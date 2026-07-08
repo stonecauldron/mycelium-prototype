@@ -16,3 +16,54 @@ polygon = PackedVector2Array(2, -64, 34, -54, 2, -44)
 [node name="MeleeUnit" parent="Units" instance=ExtResource("2_melee")]
 body_color = Color(0.25, 0.75, 0.4, 1)
 squad_index = 0
+
+[node name="MeleeUnit2" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit3" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit4" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit5" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit6" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit7" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit8" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit9" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit10" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit11" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit12" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit13" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit14" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit15" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit16" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit17" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)
+
+[node name="MeleeUnit18" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.25, 0.75, 0.4, 1)

@@ -42,6 +42,27 @@ func get_units() -> Array[Unit]:
 	return units
 
 
+func get_living_unit_count() -> int:
+	var count := 0
+	for unit in get_units():
+		if unit.current_hp > 0:
+			count += 1
+	return count
+
+
+func get_average_unit_speed() -> float:
+	var total := 0.0
+	var count := 0
+	for unit in get_units():
+		if unit.current_hp <= 0:
+			continue
+		total += unit.get_move_speed()
+		count += 1
+	if count == 0:
+		return march_speed
+	return total / float(count)
+
+
 func _acquire_opponent() -> void:
 	var closest: Army = null
 	var closest_distance := INF
@@ -100,4 +121,4 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var direction := -1.0 if is_enemy else 1.0
-	flag_bearer.set_march_velocity(march_speed * direction)
+	flag_bearer.set_march_velocity(get_average_unit_speed() * direction)

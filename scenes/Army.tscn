@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://carmy001"]
+
+[ext_resource type="Script" uid="uid://bpvfadydykxjd" path="res://scripts/combat/Army.gd" id="1_army"]
+[ext_resource type="PackedScene" uid="uid://d0wrodp775aea" path="res://scenes/FlagBearer.tscn" id="2_flag"]
+
+[node name="Army" type="Node2D" unique_id=554406342]
+script = ExtResource("1_army")
+
+[node name="FlagBearer" parent="." unique_id=1112774188 instance=ExtResource("2_flag")]

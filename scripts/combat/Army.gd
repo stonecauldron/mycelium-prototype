@@ -21,6 +21,25 @@ var _opponent: Army
 func _ready() -> void:
 	add_to_group("armies")
 	call_deferred("_acquire_opponent")
+	call_deferred("_assign_squad_indices")
+
+
+func _assign_squad_indices() -> void:
+	var units := get_units()
+	for i in units.size():
+		units[i].squad_index = i
+
+
+func get_opponent() -> Army:
+	return _opponent
+
+
+func get_units() -> Array[Unit]:
+	var units: Array[Unit] = []
+	for child in $Units.get_children():
+		if child is Unit:
+			units.append(child)
+	return units
 
 
 func _acquire_opponent() -> void:

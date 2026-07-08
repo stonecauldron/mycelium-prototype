@@ -23,5 +23,3 @@ polygon = PackedVector2Array(-2, 0, 2, 0, 2, -64, -2, -64)
 [node name="Flag" type="Polygon2D" parent="Visual" unique_id=643557935]
 color = Color(0.25, 0.75, 0.4, 1)
 polygon = PackedVector2Array(2, -64, 34, -54, 2, -44)
-
-[node name="Units" type="Node2D" parent="." unique_id=1368672954]

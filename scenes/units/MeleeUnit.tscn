@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://cmeleeunit001"]
+
+[ext_resource type="Script" path="res://scripts/units/Unit.gd" id="1_unit"]
+[ext_resource type="Resource" path="res://data/weapons/basic_melee.tres" id="2_weapon"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_unit"]
+size = Vector2(20, 32)
+
+[node name="MeleeUnit" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1_unit")
+weapon = ExtResource("2_weapon")
+roll_random_stats = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_unit")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+color = Color(0.4, 0.7, 0.5, 1)
+polygon = PackedVector2Array(-10, 0, 10, 0, 8, -28, -8, -28)

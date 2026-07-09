@@ -19,6 +19,10 @@ const HURT_FLASH_TIME := 0.12
 
 const _DAMAGE_NUMBER_SCENE := preload("res://scenes/vfx/DamageNumber.tscn")
 
+const COLLISION_WORLD := 1
+const COLLISION_PLAYER_UNITS := 2
+const COLLISION_ENEMY_UNITS := 16
+
 @export var stats: UnitStats
 @export var weapon: WeaponData
 @export var roll_random_stats: bool = true
@@ -59,6 +63,7 @@ func _ready() -> void:
 		return
 
 	_hitbox.owner_unit = self
+	_setup_collision()
 	_army.state_changed.connect(_on_army_state_changed)
 	_apply_body_color()
 	call_deferred("_sync_squad_index")
@@ -77,6 +82,15 @@ func _sync_squad_index() -> void:
 func _apply_body_color() -> void:
 	if _body:
 		_body.color = body_color
+
+
+func _setup_collision() -> void:
+	if _army.is_enemy:
+		collision_layer = COLLISION_ENEMY_UNITS
+		collision_mask = COLLISION_WORLD | COLLISION_PLAYER_UNITS
+	else:
+		collision_layer = COLLISION_PLAYER_UNITS
+		collision_mask = COLLISION_WORLD | COLLISION_ENEMY_UNITS
 
 
 func _on_army_state_changed(_new_state: Army.State) -> void:

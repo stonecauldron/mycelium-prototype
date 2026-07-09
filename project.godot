@@ -24,9 +24,10 @@ window/stretch/mode="canvas_items"
 [layer_names]
 
 2d_physics/layer_1="world"
-2d_physics/layer_2="units"
+2d_physics/layer_2="player_units"
 2d_physics/layer_3="hurtbox"
 2d_physics/layer_4="hitbox"
+2d_physics/layer_5="enemy_units"
 
 [physics]
 

@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://d0wrodp775aea"]
 
 [ext_resource type="Script" uid="uid://bfducrkaki6xq" path="res://scripts/combat/FlagBearer.gd" id="1_flag"]
+[ext_resource type="Script" uid="uid://dk024gkwu740b" path="res://scripts/components/HurtboxComponent.gd" id="2_hurtbox"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_flag"]
 size = Vector2(20, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(18, 46)
 
 [node name="FlagBearer" type="CharacterBody2D" unique_id=190074861]
 collision_layer = 2
@@ -13,6 +17,15 @@ script = ExtResource("1_flag")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1076035274]
 position = Vector2(0, -24)
 shape = SubResource("RectangleShape2D_flag")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -24)
+shape = SubResource("RectangleShape2D_hurtbox")
 
 [node name="Visual" type="Node2D" parent="." unique_id=1271113439]
 

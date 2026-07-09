@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdebugscenariopanel"]
+
+[ext_resource type="Script" path="res://scripts/debug/DebugScenarioPanel.gd" id="1_panel"]
+
+[node name="DebugScenarioPanel" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_panel")
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -320.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 180.0
+grow_horizontal = 0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Panel" type="PanelContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Margin/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Margin/Panel/VBox"]
+layout_mode = 2
+text = "Debug Scenarios"
+horizontal_alignment = 1
+
+[node name="WeakVsAverage" type="Button" parent="Margin/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Weak vs Average"
+
+[node name="AverageVsAverage" type="Button" parent="Margin/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Average vs Average"
+
+[node name="StrongVsAverage" type="Button" parent="Margin/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Strong vs Average"

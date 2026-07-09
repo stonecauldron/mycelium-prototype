@@ -4,6 +4,8 @@ extends CharacterBody2D
 signal died
 signal health_changed(current: int, maximum: int)
 
+enum CombatPhase { READY, APPROACHING, ATTACKING, RETURNING }
+
 const BASE_MOVE_SPEED := 80.0
 const BASE_ATTACK_INTERVAL := 1.0
 const HOME_ARRIVE_THRESHOLD := 4.0
@@ -31,9 +33,9 @@ const COLLISION_ENEMY_UNITS := 16
 
 var current_hp: int
 var _attack_timer: float = 0.0
-var _target: Unit
+var _target: Node2D
 var _army: Army
-var _is_attacking: bool = false
+var _combat_phase: CombatPhase = CombatPhase.READY
 var _hurt_tween: Tween
 var _knockback_time: float = 0.0
 var _knockback_velocity_x: float = 0.0
@@ -53,6 +55,23 @@ func _ready() -> void:
 		push_error("Unit requires a WeaponData resource.")
 		return
 
+	_initialize_runtime()
+
+
+func apply_power_tier(tier: UnitStats.PowerTier) -> void:
+	_cancel_attack()
+	stats = UnitStats.create_for_tier(tier)
+	current_hp = stats.get_max_hp()
+	health_changed.emit(current_hp, stats.get_max_hp())
+	_attack_timer = 0.0
+	_target = null
+	_combat_phase = CombatPhase.READY
+	_knockback_time = 0.0
+	_knockback_velocity_x = 0.0
+	_apply_body_color()
+
+
+func _initialize_runtime() -> void:
 	current_hp = stats.get_max_hp()
 	health_changed.emit(current_hp, stats.get_max_hp())
 
@@ -64,7 +83,6 @@ func _ready() -> void:
 
 	_hitbox.owner_unit = self
 	_setup_collision()
-	_army.state_changed.connect(_on_army_state_changed)
 	_apply_body_color()
 	call_deferred("_sync_squad_index")
 
@@ -93,12 +111,6 @@ func _setup_collision() -> void:
 		collision_mask = COLLISION_WORLD | COLLISION_ENEMY_UNITS
 
 
-func _on_army_state_changed(_new_state: Army.State) -> void:
-	_target = null
-	_attack_timer = 0.0
-	_cancel_attack()
-
-
 func _physics_process(delta: float) -> void:
 	if stats == null or weapon == null or _army == null:
 		return
@@ -111,16 +123,12 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 
-	if _is_attacking:
+	if _combat_phase == CombatPhase.ATTACKING:
 		velocity.x = 0.0
 		move_and_slide()
 		return
 
-	if _army.state == Army.State.HALTED:
-		_process_combat(delta)
-	else:
-		_seek_home()
-
+	_process_combat(delta)
 	move_and_slide()
 
 
@@ -130,7 +138,7 @@ func get_move_speed() -> float:
 	return BASE_MOVE_SPEED * stats.get_speed_multiplier()
 
 
-func _seek_home() -> void:
+func _seek_home_marching() -> void:
 	var home := _get_home_global()
 	var army_speed := _army.get_average_unit_speed()
 	var delta_pos := home.x - global_position.x
@@ -143,35 +151,58 @@ func _seek_home() -> void:
 
 
 func _process_combat(delta: float) -> void:
-	if not is_instance_valid(_target) or _target.current_hp <= 0:
-		_refresh_target()
+	if _combat_phase == CombatPhase.RETURNING or _attack_timer > 0.0:
+		_attack_timer = maxf(_attack_timer - delta, 0.0)
+		_return_home()
+		if _attack_timer <= 0.0 and _is_at_home():
+			_combat_phase = CombatPhase.READY
+		return
 
+	_refresh_target()
 	if _target == null:
-		velocity.x = 0.0
+		_hold_or_march()
 		return
 
 	var distance := global_position.distance_to(_target.global_position)
-	var speed := get_move_speed()
+	if distance <= weapon.attack_range:
+		velocity.x = 0.0
+		_face_toward(_target.global_position)
+		_start_attack()
+		return
 
-	if distance > weapon.attack_range:
-		velocity.x = _axis_velocity(global_position.x, _target.global_position.x, speed)
+	if _army.state == Army.State.HALTED:
+		_combat_phase = CombatPhase.APPROACHING
+		velocity.x = _axis_velocity(global_position.x, _target.global_position.x, get_move_speed())
 		_face_toward(_target.global_position)
 		return
 
-	velocity.x = 0.0
-	_face_toward(_target.global_position)
+	_hold_or_march()
 
-	_attack_timer -= delta
-	if _attack_timer <= 0.0:
-		_start_attack()
-		_attack_timer = BASE_ATTACK_INTERVAL / stats.get_speed_multiplier()
+
+func _hold_or_march() -> void:
+	if _army.state == Army.State.HALTED:
+		_return_home()
+	else:
+		_combat_phase = CombatPhase.READY
+		_seek_home_marching()
+
+
+func _return_home() -> void:
+	_combat_phase = CombatPhase.RETURNING
+	var home := _get_home_global()
+	velocity.x = _axis_velocity(global_position.x, home.x, get_move_speed())
+	_face_toward(home)
+
+
+func _is_at_home() -> bool:
+	return absf(global_position.x - _get_home_global().x) <= HOME_ARRIVE_THRESHOLD
 
 
 func _start_attack() -> void:
-	if _is_attacking:
+	if _combat_phase == CombatPhase.ATTACKING:
 		return
 
-	_is_attacking = true
+	_combat_phase = CombatPhase.ATTACKING
 	_hitbox.enable_for_attack(_get_attack_damage())
 
 	var direction := signf(_visual.scale.x)
@@ -189,15 +220,16 @@ func _start_attack() -> void:
 func _finish_attack() -> void:
 	_hitbox.disable()
 	_visual.position = Vector2.ZERO
-	_is_attacking = false
+	_attack_timer = BASE_ATTACK_INTERVAL / stats.get_speed_multiplier()
+	_combat_phase = CombatPhase.RETURNING
 
 
 func _cancel_attack() -> void:
-	if not _is_attacking:
+	if _combat_phase != CombatPhase.ATTACKING:
 		return
 	_hitbox.disable()
 	_visual.position = Vector2.ZERO
-	_is_attacking = false
+	_combat_phase = CombatPhase.RETURNING
 
 
 func _get_home_global() -> Vector2:
@@ -228,6 +260,12 @@ func _refresh_target() -> void:
 			closest_distance = distance
 			_target = unit
 
+	var flag := opponent.flag_bearer
+	if flag != null and is_instance_valid(flag):
+		var flag_distance := global_position.distance_squared_to(flag.global_position)
+		if flag_distance < closest_distance:
+			_target = flag
+
 
 func _get_attack_damage() -> int:
 	return weapon.base_damage + stats.get_damage_bonus(weapon.range_class)
@@ -241,8 +279,14 @@ func take_damage(amount: int, knockback_from: Vector2 = Vector2.ZERO) -> void:
 	current_hp = maxi(current_hp - amount, 0)
 	health_changed.emit(current_hp, stats.get_max_hp())
 	if current_hp <= 0:
-		died.emit()
-		queue_free()
+		_die()
+
+
+func _die() -> void:
+	died.emit()
+	if _army != null:
+		_army.call_deferred("refresh_squad_indices")
+	queue_free()
 
 
 func _apply_knockback(from_global: Vector2) -> void:
@@ -252,7 +296,6 @@ func _apply_knockback(from_global: Vector2) -> void:
 	_knockback_velocity_x = direction * KNOCKBACK_FORCE
 	velocity.y = KNOCKBACK_LIFT
 	_knockback_time = KNOCKBACK_DURATION
-	_cancel_attack()
 
 
 func _play_hurt_highlight() -> void:

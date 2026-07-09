@@ -151,11 +151,9 @@ func _seek_home_marching() -> void:
 
 
 func _process_combat(delta: float) -> void:
-	if _combat_phase == CombatPhase.RETURNING or _attack_timer > 0.0:
+	if _attack_timer > 0.0:
 		_attack_timer = maxf(_attack_timer - delta, 0.0)
 		_return_home()
-		if _attack_timer <= 0.0 and _is_at_home():
-			_combat_phase = CombatPhase.READY
 		return
 
 	_refresh_target()
@@ -192,10 +190,6 @@ func _return_home() -> void:
 	var home := _get_home_global()
 	velocity.x = _axis_velocity(global_position.x, home.x, get_move_speed())
 	_face_toward(home)
-
-
-func _is_at_home() -> bool:
-	return absf(global_position.x - _get_home_global().x) <= HOME_ARRIVE_THRESHOLD
 
 
 func _start_attack() -> void:
@@ -274,12 +268,13 @@ func _get_attack_damage() -> int:
 func take_damage(amount: int, knockback_from: Vector2 = Vector2.ZERO) -> void:
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
-	if knockback_from != Vector2.ZERO:
-		_apply_knockback(knockback_from)
 	current_hp = maxi(current_hp - amount, 0)
 	health_changed.emit(current_hp, stats.get_max_hp())
 	if current_hp <= 0:
 		_die()
+		return
+	if knockback_from != Vector2.ZERO:
+		call_deferred("_apply_knockback", knockback_from)
 
 
 func _die() -> void:
@@ -290,6 +285,8 @@ func _die() -> void:
 
 
 func _apply_knockback(from_global: Vector2) -> void:
+	if not is_inside_tree() or current_hp <= 0:
+		return
 	var direction := signf(global_position.x - from_global.x)
 	if direction == 0.0:
 		direction = 1.0
@@ -309,7 +306,13 @@ func _play_hurt_highlight() -> void:
 
 
 func _spawn_damage_number(amount: int) -> void:
-	var world := get_tree().current_scene.get_node_or_null("World")
+	var tree := get_tree()
+	if tree == null:
+		return
+	var scene := tree.current_scene
+	if scene == null:
+		return
+	var world := scene.get_node_or_null("World")
 	if world == null:
 		return
 

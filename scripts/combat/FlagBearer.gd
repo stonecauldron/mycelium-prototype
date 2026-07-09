@@ -91,10 +91,12 @@ func take_damage(amount: int, knockback_from: Vector2 = Vector2.ZERO) -> void:
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
 	if knockback_from != Vector2.ZERO:
-		_apply_knockback(knockback_from)
+		call_deferred("_apply_knockback", knockback_from)
 
 
 func _apply_knockback(from_global: Vector2) -> void:
+	if not is_inside_tree():
+		return
 	var direction := signf(global_position.x - from_global.x)
 	if direction == 0.0:
 		direction = 1.0
@@ -119,7 +121,13 @@ func _play_hurt_highlight() -> void:
 
 
 func _spawn_damage_number(amount: int) -> void:
-	var world := get_tree().current_scene.get_node_or_null("World")
+	var tree := get_tree()
+	if tree == null:
+		return
+	var scene := tree.current_scene
+	if scene == null:
+		return
+	var world := scene.get_node_or_null("World")
 	if world == null:
 		return
 

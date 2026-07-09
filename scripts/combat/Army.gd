@@ -128,6 +128,8 @@ func halt() -> void:
 
 func _physics_process(_delta: float) -> void:
 	_acquire_opponent()
+	if flag_bearer.is_in_knockback():
+		return
 	if _opponent == null:
 		flag_bearer.stop()
 		return

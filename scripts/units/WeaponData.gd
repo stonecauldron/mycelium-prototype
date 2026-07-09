@@ -2,6 +2,7 @@ class_name WeaponData
 extends Resource
 
 enum WeaponRange { MELEE, MID, RANGED }
+enum TargetingMode { SINGLE, AOE }
 
 const SQUAD_OFFSET := {
 	WeaponRange.MELEE: 80.0,
@@ -11,6 +12,7 @@ const SQUAD_OFFSET := {
 
 @export var display_name: String = ""
 @export var range_class: WeaponRange = WeaponRange.MELEE
+@export var targeting_mode: TargetingMode = TargetingMode.SINGLE
 @export var base_damage: int = 5
 @export var attack_range: float = 48.0
 @export var knockback_force: float = 280.0

@@ -1,11 +1,8 @@
-[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://bw1v2csvvxpw7"]
 
-[ext_resource type="Script" path="res://scripts/units/WeaponData.gd" id="1_weapon"]
+[ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://scripts/units/WeaponData.gd" id="1_weapon"]
 
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Basic Melee"
-range_class = 0
-base_damage = 5
 attack_range = 96.0
-knockback_force = 280.0

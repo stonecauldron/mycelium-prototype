@@ -1,8 +1,8 @@
 extends CharacterBody2D
 class_name FlagBearer
 
-const KNOCKBACK_LIFT := -140.0
-const KNOCKBACK_DURATION := 0.18
+const KNOCKBACK_UP_RATIO := 0.5
+const KNOCKBACK_IMPULSE_MULTIPLIER := 1.75
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
 const HURT_FLASH_TIME := 0.12
 
@@ -19,8 +19,8 @@ const _DAMAGE_NUMBER_SCENE := preload("res://scenes/vfx/DamageNumber.tscn")
 @onready var _pole: Polygon2D = $Visual/Pole
 
 var _march_speed_x: float = 0.0
-var _knockback_time: float = 0.0
-var _knockback_velocity_x: float = 0.0
+var _in_knockback: bool = false
+var _knockback_left_ground: bool = false
 var _hurt_tween: Tween
 var _pole_color: Color = Color(0.15, 0.12, 0.1, 1.0)
 
@@ -35,10 +35,14 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	velocity += get_gravity() * delta
 
-	if _knockback_time > 0.0:
-		_knockback_time -= delta
-		velocity.x = _knockback_velocity_x
+	if _in_knockback:
 		move_and_slide()
+		if not is_on_floor():
+			_knockback_left_ground = true
+		elif _knockback_left_ground and velocity.y >= 0.0:
+			_in_knockback = false
+			_knockback_left_ground = false
+			velocity.x = 0.0
 		return
 
 	velocity.x = _march_speed_x
@@ -65,17 +69,22 @@ func _setup_collision() -> void:
 
 
 func set_march_velocity(speed: float) -> void:
+	if _in_knockback:
+		return
 	_march_speed_x = speed
 
 
 func stop() -> void:
 	_march_speed_x = 0.0
-	velocity.x = 0.0
+
+
+func is_in_knockback() -> bool:
+	return _in_knockback
 
 
 func reset_combat_state() -> void:
-	_knockback_time = 0.0
-	_knockback_velocity_x = 0.0
+	_in_knockback = false
+	_knockback_left_ground = false
 	velocity = Vector2.ZERO
 	stop()
 	if _hurt_tween:
@@ -94,18 +103,21 @@ func take_damage(
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
 	if knockback_from != Vector2.ZERO and knockback_force > 0.0:
-		call_deferred("_apply_knockback", knockback_from, knockback_force)
+		_apply_knockback(knockback_from, knockback_force)
 
 
 func _apply_knockback(from_global: Vector2, knockback_force: float) -> void:
-	if not is_inside_tree():
+	if not is_inside_tree() or knockback_force <= 0.0:
 		return
 	var direction := signf(global_position.x - from_global.x)
 	if direction == 0.0:
 		direction = 1.0
-	_knockback_velocity_x = direction * knockback_force
-	velocity.y = KNOCKBACK_LIFT
-	_knockback_time = KNOCKBACK_DURATION
+	var impulse := knockback_force * KNOCKBACK_IMPULSE_MULTIPLIER
+	velocity.x = direction * impulse
+	velocity.y = -impulse * KNOCKBACK_UP_RATIO
+	_in_knockback = true
+	_knockback_left_ground = false
+	_march_speed_x = 0.0
 
 
 func _play_hurt_highlight() -> void:

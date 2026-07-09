@@ -5,6 +5,7 @@ extends Area2D
 @export var knockback_force: float = 0.0
 @export var owner_unit: Unit
 
+var _targeting_mode: WeaponData.TargetingMode = WeaponData.TargetingMode.SINGLE
 var _hit_combatants: Dictionary = {}
 
 
@@ -13,12 +14,17 @@ func _ready() -> void:
 	monitoring = false
 
 
-func enable_for_attack(attack_damage: int, attack_knockback: float) -> void:
+func enable_for_attack(
+	attack_damage: int,
+	attack_knockback: float,
+	targeting_mode: WeaponData.TargetingMode
+) -> void:
 	damage = attack_damage
 	knockback_force = attack_knockback
+	_targeting_mode = targeting_mode
 	_hit_combatants.clear()
 	monitoring = true
-	_hit_overlapping_hurtboxes()
+	_resolve_hits()
 
 
 func disable() -> void:
@@ -26,32 +32,72 @@ func disable() -> void:
 	_hit_combatants.clear()
 
 
-func _hit_overlapping_hurtboxes() -> void:
-	for area in get_overlapping_areas():
-		_try_hit(area)
-
-
-func _on_area_entered(area: Area2D) -> void:
+func _on_area_entered(_area: Area2D) -> void:
 	if not monitoring:
 		return
-	_try_hit(area)
+	_resolve_hits()
 
 
-func _try_hit(area: Area2D) -> void:
-	var hurtbox: HurtboxComponent = area as HurtboxComponent
-	if hurtbox == null or owner_unit == null:
+func _resolve_hits() -> void:
+	if _targeting_mode == WeaponData.TargetingMode.AOE:
+		for area in get_overlapping_areas():
+			_apply_hit_to_area(area)
 		return
+
+	_hit_closest_enemy()
+
+
+func _hit_closest_enemy() -> void:
+	if not _hit_combatants.is_empty():
+		return
+
+	var closest_hurtbox: HurtboxComponent = null
+	var closest_distance := INF
+
+	for area in get_overlapping_areas():
+		var hurtbox: HurtboxComponent = area as HurtboxComponent
+		var target := _get_valid_target(hurtbox)
+		if target == null:
+			continue
+		var distance := owner_unit.global_position.distance_squared_to(
+			(target as Node2D).global_position
+		)
+		if distance < closest_distance:
+			closest_distance = distance
+			closest_hurtbox = hurtbox
+
+	if closest_hurtbox != null:
+		_apply_hit(closest_hurtbox)
+
+
+func _apply_hit_to_area(area: Area2D) -> void:
+	var hurtbox: HurtboxComponent = area as HurtboxComponent
+	var target := _get_valid_target(hurtbox)
+	if target == null:
+		return
+	_apply_hit(hurtbox)
+
+
+func _apply_hit(hurtbox: HurtboxComponent) -> void:
+	var target := hurtbox.get_combatant()
+	if target == null or _hit_combatants.has(target):
+		return
+	_hit_combatants[target] = true
+	hurtbox.receive_hit(damage, owner_unit.global_position, knockback_force)
+
+
+func _get_valid_target(hurtbox: HurtboxComponent) -> Node:
+	if hurtbox == null or owner_unit == null:
+		return null
 
 	var target: Node = hurtbox.get_combatant()
 	if target == null or target == owner_unit:
-		return
+		return null
 	if _is_ally(target):
-		return
+		return null
 	if _hit_combatants.has(target):
-		return
-
-	_hit_combatants[target] = true
-	hurtbox.receive_hit(damage, owner_unit.global_position, knockback_force)
+		return null
+	return target
 
 
 func _is_ally(target: Node) -> bool:

@@ -31,6 +31,7 @@ func _run_scenario(player_tier: UnitStats.PowerTier, enemy_tier: UnitStats.Power
 	_clear_world_vfx()
 	_reset_army(player_army, _player_spawn, player_tier, Color(0.25, 0.75, 0.4, 1.0))
 	_reset_army(enemy_army, _enemy_spawn, enemy_tier, Color(0.85, 0.25, 0.3, 1.0))
+	_refresh_unit_process_order()
 	player_army.begin_march()
 	enemy_army.begin_march()
 
@@ -52,6 +53,19 @@ func _reset_army(army: Army, spawn_global: Vector2, tier: UnitStats.PowerTier, b
 		units_root.add_child(unit)
 
 	army.refresh_squad_indices()
+
+
+func _refresh_unit_process_order() -> void:
+	var units: Array[Unit] = []
+	units.append_array(player_army.get_living_units())
+	units.append_array(enemy_army.get_living_units())
+	units.sort_custom(func(a: Unit, b: Unit) -> bool:
+		if a.stats.spd != b.stats.spd:
+			return a.stats.spd > b.stats.spd
+		return a.process_tiebreak > b.process_tiebreak
+	)
+	for i in units.size():
+		units[i].process_physics_priority = i
 
 
 func _clear_world_vfx() -> void:

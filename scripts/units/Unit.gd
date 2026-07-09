@@ -13,8 +13,7 @@ const MARCH_CATCH_UP_MULTIPLIER := 2.0
 const LUNGE_DISTANCE := 48.0
 const LUNGE_OUT_TIME := 0.08
 const LUNGE_BACK_TIME := 0.12
-const KNOCKBACK_LIFT := -140.0
-const KNOCKBACK_DURATION := 0.18
+const KNOCKBACK_UP_RATIO := 0.5
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
 const HURT_FLASH_TIME := 0.12
 
@@ -31,13 +30,14 @@ const COLLISION_ENEMY_UNITS := 16
 @export var body_color: Color = Color(0.4, 0.7, 0.5)
 
 var current_hp: int
+var process_tiebreak: int = 0
 var _attack_timer: float = 0.0
 var _target: Node2D
 var _army: Army
 var _combat_phase: CombatPhase = CombatPhase.READY
 var _hurt_tween: Tween
-var _knockback_time: float = 0.0
-var _knockback_velocity_x: float = 0.0
+var _in_knockback: bool = false
+var _knockback_left_ground: bool = false
 
 @onready var _visual: Node2D = $Visual
 @onready var _body: Polygon2D = $Visual/Body
@@ -60,19 +60,21 @@ func _ready() -> void:
 func apply_power_tier(tier: UnitStats.PowerTier) -> void:
 	_cancel_attack()
 	stats = UnitStats.create_for_tier(tier)
+	process_tiebreak = randi()
 	current_hp = stats.get_max_hp()
 	health_changed.emit(current_hp, stats.get_max_hp())
 	_attack_timer = 0.0
 	_target = null
 	_combat_phase = CombatPhase.READY
-	_knockback_time = 0.0
-	_knockback_velocity_x = 0.0
+	_in_knockback = false
+	_knockback_left_ground = false
 	_apply_body_color()
 
 
 func _initialize_runtime() -> void:
 	current_hp = stats.get_max_hp()
 	health_changed.emit(current_hp, stats.get_max_hp())
+	process_tiebreak = randi()
 
 	add_to_group("units")
 	_army = get_parent().get_parent() as Army
@@ -116,10 +118,14 @@ func _physics_process(delta: float) -> void:
 
 	velocity += get_gravity() * delta
 
-	if _knockback_time > 0.0:
-		_knockback_time -= delta
-		velocity.x = _knockback_velocity_x
+	if _in_knockback:
 		move_and_slide()
+		if not is_on_floor():
+			_knockback_left_ground = true
+		elif _knockback_left_ground and velocity.y >= 0.0:
+			_in_knockback = false
+			_knockback_left_ground = false
+			velocity.x = 0.0
 		return
 
 	if _combat_phase == CombatPhase.ATTACKING:
@@ -196,7 +202,11 @@ func _start_attack() -> void:
 		return
 
 	_combat_phase = CombatPhase.ATTACKING
-	_hitbox.enable_for_attack(_get_attack_damage(), weapon.knockback_force)
+	_hitbox.enable_for_attack(
+		_get_attack_damage(),
+		weapon.knockback_force,
+		weapon.targeting_mode
+	)
 
 	var direction := signf(_visual.scale.x)
 	if direction == 0.0:
@@ -277,7 +287,7 @@ func take_damage(
 		_die()
 		return
 	if knockback_from != Vector2.ZERO and knockback_force > 0.0:
-		call_deferred("_apply_knockback", knockback_from, knockback_force)
+		_apply_knockback(knockback_from, knockback_force)
 
 
 func _die() -> void:
@@ -288,14 +298,15 @@ func _die() -> void:
 
 
 func _apply_knockback(from_global: Vector2, knockback_force: float) -> void:
-	if not is_inside_tree() or current_hp <= 0:
+	if not is_inside_tree() or current_hp <= 0 or knockback_force <= 0.0:
 		return
 	var direction := signf(global_position.x - from_global.x)
 	if direction == 0.0:
 		direction = 1.0
-	_knockback_velocity_x = direction * knockback_force
-	velocity.y = KNOCKBACK_LIFT
-	_knockback_time = KNOCKBACK_DURATION
+	velocity.x = direction * knockback_force
+	velocity.y = -knockback_force * KNOCKBACK_UP_RATIO
+	_in_knockback = true
+	_knockback_left_ground = false
 
 
 func _play_hurt_highlight() -> void:

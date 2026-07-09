@@ -13,7 +13,6 @@ const MARCH_CATCH_UP_MULTIPLIER := 2.0
 const LUNGE_DISTANCE := 48.0
 const LUNGE_OUT_TIME := 0.08
 const LUNGE_BACK_TIME := 0.12
-const KNOCKBACK_FORCE := 280.0
 const KNOCKBACK_LIFT := -140.0
 const KNOCKBACK_DURATION := 0.18
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
@@ -197,7 +196,7 @@ func _start_attack() -> void:
 		return
 
 	_combat_phase = CombatPhase.ATTACKING
-	_hitbox.enable_for_attack(_get_attack_damage())
+	_hitbox.enable_for_attack(_get_attack_damage(), weapon.knockback_force)
 
 	var direction := signf(_visual.scale.x)
 	if direction == 0.0:
@@ -265,7 +264,11 @@ func _get_attack_damage() -> int:
 	return weapon.base_damage + stats.get_damage_bonus(weapon.range_class)
 
 
-func take_damage(amount: int, knockback_from: Vector2 = Vector2.ZERO) -> void:
+func take_damage(
+	amount: int,
+	knockback_from: Vector2 = Vector2.ZERO,
+	knockback_force: float = 0.0
+) -> void:
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
 	current_hp = maxi(current_hp - amount, 0)
@@ -273,8 +276,8 @@ func take_damage(amount: int, knockback_from: Vector2 = Vector2.ZERO) -> void:
 	if current_hp <= 0:
 		_die()
 		return
-	if knockback_from != Vector2.ZERO:
-		call_deferred("_apply_knockback", knockback_from)
+	if knockback_from != Vector2.ZERO and knockback_force > 0.0:
+		call_deferred("_apply_knockback", knockback_from, knockback_force)
 
 
 func _die() -> void:
@@ -284,13 +287,13 @@ func _die() -> void:
 	queue_free()
 
 
-func _apply_knockback(from_global: Vector2) -> void:
+func _apply_knockback(from_global: Vector2, knockback_force: float) -> void:
 	if not is_inside_tree() or current_hp <= 0:
 		return
 	var direction := signf(global_position.x - from_global.x)
 	if direction == 0.0:
 		direction = 1.0
-	_knockback_velocity_x = direction * KNOCKBACK_FORCE
+	_knockback_velocity_x = direction * knockback_force
 	velocity.y = KNOCKBACK_LIFT
 	_knockback_time = KNOCKBACK_DURATION
 

@@ -2,6 +2,7 @@ class_name HitboxComponent
 extends Area2D
 
 @export var damage: int = 0
+@export var knockback_force: float = 0.0
 @export var owner_unit: Unit
 
 var _hit_combatants: Dictionary = {}
@@ -12,8 +13,9 @@ func _ready() -> void:
 	monitoring = false
 
 
-func enable_for_attack(attack_damage: int) -> void:
+func enable_for_attack(attack_damage: int, attack_knockback: float) -> void:
 	damage = attack_damage
+	knockback_force = attack_knockback
 	_hit_combatants.clear()
 	monitoring = true
 	_hit_overlapping_hurtboxes()
@@ -49,7 +51,7 @@ func _try_hit(area: Area2D) -> void:
 		return
 
 	_hit_combatants[target] = true
-	hurtbox.receive_hit(damage, owner_unit.global_position)
+	hurtbox.receive_hit(damage, owner_unit.global_position, knockback_force)
 
 
 func _is_ally(target: Node) -> bool:

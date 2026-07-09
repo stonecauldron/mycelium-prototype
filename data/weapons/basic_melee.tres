@@ -8,3 +8,4 @@ display_name = "Basic Melee"
 range_class = 0
 base_damage = 5
 attack_range = 96.0
+knockback_force = 280.0

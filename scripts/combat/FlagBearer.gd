@@ -1,7 +1,6 @@
 extends CharacterBody2D
 class_name FlagBearer
 
-const KNOCKBACK_FORCE := 280.0
 const KNOCKBACK_LIFT := -140.0
 const KNOCKBACK_DURATION := 0.18
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
@@ -87,20 +86,24 @@ func reset_combat_state() -> void:
 		_pole.color = _pole_color
 
 
-func take_damage(amount: int, knockback_from: Vector2 = Vector2.ZERO) -> void:
+func take_damage(
+	amount: int,
+	knockback_from: Vector2 = Vector2.ZERO,
+	knockback_force: float = 0.0
+) -> void:
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
-	if knockback_from != Vector2.ZERO:
-		call_deferred("_apply_knockback", knockback_from)
+	if knockback_from != Vector2.ZERO and knockback_force > 0.0:
+		call_deferred("_apply_knockback", knockback_from, knockback_force)
 
 
-func _apply_knockback(from_global: Vector2) -> void:
+func _apply_knockback(from_global: Vector2, knockback_force: float) -> void:
 	if not is_inside_tree():
 		return
 	var direction := signf(global_position.x - from_global.x)
 	if direction == 0.0:
 		direction = 1.0
-	_knockback_velocity_x = direction * KNOCKBACK_FORCE
+	_knockback_velocity_x = direction * knockback_force
 	velocity.y = KNOCKBACK_LIFT
 	_knockback_time = KNOCKBACK_DURATION
 

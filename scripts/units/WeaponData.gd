@@ -5,8 +5,8 @@ enum WeaponRange { MELEE, MID, RANGED }
 enum TargetingMode { SINGLE, AOE }
 
 const SQUAD_OFFSET := {
-	WeaponRange.MELEE: 80.0,
-	WeaponRange.MID: 0.0,
+	WeaponRange.MELEE: 48.0,
+	WeaponRange.MID: 52.0,
 	WeaponRange.RANGED: -60.0,
 }
 
@@ -20,6 +20,12 @@ const SQUAD_OFFSET := {
 
 func get_squad_offset(squad_index: int) -> float:
 	var base: float = SQUAD_OFFSET.get(range_class, 0.0)
+	if range_class == WeaponRange.MID:
+		return base * (float(squad_index) - 1.5)
+	if range_class == WeaponRange.MELEE:
+		# Start just past the forwardmost mid home (4 mids centered: ±1.5 steps).
+		var mid_forward_extent: float = SQUAD_OFFSET[WeaponRange.MID] * 1.5
+		return mid_forward_extent + base * float(squad_index + 1)
 	if base == 0.0:
 		return 0.0
 	return base * float(squad_index + 1)

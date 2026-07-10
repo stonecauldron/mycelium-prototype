@@ -13,11 +13,19 @@ const MARCH_CATCH_UP_MULTIPLIER := 2.0
 const LUNGE_DISTANCE := 48.0
 const LUNGE_OUT_TIME := 0.08
 const LUNGE_BACK_TIME := 0.12
+const THROW_JUMP_VELOCITY := -520.0
+const THROW_RELEASE_DELAY := 0.22
+const THROW_RECOVERY_TIME := 0.28
+const THROW_MAX_DURATION := 1.4
+const THROW_AIM_JITTER_X := 40.0
+const THROW_AIM_JITTER_Y := 20.0
+const THROW_ORIGIN_HEIGHT := -48.0
 const KNOCKBACK_UP_RATIO := 0.5
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
 const HURT_FLASH_TIME := 0.12
 
 const _DAMAGE_NUMBER_SCENE := preload("res://scenes/vfx/DamageNumber.tscn")
+const _SPEAR_PROJECTILE_SCENE := preload("res://scenes/combat/SpearProjectile.tscn")
 
 const COLLISION_WORLD := 1
 const COLLISION_PLAYER_UNITS := 2
@@ -38,6 +46,10 @@ var _combat_phase: CombatPhase = CombatPhase.READY
 var _hurt_tween: Tween
 var _in_knockback: bool = false
 var _knockback_left_ground: bool = false
+var _throw_released: bool = false
+var _throw_landed: bool = false
+var _throw_left_ground: bool = false
+var _throw_timer: float = 0.0
 
 @onready var _visual: Node2D = $Visual
 @onready var _body: Polygon2D = $Visual/Body
@@ -85,17 +97,6 @@ func _initialize_runtime() -> void:
 	_hitbox.owner_unit = self
 	_setup_collision()
 	_apply_body_color()
-	call_deferred("_sync_squad_index")
-
-
-func _sync_squad_index() -> void:
-	if _army == null:
-		return
-	var units: Array[Unit] = _army.get_units()
-	for i in units.size():
-		if units[i] == self:
-			squad_index = i
-			break
 
 
 func _apply_body_color() -> void:
@@ -130,6 +131,8 @@ func _physics_process(delta: float) -> void:
 
 	if _combat_phase == CombatPhase.ATTACKING:
 		velocity.x = 0.0
+		if weapon.range_class == WeaponData.WeaponRange.MID:
+			_process_throw_attack(delta)
 		move_and_slide()
 		return
 
@@ -202,6 +205,10 @@ func _start_attack() -> void:
 		return
 
 	_combat_phase = CombatPhase.ATTACKING
+	if weapon.range_class == WeaponData.WeaponRange.MID:
+		_start_throw_attack()
+		return
+
 	_hitbox.enable_for_attack(
 		_get_attack_damage(),
 		weapon.knockback_force,
@@ -220,9 +227,67 @@ func _start_attack() -> void:
 	tween.tween_callback(_finish_attack)
 
 
+func _start_throw_attack() -> void:
+	_throw_released = false
+	_throw_landed = false
+	_throw_left_ground = false
+	_throw_timer = 0.0
+	velocity.y = THROW_JUMP_VELOCITY
+
+
+func _process_throw_attack(delta: float) -> void:
+	_throw_timer += delta
+	if not _throw_released and _throw_timer >= THROW_RELEASE_DELAY:
+		_throw_released = true
+		_spawn_spear_projectile()
+
+	if not is_on_floor():
+		_throw_left_ground = true
+	elif _throw_released and _throw_left_ground and not _throw_landed:
+		_throw_landed = true
+		_throw_timer = 0.0
+
+	if _throw_landed and _throw_timer >= THROW_RECOVERY_TIME:
+		_finish_attack()
+		return
+
+	if _throw_released and _throw_timer >= THROW_MAX_DURATION:
+		_finish_attack()
+
+
+func _spawn_spear_projectile() -> void:
+	var world := _get_world_node()
+	if world == null:
+		return
+
+	var opponent := _army.get_opponent()
+	if opponent == null:
+		return
+
+	var aim := opponent.get_living_units_midpoint()
+	aim += Vector2(
+		randf_range(-THROW_AIM_JITTER_X, THROW_AIM_JITTER_X),
+		randf_range(-THROW_AIM_JITTER_Y, THROW_AIM_JITTER_Y)
+	)
+
+	var spear: SpearProjectile = _SPEAR_PROJECTILE_SCENE.instantiate()
+	world.add_child(spear)
+	spear.launch(
+		global_position + Vector2(0.0, THROW_ORIGIN_HEIGHT),
+		aim,
+		_get_attack_damage(),
+		weapon.knockback_force,
+		self
+	)
+
+
 func _finish_attack() -> void:
 	_hitbox.disable()
 	_visual.position = Vector2.ZERO
+	_throw_released = false
+	_throw_landed = false
+	_throw_left_ground = false
+	_throw_timer = 0.0
 	_attack_timer = BASE_ATTACK_INTERVAL / stats.get_speed_multiplier()
 	_combat_phase = CombatPhase.RETURNING
 
@@ -232,6 +297,10 @@ func _cancel_attack() -> void:
 		return
 	_hitbox.disable()
 	_visual.position = Vector2.ZERO
+	_throw_released = false
+	_throw_landed = false
+	_throw_left_ground = false
+	_throw_timer = 0.0
 	_combat_phase = CombatPhase.RETURNING
 
 
@@ -319,14 +388,18 @@ func _play_hurt_highlight() -> void:
 	_hurt_tween.tween_property(_body, "color", body_color, HURT_FLASH_TIME)
 
 
-func _spawn_damage_number(amount: int) -> void:
+func _get_world_node() -> Node:
 	var tree := get_tree()
 	if tree == null:
-		return
+		return null
 	var scene := tree.current_scene
 	if scene == null:
-		return
-	var world := scene.get_node_or_null("World")
+		return null
+	return scene.get_node_or_null("World")
+
+
+func _spawn_damage_number(amount: int) -> void:
+	var world := _get_world_node()
 	if world == null:
 		return
 

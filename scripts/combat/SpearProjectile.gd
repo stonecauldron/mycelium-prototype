@@ -1,0 +1,126 @@
+class_name SpearProjectile
+extends Area2D
+
+const MAX_LIFETIME := 2.5
+const FLOOR_Y := 880.0
+const LAUNCH_ANGLE := PI / 4.0
+const FALLBACK_SPEED := 600.0
+
+var damage: int = 0
+var knockback_force: float = 0.0
+var owner_unit: Unit
+var _velocity: Vector2 = Vector2.ZERO
+var _lifetime: float = 0.0
+var _spent: bool = false
+
+
+func launch(
+	from_global: Vector2,
+	aim_global: Vector2,
+	attack_damage: int,
+	attack_knockback: float,
+	thrower: Unit
+) -> void:
+	global_position = from_global
+	damage = attack_damage
+	knockback_force = attack_knockback
+	owner_unit = thrower
+	_velocity = _angle_launch_velocity(from_global, aim_global)
+	_face_velocity()
+	monitoring = true
+	monitorable = false
+
+
+func _ready() -> void:
+	area_entered.connect(_on_area_entered)
+	body_entered.connect(_on_body_entered)
+
+
+func _physics_process(delta: float) -> void:
+	if _spent:
+		return
+
+	_lifetime += delta
+	if _lifetime >= MAX_LIFETIME or global_position.y >= FLOOR_Y:
+		_expire()
+		return
+
+	_velocity += _gravity_vector() * delta
+	global_position += _velocity * delta
+	_face_velocity()
+
+
+func _gravity_vector() -> Vector2:
+	var gravity_strength := float(ProjectSettings.get_setting("physics/2d/default_gravity", 980.0))
+	return Vector2(0.0, gravity_strength)
+
+
+func _angle_launch_velocity(from_global: Vector2, aim_global: Vector2) -> Vector2:
+	var displacement := aim_global - from_global
+	var direction_x := signf(displacement.x)
+	if direction_x == 0.0:
+		direction_x = 1.0 if owner_unit == null or not owner_unit._army.is_enemy else -1.0
+
+	var gravity := _gravity_vector().y
+	var dx := absf(displacement.x)
+	var dy := displacement.y
+	# At 45°: v² = g * dx² / (dy + dx). Godot Y+ is down.
+	var denominator := dy + dx
+	var speed := FALLBACK_SPEED
+	if denominator > 1.0:
+		speed = sqrt(gravity * dx * dx / denominator)
+
+	var angle := -LAUNCH_ANGLE if direction_x > 0.0 else -PI + LAUNCH_ANGLE
+	return Vector2(cos(angle), sin(angle)) * speed
+
+
+func _face_velocity() -> void:
+	if _velocity.length_squared() < 1.0:
+		return
+	rotation = _velocity.angle()
+
+
+func _on_area_entered(area: Area2D) -> void:
+	if _spent:
+		return
+	var hurtbox := area as HurtboxComponent
+	if hurtbox == null:
+		return
+	var target := hurtbox.get_combatant()
+	if not _is_valid_target(target):
+		return
+	_spent = true
+	var from_pos := owner_unit.global_position if owner_unit != null else global_position
+	hurtbox.receive_hit(damage, from_pos, knockback_force)
+	queue_free()
+
+
+func _on_body_entered(_body: Node2D) -> void:
+	if _spent:
+		return
+	_expire()
+
+
+func _is_valid_target(target: Node) -> bool:
+	if target == null or target == owner_unit:
+		return false
+	if owner_unit == null or owner_unit._army == null:
+		return false
+	var owner_army: Army = owner_unit._army
+	var target_army := _get_army(target)
+	if target_army == null:
+		return false
+	return owner_army.is_enemy != target_army.is_enemy
+
+
+func _get_army(target: Node) -> Army:
+	if target is Unit:
+		return (target as Unit)._army
+	if target is FlagBearer:
+		return (target as FlagBearer).get_parent() as Army
+	return null
+
+
+func _expire() -> void:
+	_spent = true
+	queue_free()

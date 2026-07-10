@@ -30,9 +30,29 @@ func _assign_squad_indices() -> void:
 
 
 func refresh_squad_indices() -> void:
-	var units := get_living_units()
-	for i in units.size():
-		units[i].squad_index = i
+	var by_class: Dictionary = {}
+	for unit in get_living_units():
+		var range_class: WeaponData.WeaponRange = (
+			unit.weapon.range_class if unit.weapon != null else WeaponData.WeaponRange.MELEE
+		)
+		if not by_class.has(range_class):
+			by_class[range_class] = []
+		by_class[range_class].append(unit)
+
+	for range_class in by_class:
+		var units: Array = by_class[range_class]
+		for i in units.size():
+			units[i].squad_index = i
+
+
+func get_living_units_midpoint() -> Vector2:
+	var living := get_living_units()
+	if living.is_empty():
+		return flag_bearer.global_position
+	var sum := Vector2.ZERO
+	for unit in living:
+		sum += unit.global_position
+	return sum / float(living.size())
 
 
 func get_opponent() -> Army:

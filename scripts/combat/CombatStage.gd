@@ -1,8 +1,10 @@
 extends Node2D
 
 const FLOOR_SURFACE_Y := 880.0
-const UNIT_COUNT := 4
+const MELEE_COUNT := 4
+const SPEAR_COUNT := 4
 const _MELEE_UNIT_SCENE := preload("res://scenes/units/MeleeUnit.tscn")
+const _SPEAR_UNIT_SCENE := preload("res://scenes/units/SpearUnit.tscn")
 const _DEBUG_PANEL_SCENE := preload("res://scenes/debug/DebugScenarioPanel.tscn")
 
 @onready var player_army: Army = $World/PlayerArmy
@@ -44,15 +46,28 @@ func _reset_army(army: Army, spawn_global: Vector2, tier: UnitStats.PowerTier, b
 
 	army.reset_for_scenario(spawn_global)
 
-	for i in UNIT_COUNT:
-		var unit: Unit = _MELEE_UNIT_SCENE.instantiate()
-		unit.roll_random_stats = false
-		unit.stats = UnitStats.create_for_tier(tier)
-		unit.body_color = body_color
-		unit.squad_index = i
-		units_root.add_child(unit)
+	for i in MELEE_COUNT:
+		_spawn_unit(_MELEE_UNIT_SCENE, units_root, tier, body_color, i)
+
+	for i in SPEAR_COUNT:
+		_spawn_unit(_SPEAR_UNIT_SCENE, units_root, tier, body_color, i)
 
 	army.refresh_squad_indices()
+
+
+func _spawn_unit(
+	scene: PackedScene,
+	units_root: Node2D,
+	tier: UnitStats.PowerTier,
+	body_color: Color,
+	squad_index: int
+) -> void:
+	var unit: Unit = scene.instantiate()
+	unit.roll_random_stats = false
+	unit.stats = UnitStats.create_for_tier(tier)
+	unit.body_color = body_color
+	unit.squad_index = squad_index
+	units_root.add_child(unit)
 
 
 func _refresh_unit_process_order() -> void:
@@ -71,5 +86,5 @@ func _refresh_unit_process_order() -> void:
 func _clear_world_vfx() -> void:
 	var world := $World
 	for child in world.get_children():
-		if child is DamageNumber:
+		if child is DamageNumber or child is SpearProjectile:
 			child.queue_free()

@@ -79,6 +79,13 @@ func get_living_unit_count() -> int:
 	return get_living_units().size()
 
 
+func has_living_range_class(range_class: WeaponData.WeaponRange) -> bool:
+	for unit in get_living_units():
+		if unit.weapon != null and unit.weapon.range_class == range_class:
+			return true
+	return false
+
+
 func apply_power_tier(tier: UnitStats.PowerTier) -> void:
 	for unit in get_units():
 		unit.apply_power_tier(tier)

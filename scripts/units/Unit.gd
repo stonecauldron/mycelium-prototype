@@ -161,7 +161,10 @@ func _seek_home_marching() -> void:
 func _process_combat(delta: float) -> void:
 	if _attack_timer > 0.0:
 		_attack_timer = maxf(_attack_timer - delta, 0.0)
-		_return_home()
+		if _should_chase():
+			_chase_target()
+		else:
+			_return_home()
 		return
 
 	_refresh_target()
@@ -176,13 +179,38 @@ func _process_combat(delta: float) -> void:
 		_start_attack()
 		return
 
-	if _army.state == Army.State.HALTED:
-		_combat_phase = CombatPhase.APPROACHING
-		velocity.x = _axis_velocity(global_position.x, _target.global_position.x, get_move_speed())
-		_face_toward(_target.global_position)
+	if _army.state == Army.State.HALTED or _should_chase():
+		_chase_target()
 		return
 
 	_hold_or_march()
+
+
+func _should_chase() -> bool:
+	if weapon == null or weapon.range_class != WeaponData.WeaponRange.MELEE:
+		return false
+	if _army == null:
+		return false
+	var opponent := _army.get_opponent()
+	if opponent == null:
+		return false
+	return not opponent.has_living_range_class(WeaponData.WeaponRange.MELEE)
+
+
+func _chase_target() -> void:
+	if _target == null or not is_instance_valid(_target):
+		_refresh_target()
+	if _target == null:
+		_hold_or_march()
+		return
+
+	_combat_phase = CombatPhase.APPROACHING
+	var distance := global_position.distance_to(_target.global_position)
+	if distance <= weapon.attack_range:
+		velocity.x = 0.0
+	else:
+		velocity.x = _axis_velocity(global_position.x, _target.global_position.x, get_move_speed())
+	_face_toward(_target.global_position)
 
 
 func _hold_or_march() -> void:

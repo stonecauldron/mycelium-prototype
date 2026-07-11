@@ -4,17 +4,17 @@ extends Camera2D
 
 
 func _process(_delta: float) -> void:
-	var player_army := _find_player_army()
-	if player_army == null:
+	var player_troop := _find_player_troop()
+	if player_troop == null:
 		return
 
-	global_position.x = player_army.get_flag_global_position().x
+	global_position.x = player_troop.get_flag_global_position().x
 	global_position.y = fixed_y
 
 
-func _find_player_army() -> Army:
-	for node in get_tree().get_nodes_in_group("armies"):
-		var army := node as Army
-		if army != null and not army.is_enemy:
-			return army
+func _find_player_troop() -> Troop:
+	for node in get_tree().get_nodes_in_group("troops"):
+		var troop := node as Troop
+		if troop != null and not troop.is_enemy:
+			return troop
 	return null

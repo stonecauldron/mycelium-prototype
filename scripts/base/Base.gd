@@ -13,7 +13,7 @@ const TAB_DEFS := [
 ]
 
 const SCREEN_SCENES := {
-	TabId.BARRACKS: preload("res://scenes/base/screens/ArmySelectionScreen.tscn"),
+	TabId.BARRACKS: preload("res://scenes/base/screens/TroopSelectionScreen.tscn"),
 }
 
 @onready var _content_host: Control = %ContentHost

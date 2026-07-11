@@ -44,7 +44,7 @@ horizontal_alignment = 1
 [node name="Subtitle" type="Label" parent="Center/VBox"]
 layout_mode = 2
 theme_type_variation = &"SubtitleLabel"
-text = "Your army has been wiped out."
+text = "Your troop has been wiped out."
 horizontal_alignment = 1
 
 [node name="RestartButton" type="Button" parent="Center/VBox"]

@@ -1,7 +1,7 @@
 class_name BattleLaunch
 extends RefCounted
 
-## Enemy roster handoff from Base → CombatStage. Player lineup comes from ArmyData.
+## Enemy roster handoff from Base → CombatStage. Player lineup comes from GameState.troop.
 static var enemy_roster: Array[RosterUnitData] = []
 
 

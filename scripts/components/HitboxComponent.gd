@@ -101,16 +101,16 @@ func _get_valid_target(hurtbox: HurtboxComponent) -> Node:
 
 
 func _is_ally(target: Node) -> bool:
-	var owner_army: Army = owner_unit._army
-	var target_army := _get_army(target)
-	if owner_army == null or target_army == null:
+	var owner_troop: Troop = owner_unit._troop
+	var target_troop := _get_troop(target)
+	if owner_troop == null or target_troop == null:
 		return true
-	return owner_army.is_enemy == target_army.is_enemy
+	return owner_troop.is_enemy == target_troop.is_enemy
 
 
-func _get_army(target: Node) -> Army:
+func _get_troop(target: Node) -> Troop:
 	if target is Unit:
-		return (target as Unit)._army
+		return (target as Unit)._troop
 	if target is FlagBearer:
-		return (target as FlagBearer).get_parent() as Army
+		return (target as FlagBearer).get_parent() as Troop
 	return null

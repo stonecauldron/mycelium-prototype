@@ -7,8 +7,8 @@ const _BASE_SCENE_PATH := "res://scenes/base/Base.tscn"
 const _GAME_OVER_SCENE_PATH := "res://scenes/GameOver.tscn"
 const _DAY_SUMMARY_SCENE_PATH := "res://scenes/DaySummary.tscn"
 
-@onready var player_army: Army = $World/PlayerArmy
-@onready var enemy_army: Army = $World/EnemyArmy
+@onready var player_troop: Troop = $World/PlayerTroop
+@onready var enemy_troop: Troop = $World/EnemyTroop
 
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2
@@ -17,12 +17,12 @@ var _fallen_units: Array[RosterUnitData] = []
 
 
 func _ready() -> void:
-	_player_spawn = player_army.flag_bearer.global_position
-	_enemy_spawn = enemy_army.flag_bearer.global_position
+	_player_spawn = player_troop.flag_bearer.global_position
+	_enemy_spawn = enemy_troop.flag_bearer.global_position
 
-	var player_roster := ArmyData.get_squad_roster()
+	var player_roster := GameState.troop.get_squad_roster()
 	if player_roster.is_empty():
-		push_error("CombatStage requires a non-empty player squad in ArmyData.")
+		push_error("CombatStage requires a non-empty player squad in GameState.troop.")
 		return
 	if not BattleLaunch.has_enemy_roster():
 		push_error("CombatStage requires an enemy roster via BattleLaunch.")
@@ -38,35 +38,35 @@ func _run_battle(
 	_battle_over = false
 	_fallen_units.clear()
 	_clear_world_vfx()
-	_reset_army_from_roster(
-		player_army,
+	_reset_troop_from_roster(
+		player_troop,
 		_player_spawn,
 		player_roster,
 		Color(0.25, 0.75, 0.4, 1.0),
 		true
 	)
-	_reset_army_from_roster(
-		enemy_army,
+	_reset_troop_from_roster(
+		enemy_troop,
 		_enemy_spawn,
 		enemy_roster,
 		Color(0.85, 0.25, 0.3, 1.0),
 		false
 	)
 	_refresh_unit_process_order()
-	player_army.begin_march()
-	enemy_army.begin_march()
+	player_troop.begin_march()
+	enemy_troop.begin_march()
 
 
-func _reset_army_from_roster(
-	army: Army,
+func _reset_troop_from_roster(
+	troop: Troop,
 	spawn_global: Vector2,
 	roster: Array[RosterUnitData],
 	body_color: Color,
 	is_player: bool
 ) -> void:
-	var units_root: Node2D = army.get_node("Units")
+	var units_root: Node2D = troop.get_node("Units")
 	_clear_units(units_root)
-	army.reset_for_scenario(spawn_global)
+	troop.reset_for_scenario(spawn_global)
 
 	var index := 0
 	for data in roster:
@@ -76,7 +76,7 @@ func _reset_army_from_roster(
 		_spawn_unit(scene, units_root, data, body_color, index, is_player)
 		index += 1
 
-	army.refresh_squad_indices()
+	troop.refresh_squad_indices()
 
 
 func _clear_units(units_root: Node2D) -> void:
@@ -117,17 +117,17 @@ func _spawn_unit(
 func _on_unit_died(unit: Unit, is_player: bool) -> void:
 	if is_player and unit.roster_data != null:
 		_fallen_units.append(unit.roster_data)
-		ArmyData.remove_unit(unit.roster_data)
+		GameState.troop.remove_unit(unit.roster_data)
 	_check_battle_end()
 
 
 func _check_battle_end() -> void:
 	if _battle_over:
 		return
-	if not player_army.is_wiped_out() and not enemy_army.is_wiped_out():
+	if not player_troop.is_wiped_out() and not enemy_troop.is_wiped_out():
 		return
 	_battle_over = true
-	if player_army.is_wiped_out():
+	if player_troop.is_wiped_out():
 		SceneTransition.change_scene(_GAME_OVER_SCENE_PATH)
 	else:
 		DaySummaryFeed.clear()
@@ -138,8 +138,8 @@ func _check_battle_end() -> void:
 
 func _refresh_unit_process_order() -> void:
 	var units: Array[Unit] = []
-	units.append_array(player_army.get_living_units())
-	units.append_array(enemy_army.get_living_units())
+	units.append_array(player_troop.get_living_units())
+	units.append_array(enemy_troop.get_living_units())
 	units.sort_custom(func(a: Unit, b: Unit) -> bool:
 		if a.stats.spd != b.stats.spd:
 			return a.stats.spd > b.stats.spd

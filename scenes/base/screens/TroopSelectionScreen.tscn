@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://carmyselect001"]
+[gd_scene format=3 uid="uid://c2o6rfx3qe441"]
 
-[ext_resource type="Script" path="res://scripts/base/ArmySelectionScreen.gd" id="1_screen"]
+[ext_resource type="Script" path="res://scripts/base/TroopSelectionScreen.gd" id="1_screen"]
 [ext_resource type="Theme" path="res://themes/default.tres" id="2_theme"]
 
-[node name="ArmySelectionScreen" type="Control"]
+[node name="TroopSelectionScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,7 +34,7 @@ text = "Barracks — Deploy Squad"
 [node name="Subtitle" type="Label" parent="Margin/RootVBox"]
 layout_mode = 2
 theme_type_variation = &"PageSubtitleLabel"
-text = "Click or drag units between the bench and the army row."
+text = "Click or drag units between the bench and the troop row."
 
 [node name="BenchPanel" type="PanelContainer" parent="Margin/RootVBox"]
 unique_name_in_owner = true

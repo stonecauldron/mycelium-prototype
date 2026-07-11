@@ -59,7 +59,7 @@ func _angle_launch_velocity(from_global: Vector2, aim_global: Vector2) -> Vector
 	var displacement := aim_global - from_global
 	var direction_x := signf(displacement.x)
 	if direction_x == 0.0:
-		direction_x = 1.0 if owner_unit == null or not owner_unit._army.is_enemy else -1.0
+		direction_x = 1.0 if owner_unit == null or not owner_unit._troop.is_enemy else -1.0
 
 	var gravity_y := _gravity_vector().y
 	var dx := absf(displacement.x)
@@ -104,20 +104,20 @@ func _on_body_entered(_body: Node2D) -> void:
 func _is_valid_target(target: Node) -> bool:
 	if target == null or target == owner_unit:
 		return false
-	if owner_unit == null or owner_unit._army == null:
+	if owner_unit == null or owner_unit._troop == null:
 		return false
-	var owner_army: Army = owner_unit._army
-	var target_army := _get_army(target)
-	if target_army == null:
+	var owner_troop: Troop = owner_unit._troop
+	var target_troop := _get_troop(target)
+	if target_troop == null:
 		return false
-	return owner_army.is_enemy != target_army.is_enemy
+	return owner_troop.is_enemy != target_troop.is_enemy
 
 
-func _get_army(target: Node) -> Army:
+func _get_troop(target: Node) -> Troop:
 	if target is Unit:
-		return (target as Unit)._army
+		return (target as Unit)._troop
 	if target is FlagBearer:
-		return (target as FlagBearer).get_parent() as Army
+		return (target as FlagBearer).get_parent() as Troop
 	return null
 
 

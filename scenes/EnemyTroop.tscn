@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cenemyarmy001"]
+[gd_scene format=3 uid="uid://cenemyarmy001"]
 
-[ext_resource type="PackedScene" uid="uid://carmy001" path="res://scenes/Army.tscn" id="1_army"]
+[ext_resource type="PackedScene" uid="uid://carmy001" path="res://scenes/Troop.tscn" id="1_troop"]
 [ext_resource type="PackedScene" uid="uid://cmeleeunit001" path="res://scenes/units/MeleeUnit.tscn" id="2_melee"]
 
-[node name="EnemyArmy" unique_id=778825404 instance=ExtResource("1_army")]
+[node name="EnemyTroop" unique_id=778825404 instance=ExtResource("1_troop")]
 march_speed = 120.0
 is_enemy = true
 

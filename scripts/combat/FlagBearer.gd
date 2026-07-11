@@ -57,10 +57,10 @@ func _apply_flag_appearance() -> void:
 
 
 func _setup_collision() -> void:
-	var army := get_parent() as Army
-	if army == null:
+	var troop := get_parent() as Troop
+	if troop == null:
 		return
-	if army.is_enemy:
+	if troop.is_enemy:
 		collision_layer = COLLISION_ENEMY_UNITS
 		collision_mask = COLLISION_WORLD | COLLISION_PLAYER_UNITS
 	else:

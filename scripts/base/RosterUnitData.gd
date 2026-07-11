@@ -2,7 +2,7 @@ class_name RosterUnitData
 extends Resource
 
 @export var display_name: String = "Unit"
-@export var stats: UnitStats
+@export var stats: UnitStatsData
 @export var weapon: WeaponData
 
 
@@ -14,7 +14,7 @@ func get_range_class() -> WeaponData.WeaponRange:
 
 static func create(
 	unit_name: String,
-	unit_stats: UnitStats,
+	unit_stats: UnitStatsData,
 	unit_weapon: WeaponData
 ) -> RosterUnitData:
 	var data := RosterUnitData.new()

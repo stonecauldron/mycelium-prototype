@@ -1,4 +1,4 @@
-class_name UnitStats
+class_name UnitStatsData
 extends Resource
 
 enum PowerTier { WEAK, AVERAGE, STRONG }
@@ -19,17 +19,17 @@ const TIER_RANGES := {
 @export_range(1, 99, 1) var spd: int = NEUTRAL_STAT
 
 
-static func create_random(rng: RandomNumberGenerator = null) -> UnitStats:
+static func create_random(rng: RandomNumberGenerator = null) -> UnitStatsData:
 	return create_for_tier(PowerTier.AVERAGE, rng)
 
 
-static func create_for_tier(tier: PowerTier, rng: RandomNumberGenerator = null) -> UnitStats:
+static func create_for_tier(tier: PowerTier, rng: RandomNumberGenerator = null) -> UnitStatsData:
 	var generator := rng if rng != null else RandomNumberGenerator.new()
 	if rng == null:
 		generator.randomize()
 
 	var stat_range: Vector2i = TIER_RANGES.get(tier, TIER_RANGES[PowerTier.AVERAGE])
-	var stats := UnitStats.new()
+	var stats := UnitStatsData.new()
 	stats.strength = generator.randi_range(stat_range.x, stat_range.y)
 	stats.dex = generator.randi_range(stat_range.x, stat_range.y)
 	stats.con = generator.randi_range(stat_range.x, stat_range.y)

@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cdvma8eegsp43" path="res://scripts/combat/CombatStage.gd" id="1_combat"]
 [ext_resource type="Script" uid="uid://m3t2vpa73j5r" path="res://scripts/combat/BattleCamera.gd" id="2_camera"]
-[ext_resource type="PackedScene" uid="uid://cfpo0kyhrqm3y" path="res://scenes/PlayerArmy.tscn" id="3_player"]
-[ext_resource type="PackedScene" uid="uid://cenemyarmy001" path="res://scenes/EnemyArmy.tscn" id="4_enemy"]
+[ext_resource type="PackedScene" uid="uid://cfpo0kyhrqm3y" path="res://scenes/PlayerTroop.tscn" id="3_player"]
+[ext_resource type="PackedScene" uid="uid://cenemyarmy001" path="res://scenes/EnemyTroop.tscn" id="4_enemy"]
 [ext_resource type="PackedScene" uid="uid://int0luo0pcei" path="res://scenes/WorldBoundary.tscn" id="5_boundary"]
 
 [node name="CombatStage" type="Node2D" unique_id=1316519551]
@@ -37,10 +37,10 @@ color = Color(0.05, 0.05, 0.05, 1)
 
 [node name="WorldBoundary" parent="World" unique_id=377154070 instance=ExtResource("5_boundary")]
 
-[node name="PlayerArmy" parent="World" unique_id=53838798 instance=ExtResource("3_player")]
+[node name="PlayerTroop" parent="World" unique_id=53838798 instance=ExtResource("3_player")]
 position = Vector2(454, 637)
 
-[node name="EnemyArmy" parent="World" unique_id=1909671479 instance=ExtResource("4_enemy")]
+[node name="EnemyTroop" parent="World" unique_id=1909671479 instance=ExtResource("4_enemy")]
 position = Vector2(1844, 577)
 
 [node name="MainCamera" type="Camera2D" parent="World" unique_id=723439616]

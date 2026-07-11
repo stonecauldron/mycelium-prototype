@@ -11,5 +11,5 @@ func _ready() -> void:
 
 
 func _on_restart_pressed() -> void:
-	ArmyData.reset()
+	GameState.troop.reset()
 	SceneTransition.change_scene(_BASE_SCENE_PATH)

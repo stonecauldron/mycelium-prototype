@@ -1,14 +1,15 @@
-extends Node
+class_name TroopData
+extends Resource
 
 const SQUAD_SLOT_COUNT := 12
 
-var bench: Array[RosterUnitData] = []
-var squad: Array = []
+@export var bench: Array[RosterUnitData] = []
+@export var squad: Array = []
 
 var _seeded: bool = false
 
 
-func _ready() -> void:
+func _init() -> void:
 	_ensure_squad_size()
 
 

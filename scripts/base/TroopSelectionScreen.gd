@@ -1,4 +1,4 @@
-class_name ArmySelectionScreen
+class_name TroopSelectionScreen
 extends BaseScreen
 
 const SQUAD_SLOT_COUNT := 12
@@ -19,7 +19,7 @@ var _slots: Array[DropSlot] = []
 
 
 func _ready() -> void:
-	_hydrate_from_army_data()
+	_hydrate_from_troop_data()
 	_build_squad_ui()
 	_rebuild_bench_ui()
 	_sync_all_slots()
@@ -30,19 +30,19 @@ func _ready() -> void:
 
 
 func on_screen_shown() -> void:
-	ArmyData.sort_rosters()
+	GameState.troop.sort_rosters()
 	_rebuild_bench_ui()
 	_sync_all_slots()
 	_refresh_start_combat_button()
 
 
-func _hydrate_from_army_data() -> void:
-	if not ArmyData.is_seeded():
-		ArmyData.seed_if_empty(_make_default_bench())
+func _hydrate_from_troop_data() -> void:
+	if not GameState.troop.is_seeded():
+		GameState.troop.seed_if_empty(_make_default_bench())
 	else:
-		ArmyData.sort_rosters()
-	bench = ArmyData.bench
-	squad = ArmyData.squad
+		GameState.troop.sort_rosters()
+	bench = GameState.troop.bench
+	squad = GameState.troop.squad
 
 
 func _set_bench_structure_mouse_ignore() -> void:
@@ -60,7 +60,7 @@ func _build_squad_ui() -> void:
 
 	var title := Label.new()
 	title.theme_type_variation = &"SectionTitleLabel"
-	title.text = "Army (%d slots)" % SQUAD_SLOT_COUNT
+	title.text = "Troop (%d slots)" % SQUAD_SLOT_COUNT
 	_squad_rows.add_child(title)
 
 	var slots_row := HBoxContainer.new()
@@ -78,25 +78,25 @@ func _build_squad_ui() -> void:
 
 func _make_default_bench() -> Array[RosterUnitData]:
 	var units: Array[RosterUnitData] = []
-	units.append(_make_unit("Ash", UnitStats.PowerTier.AVERAGE, _MELEE_WEAPON))
-	units.append(_make_unit("Bramble", UnitStats.PowerTier.AVERAGE, _MELEE_WEAPON))
-	units.append(_make_unit("Cinder", UnitStats.PowerTier.STRONG, _MELEE_WEAPON))
-	units.append(_make_unit("Drift", UnitStats.PowerTier.WEAK, _MELEE_WEAPON))
-	units.append(_make_unit("Ember", UnitStats.PowerTier.AVERAGE, _MELEE_WEAPON))
-	units.append(_make_unit("Fern", UnitStats.PowerTier.AVERAGE, _SPEAR_WEAPON))
-	units.append(_make_unit("Gale", UnitStats.PowerTier.STRONG, _SPEAR_WEAPON))
-	units.append(_make_unit("Heather", UnitStats.PowerTier.AVERAGE, _SPEAR_WEAPON))
-	units.append(_make_unit("Ivy", UnitStats.PowerTier.WEAK, _SPEAR_WEAPON))
-	units.append(_make_unit("Juniper", UnitStats.PowerTier.AVERAGE, _SPEAR_WEAPON))
+	units.append(_make_unit("Ash", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
+	units.append(_make_unit("Bramble", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
+	units.append(_make_unit("Cinder", UnitStatsData.PowerTier.STRONG, _MELEE_WEAPON))
+	units.append(_make_unit("Drift", UnitStatsData.PowerTier.WEAK, _MELEE_WEAPON))
+	units.append(_make_unit("Ember", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
+	units.append(_make_unit("Fern", UnitStatsData.PowerTier.AVERAGE, _SPEAR_WEAPON))
+	units.append(_make_unit("Gale", UnitStatsData.PowerTier.STRONG, _SPEAR_WEAPON))
+	units.append(_make_unit("Heather", UnitStatsData.PowerTier.AVERAGE, _SPEAR_WEAPON))
+	units.append(_make_unit("Ivy", UnitStatsData.PowerTier.WEAK, _SPEAR_WEAPON))
+	units.append(_make_unit("Juniper", UnitStatsData.PowerTier.AVERAGE, _SPEAR_WEAPON))
 	return units
 
 
 func _make_unit(
 	unit_name: String,
-	tier: UnitStats.PowerTier,
+	tier: UnitStatsData.PowerTier,
 	weapon: WeaponData
 ) -> RosterUnitData:
-	return RosterUnitData.create(unit_name, UnitStats.create_for_tier(tier), weapon)
+	return RosterUnitData.create(unit_name, UnitStatsData.create_for_tier(tier), weapon)
 
 
 func _rebuild_bench_ui() -> void:
@@ -202,11 +202,11 @@ func _bench_drop(_at_position: Vector2, data: Variant) -> void:
 
 
 func _sort_squad() -> void:
-	ArmyData.sort_squad()
+	GameState.troop.sort_squad()
 
 
 func _sort_unit_list(units: Array) -> void:
-	units.sort_custom(ArmyData.compare_units)
+	units.sort_custom(GameState.troop.compare_units)
 
 
 func _sync_all_slots() -> void:
@@ -248,7 +248,7 @@ func _on_start_combat_pressed() -> void:
 func _make_default_enemy_roster() -> Array[RosterUnitData]:
 	var enemy: Array[RosterUnitData] = []
 	for i in 4:
-		enemy.append(_make_unit("Enemy Melee %d" % (i + 1), UnitStats.PowerTier.AVERAGE, _MELEE_WEAPON))
+		enemy.append(_make_unit("Enemy Melee %d" % (i + 1), UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
 	for i in 4:
-		enemy.append(_make_unit("Enemy Spear %d" % (i + 1), UnitStats.PowerTier.AVERAGE, _SPEAR_WEAPON))
+		enemy.append(_make_unit("Enemy Spear %d" % (i + 1), UnitStatsData.PowerTier.AVERAGE, _SPEAR_WEAPON))
 	return enemy

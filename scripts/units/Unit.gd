@@ -31,7 +31,7 @@ const COLLISION_WORLD := 1
 const COLLISION_PLAYER_UNITS := 2
 const COLLISION_ENEMY_UNITS := 16
 
-@export var stats: UnitStats
+@export var stats: UnitStatsData
 @export var weapon: WeaponData
 @export var roll_random_stats: bool = true
 @export var squad_index: int = 0
@@ -42,7 +42,7 @@ var process_tiebreak: int = 0
 var roster_data: RosterUnitData = null
 var _attack_timer: float = 0.0
 var _target: Node2D
-var _army: Army
+var _troop: Troop
 var _combat_phase: CombatPhase = CombatPhase.READY
 var _hurt_tween: Tween
 var _in_knockback: bool = false
@@ -59,7 +59,7 @@ var _throw_timer: float = 0.0
 
 func _ready() -> void:
 	if roll_random_stats and stats == null:
-		stats = UnitStats.create_random()
+		stats = UnitStatsData.create_random()
 	elif stats != null:
 		stats = stats.duplicate()
 
@@ -70,9 +70,9 @@ func _ready() -> void:
 	_initialize_runtime()
 
 
-func apply_power_tier(tier: UnitStats.PowerTier) -> void:
+func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:
 	_cancel_attack()
-	stats = UnitStats.create_for_tier(tier)
+	stats = UnitStatsData.create_for_tier(tier)
 	process_tiebreak = randi()
 	current_hp = stats.get_max_hp()
 	health_changed.emit(current_hp, stats.get_max_hp())
@@ -90,9 +90,9 @@ func _initialize_runtime() -> void:
 	process_tiebreak = randi()
 
 	add_to_group("units")
-	_army = get_parent().get_parent() as Army
-	if _army == null:
-		push_error("Unit must be a child of Army/Units.")
+	_troop = get_parent().get_parent() as Troop
+	if _troop == null:
+		push_error("Unit must be a child of Troop/Units.")
 		return
 
 	_hitbox.owner_unit = self
@@ -106,7 +106,7 @@ func _apply_body_color() -> void:
 
 
 func _setup_collision() -> void:
-	if _army.is_enemy:
+	if _troop.is_enemy:
 		collision_layer = COLLISION_ENEMY_UNITS
 		collision_mask = COLLISION_WORLD | COLLISION_PLAYER_UNITS
 	else:
@@ -115,7 +115,7 @@ func _setup_collision() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if stats == null or weapon == null or _army == null:
+	if stats == null or weapon == null or _troop == null:
 		return
 
 	velocity += get_gravity() * delta
@@ -149,14 +149,14 @@ func get_move_speed() -> float:
 
 func _seek_home_marching() -> void:
 	var home := _get_home_global()
-	var army_speed := _army.get_average_unit_speed()
+	var troop_speed := _troop.get_average_unit_speed()
 	var delta_pos := home.x - global_position.x
-	var march_direction := -1.0 if _army.is_enemy else 1.0
+	var march_direction := -1.0 if _troop.is_enemy else 1.0
 
 	if absf(delta_pos) <= HOME_ARRIVE_THRESHOLD:
-		velocity.x = army_speed * march_direction
+		velocity.x = troop_speed * march_direction
 	else:
-		velocity.x = signf(delta_pos) * army_speed * MARCH_CATCH_UP_MULTIPLIER
+		velocity.x = signf(delta_pos) * troop_speed * MARCH_CATCH_UP_MULTIPLIER
 
 
 func _process_combat(delta: float) -> void:
@@ -180,7 +180,7 @@ func _process_combat(delta: float) -> void:
 		_start_attack()
 		return
 
-	if _army.state == Army.State.HALTED or _should_chase():
+	if _troop.state == Troop.State.HALTED or _should_chase():
 		_chase_target()
 		return
 
@@ -190,9 +190,9 @@ func _process_combat(delta: float) -> void:
 func _should_chase() -> bool:
 	if weapon == null or weapon.range_class != WeaponData.WeaponRange.MELEE:
 		return false
-	if _army == null:
+	if _troop == null:
 		return false
-	var opponent := _army.get_opponent()
+	var opponent := _troop.get_opponent()
 	if opponent == null:
 		return false
 	return not opponent.has_living_range_class(WeaponData.WeaponRange.MELEE)
@@ -215,7 +215,7 @@ func _chase_target() -> void:
 
 
 func _hold_or_march() -> void:
-	if _army.state == Army.State.HALTED:
+	if _troop.state == Troop.State.HALTED:
 		_return_home()
 	else:
 		_combat_phase = CombatPhase.READY
@@ -289,7 +289,7 @@ func _spawn_spear_projectile() -> void:
 	if world == null:
 		return
 
-	var opponent := _army.get_opponent()
+	var opponent := _troop.get_opponent()
 	if opponent == null:
 		return
 
@@ -334,8 +334,8 @@ func _cancel_attack() -> void:
 
 
 func _get_home_global() -> Vector2:
-	var flag_pos := _army.flag_bearer.global_position
-	var facing := -1.0 if _army.is_enemy else 1.0
+	var flag_pos := _troop.flag_bearer.global_position
+	var facing := -1.0 if _troop.is_enemy else 1.0
 	return Vector2(flag_pos.x + facing * weapon.get_squad_offset(squad_index), flag_pos.y)
 
 
@@ -348,7 +348,7 @@ func _axis_velocity(current: float, target: float, speed: float) -> float:
 
 func _refresh_target() -> void:
 	_target = null
-	var opponent: Army = _army.get_opponent()
+	var opponent: Troop = _troop.get_opponent()
 	if opponent == null or opponent.is_wiped_out():
 		return
 
@@ -390,8 +390,8 @@ func take_damage(
 
 func _die() -> void:
 	died.emit(self)
-	if _army != null:
-		_army.call_deferred("refresh_squad_indices")
+	if _troop != null:
+		_troop.call_deferred("refresh_squad_indices")
 	queue_free()
 
 

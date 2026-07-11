@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-ArmyData="*res://scripts/base/ArmyData.gd"
+GameState="*res://scripts/GameState.gd"
 SceneTransition="*res://scripts/SceneTransition.gd"
 
 [display]

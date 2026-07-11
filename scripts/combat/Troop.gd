@@ -1,5 +1,5 @@
 extends Node2D
-class_name Army
+class_name Troop
 
 enum State { MARCHING, HALTED }
 
@@ -14,13 +14,13 @@ const HALT_DISTANCE_TOLERANCE := 24.0
 @export var is_enemy: bool = false
 
 var state: State = State.MARCHING
-var _opponent: Army
+var _opponent: Troop
 
 @onready var flag_bearer: FlagBearer = $FlagBearer
 
 
 func _ready() -> void:
-	add_to_group("armies")
+	add_to_group("troops")
 	call_deferred("_acquire_opponent")
 	call_deferred("_assign_squad_indices")
 
@@ -55,7 +55,7 @@ func get_living_units_midpoint() -> Vector2:
 	return sum / float(living.size())
 
 
-func get_opponent() -> Army:
+func get_opponent() -> Troop:
 	return _opponent
 
 
@@ -91,7 +91,7 @@ func has_living_range_class(range_class: WeaponData.WeaponRange) -> bool:
 	return false
 
 
-func apply_power_tier(tier: UnitStats.PowerTier) -> void:
+func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:
 	for unit in get_units():
 		unit.apply_power_tier(tier)
 	refresh_squad_indices()
@@ -119,19 +119,19 @@ func get_average_unit_speed() -> float:
 
 
 func _acquire_opponent() -> void:
-	var closest: Army = null
+	var closest: Troop = null
 	var closest_distance := INF
 
-	for node in get_tree().get_nodes_in_group("armies"):
+	for node in get_tree().get_nodes_in_group("troops"):
 		if node == self:
 			continue
-		var army := node as Army
-		if army == null or army.is_enemy == is_enemy:
+		var troop := node as Troop
+		if troop == null or troop.is_enemy == is_enemy:
 			continue
-		var distance := absf(army.get_flag_global_x() - get_flag_global_x())
+		var distance := absf(troop.get_flag_global_x() - get_flag_global_x())
 		if distance < closest_distance:
 			closest_distance = distance
-			closest = army
+			closest = troop
 
 	_opponent = closest
 

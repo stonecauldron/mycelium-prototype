@@ -30,12 +30,17 @@ func _ready() -> void:
 
 
 func on_screen_shown() -> void:
+	ArmyData.sort_rosters()
+	_rebuild_bench_ui()
+	_sync_all_slots()
 	_refresh_start_combat_button()
 
 
 func _hydrate_from_army_data() -> void:
 	if not ArmyData.is_seeded():
 		ArmyData.seed_if_empty(_make_default_bench())
+	else:
+		ArmyData.sort_rosters()
 	bench = ArmyData.bench
 	squad = ArmyData.squad
 
@@ -197,35 +202,11 @@ func _bench_drop(_at_position: Vector2, data: Variant) -> void:
 
 
 func _sort_squad() -> void:
-	var occupied: Array = []
-	for entry in squad:
-		if entry != null:
-			occupied.append(entry)
-
-	_sort_unit_list(occupied)
-
-	squad.clear()
-	squad.append_array(occupied)
-	while squad.size() < SQUAD_SLOT_COUNT:
-		squad.append(null)
+	ArmyData.sort_squad()
 
 
 func _sort_unit_list(units: Array) -> void:
-	units.sort_custom(_compare_units)
-
-
-func _compare_units(a: RosterUnitData, b: RosterUnitData) -> bool:
-	var range_a := int(a.get_range_class())
-	var range_b := int(b.get_range_class())
-	if range_a != range_b:
-		return range_a > range_b
-
-	var spd_a := a.stats.spd if a.stats != null else 0
-	var spd_b := b.stats.spd if b.stats != null else 0
-	if spd_a != spd_b:
-		return spd_a > spd_b
-
-	return a.display_name.naturalnocasecmp_to(b.display_name) < 0
+	units.sort_custom(ArmyData.compare_units)
 
 
 func _sync_all_slots() -> void:

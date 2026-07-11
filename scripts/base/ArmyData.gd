@@ -25,6 +25,7 @@ func seed_if_empty(bench_units: Array[RosterUnitData]) -> void:
 			bench.append(unit)
 	_ensure_squad_size()
 	_seeded = true
+	sort_rosters()
 
 
 func get_squad_roster() -> Array[RosterUnitData]:
@@ -47,6 +48,7 @@ func remove_unit(unit_data: RosterUnitData) -> void:
 		if squad[i] == unit_data:
 			squad[i] = null
 	bench.erase(unit_data)
+	sort_squad()
 
 
 func reset() -> void:
@@ -54,6 +56,48 @@ func reset() -> void:
 	squad.clear()
 	_seeded = false
 	_ensure_squad_size()
+
+
+func sort_rosters() -> void:
+	sort_squad()
+	sort_bench()
+
+
+func sort_squad() -> void:
+	var occupied: Array = []
+	for entry in squad:
+		var unit := entry as RosterUnitData
+		if unit != null:
+			occupied.append(unit)
+	occupied.sort_custom(compare_units)
+	squad.clear()
+	for unit in occupied:
+		squad.append(unit)
+	_ensure_squad_size()
+
+
+func sort_bench() -> void:
+	var ordered: Array[RosterUnitData] = []
+	for unit in bench:
+		if unit != null:
+			ordered.append(unit)
+	ordered.sort_custom(compare_units)
+	bench.clear()
+	bench.append_array(ordered)
+
+
+func compare_units(a: RosterUnitData, b: RosterUnitData) -> bool:
+	var range_a := int(a.get_range_class())
+	var range_b := int(b.get_range_class())
+	if range_a != range_b:
+		return range_a > range_b
+
+	var spd_a := a.stats.spd if a.stats != null else 0
+	var spd_b := b.stats.spd if b.stats != null else 0
+	if spd_a != spd_b:
+		return spd_a > spd_b
+
+	return a.display_name.naturalnocasecmp_to(b.display_name) < 0
 
 
 func _ensure_squad_size() -> void:

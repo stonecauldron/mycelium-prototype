@@ -1,7 +1,7 @@
 class_name Unit
 extends CharacterBody2D
 
-signal died
+signal died(unit: Unit)
 signal health_changed(current: int, maximum: int)
 
 enum CombatPhase { READY, APPROACHING, ATTACKING, RETURNING }
@@ -39,6 +39,7 @@ const COLLISION_ENEMY_UNITS := 16
 
 var current_hp: int
 var process_tiebreak: int = 0
+var roster_data: RosterUnitData = null
 var _attack_timer: float = 0.0
 var _target: Node2D
 var _army: Army
@@ -348,7 +349,7 @@ func _axis_velocity(current: float, target: float, speed: float) -> float:
 func _refresh_target() -> void:
 	_target = null
 	var opponent: Army = _army.get_opponent()
-	if opponent == null:
+	if opponent == null or opponent.is_wiped_out():
 		return
 
 	var closest_distance := INF
@@ -388,7 +389,7 @@ func take_damage(
 
 
 func _die() -> void:
-	died.emit()
+	died.emit(self)
 	if _army != null:
 		_army.call_deferred("refresh_squad_indices")
 	queue_free()

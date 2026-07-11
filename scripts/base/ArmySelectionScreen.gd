@@ -19,10 +19,10 @@ var _slots: Array[DropSlot] = []
 
 
 func _ready() -> void:
-	_init_squad_model()
+	_hydrate_from_army_data()
 	_build_squad_ui()
-	_populate_hardcoded_bench()
 	_rebuild_bench_ui()
+	_sync_all_slots()
 	_bench_panel.set_drag_forwarding(Callable(), _bench_can_drop, _bench_drop)
 	_set_bench_structure_mouse_ignore()
 	_start_combat_button.pressed.connect(_on_start_combat_pressed)
@@ -33,18 +33,19 @@ func on_screen_shown() -> void:
 	_refresh_start_combat_button()
 
 
+func _hydrate_from_army_data() -> void:
+	if not ArmyData.is_seeded():
+		ArmyData.seed_if_empty(_make_default_bench())
+	bench = ArmyData.bench
+	squad = ArmyData.squad
+
+
 func _set_bench_structure_mouse_ignore() -> void:
 	for path in ["BenchMargin", "BenchMargin/BenchVBox", "BenchMargin/BenchVBox/BenchTitle", "BenchMargin/BenchVBox/BenchGrid"]:
 		var node := _bench_panel.get_node_or_null(path) as Control
 		if node:
 			node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_bench_grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-
-func _init_squad_model() -> void:
-	squad.clear()
-	squad.resize(SQUAD_SLOT_COUNT)
-	squad.fill(null)
 
 
 func _build_squad_ui() -> void:
@@ -70,18 +71,19 @@ func _build_squad_ui() -> void:
 		_slots.append(slot)
 
 
-func _populate_hardcoded_bench() -> void:
-	bench.clear()
-	bench.append(_make_unit("Ash", UnitStats.PowerTier.AVERAGE, _MELEE_WEAPON))
-	bench.append(_make_unit("Bramble", UnitStats.PowerTier.AVERAGE, _MELEE_WEAPON))
-	bench.append(_make_unit("Cinder", UnitStats.PowerTier.STRONG, _MELEE_WEAPON))
-	bench.append(_make_unit("Drift", UnitStats.PowerTier.WEAK, _MELEE_WEAPON))
-	bench.append(_make_unit("Ember", UnitStats.PowerTier.AVERAGE, _MELEE_WEAPON))
-	bench.append(_make_unit("Fern", UnitStats.PowerTier.AVERAGE, _SPEAR_WEAPON))
-	bench.append(_make_unit("Gale", UnitStats.PowerTier.STRONG, _SPEAR_WEAPON))
-	bench.append(_make_unit("Heather", UnitStats.PowerTier.AVERAGE, _SPEAR_WEAPON))
-	bench.append(_make_unit("Ivy", UnitStats.PowerTier.WEAK, _SPEAR_WEAPON))
-	bench.append(_make_unit("Juniper", UnitStats.PowerTier.AVERAGE, _SPEAR_WEAPON))
+func _make_default_bench() -> Array[RosterUnitData]:
+	var units: Array[RosterUnitData] = []
+	units.append(_make_unit("Ash", UnitStats.PowerTier.AVERAGE, _MELEE_WEAPON))
+	units.append(_make_unit("Bramble", UnitStats.PowerTier.AVERAGE, _MELEE_WEAPON))
+	units.append(_make_unit("Cinder", UnitStats.PowerTier.STRONG, _MELEE_WEAPON))
+	units.append(_make_unit("Drift", UnitStats.PowerTier.WEAK, _MELEE_WEAPON))
+	units.append(_make_unit("Ember", UnitStats.PowerTier.AVERAGE, _MELEE_WEAPON))
+	units.append(_make_unit("Fern", UnitStats.PowerTier.AVERAGE, _SPEAR_WEAPON))
+	units.append(_make_unit("Gale", UnitStats.PowerTier.STRONG, _SPEAR_WEAPON))
+	units.append(_make_unit("Heather", UnitStats.PowerTier.AVERAGE, _SPEAR_WEAPON))
+	units.append(_make_unit("Ivy", UnitStats.PowerTier.WEAK, _SPEAR_WEAPON))
+	units.append(_make_unit("Juniper", UnitStats.PowerTier.AVERAGE, _SPEAR_WEAPON))
+	return units
 
 
 func _make_unit(
@@ -258,7 +260,7 @@ func _squad_unit_count() -> int:
 func _on_start_combat_pressed() -> void:
 	if _squad_unit_count() == 0:
 		return
-	BattleLaunch.set_rosters(squad, _make_default_enemy_roster())
+	BattleLaunch.set_enemy_roster(_make_default_enemy_roster())
 	get_tree().change_scene_to_file("res://scenes/CombatStage.tscn")
 
 

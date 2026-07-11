@@ -79,6 +79,11 @@ func get_living_unit_count() -> int:
 	return get_living_units().size()
 
 
+func is_wiped_out() -> bool:
+	## True when no combat units remain (flag bearer alone does not count).
+	return get_living_unit_count() == 0
+
+
 func has_living_range_class(range_class: WeaponData.WeaponRange) -> bool:
 	for unit in get_living_units():
 		if unit.weapon != null and unit.weapon.range_class == range_class:
@@ -156,6 +161,10 @@ func halt() -> void:
 func _physics_process(_delta: float) -> void:
 	_acquire_opponent()
 	if flag_bearer.is_in_knockback():
+		return
+	if is_wiped_out():
+		flag_bearer.stop()
+		halt()
 		return
 	if _opponent == null:
 		flag_bearer.stop()

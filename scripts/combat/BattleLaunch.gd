@@ -1,24 +1,16 @@
 class_name BattleLaunch
 extends RefCounted
 
-## Shared handoff from Base → CombatStage (no autoload needed).
-static var player_roster: Array[RosterUnitData] = []
+## Enemy roster handoff from Base → CombatStage. Player lineup comes from ArmyData.
 static var enemy_roster: Array[RosterUnitData] = []
 
 
-static func set_rosters(player_units: Array, enemy_units: Array) -> void:
-	player_roster = _copy_roster(player_units)
+static func set_enemy_roster(enemy_units: Array) -> void:
 	enemy_roster = _copy_roster(enemy_units)
 
 
-static func has_rosters() -> bool:
-	return not player_roster.is_empty() and not enemy_roster.is_empty()
-
-
-static func take_player_roster() -> Array[RosterUnitData]:
-	var copy := _copy_roster(player_roster)
-	player_roster.clear()
-	return copy
+static func has_enemy_roster() -> bool:
+	return not enemy_roster.is_empty()
 
 
 static func take_enemy_roster() -> Array[RosterUnitData]:

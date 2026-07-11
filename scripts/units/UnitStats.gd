@@ -13,7 +13,7 @@ const TIER_RANGES := {
 	PowerTier.STRONG: Vector2i(6, 8),
 }
 
-@export_range(1, 99, 1) var str: int = NEUTRAL_STAT
+@export_range(1, 99, 1) var strength: int = NEUTRAL_STAT
 @export_range(1, 99, 1) var dex: int = NEUTRAL_STAT
 @export_range(1, 99, 1) var con: int = NEUTRAL_STAT
 @export_range(1, 99, 1) var spd: int = NEUTRAL_STAT
@@ -30,7 +30,7 @@ static func create_for_tier(tier: PowerTier, rng: RandomNumberGenerator = null) 
 
 	var stat_range: Vector2i = TIER_RANGES.get(tier, TIER_RANGES[PowerTier.AVERAGE])
 	var stats := UnitStats.new()
-	stats.str = generator.randi_range(stat_range.x, stat_range.y)
+	stats.strength = generator.randi_range(stat_range.x, stat_range.y)
 	stats.dex = generator.randi_range(stat_range.x, stat_range.y)
 	stats.con = generator.randi_range(stat_range.x, stat_range.y)
 	stats.spd = generator.randi_range(stat_range.x, stat_range.y)
@@ -44,11 +44,11 @@ func get_max_hp() -> int:
 func get_attack_stat(weapon_range: WeaponData.WeaponRange) -> int:
 	match weapon_range:
 		WeaponData.WeaponRange.MELEE:
-			return str
+			return strength
 		WeaponData.WeaponRange.RANGED:
 			return dex
 		WeaponData.WeaponRange.MID:
-			return maxi(str, dex)
+			return maxi(strength, dex)
 		_:
 			return NEUTRAL_STAT
 
@@ -58,11 +58,11 @@ func get_speed_multiplier() -> float:
 
 
 func get_melee_damage_bonus() -> int:
-	return str - NEUTRAL_STAT
+	return strength - NEUTRAL_STAT
 
 
 func get_ranged_damage_bonus() -> int:
-	return (dex - NEUTRAL_STAT) / 2
+	return roundi((dex - NEUTRAL_STAT) / 2.0)
 
 
 func get_mid_damage_bonus() -> int:

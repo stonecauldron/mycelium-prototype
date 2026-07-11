@@ -1,6 +1,7 @@
-[gd_scene format=3 uid="uid://cgameover001"]
+[gd_scene load_steps=3 format=3 uid="uid://cgameover001"]
 
 [ext_resource type="Script" path="res://scripts/GameOver.gd" id="1_gameover"]
+[ext_resource type="Theme" path="res://themes/default.tres" id="2_theme"]
 
 [node name="GameOver" type="Control"]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 script = ExtResource("1_gameover")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -31,18 +33,17 @@ grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="Center"]
 layout_mode = 2
-theme_override_constants/separation = 28
+theme_type_variation = &"StackVBox"
 
 [node name="Title" type="Label" parent="Center/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 64
+theme_type_variation = &"TitleLabel"
 text = "Game Over"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="Center/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.7, 0.68, 1)
-theme_override_font_sizes/font_size = 22
+theme_type_variation = &"SubtitleLabel"
 text = "Your army has been wiped out."
 horizontal_alignment = 1
 
@@ -51,4 +52,5 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_type_variation = &"PrimaryButton"
 text = "Restart"

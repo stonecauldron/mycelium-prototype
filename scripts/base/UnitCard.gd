@@ -81,7 +81,7 @@ func _refresh() -> void:
 	_weapon_label.text = "%s (%s)" % [weapon_name, range_name]
 	if data.stats != null:
 		_stats_label.text = "STR %d  DEX %d\nCON %d  SPD %d" % [
-			data.stats.str,
+			data.stats.strength,
 			data.stats.dex,
 			data.stats.con,
 			data.stats.spd,

@@ -61,14 +61,14 @@ func _angle_launch_velocity(from_global: Vector2, aim_global: Vector2) -> Vector
 	if direction_x == 0.0:
 		direction_x = 1.0 if owner_unit == null or not owner_unit._army.is_enemy else -1.0
 
-	var gravity := _gravity_vector().y
+	var gravity_y := _gravity_vector().y
 	var dx := absf(displacement.x)
 	var dy := displacement.y
 	# At 45°: v² = g * dx² / (dy + dx). Godot Y+ is down.
 	var denominator := dy + dx
 	var speed := FALLBACK_SPEED
 	if denominator > 1.0:
-		speed = sqrt(gravity * dx * dx / denominator)
+		speed = sqrt(gravity_y * dx * dx / denominator)
 
 	var angle := -LAUNCH_ANGLE if direction_x > 0.0 else -PI + LAUNCH_ANGLE
 	return Vector2(cos(angle), sin(angle)) * speed

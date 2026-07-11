@@ -59,13 +59,13 @@ func _build_squad_ui() -> void:
 	_slots.clear()
 
 	var title := Label.new()
+	title.theme_type_variation = &"SectionTitleLabel"
 	title.text = "Army (%d slots)" % SQUAD_SLOT_COUNT
-	title.add_theme_font_size_override("font_size", 20)
 	_squad_rows.add_child(title)
 
 	var slots_row := HBoxContainer.new()
+	slots_row.theme_type_variation = &"SlotRow"
 	slots_row.custom_minimum_size = Vector2(0, 160)
-	slots_row.add_theme_constant_override("separation", 8)
 	_squad_rows.add_child(slots_row)
 
 	for i in SQUAD_SLOT_COUNT:

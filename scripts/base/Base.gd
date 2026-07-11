@@ -39,10 +39,11 @@ func _build_tab_bar() -> void:
 	for def in TAB_DEFS:
 		var tab_id: TabId = def["id"]
 		var column := VBoxContainer.new()
-		column.add_theme_constant_override("separation", 4)
+		column.theme_type_variation = &"TabColumn"
 		column.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 
 		var button := Button.new()
+		button.theme_type_variation = &"NavButton"
 		button.text = str(def["label"])
 		button.custom_minimum_size = Vector2(96, 56)
 		button.disabled = not bool(def["enabled"])

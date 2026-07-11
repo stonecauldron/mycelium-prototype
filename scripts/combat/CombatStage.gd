@@ -5,6 +5,7 @@ const _MELEE_UNIT_SCENE := preload("res://scenes/units/MeleeUnit.tscn")
 const _SPEAR_UNIT_SCENE := preload("res://scenes/units/SpearUnit.tscn")
 const _BASE_SCENE_PATH := "res://scenes/base/Base.tscn"
 const _GAME_OVER_SCENE_PATH := "res://scenes/GameOver.tscn"
+const _DAY_SUMMARY_SCENE_PATH := "res://scenes/DaySummary.tscn"
 
 @onready var player_army: Army = $World/PlayerArmy
 @onready var enemy_army: Army = $World/EnemyArmy
@@ -12,6 +13,7 @@ const _GAME_OVER_SCENE_PATH := "res://scenes/GameOver.tscn"
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2
 var _battle_over: bool = false
+var _fallen_units: Array[RosterUnitData] = []
 
 
 func _ready() -> void:
@@ -34,6 +36,7 @@ func _run_battle(
 	enemy_roster: Array[RosterUnitData]
 ) -> void:
 	_battle_over = false
+	_fallen_units.clear()
 	_clear_world_vfx()
 	_reset_army_from_roster(
 		player_army,
@@ -113,6 +116,7 @@ func _spawn_unit(
 
 func _on_unit_died(unit: Unit, is_player: bool) -> void:
 	if is_player and unit.roster_data != null:
+		_fallen_units.append(unit.roster_data)
 		ArmyData.remove_unit(unit.roster_data)
 	_check_battle_end()
 
@@ -126,7 +130,10 @@ func _check_battle_end() -> void:
 	if player_army.is_wiped_out():
 		SceneTransition.change_scene(_GAME_OVER_SCENE_PATH)
 	else:
-		SceneTransition.change_scene(_BASE_SCENE_PATH)
+		DaySummaryFeed.clear()
+		for unit in _fallen_units:
+			DaySummaryFeed.add_fallen_unit(unit)
+		SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
 
 
 func _refresh_unit_process_order() -> void:

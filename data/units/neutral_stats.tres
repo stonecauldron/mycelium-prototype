@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_stats")
-str = 5
+strength = 5
 dex = 5
 con = 5
 spd = 5

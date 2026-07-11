@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/DaySummary.gd" id="1_summary"]
+[ext_resource type="Theme" path="res://themes/default.tres" id="2_theme"]
+
+[node name="DaySummary" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_summary")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.32, 0.32, 0.32, 1)
+
+[node name="RootMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ScreenMargin"
+
+[node name="RootVBox" type="VBoxContainer" parent="RootMargin"]
+layout_mode = 2
+theme_type_variation = &"StackVBox"
+
+[node name="Header" type="VBoxContainer" parent="RootMargin/RootVBox"]
+layout_mode = 2
+theme_type_variation = &"TightVBox"
+
+[node name="Title" type="Label" parent="RootMargin/RootVBox/Header"]
+layout_mode = 2
+theme_type_variation = &"PageTitleLabel"
+text = "DAY SUMMARY"
+horizontal_alignment = 1
+
+[node name="EntriesHost" type="CenterContainer" parent="RootMargin/RootVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Entries" type="VBoxContainer" parent="RootMargin/RootVBox/EntriesHost"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionVBox"
+
+[node name="ContinueButton" type="Button" parent="RootMargin/RootVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"PrimaryButton"
+text = "✓"

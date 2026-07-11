@@ -242,7 +242,7 @@ func _on_start_combat_pressed() -> void:
 	if _squad_unit_count() == 0:
 		return
 	BattleLaunch.set_enemy_roster(_make_default_enemy_roster())
-	get_tree().change_scene_to_file("res://scenes/CombatStage.tscn")
+	SceneTransition.change_scene("res://scenes/CombatStage.tscn")
 
 
 func _make_default_enemy_roster() -> Array[RosterUnitData]:

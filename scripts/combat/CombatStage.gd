@@ -124,9 +124,9 @@ func _check_battle_end() -> void:
 		return
 	_battle_over = true
 	if player_army.is_wiped_out():
-		get_tree().call_deferred("change_scene_to_file", _GAME_OVER_SCENE_PATH)
+		SceneTransition.change_scene(_GAME_OVER_SCENE_PATH)
 	else:
-		get_tree().call_deferred("change_scene_to_file", _BASE_SCENE_PATH)
+		SceneTransition.change_scene(_BASE_SCENE_PATH)
 
 
 func _refresh_unit_process_order() -> void:

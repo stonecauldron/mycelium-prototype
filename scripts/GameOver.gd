@@ -12,4 +12,4 @@ func _ready() -> void:
 
 func _on_restart_pressed() -> void:
 	ArmyData.reset()
-	get_tree().change_scene_to_file(_BASE_SCENE_PATH)
+	SceneTransition.change_scene(_BASE_SCENE_PATH)

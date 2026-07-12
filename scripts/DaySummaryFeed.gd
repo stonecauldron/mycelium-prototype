@@ -29,6 +29,12 @@ static func add_nursery_matured(spore_name: String, plot_index: int) -> void:
 	add_entry("%s matured in plot %d" % [spore_name, plot_index + 1])
 
 
+static func add_biomass_earned(amount: int) -> void:
+	if amount <= 0:
+		return
+	add_entry("+%d biomass" % amount)
+
+
 static func take_entries() -> Array[Dictionary]:
 	var copy: Array[Dictionary] = []
 	copy.assign(entries)

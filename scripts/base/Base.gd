@@ -15,6 +15,7 @@ const SCREEN_SCENES := {
 @onready var _content_host: Control = %ContentHost
 @onready var _tab_bar: HBoxContainer = %TabBar
 @onready var _day_label: Label = %DayLabel
+@onready var _biomass_label: Label = %BiomassLabel
 
 var _current_tab: TabId = TabId.NURSERY
 var _current_screen: BaseScreen
@@ -23,14 +24,15 @@ var _tab_underlines: Dictionary = {}
 
 
 func _ready() -> void:
-	_refresh_day_label()
+	_refresh_hud()
 	_build_tab_bar()
 	_select_tab(TabId.NURSERY)
 
 
-func _refresh_day_label() -> void:
+func _refresh_hud() -> void:
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	_day_label.text = "Day %d / %d" % [day, GameState.WIN_DAYS]
+	_biomass_label.text = "Biomass: %d" % GameState.biomass.amount
 
 
 func _build_tab_bar() -> void:

@@ -54,11 +54,24 @@ layout_mode = 2
 theme_type_variation = &"SectionTitleLabel"
 text = "Spores in stock: 0"
 
-[node name="StockRow" type="HBoxContainer" parent="Margin/RootVBox/StockPanel/StockMargin/StockVBox"]
+[node name="StockRowHost" type="HBoxContainer" parent="Margin/RootVBox/StockPanel/StockMargin/StockVBox"]
+layout_mode = 2
+theme_type_variation = &"TightHBox"
+
+[node name="StockRow" type="HBoxContainer" parent="Margin/RootVBox/StockPanel/StockMargin/StockVBox/StockRowHost"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"TightHBox"
+
+[node name="BuySporeButton" type="Button" parent="Margin/RootVBox/StockPanel/StockMargin/StockVBox/StockRowHost"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 100)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
+text = "Buy Common Spore (10)"
 
 [node name="PlotsPanel" type="PanelContainer" parent="Margin/RootVBox"]
 custom_minimum_size = Vector2(0, 220)

@@ -15,6 +15,7 @@ var _player_spawn: Vector2
 var _enemy_spawn: Vector2
 var _battle_over: bool = false
 var _fallen_units: Array[RosterUnitData] = []
+var _biomass_earned_this_fight: int = 0
 
 
 func _ready() -> void:
@@ -38,6 +39,7 @@ func _run_battle(
 ) -> void:
 	_battle_over = false
 	_fallen_units.clear()
+	_biomass_earned_this_fight = 0
 	_clear_world_vfx()
 	_reset_troop_from_roster(
 		player_troop,
@@ -119,6 +121,9 @@ func _on_unit_died(unit: Unit, is_player: bool) -> void:
 	if is_player and unit.roster_data != null:
 		_fallen_units.append(unit.roster_data)
 		GameState.troop.remove_unit(unit.roster_data)
+	elif not is_player:
+		GameState.biomass.add(BiomassData.PER_KILL)
+		_biomass_earned_this_fight += BiomassData.PER_KILL
 	_check_battle_end()
 
 
@@ -137,6 +142,8 @@ func _check_battle_end() -> void:
 			SceneTransition.change_scene(_VICTORY_SCENE_PATH)
 			return
 		DaySummaryFeed.clear()
+		if _biomass_earned_this_fight > 0:
+			DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)
 		for unit in _fallen_units:
 			DaySummaryFeed.add_fallen_unit(unit)
 		var matured := GameState.nursery.advance_day()

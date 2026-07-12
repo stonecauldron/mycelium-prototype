@@ -8,11 +8,13 @@ const _SPORE_CARD_SCENE := preload("res://scenes/base/SporeCard.tscn")
 @onready var _stock_row: HBoxContainer = %StockRow
 @onready var _plot_row: HBoxContainer = %PlotRow
 @onready var _status_label: Label = %StatusLabel
+@onready var _buy_spore_button: Button = %BuySporeButton
 
 var _tiles: Array[PlotTile] = []
 
 
 func _ready() -> void:
+	_buy_spore_button.pressed.connect(_on_buy_spore_pressed)
 	_build_plot_tiles()
 	_hydrate_and_refresh()
 
@@ -42,10 +44,23 @@ func _refresh() -> void:
 	var nursery := GameState.nursery
 	var can_plant := not nursery.spore_stock.is_empty()
 	_stock_label.text = "Spores in stock: %d" % nursery.spore_stock.size()
+	_buy_spore_button.text = "Buy Common Spore (%d)" % BiomassData.COMMON_SPORE_COST
+	_buy_spore_button.disabled = not GameState.biomass.can_afford(BiomassData.COMMON_SPORE_COST)
 	_rebuild_stock_cards()
 	for i in _tiles.size():
 		var plot := nursery.plots[i] as NurseryPlotData if i < nursery.plots.size() else null
 		_tiles[i].setup(i, plot, can_plant)
+
+
+func _on_buy_spore_pressed() -> void:
+	if GameState.try_buy_common_spore():
+		_set_status("Bought Common Spore")
+		_refresh()
+		var base := get_tree().current_scene
+		if base != null and base.has_method("_refresh_hud"):
+			base._refresh_hud()
+	else:
+		_set_status("Not enough biomass")
 
 
 func _rebuild_stock_cards() -> void:

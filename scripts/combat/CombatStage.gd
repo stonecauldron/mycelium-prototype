@@ -133,6 +133,14 @@ func _check_battle_end() -> void:
 		DaySummaryFeed.clear()
 		for unit in _fallen_units:
 			DaySummaryFeed.add_fallen_unit(unit)
+		GameState.ensure_nursery_seeded()
+		GameState.current_day += 1
+		var matured := GameState.nursery.advance_day()
+		for entry in matured:
+			DaySummaryFeed.add_nursery_matured(
+				str(entry.get("spore_name", "Spore")),
+				int(entry.get("plot_index", 0))
+			)
 		SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
 
 

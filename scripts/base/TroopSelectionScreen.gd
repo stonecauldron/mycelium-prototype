@@ -248,7 +248,7 @@ func _on_start_combat_pressed() -> void:
 func _make_default_enemy_roster() -> Array[RosterUnitData]:
 	var enemy: Array[RosterUnitData] = []
 	for i in 4:
-		enemy.append(_make_unit("Enemy Melee %d" % (i + 1), UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
+		enemy.append(_make_unit("Enemy Melee %d" % (i + 1), UnitStatsData.PowerTier.WEAK, _MELEE_WEAPON))
 	for i in 4:
-		enemy.append(_make_unit("Enemy Spear %d" % (i + 1), UnitStatsData.PowerTier.AVERAGE, _SPEAR_WEAPON))
+		enemy.append(_make_unit("Enemy Spear %d" % (i + 1), UnitStatsData.PowerTier.WEAK, _SPEAR_WEAPON))
 	return enemy

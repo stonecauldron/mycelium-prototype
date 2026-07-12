@@ -1,25 +1,21 @@
 extends Control
 
-enum TabId { TAVERN, BARRACKS, STOCKPILE, WILDS, SHRINE, CAMP, RUINS }
+enum TabId { NURSERY, BARRACKS }
 
 const TAB_DEFS := [
-	{"id": TabId.TAVERN, "label": "Tavern", "enabled": false},
+	{"id": TabId.NURSERY, "label": "Nursery", "enabled": true},
 	{"id": TabId.BARRACKS, "label": "Barracks", "enabled": true},
-	{"id": TabId.STOCKPILE, "label": "Stockpile", "enabled": false},
-	{"id": TabId.WILDS, "label": "Wilds", "enabled": false},
-	{"id": TabId.SHRINE, "label": "Shrine", "enabled": false},
-	{"id": TabId.CAMP, "label": "Camp", "enabled": false},
-	{"id": TabId.RUINS, "label": "Ruins", "enabled": false},
 ]
 
 const SCREEN_SCENES := {
+	TabId.NURSERY: preload("res://scenes/base/screens/NurseryScreen.tscn"),
 	TabId.BARRACKS: preload("res://scenes/base/screens/TroopSelectionScreen.tscn"),
 }
 
 @onready var _content_host: Control = %ContentHost
 @onready var _tab_bar: HBoxContainer = %TabBar
 
-var _current_tab: TabId = TabId.BARRACKS
+var _current_tab: TabId = TabId.NURSERY
 var _current_screen: BaseScreen
 var _tab_buttons: Dictionary = {}
 var _tab_underlines: Dictionary = {}
@@ -27,7 +23,7 @@ var _tab_underlines: Dictionary = {}
 
 func _ready() -> void:
 	_build_tab_bar()
-	_select_tab(TabId.BARRACKS)
+	_select_tab(TabId.NURSERY)
 
 
 func _build_tab_bar() -> void:

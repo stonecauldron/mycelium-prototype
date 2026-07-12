@@ -25,6 +25,10 @@ static func add_fallen_unit(unit: RosterUnitData) -> void:
 	)
 
 
+static func add_nursery_matured(spore_name: String, plot_index: int) -> void:
+	add_entry("%s matured in plot %d" % [spore_name, plot_index + 1])
+
+
 static func take_entries() -> Array[Dictionary]:
 	var copy: Array[Dictionary] = []
 	copy.assign(entries)

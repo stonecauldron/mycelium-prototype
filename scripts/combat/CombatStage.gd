@@ -5,6 +5,7 @@ const _MELEE_UNIT_SCENE := preload("res://scenes/units/MeleeUnit.tscn")
 const _SPEAR_UNIT_SCENE := preload("res://scenes/units/SpearUnit.tscn")
 const _BASE_SCENE_PATH := "res://scenes/base/Base.tscn"
 const _GAME_OVER_SCENE_PATH := "res://scenes/GameOver.tscn"
+const _VICTORY_SCENE_PATH := "res://scenes/Victory.tscn"
 const _DAY_SUMMARY_SCENE_PATH := "res://scenes/DaySummary.tscn"
 
 @onready var player_troop: Troop = $World/PlayerTroop
@@ -130,11 +131,14 @@ func _check_battle_end() -> void:
 	if player_troop.is_wiped_out():
 		SceneTransition.change_scene(_GAME_OVER_SCENE_PATH)
 	else:
+		GameState.ensure_nursery_seeded()
+		GameState.current_day += 1
+		if GameState.has_won_run():
+			SceneTransition.change_scene(_VICTORY_SCENE_PATH)
+			return
 		DaySummaryFeed.clear()
 		for unit in _fallen_units:
 			DaySummaryFeed.add_fallen_unit(unit)
-		GameState.ensure_nursery_seeded()
-		GameState.current_day += 1
 		var matured := GameState.nursery.advance_day()
 		for entry in matured:
 			DaySummaryFeed.add_nursery_matured(

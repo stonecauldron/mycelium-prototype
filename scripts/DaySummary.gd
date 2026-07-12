@@ -10,9 +10,11 @@ const _RANGE_COLORS := {
 
 @onready var _entries: VBoxContainer = %Entries
 @onready var _continue_button: Button = %ContinueButton
+@onready var _title: Label = %Title
 
 
 func _ready() -> void:
+	_title.text = "DAY %d / %d" % [GameState.current_day, GameState.WIN_DAYS]
 	_populate_entries(DaySummaryFeed.take_entries())
 	_continue_button.pressed.connect(_on_continue_pressed)
 	_continue_button.grab_focus()

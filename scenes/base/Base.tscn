@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cbt14lxim11pi" path="res://scripts/base/Base.gd" id="1_base"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://themes/default.tres" id="2_theme"]
 
-[node name="Base" type="Control" unique_id=1515708820]
+[node name="Base" type="Control" unique_id=1002339220]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,7 +13,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_base")
 
-[node name="Background" type="ColorRect" parent="." unique_id=1558997566]
+[node name="Background" type="ColorRect" parent="." unique_id=321444716]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,7 +23,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.12, 0.13, 0.12, 1)
 
-[node name="RootMargin" type="MarginContainer" parent="." unique_id=1686965895]
+[node name="RootMargin" type="MarginContainer" parent="." unique_id=1315878080]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,29 +32,41 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"BaseRootMargin"
 
-[node name="RootVBox" type="VBoxContainer" parent="RootMargin" unique_id=744247873]
+[node name="RootVBox" type="VBoxContainer" parent="RootMargin" unique_id=1286804585]
 layout_mode = 2
 theme_type_variation = &"RootStack"
 
-[node name="ContentPanel" type="PanelContainer" parent="RootMargin/RootVBox" unique_id=2080398829]
+[node name="TopBar" type="HBoxContainer" parent="RootMargin/RootVBox" unique_id=1787083543]
+layout_mode = 2
+theme_type_variation = &"TightHBox"
+
+[node name="DayLabel" type="Label" parent="RootMargin/RootVBox/TopBar" unique_id=2012949745]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PageTitleLabel"
+text = "Day 1 / 10"
+horizontal_alignment = 1
+
+[node name="ContentPanel" type="PanelContainer" parent="RootMargin/RootVBox" unique_id=1831498741]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ContentHost" type="Control" parent="RootMargin/RootVBox/ContentPanel" unique_id=14747793]
+[node name="ContentHost" type="Control" parent="RootMargin/RootVBox/ContentPanel" unique_id=1919443768]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="BottomBar" type="PanelContainer" parent="RootMargin/RootVBox" unique_id=2107316384]
+[node name="BottomBar" type="PanelContainer" parent="RootMargin/RootVBox" unique_id=748289931]
 custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 
-[node name="BottomMargin" type="MarginContainer" parent="RootMargin/RootVBox/BottomBar" unique_id=2086863722]
+[node name="BottomMargin" type="MarginContainer" parent="RootMargin/RootVBox/BottomBar" unique_id=2024442891]
 layout_mode = 2
 theme_type_variation = &"BottomBarMargin"
 
-[node name="TabBar" type="HBoxContainer" parent="RootMargin/RootVBox/BottomBar/BottomMargin" unique_id=239548481]
+[node name="TabBar" type="HBoxContainer" parent="RootMargin/RootVBox/BottomBar/BottomMargin" unique_id=1682624305]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"TabBarRow"

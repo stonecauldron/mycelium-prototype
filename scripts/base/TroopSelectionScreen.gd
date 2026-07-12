@@ -246,9 +246,75 @@ func _on_start_combat_pressed() -> void:
 
 
 func _make_default_enemy_roster() -> Array[RosterUnitData]:
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var composition := _enemy_composition_for_day(day)
 	var enemy: Array[RosterUnitData] = []
-	for i in 4:
-		enemy.append(_make_unit("Enemy Melee %d" % (i + 1), UnitStatsData.PowerTier.WEAK, _MELEE_WEAPON))
-	for i in 4:
-		enemy.append(_make_unit("Enemy Spear %d" % (i + 1), UnitStatsData.PowerTier.WEAK, _SPEAR_WEAPON))
+	var melee_n: int = int(composition.get("melee", 0))
+	var spear_n: int = int(composition.get("spear", 0))
+	var tiers: Array = composition.get("tiers", [UnitStatsData.PowerTier.WEAK])
+	for i in melee_n:
+		var tier: UnitStatsData.PowerTier = tiers[i % tiers.size()]
+		enemy.append(_make_unit("Enemy Melee %d" % (i + 1), tier, _MELEE_WEAPON))
+	for i in spear_n:
+		var tier: UnitStatsData.PowerTier = tiers[(melee_n + i) % tiers.size()]
+		enemy.append(_make_unit("Enemy Spear %d" % (i + 1), tier, _SPEAR_WEAPON))
 	return enemy
+
+
+func _enemy_composition_for_day(day: int) -> Dictionary:
+	match day:
+		1, 2:
+			return {
+				"melee": 3,
+				"spear": 1,
+				"tiers": [UnitStatsData.PowerTier.WEAK],
+			}
+		3, 4:
+			return {
+				"melee": 4,
+				"spear": 2,
+				"tiers": [
+					UnitStatsData.PowerTier.WEAK,
+					UnitStatsData.PowerTier.WEAK,
+					UnitStatsData.PowerTier.AVERAGE,
+				],
+			}
+		5, 6:
+			return {
+				"melee": 4,
+				"spear": 4,
+				"tiers": [
+					UnitStatsData.PowerTier.WEAK,
+					UnitStatsData.PowerTier.AVERAGE,
+				],
+			}
+		7, 8:
+			return {
+				"melee": 5,
+				"spear": 4,
+				"tiers": [
+					UnitStatsData.PowerTier.AVERAGE,
+					UnitStatsData.PowerTier.AVERAGE,
+					UnitStatsData.PowerTier.STRONG,
+				],
+			}
+		9:
+			return {
+				"melee": 5,
+				"spear": 5,
+				"tiers": [
+					UnitStatsData.PowerTier.AVERAGE,
+					UnitStatsData.PowerTier.STRONG,
+				],
+			}
+		_:
+			# Day 10 finale
+			return {
+				"melee": 6,
+				"spear": 6,
+				"tiers": [
+					UnitStatsData.PowerTier.STRONG,
+					UnitStatsData.PowerTier.STRONG,
+					UnitStatsData.PowerTier.AVERAGE,
+				],
+			}

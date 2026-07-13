@@ -2,3 +2,9 @@
 .godot/
 /android/
 .vscode/
+
+# VSCode:
+.vs/
+
+# Mac OS:
+.DS_Store

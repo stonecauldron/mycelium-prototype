@@ -78,16 +78,9 @@ func _build_squad_ui() -> void:
 
 func _make_default_bench() -> Array[RosterUnitData]:
 	var units: Array[RosterUnitData] = []
-	units.append(_make_unit("Ash", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
-	units.append(_make_unit("Bramble", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
-	units.append(_make_unit("Cinder", UnitStatsData.PowerTier.STRONG, _MELEE_WEAPON))
-	units.append(_make_unit("Drift", UnitStatsData.PowerTier.WEAK, _MELEE_WEAPON))
-	units.append(_make_unit("Ember", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
-	units.append(_make_unit("Fern", UnitStatsData.PowerTier.AVERAGE, _SPEAR_WEAPON))
-	units.append(_make_unit("Gale", UnitStatsData.PowerTier.STRONG, _SPEAR_WEAPON))
-	units.append(_make_unit("Heather", UnitStatsData.PowerTier.AVERAGE, _SPEAR_WEAPON))
-	units.append(_make_unit("Ivy", UnitStatsData.PowerTier.WEAK, _SPEAR_WEAPON))
-	units.append(_make_unit("Juniper", UnitStatsData.PowerTier.AVERAGE, _SPEAR_WEAPON))
+	units.append(_make_unit("Fern", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
+	units.append(_make_unit("Gale", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
+	units.append(_make_unit("Heather", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
 	return units
 
 
@@ -265,14 +258,14 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 	match day:
 		1, 2:
 			return {
-				"melee": 3,
-				"spear": 1,
+				"melee": 2,
+				"spear": 0,
 				"tiers": [UnitStatsData.PowerTier.WEAK],
 			}
 		3, 4:
 			return {
-				"melee": 4,
-				"spear": 2,
+				"melee": 2,
+				"spear": 1,
 				"tiers": [
 					UnitStatsData.PowerTier.WEAK,
 					UnitStatsData.PowerTier.WEAK,
@@ -281,8 +274,8 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			}
 		5, 6:
 			return {
-				"melee": 4,
-				"spear": 4,
+				"melee": 3,
+				"spear": 2,
 				"tiers": [
 					UnitStatsData.PowerTier.WEAK,
 					UnitStatsData.PowerTier.AVERAGE,
@@ -290,8 +283,8 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			}
 		7, 8:
 			return {
-				"melee": 5,
-				"spear": 4,
+				"melee": 4,
+				"spear": 2,
 				"tiers": [
 					UnitStatsData.PowerTier.AVERAGE,
 					UnitStatsData.PowerTier.AVERAGE,
@@ -300,8 +293,8 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			}
 		9:
 			return {
-				"melee": 5,
-				"spear": 5,
+				"melee": 4,
+				"spear": 3,
 				"tiers": [
 					UnitStatsData.PowerTier.AVERAGE,
 					UnitStatsData.PowerTier.STRONG,
@@ -310,8 +303,8 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 		_:
 			# Day 10 finale
 			return {
-				"melee": 6,
-				"spear": 6,
+				"melee": 5,
+				"spear": 3,
 				"tiers": [
 					UnitStatsData.PowerTier.STRONG,
 					UnitStatsData.PowerTier.STRONG,

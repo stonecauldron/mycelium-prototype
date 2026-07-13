@@ -2,9 +2,9 @@ class_name NurseryData
 extends Resource
 
 const PLOT_COUNT := 4
-const STARTER_SPORE_COUNT := 4
+const STARTER_SPORE_COUNT := 0
 const _COMMON_SPORE_PATH := "res://data/spores/common_spore.tres"
-const _SPEAR_WEAPON_PATH := "res://data/weapons/basic_spear.tres"
+const _MELEE_WEAPON_PATH := "res://data/weapons/basic_melee.tres"
 
 const _HARVEST_NAMES: Array[String] = [
 	"Moss",
@@ -97,7 +97,7 @@ func harvest(plot_index: int) -> RosterUnitData:
 
 
 func _make_harvest_unit() -> RosterUnitData:
-	var weapon := load(_SPEAR_WEAPON_PATH) as WeaponData
+	var weapon := load(_MELEE_WEAPON_PATH) as WeaponData
 	var stats := UnitStatsData.create_for_tier(UnitStatsData.PowerTier.AVERAGE)
 	var unit_name: String = str(_HARVEST_NAMES[randi() % _HARVEST_NAMES.size()])
 	return RosterUnitData.create(unit_name, stats, weapon)

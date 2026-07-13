@@ -2,7 +2,7 @@ class_name NurseryScreen
 extends BaseScreen
 
 const _PLOT_TILE_SCENE := preload("res://assets/base/plot_tile/plot_tile.tscn")
-const _SPORE_CARD_SCENE := preload("res://assets/base/spore_card/spore_card.tscn")
+const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card.tscn")
 
 @onready var _stock_label: Label = %StockLabel
 @onready var _stock_row: HBoxContainer = %StockRow

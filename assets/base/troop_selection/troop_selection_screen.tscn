@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c2o6rfx3qe441"]
 
-[ext_resource type="Script" path="res://assets/base/troop_selection_screen/troop_selection_screen.gd" id="1_screen"]
-[ext_resource type="Theme" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://dnmbttf360iww" path="res://assets/base/troop_selection/troop_selection_screen.gd" id="1_screen"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 
 [node name="TroopSelectionScreen" type="Control"]
 layout_mode = 3

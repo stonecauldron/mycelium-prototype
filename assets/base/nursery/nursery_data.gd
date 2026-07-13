@@ -3,7 +3,7 @@ extends Resource
 
 const PLOT_COUNT := 4
 const STARTER_SPORE_COUNT := 0
-const _COMMON_SPORE_PATH := "res://assets/nursery/common_spore.tres"
+const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 const _MELEE_WEAPON_PATH := "res://assets/weapons/basic_melee.tres"
 
 const _HARVEST_NAMES: Array[String] = [

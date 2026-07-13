@@ -2,7 +2,7 @@ extends Node
 
 ## Session owner for persistent run state.
 const WIN_DAYS := 10
-const _COMMON_SPORE_PATH := "res://assets/nursery/common_spore.tres"
+const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 
 var troop: TroopData = TroopData.new()
 var nursery: NurseryData = NurseryData.new()

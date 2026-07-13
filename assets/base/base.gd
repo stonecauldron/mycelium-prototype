@@ -8,8 +8,8 @@ const TAB_DEFS := [
 ]
 
 const SCREEN_SCENES := {
-	TabId.NURSERY: preload("res://assets/base/nursery_screen/nursery_screen.tscn"),
-	TabId.BARRACKS: preload("res://assets/base/troop_selection_screen/troop_selection_screen.tscn"),
+	TabId.NURSERY: preload("res://assets/base/nursery/nursery_screen.tscn"),
+	TabId.BARRACKS: preload("res://assets/base/troop_selection/troop_selection_screen.tscn"),
 }
 
 @onready var _content_host: Control = %ContentHost

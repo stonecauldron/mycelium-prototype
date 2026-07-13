@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://c4swjtkoverfp"]
+
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="1_xtih6"]
+[ext_resource type="Script" uid="uid://c6clun5d6trkk" path="res://assets/base/nursery/nursery_screen.gd" id="2_tn1j7"]
+
+[node name="NurseryScreen" type="Control" unique_id=1034340816]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_xtih6")
+script = ExtResource("2_tn1j7")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=2114723904]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ScreenMargin"
+
+[node name="RootVBox" type="VBoxContainer" parent="Margin" unique_id=440383992]
+layout_mode = 2
+theme_type_variation = &"SectionVBox"
+
+[node name="Header" type="Label" parent="Margin/RootVBox" unique_id=1239032999]
+layout_mode = 2
+theme_type_variation = &"PageTitleLabel"
+text = "Nursery — Grow Units"
+
+[node name="Subtitle" type="Label" parent="Margin/RootVBox" unique_id=1028293788]
+layout_mode = 2
+theme_type_variation = &"PageSubtitleLabel"
+text = "Click an empty plot or drag a spore onto it. Click a ready plot to harvest to the bench."
+
+[node name="StockPanel" type="PanelContainer" parent="Margin/RootVBox" unique_id=1160569841]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+
+[node name="StockMargin" type="MarginContainer" parent="Margin/RootVBox/StockPanel" unique_id=21276682]
+layout_mode = 2
+theme_type_variation = &"PanelInnerMargin"
+
+[node name="StockVBox" type="VBoxContainer" parent="Margin/RootVBox/StockPanel/StockMargin" unique_id=1599262549]
+layout_mode = 2
+theme_type_variation = &"TightVBox"
+
+[node name="StockLabel" type="Label" parent="Margin/RootVBox/StockPanel/StockMargin/StockVBox" unique_id=338734436]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionTitleLabel"
+text = "Spores in stock: 0"
+
+[node name="StockRowHost" type="HBoxContainer" parent="Margin/RootVBox/StockPanel/StockMargin/StockVBox" unique_id=933444113]
+layout_mode = 2
+theme_type_variation = &"TightHBox"
+
+[node name="StockRow" type="HBoxContainer" parent="Margin/RootVBox/StockPanel/StockMargin/StockVBox/StockRowHost" unique_id=1395170370]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TightHBox"
+
+[node name="BuySporeButton" type="Button" parent="Margin/RootVBox/StockPanel/StockMargin/StockVBox/StockRowHost" unique_id=1691066648]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 100)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
+text = "Buy Common Spore (10)"
+
+[node name="PlotsPanel" type="PanelContainer" parent="Margin/RootVBox" unique_id=424670285]
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+
+[node name="PlotsMargin" type="MarginContainer" parent="Margin/RootVBox/PlotsPanel" unique_id=220378791]
+layout_mode = 2
+theme_type_variation = &"PanelInnerMargin"
+
+[node name="PlotsVBox" type="VBoxContainer" parent="Margin/RootVBox/PlotsPanel/PlotsMargin" unique_id=609552590]
+layout_mode = 2
+theme_type_variation = &"TightVBox"
+
+[node name="PlotsTitle" type="Label" parent="Margin/RootVBox/PlotsPanel/PlotsMargin/PlotsVBox" unique_id=120648173]
+layout_mode = 2
+theme_type_variation = &"SectionTitleLabel"
+text = "Plots"
+
+[node name="PlotRow" type="HBoxContainer" parent="Margin/RootVBox/PlotsPanel/PlotsMargin/PlotsVBox" unique_id=631351848]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+theme_type_variation = &"TightHBox"
+
+[node name="Spacer" type="Control" parent="Margin/RootVBox" unique_id=2036273649]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatusLabel" type="Label" parent="Margin/RootVBox" unique_id=1949814540]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PageSubtitleLabel"

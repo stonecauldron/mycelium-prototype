@@ -15,19 +15,20 @@ const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_num
 @export var flag_color: Color = Color(0.25, 0.75, 0.4)
 @export var flag_faces_left: bool = false
 
-@onready var _flag_banner: Polygon2D = $Visual/Flag
-@onready var _pole: Polygon2D = $Visual/Pole
+@onready var _visual: Node2D = $Visual
+@onready var _shroom: Sprite2D = $Visual/Shroom
+@onready var _flag_banner: Sprite2D = $Visual/Shroom/Flag
 
 var _march_speed_x: float = 0.0
 var _in_knockback: bool = false
 var _knockback_left_ground: bool = false
 var _hurt_tween: Tween
-var _pole_color: Color = Color(0.15, 0.12, 0.1, 1.0)
+var _shroom_modulate: Color = Color.WHITE
 
 
 func _ready() -> void:
-	if _pole:
-		_pole_color = _pole.color
+	if _shroom:
+		_shroom_modulate = _shroom.modulate
 	_apply_flag_appearance()
 	_setup_collision()
 
@@ -50,10 +51,12 @@ func _physics_process(delta: float) -> void:
 
 
 func _apply_flag_appearance() -> void:
-	if _flag_banner == null:
-		return
-	_flag_banner.color = flag_color
-	_flag_banner.scale.x = -1.0 if flag_faces_left else 1.0
+	if _visual:
+		_visual.scale.x = -1.0 if flag_faces_left else 1.0
+	if _flag_banner:
+		_flag_banner.modulate = flag_color
+	if _shroom:
+		_shroom.modulate = _shroom_modulate
 
 
 func _setup_collision() -> void:
@@ -91,8 +94,6 @@ func reset_combat_state() -> void:
 		_hurt_tween.kill()
 		_hurt_tween = null
 	_apply_flag_appearance()
-	if _pole:
-		_pole.color = _pole_color
 
 
 func take_damage(
@@ -124,15 +125,15 @@ func _play_hurt_highlight() -> void:
 	if _hurt_tween:
 		_hurt_tween.kill()
 	if _flag_banner:
-		_flag_banner.color = HURT_FLASH_COLOR
-	if _pole:
-		_pole.color = HURT_FLASH_COLOR
+		_flag_banner.modulate = HURT_FLASH_COLOR
+	if _shroom:
+		_shroom.modulate = HURT_FLASH_COLOR
 	_hurt_tween = create_tween()
 	_hurt_tween.set_parallel(true)
 	if _flag_banner:
-		_hurt_tween.tween_property(_flag_banner, "color", flag_color, HURT_FLASH_TIME)
-	if _pole:
-		_hurt_tween.tween_property(_pole, "color", _pole_color, HURT_FLASH_TIME)
+		_hurt_tween.tween_property(_flag_banner, "modulate", flag_color, HURT_FLASH_TIME)
+	if _shroom:
+		_hurt_tween.tween_property(_shroom, "modulate", _shroom_modulate, HURT_FLASH_TIME)
 
 
 func _spawn_damage_number(amount: int) -> void:

@@ -5,14 +5,6 @@
 
 [node name="PlayerTroop" unique_id=489447478 instance=ExtResource("1_troop")]
 
-[node name="Pole" type="Polygon2D" parent="FlagBearer" index="0" unique_id=1984866043]
-color = Color(0.15, 0.12, 0.1, 1)
-polygon = PackedVector2Array(-2, 0, 2, 0, 2, -64, -2, -64)
-
-[node name="Flag" type="Polygon2D" parent="FlagBearer" index="1" unique_id=259918276]
-color = Color(0.25, 0.75, 0.4, 1)
-polygon = PackedVector2Array(2, -64, 34, -54, 2, -44)
-
 [node name="MeleeUnit" parent="Units" instance=ExtResource("2_melee")]
 body_color = Color(0.25, 0.75, 0.4, 1)
 squad_index = 0

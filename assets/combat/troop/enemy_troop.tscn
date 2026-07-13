@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://cenemyarmy001"]
+
+[ext_resource type="PackedScene" uid="uid://carmy001" path="res://assets/combat/troop/troop.tscn" id="1_troop"]
+[ext_resource type="PackedScene" uid="uid://cmeleeunit001" path="res://assets/units/melee_unit/melee_unit.tscn" id="2_melee"]
+
+[node name="EnemyTroop" unique_id=778825404 instance=ExtResource("1_troop")]
+march_speed = 120.0
+is_enemy = true
+
+[node name="FlagBearer" parent="." index="0"]
+flag_color = Color(0.85, 0.25, 0.3, 1)
+flag_faces_left = true
+
+[node name="MeleeUnit" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.85, 0.25, 0.3, 1)
+squad_index = 0
+
+[node name="MeleeUnit2" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.85, 0.25, 0.3, 1)
+
+[node name="MeleeUnit3" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.85, 0.25, 0.3, 1)
+
+[node name="MeleeUnit4" parent="Units" instance=ExtResource("2_melee")]
+body_color = Color(0.85, 0.25, 0.3, 1)

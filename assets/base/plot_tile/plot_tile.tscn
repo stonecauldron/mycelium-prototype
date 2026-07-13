@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://assets/base/plot_tile/plot_tile.gd" id="1_tile"]
+[ext_resource type="Theme" path="res://assets/themes/default.tres" id="2_theme"]
+
+[node name="PlotTile" type="PanelContainer"]
+custom_minimum_size = Vector2(160, 180)
+theme = ExtResource("2_theme")
+script = ExtResource("1_tile")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"SlotMargin"
+
+[node name="Stack" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"TightVBox"
+
+[node name="VisualHost" type="CenterContainer" parent="Margin/Stack"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="PlaceholderVisual" type="ColorRect" parent="Margin/Stack/VisualHost"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 48)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.22, 0.24, 0.2, 1)
+
+[node name="StateLabel" type="Label" parent="Margin/Stack"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"PlaceholderLabel"
+text = "Empty"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HintLabel" type="Label" parent="Margin/Stack"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CardMetaLabel"
+text = "Plant"
+horizontal_alignment = 1

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://bw1v2csvvxpw7"]
+
+[ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+
+[resource]
+script = ExtResource("1_weapon")
+display_name = "Basic Melee"
+attack_range = 96.0

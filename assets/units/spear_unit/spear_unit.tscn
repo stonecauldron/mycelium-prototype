@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://cspearunit001"]
+
+[ext_resource type="Script" uid="uid://drm1bg6fdninn" path="res://assets/units/unit.gd" id="1_unit"]
+[ext_resource type="Resource" uid="uid://bspearweapon001" path="res://assets/weapons/basic_spear.tres" id="2_weapon"]
+[ext_resource type="Script" uid="uid://dk024gkwu740b" path="res://assets/components/hurtbox_component.gd" id="3_hurtbox"]
+[ext_resource type="Script" uid="uid://cns4xbglj3l7t" path="res://assets/components/hitbox_component.gd" id="4_hitbox"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_unit"]
+size = Vector2(40, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(36, 60)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(40, 20)
+
+[node name="SpearUnit" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_unit")
+weapon = ExtResource("2_weapon")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_unit")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("3_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+color = Color(0.4, 0.7, 0.5, 1)
+polygon = PackedVector2Array(-18, 0, 18, 0, 14, -52, 0, -64, -14, -52)
+
+[node name="Hitbox" type="Area2D" parent="Visual"]
+position = Vector2(0, -32)
+collision_layer = 8
+collision_mask = 4
+monitoring = false
+script = ExtResource("4_hitbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/Hitbox"]
+shape = SubResource("RectangleShape2D_hitbox")

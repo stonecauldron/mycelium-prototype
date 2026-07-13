@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://c2o6rfx3qe441"]
+
+[ext_resource type="Script" path="res://assets/base/troop_selection_screen/troop_selection_screen.gd" id="1_screen"]
+[ext_resource type="Theme" path="res://assets/themes/default.tres" id="2_theme"]
+
+[node name="TroopSelectionScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_screen")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ScreenMargin"
+
+[node name="RootVBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_type_variation = &"SectionVBox"
+
+[node name="Header" type="Label" parent="Margin/RootVBox"]
+layout_mode = 2
+theme_type_variation = &"PageTitleLabel"
+text = "Barracks — Deploy Squad"
+
+[node name="Subtitle" type="Label" parent="Margin/RootVBox"]
+layout_mode = 2
+theme_type_variation = &"PageSubtitleLabel"
+text = "Click or drag units between the bench and the troop row."
+
+[node name="BenchPanel" type="PanelContainer" parent="Margin/RootVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+
+[node name="BenchMargin" type="MarginContainer" parent="Margin/RootVBox/BenchPanel"]
+layout_mode = 2
+theme_type_variation = &"PanelInnerMargin"
+
+[node name="BenchVBox" type="VBoxContainer" parent="Margin/RootVBox/BenchPanel/BenchMargin"]
+layout_mode = 2
+theme_type_variation = &"TightVBox"
+
+[node name="BenchTitle" type="Label" parent="Margin/RootVBox/BenchPanel/BenchMargin/BenchVBox"]
+layout_mode = 2
+theme_type_variation = &"SectionTitleLabel"
+text = "Bench"
+
+[node name="BenchGrid" type="HBoxContainer" parent="Margin/RootVBox/BenchPanel/BenchMargin/BenchVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+theme_type_variation = &"TightHBox"
+
+[node name="SquadPanel" type="PanelContainer" parent="Margin/RootVBox"]
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+
+[node name="SquadMargin" type="MarginContainer" parent="Margin/RootVBox/SquadPanel"]
+layout_mode = 2
+theme_type_variation = &"PanelInnerMargin"
+
+[node name="SquadRows" type="VBoxContainer" parent="Margin/RootVBox/SquadPanel/SquadMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TightVBox"
+
+[node name="Spacer" type="Control" parent="Margin/RootVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StartCombatButton" type="Button" parent="Margin/RootVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+disabled = true
+text = "Start Combat"

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://carmy001"]
+
+[ext_resource type="Script" uid="uid://bpvfadydykxjd" path="res://assets/combat/troop/troop.gd" id="1_troop"]
+[ext_resource type="PackedScene" uid="uid://d0wrodp775aea" path="res://assets/combat/flag_bearer/flag_bearer.tscn" id="2_flag"]
+
+[node name="Troop" type="Node2D" unique_id=554406342]
+script = ExtResource("1_troop")
+
+[node name="FlagBearer" parent="." unique_id=1112774188 instance=ExtResource("2_flag")]
+
+[node name="Units" type="Node2D" parent="."]

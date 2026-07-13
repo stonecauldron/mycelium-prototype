@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://cbase001"]
+
+[ext_resource type="Script" uid="uid://cbt14lxim11pi" path="res://assets/base/base.gd" id="1_base"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+
+[node name="Base" type="Control" unique_id=1100450681]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_base")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1131029869]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.12, 0.13, 0.12, 1)
+
+[node name="RootMargin" type="MarginContainer" parent="." unique_id=1138225624]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"BaseRootMargin"
+
+[node name="RootVBox" type="VBoxContainer" parent="RootMargin" unique_id=246075591]
+layout_mode = 2
+theme_type_variation = &"RootStack"
+
+[node name="TopBar" type="HBoxContainer" parent="RootMargin/RootVBox" unique_id=300762639]
+layout_mode = 2
+theme_type_variation = &"TightHBox"
+
+[node name="BiomassLabel" type="Label" parent="RootMargin/RootVBox/TopBar" unique_id=137223051]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PageTitleLabel"
+text = "Biomass: 0"
+horizontal_alignment = 1
+
+[node name="DayLabel" type="Label" parent="RootMargin/RootVBox/TopBar" unique_id=651698557]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PageTitleLabel"
+text = "Day 1 / 10"
+horizontal_alignment = 1
+
+[node name="ContentPanel" type="PanelContainer" parent="RootMargin/RootVBox" unique_id=1192633384]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ContentHost" type="Control" parent="RootMargin/RootVBox/ContentPanel" unique_id=863862479]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BottomBar" type="PanelContainer" parent="RootMargin/RootVBox" unique_id=959213355]
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+
+[node name="BottomMargin" type="MarginContainer" parent="RootMargin/RootVBox/BottomBar" unique_id=1650097889]
+layout_mode = 2
+theme_type_variation = &"BottomBarMargin"
+
+[node name="TabBar" type="HBoxContainer" parent="RootMargin/RootVBox/BottomBar/BottomMargin" unique_id=1026750562]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TabBarRow"
+alignment = 1

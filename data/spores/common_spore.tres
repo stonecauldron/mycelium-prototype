@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="SporeData" load_steps=2 format=3]
-
-[ext_resource type="Script" path="res://scripts/nursery/SporeData.gd" id="1_spore"]
-
-[resource]
-script = ExtResource("1_spore")
-display_name = "Common Spore"
-days_to_mature = 2

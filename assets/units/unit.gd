@@ -53,7 +53,7 @@ var _throw_left_ground: bool = false
 var _throw_timer: float = 0.0
 
 @onready var _visual: Node2D = $Visual
-@onready var _body: Polygon2D = $Visual/Body
+@onready var _sprite: Sprite2D = $Visual/Sprite
 @onready var _hitbox: HitboxComponent = $Visual/Hitbox
 
 
@@ -101,8 +101,8 @@ func _initialize_runtime() -> void:
 
 
 func _apply_body_color() -> void:
-	if _body:
-		_body.color = body_color
+	if _sprite:
+		_sprite.modulate = body_color
 
 
 func _setup_collision() -> void:
@@ -157,6 +157,7 @@ func _seek_home_marching() -> void:
 		velocity.x = troop_speed * march_direction
 	else:
 		velocity.x = signf(delta_pos) * troop_speed * MARCH_CATCH_UP_MULTIPLIER
+	_face_travel_direction()
 
 
 func _process_combat(delta: float) -> void:
@@ -226,7 +227,10 @@ func _return_home() -> void:
 	_combat_phase = CombatPhase.RETURNING
 	var home := _get_home_global()
 	velocity.x = _axis_velocity(global_position.x, home.x, get_move_speed())
-	_face_toward(home)
+	if is_zero_approx(velocity.x):
+		_face_toward(home)
+	else:
+		_face_travel_direction()
 
 
 func _start_attack() -> void:
@@ -408,13 +412,13 @@ func _apply_knockback(from_global: Vector2, knockback_force: float) -> void:
 
 
 func _play_hurt_highlight() -> void:
-	if _body == null:
+	if _sprite == null:
 		return
 	if _hurt_tween:
 		_hurt_tween.kill()
-	_body.color = HURT_FLASH_COLOR
+	_sprite.modulate = HURT_FLASH_COLOR
 	_hurt_tween = create_tween()
-	_hurt_tween.tween_property(_body, "color", body_color, HURT_FLASH_TIME)
+	_hurt_tween.tween_property(_sprite, "modulate", body_color, HURT_FLASH_TIME)
 
 
 func _get_world_node() -> Node:
@@ -442,3 +446,9 @@ func _face_toward(point: Vector2) -> void:
 	if _visual == null:
 		return
 	_visual.scale.x = -1.0 if point.x < global_position.x else 1.0
+
+
+func _face_travel_direction() -> void:
+	if _visual == null or is_zero_approx(velocity.x):
+		return
+	_visual.scale.x = signf(velocity.x)

@@ -3,6 +3,8 @@ extends Node2D
 const FLOOR_SURFACE_Y := 880.0
 const _MELEE_UNIT_SCENE := preload("res://assets/units/melee_unit/melee_unit.tscn")
 const _SPEAR_UNIT_SCENE := preload("res://assets/units/spear_unit/spear_unit.tscn")
+const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee.tres")
+const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear.tres")
 const _BASE_SCENE_PATH := "res://assets/base/base.tscn"
 const _GAME_OVER_SCENE_PATH := "res://assets/game_over/game_over.tscn"
 const _VICTORY_SCENE_PATH := "res://assets/victory/victory.tscn"
@@ -24,13 +26,46 @@ func _ready() -> void:
 
 	var player_roster := GameState.troop.get_squad_roster()
 	if player_roster.is_empty():
-		push_error("CombatStage requires a non-empty player squad in GameState.troop.")
-		return
-	if not BattleLaunch.has_enemy_roster():
+		if not OS.has_feature("editor"):
+			push_error("CombatStage requires a non-empty player squad in GameState.troop.")
+			return
+		player_roster = _make_fallback_roster("Capling", 3, 0)
+
+	var enemy_roster: Array[RosterUnitData]
+	if BattleLaunch.has_enemy_roster():
+		enemy_roster = BattleLaunch.take_enemy_roster()
+	elif OS.has_feature("editor"):
+		enemy_roster = _make_fallback_roster("Enemy", 2, 1)
+	else:
 		push_error("CombatStage requires an enemy roster via BattleLaunch.")
 		return
 
-	_run_battle(player_roster, BattleLaunch.take_enemy_roster())
+	_run_battle(player_roster, enemy_roster)
+
+
+func _make_fallback_roster(
+	name_prefix: String,
+	melee_count: int,
+	spear_count: int
+) -> Array[RosterUnitData]:
+	var roster: Array[RosterUnitData] = []
+	for i in melee_count:
+		roster.append(
+			RosterUnitData.create(
+				"%s Melee %d" % [name_prefix, i + 1],
+				UnitStatsData.create_for_tier(UnitStatsData.PowerTier.AVERAGE),
+				_MELEE_WEAPON
+			)
+		)
+	for i in spear_count:
+		roster.append(
+			RosterUnitData.create(
+				"%s Spear %d" % [name_prefix, i + 1],
+				UnitStatsData.create_for_tier(UnitStatsData.PowerTier.AVERAGE),
+				_SPEAR_WEAPON
+			)
+		)
+	return roster
 
 
 func _run_battle(

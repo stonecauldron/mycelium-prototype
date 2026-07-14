@@ -3,6 +3,8 @@ extends Control
 const _BASE_SCENE_PATH := "res://assets/base/base.tscn"
 const _PORTRAIT_HOST_SIZE := Vector2(52, 64)
 const _PORTRAIT_SCALE := 0.42
+const _BIOMASS_ICON := preload("res://assets/base/biomass.png")
+const _BIOMASS_ICON_SIZE := Vector2(72, 72)
 
 const _RANGE_COLORS := {
 	WeaponData.WeaponRange.MELEE: Color(0.35, 0.75, 0.45),
@@ -36,6 +38,9 @@ func _populate_entries(entries: Array[Dictionary]) -> void:
 		if unit != null:
 			_entries.add_child(_make_unit_row(text, unit))
 			continue
+		if bool(entry.get("biomass", false)):
+			_entries.add_child(_make_biomass_row(text))
+			continue
 		var range_class := int(entry.get("range_class", -1))
 		if range_class >= 0:
 			_entries.add_child(_make_icon_row(text, range_class))
@@ -68,6 +73,22 @@ func _make_unit_row(text: String, unit: RosterUnitData) -> Control:
 	host.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(host)
 	unit.mount_portrait(host, _PORTRAIT_SCALE)
+	row.add_child(_make_entry_label(text))
+
+	return row
+
+
+func _make_biomass_row(text: String) -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+
+	var icon := TextureRect.new()
+	icon.custom_minimum_size = _BIOMASS_ICON_SIZE
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.texture = _BIOMASS_ICON
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	row.add_child(icon)
 	row.add_child(_make_entry_label(text))
 
 	return row

@@ -2,7 +2,7 @@ class_name DaySummaryFeed
 extends RefCounted
 
 ## Pending end-of-day summary rows.
-## Keys: text, optional range_class, optional unit (RosterUnitData for portraits).
+## Keys: text, optional range_class, optional unit, optional biomass.
 static var entries: Array[Dictionary] = []
 
 
@@ -15,6 +15,13 @@ static func add_entry(text: String, range_class: int = -1) -> void:
 		"text": text,
 		"range_class": range_class,
 	})
+
+
+static func add_base_unlock(feature_name: String) -> void:
+	var trimmed := feature_name.strip_edges()
+	if trimmed.is_empty():
+		return
+	add_entry("%s unlocked" % trimmed)
 
 
 static func add_fallen_unit(unit: RosterUnitData) -> void:
@@ -34,7 +41,10 @@ static func add_nursery_matured(spore_name: String, plot_index: int) -> void:
 static func add_biomass_earned(amount: int) -> void:
 	if amount <= 0:
 		return
-	add_entry("+%d biomass" % amount)
+	entries.append({
+		"text": "+%d kg" % amount,
+		"biomass": true,
+	})
 
 
 static func take_entries() -> Array[Dictionary]:

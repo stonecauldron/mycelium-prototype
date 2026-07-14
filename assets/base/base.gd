@@ -29,7 +29,10 @@ var _tab_underlines: Dictionary = {}
 func _ready() -> void:
 	_refresh_hud()
 	_build_tab_bar()
-	_select_tab(TabId.BARRACKS)
+	if GameState.consume_prefer_nursery_tab():
+		_select_tab(TabId.NURSERY)
+	else:
+		_select_tab(TabId.BARRACKS)
 
 
 func _refresh_hud() -> void:

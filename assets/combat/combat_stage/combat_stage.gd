@@ -173,6 +173,9 @@ func _check_battle_end() -> void:
 			SceneTransition.change_scene(_VICTORY_SCENE_PATH)
 			return
 		DaySummaryFeed.clear()
+		if GameState.current_day == 1:
+			GameState.prefer_nursery_tab = true
+			DaySummaryFeed.add_base_unlock("Nursery")
 		if _biomass_earned_this_fight > 0:
 			DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)
 		for unit in _fallen_units:

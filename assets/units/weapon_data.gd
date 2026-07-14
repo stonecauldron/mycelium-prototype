@@ -16,6 +16,13 @@ const SQUAD_OFFSET := {
 @export var base_damage: int = 5
 @export var attack_range: float = 48.0
 @export var knockback_force: float = 280.0
+@export var appearance_scene: PackedScene
+
+
+func instantiate_appearance() -> Node2D:
+	if appearance_scene == null:
+		return null
+	return appearance_scene.instantiate() as Node2D
 
 
 func get_squad_offset(squad_index: int) -> float:

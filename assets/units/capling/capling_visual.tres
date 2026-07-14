@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="UnitVisualData" load_steps=3 format=3 uid="uid://ccaplingvdata01"]
-
-[ext_resource type="Script" path="res://assets/units/unit_visual_data.gd" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://ccaplingvisual01" path="res://assets/units/capling/capling_visual.tscn" id="2_scene"]
-
-[resource]
-script = ExtResource("1_script")
-visual_scene = ExtResource("2_scene")
-idle_animation = &"idle"

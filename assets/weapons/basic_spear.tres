@@ -1,12 +1,12 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://bm7kydjlcgjoi"]
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+[ext_resource type="PackedScene" uid="uid://cff827oxam8sy" path="res://assets/weapons/basic_spear/basic_spear_appearance.tscn" id="2_appear"]
 
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Basic Spear"
 range_class = 1
-targeting_mode = 0
-base_damage = 5
 attack_range = 400.0
 knockback_force = 0.0
+appearance_scene = ExtResource("2_appear")

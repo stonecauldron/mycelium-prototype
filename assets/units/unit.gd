@@ -55,7 +55,8 @@ var _throw_timer: float = 0.0
 @onready var _visual: Node2D = $Visual
 @onready var _hitbox: HitboxComponent = $Visual/Hitbox
 
-var _appearance: Node2D = null
+var _appearance: UnitAppearance = null
+var _body_shape: CollisionShape2D = null
 
 
 func _ready() -> void:
@@ -103,26 +104,42 @@ func _initialize_runtime() -> void:
 
 
 func _mount_appearance() -> void:
-	var baked := _visual.get_node_or_null("Sprite")
-	if baked != null:
-		_visual.remove_child(baked)
-		baked.free()
+	_clear_visual_non_hitbox_children()
+	if _body_shape != null and is_instance_valid(_body_shape):
+		_body_shape.queue_free()
+		_body_shape = null
+	_appearance = null
 
-	if _appearance != null:
-		_appearance.queue_free()
-		_appearance = null
-
-	var visual_data: UnitVisualData = roster_data.visual if roster_data != null else null
-	if visual_data == null:
+	var strain: UnitStrain = roster_data.strain if roster_data != null else null
+	if strain == null:
+		strain = preload("res://assets/units/capling/capling_strain.tres") as UnitStrain
+	if strain == null:
 		return
 
-	_appearance = visual_data.instantiate_visual()
+	_appearance = strain.instantiate_appearance()
 	if _appearance == null:
 		return
 
 	_visual.add_child(_appearance)
 	_visual.move_child(_appearance, 0)
-	visual_data.play_idle(_appearance)
+
+	var body := _appearance.get_node_or_null("BodyShape") as CollisionShape2D
+	if body != null:
+		var global_xform := body.global_transform
+		body.reparent(self)
+		body.global_transform = global_xform
+		_body_shape = body
+
+	_appearance.mount_weapon_appearance(weapon)
+	_appearance.play_idle(true)
+
+
+func _clear_visual_non_hitbox_children() -> void:
+	for child in _visual.get_children():
+		if child == _hitbox:
+			continue
+		_visual.remove_child(child)
+		child.free()
 
 
 func _apply_body_color() -> void:

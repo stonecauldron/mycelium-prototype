@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cbasicmeleeapp01"]
+
+[node name="BasicMeleeAppearance" type="Node2D"]
+
+[node name="Visual" type="Polygon2D" parent="."]
+color = Color(0.45, 0.42, 0.4, 1)
+polygon = PackedVector2Array(0, -4, 28, -5, 36, 0, 28, 5, 0, 4, -4, 0)
+rotation = -0.6

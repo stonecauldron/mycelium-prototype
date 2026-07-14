@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="UnitStrain" format=3 uid="uid://dq1q1tcux6dy3"]
+
+[ext_resource type="Script" uid="uid://bftxo0b154lgi" path="res://assets/units/unit_strain.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dq1q1a7s2xhy3" path="res://assets/units/capling/capling_appearance.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_script")
+appearance_scene = ExtResource("2_scene")

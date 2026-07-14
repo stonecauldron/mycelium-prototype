@@ -97,18 +97,19 @@ func _refresh_portrait(data: RosterUnitData) -> void:
 	if _portrait_instance != null:
 		_portrait_instance.queue_free()
 		_portrait_instance = null
-	if _portrait_host == null or data.visual == null:
+	if _portrait_host == null or data.strain == null:
 		return
-	var instance := data.visual.instantiate_visual()
-	if instance == null:
+	var appearance := data.strain.instantiate_appearance()
+	if appearance == null:
 		return
-	_portrait_host.add_child(instance)
-	_portrait_instance = instance
-	instance.scale = Vector2(PORTRAIT_SCALE, PORTRAIT_SCALE)
-	instance.position = Vector2(_portrait_host.size.x * 0.5, _portrait_host.size.y - 4.0)
+	_portrait_host.add_child(appearance)
+	_portrait_instance = appearance
+	appearance.scale = Vector2(PORTRAIT_SCALE, PORTRAIT_SCALE)
+	appearance.position = Vector2(_portrait_host.size.x * 0.5, _portrait_host.size.y - 4.0)
 	if not _portrait_host.resized.is_connected(_on_portrait_host_resized):
 		_portrait_host.resized.connect(_on_portrait_host_resized)
-	data.visual.play_idle(instance)
+	appearance.mount_weapon_appearance(data.weapon)
+	appearance.play_idle(true)
 
 
 func _on_portrait_host_resized() -> void:

@@ -3,7 +3,12 @@ extends Area2D
 
 
 func get_combatant() -> Node:
-	return get_parent()
+	var node: Node = get_parent()
+	while node != null:
+		if node.has_method("take_damage"):
+			return node
+		node = node.get_parent()
+	return null
 
 
 func receive_hit(

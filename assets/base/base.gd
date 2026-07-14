@@ -1,15 +1,16 @@
 extends Control
 
-enum TabId { NURSERY, BARRACKS }
+enum TabId { BARRACKS, NURSERY }
 
+## Left-to-right order; Barracks stays rightmost when Nursery is visible.
 const TAB_DEFS := [
-	{"id": TabId.NURSERY, "label": "Nursery", "enabled": true},
-	{"id": TabId.BARRACKS, "label": "Barracks", "enabled": true},
+	{"id": TabId.NURSERY, "label": "Nursery"},
+	{"id": TabId.BARRACKS, "label": "Barracks"},
 ]
 
 const SCREEN_SCENES := {
-	TabId.NURSERY: preload("res://assets/base/nursery/nursery_screen.tscn"),
 	TabId.BARRACKS: preload("res://assets/base/troop_selection/troop_selection_screen.tscn"),
+	TabId.NURSERY: preload("res://assets/base/nursery/nursery_screen.tscn"),
 }
 
 @onready var _content_host: Control = %ContentHost
@@ -17,7 +18,7 @@ const SCREEN_SCENES := {
 @onready var _day_label: Label = %DayLabel
 @onready var _biomass_label: Label = %BiomassLabel
 
-var _current_tab: TabId = TabId.NURSERY
+var _current_tab: TabId = TabId.BARRACKS
 var _current_screen: BaseScreen
 var _tab_buttons: Dictionary = {}
 var _tab_underlines: Dictionary = {}
@@ -26,13 +27,21 @@ var _tab_underlines: Dictionary = {}
 func _ready() -> void:
 	_refresh_hud()
 	_build_tab_bar()
-	_select_tab(TabId.NURSERY)
+	_select_tab(TabId.BARRACKS)
 
 
 func _refresh_hud() -> void:
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	_day_label.text = "Day %d / %d" % [day, GameState.WIN_DAYS]
 	_biomass_label.text = "Biomass: %d" % GameState.biomass.amount
+
+
+func _is_tab_visible(tab_id: TabId) -> bool:
+	match tab_id:
+		TabId.NURSERY:
+			return GameState.is_nursery_unlocked()
+		_:
+			return true
 
 
 func _build_tab_bar() -> void:
@@ -43,6 +52,9 @@ func _build_tab_bar() -> void:
 
 	for def in TAB_DEFS:
 		var tab_id: TabId = def["id"]
+		if not _is_tab_visible(tab_id):
+			continue
+
 		var column := VBoxContainer.new()
 		column.theme_type_variation = &"TabColumn"
 		column.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -51,7 +63,6 @@ func _build_tab_bar() -> void:
 		button.theme_type_variation = &"NavButton"
 		button.text = str(def["label"])
 		button.custom_minimum_size = Vector2(96, 56)
-		button.disabled = not bool(def["enabled"])
 		button.focus_mode = Control.FOCUS_NONE
 		button.pressed.connect(_select_tab.bind(tab_id))
 		column.add_child(button)
@@ -68,6 +79,8 @@ func _build_tab_bar() -> void:
 
 
 func _select_tab(tab_id: TabId) -> void:
+	if not _is_tab_visible(tab_id):
+		return
 	_current_tab = tab_id
 	_update_tab_visuals()
 	_show_screen_for_tab(tab_id)
@@ -80,8 +93,6 @@ func _update_tab_visuals() -> void:
 		var button: Button = _tab_buttons[tab_id]
 		if tab_id == _current_tab:
 			button.modulate = Color(1, 1, 1, 1)
-		elif button.disabled:
-			button.modulate = Color(0.55, 0.55, 0.55, 1)
 		else:
 			button.modulate = Color(0.8, 0.8, 0.8, 1)
 

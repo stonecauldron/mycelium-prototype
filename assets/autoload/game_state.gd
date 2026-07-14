@@ -18,6 +18,10 @@ func has_won_run() -> bool:
 	return current_day >= WIN_DAYS
 
 
+func is_nursery_unlocked() -> bool:
+	return current_day >= 1
+
+
 func ensure_nursery_seeded() -> void:
 	nursery.seed_if_empty()
 

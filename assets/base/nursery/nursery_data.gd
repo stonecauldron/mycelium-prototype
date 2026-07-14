@@ -6,17 +6,6 @@ const STARTER_SPORE_COUNT := 0
 const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 const _MELEE_WEAPON_PATH := "res://assets/weapons/basic_melee.tres"
 
-const _HARVEST_NAMES: Array[String] = [
-	"Moss",
-	"Sprout",
-	"Thorn",
-	"Pollen",
-	"Mycel",
-	"Sporeling",
-	"Cap",
-	"Hypha",
-]
-
 @export var plots: Array = []
 @export var spore_stock: Array[SporeData] = []
 
@@ -99,8 +88,7 @@ func harvest(plot_index: int) -> RosterUnitData:
 func _make_harvest_unit() -> RosterUnitData:
 	var weapon := load(_MELEE_WEAPON_PATH) as WeaponData
 	var stats := UnitStatsData.create_for_tier(UnitStatsData.PowerTier.AVERAGE)
-	var unit_name: String = str(_HARVEST_NAMES[randi() % _HARVEST_NAMES.size()])
-	return RosterUnitData.create(unit_name, stats, weapon)
+	return RosterUnitData.create(UnitNames.pick(), stats, weapon)
 
 
 func _ensure_plot_count() -> void:

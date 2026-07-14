@@ -29,13 +29,13 @@ func _ready() -> void:
 		if not OS.has_feature("editor"):
 			push_error("CombatStage requires a non-empty player squad in GameState.troop.")
 			return
-		player_roster = _make_fallback_roster("Capling", 3, 0)
+		player_roster = _make_fallback_roster(3, 0)
 
 	var enemy_roster: Array[RosterUnitData]
 	if BattleLaunch.has_enemy_roster():
 		enemy_roster = BattleLaunch.take_enemy_roster()
 	elif OS.has_feature("editor"):
-		enemy_roster = _make_fallback_roster("Enemy", 2, 1)
+		enemy_roster = _make_fallback_roster(2, 1)
 	else:
 		push_error("CombatStage requires an enemy roster via BattleLaunch.")
 		return
@@ -43,24 +43,20 @@ func _ready() -> void:
 	_run_battle(player_roster, enemy_roster)
 
 
-func _make_fallback_roster(
-	name_prefix: String,
-	melee_count: int,
-	spear_count: int
-) -> Array[RosterUnitData]:
+func _make_fallback_roster(melee_count: int, spear_count: int) -> Array[RosterUnitData]:
 	var roster: Array[RosterUnitData] = []
-	for i in melee_count:
+	for _i in melee_count:
 		roster.append(
 			RosterUnitData.create(
-				"%s Melee %d" % [name_prefix, i + 1],
+				UnitNames.pick(),
 				UnitStatsData.create_for_tier(UnitStatsData.PowerTier.AVERAGE),
 				_MELEE_WEAPON
 			)
 		)
-	for i in spear_count:
+	for _i in spear_count:
 		roster.append(
 			RosterUnitData.create(
-				"%s Spear %d" % [name_prefix, i + 1],
+				UnitNames.pick(),
 				UnitStatsData.create_for_tier(UnitStatsData.PowerTier.AVERAGE),
 				_SPEAR_WEAPON
 			)

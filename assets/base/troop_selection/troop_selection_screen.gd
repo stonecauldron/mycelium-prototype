@@ -78,9 +78,8 @@ func _build_squad_ui() -> void:
 
 func _make_default_bench() -> Array[RosterUnitData]:
 	var units: Array[RosterUnitData] = []
-	units.append(_make_unit("Fern", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
-	units.append(_make_unit("Gale", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
-	units.append(_make_unit("Heather", UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
+	for unit_name in UnitNames.pick_unique(3):
+		units.append(_make_unit(unit_name, UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
 	return units
 
 
@@ -247,10 +246,10 @@ func _make_default_enemy_roster() -> Array[RosterUnitData]:
 	var tiers: Array = composition.get("tiers", [UnitStatsData.PowerTier.WEAK])
 	for i in melee_n:
 		var tier: UnitStatsData.PowerTier = tiers[i % tiers.size()]
-		enemy.append(_make_unit("Enemy Melee %d" % (i + 1), tier, _MELEE_WEAPON))
+		enemy.append(_make_unit(UnitNames.pick(), tier, _MELEE_WEAPON))
 	for i in spear_n:
 		var tier: UnitStatsData.PowerTier = tiers[(melee_n + i) % tiers.size()]
-		enemy.append(_make_unit("Enemy Spear %d" % (i + 1), tier, _SPEAR_WEAPON))
+		enemy.append(_make_unit(UnitNames.pick(), tier, _SPEAR_WEAPON))
 	return enemy
 
 

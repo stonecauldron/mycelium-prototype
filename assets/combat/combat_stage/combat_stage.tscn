@@ -29,8 +29,18 @@ position = Vector2(960, 540)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_mqp0b")
 
+[node name="Hills2" type="Sprite2D" parent="World/Background" unique_id=586121355]
+position = Vector2(2871, 554)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+
 [node name="Mould" type="Sprite2D" parent="World/Background" unique_id=819780414]
 position = Vector2(960, 540)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_mqp0b")
+
+[node name="Mould2" type="Sprite2D" parent="World/Background" unique_id=1400390724]
+position = Vector2(2435, 539)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_mqp0b")
 
@@ -51,7 +61,7 @@ position = Vector2(-12, 540)
 shape = SubResource("RectangleShape2D_left")
 
 [node name="RightEdge" type="CollisionShape2D" parent="World/WorldBoundary" unique_id=1093973712]
-position = Vector2(2143, 575)
+position = Vector2(3845, 575)
 shape = SubResource("RectangleShape2D_right")
 
 [node name="PlayerTroop" parent="World" unique_id=53838798 instance=ExtResource("3_player")]

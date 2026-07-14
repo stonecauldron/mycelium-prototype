@@ -16,7 +16,7 @@ const _RANGE_COLORS := {
 
 
 func _ready() -> void:
-	_title.text = "DAY %d / %d" % [GameState.current_day, GameState.WIN_DAYS]
+	_title.text = "Day %d => Day %d" % [GameState.current_day, GameState.current_day + 1]
 	_populate_entries(DaySummaryFeed.take_entries())
 	_continue_button.pressed.connect(_on_continue_pressed)
 	_continue_button.grab_focus()
@@ -44,9 +44,15 @@ func _populate_entries(entries: Array[Dictionary]) -> void:
 
 
 func _make_message_row(text: String) -> Control:
+	return _make_entry_label(text)
+
+
+func _make_entry_label(text: String) -> Label:
 	var label := Label.new()
-	label.theme_type_variation = &"PageSubtitleLabel"
+	label.theme_type_variation = &"SummaryEntryLabel"
 	label.text = text
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	return label
 
 
@@ -62,12 +68,7 @@ func _make_unit_row(text: String, unit: RosterUnitData) -> Control:
 	host.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(host)
 	unit.mount_portrait(host, _PORTRAIT_SCALE)
-
-	var label := Label.new()
-	label.text = text
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	row.add_child(label)
+	row.add_child(_make_entry_label(text))
 
 	return row
 
@@ -80,12 +81,7 @@ func _make_icon_row(text: String, range_class: int) -> Control:
 	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	icon.color = _RANGE_COLORS.get(range_class, Color(0.7, 0.7, 0.7))
 	row.add_child(icon)
-
-	var label := Label.new()
-	label.text = text
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	row.add_child(label)
+	row.add_child(_make_entry_label(text))
 
 	return row
 

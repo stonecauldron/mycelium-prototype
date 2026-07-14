@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://dgubsx06pskym"]
 
-[ext_resource type="Script" path="res://assets/day_summary/day_summary.gd" id="1_summary"]
-[ext_resource type="Theme" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://0jwhnpwuivng" path="res://assets/day_summary/day_summary.gd" id="1_summary"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 
-[node name="DaySummary" type="Control"]
+[node name="DaySummary" type="Control" unique_id=1288080575]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,7 +13,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_summary")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1551694159]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,7 +23,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.32, 0.32, 0.32, 1)
 
-[node name="RootMargin" type="MarginContainer" parent="."]
+[node name="RootMargin" type="MarginContainer" parent="." unique_id=1270622962]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,31 +32,32 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"ScreenMargin"
 
-[node name="RootVBox" type="VBoxContainer" parent="RootMargin"]
+[node name="RootVBox" type="VBoxContainer" parent="RootMargin" unique_id=1441725800]
 layout_mode = 2
 theme_type_variation = &"StackVBox"
 
-[node name="Header" type="VBoxContainer" parent="RootMargin/RootVBox"]
+[node name="Header" type="VBoxContainer" parent="RootMargin/RootVBox" unique_id=755370294]
 layout_mode = 2
 theme_type_variation = &"TightVBox"
 
-[node name="Title" type="Label" parent="RootMargin/RootVBox/Header"]
+[node name="Title" type="Label" parent="RootMargin/RootVBox/Header" unique_id=339360445]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"PageTitleLabel"
+theme_override_font_sizes/font_size = 42
 text = "DAY SUMMARY"
 horizontal_alignment = 1
 
-[node name="EntriesHost" type="CenterContainer" parent="RootMargin/RootVBox"]
+[node name="EntriesHost" type="CenterContainer" parent="RootMargin/RootVBox" unique_id=475253676]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Entries" type="VBoxContainer" parent="RootMargin/RootVBox/EntriesHost"]
+[node name="Entries" type="VBoxContainer" parent="RootMargin/RootVBox/EntriesHost" unique_id=1891318588]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"SectionVBox"
 
-[node name="ContinueButton" type="Button" parent="RootMargin/RootVBox"]
+[node name="ContinueButton" type="Button" parent="RootMargin/RootVBox" unique_id=1379873894]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 72)
 layout_mode = 2

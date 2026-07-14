@@ -3,6 +3,44 @@
 [ext_resource type="StyleBox" uid="uid://b101vonptpfju" path="res://assets/themes/confirm_button_normal.tres" id="1_normal"]
 [ext_resource type="StyleBox" uid="uid://b4ldnbdgtfqfs" path="res://assets/themes/confirm_button_hover.tres" id="2_hover"]
 [ext_resource type="StyleBox" uid="uid://bdxhplluf3mkb" path="res://assets/themes/confirm_button_pressed.tres" id="3_pressed"]
+[ext_resource type="FontFile" uid="uid://bckw80lf7bsfa" path="res://assets/fonts/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf" id="4_fraunces"]
+[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="5_figtree"]
+
+[sub_resource type="FontVariation" id="Font_fraunces_display"]
+base_font = ExtResource("4_fraunces")
+variation_opentype = {
+2003265652: 550
+}
+
+[sub_resource type="FontVariation" id="Font_fraunces_title"]
+base_font = ExtResource("4_fraunces")
+variation_opentype = {
+2003265652: 500
+}
+
+[sub_resource type="FontVariation" id="Font_fraunces_name"]
+base_font = ExtResource("4_fraunces")
+variation_opentype = {
+2003265652: 500
+}
+
+[sub_resource type="FontVariation" id="Font_figtree_body"]
+base_font = ExtResource("5_figtree")
+variation_opentype = {
+2003265652: 450
+}
+
+[sub_resource type="FontVariation" id="Font_figtree_meta"]
+base_font = ExtResource("5_figtree")
+variation_opentype = {
+2003265652: 500
+}
+
+[sub_resource type="FontVariation" id="Font_figtree_button"]
+base_font = ExtResource("5_figtree")
+variation_opentype = {
+2003265652: 600
+}
 
 [resource]
 BaseRootMargin/base_type = &"MarginContainer"
@@ -15,6 +53,7 @@ BottomBarMargin/constants/margin_bottom = 8
 BottomBarMargin/constants/margin_left = 12
 BottomBarMargin/constants/margin_right = 12
 BottomBarMargin/constants/margin_top = 8
+Button/fonts/font = SubResource("Font_figtree_button")
 Button/font_sizes/font_size = 16
 CardMargin/base_type = &"MarginContainer"
 CardMargin/constants/margin_bottom = 8
@@ -23,12 +62,15 @@ CardMargin/constants/margin_right = 8
 CardMargin/constants/margin_top = 8
 CardMetaLabel/base_type = &"Label"
 CardMetaLabel/colors/font_color = Color(0.75, 0.78, 0.82, 1)
+CardMetaLabel/fonts/font = SubResource("Font_figtree_meta")
 CardMetaLabel/font_sizes/font_size = 12
 CardNameLabel/base_type = &"Label"
 CardNameLabel/colors/font_color = Color(0.95, 0.95, 0.95, 1)
+CardNameLabel/fonts/font = SubResource("Font_fraunces_name")
 CardNameLabel/font_sizes/font_size = 16
 CardStatsLabel/base_type = &"Label"
 CardStatsLabel/colors/font_color = Color(0.95, 0.95, 0.95, 1)
+CardStatsLabel/fonts/font = SubResource("Font_figtree_meta")
 CardStatsLabel/font_sizes/font_size = 12
 CardVBox/base_type = &"VBoxContainer"
 CardVBox/constants/separation = 6
@@ -36,17 +78,22 @@ DamageLabel/base_type = &"Label"
 DamageLabel/colors/font_color = Color(1, 0.95, 0.85, 1)
 DamageLabel/colors/font_outline_color = Color(0.1, 0.05, 0.05, 1)
 DamageLabel/constants/outline_size = 4
+DamageLabel/fonts/font = SubResource("Font_figtree_button")
 DamageLabel/font_sizes/font_size = 20
 HBoxContainer/constants/separation = 16
 Label/colors/font_color = Color(0.95, 0.95, 0.95, 1)
+Label/fonts/font = SubResource("Font_figtree_body")
 Label/font_sizes/font_size = 28
 NavButton/base_type = &"Button"
+NavButton/fonts/font = SubResource("Font_figtree_button")
 NavButton/font_sizes/font_size = 16
 PageSubtitleLabel/base_type = &"Label"
 PageSubtitleLabel/colors/font_color = Color(0.7, 0.74, 0.78, 1)
+PageSubtitleLabel/fonts/font = SubResource("Font_figtree_body")
 PageSubtitleLabel/font_sizes/font_size = 14
 PageTitleLabel/base_type = &"Label"
 PageTitleLabel/colors/font_color = Color(0.95, 0.95, 0.95, 1)
+PageTitleLabel/fonts/font = SubResource("Font_fraunces_title")
 PageTitleLabel/font_sizes/font_size = 28
 PanelInnerMargin/base_type = &"MarginContainer"
 PanelInnerMargin/constants/margin_bottom = 10
@@ -55,6 +102,7 @@ PanelInnerMargin/constants/margin_right = 16
 PanelInnerMargin/constants/margin_top = 10
 PlaceholderLabel/base_type = &"Label"
 PlaceholderLabel/colors/font_color = Color(0.55, 0.58, 0.62, 1)
+PlaceholderLabel/fonts/font = SubResource("Font_figtree_meta")
 PlaceholderLabel/font_sizes/font_size = 13
 PrimaryButton/base_type = &"Button"
 PrimaryButton/colors/font_color = Color(0.15, 0.18, 0.14, 1)
@@ -62,6 +110,7 @@ PrimaryButton/colors/font_disabled_color = Color(0.15, 0.18, 0.14, 0.45)
 PrimaryButton/colors/font_focus_color = Color(0.1, 0.12, 0.08, 1)
 PrimaryButton/colors/font_hover_color = Color(0.1, 0.12, 0.08, 1)
 PrimaryButton/colors/font_pressed_color = Color(0.1, 0.12, 0.08, 1)
+PrimaryButton/fonts/font = SubResource("Font_figtree_button")
 PrimaryButton/font_sizes/font_size = 22
 PrimaryButton/styles/disabled = ExtResource("3_pressed")
 PrimaryButton/styles/focus = ExtResource("2_hover")
@@ -77,6 +126,7 @@ ScreenMargin/constants/margin_right = 16
 ScreenMargin/constants/margin_top = 12
 SectionTitleLabel/base_type = &"Label"
 SectionTitleLabel/colors/font_color = Color(0.95, 0.95, 0.95, 1)
+SectionTitleLabel/fonts/font = SubResource("Font_fraunces_title")
 SectionTitleLabel/font_sizes/font_size = 20
 SectionVBox/base_type = &"VBoxContainer"
 SectionVBox/constants/separation = 16
@@ -91,6 +141,7 @@ StackVBox/base_type = &"VBoxContainer"
 StackVBox/constants/separation = 28
 SubtitleLabel/base_type = &"Label"
 SubtitleLabel/colors/font_color = Color(0.75, 0.7, 0.68, 1)
+SubtitleLabel/fonts/font = SubResource("Font_fraunces_title")
 SubtitleLabel/font_sizes/font_size = 22
 TabBarRow/base_type = &"HBoxContainer"
 TabBarRow/constants/separation = 10
@@ -102,5 +153,6 @@ TightVBox/base_type = &"VBoxContainer"
 TightVBox/constants/separation = 6
 TitleLabel/base_type = &"Label"
 TitleLabel/colors/font_color = Color(1, 1, 1, 1)
+TitleLabel/fonts/font = SubResource("Font_fraunces_display")
 TitleLabel/font_sizes/font_size = 64
 VBoxContainer/constants/separation = 8

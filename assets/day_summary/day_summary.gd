@@ -1,6 +1,8 @@
 extends Control
 
 const _BASE_SCENE_PATH := "res://assets/base/base.tscn"
+const _PORTRAIT_HOST_SIZE := Vector2(52, 64)
+const _PORTRAIT_SCALE := 0.42
 
 const _RANGE_COLORS := {
 	WeaponData.WeaponRange.MELEE: Color(0.35, 0.75, 0.45),
@@ -30,6 +32,10 @@ func _populate_entries(entries: Array[Dictionary]) -> void:
 
 	for entry in entries:
 		var text := str(entry.get("text", ""))
+		var unit := entry.get("unit") as RosterUnitData
+		if unit != null:
+			_entries.add_child(_make_unit_row(text, unit))
+			continue
 		var range_class := int(entry.get("range_class", -1))
 		if range_class >= 0:
 			_entries.add_child(_make_icon_row(text, range_class))
@@ -42,6 +48,28 @@ func _make_message_row(text: String) -> Control:
 	label.theme_type_variation = &"PageSubtitleLabel"
 	label.text = text
 	return label
+
+
+func _make_unit_row(text: String, unit: RosterUnitData) -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+
+	var host := Control.new()
+	host.custom_minimum_size = _PORTRAIT_HOST_SIZE
+	host.size = _PORTRAIT_HOST_SIZE
+	host.clip_contents = true
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(host)
+	unit.mount_portrait(host, _PORTRAIT_SCALE)
+
+	var label := Label.new()
+	label.text = text
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(label)
+
+	return row
 
 
 func _make_icon_row(text: String, range_class: int) -> Control:

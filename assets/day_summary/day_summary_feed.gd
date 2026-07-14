@@ -1,7 +1,8 @@
 class_name DaySummaryFeed
 extends RefCounted
 
-## Pending end-of-day summary rows (text + optional range_class for icon color).
+## Pending end-of-day summary rows.
+## Keys: text, optional range_class, optional unit (RosterUnitData for portraits).
 static var entries: Array[Dictionary] = []
 
 
@@ -19,10 +20,11 @@ static func add_entry(text: String, range_class: int = -1) -> void:
 static func add_fallen_unit(unit: RosterUnitData) -> void:
 	if unit == null:
 		return
-	add_entry(
-		"%s has fallen" % unit.display_name,
-		int(unit.get_range_class())
-	)
+	entries.append({
+		"text": "%s has fallen" % unit.display_name,
+		"range_class": int(unit.get_range_class()),
+		"unit": unit,
+	})
 
 
 static func add_nursery_matured(spore_name: String, plot_index: int) -> void:

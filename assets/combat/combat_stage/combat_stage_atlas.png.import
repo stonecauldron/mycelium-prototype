@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d3hp7svivvnxh"
-path="res://.godot/imported/background_swamp_0.png-19a7f1eb47a85cb393a184ffe2f59a07.ctex"
+uid="uid://cwuylhpwymp7"
+path="res://.godot/imported/combat_stage_atlas.png-54e788bdf435fdca47f2f811208b690b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/combat/combat_stage/background_swamp_0.png"
-dest_files=["res://.godot/imported/background_swamp_0.png-19a7f1eb47a85cb393a184ffe2f59a07.ctex"]
+source_file="res://assets/combat/combat_stage/combat_stage_atlas.png"
+dest_files=["res://.godot/imported/combat_stage_atlas.png-54e788bdf435fdca47f2f811208b690b.ctex"]
 
 [params]
 

@@ -2,9 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cdvma8eegsp43" path="res://assets/combat/combat_stage/combat_stage.gd" id="1_combat"]
 [ext_resource type="Script" uid="uid://m3t2vpa73j5r" path="res://assets/combat/combat_stage/battle_camera.gd" id="2_camera"]
-[ext_resource type="Texture2D" uid="uid://d3hp7svivvnxh" path="res://assets/combat/combat_stage/background_swamp_0.png" id="2_mqp0b"]
+[ext_resource type="Texture2D" uid="uid://cwuylhpwymp7" path="res://assets/combat/combat_stage/combat_stage_atlas.png" id="2_mqp0b"]
 [ext_resource type="Texture2D" uid="uid://c6613lhynerid" path="res://assets/combat/combat_stage/floor.png" id="2_pvs8v"]
-[ext_resource type="Texture2D" uid="uid://bbo08payn1nrc" path="res://assets/combat/combat_stage/background_swamp_1.png" id="3_mqp0b"]
 [ext_resource type="PackedScene" uid="uid://cfpo0kyhrqm3y" path="res://assets/combat/troop/player_troop.tscn" id="3_player"]
 [ext_resource type="PackedScene" uid="uid://cenemyarmy001" path="res://assets/combat/troop/enemy_troop.tscn" id="4_enemy"]
 
@@ -24,25 +23,161 @@ script = ExtResource("1_combat")
 [node name="Background" type="Node2D" parent="World" unique_id=671687693]
 z_index = -20
 
-[node name="Hills" type="Sprite2D" parent="World/Background" unique_id=25355457]
-position = Vector2(960, 540)
+[node name="Hill" type="Sprite2D" parent="World/Background" unique_id=579939570]
+modulate = Color(0.24296594, 0.2429657, 0.24296573, 1)
+position = Vector2(954, 759)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_mqp0b")
+region_enabled = true
+region_rect = Rect2(0, 1799, 3840, 361)
 
-[node name="Hills2" type="Sprite2D" parent="World/Background" unique_id=586121355]
-position = Vector2(2871, 554)
+[node name="Hill2" type="Sprite2D" parent="World/Background" unique_id=56988798]
+modulate = Color(0.24296594, 0.2429657, 0.24296573, 1)
+position = Vector2(2870, 770)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_mqp0b")
+region_enabled = true
+region_rect = Rect2(0, 1799, 3840, 361)
 
-[node name="Mould" type="Sprite2D" parent="World/Background" unique_id=819780414]
-position = Vector2(960, 540)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_mqp0b")
+[node name="Mould" type="Node2D" parent="World/Background" unique_id=304601161]
 
-[node name="Mould2" type="Sprite2D" parent="World/Background" unique_id=1400390724]
-position = Vector2(2435, 539)
+[node name="Mould0" type="Sprite2D" parent="World/Background/Mould" unique_id=25355457]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(300, 682)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_mqp0b")
+texture = ExtResource("2_mqp0b")
+region_enabled = true
+region_rect = Rect2(0, 296, 305, 924)
+
+[node name="Mould1" type="Sprite2D" parent="World/Background/Mould" unique_id=326186631]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(423, 661)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(920, 0, 446, 1278)
+
+[node name="Mould3" type="Sprite2D" parent="World/Background/Mould" unique_id=2079498891]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(552, 850)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(1552, 69, 336, 1259)
+
+[node name="Mould4" type="Sprite2D" parent="World/Background/Mould" unique_id=1727620114]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(649, 645)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(2161, 178, 237, 1065)
+
+[node name="Mould5" type="Sprite2D" parent="World/Background/Mould" unique_id=177725854]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(813, 810)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(2531, 72, 293, 1145)
+
+[node name="Mould2" type="Node2D" parent="World/Background" unique_id=577442960]
+position = Vector2(656, -212)
+scale = Vector2(1, 1.2)
+
+[node name="Mould0" type="Sprite2D" parent="World/Background/Mould2" unique_id=367371577]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(297, 770.8333)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+region_enabled = true
+region_rect = Rect2(0, 296, 305, 924)
+
+[node name="Mould1" type="Sprite2D" parent="World/Background/Mould2" unique_id=1347716]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(481, 623.3333)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+region_enabled = true
+region_rect = Rect2(920, 0, 446, 1278)
+
+[node name="Mould3" type="Sprite2D" parent="World/Background/Mould2" unique_id=962910155]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(547, 874.99994)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(1552, 69, 336, 1259)
+
+[node name="Mould4" type="Sprite2D" parent="World/Background/Mould2" unique_id=106094450]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(756, 754.99994)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(2161, 178, 237, 1065)
+
+[node name="Mould5" type="Sprite2D" parent="World/Background/Mould2" unique_id=633155942]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(903, 908.3333)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(2531, 72, 293, 1145)
+
+[node name="Mould3" type="Node2D" parent="World/Background" unique_id=2065411247]
+position = Vector2(1422, 38)
+
+[node name="Mould0" type="Sprite2D" parent="World/Background/Mould3" unique_id=1876504889]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(300, 682)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+region_enabled = true
+region_rect = Rect2(0, 296, 305, 924)
+
+[node name="Mould1" type="Sprite2D" parent="World/Background/Mould3" unique_id=724503985]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(423, 661)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(920, 0, 446, 1278)
+
+[node name="Mould3" type="Sprite2D" parent="World/Background/Mould3" unique_id=557238358]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(552, 850)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(1552, 69, 336, 1259)
+
+[node name="Mould4" type="Sprite2D" parent="World/Background/Mould3" unique_id=834679134]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(649, 645)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(2161, 178, 237, 1065)
+
+[node name="Mould5" type="Sprite2D" parent="World/Background/Mould3" unique_id=343054095]
+modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
+position = Vector2(813, 810)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mqp0b")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(2531, 72, 293, 1145)
 
 [node name="WorldBoundary" type="StaticBody2D" parent="World" unique_id=377154070]
 collision_mask = 0

@@ -1,44 +1,44 @@
-[gd_scene load_steps=3 format=3 uid="uid://cunitcard001"]
+[gd_scene format=3 uid="uid://cunitcard001"]
 
-[ext_resource type="Script" path="res://assets/base/unit_card/unit_card.gd" id="1_card"]
-[ext_resource type="Theme" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://d13npfmtg0qhh" path="res://assets/base/unit_card/unit_card.gd" id="1_card"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 
-[node name="UnitCard" type="PanelContainer"]
-clip_contents = true
+[node name="UnitCard" type="PanelContainer" unique_id=2141139699]
 custom_minimum_size = Vector2(140, 160)
+clip_contents = true
 theme = ExtResource("2_theme")
 script = ExtResource("1_card")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="." unique_id=2140613681]
 layout_mode = 2
 theme_type_variation = &"CardMargin"
 
-[node name="VBox" type="VBoxContainer" parent="Margin"]
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=554016402]
 layout_mode = 2
 theme_type_variation = &"CardVBox"
 
-[node name="Swatch" type="ColorRect" parent="Margin/VBox"]
+[node name="PortraitHost" type="Control" parent="Margin/VBox" unique_id=1855401594]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 size_flags_horizontal = 3
-color = Color(0.3, 0.7, 0.45, 1)
+clip_contents = true
 
-[node name="NameLabel" type="Label" parent="Margin/VBox"]
+[node name="NameLabel" type="Label" parent="Margin/VBox" unique_id=204576278]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CardNameLabel"
 text = "Unit"
 horizontal_alignment = 1
 
-[node name="WeaponLabel" type="Label" parent="Margin/VBox"]
+[node name="WeaponLabel" type="Label" parent="Margin/VBox" unique_id=1482280732]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CardMetaLabel"
 text = "Weapon"
 horizontal_alignment = 1
 
-[node name="StatsLabel" type="Label" parent="Margin/VBox"]
+[node name="StatsLabel" type="Label" parent="Margin/VBox" unique_id=229174653]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CardStatsLabel"

@@ -53,8 +53,9 @@ var _throw_left_ground: bool = false
 var _throw_timer: float = 0.0
 
 @onready var _visual: Node2D = $Visual
-@onready var _sprite: Sprite2D = $Visual/Sprite
 @onready var _hitbox: HitboxComponent = $Visual/Hitbox
+
+var _appearance: Node2D = null
 
 
 func _ready() -> void:
@@ -97,12 +98,36 @@ func _initialize_runtime() -> void:
 
 	_hitbox.owner_unit = self
 	_setup_collision()
+	_mount_appearance()
 	_apply_body_color()
 
 
+func _mount_appearance() -> void:
+	var baked := _visual.get_node_or_null("Sprite")
+	if baked != null:
+		_visual.remove_child(baked)
+		baked.free()
+
+	if _appearance != null:
+		_appearance.queue_free()
+		_appearance = null
+
+	var visual_data: UnitVisualData = roster_data.visual if roster_data != null else null
+	if visual_data == null:
+		return
+
+	_appearance = visual_data.instantiate_visual()
+	if _appearance == null:
+		return
+
+	_visual.add_child(_appearance)
+	_visual.move_child(_appearance, 0)
+	visual_data.play_idle(_appearance)
+
+
 func _apply_body_color() -> void:
-	if _sprite:
-		_sprite.modulate = body_color
+	if _appearance:
+		_appearance.modulate = body_color
 
 
 func _setup_collision() -> void:
@@ -412,13 +437,13 @@ func _apply_knockback(from_global: Vector2, knockback_force: float) -> void:
 
 
 func _play_hurt_highlight() -> void:
-	if _sprite == null:
+	if _appearance == null:
 		return
 	if _hurt_tween:
 		_hurt_tween.kill()
-	_sprite.modulate = HURT_FLASH_COLOR
+	_appearance.modulate = HURT_FLASH_COLOR
 	_hurt_tween = create_tween()
-	_hurt_tween.tween_property(_sprite, "modulate", body_color, HURT_FLASH_TIME)
+	_hurt_tween.tween_property(_appearance, "modulate", body_color, HURT_FLASH_TIME)
 
 
 func _get_world_node() -> Node:

@@ -5,6 +5,7 @@ signal drag_started(card: UnitCard)
 signal clicked(card: UnitCard)
 
 const CARD_SIZE := Vector2(140, 160)
+const PORTRAIT_SCALE := 0.55
 const RANGE_LABELS := {
 	WeaponData.WeaponRange.MELEE: "Melee",
 	WeaponData.WeaponRange.MID: "Mid",
@@ -15,11 +16,12 @@ var unit_data: Resource
 var source: String = "bench"
 var slot: Node
 var _drag_started_flag: bool = false
+var _portrait_instance: Node2D = null
 
 @onready var _name_label: Label = %NameLabel
 @onready var _weapon_label: Label = %WeaponLabel
 @onready var _stats_label: Label = %StatsLabel
-@onready var _swatch: ColorRect = %Swatch
+@onready var _portrait_host: Control = %PortraitHost
 
 
 func setup(data: Resource, card_source: String = "bench", card_slot: Node = null) -> void:
@@ -86,21 +88,36 @@ func _refresh() -> void:
 			data.stats.con,
 			data.stats.spd,
 		]
-		_swatch.color = _color_for_range(data.get_range_class())
 	else:
 		_stats_label.text = "—"
+	_refresh_portrait(data)
 
 
-func _color_for_range(range_class: WeaponData.WeaponRange) -> Color:
-	match range_class:
-		WeaponData.WeaponRange.MELEE:
-			return Color(0.3, 0.7, 0.45, 1.0)
-		WeaponData.WeaponRange.MID:
-			return Color(0.35, 0.55, 0.85, 1.0)
-		WeaponData.WeaponRange.RANGED:
-			return Color(0.85, 0.65, 0.3, 1.0)
-		_:
-			return Color(0.5, 0.5, 0.5, 1.0)
+func _refresh_portrait(data: RosterUnitData) -> void:
+	if _portrait_instance != null:
+		_portrait_instance.queue_free()
+		_portrait_instance = null
+	if _portrait_host == null or data.visual == null:
+		return
+	var instance := data.visual.instantiate_visual()
+	if instance == null:
+		return
+	_portrait_host.add_child(instance)
+	_portrait_instance = instance
+	instance.scale = Vector2(PORTRAIT_SCALE, PORTRAIT_SCALE)
+	instance.position = Vector2(_portrait_host.size.x * 0.5, _portrait_host.size.y - 4.0)
+	if not _portrait_host.resized.is_connected(_on_portrait_host_resized):
+		_portrait_host.resized.connect(_on_portrait_host_resized)
+	data.visual.play_idle(instance)
+
+
+func _on_portrait_host_resized() -> void:
+	if _portrait_instance == null or _portrait_host == null:
+		return
+	_portrait_instance.position = Vector2(
+		_portrait_host.size.x * 0.5,
+		_portrait_host.size.y - 4.0
+	)
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:

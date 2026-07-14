@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://dq1q1v0wjxby3"]
+
+[ext_resource type="Script" uid="uid://cxt0dcdtr2s2c" path="res://assets/units/unit_visual_root.gd" id="1_root"]
+[ext_resource type="Texture2D" uid="uid://cxbtntfc3hcqj" path="res://assets/units/capling.png" id="2_tex"]
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6, 1.2),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [Vector2(0.4, 0.4), Vector2(0.375, 0.435), Vector2(0.4, 0.4)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_main"]
+_data = {
+&"idle": SubResource("Animation_idle")
+}
+
+[node name="CaplingVisual" type="Node2D" unique_id=1626935717]
+script = ExtResource("1_root")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=887362495]
+position = Vector2(1, -52)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("2_tex")
+region_enabled = true
+region_rect = Rect2(169, 238, 175, 274)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=224118308]
+libraries/ = SubResource("AnimationLibrary_main")

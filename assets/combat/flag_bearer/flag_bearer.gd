@@ -18,6 +18,7 @@ const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_num
 @onready var _visual: Node2D = $Visual
 @onready var _shroom: Sprite2D = $Visual/Shroom
 @onready var _flag_banner: Sprite2D = $Visual/Shroom/Flag
+@onready var _animation_player: AnimationPlayer = $Visual/AnimationPlayer
 
 var _march_speed_x: float = 0.0
 var _in_knockback: bool = false
@@ -31,6 +32,16 @@ func _ready() -> void:
 		_shroom_modulate = _shroom.modulate
 	_apply_flag_appearance()
 	_setup_collision()
+	_start_idle_animation()
+
+
+func _start_idle_animation() -> void:
+	if _animation_player == null or not _animation_player.has_animation(&"idle"):
+		return
+	_animation_player.play(&"idle")
+	var length := _animation_player.current_animation_length
+	if length > 0.0:
+		_animation_player.seek(randf() * length, true)
 
 
 func _physics_process(delta: float) -> void:

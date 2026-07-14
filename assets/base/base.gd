@@ -13,10 +13,12 @@ const SCREEN_SCENES := {
 	TabId.NURSERY: preload("res://assets/base/nursery/nursery_screen.tscn"),
 }
 
+const _BIOMASS_DIGITS := 4
+
 @onready var _content_host: Control = %ContentHost
 @onready var _tab_bar: HBoxContainer = %TabBar
 @onready var _day_label: Label = %DayLabel
-@onready var _biomass_label: Label = %BiomassLabel
+@onready var _biomass_amount: Label = %BiomassAmount
 
 var _current_tab: TabId = TabId.BARRACKS
 var _current_screen: BaseScreen
@@ -33,7 +35,7 @@ func _ready() -> void:
 func _refresh_hud() -> void:
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	_day_label.text = "Day %d / %d" % [day, GameState.WIN_DAYS]
-	_biomass_label.text = "Biomass: %d" % GameState.biomass.amount
+	_biomass_amount.text = "%0*d kg" % [_BIOMASS_DIGITS, GameState.biomass.amount]
 
 
 func _is_tab_visible(tab_id: TabId) -> bool:

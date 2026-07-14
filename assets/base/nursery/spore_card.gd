@@ -8,7 +8,6 @@ var stock_index: int = 0
 
 @onready var _name_label: Label = %NameLabel
 @onready var _days_label: Label = %DaysLabel
-@onready var _swatch: ColorRect = %Swatch
 
 
 func setup(spore_data: SporeData, index: int) -> void:
@@ -55,16 +54,20 @@ func _refresh() -> void:
 		return
 	_name_label.text = spore.display_name
 	_days_label.text = "%d days" % spore.days_to_mature
-	_swatch.color = Color(0.45, 0.7, 0.4, 1.0)
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	if spore == null:
 		return null
+	var host := Control.new()
+	host.custom_minimum_size = CARD_SIZE
+	host.size = CARD_SIZE
+	host.clip_contents = true
 	var preview := duplicate() as SporeCard
 	preview.modulate = Color(1, 1, 1, 0.85)
 	preview.reset_compact_layout()
-	set_drag_preview(preview)
+	host.add_child(preview)
+	set_drag_preview(host)
 	return {
 		"type": "spore",
 		"stock_index": stock_index,

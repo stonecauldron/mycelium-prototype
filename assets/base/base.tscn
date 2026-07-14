@@ -37,6 +37,7 @@ layout_mode = 2
 theme_type_variation = &"RootStack"
 
 [node name="TopBar" type="HBoxContainer" parent="RootMargin/RootVBox" unique_id=300762639]
+custom_minimum_size = Vector2(0, 125)
 layout_mode = 2
 theme_type_variation = &"TightHBox"
 

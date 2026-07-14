@@ -3,8 +3,10 @@ PRESET ?= Web
 BUILD_DIR := build/web
 EXPORT_HTML := $(BUILD_DIR)/index.html
 PORT ?= 8060
+BUTLER ?= butler
+ITCH_TARGET := cauldron/spore-lord:html
 
-.PHONY: all build run serve open clean help
+.PHONY: all build run serve open upload clean help
 
 all: build
 
@@ -13,9 +15,10 @@ help:
 	@echo "  make build   Export the Web preset to $(EXPORT_HTML)"
 	@echo "  make run     Export, then serve locally on port $(PORT)"
 	@echo "  make open    Same as run, and open the default browser"
+	@echo "  make upload  Export, then push to itch.io ($(ITCH_TARGET))"
 	@echo "  make clean   Remove build/"
 	@echo ""
-	@echo "Overrides: GODOT=$(GODOT) PORT=$(PORT) PRESET=$(PRESET)"
+	@echo "Overrides: GODOT=$(GODOT) PORT=$(PORT) PRESET=$(PRESET) BUTLER=$(BUTLER)"
 
 build:
 	@mkdir -p "$(BUILD_DIR)"
@@ -36,6 +39,9 @@ open: build
 		wait $$server_pid
 
 serve: run
+
+upload: build
+	"$(BUTLER)" push "$(BUILD_DIR)" "$(ITCH_TARGET)"
 
 clean:
 	rm -rf build

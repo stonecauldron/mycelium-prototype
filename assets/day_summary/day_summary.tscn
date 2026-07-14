@@ -63,4 +63,4 @@ custom_minimum_size = Vector2(220, 72)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
-text = "✓"
+text = "continue"

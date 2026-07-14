@@ -29,7 +29,7 @@ theme_type_variation = &"SectionVBox"
 [node name="Header" type="Label" parent="Margin/RootVBox"]
 layout_mode = 2
 theme_type_variation = &"PageTitleLabel"
-text = "Barracks — Deploy Squad"
+text = "Colony — Deploy Squad"
 
 [node name="Subtitle" type="Label" parent="Margin/RootVBox"]
 layout_mode = 2

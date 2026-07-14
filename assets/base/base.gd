@@ -1,15 +1,15 @@
 extends Control
 
-enum TabId { BARRACKS, NURSERY }
+enum TabId { COLONY, NURSERY }
 
-## Left-to-right order; Barracks stays rightmost when Nursery is visible.
+## Left-to-right order; Colony stays rightmost when Nursery is visible.
 const TAB_DEFS := [
 	{"id": TabId.NURSERY, "label": "Nursery"},
-	{"id": TabId.BARRACKS, "label": "Barracks"},
+	{"id": TabId.COLONY, "label": "Colony"},
 ]
 
 const SCREEN_SCENES := {
-	TabId.BARRACKS: preload("res://assets/base/troop_selection/troop_selection_screen.tscn"),
+	TabId.COLONY: preload("res://assets/base/troop_selection/troop_selection_screen.tscn"),
 	TabId.NURSERY: preload("res://assets/base/nursery/nursery_screen.tscn"),
 }
 
@@ -20,7 +20,7 @@ const _BIOMASS_DIGITS := 4
 @onready var _day_label: Label = %DayLabel
 @onready var _biomass_amount: Label = %BiomassAmount
 
-var _current_tab: TabId = TabId.BARRACKS
+var _current_tab: TabId = TabId.COLONY
 var _current_screen: BaseScreen
 var _tab_buttons: Dictionary = {}
 var _tab_underlines: Dictionary = {}
@@ -32,7 +32,7 @@ func _ready() -> void:
 	if GameState.consume_prefer_nursery_tab():
 		_select_tab(TabId.NURSERY)
 	else:
-		_select_tab(TabId.BARRACKS)
+		_select_tab(TabId.COLONY)
 
 
 func _refresh_hud() -> void:

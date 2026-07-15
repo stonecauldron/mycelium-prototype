@@ -6,8 +6,8 @@ signal health_changed(current: int, maximum: int)
 
 enum CombatPhase { READY, APPROACHING, ATTACKING, RETURNING }
 
-const BASE_MOVE_SPEED := 80.0
-const BASE_ATTACK_INTERVAL := 1.0
+const BASE_MOVE_SPEED := 180.0
+const BASE_ATTACK_INTERVAL := 0.75
 const HOME_ARRIVE_THRESHOLD := 4.0
 const MARCH_CATCH_UP_MULTIPLIER := 2.0
 const LUNGE_DISTANCE := 48.0

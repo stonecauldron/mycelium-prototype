@@ -80,18 +80,40 @@ func _face_velocity() -> void:
 	rotation = _velocity.angle()
 
 
-func _on_area_entered(area: Area2D) -> void:
+func _on_area_entered(_area: Area2D) -> void:
 	if _spent:
 		return
-	var hurtbox := area as HurtboxComponent
-	if hurtbox == null:
+	_resolve_hit()
+
+
+func _resolve_hit() -> void:
+	var chosen: HurtboxComponent = null
+	var chosen_is_flag := true
+	var closest_distance := INF
+
+	for area in get_overlapping_areas():
+		var hurtbox := area as HurtboxComponent
+		if hurtbox == null:
+			continue
+		var target := hurtbox.get_combatant()
+		if not _is_valid_target(target):
+			continue
+		var is_flag := target is FlagBearer
+		# Units outrank the flag bearer even when the flag is closer.
+		if chosen != null and not chosen_is_flag and is_flag:
+			continue
+		var distance := global_position.distance_squared_to((target as Node2D).global_position)
+		if chosen == null or (chosen_is_flag and not is_flag) or distance < closest_distance:
+			chosen = hurtbox
+			chosen_is_flag = is_flag
+			closest_distance = distance
+
+	if chosen == null:
 		return
-	var target := hurtbox.get_combatant()
-	if not _is_valid_target(target):
-		return
+
 	_spent = true
 	var from_pos := owner_unit.global_position if owner_unit != null else global_position
-	hurtbox.receive_hit(damage, from_pos, knockback_force)
+	chosen.receive_hit(damage, from_pos, knockback_force)
 	queue_free()
 
 

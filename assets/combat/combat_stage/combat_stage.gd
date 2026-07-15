@@ -35,7 +35,7 @@ func _ready() -> void:
 	if BattleLaunch.has_enemy_roster():
 		enemy_roster = BattleLaunch.take_enemy_roster()
 	elif OS.has_feature("editor"):
-		enemy_roster = _make_fallback_roster(2, 1)
+		enemy_roster = _make_fallback_roster(0, 3)
 	else:
 		push_error("CombatStage requires an enemy roster via BattleLaunch.")
 		return
@@ -111,6 +111,7 @@ func _reset_troop_from_roster(
 		index += 1
 
 	troop.refresh_squad_indices()
+	troop.cache_battle_march_speed()
 
 
 func _clear_units(units_root: Node2D) -> void:

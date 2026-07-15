@@ -10,7 +10,6 @@ var _hit_combatants: Dictionary = {}
 
 
 func _ready() -> void:
-	area_entered.connect(_on_area_entered)
 	monitoring = false
 
 
@@ -24,18 +23,13 @@ func enable_for_attack(
 	_targeting_mode = targeting_mode
 	_hit_combatants.clear()
 	monitoring = true
-	_resolve_hits()
 
 
 func disable() -> void:
+	if monitoring:
+		_resolve_hits()
 	monitoring = false
 	_hit_combatants.clear()
-
-
-func _on_area_entered(_area: Area2D) -> void:
-	if not monitoring:
-		return
-	_resolve_hits()
 
 
 func _resolve_hits() -> void:
@@ -44,36 +38,39 @@ func _resolve_hits() -> void:
 			_apply_hit_to_area(area)
 		return
 
-	_hit_closest_enemy()
+	_hit_single_target()
 
 
-func _hit_closest_enemy() -> void:
-	if not _hit_combatants.is_empty():
-		return
-
-	var closest_hurtbox: HurtboxComponent = null
-	var closest_distance := INF
+func _hit_single_target() -> void:
+	var closest_unit: HurtboxComponent = null
+	var closest_unit_distance := INF
+	var flag_hurtboxes: Array[HurtboxComponent] = []
 
 	for area in get_overlapping_areas():
-		var hurtbox: HurtboxComponent = area as HurtboxComponent
+		var hurtbox := area as HurtboxComponent
 		var target := _get_valid_target(hurtbox)
 		if target == null:
+			continue
+		if target is FlagBearer:
+			flag_hurtboxes.append(hurtbox)
 			continue
 		var distance := owner_unit.global_position.distance_squared_to(
 			(target as Node2D).global_position
 		)
-		if distance < closest_distance:
-			closest_distance = distance
-			closest_hurtbox = hurtbox
+		if distance < closest_unit_distance:
+			closest_unit_distance = distance
+			closest_unit = hurtbox
 
-	if closest_hurtbox != null:
-		_apply_hit(closest_hurtbox)
+	# Prefer a unit for the single-target slot; flag always gets hit if present.
+	if closest_unit != null:
+		_apply_hit(closest_unit)
+	for hurtbox in flag_hurtboxes:
+		_apply_hit(hurtbox)
 
 
 func _apply_hit_to_area(area: Area2D) -> void:
-	var hurtbox: HurtboxComponent = area as HurtboxComponent
-	var target := _get_valid_target(hurtbox)
-	if target == null:
+	var hurtbox := area as HurtboxComponent
+	if _get_valid_target(hurtbox) == null:
 		return
 	_apply_hit(hurtbox)
 

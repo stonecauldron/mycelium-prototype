@@ -15,6 +15,7 @@ const HALT_DISTANCE_TOLERANCE := 24.0
 
 var state: State = State.MARCHING
 var _opponent: Troop
+var _battle_march_speed: float = DEFAULT_MARCH_SPEED
 
 @onready var flag_bearer: FlagBearer = $FlagBearer
 
@@ -102,10 +103,11 @@ func reset_for_scenario(spawn_global: Vector2) -> void:
 	flag_bearer.reset_combat_state()
 	state = State.MARCHING
 	state_changed.emit(state)
+	_battle_march_speed = march_speed
 	refresh_squad_indices()
 
 
-func get_average_unit_speed() -> float:
+func cache_battle_march_speed() -> void:
 	var total := 0.0
 	var count := 0
 	for unit in get_units():
@@ -114,8 +116,13 @@ func get_average_unit_speed() -> float:
 		total += unit.get_move_speed()
 		count += 1
 	if count == 0:
-		return march_speed
-	return total / float(count)
+		_battle_march_speed = march_speed
+	else:
+		_battle_march_speed = total / float(count)
+
+
+func get_average_unit_speed() -> float:
+	return _battle_march_speed
 
 
 func _acquire_opponent() -> void:

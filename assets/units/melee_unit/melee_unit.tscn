@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dq1q1a7s2xhy3" path="res://assets/units/capling/capling_appearance.tscn" id="5_appear"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
-size = Vector2(111, 30)
+size = Vector2(107, 120)
 
 [node name="MeleeUnit" type="CharacterBody2D" unique_id=2102761541]
 collision_layer = 2
@@ -24,5 +24,5 @@ collision_mask = 4
 script = ExtResource("4_hitbox")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Visual/Hitbox" unique_id=736467790]
-position = Vector2(37.5, 2)
+position = Vector2(29.5, -28)
 shape = SubResource("RectangleShape2D_hitbox")

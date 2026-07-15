@@ -20,6 +20,7 @@ const THROW_MAX_DURATION := 1.4
 const THROW_AIM_JITTER_X := 40.0
 const THROW_AIM_JITTER_Y := 20.0
 const THROW_ORIGIN_HEIGHT := -48.0
+const MELEE_PROXIMITY := 160.0
 const KNOCKBACK_UP_RATIO := 0.5
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
 const HURT_FLASH_TIME := 0.12
@@ -217,6 +218,13 @@ func _process_combat(delta: float) -> void:
 		return
 
 	var distance := global_position.distance_to(_target.global_position)
+	if (
+		weapon.range_class == WeaponData.WeaponRange.MID
+		and distance <= MELEE_PROXIMITY
+	):
+		_return_home()
+		return
+
 	if distance <= weapon.attack_range:
 		velocity.x = 0.0
 		_face_toward(_target.global_position)

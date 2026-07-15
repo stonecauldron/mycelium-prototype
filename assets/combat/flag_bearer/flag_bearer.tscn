@@ -4,12 +4,6 @@
 [ext_resource type="Script" uid="uid://dk024gkwu740b" path="res://assets/components/hurtbox_component.gd" id="2_hurtbox"]
 [ext_resource type="Texture2D" uid="uid://divttx4sownsq" path="res://assets/combat/flag_bearer/flag.png" id="3_68fxw"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_flag"]
-size = Vector2(89, 127)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
-size = Vector2(91, 125)
-
 [sub_resource type="Animation" id="Animation_idle"]
 resource_name = "idle"
 length = 1.6
@@ -44,7 +38,14 @@ _data = {
 &"idle": SubResource("Animation_idle")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_flag"]
+size = Vector2(89, 127)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(91, 125)
+
 [node name="FlagBearer" type="CharacterBody2D" unique_id=190074861]
+z_index = 1
 collision_layer = 2
 script = ExtResource("1_flag")
 

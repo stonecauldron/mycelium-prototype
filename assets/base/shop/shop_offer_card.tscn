@@ -1,0 +1,118 @@
+[gd_scene format=3 uid="uid://diu7rs1gjbt0k"]
+
+[ext_resource type="Script" uid="uid://bprip8hhf4ti2" path="res://assets/base/shop/shop_offer_card.gd" id="1_card"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://f8n1147me83h" path="res://assets/base/nursery/spores.png" id="3_spores"]
+[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="4_biomass"]
+[ext_resource type="Texture2D" uid="uid://bm2sipndchcwt" path="res://assets/base/shop/padlock_locked.png" id="5_padlock"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shop_card"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12, 0.14, 0.16, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.78, 0.82, 0.72, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_spore"]
+atlas = ExtResource("3_spores")
+region = Rect2(171, 166, 171, 179)
+
+[node name="ShopOfferCard" type="Control" unique_id=1617112971]
+custom_minimum_size = Vector2(148, 176)
+layout_mode = 3
+anchors_preset = 0
+theme = ExtResource("2_theme")
+script = ExtResource("1_card")
+
+[node name="CardPanel" type="PanelContainer" parent="." unique_id=511557256]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_shop_card")
+
+[node name="Margin" type="MarginContainer" parent="CardPanel" unique_id=1063352709]
+layout_mode = 2
+theme_type_variation = &"CardMargin"
+
+[node name="VBox" type="VBoxContainer" parent="CardPanel/Margin" unique_id=1887111811]
+layout_mode = 2
+theme_type_variation = &"CardVBox"
+
+[node name="Icon" type="TextureRect" parent="CardPanel/Margin/VBox" unique_id=638753186]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = SubResource("AtlasTexture_spore")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=1142720565]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CardNameLabel"
+text = "Offer"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="SubtitleLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=639148190]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CardMetaLabel"
+horizontal_alignment = 1
+
+[node name="PriceRow" type="HBoxContainer" parent="CardPanel/Margin/VBox" unique_id=216391871]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="PriceLabel" type="Label" parent="CardPanel/Margin/VBox/PriceRow" unique_id=962066691]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CardMetaLabel"
+theme_override_colors/font_color = Color(0.95, 0.95, 0.92, 1)
+theme_override_font_sizes/font_size = 22
+text = "10"
+horizontal_alignment = 1
+
+[node name="BiomassIcon" type="TextureRect" parent="CardPanel/Margin/VBox/PriceRow" unique_id=816829178]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_biomass")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LockButton" type="Button" parent="." unique_id=1087985862]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -44.0
+offset_top = 2.0
+offset_right = -4.0
+offset_bottom = 42.0
+grow_horizontal = 0
+focus_mode = 0
+theme_override_constants/icon_max_width = 36
+icon = ExtResource("5_padlock")
+flat = true
+expand_icon = true

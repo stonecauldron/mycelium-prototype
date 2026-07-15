@@ -6,6 +6,7 @@ const CARD_SIZE := Vector2(120, 100)
 var spore: SporeData
 var stock_index: int = 0
 
+@onready var _icon: TextureRect = %Icon
 @onready var _name_label: Label = %NameLabel
 @onready var _days_label: Label = %DaysLabel
 
@@ -54,6 +55,8 @@ func _refresh() -> void:
 		return
 	_name_label.text = spore.display_name
 	_days_label.text = "%d days" % spore.days_to_mature
+	if _icon != null:
+		_icon.modulate = spore.tint
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
@@ -73,3 +76,19 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		"stock_index": stock_index,
 		"spore": spore,
 	}
+
+
+func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+	# Forward shop purchases onto stock cards to the inventory host.
+	if typeof(data) != TYPE_DICTIONARY:
+		return false
+	return str(data.get("type", "")) == "shop_spore"
+
+
+func _drop_data(at_position: Vector2, data: Variant) -> void:
+	var node: Node = get_parent()
+	while node != null:
+		if node is StockDropHost:
+			(node as StockDropHost)._drop_data(at_position, data)
+			return
+		node = node.get_parent()

@@ -35,16 +35,21 @@ func ensure_nursery_seeded() -> void:
 	nursery.seed_if_empty()
 
 
-func try_buy_common_spore() -> bool:
-	ensure_nursery_seeded()
-	if not biomass.try_spend(BiomassData.COMMON_SPORE_COST):
+func try_buy_spore(spore: SporeData, cost: int) -> bool:
+	if spore == null or cost < 0:
 		return false
-	var spore := load(_COMMON_SPORE_PATH) as SporeData
-	if spore == null:
-		biomass.add(BiomassData.COMMON_SPORE_COST)
+	ensure_nursery_seeded()
+	if not biomass.try_spend(cost):
 		return false
 	nursery.spore_stock.append(spore)
 	return true
+
+
+func try_buy_common_spore() -> bool:
+	var spore := load(_COMMON_SPORE_PATH) as SporeData
+	if spore == null:
+		return false
+	return try_buy_spore(spore, BiomassData.COMMON_SPORE_COST)
 
 
 func reset_run() -> void:

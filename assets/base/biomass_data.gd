@@ -2,7 +2,10 @@ class_name BiomassData
 extends Resource
 
 const PER_KILL := 5
-const COMMON_SPORE_COST := 10
+const COMMON_SPORE_COST := 4
+const RARE_SPORE_COST := 8
+const SHOP_REROLL_COST := 2
+const RARE_SPORE_CHANCE := 0.1
 
 @export var amount: int = 0
 

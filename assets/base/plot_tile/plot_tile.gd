@@ -2,7 +2,7 @@ class_name PlotTile
 extends PanelContainer
 
 signal plot_pressed(tile: PlotTile)
-signal spore_dropped(tile: PlotTile, stock_index: int)
+signal spore_dropped(tile: PlotTile, data: Dictionary)
 
 const TILE_SIZE := Vector2(160, 180)
 
@@ -60,8 +60,8 @@ func _refresh() -> void:
 
 	match _plot.get_state():
 		NurseryPlotData.State.EMPTY:
-			_hint_label.text = "Plant / Drop spore" if _can_plant else "No spores"
-			modulate = Color(1, 1, 1, 1.0) if _can_plant else Color(1, 1, 1, 0.65)
+			_hint_label.text = "Plant / Drop spore"
+			modulate = Color.WHITE
 			_base_modulate = modulate
 		NurseryPlotData.State.GROWING:
 			_hint_label.text = "Growing"
@@ -78,6 +78,15 @@ func _apply_visual_state() -> void:
 	if _plot_visual == null:
 		return
 	_plot_visual.texture = _texture_for_plot()
+	_plot_visual.modulate = _growth_tint()
+
+
+func _growth_tint() -> Color:
+	if _plot == null or _plot.get_state() == NurseryPlotData.State.EMPTY:
+		return Color.WHITE
+	if _plot.planted_spore == null:
+		return Color.WHITE
+	return _plot.planted_spore.tint
 
 
 func _texture_for_plot() -> Texture2D:
@@ -106,26 +115,31 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	if typeof(data) != TYPE_DICTIONARY:
 		clear_drop_highlight()
 		return false
-	if str(data.get("type", "")) != "spore":
-		clear_drop_highlight()
-		return false
 	if _plot == null or _plot.get_state() != NurseryPlotData.State.EMPTY:
 		clear_drop_highlight()
 		return false
-	if not _can_plant:
-		clear_drop_highlight()
-		return false
-	modulate = Color(0.7, 1.0, 0.75, 1.0)
-	return true
+	var drop_type := str(data.get("type", ""))
+	if drop_type == "shop_spore":
+		modulate = Color(0.7, 1.0, 0.75, 1.0)
+		return true
+	if drop_type == "spore":
+		if not _can_plant:
+			clear_drop_highlight()
+			return false
+		modulate = Color(0.7, 1.0, 0.75, 1.0)
+		return true
+	clear_drop_highlight()
+	return false
 
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	clear_drop_highlight()
 	if typeof(data) != TYPE_DICTIONARY:
 		return
-	if str(data.get("type", "")) != "spore":
+	var drop_type := str(data.get("type", ""))
+	if drop_type != "spore" and drop_type != "shop_spore":
 		return
-	spore_dropped.emit(self, int(data.get("stock_index", 0)))
+	spore_dropped.emit(self, data)
 
 
 func _notification(what: int) -> void:

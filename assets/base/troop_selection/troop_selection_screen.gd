@@ -38,7 +38,7 @@ func on_screen_shown() -> void:
 
 func _hydrate_from_troop_data() -> void:
 	if not GameState.troop.is_seeded():
-		GameState.troop.seed_if_empty(_make_default_bench())
+		GameState.troop.seed_if_empty(_make_default_starters())
 	else:
 		GameState.troop.sort_rosters()
 	bench = GameState.troop.bench
@@ -76,7 +76,7 @@ func _build_squad_ui() -> void:
 		_slots.append(slot)
 
 
-func _make_default_bench() -> Array[RosterUnitData]:
+func _make_default_starters() -> Array[RosterUnitData]:
 	var units: Array[RosterUnitData] = []
 	for unit_name in UnitNames.pick_unique(3):
 		units.append(_make_unit(unit_name, UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))

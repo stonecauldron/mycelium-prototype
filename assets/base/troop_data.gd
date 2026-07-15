@@ -17,14 +17,20 @@ func is_seeded() -> bool:
 	return _seeded
 
 
-func seed_if_empty(bench_units: Array[RosterUnitData]) -> void:
+func seed_if_empty(starter_units: Array[RosterUnitData]) -> void:
 	if _seeded:
 		return
 	bench.clear()
-	for unit in bench_units:
-		if unit != null:
-			bench.append(unit)
 	_ensure_squad_size()
+	var slot := 0
+	for unit in starter_units:
+		if unit == null:
+			continue
+		if slot < squad.size():
+			squad[slot] = unit
+			slot += 1
+		else:
+			bench.append(unit)
 	_seeded = true
 	sort_rosters()
 

@@ -1,7 +1,8 @@
 class_name NurseryData
 extends Resource
 
-const PLOT_COUNT := 4
+const MAX_PLOT_COUNT := 9
+const STARTING_UNLOCKED_PLOTS := 1
 const SHOP_SLOT_COUNT := 3
 const STARTER_SPORE_COUNT := 0
 const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
@@ -12,11 +13,13 @@ const _MELEE_WEAPON_PATH := "res://assets/weapons/basic_melee.tres"
 @export var spore_stock: Array[SporeData] = []
 ## Spore shop state (offers + locks). Shared ShopInventory used by any shop screen.
 @export var spore_shop: ShopInventory
+@export var unlocked_plot_count: int = STARTING_UNLOCKED_PLOTS
 
 var _seeded: bool = false
 
 
 func _init() -> void:
+	unlocked_plot_count = STARTING_UNLOCKED_PLOTS
 	_ensure_plot_count()
 	_ensure_spore_shop()
 
@@ -42,10 +45,33 @@ func seed_if_empty() -> void:
 func reset() -> void:
 	plots.clear()
 	spore_stock.clear()
+	unlocked_plot_count = STARTING_UNLOCKED_PLOTS
 	_ensure_spore_shop()
 	spore_shop.clear()
 	_seeded = false
 	_ensure_plot_count()
+
+
+func is_plot_unlocked(plot_index: int) -> bool:
+	return plot_index >= 0 and plot_index < unlocked_plot_count
+
+
+func can_unlock_plot() -> bool:
+	return unlocked_plot_count < MAX_PLOT_COUNT
+
+
+func next_unlock_cost() -> int:
+	if not can_unlock_plot():
+		return -1
+	return BiomassData.PLOT_UNLOCK_BASE_COST * unlocked_plot_count * unlocked_plot_count
+
+
+func unlock_next_plot() -> bool:
+	if not can_unlock_plot():
+		return false
+	unlocked_plot_count += 1
+	_ensure_plot_count()
+	return true
 
 
 func ensure_shop_offers() -> void:
@@ -94,7 +120,9 @@ func plant(plot_index: int, stock_index: int = 0) -> bool:
 
 
 func plant_spore(plot_index: int, spore: SporeData) -> bool:
-	if plot_index < 0 or plot_index >= plots.size():
+	if not is_plot_unlocked(plot_index):
+		return false
+	if plot_index >= plots.size():
 		return false
 	if spore == null:
 		return false
@@ -108,7 +136,9 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 
 func advance_day() -> Array[Dictionary]:
 	var matured: Array[Dictionary] = []
-	for i in plots.size():
+	for i in unlocked_plot_count:
+		if i >= plots.size():
+			break
 		var plot := plots[i] as NurseryPlotData
 		if plot == null or plot.planted_spore == null:
 			continue
@@ -125,7 +155,9 @@ func advance_day() -> Array[Dictionary]:
 
 
 func harvest(plot_index: int) -> RosterUnitData:
-	if plot_index < 0 or plot_index >= plots.size():
+	if not is_plot_unlocked(plot_index):
+		return null
+	if plot_index >= plots.size():
 		return null
 	var plot := plots[plot_index] as NurseryPlotData
 	if plot == null or not plot.can_harvest():
@@ -145,10 +177,11 @@ func _make_harvest_unit(spore: SporeData) -> RosterUnitData:
 
 
 func _ensure_plot_count() -> void:
-	while plots.size() < PLOT_COUNT:
+	unlocked_plot_count = clampi(unlocked_plot_count, STARTING_UNLOCKED_PLOTS, MAX_PLOT_COUNT)
+	while plots.size() < MAX_PLOT_COUNT:
 		plots.append(NurseryPlotData.new())
-	if plots.size() > PLOT_COUNT:
-		plots.resize(PLOT_COUNT)
+	if plots.size() > MAX_PLOT_COUNT:
+		plots.resize(MAX_PLOT_COUNT)
 	for i in plots.size():
 		if plots[i] == null:
 			plots[i] = NurseryPlotData.new()

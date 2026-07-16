@@ -52,6 +52,19 @@ func try_buy_common_spore() -> bool:
 	return try_buy_spore(spore, BiomassData.COMMON_SPORE_COST)
 
 
+func try_unlock_plot() -> bool:
+	ensure_nursery_seeded()
+	if not nursery.can_unlock_plot():
+		return false
+	var cost := nursery.next_unlock_cost()
+	if cost < 0 or not biomass.try_spend(cost):
+		return false
+	if not nursery.unlock_next_plot():
+		biomass.add(cost)
+		return false
+	return true
+
+
 func reset_run() -> void:
 	troop.reset()
 	nursery.reset()

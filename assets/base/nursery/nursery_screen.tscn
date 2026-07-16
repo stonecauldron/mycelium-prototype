@@ -4,6 +4,13 @@
 [ext_resource type="Script" uid="uid://c6clun5d6trkk" path="res://assets/base/nursery/nursery_screen.gd" id="2_tn1j7"]
 [ext_resource type="Script" uid="uid://44fg5s4d8hy7" path="res://assets/base/nursery/stock_drop_host.gd" id="3_stock"]
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="4_biomass"]
+[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="5_figtree"]
+
+[sub_resource type="FontVariation" id="Font_figtree_button"]
+base_font = ExtResource("5_figtree")
+variation_opentype = {
+2003265652: 600
+}
 
 [node name="NurseryScreen" type="Control" unique_id=806195354]
 layout_mode = 3
@@ -79,7 +86,7 @@ size_flags_vertical = 3
 theme_type_variation = &"TightHBox"
 
 [node name="PlotsPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox" unique_id=1946078193]
-custom_minimum_size = Vector2(0, 220)
+custom_minimum_size = Vector2(0, 380)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -96,12 +103,14 @@ layout_mode = 2
 theme_type_variation = &"SectionTitleLabel"
 text = "Plots"
 
-[node name="PlotRow" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/PlotsPanel/PlotsMargin/PlotsVBox" unique_id=103951673]
+[node name="PlotRow" type="GridContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/PlotsPanel/PlotsMargin/PlotsVBox" unique_id=103951673]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 size_flags_vertical = 3
-theme_type_variation = &"TightHBox"
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 3
 
 [node name="ShopPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox" unique_id=1879012606]
 custom_minimum_size = Vector2(180, 0)
@@ -147,11 +156,17 @@ alignment = 1
 
 [node name="RerollLabel" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent" unique_id=1935055043]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_fonts/font = SubResource("Font_figtree_button")
+theme_override_font_sizes/font_size = 22
 text = "Reroll"
 
 [node name="RerollCostLabel" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent" unique_id=529388487]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_fonts/font = SubResource("Font_figtree_button")
+theme_override_font_sizes/font_size = 22
 text = "2"
 
 [node name="RerollBiomassIcon" type="TextureRect" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent" unique_id=1970297507]

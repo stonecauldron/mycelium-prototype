@@ -9,7 +9,7 @@ const _SPORE_ICON := preload("res://assets/base/nursery/spores.png")
 @onready var _stock_label: Label = %StockLabel
 @onready var _stock_row: HBoxContainer = %StockRow
 @onready var _stock_panel: StockDropHost = %StockPanel
-@onready var _plot_row: HBoxContainer = %PlotRow
+@onready var _plot_row: GridContainer = %PlotRow
 @onready var _shop_column: VBoxContainer = %ShopColumn
 @onready var _reroll_button: Button = %RerollButton
 @onready var _reroll_cost_label: Label = %RerollCostLabel
@@ -43,9 +43,15 @@ func _hydrate_and_refresh() -> void:
 
 func _build_plot_tiles() -> void:
 	for child in _plot_row.get_children():
+		_plot_row.remove_child(child)
 		child.queue_free()
 	_tiles.clear()
-	for i in NurseryData.PLOT_COUNT:
+	GameState.ensure_nursery_seeded()
+	var nursery := GameState.nursery
+	var visible_count := nursery.unlocked_plot_count
+	if nursery.can_unlock_plot():
+		visible_count += 1
+	for i in visible_count:
 		var tile: PlotTile = _PLOT_TILE_SCENE.instantiate()
 		_plot_row.add_child(tile)
 		tile.plot_pressed.connect(_on_plot_pressed)
@@ -91,20 +97,35 @@ func _build_shop_cards() -> void:
 
 func _refresh() -> void:
 	var nursery := GameState.nursery
+	var expected_visible := nursery.unlocked_plot_count
+	if nursery.can_unlock_plot():
+		expected_visible += 1
+	if _tiles.size() != expected_visible:
+		_build_plot_tiles()
 	var can_plant := not nursery.spore_stock.is_empty()
 	_stock_label.text = "Spores in stock: %d" % nursery.spore_stock.size()
 	_rebuild_stock_cards()
 	_refresh_shop_affordability()
-	for i in _tiles.size():
+	for i in nursery.unlocked_plot_count:
+		if i >= _tiles.size():
+			break
 		var plot := nursery.plots[i] as NurseryPlotData if i < nursery.plots.size() else null
 		_tiles[i].setup(i, plot, can_plant)
+	if nursery.can_unlock_plot() and _tiles.size() > nursery.unlocked_plot_count:
+		var unlock_index := nursery.unlocked_plot_count
+		_tiles[unlock_index].setup_unlockable(unlock_index, nursery.next_unlock_cost())
 
 
 func _refresh_shop_affordability() -> void:
 	for card in _shop_cards:
 		card.set_affordable(GameState.biomass.can_afford(card.cost))
 	_reroll_cost_label.text = "%d" % BiomassData.SHOP_REROLL_COST
-	_reroll_button.disabled = not GameState.biomass.can_afford(BiomassData.SHOP_REROLL_COST)
+	var can_reroll := GameState.biomass.can_afford(BiomassData.SHOP_REROLL_COST)
+	_reroll_button.disabled = not can_reroll
+	_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
+	for tile in _tiles:
+		if tile.is_unlockable:
+			tile.setup_unlockable(tile.plot_index, tile.unlock_cost)
 
 
 func _on_reroll_pressed() -> void:
@@ -172,8 +193,13 @@ func _replace_bought_shop_slot(slot_index: int) -> void:
 
 
 func _on_plot_pressed(tile: PlotTile) -> void:
+	if tile.is_unlockable:
+		_try_unlock_plot()
+		return
 	var nursery := GameState.nursery
-	if tile.plot_index < 0 or tile.plot_index >= nursery.plots.size():
+	if not nursery.is_plot_unlocked(tile.plot_index):
+		return
+	if tile.plot_index >= nursery.plots.size():
 		return
 	var plot := nursery.plots[tile.plot_index] as NurseryPlotData
 	if plot == null:
@@ -206,6 +232,8 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 
 
 func _on_spore_dropped(tile: PlotTile, data: Dictionary) -> void:
+	if tile.is_unlockable:
+		return
 	var drop_type := str(data.get("type", ""))
 	if drop_type == "shop_spore":
 		_plant_from_shop(tile.plot_index, data)
@@ -217,6 +245,17 @@ func _on_spore_dropped(tile: PlotTile, data: Dictionary) -> void:
 			_refresh()
 		else:
 			_set_status("Could not plant")
+
+
+func _try_unlock_plot() -> void:
+	var cost := GameState.nursery.next_unlock_cost()
+	if GameState.try_unlock_plot():
+		_set_status("Unlocked plot for %d biomass" % cost)
+		_build_plot_tiles()
+		_refresh()
+		_refresh_base_hud()
+	else:
+		_set_status("Not enough biomass")
 
 
 func _plant_from_shop(plot_index: int, data: Dictionary) -> void:

@@ -34,6 +34,16 @@ static func add_fallen_unit(unit: RosterUnitData) -> void:
 	})
 
 
+static func add_unit_became_imago(unit: RosterUnitData) -> void:
+	if unit == null:
+		return
+	entries.append({
+		"text": "%s has matured." % unit.display_name,
+		"range_class": int(unit.get_range_class()),
+		"unit": unit,
+	})
+
+
 static func add_nursery_matured(spore_name: String, plot_index: int) -> void:
 	add_entry("%s matured in plot %d" % [spore_name, plot_index + 1])
 

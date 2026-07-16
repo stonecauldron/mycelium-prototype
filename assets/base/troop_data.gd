@@ -58,6 +58,27 @@ func remove_unit(unit_data: RosterUnitData) -> void:
 	sort_squad()
 
 
+func advance_unit_ages() -> Array[RosterUnitData]:
+	var matured: Array[RosterUnitData] = []
+	for unit in _iter_living_units():
+		unit.days_alive += 1
+		if unit.can_promote_to_imago() and unit.promote_to_imago():
+			matured.append(unit)
+	return matured
+
+
+func _iter_living_units() -> Array[RosterUnitData]:
+	var units: Array[RosterUnitData] = []
+	for entry in squad:
+		var unit := entry as RosterUnitData
+		if unit != null:
+			units.append(unit)
+	for unit in bench:
+		if unit != null:
+			units.append(unit)
+	return units
+
+
 func reset() -> void:
 	bench.clear()
 	squad.clear()

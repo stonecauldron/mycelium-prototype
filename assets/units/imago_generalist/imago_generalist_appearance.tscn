@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://dq1q1a7s2xhy3"]
+[gd_scene format=3 uid="uid://ciowtprn6kf4k"]
 
 [ext_resource type="Script" uid="uid://nqw7ixv3u2we" path="res://assets/units/unit_appearance.gd" id="1_root"]
-[ext_resource type="Texture2D" uid="uid://cxbtntfc3hcqj" path="res://assets/units/capling/capling.png" id="2_tex"]
+[ext_resource type="Texture2D" uid="uid://cvppmivdslcjw" path="res://assets/units/imago_generalist/imago_generalist.png" id="2_tex"]
 [ext_resource type="Script" uid="uid://dk024gkwu740b" path="res://assets/components/hurtbox_component.gd" id="3_hurtbox"]
 
 [sub_resource type="Animation" id="Animation_idle"]
@@ -27,36 +27,36 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
-size = Vector2(61, 103)
+size = Vector2(75.5, 115)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(61, 104)
+size = Vector2(75.5, 117)
 
-[node name="CaplingAppearance" type="Node2D" unique_id=369788823]
+[node name="ImagoGeneralistAppearance" type="Node2D" unique_id=101060416]
 script = ExtResource("1_root")
 
-[node name="Sprite" type="Sprite2D" parent="." unique_id=199861224]
-position = Vector2(1, -52)
-scale = Vector2(0.4, 0.4)
+[node name="Sprite" type="Sprite2D" parent="." unique_id=288080520]
+position = Vector2(1, -55)
+scale = Vector2(0.3993315, 0.40093592)
 texture = ExtResource("2_tex")
 region_enabled = true
-region_rect = Rect2(169, 238, 175, 274)
+region_rect = Rect2(133, 201, 250, 311)
 
-[node name="WeaponMount" type="Node2D" parent="." unique_id=1779674008]
-position = Vector2(31, -32)
+[node name="WeaponMount" type="Node2D" parent="." unique_id=2038425345]
+position = Vector2(35, -36)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=429055354]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=874260023]
 libraries/ = SubResource("AnimationLibrary_main")
 
-[node name="Hurtbox" type="Area2D" parent="." unique_id=2024457660]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1643200994]
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("3_hurtbox")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1875027642]
-position = Vector2(2.5, -53.5)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1300552134]
+position = Vector2(0.75, -51.5)
 shape = SubResource("RectangleShape2D_hurtbox")
 
-[node name="BodyShape" type="CollisionShape2D" parent="." unique_id=413708413]
-position = Vector2(2.5, -52)
+[node name="BodyShape" type="CollisionShape2D" parent="." unique_id=251417434]
+position = Vector2(0.75, -52.5)
 shape = SubResource("RectangleShape2D_body")

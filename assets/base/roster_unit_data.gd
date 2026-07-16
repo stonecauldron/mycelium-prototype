@@ -1,18 +1,40 @@
 class_name RosterUnitData
 extends Resource
 
+const DAYS_TO_IMAGO := 2
+const IMAGO_STAT_BONUS := 2
 const _DEFAULT_STRAIN := preload("res://assets/units/capling/capling_strain.tres")
+const _IMAGO_STRAIN := preload("res://assets/units/imago_generalist/imago_generalist_strain.tres")
 
 @export var display_name: String = "Unit"
 @export var stats: UnitStatsData
 @export var weapon: WeaponData
 @export var strain: UnitStrain
+@export var days_alive: int = 0
+@export var is_imago: bool = false
 
 
 func get_range_class() -> WeaponData.WeaponRange:
 	if weapon == null:
 		return WeaponData.WeaponRange.MELEE
 	return weapon.range_class
+
+
+func can_promote_to_imago() -> bool:
+	return not is_imago and days_alive >= DAYS_TO_IMAGO
+
+
+func promote_to_imago(imago_strain: UnitStrain = null) -> bool:
+	if is_imago:
+		return false
+	if stats != null:
+		stats.strength = clampi(stats.strength + IMAGO_STAT_BONUS, 1, 99)
+		stats.dex = clampi(stats.dex + IMAGO_STAT_BONUS, 1, 99)
+		stats.con = clampi(stats.con + IMAGO_STAT_BONUS, 1, 99)
+		stats.spd = clampi(stats.spd + IMAGO_STAT_BONUS, 1, 99)
+	is_imago = true
+	strain = imago_strain if imago_strain != null else _IMAGO_STRAIN
+	return true
 
 
 func mount_portrait(host: Control, portrait_scale: float = 0.55) -> UnitAppearance:
@@ -61,4 +83,6 @@ static func create(
 	data.stats = unit_stats
 	data.weapon = unit_weapon
 	data.strain = unit_strain if unit_strain != null else _DEFAULT_STRAIN
+	data.days_alive = 0
+	data.is_imago = false
 	return data

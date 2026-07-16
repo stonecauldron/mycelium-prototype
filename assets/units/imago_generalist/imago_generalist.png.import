@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxbtntfc3hcqj"
-path="res://.godot/imported/capling.png-8b3ad5a614ece9de5493c834fb9ce2ae.ctex"
+uid="uid://cvppmivdslcjw"
+path="res://.godot/imported/imago_generalist.png-d0c4ed7bc7a5a8666d11abb6bf1de4bf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/units/capling.png"
-dest_files=["res://.godot/imported/capling.png-8b3ad5a614ece9de5493c834fb9ce2ae.ctex"]
+source_file="res://assets/units/imago_generalist/imago_generalist.png"
+dest_files=["res://.godot/imported/imago_generalist.png-d0c4ed7bc7a5a8666d11abb6bf1de4bf.ctex"]
 
 [params]
 

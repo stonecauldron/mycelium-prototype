@@ -181,6 +181,9 @@ func _check_battle_end() -> void:
 			DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)
 		for unit in _fallen_units:
 			DaySummaryFeed.add_fallen_unit(unit)
+		var grown := GameState.troop.advance_unit_ages()
+		for unit in grown:
+			DaySummaryFeed.add_unit_became_imago(unit)
 		var matured := GameState.nursery.advance_day()
 		for entry in matured:
 			DaySummaryFeed.add_nursery_matured(

@@ -243,6 +243,7 @@ func _make_default_enemy_roster() -> Array[RosterUnitData]:
 	var enemy: Array[RosterUnitData] = []
 	var melee_n: int = int(composition.get("melee", 0))
 	var spear_n: int = int(composition.get("spear", 0))
+	var imago_n: int = int(composition.get("imago", 0))
 	var tiers: Array = composition.get("tiers", [UnitStatsData.PowerTier.WEAK])
 	for i in melee_n:
 		var tier: UnitStatsData.PowerTier = tiers[i % tiers.size()]
@@ -250,21 +251,41 @@ func _make_default_enemy_roster() -> Array[RosterUnitData]:
 	for i in spear_n:
 		var tier: UnitStatsData.PowerTier = tiers[(melee_n + i) % tiers.size()]
 		enemy.append(_make_unit(UnitNames.pick(), tier, _SPEAR_WEAPON))
+	_promote_enemy_imagos(enemy, imago_n)
 	return enemy
 
 
+func _promote_enemy_imagos(enemy: Array[RosterUnitData], imago_n: int) -> void:
+	var promote_count := mini(imago_n, enemy.size())
+	if promote_count <= 0:
+		return
+	# Spread across the roster so imagos aren't always the leading melee slots.
+	var step := float(enemy.size()) / float(promote_count)
+	var used: Dictionary = {}
+	for i in promote_count:
+		var index := clampi(int(i * step + step * 0.5), 0, enemy.size() - 1)
+		while used.has(index):
+			index = (index + 1) % enemy.size()
+		used[index] = true
+		enemy[index].promote_to_imago()
+
+
 func _enemy_composition_for_day(day: int) -> Dictionary:
+	# Counts/tiers match the pre-imago curve; `imago` promotions apply +2 all stats
+	# and the imago appearance on a spread of those units.
 	match day:
 		1, 2:
 			return {
 				"melee": 2,
 				"spear": 0,
+				"imago": 0,
 				"tiers": [UnitStatsData.PowerTier.WEAK],
 			}
 		3, 4:
 			return {
 				"melee": 2,
 				"spear": 1,
+				"imago": 1,
 				"tiers": [
 					UnitStatsData.PowerTier.WEAK,
 					UnitStatsData.PowerTier.WEAK,
@@ -275,6 +296,7 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			return {
 				"melee": 3,
 				"spear": 2,
+				"imago": 2,
 				"tiers": [
 					UnitStatsData.PowerTier.WEAK,
 					UnitStatsData.PowerTier.AVERAGE,
@@ -284,6 +306,7 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			return {
 				"melee": 4,
 				"spear": 2,
+				"imago": 2,
 				"tiers": [
 					UnitStatsData.PowerTier.AVERAGE,
 					UnitStatsData.PowerTier.AVERAGE,
@@ -294,6 +317,7 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			return {
 				"melee": 4,
 				"spear": 3,
+				"imago": 3,
 				"tiers": [
 					UnitStatsData.PowerTier.AVERAGE,
 					UnitStatsData.PowerTier.STRONG,
@@ -304,6 +328,7 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			return {
 				"melee": 5,
 				"spear": 3,
+				"imago": 4,
 				"tiers": [
 					UnitStatsData.PowerTier.STRONG,
 					UnitStatsData.PowerTier.STRONG,

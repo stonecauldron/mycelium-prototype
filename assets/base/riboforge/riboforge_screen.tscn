@@ -1,0 +1,182 @@
+[gd_scene format=3 uid="uid://ctgmgo4sqa1g7"]
+
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="1_theme"]
+[ext_resource type="Script" path="res://assets/base/riboforge/riboforge_screen.gd" id="2_screen"]
+[ext_resource type="Script" path="res://assets/base/riboforge/weapon_stock_drop_host.gd" id="3_stock"]
+[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="4_biomass"]
+[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="5_figtree"]
+
+[sub_resource type="FontVariation" id="Font_figtree_button"]
+base_font = ExtResource("5_figtree")
+variation_opentype = {
+2003265652: 600
+}
+
+[node name="RiboforgeScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_screen")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ScreenMargin"
+theme_override_constants/margin_right = 48
+
+[node name="RootVBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_type_variation = &"SectionVBox"
+
+[node name="Header" type="Label" parent="Margin/RootVBox"]
+layout_mode = 2
+theme_type_variation = &"PageTitleLabel"
+text = "Riboforge — Arm Units"
+
+[node name="Subtitle" type="Label" parent="Margin/RootVBox"]
+layout_mode = 2
+theme_type_variation = &"PageSubtitleLabel"
+text = "Buy weapons from the shop. Drag stock onto a squad unit to equip, or drag a unit's weapon back to stock to unequip."
+
+[node name="ContentHBox" type="HBoxContainer" parent="Margin/RootVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"TightHBox"
+
+[node name="LeftVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"SectionVBox"
+
+[node name="StockPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("3_stock")
+
+[node name="StockMargin" type="MarginContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel"]
+layout_mode = 2
+theme_type_variation = &"PanelInnerMargin"
+
+[node name="StockVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel/StockMargin"]
+layout_mode = 2
+theme_type_variation = &"TightVBox"
+
+[node name="StockLabel" type="Label" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel/StockMargin/StockVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionTitleLabel"
+text = "Weapons in stock: 0"
+
+[node name="StockRow" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel/StockMargin/StockVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"TightHBox"
+
+[node name="SquadPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox"]
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SquadMargin" type="MarginContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/SquadPanel"]
+layout_mode = 2
+theme_type_variation = &"PanelInnerMargin"
+
+[node name="SquadVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/SquadPanel/SquadMargin"]
+layout_mode = 2
+theme_type_variation = &"TightVBox"
+
+[node name="SquadTitle" type="Label" parent="Margin/RootVBox/ContentHBox/LeftVBox/SquadPanel/SquadMargin/SquadVBox"]
+layout_mode = 2
+theme_type_variation = &"SectionTitleLabel"
+text = "Squad"
+
+[node name="SquadRow" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/SquadPanel/SquadMargin/SquadVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="ShopPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ShopMargin" type="MarginContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel"]
+layout_mode = 2
+theme_type_variation = &"PanelInnerMargin"
+
+[node name="ShopVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin"]
+layout_mode = 2
+theme_type_variation = &"TightVBox"
+
+[node name="ShopTitle" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox"]
+layout_mode = 2
+theme_type_variation = &"SectionTitleLabel"
+text = "Shop"
+
+[node name="ShopColumn" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"TightVBox"
+alignment = 1
+
+[node name="RerollButton" type="Button" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+
+[node name="RerollContent" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="RerollLabel" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_fonts/font = SubResource("Font_figtree_button")
+theme_override_font_sizes/font_size = 22
+text = "Reroll"
+
+[node name="RerollCostLabel" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_fonts/font = SubResource("Font_figtree_button")
+theme_override_font_sizes/font_size = 22
+text = "2"
+
+[node name="RerollBiomassIcon" type="TextureRect" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("4_biomass")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StatusLabel" type="Label" parent="Margin/RootVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PageSubtitleLabel"

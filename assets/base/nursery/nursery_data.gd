@@ -7,7 +7,6 @@ const SHOP_SLOT_COUNT := 3
 const STARTER_SPORE_COUNT := 0
 const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 const _RARE_SPORE_PATH := "res://assets/base/nursery/rare_spore.tres"
-const _MELEE_WEAPON_PATH := "res://assets/weapons/basic_melee.tres"
 
 @export var plots: Array = []
 @export var spore_stock: Array[SporeData] = []
@@ -168,7 +167,7 @@ func harvest(plot_index: int) -> RosterUnitData:
 
 
 func _make_harvest_unit(spore: SporeData) -> RosterUnitData:
-	var weapon := load(_MELEE_WEAPON_PATH) as WeaponData
+	var weapon := RiboforgeData.get_default_weapon()
 	var tier := UnitStatsData.PowerTier.AVERAGE
 	if spore != null:
 		tier = spore.power_tier

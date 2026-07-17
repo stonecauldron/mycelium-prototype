@@ -1,16 +1,18 @@
 extends Control
 
-enum TabId { COLONY, NURSERY }
+enum TabId { COLONY, NURSERY, RIBOFORGE }
 
-## Left-to-right order; Colony stays rightmost when Nursery is visible.
+## Left-to-right order; Colony stays rightmost.
 const TAB_DEFS := [
 	{"id": TabId.NURSERY, "label": "Nursery"},
+	{"id": TabId.RIBOFORGE, "label": "Riboforge"},
 	{"id": TabId.COLONY, "label": "Colony"},
 ]
 
 const SCREEN_SCENES := {
 	TabId.COLONY: preload("res://assets/base/troop_selection/troop_selection_screen.tscn"),
 	TabId.NURSERY: preload("res://assets/base/nursery/nursery_screen.tscn"),
+	TabId.RIBOFORGE: preload("res://assets/base/riboforge/riboforge_screen.tscn"),
 }
 
 const _BIOMASS_DIGITS := 4
@@ -29,7 +31,9 @@ var _tab_underlines: Dictionary = {}
 func _ready() -> void:
 	_refresh_hud()
 	_build_tab_bar()
-	if GameState.consume_prefer_nursery_tab():
+	if GameState.consume_prefer_riboforge_tab():
+		_select_tab(TabId.RIBOFORGE)
+	elif GameState.consume_prefer_nursery_tab():
 		_select_tab(TabId.NURSERY)
 	else:
 		_select_tab(TabId.COLONY)
@@ -45,6 +49,8 @@ func _is_tab_visible(tab_id: TabId) -> bool:
 	match tab_id:
 		TabId.NURSERY:
 			return GameState.is_nursery_unlocked()
+		TabId.RIBOFORGE:
+			return GameState.is_riboforge_unlocked()
 		_:
 			return true
 

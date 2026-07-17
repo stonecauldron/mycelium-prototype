@@ -1,8 +1,11 @@
-[gd_scene format=3 uid="uid://cbasicspearapp01"]
+[gd_scene format=3 uid="uid://cff827oxam8sy"]
 
-[node name="BasicSpearAppearance" type="Node2D"]
+[ext_resource type="Texture2D" uid="uid://bj35arlgrvuum" path="res://assets/weapons/basic_spear/spear.png" id="1_spear"]
 
-[node name="Visual" type="Polygon2D" parent="."]
-color = Color(0.55, 0.38, 0.22, 1)
-polygon = PackedVector2Array(-8, -2, 40, -2, 48, 0, 40, 2, -8, 2, -6, 0)
-rotation = -0.85
+[node name="BasicSpearAppearance" type="Node2D" unique_id=1152229545]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1772255643]
+rotation = 0.720796
+scale = Vector2(0.3, 0.2)
+texture = ExtResource("1_spear")
+offset = Vector2(30, -90)

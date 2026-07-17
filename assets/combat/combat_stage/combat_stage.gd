@@ -3,8 +3,8 @@ extends Node2D
 const FLOOR_SURFACE_Y := 880.0
 const _MELEE_UNIT_SCENE := preload("res://assets/units/melee_unit/melee_unit.tscn")
 const _SPEAR_UNIT_SCENE := preload("res://assets/units/spear_unit/spear_unit.tscn")
-const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee.tres")
-const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear.tres")
+const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee/basic_melee.tres")
+const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 const _BASE_SCENE_PATH := "res://assets/base/base.tscn"
 const _GAME_OVER_SCENE_PATH := "res://assets/game_over/game_over.tscn"
 const _VICTORY_SCENE_PATH := "res://assets/victory/victory.tscn"
@@ -174,9 +174,12 @@ func _check_battle_end() -> void:
 			SceneTransition.change_scene(_VICTORY_SCENE_PATH)
 			return
 		DaySummaryFeed.clear()
-		if GameState.current_day == 1:
+		if GameState.current_day == GameState.NURSERY_UNLOCK_DAY:
 			GameState.prefer_nursery_tab = true
 			DaySummaryFeed.add_base_unlock("Nursery")
+		if GameState.current_day == GameState.RIBOFORGE_UNLOCK_DAY:
+			GameState.prefer_riboforge_tab = true
+			DaySummaryFeed.add_base_unlock("Riboforge")
 		if _biomass_earned_this_fight > 0:
 			DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)
 		for unit in _fallen_units:

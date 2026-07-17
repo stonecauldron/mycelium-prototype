@@ -1,20 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://cspearproj001"]
+[gd_scene format=3 uid="uid://cspearproj001"]
 
-[ext_resource type="Script" path="res://assets/combat/spear_projectile/spear_projectile.gd" id="1_spear"]
+[ext_resource type="Script" uid="uid://2pt0qx2qnuuo" path="res://assets/combat/spear_projectile/spear_projectile.gd" id="1_spear"]
+[ext_resource type="Texture2D" uid="uid://bj35arlgrvuum" path="res://assets/weapons/basic_spear/spear.png" id="2_c7uvy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_spear"]
-size = Vector2(48, 8)
+size = Vector2(97, 8)
 
-[node name="SpearProjectile" type="Area2D"]
+[node name="SpearProjectile" type="Area2D" unique_id=1082384796]
 collision_layer = 8
 collision_mask = 5
-monitoring = true
 monitorable = false
 script = ExtResource("1_spear")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1024114994]
+position = Vector2(0.5, 0)
 shape = SubResource("RectangleShape2D_spear")
 
-[node name="Visual" type="Polygon2D" parent="."]
-color = Color(0.55, 0.38, 0.22, 1)
-polygon = PackedVector2Array(-24, -3, 16, -3, 24, 0, 16, 3, -24, 3, -20, 0)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=324095007]
+position = Vector2(2, 9)
+rotation = 1.5707964
+scale = Vector2(0.3, 0.2)
+texture = ExtResource("2_c7uvy")

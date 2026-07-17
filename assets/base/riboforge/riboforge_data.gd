@@ -2,9 +2,10 @@ class_name RiboforgeData
 extends Resource
 
 const SHOP_SLOT_COUNT := 3
-const DEFAULT_WEAPON_PATH := "res://assets/weapons/basic_melee.tres"
-const _MELEE_WEAPON_PATH := "res://assets/weapons/basic_melee.tres"
-const _SPEAR_WEAPON_PATH := "res://assets/weapons/basic_spear.tres"
+## Bare fists: the unremovable fallback weapon for units with nothing equipped.
+const DEFAULT_WEAPON_PATH := "res://assets/weapons/bare_fists.tres"
+const MELEE_WEAPON_PATH := "res://assets/weapons/basic_melee/basic_melee.tres"
+const SPEAR_WEAPON_PATH := "res://assets/weapons/basic_spear/basic_spear.tres"
 const _DEFAULT_WEAPON_COST := 5
 
 static var _default_weapon: WeaponData
@@ -28,6 +29,12 @@ static func get_default_weapon() -> WeaponData:
 
 static func is_default_weapon(weapon: WeaponData) -> bool:
 	return weapon == null or weapon == get_default_weapon()
+
+
+static func icon_for_weapon(weapon: WeaponData) -> Texture2D:
+	if weapon == null:
+		return null
+	return weapon.icon
 
 
 func is_seeded() -> bool:
@@ -66,7 +73,7 @@ func replace_shop_slot(slot_index: int) -> void:
 
 
 func generate_weapon_offer() -> ShopOffer:
-	var path := _SPEAR_WEAPON_PATH if randf() < 0.5 else _MELEE_WEAPON_PATH
+	var path := SPEAR_WEAPON_PATH if randf() < 0.5 else MELEE_WEAPON_PATH
 	var weapon := load(path) as WeaponData
 	var offer := ShopOffer.new()
 	offer.item = weapon

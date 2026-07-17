@@ -18,6 +18,10 @@ const SQUAD_OFFSET := {
 @export var knockback_force: float = 280.0
 @export var biomass_cost: int = 5
 @export var appearance_scene: PackedScene
+## Card icon shown in shop/stock UI. Lives on the resource itself so it
+## survives duplicate() (unlike matching on resource_path, which is cleared
+## on duplicated resources).
+@export var icon: Texture2D
 
 
 func instantiate_appearance() -> Node2D:

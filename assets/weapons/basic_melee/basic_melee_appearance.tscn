@@ -1,8 +1,11 @@
-[gd_scene format=3 uid="uid://cbasicmeleeapp01"]
+[gd_scene format=3 uid="uid://cff2rfskam8sy"]
 
-[node name="BasicMeleeAppearance" type="Node2D"]
+[ext_resource type="Texture2D" uid="uid://dgrwl2tbl33wj" path="res://assets/weapons/basic_melee/sword.png" id="1_sword"]
 
-[node name="Visual" type="Polygon2D" parent="."]
-color = Color(0.45, 0.42, 0.4, 1)
-polygon = PackedVector2Array(0, -4, 28, -5, 36, 0, 28, 5, 0, 4, -4, 0)
-rotation = -0.6
+[node name="BasicMeleeAppearance" type="Node2D" unique_id=123957747]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=227833974]
+rotation = 0.970796
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_sword")
+offset = Vector2(-2.5, -167)

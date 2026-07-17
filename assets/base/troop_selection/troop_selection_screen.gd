@@ -4,8 +4,8 @@ extends BaseScreen
 const SQUAD_SLOT_COUNT := 12
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
-const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee.tres")
-const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear.tres")
+const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee/basic_melee.tres")
+const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 
 var bench: Array[RosterUnitData] = []
 var squad: Array = []

@@ -2,6 +2,8 @@ extends Node
 
 ## Session owner for persistent run state.
 const WIN_DAYS := 10
+const NURSERY_UNLOCK_DAY := 1
+const RIBOFORGE_UNLOCK_DAY := 2
 const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 
 var troop: TroopData = TroopData.new()
@@ -11,6 +13,8 @@ var biomass: BiomassData = BiomassData.new()
 var current_day: int = 0
 ## One-shot: open Nursery when returning to base after it unlocks.
 var prefer_nursery_tab: bool = false
+## One-shot: open Riboforge when returning to base after it unlocks.
+var prefer_riboforge_tab: bool = false
 
 
 func get_upcoming_day() -> int:
@@ -22,7 +26,11 @@ func has_won_run() -> bool:
 
 
 func is_nursery_unlocked() -> bool:
-	return current_day >= 1
+	return current_day >= NURSERY_UNLOCK_DAY
+
+
+func is_riboforge_unlocked() -> bool:
+	return current_day >= RIBOFORGE_UNLOCK_DAY
 
 
 func consume_prefer_nursery_tab() -> bool:
@@ -30,6 +38,13 @@ func consume_prefer_nursery_tab() -> bool:
 		return false
 	prefer_nursery_tab = false
 	return is_nursery_unlocked()
+
+
+func consume_prefer_riboforge_tab() -> bool:
+	if not prefer_riboforge_tab:
+		return false
+	prefer_riboforge_tab = false
+	return is_riboforge_unlocked()
 
 
 func ensure_nursery_seeded() -> void:
@@ -120,3 +135,4 @@ func reset_run() -> void:
 	biomass.reset()
 	current_day = 0
 	prefer_nursery_tab = false
+	prefer_riboforge_tab = false

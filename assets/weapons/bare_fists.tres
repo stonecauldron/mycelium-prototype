@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://c7hq4mtxkfd8n"]
+
+[ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+
+[resource]
+script = ExtResource("1_weapon")
+display_name = "Bare Fists"
+base_damage = 3
+attack_range = 86.0
+knockback_force = 140.0
+biomass_cost = 0

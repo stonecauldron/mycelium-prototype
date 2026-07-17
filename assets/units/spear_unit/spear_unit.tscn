@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cspearunit001"]
 
 [ext_resource type="Script" uid="uid://drm1bg6fdninn" path="res://assets/units/unit.gd" id="1_unit"]
-[ext_resource type="Resource" uid="uid://bm7kydjlcgjoi" path="res://assets/weapons/basic_spear.tres" id="2_weapon"]
+[ext_resource type="Resource" uid="uid://bm7kydjlcgjoi" path="res://assets/weapons/basic_spear/basic_spear.tres" id="2_weapon"]
 [ext_resource type="Script" uid="uid://cns4xbglj3l7t" path="res://assets/components/hitbox_component.gd" id="4_hitbox"]
-[ext_resource type="PackedScene" uid="uid://ccaplingappear01" path="res://assets/units/capling/capling_appearance.tscn" id="5_appear"]
+[ext_resource type="PackedScene" uid="uid://dq1q1a7s2xhy3" path="res://assets/units/capling/capling_appearance.tscn" id="5_appear"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
 size = Vector2(40, 20)

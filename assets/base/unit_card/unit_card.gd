@@ -3,6 +3,7 @@ extends PanelContainer
 
 signal drag_started(card: UnitCard)
 signal clicked(card: UnitCard)
+signal weapon_loadout_changed(card: UnitCard)
 
 const CARD_SIZE := Vector2(140, 160)
 const PORTRAIT_SCALE := 0.55
@@ -105,12 +106,30 @@ func _refresh_portrait(data: RosterUnitData) -> void:
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	if unit_data == null:
 		return null
+	# Riboforge: drag unequips non-default weapons onto the stock panel.
+	if source == "riboforge_squad":
+		var roster := unit_data as RosterUnitData
+		if roster == null or RiboforgeData.is_default_weapon(roster.weapon):
+			return null
+		_drag_started_flag = true
+		drag_started.emit(self)
+		var weapon_card_scene: PackedScene = load("res://assets/base/riboforge/weapon_card.tscn")
+		var preview := weapon_card_scene.instantiate() as WeaponCard
+		preview.setup(roster.weapon, -1)
+		preview.modulate = Color(1, 1, 1, 0.85)
+		preview.reset_compact_layout()
+		set_drag_preview(preview)
+		return {
+			"type": "equipped_weapon",
+			"unit": roster,
+			"weapon": roster.weapon,
+		}
 	_drag_started_flag = true
 	drag_started.emit(self)
-	var preview := duplicate() as UnitCard
-	preview.modulate = Color(1, 1, 1, 0.85)
-	preview.reset_compact_layout()
-	set_drag_preview(preview)
+	var unit_preview := duplicate() as UnitCard
+	unit_preview.modulate = Color(1, 1, 1, 0.85)
+	unit_preview.reset_compact_layout()
+	set_drag_preview(unit_preview)
 	return {
 		"unit": unit_data,
 		"source": source,
@@ -137,6 +156,10 @@ func _notification(what: int) -> void:
 
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
+	if typeof(data) == TYPE_DICTIONARY and unit_data is RosterUnitData:
+		var drop_type := str(data.get("type", ""))
+		if drop_type == "weapon" or drop_type == "shop_weapon":
+			return true
 	# Occupied squad slots: the card covers the DropSlot, so forward drops.
 	if slot != null and slot.has_method("_can_drop_data"):
 		return slot._can_drop_data(at_position, data)
@@ -147,6 +170,11 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
+	if typeof(data) == TYPE_DICTIONARY and unit_data is RosterUnitData:
+		var drop_type := str(data.get("type", ""))
+		if drop_type == "weapon" or drop_type == "shop_weapon":
+			_try_receive_weapon(data)
+			return
 	if slot != null and slot.has_method("_drop_data"):
 		slot._drop_data(at_position, data)
 		return
@@ -154,6 +182,33 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 		var base := _find_base()
 		if base != null and base.has_method("_bench_drop"):
 			base._bench_drop(at_position, data)
+
+
+func _try_receive_weapon(data: Dictionary) -> void:
+	var unit := unit_data as RosterUnitData
+	if unit == null:
+		return
+	var drop_type := str(data.get("type", ""))
+	if drop_type == "weapon":
+		var stock_index := int(data.get("stock_index", -1))
+		if GameState.try_equip_weapon_from_stock(unit, stock_index):
+			_refresh()
+			weapon_loadout_changed.emit(self)
+		return
+	if drop_type == "shop_weapon":
+		var weapon := data.get("weapon") as WeaponData
+		var cost := int(data.get("cost", 0))
+		var slot_index := int(data.get("slot_index", -1))
+		if weapon == null:
+			return
+		if not GameState.try_buy_weapon(weapon, cost):
+			return
+		if slot_index >= 0:
+			GameState.riboforge.replace_shop_slot(slot_index)
+		var new_index := GameState.riboforge.weapon_stock.size() - 1
+		if GameState.try_equip_weapon_from_stock(unit, new_index):
+			_refresh()
+			weapon_loadout_changed.emit(self)
 
 
 func _find_base() -> Node:

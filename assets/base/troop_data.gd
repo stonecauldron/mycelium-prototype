@@ -55,7 +55,42 @@ func remove_unit(unit_data: RosterUnitData) -> void:
 		if squad[i] == unit_data:
 			squad[i] = null
 	bench.erase(unit_data)
-	sort_squad()
+	pack_squad()
+
+
+func insert_unit_into_squad_sorted(unit: RosterUnitData) -> bool:
+	if unit == null:
+		return false
+	if squad_unit_count() >= SQUAD_SLOT_COUNT:
+		return false
+	var occupied: Array = []
+	for entry in squad:
+		var existing := entry as RosterUnitData
+		if existing != null:
+			occupied.append(existing)
+	var insert_index := occupied.size()
+	for i in occupied.size():
+		if compare_units(unit, occupied[i]):
+			insert_index = i
+			break
+	occupied.insert(insert_index, unit)
+	squad.clear()
+	for existing in occupied:
+		squad.append(existing)
+	_ensure_squad_size()
+	return true
+
+
+func pack_squad() -> void:
+	var occupied: Array = []
+	for entry in squad:
+		var unit := entry as RosterUnitData
+		if unit != null:
+			occupied.append(unit)
+	squad.clear()
+	for unit in occupied:
+		squad.append(unit)
+	_ensure_squad_size()
 
 
 func advance_unit_ages() -> Array[RosterUnitData]:
@@ -123,7 +158,7 @@ func compare_units(a: RosterUnitData, b: RosterUnitData) -> bool:
 	var spd_a := a.stats.spd if a.stats != null else 0
 	var spd_b := b.stats.spd if b.stats != null else 0
 	if spd_a != spd_b:
-		return spd_a > spd_b
+		return spd_a < spd_b
 
 	return a.display_name.naturalnocasecmp_to(b.display_name) < 0
 

@@ -30,7 +30,7 @@ func _ready() -> void:
 
 
 func on_screen_shown() -> void:
-	GameState.troop.sort_rosters()
+	GameState.troop.sort_bench()
 	_rebuild_bench_ui()
 	_sync_all_slots()
 	_refresh_start_combat_button()
@@ -40,7 +40,7 @@ func _hydrate_from_troop_data() -> void:
 	if not GameState.troop.is_seeded():
 		GameState.troop.seed_if_empty(_make_default_starters())
 	else:
-		GameState.troop.sort_rosters()
+		GameState.troop.sort_bench()
 	bench = GameState.troop.bench
 	squad = GameState.troop.squad
 
@@ -108,10 +108,9 @@ func _on_unit_card_clicked(card: UnitCard) -> void:
 		return
 
 	if card.source == "bench":
-		if not _add_unit_to_squad(unit):
+		if not GameState.troop.insert_unit_into_squad_sorted(unit):
 			return
 		bench.erase(unit)
-		_sort_squad()
 		_sync_all_slots()
 		_rebuild_bench_ui()
 		return
@@ -120,17 +119,8 @@ func _on_unit_card_clicked(card: UnitCard) -> void:
 		_remove_unit_from_squad(unit)
 		if not bench.has(unit):
 			bench.append(unit)
-		_sort_squad()
 		_sync_all_slots()
 		_rebuild_bench_ui()
-
-
-func _add_unit_to_squad(unit: RosterUnitData) -> bool:
-	for i in squad.size():
-		if squad[i] == null:
-			squad[i] = unit
-			return true
-	return false
 
 
 func _remove_unit_from_squad(unit: RosterUnitData) -> void:
@@ -158,7 +148,6 @@ func _on_slot_unit_dropped(slot: DropSlot, drag_data: Dictionary) -> void:
 		squad[slot.slot_index] = unit
 		if displaced != null:
 			bench.append(displaced)
-		_sort_squad()
 		_sync_all_slots()
 		_rebuild_bench_ui()
 		return
@@ -166,7 +155,6 @@ func _on_slot_unit_dropped(slot: DropSlot, drag_data: Dictionary) -> void:
 	if source == "squad" and source_slot != null:
 		squad[source_slot.slot_index] = displaced
 		squad[slot.slot_index] = unit
-		_sort_squad()
 		_sync_all_slots()
 
 
@@ -188,13 +176,8 @@ func _bench_drop(_at_position: Vector2, data: Variant) -> void:
 	squad[source_slot.slot_index] = null
 	if not bench.has(unit):
 		bench.append(unit)
-	_sort_squad()
 	_sync_all_slots()
 	_rebuild_bench_ui()
-
-
-func _sort_squad() -> void:
-	GameState.troop.sort_squad()
 
 
 func _sort_unit_list(units: Array) -> void:

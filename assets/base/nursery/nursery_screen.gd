@@ -9,7 +9,7 @@ const _SPORE_ICON := preload("res://assets/base/nursery/spores.png")
 @onready var _stock_label: Label = %StockLabel
 @onready var _stock_row: HBoxContainer = %StockRow
 @onready var _stock_panel: StockDropHost = %StockPanel
-@onready var _plot_row: GridContainer = %PlotRow
+@onready var _plot_row: HBoxContainer = %PlotRow
 @onready var _shop_column: VBoxContainer = %ShopColumn
 @onready var _reroll_button: Button = %RerollButton
 @onready var _reroll_cost_label: Label = %RerollCostLabel
@@ -218,6 +218,7 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 		NurseryPlotData.State.GROWING:
 			_set_status("Still growing")
 		NurseryPlotData.State.READY:
+			var as_imago := plot.will_harvest_as_imago()
 			var unit := nursery.harvest(tile.plot_index)
 			if unit == null:
 				_set_status("Could not harvest")
@@ -227,7 +228,10 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 				GameState.troop.seed_if_empty(empty_bench)
 			GameState.troop.bench.append(unit)
 			GameState.troop.sort_bench()
-			_set_status("Harvested %s → bench" % unit.display_name)
+			if as_imago:
+				_set_status("Harvested imago %s → bench" % unit.display_name)
+			else:
+				_set_status("Harvested %s → bench" % unit.display_name)
 			_refresh()
 
 

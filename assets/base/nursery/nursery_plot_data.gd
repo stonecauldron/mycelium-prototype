@@ -15,6 +15,12 @@ func can_harvest() -> bool:
 	return get_state() == State.READY
 
 
+func will_harvest_as_imago() -> bool:
+	if planted_spore == null:
+		return false
+	return planted_spore.grants_imago_at(days_grown)
+
+
 func get_state() -> State:
 	if planted_spore == null:
 		return State.EMPTY

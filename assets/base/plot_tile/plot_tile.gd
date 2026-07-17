@@ -11,6 +11,7 @@ const _TEX_EMPTY := preload("res://assets/base/plot_tile/plot_empty.png")
 const _TEX_GROWTH0 := preload("res://assets/base/plot_tile/growth0.png")
 const _TEX_GROWTH1 := preload("res://assets/base/plot_tile/growth1.png")
 const _TEX_GROWTH2 := preload("res://assets/base/plot_tile/growth2.png")
+const _TEX_GROWTH4 := preload("res://assets/base/plot_tile/growth4.png")
 
 var plot_index: int = 0
 var is_unlockable: bool = false
@@ -116,7 +117,7 @@ func _refresh() -> void:
 			modulate = Color.WHITE
 			_base_modulate = modulate
 		NurseryPlotData.State.READY:
-			_hint_label.text = "Ready to harvest"
+			_hint_label.text = "Ready (imago)" if _plot.will_harvest_as_imago() else "Ready to harvest"
 			modulate = Color.WHITE
 			_base_modulate = modulate
 	_apply_visual_state()
@@ -141,6 +142,8 @@ func _texture_for_plot() -> Texture2D:
 	if _plot == null or _plot.get_state() == NurseryPlotData.State.EMPTY:
 		return _TEX_EMPTY
 	if _plot.get_state() == NurseryPlotData.State.READY:
+		if _plot.will_harvest_as_imago():
+			return _TEX_GROWTH4
 		return _TEX_GROWTH2
 	var needed := 1
 	if _plot.planted_spore != null:

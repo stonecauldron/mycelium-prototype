@@ -142,15 +142,12 @@ func advance_day() -> Array[Dictionary]:
 		var plot := plots[i] as NurseryPlotData
 		if plot == null or plot.planted_spore == null:
 			continue
-		if plot.get_state() != NurseryPlotData.State.GROWING:
-			continue
 		plot.days_grown += 1
-		if plot.get_state() != NurseryPlotData.State.READY:
-			continue
-		matured.append({
-			"plot_index": i,
-			"spore_name": plot.planted_spore.display_name,
-		})
+		if plot.days_grown == plot.planted_spore.days_to_mature:
+			matured.append({
+				"plot_index": i,
+				"spore_name": plot.planted_spore.display_name,
+			})
 	return matured
 
 
@@ -162,7 +159,10 @@ func harvest(plot_index: int) -> RosterUnitData:
 	var plot := plots[plot_index] as NurseryPlotData
 	if plot == null or not plot.can_harvest():
 		return null
+	var as_imago := plot.will_harvest_as_imago()
 	var unit := _make_harvest_unit(plot.planted_spore)
+	if as_imago and unit != null:
+		unit.promote_to_imago()
 	plot.clear()
 	return unit
 

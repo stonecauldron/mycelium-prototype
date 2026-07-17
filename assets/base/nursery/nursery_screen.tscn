@@ -103,14 +103,12 @@ layout_mode = 2
 theme_type_variation = &"SectionTitleLabel"
 text = "Plots"
 
-[node name="PlotRow" type="GridContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/PlotsPanel/PlotsMargin/PlotsVBox" unique_id=103951673]
+[node name="PlotRow" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/PlotsPanel/PlotsMargin/PlotsVBox" unique_id=103951673]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-columns = 3
+theme_override_constants/separation = 8
 
 [node name="ShopPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox" unique_id=1879012606]
 custom_minimum_size = Vector2(180, 0)

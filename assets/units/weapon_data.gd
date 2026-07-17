@@ -16,6 +16,7 @@ const SQUAD_OFFSET := {
 @export var base_damage: int = 5
 @export var attack_range: float = 48.0
 @export var knockback_force: float = 280.0
+@export var biomass_cost: int = 5
 @export var appearance_scene: PackedScene
 
 

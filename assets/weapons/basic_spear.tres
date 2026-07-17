@@ -9,4 +9,5 @@ display_name = "Basic Spear"
 range_class = 1
 attack_range = 400.0
 knockback_force = 0.0
+biomass_cost = 8
 appearance_scene = ExtResource("2_appear")

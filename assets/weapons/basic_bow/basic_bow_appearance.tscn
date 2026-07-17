@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://ru18fydvyq1u"]
+
+[ext_resource type="Texture2D" uid="uid://ba54ju7pqqlac" path="res://assets/weapons/basic_bow/bow.png" id="1_bow"]
+
+[node name="BasicBowAppearance" type="Node2D"]
+
+[node name="Visual" type="Sprite2D" parent="."]
+rotation = 0.2
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("1_bow")
+offset = Vector2(40, -80)

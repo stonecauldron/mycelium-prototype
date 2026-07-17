@@ -6,7 +6,9 @@ const SHOP_SLOT_COUNT := 3
 const DEFAULT_WEAPON_PATH := "res://assets/weapons/bare_fists.tres"
 const MELEE_WEAPON_PATH := "res://assets/weapons/basic_melee/basic_melee.tres"
 const SPEAR_WEAPON_PATH := "res://assets/weapons/basic_spear/basic_spear.tres"
+const BOW_WEAPON_PATH := "res://assets/weapons/basic_bow/basic_bow.tres"
 const _DEFAULT_WEAPON_COST := 5
+const _SHOP_WEAPON_PATHS := [MELEE_WEAPON_PATH, SPEAR_WEAPON_PATH, BOW_WEAPON_PATH]
 
 static var _default_weapon: WeaponData
 
@@ -73,7 +75,7 @@ func replace_shop_slot(slot_index: int) -> void:
 
 
 func generate_weapon_offer() -> ShopOffer:
-	var path := SPEAR_WEAPON_PATH if randf() < 0.5 else MELEE_WEAPON_PATH
+	var path: String = _SHOP_WEAPON_PATHS[randi() % _SHOP_WEAPON_PATHS.size()]
 	var weapon := load(path) as WeaponData
 	var offer := ShopOffer.new()
 	offer.item = weapon

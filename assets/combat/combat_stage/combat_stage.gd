@@ -212,5 +212,5 @@ func _refresh_unit_process_order() -> void:
 func _clear_world_vfx() -> void:
 	var world := $World
 	for child in world.get_children():
-		if child is DamageNumber or child is SpearProjectile:
+		if child is DamageNumber or child is SpearProjectile or child is ArrowProjectile:
 			child.queue_free()

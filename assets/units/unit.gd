@@ -20,6 +20,9 @@ const THROW_MAX_DURATION := 1.4
 const THROW_AIM_JITTER_X := 40.0
 const THROW_AIM_JITTER_Y := 20.0
 const THROW_ORIGIN_HEIGHT := -48.0
+const RANGED_RELEASE_DELAY := 0.18
+const RANGED_RECOVERY_TIME := 0.32
+const RANGED_ORIGIN_HEIGHT := -40.0
 const MELEE_PROXIMITY := 160.0
 const KNOCKBACK_UP_RATIO := 0.5
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
@@ -27,6 +30,7 @@ const HURT_FLASH_TIME := 0.12
 
 const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_number.tscn")
 const _SPEAR_PROJECTILE_SCENE := preload("res://assets/combat/spear_projectile/spear_projectile.tscn")
+const _ARROW_PROJECTILE_SCENE := preload("res://assets/combat/arrow_projectile/arrow_projectile.tscn")
 
 const COLLISION_WORLD := 1
 const COLLISION_PLAYER_UNITS := 2
@@ -177,6 +181,8 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 0.0
 		if weapon.range_class == WeaponData.WeaponRange.MID:
 			_process_throw_attack(delta)
+		elif weapon.range_class == WeaponData.WeaponRange.RANGED:
+			_process_ranged_attack(delta)
 		move_and_slide()
 		return
 
@@ -219,7 +225,10 @@ func _process_combat(delta: float) -> void:
 
 	var distance := global_position.distance_to(_target.global_position)
 	if (
-		weapon.range_class == WeaponData.WeaponRange.MID
+		(
+			weapon.range_class == WeaponData.WeaponRange.MID
+			or weapon.range_class == WeaponData.WeaponRange.RANGED
+		)
 		and distance <= MELEE_PROXIMITY
 	):
 		_return_home()
@@ -291,6 +300,9 @@ func _start_attack() -> void:
 	if weapon.range_class == WeaponData.WeaponRange.MID:
 		_start_throw_attack()
 		return
+	if weapon.range_class == WeaponData.WeaponRange.RANGED:
+		_start_ranged_attack()
+		return
 
 	_hitbox.enable_for_attack(
 		_get_attack_damage(),
@@ -357,6 +369,49 @@ func _spawn_spear_projectile() -> void:
 	world.add_child(spear)
 	spear.launch(
 		global_position + Vector2(0.0, THROW_ORIGIN_HEIGHT),
+		aim,
+		_get_attack_damage(),
+		weapon.knockback_force,
+		self
+	)
+
+
+func _start_ranged_attack() -> void:
+	_throw_released = false
+	_throw_timer = 0.0
+
+
+func _process_ranged_attack(delta: float) -> void:
+	_throw_timer += delta
+	if not _throw_released and _throw_timer >= RANGED_RELEASE_DELAY:
+		_throw_released = true
+		_spawn_arrow_projectile()
+		_throw_timer = 0.0
+		return
+
+	if _throw_released and _throw_timer >= RANGED_RECOVERY_TIME:
+		_finish_attack()
+
+
+func _spawn_arrow_projectile() -> void:
+	var world := _get_world_node()
+	if world == null:
+		return
+
+	var opponent := _troop.get_opponent()
+	if opponent == null:
+		return
+
+	var aim := opponent.get_living_units_midpoint()
+	aim += Vector2(
+		randf_range(-THROW_AIM_JITTER_X, THROW_AIM_JITTER_X),
+		randf_range(-THROW_AIM_JITTER_Y, THROW_AIM_JITTER_Y)
+	)
+
+	var arrow: ArrowProjectile = _ARROW_PROJECTILE_SCENE.instantiate()
+	world.add_child(arrow)
+	arrow.launch(
+		global_position + Vector2(0.0, RANGED_ORIGIN_HEIGHT),
 		aim,
 		_get_attack_damage(),
 		weapon.knockback_force,

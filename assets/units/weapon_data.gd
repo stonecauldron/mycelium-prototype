@@ -7,7 +7,7 @@ enum TargetingMode { SINGLE, AOE }
 const SQUAD_OFFSET := {
 	WeaponRange.MELEE: 48.0,
 	WeaponRange.MID: 52.0,
-	WeaponRange.RANGED: -60.0,
+	WeaponRange.RANGED: -140.0,
 }
 
 @export var display_name: String = ""

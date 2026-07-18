@@ -4,6 +4,12 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="3_biomass"]
 [ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="4_figtree"]
+[ext_resource type="Texture2D" uid="uid://cnxfhca438svu" path="res://assets/base/background/background.png" id="5_bg_far"]
+[ext_resource type="Texture2D" uid="uid://brnicc8ghj3md" path="res://assets/base/background/upper_foreground.png" id="9_bg_upper_fg"]
+[ext_resource type="Texture2D" uid="uid://c00gqs4n3sm1c" path="res://assets/base/background/lower_foreground.png" id="10_bg_lower_fg"]
+[ext_resource type="PackedScene" uid="uid://c4swjtkoverfp" path="res://assets/base/nursery/nursery_screen.tscn" id="11_nursery"]
+[ext_resource type="PackedScene" uid="uid://ctgmgo4sqa1g7" path="res://assets/base/riboforge/riboforge_screen.tscn" id="12_riboforge"]
+[ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icon"]
 bg_color = Color(0.1, 0.1, 0.1, 1)
@@ -29,17 +35,25 @@ variation_opentype = {
 2003265652: 500
 }
 
-[node name="Base" type="Control" unique_id=1100450681]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bottom_bg"]
+bg_color = Color(0.086, 0.122, 0.118, 0.68)
+
+[node name="Base" type="Node2D" unique_id=65120356]
+script = ExtResource("1_base")
+
+[node name="BackdropLayer" type="CanvasLayer" parent="." unique_id=885466703]
+layer = -10
+
+[node name="Backdrop" type="Control" parent="BackdropLayer" unique_id=1113877553]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_theme")
-script = ExtResource("1_base")
+mouse_filter = 2
 
-[node name="Background" type="ColorRect" parent="." unique_id=1131029869]
+[node name="FarLayer" type="TextureRect" parent="BackdropLayer/Backdrop" unique_id=811087870]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -47,27 +61,166 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.12, 0.13, 0.12, 1)
+texture = ExtResource("5_bg_far")
+expand_mode = 1
 
-[node name="RootMargin" type="MarginContainer" parent="." unique_id=1138225624]
+[node name="World" type="Node2D" parent="." unique_id=48472731]
+
+[node name="BaseCamera" type="Camera2D" parent="World" unique_id=509771903]
+unique_name_in_owner = true
+position = Vector2(960, 540)
+
+[node name="Zones" type="Node2D" parent="World" unique_id=2009775218]
+
+[node name="NurseryZone" type="Node2D" parent="World/Zones" unique_id=116231748]
+unique_name_in_owner = true
+
+[node name="Host" type="Control" parent="World/Zones/NurseryZone" unique_id=990024403]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="UpperForegroundLayer" type="TextureRect" parent="World/Zones/NurseryZone/Host" unique_id=1090787679]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("9_bg_upper_fg")
+expand_mode = 1
+
+[node name="NurseryScreen" parent="World/Zones/NurseryZone/Host" unique_id=816589104 instance=ExtResource("11_nursery")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+
+[node name="LowerForegroundLayer" type="TextureRect" parent="World/Zones/NurseryZone/Host" unique_id=2058806578]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("10_bg_lower_fg")
+expand_mode = 1
+
+[node name="RiboforgeZone" type="Node2D" parent="World/Zones" unique_id=3879105]
+unique_name_in_owner = true
+position = Vector2(1920, 0)
+
+[node name="Host" type="Control" parent="World/Zones/RiboforgeZone" unique_id=1763357063]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="RiboforgeScreen" parent="World/Zones/RiboforgeZone/Host" unique_id=1966144431 instance=ExtResource("12_riboforge")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="UpperForegroundLayer" type="TextureRect" parent="World/Zones/RiboforgeZone/Host" unique_id=1386009894]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("9_bg_upper_fg")
+expand_mode = 1
+
+[node name="LowerForegroundLayer" type="TextureRect" parent="World/Zones/RiboforgeZone/Host" unique_id=1093041674]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("10_bg_lower_fg")
+expand_mode = 1
+
+[node name="ColonyZone" type="Node2D" parent="World/Zones" unique_id=688036510]
+unique_name_in_owner = true
+position = Vector2(3840, 0)
+
+[node name="Host" type="Control" parent="World/Zones/ColonyZone" unique_id=956056943]
+custom_minimum_size = Vector2(1920, 1080)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="UpperForegroundLayer" type="TextureRect" parent="World/Zones/ColonyZone/Host" unique_id=1500394444]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("9_bg_upper_fg")
+expand_mode = 1
+
+[node name="ColonyScreen" parent="World/Zones/ColonyZone/Host" unique_id=685627613 instance=ExtResource("13_colony")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="LowerForegroundLayer" type="TextureRect" parent="World/Zones/ColonyZone/Host" unique_id=167410505]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("10_bg_lower_fg")
+expand_mode = 1
+
+[node name="HudLayer" type="CanvasLayer" parent="." unique_id=596109145]
+layer = 10
+
+[node name="HudRoot" type="Control" parent="HudLayer" unique_id=2088734406]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_theme")
+
+[node name="RootMargin" type="MarginContainer" parent="HudLayer/HudRoot" unique_id=1955995703]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 theme_type_variation = &"BaseRootMargin"
 
-[node name="RootVBox" type="VBoxContainer" parent="RootMargin" unique_id=246075591]
+[node name="RootVBox" type="VBoxContainer" parent="HudLayer/HudRoot/RootMargin" unique_id=1433955630]
 layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"RootStack"
 
-[node name="TopBar" type="HBoxContainer" parent="RootMargin/RootVBox" unique_id=300762639]
+[node name="TopBar" type="HBoxContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox" unique_id=19804651]
 custom_minimum_size = Vector2(0, 125)
 layout_mode = 2
 theme_type_variation = &"TightHBox"
 
-[node name="DayLabel" type="Label" parent="RootMargin/RootVBox/TopBar" unique_id=651698557]
+[node name="DayLabel" type="Label" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar" unique_id=30292540]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -75,43 +228,43 @@ theme_type_variation = &"PageTitleLabel"
 text = "Day 1 / 10"
 vertical_alignment = 1
 
-[node name="BiomassChip" type="HBoxContainer" parent="RootMargin/RootVBox/TopBar" unique_id=1696753766]
+[node name="BiomassChip" type="HBoxContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar" unique_id=1142113358]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_constants/separation = 0
 
-[node name="IconFrame" type="PanelContainer" parent="RootMargin/RootVBox/TopBar/BiomassChip" unique_id=695637705]
+[node name="IconFrame" type="PanelContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar/BiomassChip" unique_id=1237646514]
 custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_icon")
 
-[node name="Icon" type="TextureRect" parent="RootMargin/RootVBox/TopBar/BiomassChip/IconFrame" unique_id=781605682]
+[node name="Icon" type="TextureRect" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar/BiomassChip/IconFrame" unique_id=473024144]
 layout_mode = 2
 texture = ExtResource("3_biomass")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="InfoFrame" type="PanelContainer" parent="RootMargin/RootVBox/TopBar/BiomassChip" unique_id=202483704]
+[node name="InfoFrame" type="PanelContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar/BiomassChip" unique_id=1612260852]
 custom_minimum_size = Vector2(140, 72)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_info")
 
-[node name="InfoVBox" type="VBoxContainer" parent="RootMargin/RootVBox/TopBar/BiomassChip/InfoFrame" unique_id=79314904]
+[node name="InfoVBox" type="VBoxContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar/BiomassChip/InfoFrame" unique_id=406518560]
 layout_mode = 2
 theme_override_constants/separation = 2
 alignment = 1
 
-[node name="BiomassTitle" type="Label" parent="RootMargin/RootVBox/TopBar/BiomassChip/InfoFrame/InfoVBox" unique_id=495073330]
+[node name="BiomassTitle" type="Label" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar/BiomassChip/InfoFrame/InfoVBox" unique_id=1709637846]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
 theme_override_fonts/font = SubResource("Font_biomass_amount")
 theme_override_font_sizes/font_size = 14
 text = "BIOMASS"
 
-[node name="BiomassAmount" type="Label" parent="RootMargin/RootVBox/TopBar/BiomassChip/InfoFrame/InfoVBox" unique_id=698006715]
+[node name="BiomassAmount" type="Label" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar/BiomassChip/InfoFrame/InfoVBox" unique_id=1526240313]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
@@ -119,26 +272,46 @@ theme_override_fonts/font = SubResource("Font_biomass_amount")
 theme_override_font_sizes/font_size = 28
 text = "0000 kg"
 
-[node name="ContentPanel" type="PanelContainer" parent="RootMargin/RootVBox" unique_id=1192633384]
+[node name="Spacer" type="Control" parent="HudLayer/HudRoot/RootMargin/RootVBox" unique_id=171144055]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 
-[node name="ContentHost" type="Control" parent="RootMargin/RootVBox/ContentPanel" unique_id=863862479]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="BottomBar" type="PanelContainer" parent="RootMargin/RootVBox" unique_id=959213355]
+[node name="BottomBar" type="PanelContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox" unique_id=1027196615]
 custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bottom_bg")
 
-[node name="BottomMargin" type="MarginContainer" parent="RootMargin/RootVBox/BottomBar" unique_id=1650097889]
+[node name="BottomMargin" type="MarginContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar" unique_id=1027746649]
 layout_mode = 2
 theme_type_variation = &"BottomBarMargin"
 
-[node name="TabBar" type="HBoxContainer" parent="RootMargin/RootVBox/BottomBar/BottomMargin" unique_id=1026750562]
+[node name="BottomRow" type="HBoxContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin" unique_id=1277926681]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LeftPad" type="Control" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow" unique_id=221401387]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="TabBar" type="HBoxContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow" unique_id=2001233876]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
 theme_type_variation = &"TabBarRow"
 alignment = 1
+
+[node name="RightPad" type="HBoxContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow" unique_id=1504207992]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="StartCombatButton" type="Button" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow/RightPad" unique_id=1667727997]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 56)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
+disabled = true
+text = "Start Combat"

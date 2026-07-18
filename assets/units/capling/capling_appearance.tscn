@@ -40,7 +40,7 @@ position = Vector2(1, -52)
 scale = Vector2(0.4, 0.4)
 texture = ExtResource("2_tex")
 region_enabled = true
-region_rect = Rect2(169, 238, 175, 274)
+region_rect = Rect2(160, 117, 192, 303)
 
 [node name="WeaponMount" type="Node2D" parent="." unique_id=1779674008]
 position = Vector2(31, -32)

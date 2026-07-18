@@ -5,8 +5,8 @@ signal drag_started(card: UnitCard)
 signal clicked(card: UnitCard)
 signal weapon_loadout_changed(card: UnitCard)
 
-const CARD_SIZE := Vector2(140, 160)
-const PORTRAIT_SCALE := 0.55
+const CARD_SIZE := Vector2(140, 180)
+const PORTRAIT_SCALE := 1.0
 const RANGE_LABELS := {
 	WeaponData.WeaponRange.MELEE: "Melee",
 	WeaponData.WeaponRange.MID: "Mid",

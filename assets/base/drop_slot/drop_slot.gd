@@ -73,7 +73,7 @@ func take_card() -> Control:
 
 func _update_placeholder() -> void:
 	if _placeholder:
-		_placeholder.visible = occupied_unit == null
+		_placeholder.visible = false
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:

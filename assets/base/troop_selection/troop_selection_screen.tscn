@@ -2,8 +2,13 @@
 
 [ext_resource type="Script" uid="uid://dnmbttf360iww" path="res://assets/base/troop_selection/troop_selection_screen.gd" id="1_screen"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://clt2ubxc7lo1c" path="res://assets/base/background/upper_lane.png" id="3_upper_lane"]
+[ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="4_lower_lane"]
 
-[node name="TroopSelectionScreen" type="Control"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
+
+[node name="TroopSelectionScreen" type="Control" unique_id=455999625]
+custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,74 +18,95 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_screen")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="UpperLaneLayer" type="TextureRect" parent="." unique_id=1298238025]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"ScreenMargin"
+mouse_filter = 2
+texture = ExtResource("3_upper_lane")
+expand_mode = 1
 
-[node name="RootVBox" type="VBoxContainer" parent="Margin"]
-layout_mode = 2
+[node name="LowerLaneLayer" type="TextureRect" parent="." unique_id=427991229]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_lower_lane")
+expand_mode = 1
+
+[node name="HeaderBlock" type="VBoxContainer" parent="." unique_id=826697549]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 16.0
+offset_top = 141.0
+offset_right = 640.0
+offset_bottom = 219.0
+mouse_filter = 2
 theme_type_variation = &"SectionVBox"
 
-[node name="Header" type="Label" parent="Margin/RootVBox"]
+[node name="Header" type="Label" parent="HeaderBlock" unique_id=1708698391]
 layout_mode = 2
 theme_type_variation = &"PageTitleLabel"
 text = "Colony — Deploy Squad"
 
-[node name="Subtitle" type="Label" parent="Margin/RootVBox"]
+[node name="Subtitle" type="Label" parent="HeaderBlock" unique_id=1767566579]
 layout_mode = 2
 theme_type_variation = &"PageSubtitleLabel"
 text = "Click or drag units between the bench and the troop row."
 
-[node name="BenchPanel" type="PanelContainer" parent="Margin/RootVBox"]
+[node name="BenchPanel" type="PanelContainer" parent="." unique_id=710296817]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 220)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 232.0
+offset_right = -16.0
+offset_bottom = 464.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
-[node name="BenchMargin" type="MarginContainer" parent="Margin/RootVBox/BenchPanel"]
+[node name="BenchMargin" type="MarginContainer" parent="BenchPanel" unique_id=878538865]
 layout_mode = 2
 theme_type_variation = &"PanelInnerMargin"
 
-[node name="BenchVBox" type="VBoxContainer" parent="Margin/RootVBox/BenchPanel/BenchMargin"]
+[node name="BenchVBox" type="VBoxContainer" parent="BenchPanel/BenchMargin" unique_id=1807134095]
 layout_mode = 2
 theme_type_variation = &"TightVBox"
 
-[node name="BenchTitle" type="Label" parent="Margin/RootVBox/BenchPanel/BenchMargin/BenchVBox"]
+[node name="BenchTitle" type="Label" parent="BenchPanel/BenchMargin/BenchVBox" unique_id=1323217261]
 layout_mode = 2
 theme_type_variation = &"SectionTitleLabel"
 text = "Bench"
 
-[node name="BenchGrid" type="HBoxContainer" parent="Margin/RootVBox/BenchPanel/BenchMargin/BenchVBox"]
+[node name="BenchGrid" type="HBoxContainer" parent="BenchPanel/BenchMargin/BenchVBox" unique_id=1082664112]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 160)
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
+size_flags_vertical = 3
 theme_type_variation = &"TightHBox"
 
-[node name="SquadPanel" type="PanelContainer" parent="Margin/RootVBox"]
-custom_minimum_size = Vector2(0, 220)
-layout_mode = 2
+[node name="SquadPanel" type="PanelContainer" parent="." unique_id=1422856244]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 591.0
+offset_right = -16.0
+offset_bottom = 821.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
-[node name="SquadMargin" type="MarginContainer" parent="Margin/RootVBox/SquadPanel"]
+[node name="SquadMargin" type="MarginContainer" parent="SquadPanel" unique_id=1251518974]
 layout_mode = 2
 theme_type_variation = &"PanelInnerMargin"
 
-[node name="SquadRows" type="VBoxContainer" parent="Margin/RootVBox/SquadPanel/SquadMargin"]
+[node name="SquadRows" type="VBoxContainer" parent="SquadPanel/SquadMargin" unique_id=1407487620]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"TightVBox"
-
-[node name="Spacer" type="Control" parent="Margin/RootVBox"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="StartCombatButton" type="Button" parent="Margin/RootVBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
-layout_mode = 2
-theme_type_variation = &"PrimaryButton"
-disabled = true
-text = "Start Combat"

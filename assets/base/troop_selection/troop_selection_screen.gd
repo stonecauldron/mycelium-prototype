@@ -13,7 +13,6 @@ var squad: Array = []
 @onready var _squad_rows: VBoxContainer = %SquadRows
 @onready var _bench_grid: HBoxContainer = %BenchGrid
 @onready var _bench_panel: PanelContainer = %BenchPanel
-@onready var _start_combat_button: Button = %StartCombatButton
 
 var _slots: Array[DropSlot] = []
 
@@ -25,15 +24,14 @@ func _ready() -> void:
 	_sync_all_slots()
 	_bench_panel.set_drag_forwarding(Callable(), _bench_can_drop, _bench_drop)
 	_set_bench_structure_mouse_ignore()
-	_start_combat_button.pressed.connect(_on_start_combat_pressed)
-	_refresh_start_combat_button()
+	_notify_start_combat_state()
 
 
 func on_screen_shown() -> void:
 	GameState.troop.sort_bench()
 	_rebuild_bench_ui()
 	_sync_all_slots()
-	_refresh_start_combat_button()
+	_notify_start_combat_state()
 
 
 func _hydrate_from_troop_data() -> void:
@@ -65,7 +63,7 @@ func _build_squad_ui() -> void:
 
 	var slots_row := HBoxContainer.new()
 	slots_row.theme_type_variation = &"SlotRow"
-	slots_row.custom_minimum_size = Vector2(0, 160)
+	slots_row.custom_minimum_size = Vector2(0, 180)
 	_squad_rows.add_child(slots_row)
 
 	for i in SQUAD_SLOT_COUNT:
@@ -187,7 +185,7 @@ func _sort_unit_list(units: Array) -> void:
 func _sync_all_slots() -> void:
 	for slot in _slots:
 		_sync_slot_card(slot)
-	_refresh_start_combat_button()
+	_notify_start_combat_state()
 
 
 func _sync_slot_card(slot: DropSlot) -> void:
@@ -201,8 +199,21 @@ func _sync_slot_card(slot: DropSlot) -> void:
 	slot.set_card(card)
 
 
-func _refresh_start_combat_button() -> void:
-	_start_combat_button.disabled = _squad_unit_count() == 0
+func can_start_combat() -> bool:
+	return _squad_unit_count() > 0
+
+
+func start_combat() -> void:
+	if not can_start_combat():
+		return
+	BattleLaunch.set_enemy_roster(_make_default_enemy_roster())
+	SceneTransition.change_scene("res://assets/combat/combat_stage/combat_stage.tscn")
+
+
+func _notify_start_combat_state() -> void:
+	var base := get_tree().current_scene
+	if base != null and base.has_method("set_start_combat_enabled"):
+		base.set_start_combat_enabled(can_start_combat())
 
 
 func _squad_unit_count() -> int:
@@ -211,13 +222,6 @@ func _squad_unit_count() -> int:
 		if entry != null:
 			count += 1
 	return count
-
-
-func _on_start_combat_pressed() -> void:
-	if _squad_unit_count() == 0:
-		return
-	BattleLaunch.set_enemy_roster(_make_default_enemy_roster())
-	SceneTransition.change_scene("res://assets/combat/combat_stage/combat_stage.tscn")
 
 
 func _make_default_enemy_roster() -> Array[RosterUnitData]:

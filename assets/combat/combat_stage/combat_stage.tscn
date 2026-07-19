@@ -215,3 +215,19 @@ limit_bottom = 1080
 position_smoothing_enabled = true
 position_smoothing_speed = 2.5
 script = ExtResource("2_camera")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="FastForwardButton" type="Button" parent="HUD"]
+unique_name_in_owner = true
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -80.0
+offset_top = 12.0
+offset_right = 80.0
+offset_bottom = 120.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 72
+text = "⏩"
+flat = true

@@ -9,20 +9,25 @@ const _BASE_SCENE_PATH := "res://assets/base/base.tscn"
 const _GAME_OVER_SCENE_PATH := "res://assets/game_over/game_over.tscn"
 const _VICTORY_SCENE_PATH := "res://assets/victory/victory.tscn"
 const _DAY_SUMMARY_SCENE_PATH := "res://assets/day_summary/day_summary.tscn"
+const _FAST_FORWARD_SCALE := 2.0
 
 @onready var player_troop: Troop = $World/PlayerTroop
 @onready var enemy_troop: Troop = $World/EnemyTroop
+@onready var _fast_forward_button: Button = %FastForwardButton
 
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2
 var _battle_over: bool = false
 var _fallen_units: Array[RosterUnitData] = []
 var _biomass_earned_this_fight: int = 0
+var _fast_forward: bool = false
 
 
 func _ready() -> void:
 	_player_spawn = player_troop.flag_bearer.global_position
 	_enemy_spawn = enemy_troop.flag_bearer.global_position
+	_fast_forward_button.pressed.connect(_on_fast_forward_pressed)
+	_set_fast_forward(GameState.combat_fast_forward)
 
 	var player_roster := GameState.troop.get_squad_roster()
 	if player_roster.is_empty():
@@ -41,6 +46,24 @@ func _ready() -> void:
 		return
 
 	_run_battle(player_roster, enemy_roster)
+
+
+func _exit_tree() -> void:
+	Engine.time_scale = 1.0
+
+
+func _on_fast_forward_pressed() -> void:
+	_set_fast_forward(not _fast_forward)
+
+
+func _set_fast_forward(enabled: bool) -> void:
+	_fast_forward = enabled
+	GameState.combat_fast_forward = enabled
+	Engine.time_scale = _FAST_FORWARD_SCALE if enabled else 1.0
+	if _fast_forward_button != null:
+		_fast_forward_button.modulate = (
+			Color(1.0, 0.85, 0.35, 1.0) if enabled else Color.WHITE
+		)
 
 
 func _make_fallback_roster(melee_count: int, spear_count: int) -> Array[RosterUnitData]:
@@ -165,6 +188,7 @@ func _check_battle_end() -> void:
 	if not player_troop.is_wiped_out() and not enemy_troop.is_wiped_out():
 		return
 	_battle_over = true
+	Engine.time_scale = 1.0
 	if player_troop.is_wiped_out():
 		SceneTransition.change_scene(_GAME_OVER_SCENE_PATH)
 	else:

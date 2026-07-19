@@ -15,6 +15,8 @@ var current_day: int = 0
 var prefer_nursery_tab: bool = false
 ## One-shot: open Riboforge when returning to base after it unlocks.
 var prefer_riboforge_tab: bool = false
+## Session preference: combat fast-forward toggle (restored on next fight).
+var combat_fast_forward: bool = false
 
 
 func get_upcoming_day() -> int:

@@ -123,10 +123,6 @@ anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 
-[node name="RiboforgeScreen" parent="World/Zones/RiboforgeZone/Host" unique_id=1966144431 instance=ExtResource("12_riboforge")]
-unique_name_in_owner = true
-layout_mode = 1
-
 [node name="UpperForegroundLayer" type="TextureRect" parent="World/Zones/RiboforgeZone/Host" unique_id=1386009894]
 layout_mode = 1
 anchors_preset = 15
@@ -138,11 +134,19 @@ mouse_filter = 2
 texture = ExtResource("9_bg_upper_fg")
 expand_mode = 1
 
+[node name="RiboforgeScreen" parent="World/Zones/RiboforgeZone/Host" unique_id=1966144431 instance=ExtResource("12_riboforge")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_top = 139.0
+offset_bottom = -111.0
+
 [node name="LowerForegroundLayer" type="TextureRect" parent="World/Zones/RiboforgeZone/Host" unique_id=1093041674]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 89.0
+offset_bottom = 89.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2

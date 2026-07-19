@@ -1,10 +1,10 @@
 class_name ArrowProjectile
 extends Area2D
 
-const MAX_LIFETIME := 2.5
+const MAX_LIFETIME := 3.5
 const FLOOR_Y := 880.0
-const LAUNCH_ANGLE := PI / 4.0
-const FALLBACK_SPEED := 750.0
+const LAUNCH_ANGLE := deg_to_rad(60.0)
+const FALLBACK_SPEED := 900.0
 
 var damage: int = 0
 var knockback_force: float = 0.0

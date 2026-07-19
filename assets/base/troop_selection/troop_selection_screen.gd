@@ -1,26 +1,28 @@
 class_name TroopSelectionScreen
 extends BaseScreen
 
-const SQUAD_SLOT_COUNT := 12
+const SQUAD_SLOT_COUNT := TroopData.SQUAD_SLOT_COUNT
+const BENCH_SLOT_COUNT := TroopData.BENCH_SLOT_COUNT
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee/basic_melee.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 
-var bench: Array[RosterUnitData] = []
+var bench: Array = []
 var squad: Array = []
 
 @onready var _squad_rows: VBoxContainer = %SquadRows
 @onready var _bench_grid: HBoxContainer = %BenchGrid
 @onready var _bench_panel: PanelContainer = %BenchPanel
 
-var _slots: Array[DropSlot] = []
+var _squad_slots: Array[DropSlot] = []
+var _bench_slots: Array[DropSlot] = []
 
 
 func _ready() -> void:
 	_hydrate_from_troop_data()
 	_build_squad_ui()
-	_rebuild_bench_ui()
+	_build_bench_ui()
 	_sync_all_slots()
 	_bench_panel.set_drag_forwarding(Callable(), _bench_can_drop, _bench_drop)
 	_set_bench_structure_mouse_ignore()
@@ -28,8 +30,6 @@ func _ready() -> void:
 
 
 func on_screen_shown() -> void:
-	GameState.troop.sort_bench()
-	_rebuild_bench_ui()
 	_sync_all_slots()
 	_notify_start_combat_state()
 
@@ -37,8 +37,6 @@ func on_screen_shown() -> void:
 func _hydrate_from_troop_data() -> void:
 	if not GameState.troop.is_seeded():
 		GameState.troop.seed_if_empty(_make_default_starters())
-	else:
-		GameState.troop.sort_bench()
 	bench = GameState.troop.bench
 	squad = GameState.troop.squad
 
@@ -54,7 +52,7 @@ func _set_bench_structure_mouse_ignore() -> void:
 func _build_squad_ui() -> void:
 	for child in _squad_rows.get_children():
 		child.queue_free()
-	_slots.clear()
+	_squad_slots.clear()
 
 	var title := Label.new()
 	title.theme_type_variation = &"SectionTitleLabel"
@@ -69,9 +67,21 @@ func _build_squad_ui() -> void:
 	for i in SQUAD_SLOT_COUNT:
 		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		slot.slot_index = i
-		slot.unit_dropped.connect(_on_slot_unit_dropped)
+		slot.unit_dropped.connect(_on_unit_dropped.bind("squad"))
 		slots_row.add_child(slot)
-		_slots.append(slot)
+		_squad_slots.append(slot)
+
+
+func _build_bench_ui() -> void:
+	for child in _bench_grid.get_children():
+		child.queue_free()
+	_bench_slots.clear()
+	for i in BENCH_SLOT_COUNT:
+		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
+		slot.slot_index = i
+		slot.unit_dropped.connect(_on_unit_dropped.bind("bench"))
+		_bench_grid.add_child(slot)
+		_bench_slots.append(slot)
 
 
 func _make_default_starters() -> Array[RosterUnitData]:
@@ -89,15 +99,15 @@ func _make_unit(
 	return RosterUnitData.create(unit_name, UnitStatsData.create_for_tier(tier), weapon)
 
 
-func _rebuild_bench_ui() -> void:
-	_sort_unit_list(bench)
-	for child in _bench_grid.get_children():
-		child.queue_free()
-	for unit in bench:
-		var card: UnitCard = _UNIT_CARD_SCENE.instantiate()
-		card.setup(unit, "bench", null)
-		card.clicked.connect(_on_unit_card_clicked)
-		_bench_grid.add_child(card)
+func _row(source: String) -> Array:
+	return bench if source == "bench" else squad
+
+
+func _first_empty(row: Array) -> int:
+	for i in row.size():
+		if row[i] == null:
+			return i
+	return -1
 
 
 func _on_unit_card_clicked(card: UnitCard) -> void:
@@ -106,95 +116,89 @@ func _on_unit_card_clicked(card: UnitCard) -> void:
 		return
 
 	if card.source == "bench":
-		if not GameState.troop.insert_unit_into_squad_sorted(unit):
+		var dest := _first_empty(squad)
+		if dest < 0:
 			return
-		bench.erase(unit)
-		_sync_all_slots()
-		_rebuild_bench_ui()
+		_move_unit(unit, "bench", card.slot.slot_index if card.slot else -1, "squad", dest)
 		return
 
 	if card.source == "squad":
-		_remove_unit_from_squad(unit)
-		if not bench.has(unit):
-			bench.append(unit)
-		_sync_all_slots()
-		_rebuild_bench_ui()
-
-
-func _remove_unit_from_squad(unit: RosterUnitData) -> void:
-	for i in squad.size():
-		if squad[i] == unit:
-			squad[i] = null
+		var dest := _first_empty(bench)
+		if dest < 0:
 			return
+		_move_unit(unit, "squad", card.slot.slot_index if card.slot else -1, "bench", dest)
 
 
-func _on_slot_unit_dropped(slot: DropSlot, drag_data: Dictionary) -> void:
+func _on_unit_dropped(slot: DropSlot, drag_data: Dictionary, dest_source: String) -> void:
 	var unit: RosterUnitData = drag_data.get("unit") as RosterUnitData
 	if unit == null:
 		return
-
-	var source: String = str(drag_data.get("source", "bench"))
+	var source := str(drag_data.get("source", "bench"))
 	var source_slot: DropSlot = drag_data.get("slot") as DropSlot
-
-	if source == "squad" and source_slot == slot:
+	if source_slot == null:
 		return
-
-	var displaced: RosterUnitData = squad[slot.slot_index]
-
-	if source == "bench":
-		bench.erase(unit)
-		squad[slot.slot_index] = unit
-		if displaced != null:
-			bench.append(displaced)
-		_sync_all_slots()
-		_rebuild_bench_ui()
+	if source == dest_source and source_slot == slot:
 		return
+	_move_unit(unit, source, source_slot.slot_index, dest_source, slot.slot_index)
 
-	if source == "squad" and source_slot != null:
-		squad[source_slot.slot_index] = displaced
-		squad[slot.slot_index] = unit
-		_sync_all_slots()
+
+func _move_unit(
+	unit: RosterUnitData,
+	from_source: String,
+	from_index: int,
+	to_source: String,
+	to_index: int
+) -> void:
+	var from_row := _row(from_source)
+	var to_row := _row(to_source)
+	if from_index < 0 or from_index >= from_row.size():
+		return
+	if to_index < 0 or to_index >= to_row.size():
+		return
+	if from_row[from_index] != unit:
+		# Click path may pass index from card.slot; fall back to search.
+		from_index = from_row.find(unit)
+		if from_index < 0:
+			return
+	var displaced: RosterUnitData = to_row[to_index]
+	to_row[to_index] = unit
+	from_row[from_index] = displaced
+	_sync_all_slots()
 
 
 func _bench_can_drop(_at_position: Vector2, data: Variant) -> bool:
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
-	return str(data.get("source", "")) == "squad"
+	return str(data.get("source", "")) == "squad" and _first_empty(bench) >= 0
 
 
 func _bench_drop(_at_position: Vector2, data: Variant) -> void:
 	if typeof(data) != TYPE_DICTIONARY:
 		return
-	if str(data.get("source", "")) != "squad":
-		return
 	var unit: RosterUnitData = data.get("unit") as RosterUnitData
 	var source_slot: DropSlot = data.get("slot") as DropSlot
-	if unit == null or source_slot == null:
+	var dest := _first_empty(bench)
+	if unit == null or source_slot == null or dest < 0:
 		return
-	squad[source_slot.slot_index] = null
-	if not bench.has(unit):
-		bench.append(unit)
-	_sync_all_slots()
-	_rebuild_bench_ui()
-
-
-func _sort_unit_list(units: Array) -> void:
-	units.sort_custom(GameState.troop.compare_units)
+	_move_unit(unit, "squad", source_slot.slot_index, "bench", dest)
 
 
 func _sync_all_slots() -> void:
-	for slot in _slots:
-		_sync_slot_card(slot)
+	for slot in _squad_slots:
+		_sync_slot_card(slot, "squad")
+	for slot in _bench_slots:
+		_sync_slot_card(slot, "bench")
 	_notify_start_combat_state()
 
 
-func _sync_slot_card(slot: DropSlot) -> void:
-	var unit: RosterUnitData = squad[slot.slot_index]
+func _sync_slot_card(slot: DropSlot, source: String) -> void:
+	var row := _row(source)
+	var unit: RosterUnitData = row[slot.slot_index] if slot.slot_index < row.size() else null
 	slot.clear_card()
 	if unit == null:
 		return
 	var card: UnitCard = _UNIT_CARD_SCENE.instantiate()
-	card.setup(unit, "squad", slot)
+	card.setup(unit, source, slot)
 	card.clicked.connect(_on_unit_card_clicked)
 	slot.set_card(card)
 

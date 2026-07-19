@@ -15,7 +15,7 @@ var _base_modulate: Color = Color.WHITE
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	custom_minimum_size = Vector2(140, 160)
+	custom_minimum_size = Vector2(140, 180)
 	_base_modulate = modulate
 	_set_children_mouse_filter_ignore(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -43,7 +43,6 @@ func set_card(card: Control) -> void:
 	var unit_card := card as UnitCard
 	if unit_card != null:
 		occupied_unit = unit_card.unit_data
-		unit_card.source = "squad"
 		unit_card.slot = self
 		# Card must receive mouse for dragging, and forwards drops to this slot.
 		unit_card.mouse_filter = Control.MOUSE_FILTER_STOP

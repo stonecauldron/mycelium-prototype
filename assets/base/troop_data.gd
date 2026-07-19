@@ -1,9 +1,10 @@
 class_name TroopData
 extends Resource
 
-const SQUAD_SLOT_COUNT := 12
+const SQUAD_SLOT_COUNT := 10
+const BENCH_SLOT_COUNT := 5
 
-@export var bench: Array[RosterUnitData] = []
+@export var bench: Array = []
 @export var squad: Array = []
 
 var _seeded: bool = false
@@ -11,6 +12,7 @@ var _seeded: bool = false
 
 func _init() -> void:
 	_ensure_squad_size()
+	_ensure_bench_size()
 
 
 func is_seeded() -> bool:
@@ -22,6 +24,7 @@ func seed_if_empty(starter_units: Array[RosterUnitData]) -> void:
 		return
 	bench.clear()
 	_ensure_squad_size()
+	_ensure_bench_size()
 	var slot := 0
 	for unit in starter_units:
 		if unit == null:
@@ -30,9 +33,10 @@ func seed_if_empty(starter_units: Array[RosterUnitData]) -> void:
 			squad[slot] = unit
 			slot += 1
 		else:
-			bench.append(unit)
+			var bench_slot := _first_empty(bench)
+			if bench_slot >= 0:
+				bench[bench_slot] = unit
 	_seeded = true
-	sort_rosters()
 
 
 func get_squad_roster() -> Array[RosterUnitData]:
@@ -54,31 +58,10 @@ func remove_unit(unit_data: RosterUnitData) -> void:
 	for i in squad.size():
 		if squad[i] == unit_data:
 			squad[i] = null
-	bench.erase(unit_data)
+	for i in bench.size():
+		if bench[i] == unit_data:
+			bench[i] = null
 	pack_squad()
-
-
-func insert_unit_into_squad_sorted(unit: RosterUnitData) -> bool:
-	if unit == null:
-		return false
-	if squad_unit_count() >= SQUAD_SLOT_COUNT:
-		return false
-	var occupied: Array = []
-	for entry in squad:
-		var existing := entry as RosterUnitData
-		if existing != null:
-			occupied.append(existing)
-	var insert_index := occupied.size()
-	for i in occupied.size():
-		if compare_units(unit, occupied[i]):
-			insert_index = i
-			break
-	occupied.insert(insert_index, unit)
-	squad.clear()
-	for existing in occupied:
-		squad.append(existing)
-	_ensure_squad_size()
-	return true
 
 
 func pack_squad() -> void:
@@ -108,7 +91,8 @@ func _iter_living_units() -> Array[RosterUnitData]:
 		var unit := entry as RosterUnitData
 		if unit != null:
 			units.append(unit)
-	for unit in bench:
+	for entry in bench:
+		var unit := entry as RosterUnitData
 		if unit != null:
 			units.append(unit)
 	return units
@@ -119,56 +103,30 @@ func reset() -> void:
 	squad.clear()
 	_seeded = false
 	_ensure_squad_size()
+	_ensure_bench_size()
 
 
-func sort_rosters() -> void:
-	sort_squad()
-	sort_bench()
-
-
-func sort_squad() -> void:
-	var occupied: Array = []
-	for entry in squad:
-		var unit := entry as RosterUnitData
-		if unit != null:
-			occupied.append(unit)
-	occupied.sort_custom(compare_units)
-	squad.clear()
-	for unit in occupied:
-		squad.append(unit)
-	_ensure_squad_size()
-
-
-func sort_bench() -> void:
-	var ordered: Array[RosterUnitData] = []
-	for unit in bench:
-		if unit != null:
-			ordered.append(unit)
-	ordered.sort_custom(compare_units)
-	bench.clear()
-	bench.append_array(ordered)
-
-
-func compare_units(a: RosterUnitData, b: RosterUnitData) -> bool:
-	var range_a := int(a.get_range_class())
-	var range_b := int(b.get_range_class())
-	if range_a != range_b:
-		return range_a > range_b
-
-	var spd_a := a.stats.spd if a.stats != null else 0
-	var spd_b := b.stats.spd if b.stats != null else 0
-	if spd_a != spd_b:
-		return spd_a < spd_b
-
-	return a.display_name.naturalnocasecmp_to(b.display_name) < 0
+func _first_empty(row: Array) -> int:
+	for i in row.size():
+		if row[i] == null:
+			return i
+	return -1
 
 
 func _ensure_squad_size() -> void:
-	if squad.is_empty():
-		squad.resize(SQUAD_SLOT_COUNT)
-		squad.fill(null)
+	_ensure_size(squad, SQUAD_SLOT_COUNT)
+
+
+func _ensure_bench_size() -> void:
+	_ensure_size(bench, BENCH_SLOT_COUNT)
+
+
+func _ensure_size(row: Array, slot_count: int) -> void:
+	if row.is_empty():
+		row.resize(slot_count)
+		row.fill(null)
 		return
-	while squad.size() < SQUAD_SLOT_COUNT:
-		squad.append(null)
-	if squad.size() > SQUAD_SLOT_COUNT:
-		squad.resize(SQUAD_SLOT_COUNT)
+	while row.size() < slot_count:
+		row.append(null)
+	if row.size() > slot_count:
+		row.resize(slot_count)

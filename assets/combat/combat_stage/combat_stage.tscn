@@ -2,10 +2,12 @@
 
 [ext_resource type="Script" uid="uid://cdvma8eegsp43" path="res://assets/combat/combat_stage/combat_stage.gd" id="1_combat"]
 [ext_resource type="Script" uid="uid://m3t2vpa73j5r" path="res://assets/combat/combat_stage/battle_camera.gd" id="2_camera"]
-[ext_resource type="Texture2D" uid="uid://cwuylhpwymp7" path="res://assets/combat/combat_stage/combat_stage_atlas.png" id="2_mqp0b"]
-[ext_resource type="Texture2D" uid="uid://c6613lhynerid" path="res://assets/combat/combat_stage/floor.png" id="2_pvs8v"]
 [ext_resource type="PackedScene" uid="uid://cfpo0kyhrqm3y" path="res://assets/combat/troop/player_troop.tscn" id="3_player"]
 [ext_resource type="PackedScene" uid="uid://cenemyarmy001" path="res://assets/combat/troop/enemy_troop.tscn" id="4_enemy"]
+[ext_resource type="Texture2D" uid="uid://cnxfhca438svu" path="res://assets/base/background/background.png" id="5_bg_far"]
+[ext_resource type="Texture2D" uid="uid://brnicc8ghj3md" path="res://assets/base/background/upper_foreground.png" id="6_bg_upper_fg"]
+[ext_resource type="Texture2D" uid="uid://c00gqs4n3sm1c" path="res://assets/base/background/lower_foreground.png" id="7_bg_lower_fg"]
+[ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="9_lower_lane"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
 
@@ -18,178 +20,135 @@ size = Vector2(24, 1080)
 [node name="CombatStage" type="Node2D" unique_id=1316519551]
 script = ExtResource("1_combat")
 
+[node name="BackdropLayer" type="CanvasLayer" parent="." unique_id=2100000001]
+layer = -10
+
+[node name="Backdrop" type="Control" parent="BackdropLayer" unique_id=2100000002]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FarLayer" type="TextureRect" parent="BackdropLayer/Backdrop" unique_id=2100000003]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_bg_far")
+expand_mode = 1
+
 [node name="World" type="Node2D" parent="." unique_id=1383156285]
 
 [node name="Background" type="Node2D" parent="World" unique_id=671687693]
 z_index = -20
 
-[node name="Hill" type="Sprite2D" parent="World/Background" unique_id=579939570]
-modulate = Color(0.24296594, 0.2429657, 0.24296573, 1)
-position = Vector2(954, 759)
+[node name="Segment0" type="Node2D" parent="World/Background" unique_id=2100000010]
+
+[node name="UpperForegroundLayer" type="Sprite2D" parent="World/Background/Segment0" unique_id=2100000011]
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-region_enabled = true
-region_rect = Rect2(0, 1799, 3840, 361)
+texture = ExtResource("6_bg_upper_fg")
+centered = false
 
-[node name="Hill2" type="Sprite2D" parent="World/Background" unique_id=56988798]
-modulate = Color(0.24296594, 0.2429657, 0.24296573, 1)
-position = Vector2(2870, 770)
+[node name="LowerLaneLayer" type="Sprite2D" parent="World/Background/Segment0" unique_id=2100000013]
+position = Vector2(0, -22)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-region_enabled = true
-region_rect = Rect2(0, 1799, 3840, 361)
+texture = ExtResource("9_lower_lane")
+centered = false
 
-[node name="Mould" type="Node2D" parent="World/Background" unique_id=304601161]
+[node name="Segment1" type="Node2D" parent="World/Background" unique_id=2100000020]
+position = Vector2(1920, 0)
 
-[node name="Mould0" type="Sprite2D" parent="World/Background/Mould" unique_id=25355457]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(300, 682)
+[node name="UpperForegroundLayer" type="Sprite2D" parent="World/Background/Segment1" unique_id=2100000021]
+position = Vector2(-40, -29)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-region_enabled = true
-region_rect = Rect2(0, 296, 305, 924)
+texture = ExtResource("6_bg_upper_fg")
+centered = false
 
-[node name="Mould1" type="Sprite2D" parent="World/Background/Mould" unique_id=326186631]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(423, 661)
+[node name="LowerLaneLayer" type="Sprite2D" parent="World/Background/Segment1" unique_id=2100000023]
+position = Vector2(0, -22)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(920, 0, 446, 1278)
+texture = ExtResource("9_lower_lane")
+centered = false
 
-[node name="Mould3" type="Sprite2D" parent="World/Background/Mould" unique_id=2079498891]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(552, 850)
+[node name="Segment2" type="Node2D" parent="World/Background" unique_id=2100000030]
+position = Vector2(3840, 0)
+
+[node name="UpperForegroundLayer" type="Sprite2D" parent="World/Background/Segment2" unique_id=2100000031]
+position = Vector2(-57, -55)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(1552, 69, 336, 1259)
+texture = ExtResource("6_bg_upper_fg")
+centered = false
 
-[node name="Mould4" type="Sprite2D" parent="World/Background/Mould" unique_id=1727620114]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(649, 645)
+[node name="LowerLaneLayer" type="Sprite2D" parent="World/Background/Segment2" unique_id=2100000033]
+position = Vector2(0, -22)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(2161, 178, 237, 1065)
+texture = ExtResource("9_lower_lane")
+centered = false
 
-[node name="Mould5" type="Sprite2D" parent="World/Background/Mould" unique_id=177725854]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(813, 810)
+[node name="Segment3" type="Node2D" parent="World/Background" unique_id=2100000040]
+position = Vector2(5760, 0)
+
+[node name="UpperForegroundLayer" type="Sprite2D" parent="World/Background/Segment3" unique_id=2100000041]
+position = Vector2(-86, -82)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(2531, 72, 293, 1145)
+texture = ExtResource("6_bg_upper_fg")
+centered = false
 
-[node name="Mould2" type="Node2D" parent="World/Background" unique_id=577442960]
-position = Vector2(656, -212)
-scale = Vector2(1, 1.2)
-
-[node name="Mould0" type="Sprite2D" parent="World/Background/Mould2" unique_id=367371577]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(297, 770.8333)
+[node name="LowerLaneLayer" type="Sprite2D" parent="World/Background/Segment3" unique_id=2100000043]
+position = Vector2(0, -22)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-region_enabled = true
-region_rect = Rect2(0, 296, 305, 924)
+texture = ExtResource("9_lower_lane")
+centered = false
 
-[node name="Mould1" type="Sprite2D" parent="World/Background/Mould2" unique_id=1347716]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(481, 623.3333)
+[node name="Foreground" type="Node2D" parent="World" unique_id=2100000100]
+z_index = 20
+
+[node name="Segment0" type="Node2D" parent="World/Foreground" unique_id=2100000110]
+
+[node name="LowerForegroundLayer" type="Sprite2D" parent="World/Foreground/Segment0" unique_id=2100000111]
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-region_enabled = true
-region_rect = Rect2(920, 0, 446, 1278)
+texture = ExtResource("7_bg_lower_fg")
+centered = false
 
-[node name="Mould3" type="Sprite2D" parent="World/Background/Mould2" unique_id=962910155]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(547, 874.99994)
+[node name="Segment1" type="Node2D" parent="World/Foreground" unique_id=2100000120]
+position = Vector2(1920, 0)
+
+[node name="LowerForegroundLayer" type="Sprite2D" parent="World/Foreground/Segment1" unique_id=2100000121]
+position = Vector2(-72, -18)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(1552, 69, 336, 1259)
+texture = ExtResource("7_bg_lower_fg")
+centered = false
 
-[node name="Mould4" type="Sprite2D" parent="World/Background/Mould2" unique_id=106094450]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(756, 754.99994)
+[node name="Segment2" type="Node2D" parent="World/Foreground" unique_id=2100000130]
+position = Vector2(3840, 0)
+
+[node name="LowerForegroundLayer" type="Sprite2D" parent="World/Foreground/Segment2" unique_id=2100000131]
+position = Vector2(-144, -38)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(2161, 178, 237, 1065)
+texture = ExtResource("7_bg_lower_fg")
+centered = false
 
-[node name="Mould5" type="Sprite2D" parent="World/Background/Mould2" unique_id=633155942]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(903, 908.3333)
+[node name="Segment3" type="Node2D" parent="World/Foreground" unique_id=2100000140]
+position = Vector2(5760, 0)
+
+[node name="LowerForegroundLayer" type="Sprite2D" parent="World/Foreground/Segment3" unique_id=2100000141]
+position = Vector2(-234, -42)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(2531, 72, 293, 1145)
-
-[node name="Mould3" type="Node2D" parent="World/Background" unique_id=2065411247]
-position = Vector2(1422, 38)
-
-[node name="Mould0" type="Sprite2D" parent="World/Background/Mould3" unique_id=1876504889]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(300, 682)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-region_enabled = true
-region_rect = Rect2(0, 296, 305, 924)
-
-[node name="Mould1" type="Sprite2D" parent="World/Background/Mould3" unique_id=724503985]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(423, 661)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(920, 0, 446, 1278)
-
-[node name="Mould3" type="Sprite2D" parent="World/Background/Mould3" unique_id=557238358]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(552, 850)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(1552, 69, 336, 1259)
-
-[node name="Mould4" type="Sprite2D" parent="World/Background/Mould3" unique_id=834679134]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(649, 645)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(2161, 178, 237, 1065)
-
-[node name="Mould5" type="Sprite2D" parent="World/Background/Mould3" unique_id=343054095]
-modulate = Color(0.14117648, 0.14117648, 0.14117648, 1)
-position = Vector2(813, 810)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mqp0b")
-flip_h = true
-region_enabled = true
-region_rect = Rect2(2531, 72, 293, 1145)
+texture = ExtResource("7_bg_lower_fg")
+centered = false
 
 [node name="WorldBoundary" type="StaticBody2D" parent="World" unique_id=377154070]
 collision_mask = 0
 
 [node name="Floor" type="CollisionShape2D" parent="World/WorldBoundary" unique_id=504069741]
-position = Vector2(0, 915)
+position = Vector2(0, 786)
 shape = SubResource("WorldBoundaryShape2D_floor")
-
-[node name="Ground" type="Sprite2D" parent="World/WorldBoundary/Floor" unique_id=2052678474]
-position = Vector2(0, -375)
-scale = Vector2(2, 0.5)
-texture = ExtResource("2_pvs8v")
 
 [node name="LeftEdge" type="CollisionShape2D" parent="World/WorldBoundary" unique_id=254316770]
 position = Vector2(-12, 540)
@@ -200,10 +159,10 @@ position = Vector2(3845, 575)
 shape = SubResource("RectangleShape2D_right")
 
 [node name="PlayerTroop" parent="World" unique_id=53838798 instance=ExtResource("3_player")]
-position = Vector2(66, 860)
+position = Vector2(66, 728)
 
 [node name="EnemyTroop" parent="World" unique_id=1909671479 instance=ExtResource("4_enemy")]
-position = Vector2(1978, 849)
+position = Vector2(1978, 691)
 
 [node name="MainCamera" type="Camera2D" parent="World" unique_id=723439616]
 position = Vector2(960, 540)
@@ -216,9 +175,9 @@ position_smoothing_enabled = true
 position_smoothing_speed = 2.5
 script = ExtResource("2_camera")
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1373945268]
 
-[node name="FastForwardButton" type="Button" parent="HUD"]
+[node name="FastForwardButton" type="Button" parent="HUD" unique_id=428364516]
 unique_name_in_owner = true
 anchors_preset = 5
 anchor_left = 0.5

@@ -8,6 +8,7 @@ enum CombatPhase { READY, APPROACHING, ATTACKING, RETURNING }
 
 const BASE_MOVE_SPEED := 180.0
 const BASE_ATTACK_INTERVAL := 0.75
+const RANGED_ATTACK_INTERVAL := 1.15
 const HOME_ARRIVE_THRESHOLD := 4.0
 const MARCH_CATCH_UP_MULTIPLIER := 2.0
 const LUNGE_DISTANCE := 48.0
@@ -20,8 +21,8 @@ const THROW_MAX_DURATION := 1.4
 const THROW_AIM_JITTER_X := 40.0
 const THROW_AIM_JITTER_Y := 20.0
 const THROW_ORIGIN_HEIGHT := -48.0
-const RANGED_RELEASE_DELAY := 0.18
-const RANGED_RECOVERY_TIME := 0.32
+const RANGED_RELEASE_DELAY := 0.22
+const RANGED_RECOVERY_TIME := 0.42
 const RANGED_ORIGIN_HEIGHT := -40.0
 const MELEE_PROXIMITY := 160.0
 const KNOCKBACK_UP_RATIO := 0.5
@@ -426,7 +427,10 @@ func _finish_attack() -> void:
 	_throw_landed = false
 	_throw_left_ground = false
 	_throw_timer = 0.0
-	_attack_timer = BASE_ATTACK_INTERVAL / stats.get_speed_multiplier()
+	var interval := BASE_ATTACK_INTERVAL
+	if weapon != null and weapon.range_class == WeaponData.WeaponRange.RANGED:
+		interval = RANGED_ATTACK_INTERVAL
+	_attack_timer = interval / stats.get_speed_multiplier()
 	_combat_phase = CombatPhase.RETURNING
 
 

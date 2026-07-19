@@ -7,6 +7,7 @@ const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee/basic_melee.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
+const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
 
 var bench: Array = []
 var squad: Array = []
@@ -85,9 +86,11 @@ func _build_bench_ui() -> void:
 
 
 func _make_default_starters() -> Array[RosterUnitData]:
+	var names := UnitNames.pick_unique(3)
+	var weapons: Array[WeaponData] = [_MELEE_WEAPON, _BOW_WEAPON, _SPEAR_WEAPON]
 	var units: Array[RosterUnitData] = []
-	for unit_name in UnitNames.pick_unique(3):
-		units.append(_make_unit(unit_name, UnitStatsData.PowerTier.AVERAGE, _MELEE_WEAPON))
+	for i in names.size():
+		units.append(_make_unit(names[i], UnitStatsData.PowerTier.AVERAGE, weapons[i]))
 	return units
 
 
@@ -234,6 +237,7 @@ func _make_default_enemy_roster() -> Array[RosterUnitData]:
 	var enemy: Array[RosterUnitData] = []
 	var melee_n: int = int(composition.get("melee", 0))
 	var spear_n: int = int(composition.get("spear", 0))
+	var bow_n: int = int(composition.get("bow", 0))
 	var imago_n: int = int(composition.get("imago", 0))
 	var tiers: Array = composition.get("tiers", [UnitStatsData.PowerTier.WEAK])
 	for i in melee_n:
@@ -242,6 +246,9 @@ func _make_default_enemy_roster() -> Array[RosterUnitData]:
 	for i in spear_n:
 		var tier: UnitStatsData.PowerTier = tiers[(melee_n + i) % tiers.size()]
 		enemy.append(_make_unit(UnitNames.pick(), tier, _SPEAR_WEAPON))
+	for i in bow_n:
+		var tier: UnitStatsData.PowerTier = tiers[(melee_n + spear_n + i) % tiers.size()]
+		enemy.append(_make_unit(UnitNames.pick(), tier, _BOW_WEAPON))
 	_promote_enemy_imagos(enemy, imago_n)
 	return enemy
 
@@ -264,11 +271,13 @@ func _promote_enemy_imagos(enemy: Array[RosterUnitData], imago_n: int) -> void:
 func _enemy_composition_for_day(day: int) -> Dictionary:
 	# Counts/tiers match the pre-imago curve; `imago` promotions apply +2 all stats
 	# and the imago appearance on a spread of those units.
+	# Weapon keys: melee / spear / bow (matches basic_* weapons).
 	match day:
 		1, 2:
 			return {
 				"melee": 2,
 				"spear": 0,
+				"bow": 0,
 				"imago": 0,
 				"tiers": [UnitStatsData.PowerTier.WEAK],
 			}
@@ -276,7 +285,8 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			return {
 				"melee": 2,
 				"spear": 1,
-				"imago": 1,
+				"bow": 0,
+				"imago": 3,
 				"tiers": [
 					UnitStatsData.PowerTier.WEAK,
 					UnitStatsData.PowerTier.WEAK,
@@ -285,9 +295,10 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			}
 		5, 6:
 			return {
-				"melee": 3,
+				"melee": 2,
 				"spear": 2,
-				"imago": 2,
+				"bow": 1,
+				"imago": 4,
 				"tiers": [
 					UnitStatsData.PowerTier.WEAK,
 					UnitStatsData.PowerTier.AVERAGE,
@@ -295,9 +306,10 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			}
 		7, 8:
 			return {
-				"melee": 4,
+				"melee": 3,
 				"spear": 2,
-				"imago": 2,
+				"bow": 1,
+				"imago": 5,
 				"tiers": [
 					UnitStatsData.PowerTier.AVERAGE,
 					UnitStatsData.PowerTier.AVERAGE,
@@ -306,9 +318,10 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 			}
 		9:
 			return {
-				"melee": 4,
-				"spear": 3,
-				"imago": 3,
+				"melee": 3,
+				"spear": 2,
+				"bow": 2,
+				"imago": 5,
 				"tiers": [
 					UnitStatsData.PowerTier.AVERAGE,
 					UnitStatsData.PowerTier.STRONG,
@@ -317,9 +330,10 @@ func _enemy_composition_for_day(day: int) -> Dictionary:
 		_:
 			# Day 10 finale
 			return {
-				"melee": 5,
-				"spear": 3,
-				"imago": 4,
+				"melee": 4,
+				"spear": 2,
+				"bow": 2,
+				"imago": 6,
 				"tiers": [
 					UnitStatsData.PowerTier.STRONG,
 					UnitStatsData.PowerTier.STRONG,

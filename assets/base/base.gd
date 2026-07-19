@@ -151,24 +151,19 @@ func _select_tab(tab_id: TabId, instant: bool = false) -> void:
 	if _camera_tween != null and _camera_tween.is_valid():
 		_camera_tween.kill()
 
+	# Rebuild destination UI at transition start so heavy work overlaps the camera move.
+	_current_screen = next_screen
+	_current_screen.on_screen_shown()
+	_refresh_hud()
+
 	if instant:
 		_camera.position = target
-		_current_screen = next_screen
-		_current_screen.on_screen_shown()
-		_refresh_hud()
 		return
 
 	_camera_tween = create_tween()
 	_camera_tween.set_ease(Tween.EASE_OUT)
 	_camera_tween.set_trans(Tween.TRANS_CUBIC)
 	_camera_tween.tween_property(_camera, "position", target, CAMERA_TWEEN_SECONDS)
-	_camera_tween.finished.connect(
-		func() -> void:
-			_current_screen = next_screen
-			_current_screen.on_screen_shown()
-			_refresh_hud(),
-		CONNECT_ONE_SHOT
-	)
 
 
 func _update_tab_visuals() -> void:

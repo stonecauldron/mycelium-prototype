@@ -7,6 +7,7 @@ signal weapon_loadout_changed(card: UnitCard)
 
 const CARD_SIZE := Vector2(140, 180)
 const PORTRAIT_SCALE := 1.0
+const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const RANGE_LABELS := {
 	WeaponData.WeaponRange.MELEE: "Melee",
 	WeaponData.WeaponRange.MID: "Mid",
@@ -126,9 +127,13 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		}
 	_drag_started_flag = true
 	drag_started.emit(self)
-	var unit_preview := duplicate() as UnitCard
-	unit_preview.modulate = Color(1, 1, 1, 0.85)
-	unit_preview.reset_compact_layout()
+	# Chess-piece pickup: leave the pad empty while dragging.
+	visible = false
+	# Instantiate fresh — duplicate() keeps @onready refs to this card, so the
+	# preview would remount its portrait onto the hidden source (no anim).
+	var unit_preview: UnitCard = _UNIT_CARD_SCENE.instantiate()
+	unit_preview.setup(unit_data, source, null)
+	unit_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_drag_preview(_centered_drag_preview(unit_preview, CARD_SIZE))
 	return {
 		"unit": unit_data,
@@ -167,6 +172,9 @@ func _gui_input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_END:
 		_drag_started_flag = false
+		# Restore if the drag was cancelled; successful drops rebuild the card.
+		if is_inside_tree():
+			visible = true
 
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:

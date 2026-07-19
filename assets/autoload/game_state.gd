@@ -117,6 +117,24 @@ func try_unequip_weapon_to_stock(unit: RosterUnitData) -> bool:
 	return true
 
 
+## Move an equipped non-default weapon onto another unit (swap if the target has one).
+func try_transfer_equipped_weapon(from_unit: RosterUnitData, to_unit: RosterUnitData) -> bool:
+	if from_unit == null or to_unit == null or from_unit == to_unit:
+		return false
+	ensure_riboforge_seeded()
+	if RiboforgeData.is_default_weapon(from_unit.weapon):
+		return false
+	var moving := from_unit.weapon
+	var displaced := to_unit.weapon
+	to_unit.weapon = moving
+	from_unit.weapon = (
+		RiboforgeData.get_default_weapon()
+		if RiboforgeData.is_default_weapon(displaced)
+		else displaced
+	)
+	return true
+
+
 func try_unlock_plot() -> bool:
 	ensure_nursery_seeded()
 	if not nursery.can_unlock_plot():

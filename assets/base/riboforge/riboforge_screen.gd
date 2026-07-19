@@ -125,7 +125,7 @@ func _rebuild_squad_cards() -> void:
 
 
 func _on_unit_weapon_changed(_card: UnitCard) -> void:
-	_set_status("Weapon equipped")
+	_set_status("Weapons updated")
 	_build_shop_cards()
 	_refresh()
 	_refresh_base_hud()

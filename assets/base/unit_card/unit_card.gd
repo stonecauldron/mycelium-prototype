@@ -187,6 +187,9 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 		var drop_type := str(data.get("type", ""))
 		if drop_type == "weapon" or drop_type == "shop_weapon":
 			return true
+		if drop_type == "equipped_weapon":
+			var from_unit := data.get("unit") as RosterUnitData
+			return from_unit != null and from_unit != unit_data
 	# Occupied squad slots: the card covers the DropSlot, so forward drops.
 	if slot != null and slot.has_method("_can_drop_data"):
 		return slot._can_drop_data(at_position, data)
@@ -199,7 +202,11 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 func _drop_data(at_position: Vector2, data: Variant) -> void:
 	if typeof(data) == TYPE_DICTIONARY and unit_data is RosterUnitData:
 		var drop_type := str(data.get("type", ""))
-		if drop_type == "weapon" or drop_type == "shop_weapon":
+		if (
+			drop_type == "weapon"
+			or drop_type == "shop_weapon"
+			or drop_type == "equipped_weapon"
+		):
 			_try_receive_weapon(data)
 			return
 	if slot != null and slot.has_method("_drop_data"):
@@ -219,6 +226,12 @@ func _try_receive_weapon(data: Dictionary) -> void:
 	if drop_type == "weapon":
 		var stock_index := int(data.get("stock_index", -1))
 		if GameState.try_equip_weapon_from_stock(unit, stock_index):
+			_refresh()
+			weapon_loadout_changed.emit(self)
+		return
+	if drop_type == "equipped_weapon":
+		var from_unit := data.get("unit") as RosterUnitData
+		if GameState.try_transfer_equipped_weapon(from_unit, unit):
 			_refresh()
 			weapon_loadout_changed.emit(self)
 		return

@@ -118,7 +118,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		preview.setup(roster.weapon, -1)
 		preview.modulate = Color(1, 1, 1, 0.85)
 		preview.reset_compact_layout()
-		set_drag_preview(preview)
+		set_drag_preview(_centered_drag_preview(preview, preview.CARD_SIZE))
 		return {
 			"type": "equipped_weapon",
 			"unit": roster,
@@ -129,13 +129,27 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	var unit_preview := duplicate() as UnitCard
 	unit_preview.modulate = Color(1, 1, 1, 0.85)
 	unit_preview.reset_compact_layout()
-	set_drag_preview(unit_preview)
+	set_drag_preview(_centered_drag_preview(unit_preview, CARD_SIZE))
 	return {
 		"unit": unit_data,
 		"source": source,
 		"slot": slot,
 		"card": self,
 	}
+
+
+func _centered_drag_preview(preview: Control, preview_size: Vector2) -> Control:
+	# Viewport pins the preview root origin to the cursor. Offset the child so the
+	# card center sits there. Must run after preview.ready — UnitCard._ready calls
+	# reset_compact_layout(), which clears any position set beforehand.
+	var host := Control.new()
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var center := func() -> void:
+		# Slight downward bias so the unit sprite hangs under the cursor.
+		preview.position = Vector2(-preview_size.x * 0.5, -preview_size.y * 0.5 + 28.0)
+	preview.ready.connect(center, CONNECT_ONE_SHOT)
+	host.add_child(preview)
+	return host
 
 
 func _gui_input(event: InputEvent) -> void:

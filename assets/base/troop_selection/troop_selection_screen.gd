@@ -87,7 +87,7 @@ func _build_bench_ui() -> void:
 
 func _make_default_starters() -> Array[RosterUnitData]:
 	var names := UnitNames.pick_unique(3)
-	var weapons: Array[WeaponData] = [_MELEE_WEAPON, _BOW_WEAPON, _SPEAR_WEAPON]
+	var weapons: Array[WeaponData] = [_BOW_WEAPON, _SPEAR_WEAPON, _MELEE_WEAPON]
 	var units: Array[RosterUnitData] = []
 	for i in names.size():
 		units.append(_make_unit(names[i], UnitStatsData.PowerTier.AVERAGE, weapons[i]))

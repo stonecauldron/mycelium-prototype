@@ -86,7 +86,7 @@ text = "Bench"
 
 [node name="BenchGrid" type="HBoxContainer" parent="BenchPanel/BenchMargin/BenchVBox" unique_id=1082664112]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 180)
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"SlotRow"

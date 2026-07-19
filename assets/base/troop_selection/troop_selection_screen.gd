@@ -62,7 +62,7 @@ func _build_squad_ui() -> void:
 
 	var slots_row := HBoxContainer.new()
 	slots_row.theme_type_variation = &"SlotRow"
-	slots_row.custom_minimum_size = Vector2(0, 180)
+	slots_row.custom_minimum_size = Vector2(0, 200)
 	_squad_rows.add_child(slots_row)
 
 	for i in SQUAD_SLOT_COUNT:

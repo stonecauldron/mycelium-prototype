@@ -5,7 +5,7 @@ signal drag_started(card: UnitCard)
 signal clicked(card: UnitCard)
 signal weapon_loadout_changed(card: UnitCard)
 
-const CARD_SIZE := Vector2(140, 180)
+const CARD_SIZE := Vector2(140, 200)
 const PORTRAIT_SCALE := 1.0
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const RANGE_LABELS := {
@@ -84,7 +84,11 @@ func _refresh() -> void:
 	var range_name: String = str(RANGE_LABELS.get(data.get_range_class(), "?"))
 	_weapon_label.text = "%s (%s)" % [weapon_name, range_name]
 	if data.stats != null:
-		_stats_label.text = "STR %d  DEX %d\nCON %d  SPD %d" % [
+		var atk: int = data.stats.get_damage_bonus(data.get_range_class())
+		if data.weapon != null:
+			atk += data.weapon.base_damage
+		_stats_label.text = "ATK: %d  HP: %d" % [atk, data.stats.get_max_hp()]
+		tooltip_text = "STR %d  DEX %d\nCON %d  SPD %d" % [
 			data.stats.strength,
 			data.stats.dex,
 			data.stats.con,
@@ -92,6 +96,7 @@ func _refresh() -> void:
 		]
 	else:
 		_stats_label.text = "—"
+		tooltip_text = ""
 	_refresh_portrait(data)
 
 

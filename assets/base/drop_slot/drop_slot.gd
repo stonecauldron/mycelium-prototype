@@ -15,7 +15,7 @@ var _base_modulate: Color = Color.WHITE
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	custom_minimum_size = Vector2(140, 180)
+	custom_minimum_size = Vector2(140, 200)
 	_base_modulate = modulate
 	_set_children_mouse_filter_ignore(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP

@@ -7,7 +7,7 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
 [node name="DropSlot" type="PanelContainer" unique_id=539502589]
-custom_minimum_size = Vector2(140, 180)
+custom_minimum_size = Vector2(140, 200)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_slot")
@@ -27,9 +27,9 @@ mouse_filter = 2
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
-anchor_top = 0.78
+anchor_top = 0.66
 anchor_right = 0.95
-anchor_bottom = 1.14
+anchor_bottom = 1.02
 offset_left = 0.39999962
 offset_top = 5.8400116
 offset_right = 0.40000153

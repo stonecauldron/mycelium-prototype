@@ -90,7 +90,6 @@ func _on_area_entered(_area: Area2D) -> void:
 
 func _resolve_hit() -> void:
 	var chosen: HurtboxComponent = null
-	var chosen_is_flag := true
 	var closest_distance := INF
 
 	for area in get_overlapping_areas():
@@ -100,13 +99,9 @@ func _resolve_hit() -> void:
 		var target := hurtbox.get_combatant()
 		if not _is_valid_target(target):
 			continue
-		var is_flag := target is FlagBearer
-		if chosen != null and not chosen_is_flag and is_flag:
-			continue
 		var distance := global_position.distance_squared_to((target as Node2D).global_position)
-		if chosen == null or (chosen_is_flag and not is_flag) or distance < closest_distance:
+		if chosen == null or distance < closest_distance:
 			chosen = hurtbox
-			chosen_is_flag = is_flag
 			closest_distance = distance
 
 	if chosen == null:
@@ -125,7 +120,7 @@ func _on_body_entered(_body: Node2D) -> void:
 
 
 func _is_valid_target(target: Node) -> bool:
-	if target == null or target == owner_unit:
+	if target == null or target == owner_unit or target is FlagBearer:
 		return false
 	if owner_unit == null or owner_unit._troop == null:
 		return false
@@ -139,8 +134,6 @@ func _is_valid_target(target: Node) -> bool:
 func _get_troop(target: Node) -> Troop:
 	if target is Unit:
 		return (target as Unit)._troop
-	if target is FlagBearer:
-		return (target as FlagBearer).get_parent() as Troop
 	return null
 
 

@@ -6,7 +6,7 @@ enum TabId { COLONY, NURSERY, RIBOFORGE }
 const TAB_DEFS := [
 	{"id": TabId.NURSERY, "label": "Nursery"},
 	{"id": TabId.RIBOFORGE, "label": "Riboforge"},
-	{"id": TabId.COLONY, "label": "Colony"},
+	{"id": TabId.COLONY, "label": "War Chamber"},
 ]
 
 const VIEWPORT_SIZE := Vector2(1920, 1080)
@@ -47,7 +47,7 @@ func _ready() -> void:
 
 
 func set_start_combat_enabled(enabled: bool) -> void:
-	# Colony screen _ready can run before this node's @onready vars are set.
+	# War Chamber screen _ready can run before this node's @onready vars are set.
 	if _start_combat_button == null:
 		return
 	_start_combat_button.disabled = not enabled

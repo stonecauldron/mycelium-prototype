@@ -53,7 +53,7 @@ theme_type_variation = &"SectionVBox"
 [node name="Header" type="Label" parent="HeaderBlock" unique_id=1708698391]
 layout_mode = 2
 theme_type_variation = &"PageTitleLabel"
-text = "Colony — Deploy Squad"
+text = "War Chamber — Deploy Squad"
 
 [node name="Subtitle" type="Label" parent="HeaderBlock" unique_id=1767566579]
 layout_mode = 2

@@ -22,7 +22,8 @@ var _portrait_instance: Node2D = null
 
 @onready var _name_label: Label = %NameLabel
 @onready var _weapon_label: Label = %WeaponLabel
-@onready var _stats_label: Label = %StatsLabel
+@onready var _atk_value: Label = %AtkValue
+@onready var _hp_value: Label = %HpValue
 @onready var _portrait_host: Control = %PortraitHost
 
 
@@ -87,7 +88,8 @@ func _refresh() -> void:
 		var atk: int = data.stats.get_damage_bonus(data.get_range_class())
 		if data.weapon != null:
 			atk += data.weapon.base_damage
-		_stats_label.text = "ATK: %d  HP: %d" % [atk, data.stats.get_max_hp()]
+		_atk_value.text = str(atk)
+		_hp_value.text = str(data.stats.get_max_hp())
 		tooltip_text = "STR %d  DEX %d\nCON %d  SPD %d" % [
 			data.stats.strength,
 			data.stats.dex,
@@ -95,7 +97,8 @@ func _refresh() -> void:
 			data.stats.spd,
 		]
 	else:
-		_stats_label.text = "—"
+		_atk_value.text = "—"
+		_hp_value.text = "—"
 		tooltip_text = ""
 	_refresh_portrait(data)
 

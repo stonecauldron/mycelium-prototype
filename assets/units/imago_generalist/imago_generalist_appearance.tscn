@@ -27,20 +27,20 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
-size = Vector2(75.5, 115)
+size = Vector2(107, 130)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(75.5, 117)
+size = Vector2(106, 130)
 
 [node name="ImagoGeneralistAppearance" type="Node2D" unique_id=101060416]
 script = ExtResource("1_root")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=288080520]
-position = Vector2(1, -55)
+position = Vector2(1, -59)
 scale = Vector2(0.3993315, 0.40093592)
 texture = ExtResource("2_tex")
 region_enabled = true
-region_rect = Rect2(133, 201, 250, 311)
+region_rect = Rect2(124, 186, 269, 323)
 
 [node name="WeaponMount" type="Node2D" parent="." unique_id=2038425345]
 position = Vector2(35, -36)
@@ -54,9 +54,9 @@ collision_mask = 0
 script = ExtResource("3_hurtbox")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1300552134]
-position = Vector2(0.75, -51.5)
+position = Vector2(1.5, -59)
 shape = SubResource("RectangleShape2D_hurtbox")
 
 [node name="BodyShape" type="CollisionShape2D" parent="." unique_id=251417434]
-position = Vector2(0.75, -52.5)
+position = Vector2(1, -59)
 shape = SubResource("RectangleShape2D_body")

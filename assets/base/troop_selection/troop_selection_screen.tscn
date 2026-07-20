@@ -66,7 +66,7 @@ scale = Vector2(-1, 1)
 [node name="ScoutBubbleRoot" type="Control" parent="." unique_id=61723111]
 layout_mode = 1
 anchors_preset = 0
-offset_left = 1133.0
+offset_left = 1222.0
 offset_top = 212.0
 offset_right = 1724.0
 offset_bottom = 573.0
@@ -133,7 +133,6 @@ alignment = 1
 [node name="ScoutReward" type="HBoxContainer" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox" unique_id=1331140296]
 unique_name_in_owner = true
 layout_mode = 2
-layout_direction = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 alignment = 1
@@ -155,6 +154,50 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "+0"
 vertical_alignment = 1
+
+[node name="ScoutRerollButton" type="Button" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox" unique_id=1554585260]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"PrimaryButton"
+
+[node name="ScoutRerollContent" type="HBoxContainer" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox/ScoutRerollButton" unique_id=1554585261]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_right = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="ScoutRerollLabel" type="Label" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox/ScoutRerollButton/ScoutRerollContent" unique_id=1554585262]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_font_sizes/font_size = 18
+text = "Reroll"
+vertical_alignment = 1
+
+[node name="ScoutRerollCostLabel" type="Label" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox/ScoutRerollButton/ScoutRerollContent" unique_id=1554585263]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_font_sizes/font_size = 18
+text = "2"
+vertical_alignment = 1
+
+[node name="ScoutRerollBiomassIcon" type="TextureRect" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox/ScoutRerollButton/ScoutRerollContent" unique_id=1554585264]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("7_biomass")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="ScoutTip" parent="ScoutBubbleRoot" unique_id=919974196 instance=ExtResource("6_tip")]
 layout_mode = 1

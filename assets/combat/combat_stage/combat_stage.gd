@@ -194,6 +194,7 @@ func _check_battle_end() -> void:
 	else:
 		GameState.ensure_nursery_seeded()
 		GameState.current_day += 1
+		GameState.clear_upcoming_enemy_formation()
 		if GameState.has_won_run():
 			SceneTransition.change_scene(_VICTORY_SCENE_PATH)
 			return

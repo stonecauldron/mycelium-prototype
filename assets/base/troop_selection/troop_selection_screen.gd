@@ -19,9 +19,9 @@ var squad: Array = []
 @onready var _bench_grid: HBoxContainer = %BenchGrid
 @onready var _bench_panel: PanelContainer = %BenchPanel
 @onready var _scout_row: HBoxContainer = %ScoutRow
-@onready var _scout_reward: HBoxContainer = %ScoutReward
-@onready var _scout_reward_icon: TextureRect = %ScoutRewardIcon
 @onready var _scout_reward_label: Label = %ScoutRewardLabel
+@onready var _scout_reroll_button: Button = %ScoutRerollButton
+@onready var _scout_reroll_cost_label: Label = %ScoutRerollCostLabel
 
 var _squad_slots: Array[DropSlot] = []
 var _bench_slots: Array[DropSlot] = []
@@ -34,6 +34,8 @@ func _ready() -> void:
 	_sync_all_slots()
 	_bench_panel.set_drag_forwarding(Callable(), _bench_can_drop, _bench_drop)
 	_set_bench_structure_mouse_ignore()
+	if _scout_reroll_button != null:
+		_scout_reroll_button.pressed.connect(_on_scout_reroll_pressed)
 	_refresh_scout_bubble()
 	_notify_start_combat_state()
 
@@ -245,135 +247,87 @@ func _refresh_scout_bubble() -> void:
 		return
 	for child in _scout_row.get_children():
 		child.queue_free()
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
-	var composition := _enemy_composition_for_day(day)
+	_ensure_upcoming_enemy_formation()
+	var specs := GameState.upcoming_enemy_formation
+	var counts := {
+		EnemyUnitSpec.UnitType.MELEE: 0,
+		EnemyUnitSpec.UnitType.SPEAR: 0,
+		EnemyUnitSpec.UnitType.BOW: 0,
+	}
+	for spec in specs:
+		counts[spec.type] = int(counts[spec.type]) + 1
 	var entries: Array = [
-		{"count": int(composition.get("melee", 0)), "weapon": _MELEE_WEAPON},
-		{"count": int(composition.get("spear", 0)), "weapon": _SPEAR_WEAPON},
-		{"count": int(composition.get("bow", 0)), "weapon": _BOW_WEAPON},
+		{"count": counts[EnemyUnitSpec.UnitType.MELEE], "weapon": _MELEE_WEAPON},
+		{"count": counts[EnemyUnitSpec.UnitType.SPEAR], "weapon": _SPEAR_WEAPON},
+		{"count": counts[EnemyUnitSpec.UnitType.BOW], "weapon": _BOW_WEAPON},
 	]
-	var enemy_count := 0
+	var enemy_count := specs.size()
 	for entry in entries:
 		var count: int = entry["count"]
 		if count <= 0:
 			continue
-		enemy_count += count
 		var weapon: WeaponData = entry["weapon"]
 		var entry_card: ScoutWeaponEntry = _SCOUT_ENTRY_SCENE.instantiate()
 		_scout_row.add_child(entry_card)
 		entry_card.setup(count, weapon)
-	if _scout_reward != null and _scout_reward_icon != null and _scout_reward_label != null:
-		# Keep icon left of the amount (LTR), matching the intended layout.
-		_scout_reward.move_child(_scout_reward_icon, 0)
+	if _scout_reward_label != null:
 		_scout_reward_label.text = "+%d" % (enemy_count * BiomassData.PER_KILL)
+	_refresh_scout_reroll_affordability()
+
+
+func _ensure_upcoming_enemy_formation() -> void:
+	if not GameState.upcoming_enemy_formation.is_empty():
+		return
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	GameState.upcoming_enemy_formation = EnemyComposer.specs_for_day(day)
+
+
+func _refresh_scout_reroll_affordability() -> void:
+	if _scout_reroll_button == null:
+		return
+	if _scout_reroll_cost_label != null:
+		_scout_reroll_cost_label.text = "%d" % BiomassData.SCOUT_REROLL_COST
+	var can_reroll := GameState.biomass.can_afford(BiomassData.SCOUT_REROLL_COST)
+	_scout_reroll_button.disabled = not can_reroll
+	_scout_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
+
+
+func _on_scout_reroll_pressed() -> void:
+	if not GameState.biomass.try_spend(BiomassData.SCOUT_REROLL_COST):
+		_refresh_scout_reroll_affordability()
+		return
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	_ensure_upcoming_enemy_formation()
+	GameState.upcoming_enemy_formation = EnemyComposer.reroll_for_day(
+		day,
+		GameState.upcoming_enemy_formation
+	)
+	_refresh_scout_bubble()
+	_refresh_base_hud()
+
+
+func _refresh_base_hud() -> void:
+	var base := get_tree().current_scene
+	if base != null and base.has_method("_refresh_hud"):
+		base._refresh_hud()
 
 
 func _make_default_enemy_roster() -> Array[RosterUnitData]:
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
-	var composition := _enemy_composition_for_day(day)
+	_ensure_upcoming_enemy_formation()
 	var enemy: Array[RosterUnitData] = []
-	var melee_n: int = int(composition.get("melee", 0))
-	var spear_n: int = int(composition.get("spear", 0))
-	var bow_n: int = int(composition.get("bow", 0))
-	var imago_n: int = int(composition.get("imago", 0))
-	var tiers: Array = composition.get("tiers", [UnitStatsData.PowerTier.WEAK])
-	for i in melee_n:
-		var tier: UnitStatsData.PowerTier = tiers[i % tiers.size()]
-		enemy.append(_make_unit(UnitNames.pick(), tier, _MELEE_WEAPON))
-	for i in spear_n:
-		var tier: UnitStatsData.PowerTier = tiers[(melee_n + i) % tiers.size()]
-		enemy.append(_make_unit(UnitNames.pick(), tier, _SPEAR_WEAPON))
-	for i in bow_n:
-		var tier: UnitStatsData.PowerTier = tiers[(melee_n + spear_n + i) % tiers.size()]
-		enemy.append(_make_unit(UnitNames.pick(), tier, _BOW_WEAPON))
-	_promote_enemy_imagos(enemy, imago_n)
+	for spec in GameState.upcoming_enemy_formation:
+		var unit := _make_unit(UnitNames.pick(), spec.tier, _weapon_for_enemy_type(spec.type))
+		if spec.is_imago:
+			unit.promote_to_imago()
+		enemy.append(unit)
 	return enemy
 
 
-func _promote_enemy_imagos(enemy: Array[RosterUnitData], imago_n: int) -> void:
-	var promote_count := mini(imago_n, enemy.size())
-	if promote_count <= 0:
-		return
-	# Spread across the roster so imagos aren't always the leading melee slots.
-	var step := float(enemy.size()) / float(promote_count)
-	var used: Dictionary = {}
-	for i in promote_count:
-		var index := clampi(int(i * step + step * 0.5), 0, enemy.size() - 1)
-		while used.has(index):
-			index = (index + 1) % enemy.size()
-		used[index] = true
-		enemy[index].promote_to_imago()
-
-
-func _enemy_composition_for_day(day: int) -> Dictionary:
-	# Counts/tiers match the pre-imago curve; `imago` promotions apply +2 all stats
-	# and the imago appearance on a spread of those units.
-	# Weapon keys: melee / spear / bow (matches basic_* weapons).
-	match day:
-		1, 2:
-			return {
-				"melee": 2,
-				"spear": 0,
-				"bow": 0,
-				"imago": 0,
-				"tiers": [UnitStatsData.PowerTier.WEAK],
-			}
-		3, 4:
-			return {
-				"melee": 2,
-				"spear": 1,
-				"bow": 0,
-				"imago": 3,
-				"tiers": [
-					UnitStatsData.PowerTier.WEAK,
-					UnitStatsData.PowerTier.WEAK,
-					UnitStatsData.PowerTier.AVERAGE,
-				],
-			}
-		5, 6:
-			return {
-				"melee": 2,
-				"spear": 2,
-				"bow": 1,
-				"imago": 4,
-				"tiers": [
-					UnitStatsData.PowerTier.WEAK,
-					UnitStatsData.PowerTier.AVERAGE,
-				],
-			}
-		7, 8:
-			return {
-				"melee": 3,
-				"spear": 2,
-				"bow": 1,
-				"imago": 5,
-				"tiers": [
-					UnitStatsData.PowerTier.AVERAGE,
-					UnitStatsData.PowerTier.AVERAGE,
-					UnitStatsData.PowerTier.STRONG,
-				],
-			}
-		9:
-			return {
-				"melee": 3,
-				"spear": 2,
-				"bow": 2,
-				"imago": 5,
-				"tiers": [
-					UnitStatsData.PowerTier.AVERAGE,
-					UnitStatsData.PowerTier.STRONG,
-				],
-			}
+func _weapon_for_enemy_type(unit_type: EnemyUnitSpec.UnitType) -> WeaponData:
+	match unit_type:
+		EnemyUnitSpec.UnitType.SPEAR:
+			return _SPEAR_WEAPON
+		EnemyUnitSpec.UnitType.BOW:
+			return _BOW_WEAPON
 		_:
-			# Day 10 finale
-			return {
-				"melee": 4,
-				"spear": 2,
-				"bow": 2,
-				"imago": 6,
-				"tiers": [
-					UnitStatsData.PowerTier.STRONG,
-					UnitStatsData.PowerTier.STRONG,
-					UnitStatsData.PowerTier.AVERAGE,
-				],
-			}
+			return _MELEE_WEAPON

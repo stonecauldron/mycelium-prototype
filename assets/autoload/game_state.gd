@@ -11,6 +11,10 @@ var nursery: NurseryData = NurseryData.new()
 var riboforge: RiboforgeData = RiboforgeData.new()
 var biomass: BiomassData = BiomassData.new()
 var current_day: int = 0
+## Seeds deterministic enemy compositions for this run (scout matches combat).
+var run_seed: int = 0
+## Active enemy formation for the upcoming day (filled by scout; consumed by roster build).
+var upcoming_enemy_formation: Array[EnemyUnitSpec] = []
 ## One-shot: open Nursery when returning to base after it unlocks.
 var prefer_nursery_tab: bool = false
 ## One-shot: open Riboforge when returning to base after it unlocks.
@@ -19,8 +23,16 @@ var prefer_riboforge_tab: bool = false
 var combat_fast_forward: bool = false
 
 
+func _ready() -> void:
+	_roll_run_seed()
+
+
 func get_upcoming_day() -> int:
 	return current_day + 1
+
+
+func clear_upcoming_enemy_formation() -> void:
+	upcoming_enemy_formation.clear()
 
 
 func has_won_run() -> bool:
@@ -156,3 +168,11 @@ func reset_run() -> void:
 	current_day = 0
 	prefer_nursery_tab = false
 	prefer_riboforge_tab = false
+	clear_upcoming_enemy_formation()
+	_roll_run_seed()
+
+
+func _roll_run_seed() -> void:
+	run_seed = randi()
+	if run_seed == 0:
+		run_seed = 1

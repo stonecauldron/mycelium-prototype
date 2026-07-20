@@ -25,8 +25,10 @@ On tab select, call the destination's `on_screen_shown()` / HUD refresh at **tra
 - Preference lives on `GameState.combat_fast_forward` for the session; restore on combat enter.
 - Always reset `Engine.time_scale` to `1.0` on battle end and `_exit_tree` so non-combat scenes stay normal speed. Do **not** clear the preference when resetting scale.
 
-## Enemy / starter composition (`troop_selection_screen.gd`)
+## Enemy / starter composition
 
-- Enemy day composition dict supports `"melee"`, `"spear"`, `"bow"` keys; bow uses `basic_bow.tres`.
-- Combat spawns from roster weapon data (`WeaponRange.RANGED`, etc.) — composition builders must create units with the right weapons.
+- Enemy specs come from `EnemyComposer.specs_for_day()` → `Array[EnemyUnitSpec]` (`type` / `tier` / `is_imago`; array order = spawn order within each weapon line).
+- Scout fills `GameState.upcoming_enemy_formation`; roster build reads that array (combat via `BattleLaunch`). Scout reroll costs `BiomassData.SCOUT_REROLL_COST` and bias-picks a different difficulty.
+- Days 5 and 10 use skill-check override lists (seeded pick if multiple variants); other days use the day curve. Seeded by `GameState.run_seed` + day.
+- Combat spawns from roster weapon data (`WeaponRange.RANGED`, etc.) — builders map `EnemyUnitSpec.UnitType` to `basic_*.tres`.
 - Initial player troop / `_make_default_starters()`: one melee, one bow, one spear (average tier).

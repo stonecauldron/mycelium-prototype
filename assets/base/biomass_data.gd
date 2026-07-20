@@ -5,6 +5,7 @@ const PER_KILL := 5
 const COMMON_SPORE_COST := 4
 const RARE_SPORE_COST := 8
 const SHOP_REROLL_COST := 2
+const SCOUT_REROLL_COST := 2
 const PLOT_UNLOCK_BASE_COST := 4
 const RARE_SPORE_CHANCE := 0.1
 

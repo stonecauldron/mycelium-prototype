@@ -5,7 +5,7 @@
 [node name="BasicMeleeAppearance" type="Node2D" unique_id=123957747]
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=227833974]
-rotation = 0.970796
-scale = Vector2(0.2, 0.2)
+rotation = 0.7784169
+scale = Vector2(0.15, 0.15)
 texture = ExtResource("1_sword")
 offset = Vector2(-2.5, -167)

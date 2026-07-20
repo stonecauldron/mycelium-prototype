@@ -4,45 +4,39 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://sdkqu2q3e1u" path="res://assets/base/unit_card/sword_icon.png" id="3_sword"]
 [ext_resource type="Texture2D" uid="uid://dqwo514d7ery6" path="res://assets/base/unit_card/hp_icon.png" id="4_hp"]
-[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="5_figtree"]
+[ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
-[sub_resource type="FontVariation" id="Font_chip_value"]
-base_font = ExtResource("5_figtree")
-variation_opentype = {
-2003265652: 700
-}
-
-[node name="UnitCard" type="PanelContainer" unique_id=1651646966]
+[node name="UnitCard" type="PanelContainer"]
 custom_minimum_size = Vector2(140, 200)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_card")
 
-[node name="Margin" type="MarginContainer" parent="." unique_id=1501083576]
+[node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_type_variation = &"CardMargin"
 
-[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=120173602]
+[node name="VBox" type="VBoxContainer" parent="Margin"]
 layout_mode = 2
 theme_type_variation = &"CardVBox"
 
-[node name="NameLabel" type="Label" parent="Margin/VBox" unique_id=1485630314]
+[node name="NameLabel" type="Label" parent="Margin/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CardNameLabel"
 text = "Unit"
 horizontal_alignment = 1
 
-[node name="PortraitHost" type="Control" parent="Margin/VBox" unique_id=724713023]
+[node name="PortraitHost" type="Control" parent="Margin/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 130)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="WeaponLabel" type="Label" parent="Margin/VBox" unique_id=120988532]
+[node name="WeaponLabel" type="Label" parent="Margin/VBox"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -50,76 +44,18 @@ theme_type_variation = &"CardMetaLabel"
 text = "Weapon"
 horizontal_alignment = 1
 
-[node name="StatsRow" type="HBoxContainer" parent="Margin/VBox" unique_id=1864423281]
+[node name="StatsRow" type="HBoxContainer" parent="Margin/VBox"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="AtkChip" type="Control" parent="Margin/VBox/StatsRow" unique_id=988863021]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-
-[node name="AtkIcon" type="TextureRect" parent="Margin/VBox/StatsRow/AtkChip" unique_id=1957918335]
-texture_filter = 1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("3_sword")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="AtkValue" type="Label" parent="Margin/VBox/StatsRow/AtkChip/AtkIcon" unique_id=559311472]
+[node name="AtkChip" parent="Margin/VBox/StatsRow" instance=ExtResource("5_chip")]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 5
-theme_override_fonts/font = SubResource("Font_chip_value")
-theme_override_font_sizes/font_size = 16
-text = "99"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HpChip" type="Control" parent="Margin/VBox/StatsRow" unique_id=2125642373]
-custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
+icon = ExtResource("3_sword")
 
-[node name="HpIcon" type="TextureRect" parent="Margin/VBox/StatsRow/HpChip" unique_id=1810465370]
-texture_filter = 1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("4_hp")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="HpValue" type="Label" parent="Margin/VBox/StatsRow/HpChip/HpIcon" unique_id=255814233]
+[node name="HpChip" parent="Margin/VBox/StatsRow" instance=ExtResource("5_chip")]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 5
-theme_override_fonts/font = SubResource("Font_chip_value")
-theme_override_font_sizes/font_size = 16
-text = "99"
-horizontal_alignment = 1
-vertical_alignment = 1
+layout_mode = 2
+icon = ExtResource("4_hp")

@@ -32,6 +32,9 @@ const HURT_FLASH_TIME := 0.12
 const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_number.tscn")
 const _SPEAR_PROJECTILE_SCENE := preload("res://assets/combat/spear_projectile/spear_projectile.tscn")
 const _ARROW_PROJECTILE_SCENE := preload("res://assets/combat/arrow_projectile/arrow_projectile.tscn")
+const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
+const _HP_ICON := preload("res://assets/base/unit_card/hp_icon.png")
+const HP_CHIP_GAP := 4.0
 
 const COLLISION_WORLD := 1
 const COLLISION_PLAYER_UNITS := 2
@@ -63,6 +66,7 @@ var _throw_timer: float = 0.0
 
 var _appearance: UnitAppearance = null
 var _body_shape: CollisionShape2D = null
+var _hp_chip: StatChip = null
 
 
 func _ready() -> void:
@@ -107,6 +111,7 @@ func _initialize_runtime() -> void:
 	_setup_collision()
 	_mount_appearance()
 	_apply_body_color()
+	_ensure_hp_chip()
 
 
 func _mount_appearance() -> void:
@@ -549,6 +554,35 @@ func _spawn_damage_number(amount: int) -> void:
 	world.add_child(number)
 	number.global_position = global_position + Vector2(0, -72)
 	number.display(amount)
+
+
+func _ensure_hp_chip() -> void:
+	if _hp_chip != null and is_instance_valid(_hp_chip):
+		_hp_chip.position = _hp_chip_local_position()
+		_hp_chip.set_value(current_hp)
+		return
+	_hp_chip = _STAT_CHIP_SCENE.instantiate() as StatChip
+	_hp_chip.icon = _HP_ICON
+	_hp_chip.position = _hp_chip_local_position()
+	_hp_chip.z_index = 10
+	add_child(_hp_chip)
+	_hp_chip.set_value(current_hp)
+	health_changed.connect(_on_hp_chip_health_changed)
+
+
+func _hp_chip_local_position() -> Vector2:
+	var half := StatChip.CHIP_SIZE * 0.5
+	var pos := Vector2(-half.x, HP_CHIP_GAP)
+	if _body_shape != null and _body_shape.shape is RectangleShape2D:
+		var rect := _body_shape.shape as RectangleShape2D
+		var bottom_y := _body_shape.position.y + rect.size.y * 0.5
+		pos = Vector2(_body_shape.position.x - half.x, bottom_y + HP_CHIP_GAP)
+	return pos
+
+
+func _on_hp_chip_health_changed(current: int, _maximum: int) -> void:
+	if _hp_chip != null and is_instance_valid(_hp_chip):
+		_hp_chip.set_value(current)
 
 
 func _face_toward(point: Vector2) -> void:

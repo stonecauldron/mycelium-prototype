@@ -221,24 +221,19 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 			if not GameState.troop.is_seeded():
 				var empty_bench: Array[RosterUnitData] = []
 				GameState.troop.seed_if_empty(empty_bench)
-			var bench_slot := -1
-			for i in GameState.troop.bench.size():
-				if GameState.troop.bench[i] == null:
-					bench_slot = i
-					break
-			if bench_slot < 0:
-				_set_status("Bench is full")
+			if not GameState.troop.has_free_slot():
+				_set_status("Squad and bench are full")
 				return
 			var as_imago := plot.will_harvest_as_imago()
 			var unit := nursery.harvest(tile.plot_index)
 			if unit == null:
 				_set_status("Could not harvest")
 				return
-			GameState.troop.bench[bench_slot] = unit
+			var destination := GameState.troop.try_add_unit(unit)
 			if as_imago:
-				_set_status("Harvested imago %s → bench" % unit.display_name)
+				_set_status("Harvested imago %s → %s" % [unit.display_name, destination])
 			else:
-				_set_status("Harvested %s → bench" % unit.display_name)
+				_set_status("Harvested %s → %s" % [unit.display_name, destination])
 			_refresh()
 
 

@@ -39,6 +39,26 @@ func seed_if_empty(starter_units: Array[RosterUnitData]) -> void:
 	_seeded = true
 
 
+func has_free_slot() -> bool:
+	return _first_empty(squad) >= 0 or _first_empty(bench) >= 0
+
+
+## Places unit in the first empty squad slot, or the bench if squad is full.
+## Returns "squad", "bench", or "" if there is no free slot.
+func try_add_unit(unit: RosterUnitData) -> String:
+	if unit == null:
+		return ""
+	var squad_slot := _first_empty(squad)
+	if squad_slot >= 0:
+		squad[squad_slot] = unit
+		return "squad"
+	var bench_slot := _first_empty(bench)
+	if bench_slot >= 0:
+		bench[bench_slot] = unit
+		return "bench"
+	return ""
+
+
 func get_squad_roster() -> Array[RosterUnitData]:
 	var roster: Array[RosterUnitData] = []
 	for entry in squad:

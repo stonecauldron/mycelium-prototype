@@ -177,8 +177,10 @@ func _on_unit_died(unit: Unit, is_player: bool) -> void:
 		_fallen_units.append(unit.roster_data)
 		GameState.troop.remove_unit(unit.roster_data)
 	elif not is_player:
-		GameState.biomass.add(BiomassData.PER_KILL)
-		_biomass_earned_this_fight += BiomassData.PER_KILL
+		var is_imago := unit.roster_data != null and unit.roster_data.is_imago
+		var reward := BiomassData.reward_for_kill(is_imago)
+		GameState.biomass.add(reward)
+		_biomass_earned_this_fight += reward
 	_check_battle_end()
 
 

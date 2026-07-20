@@ -35,6 +35,11 @@ size = Vector2(61, 104)
 [node name="CaplingAppearance" type="Node2D" unique_id=369788823]
 script = ExtResource("1_root")
 
+[node name="GroundShadow" type="Polygon2D" parent="." unique_id=483943757]
+position = Vector2(-2, -2)
+color = Color(0, 0, 0, 0.25)
+polygon = PackedVector2Array(27.45, 0, 26.515, 2.21, 23.772, 4.27, 19.41, 6.039, 13.725, 7.396, 7.105, 8.249, 0, 8.54, -7.105, 8.249, -13.725, 7.396, -19.41, 6.039, -23.772, 4.27, -26.515, 2.21, -27.45, 0, -26.515, -2.21, -23.772, -4.27, -19.41, -6.039, -13.725, -7.396, -7.105, -8.249, 0, -8.54, 7.105, -8.249, 13.725, -7.396, 19.41, -6.039, 23.772, -4.27, 26.515, -2.21)
+
 [node name="Sprite" type="Sprite2D" parent="." unique_id=199861224]
 position = Vector2(1, -52)
 scale = Vector2(0.4, 0.4)

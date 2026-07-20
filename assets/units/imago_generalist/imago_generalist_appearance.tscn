@@ -35,6 +35,12 @@ size = Vector2(106, 130)
 [node name="ImagoGeneralistAppearance" type="Node2D" unique_id=101060416]
 script = ExtResource("1_root")
 
+[node name="GroundShadow" type="Polygon2D" parent="." unique_id=383035601]
+position = Vector2(-3, 8)
+scale = Vector2(0.8, 0.8)
+color = Color(0, 0, 0, 0.25)
+polygon = PackedVector2Array(47.7, 0, 46.075, 3.841, 41.309, 7.42, 33.729, 10.493, 23.85, 12.852, 12.346, 14.334, 0, 14.84, -12.346, 14.334, -23.85, 12.852, -33.729, 10.493, -41.309, 7.42, -46.075, 3.841, -47.7, 0, -46.075, -3.841, -41.309, -7.42, -33.729, -10.493, -23.85, -12.852, -12.346, -14.334, 0, -14.84, 12.346, -14.334, 23.85, -12.852, 33.729, -10.493, 41.309, -7.42, 46.075, -3.841)
+
 [node name="Sprite" type="Sprite2D" parent="." unique_id=288080520]
 position = Vector2(1, -59)
 scale = Vector2(0.3993315, 0.40093592)

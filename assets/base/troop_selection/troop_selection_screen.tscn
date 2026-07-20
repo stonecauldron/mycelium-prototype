@@ -4,6 +4,25 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://clt2ubxc7lo1c" path="res://assets/base/background/upper_lane.png" id="3_upper_lane"]
 [ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="4_lower_lane"]
+[ext_resource type="PackedScene" uid="uid://iwk60b5u7rf7" path="res://assets/combat/flag_bearer/flag_bearer_visual.tscn" id="5_u66j2"]
+[ext_resource type="PackedScene" uid="uid://cdr3kf2bf6rx8" path="res://assets/base/troop_selection/scout_bubble/speech_bubble_tip.tscn" id="6_tip"]
+[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="7_biomass"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scout_bubble"]
+content_margin_left = 18.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 16.0
+bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
@@ -39,6 +58,118 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("4_lower_lane")
 expand_mode = 1
+
+[node name="FlagBearer" parent="LowerLaneLayer" unique_id=222675723 instance=ExtResource("5_u66j2")]
+position = Vector2(1782, 822)
+scale = Vector2(-1, 1)
+
+[node name="ScoutBubbleRoot" type="Control" parent="." unique_id=61723111]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 1133.0
+offset_top = 212.0
+offset_right = 1724.0
+offset_bottom = 573.0
+mouse_filter = 2
+
+[node name="ScoutBubble" type="PanelContainer" parent="ScoutBubbleRoot" unique_id=1223526131]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_scout_bubble")
+
+[node name="ScoutMargin" type="MarginContainer" parent="ScoutBubbleRoot/ScoutBubble" unique_id=1322188425]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="ScoutVBox" type="VBoxContainer" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin" unique_id=696962643]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="ScoutTitle" type="Label" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox" unique_id=1868290355]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 28
+text = "Next Fight"
+horizontal_alignment = 1
+
+[node name="ScoutDivider" type="Control" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox" unique_id=949200192]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ScoutDividerLine" type="ColorRect" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox/ScoutDivider" unique_id=1270145595]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -1.5
+offset_bottom = 1.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ScoutRow" type="HBoxContainer" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox" unique_id=1796666168]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ScoutReward" type="HBoxContainer" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox" unique_id=1331140296]
+unique_name_in_owner = true
+layout_mode = 2
+layout_direction = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="ScoutRewardIcon" type="TextureRect" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox/ScoutReward" unique_id=1554585259]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("7_biomass")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ScoutRewardLabel" type="Label" parent="ScoutBubbleRoot/ScoutBubble/ScoutMargin/ScoutVBox/ScoutReward" unique_id=153637993]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "+0"
+vertical_alignment = 1
+
+[node name="ScoutTip" parent="ScoutBubbleRoot" unique_id=919974196 instance=ExtResource("6_tip")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.72
+anchor_right = 1.0
+anchor_bottom = 0.72
+offset_left = -116.0
+offset_top = 86.07999
+offset_right = -76.0
+offset_bottom = 146.07999
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
 
 [node name="HeaderBlock" type="VBoxContainer" parent="." unique_id=826697549]
 layout_mode = 1

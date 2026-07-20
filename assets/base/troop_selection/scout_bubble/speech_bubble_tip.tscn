@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cdr3kf2bf6rx8"]
+
+[ext_resource type="Texture2D" uid="uid://cxa4bgxyat3ki" path="res://assets/base/troop_selection/scout_bubble/bubble_tip.png" id="1_n03ae"]
+
+[node name="SpeechBubbleTip" type="Control" unique_id=452179581]
+custom_minimum_size = Vector2(40, 60)
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=240918999]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_n03ae")

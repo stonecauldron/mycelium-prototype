@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://iwk60b5u7rf7"]
+
+[ext_resource type="Texture2D" uid="uid://divttx4sownsq" path="res://assets/combat/flag_bearer/flag.png" id="1_3q0oy"]
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 1.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Shroom:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8, 1.6),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [Vector2(0.4, 0.4), Vector2(0.375, 0.435), Vector2(0.4, 0.4)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Shroom/Flag:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8, 1.2, 1.6),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 0.08, 0.0, -0.08, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_main"]
+_data = {
+&"idle": SubResource("Animation_idle")
+}
+
+[node name="Visual" type="Node2D" unique_id=222675723]
+
+[node name="Shroom" type="Sprite2D" parent="." unique_id=610260484]
+position = Vector2(-2, -62)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_3q0oy")
+region_enabled = true
+region_rect = Rect2(128, 671, 247, 319)
+
+[node name="Flag" type="Sprite2D" parent="Shroom" unique_id=964701704]
+position = Vector2(32.500008, 42.49997)
+texture = ExtResource("1_3q0oy")
+offset = Vector2(93.49999, -242.49997)
+region_enabled = true
+region_rect = Rect2(144, 30, 225, 610)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=345071971]
+libraries/ = SubResource("AnimationLibrary_main")
+autoplay = &"idle"

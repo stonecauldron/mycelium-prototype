@@ -8,6 +8,9 @@ const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee/basic_melee.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
+const _SCOUT_ENTRY_SCENE := preload(
+	"res://assets/base/troop_selection/scout_bubble/scout_weapon_entry.tscn"
+)
 
 var bench: Array = []
 var squad: Array = []
@@ -15,6 +18,10 @@ var squad: Array = []
 @onready var _squad_rows: VBoxContainer = %SquadRows
 @onready var _bench_grid: HBoxContainer = %BenchGrid
 @onready var _bench_panel: PanelContainer = %BenchPanel
+@onready var _scout_row: HBoxContainer = %ScoutRow
+@onready var _scout_reward: HBoxContainer = %ScoutReward
+@onready var _scout_reward_icon: TextureRect = %ScoutRewardIcon
+@onready var _scout_reward_label: Label = %ScoutRewardLabel
 
 var _squad_slots: Array[DropSlot] = []
 var _bench_slots: Array[DropSlot] = []
@@ -27,11 +34,13 @@ func _ready() -> void:
 	_sync_all_slots()
 	_bench_panel.set_drag_forwarding(Callable(), _bench_can_drop, _bench_drop)
 	_set_bench_structure_mouse_ignore()
+	_refresh_scout_bubble()
 	_notify_start_combat_state()
 
 
 func on_screen_shown() -> void:
 	_sync_all_slots()
+	_refresh_scout_bubble()
 	_notify_start_combat_state()
 
 
@@ -229,6 +238,34 @@ func _squad_unit_count() -> int:
 		if entry != null:
 			count += 1
 	return count
+
+
+func _refresh_scout_bubble() -> void:
+	if _scout_row == null:
+		return
+	for child in _scout_row.get_children():
+		child.queue_free()
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var composition := _enemy_composition_for_day(day)
+	var entries: Array = [
+		{"count": int(composition.get("melee", 0)), "weapon": _MELEE_WEAPON},
+		{"count": int(composition.get("spear", 0)), "weapon": _SPEAR_WEAPON},
+		{"count": int(composition.get("bow", 0)), "weapon": _BOW_WEAPON},
+	]
+	var enemy_count := 0
+	for entry in entries:
+		var count: int = entry["count"]
+		if count <= 0:
+			continue
+		enemy_count += count
+		var weapon: WeaponData = entry["weapon"]
+		var entry_card: ScoutWeaponEntry = _SCOUT_ENTRY_SCENE.instantiate()
+		_scout_row.add_child(entry_card)
+		entry_card.setup(count, weapon)
+	if _scout_reward != null and _scout_reward_icon != null and _scout_reward_label != null:
+		# Keep icon left of the amount (LTR), matching the intended layout.
+		_scout_reward.move_child(_scout_reward_icon, 0)
+		_scout_reward_label.text = "+%d" % (enemy_count * BiomassData.PER_KILL)
 
 
 func _make_default_enemy_roster() -> Array[RosterUnitData]:

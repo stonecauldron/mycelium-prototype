@@ -8,9 +8,6 @@ const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee/basic_melee.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
-const _SCOUT_ENTRY_SCENE := preload(
-	"res://assets/base/troop_selection/scout_bubble/scout_weapon_entry.tscn"
-)
 
 var bench: Array = []
 var squad: Array = []
@@ -18,10 +15,7 @@ var squad: Array = []
 @onready var _squad_rows: VBoxContainer = %SquadRows
 @onready var _bench_grid: HBoxContainer = %BenchGrid
 @onready var _bench_panel: PanelContainer = %BenchPanel
-@onready var _scout_row: HBoxContainer = %ScoutRow
-@onready var _scout_reward_label: Label = %ScoutRewardLabel
-@onready var _scout_reroll_button: Button = %ScoutRerollButton
-@onready var _scout_reroll_cost_label: Label = %ScoutRerollCostLabel
+@onready var _scout_bubble: ScoutBubble = %ScoutBubble
 
 var _squad_slots: Array[DropSlot] = []
 var _bench_slots: Array[DropSlot] = []
@@ -34,15 +28,15 @@ func _ready() -> void:
 	_sync_all_slots()
 	_bench_panel.set_drag_forwarding(Callable(), _bench_can_drop, _bench_drop)
 	_set_bench_structure_mouse_ignore()
-	if _scout_reroll_button != null:
-		_scout_reroll_button.pressed.connect(_on_scout_reroll_pressed)
-	_refresh_scout_bubble()
+	if _scout_bubble != null:
+		_scout_bubble.refresh()
 	_notify_start_combat_state()
 
 
 func on_screen_shown() -> void:
 	_sync_all_slots()
-	_refresh_scout_bubble()
+	if _scout_bubble != null:
+		_scout_bubble.refresh()
 	_notify_start_combat_state()
 
 
@@ -242,78 +236,8 @@ func _squad_unit_count() -> int:
 	return count
 
 
-func _refresh_scout_bubble() -> void:
-	if _scout_row == null:
-		return
-	for child in _scout_row.get_children():
-		child.queue_free()
-	_ensure_upcoming_enemy_formation()
-	var specs := GameState.upcoming_enemy_formation
-	var counts := {
-		EnemyUnitSpec.UnitType.MELEE: 0,
-		EnemyUnitSpec.UnitType.SPEAR: 0,
-		EnemyUnitSpec.UnitType.BOW: 0,
-	}
-	for spec in specs:
-		counts[spec.type] = int(counts[spec.type]) + 1
-	var entries: Array = [
-		{"count": counts[EnemyUnitSpec.UnitType.MELEE], "weapon": _MELEE_WEAPON},
-		{"count": counts[EnemyUnitSpec.UnitType.SPEAR], "weapon": _SPEAR_WEAPON},
-		{"count": counts[EnemyUnitSpec.UnitType.BOW], "weapon": _BOW_WEAPON},
-	]
-	var enemy_count := specs.size()
-	for entry in entries:
-		var count: int = entry["count"]
-		if count <= 0:
-			continue
-		var weapon: WeaponData = entry["weapon"]
-		var entry_card: ScoutWeaponEntry = _SCOUT_ENTRY_SCENE.instantiate()
-		_scout_row.add_child(entry_card)
-		entry_card.setup(count, weapon)
-	if _scout_reward_label != null:
-		_scout_reward_label.text = "+%d" % (enemy_count * BiomassData.PER_KILL)
-	_refresh_scout_reroll_affordability()
-
-
-func _ensure_upcoming_enemy_formation() -> void:
-	if not GameState.upcoming_enemy_formation.is_empty():
-		return
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
-	GameState.upcoming_enemy_formation = EnemyComposer.specs_for_day(day)
-
-
-func _refresh_scout_reroll_affordability() -> void:
-	if _scout_reroll_button == null:
-		return
-	if _scout_reroll_cost_label != null:
-		_scout_reroll_cost_label.text = "%d" % BiomassData.SCOUT_REROLL_COST
-	var can_reroll := GameState.biomass.can_afford(BiomassData.SCOUT_REROLL_COST)
-	_scout_reroll_button.disabled = not can_reroll
-	_scout_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
-
-
-func _on_scout_reroll_pressed() -> void:
-	if not GameState.biomass.try_spend(BiomassData.SCOUT_REROLL_COST):
-		_refresh_scout_reroll_affordability()
-		return
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
-	_ensure_upcoming_enemy_formation()
-	GameState.upcoming_enemy_formation = EnemyComposer.reroll_for_day(
-		day,
-		GameState.upcoming_enemy_formation
-	)
-	_refresh_scout_bubble()
-	_refresh_base_hud()
-
-
-func _refresh_base_hud() -> void:
-	var base := get_tree().current_scene
-	if base != null and base.has_method("_refresh_hud"):
-		base._refresh_hud()
-
-
 func _make_default_enemy_roster() -> Array[RosterUnitData]:
-	_ensure_upcoming_enemy_formation()
+	GameState.ensure_upcoming_enemy_formation()
 	var enemy: Array[RosterUnitData] = []
 	for spec in GameState.upcoming_enemy_formation:
 		var unit := _make_unit(UnitNames.pick(), spec.tier, _weapon_for_enemy_type(spec.type))

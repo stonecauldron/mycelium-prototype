@@ -28,7 +28,7 @@ On tab select, call the destination's `on_screen_shown()` / HUD refresh at **tra
 ## Enemy / starter composition
 
 - Enemy specs come from `EnemyComposer.specs_for_day()` → `Array[EnemyUnitSpec]` (`type` / `tier` / `is_imago`; array order = spawn order within each weapon line).
-- Scout fills `GameState.upcoming_enemy_formation`; roster build reads that array (combat via `BattleLaunch`). Scout reroll costs `BiomassData.SCOUT_REROLL_COST` and bias-picks a different difficulty.
+- Scout UI lives in `scout_bubble/scout_bubble.tscn` (`ScoutBubble`); it fills `GameState.upcoming_enemy_formation`. Roster build reads that array (combat via `BattleLaunch`). Scout reroll costs `BiomassData.SCOUT_REROLL_COST` and bias-picks a different difficulty.
 - Days 5 and 10 use skill-check override lists (seeded pick if multiple variants); other days use the day curve. Seeded by `GameState.run_seed` + day.
 - Combat spawns from roster weapon data (`WeaponRange.RANGED`, etc.) — builders map `EnemyUnitSpec.UnitType` to `basic_*.tres`.
 - Initial player troop / `_make_default_starters()`: one melee, one bow, one spear (average tier).

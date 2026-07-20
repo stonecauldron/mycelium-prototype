@@ -35,6 +35,13 @@ func clear_upcoming_enemy_formation() -> void:
 	upcoming_enemy_formation.clear()
 
 
+func ensure_upcoming_enemy_formation() -> void:
+	if not upcoming_enemy_formation.is_empty():
+		return
+	var day := clampi(get_upcoming_day(), 1, WIN_DAYS)
+	upcoming_enemy_formation = EnemyComposer.specs_for_day(day)
+
+
 func has_won_run() -> bool:
 	return current_day >= WIN_DAYS
 

@@ -1,14 +1,17 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://ru18fywxnj1u"]
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
-[ext_resource type="PackedScene" uid="uid://cbasicbowapp001" path="res://assets/weapons/basic_bow/basic_bow_appearance.tscn" id="2_appear"]
+[ext_resource type="PackedScene" uid="uid://ru18fydvyq1u" path="res://assets/weapons/basic_bow/basic_bow_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://ba54ju7pqqlac" path="res://assets/weapons/basic_bow/bow.png" id="3_icon"]
 
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Basic Bow"
-range_class = 2
-attack_range = 900.0
+formation_line = 2
+engagement_stance = 2
+attack_style = 2
+attack_range = 1300.0
+skirmish_distance = 320.0
 knockback_force = 0.0
 biomass_cost = 10
 appearance_scene = ExtResource("2_appear")

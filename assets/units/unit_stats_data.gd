@@ -41,13 +41,13 @@ func get_max_hp() -> int:
 	return maxi(con * 4, 1)
 
 
-func get_attack_stat(weapon_range: WeaponData.WeaponRange) -> int:
-	match weapon_range:
-		WeaponData.WeaponRange.MELEE:
+func get_attack_stat(attack_style: WeaponData.AttackStyle) -> int:
+	match attack_style:
+		WeaponData.AttackStyle.MELEE_LUNGE:
 			return strength
-		WeaponData.WeaponRange.RANGED:
+		WeaponData.AttackStyle.BOW_SHOT:
 			return dex
-		WeaponData.WeaponRange.MID:
+		WeaponData.AttackStyle.SPEAR_THROW:
 			return maxi(strength, dex)
 		_:
 			return NEUTRAL_STAT
@@ -66,16 +66,16 @@ func get_ranged_damage_bonus() -> int:
 
 
 func get_mid_damage_bonus() -> int:
-	return get_attack_stat(WeaponData.WeaponRange.MID) - NEUTRAL_STAT
+	return get_attack_stat(WeaponData.AttackStyle.SPEAR_THROW) - NEUTRAL_STAT
 
 
-func get_damage_bonus(weapon_range: WeaponData.WeaponRange) -> int:
-	match weapon_range:
-		WeaponData.WeaponRange.MELEE:
+func get_damage_bonus(attack_style: WeaponData.AttackStyle) -> int:
+	match attack_style:
+		WeaponData.AttackStyle.MELEE_LUNGE:
 			return get_melee_damage_bonus()
-		WeaponData.WeaponRange.RANGED:
+		WeaponData.AttackStyle.BOW_SHOT:
 			return get_ranged_damage_bonus()
-		WeaponData.WeaponRange.MID:
+		WeaponData.AttackStyle.SPEAR_THROW:
 			return get_mid_damage_bonus()
 		_:
 			return 0

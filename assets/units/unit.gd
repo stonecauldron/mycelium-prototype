@@ -24,7 +24,6 @@ const THROW_ORIGIN_HEIGHT := -48.0
 const RANGED_RELEASE_DELAY := 0.22
 const RANGED_RECOVERY_TIME := 0.42
 const RANGED_ORIGIN_HEIGHT := -40.0
-const MELEE_PROXIMITY := 160.0
 const KNOCKBACK_UP_RATIO := 0.5
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
 const HURT_FLASH_TIME := 0.12
@@ -185,9 +184,9 @@ func _physics_process(delta: float) -> void:
 
 	if _combat_phase == CombatPhase.ATTACKING:
 		velocity.x = 0.0
-		if weapon.range_class == WeaponData.WeaponRange.MID:
+		if weapon.attack_style == WeaponData.AttackStyle.SPEAR_THROW:
 			_process_throw_attack(delta)
-		elif weapon.range_class == WeaponData.WeaponRange.RANGED:
+		elif weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 			_process_ranged_attack(delta)
 		move_and_slide()
 		return
@@ -218,7 +217,10 @@ func _seek_home_marching() -> void:
 func _process_combat(delta: float) -> void:
 	if _attack_timer > 0.0:
 		_attack_timer = maxf(_attack_timer - delta, 0.0)
-		if _should_chase():
+		_refresh_target()
+		if _target == null:
+			_hold_or_march()
+		elif _should_chase():
 			_chase_target()
 		else:
 			_return_home()
@@ -231,11 +233,8 @@ func _process_combat(delta: float) -> void:
 
 	var distance := global_position.distance_to(_target.global_position)
 	if (
-		(
-			weapon.range_class == WeaponData.WeaponRange.MID
-			or weapon.range_class == WeaponData.WeaponRange.RANGED
-		)
-		and distance <= MELEE_PROXIMITY
+		weapon.engagement_stance == WeaponData.EngagementStance.SKIRMISH
+		and distance <= weapon.skirmish_distance
 	):
 		_return_home()
 		return
@@ -254,14 +253,18 @@ func _process_combat(delta: float) -> void:
 
 
 func _should_chase() -> bool:
-	if weapon == null or weapon.range_class != WeaponData.WeaponRange.MELEE:
+	if weapon == null or _troop == null:
 		return false
-	if _troop == null:
-		return false
-	var opponent := _troop.get_opponent()
-	if opponent == null:
-		return false
-	return not opponent.has_living_range_class(WeaponData.WeaponRange.MELEE)
+	match weapon.engagement_stance:
+		WeaponData.EngagementStance.HOLD:
+			return true
+		WeaponData.EngagementStance.REFORM:
+			var opponent := _troop.get_opponent()
+			if opponent == null:
+				return false
+			return not opponent.has_living_formation_line(WeaponData.FormationLine.FRONT)
+		_:
+			return false
 
 
 func _chase_target() -> void:
@@ -303,10 +306,10 @@ func _start_attack() -> void:
 		return
 
 	_combat_phase = CombatPhase.ATTACKING
-	if weapon.range_class == WeaponData.WeaponRange.MID:
+	if weapon.attack_style == WeaponData.AttackStyle.SPEAR_THROW:
 		_start_throw_attack()
 		return
-	if weapon.range_class == WeaponData.WeaponRange.RANGED:
+	if weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 		_start_ranged_attack()
 		return
 
@@ -433,7 +436,7 @@ func _finish_attack() -> void:
 	_throw_left_ground = false
 	_throw_timer = 0.0
 	var interval := BASE_ATTACK_INTERVAL
-	if weapon != null and weapon.range_class == WeaponData.WeaponRange.RANGED:
+	if weapon != null and weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 		interval = RANGED_ATTACK_INTERVAL
 	_attack_timer = interval / stats.get_speed_multiplier()
 	_combat_phase = CombatPhase.RETURNING
@@ -487,7 +490,8 @@ func _refresh_target() -> void:
 
 
 func _get_attack_damage() -> int:
-	return weapon.base_damage + stats.get_damage_bonus(weapon.range_class)
+	var raw: int = weapon.base_damage + stats.get_damage_bonus(weapon.attack_style)
+	return roundi(float(raw) * weapon.outgoing_damage_multiplier)
 
 
 func take_damage(
@@ -495,6 +499,12 @@ func take_damage(
 	knockback_from: Vector2 = Vector2.ZERO,
 	knockback_force: float = 0.0
 ) -> void:
+	var incoming_mult: float = 1.0
+	var knockback_mult: float = 1.0
+	if weapon != null:
+		incoming_mult = weapon.incoming_damage_multiplier
+		knockback_mult = weapon.incoming_knockback_multiplier
+	amount = roundi(float(amount) * incoming_mult)
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
 	current_hp = maxi(current_hp - amount, 0)
@@ -503,7 +513,7 @@ func take_damage(
 		_die()
 		return
 	if knockback_from != Vector2.ZERO and knockback_force > 0.0:
-		_apply_knockback(knockback_from, knockback_force)
+		_apply_knockback(knockback_from, knockback_force * knockback_mult)
 
 
 func _die() -> void:

@@ -2,7 +2,7 @@ class_name DaySummaryFeed
 extends RefCounted
 
 ## Pending end-of-day summary rows.
-## Keys: text, optional range_class, optional unit, optional biomass.
+## Keys: text, optional formation_line, optional unit, optional biomass.
 static var entries: Array[Dictionary] = []
 
 
@@ -10,10 +10,10 @@ static func clear() -> void:
 	entries.clear()
 
 
-static func add_entry(text: String, range_class: int = -1) -> void:
+static func add_entry(text: String, formation_line: int = -1) -> void:
 	entries.append({
 		"text": text,
-		"range_class": range_class,
+		"formation_line": formation_line,
 	})
 
 
@@ -29,7 +29,7 @@ static func add_fallen_unit(unit: RosterUnitData) -> void:
 		return
 	entries.append({
 		"text": "%s has fallen" % unit.display_name,
-		"range_class": int(unit.get_range_class()),
+		"formation_line": int(unit.get_formation_line()),
 		"unit": unit,
 	})
 
@@ -39,7 +39,7 @@ static func add_unit_became_imago(unit: RosterUnitData) -> void:
 		return
 	entries.append({
 		"text": "%s has matured." % unit.display_name,
-		"range_class": int(unit.get_range_class()),
+		"formation_line": int(unit.get_formation_line()),
 		"unit": unit,
 	})
 

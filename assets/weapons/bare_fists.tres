@@ -5,6 +5,9 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Bare Fists"
+formation_line = 0
+engagement_stance = 0
+attack_style = 0
 base_damage = 3
 attack_range = 86.0
 knockback_force = 140.0

@@ -8,12 +8,6 @@ signal weapon_loadout_changed(card: UnitCard)
 const CARD_SIZE := Vector2(140, 200)
 const PORTRAIT_SCALE := 1.0
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
-const RANGE_LABELS := {
-	WeaponData.WeaponRange.MELEE: "Melee",
-	WeaponData.WeaponRange.MID: "Mid",
-	WeaponData.WeaponRange.RANGED: "Ranged",
-}
-
 var unit_data: Resource
 var source: String = "bench"
 var slot: Node
@@ -82,12 +76,15 @@ func _refresh() -> void:
 		return
 	_name_label.text = data.display_name
 	var weapon_name: String = data.weapon.display_name if data.weapon else "—"
-	var range_name: String = str(RANGE_LABELS.get(data.get_range_class(), "?"))
+	var range_name: String = str(WeaponData.FORMATION_LINE_LABELS.get(data.get_formation_line(), "?"))
 	_weapon_label.text = "%s (%s)" % [weapon_name, range_name]
 	if data.stats != null:
-		var atk: int = data.stats.get_damage_bonus(data.get_range_class())
+		var atk: int = data.stats.get_damage_bonus(data.get_attack_style())
+		var outgoing_mult: float = 1.0
 		if data.weapon != null:
 			atk += data.weapon.base_damage
+			outgoing_mult = data.weapon.outgoing_damage_multiplier
+		atk = roundi(float(atk) * outgoing_mult)
 		_atk_chip.set_value(atk)
 		_hp_chip.set_value(data.stats.get_max_hp())
 		tooltip_text = "STR %d  DEX %d\nCON %d  SPD %d" % [

@@ -116,7 +116,7 @@ func _reset_troop_from_roster(
 	for data in roster:
 		if data == null:
 			continue
-		var scene := _scene_for_range(data.get_range_class())
+		var scene := _scene_for_attack_style(data.get_attack_style())
 		_spawn_unit(scene, units_root, data, body_color, index, is_player)
 		index += 1
 
@@ -130,9 +130,9 @@ func _clear_units(units_root: Node2D) -> void:
 		child.free()
 
 
-func _scene_for_range(range_class: WeaponData.WeaponRange) -> PackedScene:
-	match range_class:
-		WeaponData.WeaponRange.MID:
+func _scene_for_attack_style(attack_style: WeaponData.AttackStyle) -> PackedScene:
+	match attack_style:
+		WeaponData.AttackStyle.SPEAR_THROW:
 			return _SPEAR_UNIT_SCENE
 		_:
 			return _MELEE_UNIT_SCENE

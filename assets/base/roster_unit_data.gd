@@ -14,10 +14,16 @@ const _IMAGO_STRAIN := preload("res://assets/units/imago_generalist/imago_genera
 @export var is_imago: bool = false
 
 
-func get_range_class() -> WeaponData.WeaponRange:
+func get_formation_line() -> WeaponData.FormationLine:
 	if weapon == null:
-		return WeaponData.WeaponRange.MELEE
-	return weapon.range_class
+		return WeaponData.FormationLine.FRONT
+	return weapon.formation_line
+
+
+func get_attack_style() -> WeaponData.AttackStyle:
+	if weapon == null:
+		return WeaponData.AttackStyle.MELEE_LUNGE
+	return weapon.attack_style
 
 
 func can_promote_to_imago() -> bool:

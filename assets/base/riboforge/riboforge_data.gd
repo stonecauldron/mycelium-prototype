@@ -7,8 +7,14 @@ const DEFAULT_WEAPON_PATH := "res://assets/weapons/bare_fists.tres"
 const MELEE_WEAPON_PATH := "res://assets/weapons/basic_melee/basic_melee.tres"
 const SPEAR_WEAPON_PATH := "res://assets/weapons/basic_spear/basic_spear.tres"
 const BOW_WEAPON_PATH := "res://assets/weapons/basic_bow/basic_bow.tres"
+const SHIELD_WEAPON_PATH := "res://assets/weapons/basic_shield/basic_shield.tres"
 const _DEFAULT_WEAPON_COST := 5
-const _SHOP_WEAPON_PATHS := [MELEE_WEAPON_PATH, SPEAR_WEAPON_PATH, BOW_WEAPON_PATH]
+const _SHOP_WEAPON_PATHS := [
+	MELEE_WEAPON_PATH,
+	SPEAR_WEAPON_PATH,
+	BOW_WEAPON_PATH,
+	SHIELD_WEAPON_PATH,
+]
 
 static var _default_weapon: WeaponData
 

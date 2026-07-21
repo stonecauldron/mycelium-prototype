@@ -31,17 +31,17 @@ func _assign_squad_indices() -> void:
 
 
 func refresh_squad_indices() -> void:
-	var by_class: Dictionary = {}
+	var by_line: Dictionary = {}
 	for unit in get_living_units():
-		var range_class: WeaponData.WeaponRange = (
-			unit.weapon.range_class if unit.weapon != null else WeaponData.WeaponRange.MELEE
+		var formation_line: WeaponData.FormationLine = (
+			unit.weapon.formation_line if unit.weapon != null else WeaponData.FormationLine.FRONT
 		)
-		if not by_class.has(range_class):
-			by_class[range_class] = []
-		by_class[range_class].append(unit)
+		if not by_line.has(formation_line):
+			by_line[formation_line] = []
+		by_line[formation_line].append(unit)
 
-	for range_class in by_class:
-		var units: Array = by_class[range_class]
+	for formation_line in by_line:
+		var units: Array = by_line[formation_line]
 		for i in units.size():
 			units[i].squad_index = i
 
@@ -85,9 +85,9 @@ func is_wiped_out() -> bool:
 	return get_living_unit_count() == 0
 
 
-func has_living_range_class(range_class: WeaponData.WeaponRange) -> bool:
+func has_living_formation_line(formation_line: WeaponData.FormationLine) -> bool:
 	for unit in get_living_units():
-		if unit.weapon != null and unit.weapon.range_class == range_class:
+		if unit.weapon != null and unit.weapon.formation_line == formation_line:
 			return true
 	return false
 

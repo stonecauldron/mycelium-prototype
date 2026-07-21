@@ -5,12 +5,6 @@ const _WEAPON_CARD_SCENE := preload("res://assets/base/riboforge/weapon_card.tsc
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 
-const RANGE_LABELS := {
-	WeaponData.WeaponRange.MELEE: "Melee",
-	WeaponData.WeaponRange.MID: "Mid",
-	WeaponData.WeaponRange.RANGED: "Ranged",
-}
-
 @onready var _stock_label: Label = %StockLabel
 @onready var _stock_row: HBoxContainer = %StockRow
 @onready var _stock_panel: WeaponStockDropHost = %StockPanel
@@ -57,10 +51,11 @@ func _build_shop_cards() -> void:
 			continue
 		var card: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
 		_shop_column.add_child(card)
-		var range_name := str(RANGE_LABELS.get(weapon.range_class, "?"))
+		var range_name := str(WeaponData.FORMATION_LINE_LABELS.get(weapon.formation_line, "?"))
+		var display_dmg: int = roundi(float(weapon.base_damage) * weapon.outgoing_damage_multiplier)
 		card.setup(
 			weapon.display_name,
-			"%s · dmg %d" % [range_name, weapon.base_damage],
+			"%s · dmg %d" % [range_name, display_dmg],
 			offer.cost,
 			{
 				"type": "shop_weapon",

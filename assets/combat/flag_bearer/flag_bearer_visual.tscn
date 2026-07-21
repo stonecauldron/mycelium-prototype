@@ -43,14 +43,14 @@ position = Vector2(-2, -62)
 scale = Vector2(0.4, 0.4)
 texture = ExtResource("1_3q0oy")
 region_enabled = true
-region_rect = Rect2(128, 671, 247, 319)
+region_rect = Rect2(122, 669, 269, 323)
 
 [node name="Flag" type="Sprite2D" parent="Shroom" unique_id=964701704]
-position = Vector2(32.500008, 42.49997)
+position = Vector2(27.499998, 45)
 texture = ExtResource("1_3q0oy")
 offset = Vector2(93.49999, -242.49997)
 region_enabled = true
-region_rect = Rect2(144, 30, 225, 610)
+region_rect = Rect2(138, 26, 220, 619)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=345071971]
 libraries/ = SubResource("AnimationLibrary_main")

@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://brnicc8ghj3md" path="res://assets/base/background/upper_foreground.png" id="6_bg_upper_fg"]
 [ext_resource type="Texture2D" uid="uid://c00gqs4n3sm1c" path="res://assets/base/background/lower_foreground.png" id="7_bg_lower_fg"]
 [ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="9_lower_lane"]
+[ext_resource type="Texture2D" uid="uid://3vtn54xo3e3w" path="res://assets/combat/combat_stage/fast_forward.png" id="10_ff"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
 
@@ -182,11 +183,11 @@ unique_name_in_owner = true
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -80.0
+offset_left = -56.0
 offset_top = 12.0
-offset_right = 80.0
-offset_bottom = 120.0
+offset_right = 56.0
+offset_bottom = 108.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 72
-text = "⏩"
+icon = ExtResource("10_ff")
 flat = true
+expand_icon = true

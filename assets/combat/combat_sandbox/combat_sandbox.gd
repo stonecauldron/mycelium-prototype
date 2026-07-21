@@ -9,48 +9,81 @@ const _SHIELD_WEAPON := preload("res://assets/weapons/basic_shield/basic_shield.
 @onready var _stage: Node2D = $CombatStage
 @onready var _buttons: VBoxContainer = %MatchupButtons
 
-var _player_roster: Array[RosterUnitData] = []
-var _enemy_roster: Array[RosterUnitData] = []
+var _rebuild_matchup: Callable = Callable()
 var _restart_token: int = 0
+var _imago_checkbox: CheckBox
 
 
 func _ready() -> void:
 	_stage.battle_ended.connect(_on_battle_ended)
 	_wire_buttons()
-	_start_matchup(_make_units(_MELEE_WEAPON, 3), _make_units(_SPEAR_WEAPON, 3))
+	_set_matchup(func() -> Array:
+		return [_make_units(_MELEE_WEAPON, 3), _make_units(_SPEAR_WEAPON, 3)]
+	)
 
 
 func _wire_buttons() -> void:
+	_imago_checkbox = CheckBox.new()
+	_imago_checkbox.text = "Imago units"
+	_imago_checkbox.toggled.connect(_on_imago_toggled)
+	_buttons.add_child(_imago_checkbox)
+
 	_add_button("Restart", _restart_current)
 	_add_button("3v3 Starters", func() -> void:
-		_start_matchup(
-			[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_MELEE_WEAPON)],
-			[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_MELEE_WEAPON)]
+		_set_matchup(func() -> Array:
+			return [
+				[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_MELEE_WEAPON)],
+				[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_MELEE_WEAPON)],
+			]
 		)
 	)
 	_add_button("3 Melee", func() -> void:
-		_start_matchup(_make_units(_MELEE_WEAPON, 3), _make_units(_MELEE_WEAPON, 3))
+		_set_matchup(func() -> Array:
+			return [_make_units(_MELEE_WEAPON, 3), _make_units(_MELEE_WEAPON, 3)]
+		)
 	)
 	_add_button("3 Spear", func() -> void:
-		_start_matchup(_make_units(_SPEAR_WEAPON, 3), _make_units(_SPEAR_WEAPON, 3))
+		_set_matchup(func() -> Array:
+			return [_make_units(_SPEAR_WEAPON, 3), _make_units(_SPEAR_WEAPON, 3)]
+		)
 	)
 	_add_button("3 Bow", func() -> void:
-		_start_matchup(_make_units(_BOW_WEAPON, 3), _make_units(_BOW_WEAPON, 3))
+		_set_matchup(func() -> Array:
+			return [_make_units(_BOW_WEAPON, 3), _make_units(_BOW_WEAPON, 3)]
+		)
 	)
 	_add_button("Melee vs Spear", func() -> void:
-		_start_matchup(_make_units(_MELEE_WEAPON, 1), _make_units(_SPEAR_WEAPON, 1))
+		_set_matchup(func() -> Array:
+			return [_make_units(_MELEE_WEAPON, 1), _make_units(_SPEAR_WEAPON, 1)]
+		)
 	)
 	_add_button("Melee vs Bow", func() -> void:
-		_start_matchup(_make_units(_MELEE_WEAPON, 1), _make_units(_BOW_WEAPON, 1))
+		_set_matchup(func() -> Array:
+			return [_make_units(_MELEE_WEAPON, 1), _make_units(_BOW_WEAPON, 1)]
+		)
 	)
 	_add_button("Spear vs Bow", func() -> void:
-		_start_matchup(_make_units(_SPEAR_WEAPON, 1), _make_units(_BOW_WEAPON, 1))
+		_set_matchup(func() -> Array:
+			return [_make_units(_SPEAR_WEAPON, 1), _make_units(_BOW_WEAPON, 1)]
+		)
 	)
 	_add_button("Shield vs Melee", func() -> void:
-		_start_matchup(_make_units(_SHIELD_WEAPON, 1), _make_units(_MELEE_WEAPON, 1))
+		_set_matchup(func() -> Array:
+			return [_make_units(_SHIELD_WEAPON, 1), _make_units(_MELEE_WEAPON, 1)]
+		)
 	)
 	_add_button("Shield vs Bow", func() -> void:
-		_start_matchup(_make_units(_SHIELD_WEAPON, 1), _make_units(_BOW_WEAPON, 1))
+		_set_matchup(func() -> Array:
+			return [_make_units(_SHIELD_WEAPON, 1), _make_units(_BOW_WEAPON, 1)]
+		)
+	)
+	_add_button("9v9 Shield Line", func() -> void:
+		_set_matchup(func() -> Array:
+			return [
+				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SHIELD_WEAPON]),
+				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _MELEE_WEAPON]),
+			]
+		)
 	)
 
 
@@ -59,6 +92,10 @@ func _add_button(label: String, callback: Callable) -> void:
 	button.text = label
 	button.pressed.connect(callback)
 	_buttons.add_child(button)
+
+
+func _on_imago_toggled(_pressed: bool) -> void:
+	_restart_current()
 
 
 func _on_battle_ended(_player_won: bool) -> void:
@@ -71,19 +108,30 @@ func _on_battle_ended(_player_won: bool) -> void:
 
 
 func _restart_current() -> void:
-	if _player_roster.is_empty() and _enemy_roster.is_empty():
+	if not _rebuild_matchup.is_valid():
 		return
-	_start_matchup(_copy_roster(_player_roster), _copy_roster(_enemy_roster))
+	_set_matchup(_rebuild_matchup)
 
 
-func _start_matchup(
-	player_roster: Array[RosterUnitData],
-	enemy_roster: Array[RosterUnitData]
-) -> void:
+func _set_matchup(builder: Callable) -> void:
 	_restart_token += 1
-	_player_roster = _copy_roster(player_roster)
-	_enemy_roster = _copy_roster(enemy_roster)
-	_stage.start_battle(_copy_roster(_player_roster), _copy_roster(_enemy_roster))
+	_rebuild_matchup = builder
+	var pair: Array = builder.call()
+	_stage.start_battle(_as_roster(pair[0]), _as_roster(pair[1]))
+
+
+func _as_roster(value: Variant) -> Array[RosterUnitData]:
+	var roster: Array[RosterUnitData] = []
+	for unit in value:
+		roster.append(unit as RosterUnitData)
+	return roster
+
+
+func _make_line(weapons: Array) -> Array[RosterUnitData]:
+	var roster: Array[RosterUnitData] = []
+	for weapon in weapons:
+		roster.append_array(_make_units(weapon as WeaponData, 3))
+	return roster
 
 
 func _make_units(weapon: WeaponData, count: int) -> Array[RosterUnitData]:
@@ -94,17 +142,11 @@ func _make_units(weapon: WeaponData, count: int) -> Array[RosterUnitData]:
 
 
 func _make_unit(weapon: WeaponData) -> RosterUnitData:
-	return RosterUnitData.create(
+	var unit := RosterUnitData.create(
 		UnitNames.pick(),
 		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.AVERAGE),
 		weapon
 	)
-
-
-func _copy_roster(roster: Array[RosterUnitData]) -> Array[RosterUnitData]:
-	var copy: Array[RosterUnitData] = []
-	for unit in roster:
-		if unit == null:
-			continue
-		copy.append(unit.duplicate(true) as RosterUnitData)
-	return copy
+	if _imago_checkbox != null and _imago_checkbox.button_pressed:
+		unit.promote_to_imago()
+	return unit

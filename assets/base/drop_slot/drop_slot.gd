@@ -1,9 +1,15 @@
 class_name DropSlot
 extends PanelContainer
 
+signal item_dropped(slot: DropSlot, drag_data: Dictionary)
+## Alias of item_dropped for troop-selection call sites.
 signal unit_dropped(slot: DropSlot, drag_data: Dictionary)
 
 @export var slot_index: int = 0
+## Drag payload types this slot accepts. Use "unit" for RosterUnitData drags.
+## Empty array = accept nothing (display pad only).
+@export var accepted_drag_types: PackedStringArray = PackedStringArray(["unit"])
+@export var accepts_drops: bool = true
 
 var occupied_unit: Resource
 
@@ -48,6 +54,10 @@ func set_card(card: Control) -> void:
 		unit_card.mouse_filter = Control.MOUSE_FILTER_STOP
 		# Keep native card size — stretching causes ColorRect edge artefacts.
 		unit_card.reset_compact_layout()
+	else:
+		card.mouse_filter = Control.MOUSE_FILTER_STOP
+		if card.has_method("reset_compact_layout"):
+			card.reset_compact_layout()
 	_card_host.add_child(card)
 	_update_placeholder()
 
@@ -75,12 +85,22 @@ func _update_placeholder() -> void:
 		_placeholder.visible = false
 
 
+func _is_accepted_drag(data: Dictionary) -> bool:
+	if not accepts_drops or accepted_drag_types.is_empty():
+		return false
+	var drop_type := str(data.get("type", ""))
+	if drop_type != "" and drop_type in accepted_drag_types:
+		return true
+	if "unit" in accepted_drag_types and data.get("unit") is RosterUnitData:
+		return true
+	return false
+
+
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	if typeof(data) != TYPE_DICTIONARY:
 		clear_drop_highlight()
 		return false
-	var unit := data.get("unit") as RosterUnitData
-	if unit == null:
+	if not _is_accepted_drag(data):
 		clear_drop_highlight()
 		return false
 	modulate = Color(0.7, 1.0, 0.75, 1.0)
@@ -91,6 +111,9 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	clear_drop_highlight()
 	if typeof(data) != TYPE_DICTIONARY:
 		return
+	if not _is_accepted_drag(data):
+		return
+	item_dropped.emit(self, data)
 	unit_dropped.emit(self, data)
 
 

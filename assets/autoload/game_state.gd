@@ -80,9 +80,13 @@ func try_buy_spore(spore: SporeData, cost: int) -> bool:
 	if spore == null or cost < 0:
 		return false
 	ensure_nursery_seeded()
+	if not nursery.can_add_spore():
+		return false
 	if not biomass.try_spend(cost):
 		return false
-	nursery.spore_stock.append(spore)
+	if not nursery.add_spore(spore):
+		biomass.add(cost)
+		return false
 	return true
 
 

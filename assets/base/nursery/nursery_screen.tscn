@@ -2,17 +2,21 @@
 
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="1_xtih6"]
 [ext_resource type="Script" uid="uid://c6clun5d6trkk" path="res://assets/base/nursery/nursery_screen.gd" id="2_tn1j7"]
-[ext_resource type="Script" uid="uid://44fg5s4d8hy7" path="res://assets/base/nursery/stock_drop_host.gd" id="3_stock"]
-[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="4_biomass"]
-[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="5_figtree"]
+[ext_resource type="Texture2D" uid="uid://clt2ubxc7lo1c" path="res://assets/base/background/upper_lane.png" id="3_upper_lane"]
+[ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="4_lower_lane"]
+[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="5_biomass"]
+[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="6_figtree"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
 [sub_resource type="FontVariation" id="Font_figtree_button"]
-base_font = ExtResource("5_figtree")
+base_font = ExtResource("6_figtree")
 variation_opentype = {
 2003265652: 600
 }
 
 [node name="NurseryScreen" type="Control" unique_id=806195354]
+custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,126 +26,118 @@ grow_vertical = 2
 theme = ExtResource("1_xtih6")
 script = ExtResource("2_tn1j7")
 
-[node name="Margin" type="MarginContainer" parent="." unique_id=1003970511]
+[node name="UpperLaneLayer" type="TextureRect" parent="." unique_id=1298238025]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"ScreenMargin"
-theme_override_constants/margin_right = 48
+mouse_filter = 2
+texture = ExtResource("3_upper_lane")
+expand_mode = 1
 
-[node name="RootVBox" type="VBoxContainer" parent="Margin" unique_id=1530937338]
-layout_mode = 2
+[node name="LowerLaneLayer" type="TextureRect" parent="." unique_id=427991229]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_lower_lane")
+expand_mode = 1
+
+[node name="HeaderBlock" type="VBoxContainer" parent="." unique_id=826697549]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 16.0
+offset_top = 141.0
+offset_right = 720.0
+offset_bottom = 219.0
+mouse_filter = 2
 theme_type_variation = &"SectionVBox"
 
-[node name="Header" type="Label" parent="Margin/RootVBox" unique_id=500488659]
+[node name="Header" type="Label" parent="HeaderBlock" unique_id=1708698391]
 layout_mode = 2
 theme_type_variation = &"PageTitleLabel"
 text = "Nursery — Grow Units"
 
-[node name="Subtitle" type="Label" parent="Margin/RootVBox" unique_id=677600520]
+[node name="Subtitle" type="Label" parent="HeaderBlock" unique_id=1767566579]
 layout_mode = 2
 theme_type_variation = &"PageSubtitleLabel"
-text = "Buy spores from the shop. Click or drop into stock, or drag onto an empty plot to plant."
+text = "Buy spores into stock, or drag onto an empty plot to plant."
 
-[node name="ContentHBox" type="HBoxContainer" parent="Margin/RootVBox" unique_id=168201248]
-layout_mode = 2
-size_flags_vertical = 3
-theme_type_variation = &"TightHBox"
-
-[node name="LeftVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox" unique_id=407126936]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_type_variation = &"SectionVBox"
-
-[node name="StockPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox" unique_id=252684151]
+[node name="StockShopPanel" type="PanelContainer" parent="." unique_id=710296817]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 160)
-layout_mode = 2
-size_flags_vertical = 3
-script = ExtResource("3_stock")
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 218.0
+offset_right = -16.0
+offset_bottom = 518.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
-[node name="StockMargin" type="MarginContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel" unique_id=493032541]
+[node name="StockShopMargin" type="MarginContainer" parent="StockShopPanel" unique_id=878538865]
 layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"PanelInnerMargin"
 
-[node name="StockVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel/StockMargin" unique_id=1514141305]
+[node name="StockShopVBox" type="VBoxContainer" parent="StockShopPanel/StockShopMargin" unique_id=1807134095]
 layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"TightVBox"
 
-[node name="StockLabel" type="Label" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel/StockMargin/StockVBox" unique_id=1012814581]
-unique_name_in_owner = true
+[node name="StockShopTitle" type="Label" parent="StockShopPanel/StockShopMargin/StockShopVBox" unique_id=1323217261]
 layout_mode = 2
 theme_type_variation = &"SectionTitleLabel"
-text = "Spores in stock: 0"
+text = "Spores"
 
-[node name="StockRow" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel/StockMargin/StockVBox" unique_id=1430706056]
+[node name="StockShopRow" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox" unique_id=1082664112]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 240)
 layout_mode = 2
 size_flags_vertical = 3
-theme_type_variation = &"TightHBox"
+mouse_filter = 2
+theme_type_variation = &"SlotRow"
 
-[node name="PlotsPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox" unique_id=1946078193]
-custom_minimum_size = Vector2(0, 380)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="PlotsMargin" type="MarginContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/PlotsPanel" unique_id=1233514664]
-layout_mode = 2
-theme_type_variation = &"PanelInnerMargin"
-
-[node name="PlotsVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/PlotsPanel/PlotsMargin" unique_id=1372124762]
-layout_mode = 2
-theme_type_variation = &"TightVBox"
-
-[node name="PlotsTitle" type="Label" parent="Margin/RootVBox/ContentHBox/LeftVBox/PlotsPanel/PlotsMargin/PlotsVBox" unique_id=150928833]
-layout_mode = 2
-theme_type_variation = &"SectionTitleLabel"
-text = "Plots"
-
-[node name="PlotRow" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/PlotsPanel/PlotsMargin/PlotsVBox" unique_id=103951673]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 180)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="ShopPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox" unique_id=1879012606]
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="ShopMargin" type="MarginContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel" unique_id=116413980]
-layout_mode = 2
-theme_type_variation = &"PanelInnerMargin"
-
-[node name="ShopVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin" unique_id=1050658267]
-layout_mode = 2
-theme_type_variation = &"TightVBox"
-
-[node name="ShopTitle" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox" unique_id=2034477220]
-layout_mode = 2
-theme_type_variation = &"SectionTitleLabel"
-text = "Shop"
-
-[node name="ShopColumn" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox" unique_id=1108388942]
+[node name="StockRow" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow" unique_id=1430706056]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
-theme_type_variation = &"TightVBox"
+size_flags_vertical = 0
+mouse_filter = 2
+theme_type_variation = &"SlotRow"
+
+[node name="LaneSpacer" type="Control" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow" unique_id=1430706057]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ShopRow" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow" unique_id=1108388942]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_constants/separation = 36
 alignment = 1
 
-[node name="RerollButton" type="Button" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox" unique_id=1060688289]
+[node name="MiddleShopColumn" type="VBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow" unique_id=1108388943]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="RerollButton" type="Button" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn" unique_id=1060688289]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(148, 48)
+layout_mode = 2
+size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 
-[node name="RerollContent" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton" unique_id=1131437255]
+[node name="RerollContent" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton" unique_id=1131437255]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -152,14 +148,14 @@ mouse_filter = 2
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="RerollLabel" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent" unique_id=1935055043]
+[node name="RerollLabel" type="Label" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=1935055043]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 22
 text = "Reroll"
 
-[node name="RerollCostLabel" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent" unique_id=529388487]
+[node name="RerollCostLabel" type="Label" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=529388487]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
@@ -167,16 +163,55 @@ theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 22
 text = "2"
 
-[node name="RerollBiomassIcon" type="TextureRect" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent" unique_id=1970297507]
+[node name="RerollBiomassIcon" type="TextureRect" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=1970297507]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
-texture = ExtResource("4_biomass")
+texture = ExtResource("5_biomass")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatusLabel" type="Label" parent="Margin/RootVBox" unique_id=295834069]
+[node name="PlotsPanel" type="PanelContainer" parent="." unique_id=1422856244]
 unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 591.0
+offset_right = -16.0
+offset_bottom = 821.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
+
+[node name="PlotsMargin" type="MarginContainer" parent="PlotsPanel" unique_id=1251518974]
 layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"PanelInnerMargin"
+
+[node name="PlotsVBox" type="VBoxContainer" parent="PlotsPanel/PlotsMargin" unique_id=1407487620]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"TightVBox"
+
+[node name="PlotsTitle" type="Label" parent="PlotsPanel/PlotsMargin/PlotsVBox" unique_id=150928833]
+layout_mode = 2
+theme_type_variation = &"SectionTitleLabel"
+text = "Plots"
+
+[node name="PlotRow" type="HBoxContainer" parent="PlotsPanel/PlotsMargin/PlotsVBox" unique_id=103951673]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_type_variation = &"SlotRow"
+
+[node name="StatusLabel" type="Label" parent="." unique_id=295834069]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+offset_left = 16.0
+offset_top = 836.0
+offset_right = 960.0
+offset_bottom = 872.0
 theme_type_variation = &"PageSubtitleLabel"

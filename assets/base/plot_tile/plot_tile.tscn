@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://bm2sipndchcwt" path="res://assets/base/shop/padlock_locked.png" id="5_padlock"]
 [ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="6_figtree"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
+
 [sub_resource type="FontVariation" id="Font_figtree_button"]
 base_font = ExtResource("6_figtree")
 variation_opentype = {
@@ -14,8 +16,9 @@ variation_opentype = {
 }
 
 [node name="PlotTile" type="PanelContainer" unique_id=1149444614]
-custom_minimum_size = Vector2(160, 180)
+custom_minimum_size = Vector2(160, 200)
 theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_tile")
 
 [node name="Content" type="Control" parent="." unique_id=351598709]

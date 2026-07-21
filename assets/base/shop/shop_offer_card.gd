@@ -5,6 +5,7 @@ signal offer_clicked(card: ShopOfferCard)
 signal lock_toggled(card: ShopOfferCard)
 
 const CARD_SIZE := Vector2(148, 176)
+const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
 
 var cost: int = 0
 var payload: Dictionary = {}
@@ -14,6 +15,9 @@ var _can_afford: bool = true
 var _pressing: bool = false
 var _did_drag: bool = false
 var _item_tint: Color = Color.WHITE
+var _title: String = ""
+var _subtitle: String = ""
+var _icon_texture: Texture2D = null
 
 @onready var _content: Control = $CardPanel
 @onready var _icon: TextureRect = %Icon
@@ -38,6 +42,9 @@ func setup(
 	slot_index = offer_slot_index
 	is_locked = locked
 	_item_tint = item_tint
+	_title = title
+	_subtitle = subtitle
+	_icon_texture = icon
 	if is_node_ready():
 		_apply_content(title, subtitle, icon)
 		set_locked(is_locked)
@@ -72,12 +79,27 @@ func set_locked(locked: bool) -> void:
 	_lock_button.tooltip_text = "Unlock" if locked else "Lock"
 
 
+func reset_compact_layout() -> void:
+	set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	anchor_right = anchor_left
+	anchor_bottom = anchor_top
+	offset_left = 0.0
+	offset_top = 0.0
+	offset_right = CARD_SIZE.x
+	offset_bottom = CARD_SIZE.y
+	custom_minimum_size = CARD_SIZE
+	size = CARD_SIZE
+	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	custom_minimum_size = CARD_SIZE
 	_set_children_mouse_filter_ignore(_content)
 	_lock_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	_lock_button.pressed.connect(_on_lock_pressed)
+	reset_compact_layout()
 
 
 func _apply_content(title: String, subtitle: String, icon: Texture2D) -> void:
@@ -128,23 +150,48 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	if not _can_afford or payload.is_empty():
 		return null
 	_did_drag = true
-	# Avoid clip_contents — it cuts off the StyleBox bottom border on the preview.
-	var preview_size := size if size.x > 0.0 and size.y > 0.0 else CARD_SIZE
-	var host := Control.new()
-	host.custom_minimum_size = preview_size
-	host.size = preview_size
-	host.clip_contents = false
-	var preview := duplicate() as ShopOfferCard
-	preview.modulate = Color(1, 1, 1, 0.85)
+	# Chess-piece pickup: leave the pad empty while dragging.
+	visible = false
+	# Instantiate fresh — duplicate() keeps @onready refs to this card.
+	var preview: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
+	preview.setup(
+		_title,
+		_subtitle,
+		cost,
+		payload,
+		_icon_texture,
+		slot_index,
+		is_locked,
+		_item_tint
+	)
+	preview.set_affordable(true)
+	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	preview.clip_contents = false
-	preview.custom_minimum_size = preview_size
-	preview.size = preview_size
-	host.add_child(preview)
-	set_drag_preview(host)
+	set_drag_preview(_centered_drag_preview(preview, CARD_SIZE))
 	return payload.duplicate(true)
+
+
+func _centered_drag_preview(preview: Control, preview_size: Vector2) -> Control:
+	# Viewport pins the preview root origin to the cursor. Offset the child so the
+	# card center sits there. Must run after preview.ready — _ready may reset layout.
+	var host := Control.new()
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var center := func() -> void:
+		# Slight downward bias so the offer hangs under the cursor.
+		preview.position = Vector2(-preview_size.x * 0.5, -preview_size.y * 0.5 + 28.0)
+	if preview.is_node_ready():
+		center.call()
+	else:
+		preview.ready.connect(center, CONNECT_ONE_SHOT)
+	host.add_child(preview)
+	return host
+
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_END:
 		_did_drag = false
 		_pressing = false
+		# Restore if the drag was cancelled; successful drops rebuild the card.
+		if is_inside_tree():
+			visible = true

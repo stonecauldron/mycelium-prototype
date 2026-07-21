@@ -4,6 +4,7 @@ extends Resource
 const MAX_PLOT_COUNT := 9
 const STARTING_UNLOCKED_PLOTS := 1
 const SHOP_SLOT_COUNT := 3
+const STOCK_SLOT_COUNT := 5
 const STARTER_SPORE_COUNT := 0
 const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 const _RARE_SPORE_PATH := "res://assets/base/nursery/rare_spore.tres"
@@ -35,7 +36,7 @@ func seed_if_empty() -> void:
 	spore_stock.clear()
 	var common_spore := load(_COMMON_SPORE_PATH) as SporeData
 	if common_spore != null:
-		for _i in STARTER_SPORE_COUNT:
+		for _i in mini(STARTER_SPORE_COUNT, STOCK_SLOT_COUNT):
 			spore_stock.append(common_spore)
 	spore_shop.ensure_filled(generate_spore_offer)
 	_seeded = true
@@ -86,6 +87,17 @@ func reroll_unlocked_shop_offers() -> void:
 func replace_shop_slot(slot_index: int) -> void:
 	_ensure_spore_shop()
 	spore_shop.replace_slot(slot_index, generate_spore_offer)
+
+
+func can_add_spore() -> bool:
+	return spore_stock.size() < STOCK_SLOT_COUNT
+
+
+func add_spore(spore: SporeData) -> bool:
+	if spore == null or not can_add_spore():
+		return false
+	spore_stock.append(spore)
+	return true
 
 
 func generate_spore_offer() -> ShopOffer:

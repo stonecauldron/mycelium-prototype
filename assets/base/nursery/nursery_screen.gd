@@ -1,21 +1,25 @@
 class_name NurseryScreen
 extends BaseScreen
 
+const STOCK_SLOT_COUNT := NurseryData.STOCK_SLOT_COUNT
+const SHOP_SLOT_COUNT := NurseryData.SHOP_SLOT_COUNT
 const _PLOT_TILE_SCENE := preload("res://assets/base/plot_tile/plot_tile.tscn")
-const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card.tscn")
+const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
+const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _SPORE_ICON := preload("res://assets/base/nursery/spores.png")
 
-@onready var _stock_label: Label = %StockLabel
 @onready var _stock_row: HBoxContainer = %StockRow
-@onready var _stock_panel: StockDropHost = %StockPanel
+@onready var _shop_row: HBoxContainer = %ShopRow
+@onready var _middle_shop_column: VBoxContainer = %MiddleShopColumn
+@onready var _stock_shop_panel: PanelContainer = %StockShopPanel
 @onready var _plot_row: HBoxContainer = %PlotRow
-@onready var _shop_column: VBoxContainer = %ShopColumn
 @onready var _reroll_button: Button = %RerollButton
 @onready var _reroll_cost_label: Label = %RerollCostLabel
 @onready var _status_label: Label = %StatusLabel
 
 var _tiles: Array[PlotTile] = []
+var _stock_slots: Array[DropSlot] = []
 var _shop_cards: Array[ShopOfferCard] = []
 var _spore_icon_atlas: AtlasTexture
 
@@ -24,9 +28,10 @@ func _ready() -> void:
 	_spore_icon_atlas = AtlasTexture.new()
 	_spore_icon_atlas.atlas = _SPORE_ICON
 	_spore_icon_atlas.region = Rect2(171, 166, 171, 179)
-	_stock_panel.shop_spore_dropped.connect(_on_shop_spore_to_stock)
 	_reroll_button.pressed.connect(_on_reroll_pressed)
+	_build_stock_slots()
 	_build_plot_tiles()
+	_set_structure_mouse_ignore()
 	_hydrate_and_refresh()
 
 
@@ -37,8 +42,36 @@ func on_screen_shown() -> void:
 func _hydrate_and_refresh() -> void:
 	GameState.ensure_nursery_seeded()
 	GameState.nursery.ensure_shop_offers()
-	_build_shop_cards()
+	_rebuild_shop_cards()
 	_refresh()
+
+
+func _set_structure_mouse_ignore() -> void:
+	for path in [
+		"StockShopMargin",
+		"StockShopMargin/StockShopVBox",
+		"StockShopMargin/StockShopVBox/StockShopTitle",
+		"StockShopMargin/StockShopVBox/StockShopRow",
+	]:
+		var node := _stock_shop_panel.get_node_or_null(path) as Control
+		if node:
+			node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stock_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_shop_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_middle_shop_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
+func _build_stock_slots() -> void:
+	for child in _stock_row.get_children():
+		child.queue_free()
+	_stock_slots.clear()
+	for i in STOCK_SLOT_COUNT:
+		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
+		slot.slot_index = i
+		slot.accepted_drag_types = PackedStringArray(["shop_spore"])
+		slot.item_dropped.connect(_on_stock_item_dropped)
+		_stock_row.add_child(slot)
+		_stock_slots.append(slot)
 
 
 func _build_plot_tiles() -> void:
@@ -59,14 +92,23 @@ func _build_plot_tiles() -> void:
 		_tiles.append(tile)
 
 
-func _build_shop_cards() -> void:
-	for child in _shop_column.get_children():
-		child.queue_free()
+func _rebuild_shop_cards() -> void:
+	for child in _middle_shop_column.get_children():
+		if child != _reroll_button:
+			child.queue_free()
+	for child in _shop_row.get_children():
+		if child != _middle_shop_column:
+			child.queue_free()
 	_shop_cards.clear()
 	var shop := GameState.nursery.spore_shop
 	if shop == null:
 		return
-	for i in shop.offers.size():
+	var middle_index := SHOP_SLOT_COUNT / 2
+	var built: Array[ShopOfferCard] = []
+	built.resize(SHOP_SLOT_COUNT)
+	for i in SHOP_SLOT_COUNT:
+		if i >= shop.offers.size():
+			break
 		var offer := shop.offers[i]
 		if offer == null:
 			continue
@@ -74,7 +116,6 @@ func _build_shop_cards() -> void:
 		if spore == null:
 			continue
 		var card: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
-		_shop_column.add_child(card)
 		card.setup(
 			spore.display_name,
 			"growth: %d days" % spore.days_to_mature,
@@ -92,7 +133,43 @@ func _build_shop_cards() -> void:
 		)
 		card.offer_clicked.connect(_on_shop_offer_clicked)
 		card.lock_toggled.connect(_on_shop_lock_toggled)
+		built[i] = card
 		_shop_cards.append(card)
+	for i in middle_index:
+		var left_card := built[i]
+		if left_card == null:
+			continue
+		_shop_row.add_child(left_card)
+		_shop_row.move_child(left_card, i)
+		left_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	var middle_card := built[middle_index] if middle_index < built.size() else null
+	if middle_card != null:
+		_middle_shop_column.add_child(middle_card)
+		_middle_shop_column.move_child(middle_card, 0)
+		_middle_shop_column.move_child(_reroll_button, 1)
+	for i in range(middle_index + 1, SHOP_SLOT_COUNT):
+		var right_card := built[i]
+		if right_card == null:
+			continue
+		_shop_row.add_child(right_card)
+		right_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+
+func _sync_stock_slots() -> void:
+	var stock := GameState.nursery.spore_stock
+	var can_add := GameState.nursery.can_add_spore()
+	for i in _stock_slots.size():
+		var slot := _stock_slots[i]
+		slot.accepts_drops = can_add
+		slot.clear_card()
+		if i >= stock.size():
+			continue
+		var spore := stock[i] as SporeData
+		if spore == null:
+			continue
+		var card: SporeCard = _SPORE_CARD_SCENE.instantiate()
+		card.setup(spore, i)
+		slot.set_card(card)
 
 
 func _refresh() -> void:
@@ -103,8 +180,7 @@ func _refresh() -> void:
 	if _tiles.size() != expected_visible:
 		_build_plot_tiles()
 	var can_plant := not nursery.spore_stock.is_empty()
-	_stock_label.text = "Spores in stock: %d" % nursery.spore_stock.size()
-	_rebuild_stock_cards()
+	_sync_stock_slots()
 	_refresh_shop_affordability()
 	for i in nursery.unlocked_plot_count:
 		if i >= _tiles.size():
@@ -133,7 +209,7 @@ func _on_reroll_pressed() -> void:
 		_set_status("Not enough biomass")
 		return
 	GameState.nursery.reroll_unlocked_shop_offers()
-	_build_shop_cards()
+	_rebuild_shop_cards()
 	_refresh_shop_affordability()
 	_refresh_base_hud()
 	_set_status("Shop rerolled")
@@ -148,24 +224,11 @@ func _on_shop_lock_toggled(card: ShopOfferCard) -> void:
 	_set_status("Locked offer" if locked else "Unlocked offer")
 
 
-func _rebuild_stock_cards() -> void:
-	for child in _stock_row.get_children():
-		child.queue_free()
-	var stock := GameState.nursery.spore_stock
-	for i in stock.size():
-		var spore := stock[i] as SporeData
-		if spore == null:
-			continue
-		var card: SporeCard = _SPORE_CARD_SCENE.instantiate()
-		_stock_row.add_child(card)
-		card.setup(spore, i)
-
-
 func _on_shop_offer_clicked(card: ShopOfferCard) -> void:
 	_try_buy_shop_payload(card.payload)
 
 
-func _on_shop_spore_to_stock(data: Dictionary) -> void:
+func _on_stock_item_dropped(_slot: DropSlot, data: Dictionary) -> void:
 	_try_buy_shop_payload(data)
 
 
@@ -176,10 +239,13 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 	if spore == null:
 		_set_status("Could not buy")
 		return
+	if not GameState.nursery.can_add_spore():
+		_set_status("Stock full")
+		return
 	if GameState.try_buy_spore(spore, cost):
 		_replace_bought_shop_slot(slot_index)
 		_set_status("Bought %s" % spore.display_name)
-		_build_shop_cards()
+		_rebuild_shop_cards()
 		_refresh()
 		_refresh_base_hud()
 	else:
@@ -280,7 +346,7 @@ func _plant_from_shop(plot_index: int, data: Dictionary) -> void:
 		_set_status("Could not plant")
 		return
 	_replace_bought_shop_slot(slot_index)
-	_build_shop_cards()
+	_rebuild_shop_cards()
 	_set_status("Bought & planted in plot %d" % (plot_index + 1))
 	_refresh()
 	_refresh_base_hud()

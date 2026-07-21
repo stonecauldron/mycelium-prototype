@@ -4,7 +4,7 @@ extends PanelContainer
 signal plot_pressed(tile: PlotTile)
 signal spore_dropped(tile: PlotTile, data: Dictionary)
 
-const TILE_SIZE := Vector2(160, 180)
+const TILE_SIZE := Vector2(160, 200)
 const _LOCKED_MODULATE := Color(0.55, 0.55, 0.55, 1.0)
 
 const _TEX_EMPTY := preload("res://assets/base/plot_tile/plot_empty.png")

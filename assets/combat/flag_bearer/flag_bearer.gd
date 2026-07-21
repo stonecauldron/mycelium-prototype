@@ -148,13 +148,7 @@ func _play_hurt_highlight() -> void:
 
 
 func _spawn_damage_number(amount: int) -> void:
-	var tree := get_tree()
-	if tree == null:
-		return
-	var scene := tree.current_scene
-	if scene == null:
-		return
-	var world := scene.get_node_or_null("World")
+	var world := _get_world_node()
 	if world == null:
 		return
 
@@ -162,3 +156,10 @@ func _spawn_damage_number(amount: int) -> void:
 	world.add_child(number)
 	number.global_position = global_position + Vector2(0, -72)
 	number.display(amount)
+
+
+func _get_world_node() -> Node:
+	var tree := get_tree()
+	if tree == null:
+		return null
+	return tree.get_first_node_in_group("combat_world")

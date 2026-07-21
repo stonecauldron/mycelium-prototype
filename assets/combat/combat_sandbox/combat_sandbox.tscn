@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://c24di3l5mun0o"]
+
+[ext_resource type="Script" uid="uid://dica0meys0kth" path="res://assets/combat/combat_sandbox/combat_sandbox.gd" id="1_sandbox"]
+[ext_resource type="PackedScene" uid="uid://btqr2qonpoxjc" path="res://assets/combat/combat_stage/combat_stage.tscn" id="2_stage"]
+
+[node name="CombatSandbox" type="Node" unique_id=1112878196]
+script = ExtResource("1_sandbox")
+
+[node name="CombatStage" parent="." unique_id=1496738158 instance=ExtResource("2_stage")]
+sandboxed = true
+
+[node name="SandboxHUD" type="CanvasLayer" parent="." unique_id=1868609093]
+layer = 10
+
+[node name="MatchupPanel" type="PanelContainer" parent="SandboxHUD" unique_id=1794513099]
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 220.0
+offset_bottom = 420.0
+
+[node name="Margin" type="MarginContainer" parent="SandboxHUD/MatchupPanel" unique_id=945904680]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="MatchupButtons" type="VBoxContainer" parent="SandboxHUD/MatchupPanel/Margin" unique_id=935106000]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4

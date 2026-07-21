@@ -44,7 +44,7 @@ mouse_filter = 2
 texture = ExtResource("5_bg_far")
 expand_mode = 1
 
-[node name="World" type="Node2D" parent="." unique_id=1383156285]
+[node name="World" type="Node2D" parent="." unique_id=1383156285 groups=["combat_world"]]
 
 [node name="Background" type="Node2D" parent="World" unique_id=671687693]
 z_index = -20

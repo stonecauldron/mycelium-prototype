@@ -1,15 +1,16 @@
 extends Node2D
 
+signal battle_ended(player_won: bool)
+
 const FLOOR_SURFACE_Y := 880.0
 const _MELEE_UNIT_SCENE := preload("res://assets/units/melee_unit/melee_unit.tscn")
 const _SPEAR_UNIT_SCENE := preload("res://assets/units/spear_unit/spear_unit.tscn")
-const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee/basic_melee.tres")
-const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
-const _BASE_SCENE_PATH := "res://assets/base/base.tscn"
 const _GAME_OVER_SCENE_PATH := "res://assets/game_over/game_over.tscn"
 const _VICTORY_SCENE_PATH := "res://assets/victory/victory.tscn"
 const _DAY_SUMMARY_SCENE_PATH := "res://assets/day_summary/day_summary.tscn"
 const _FAST_FORWARD_SCALE := 2.0
+
+@export var sandboxed: bool = false
 
 @onready var player_troop: Troop = $World/PlayerTroop
 @onready var enemy_troop: Troop = $World/EnemyTroop
@@ -24,32 +25,38 @@ var _fast_forward: bool = false
 
 
 func _ready() -> void:
+	if get_tree().current_scene != self:
+		sandboxed = true
+
 	_player_spawn = player_troop.flag_bearer.global_position
 	_enemy_spawn = enemy_troop.flag_bearer.global_position
 	_fast_forward_button.pressed.connect(_on_fast_forward_pressed)
 	_set_fast_forward(GameState.combat_fast_forward)
 
+	if sandboxed:
+		return
+
 	var player_roster := GameState.troop.get_squad_roster()
 	if player_roster.is_empty():
-		if not OS.has_feature("editor"):
-			push_error("CombatStage requires a non-empty player squad in GameState.troop.")
-			return
-		player_roster = _make_fallback_roster(3, 0)
+		push_error("CombatStage requires a non-empty player squad in GameState.troop.")
+		return
 
-	var enemy_roster: Array[RosterUnitData]
-	if BattleLaunch.has_enemy_roster():
-		enemy_roster = BattleLaunch.take_enemy_roster()
-	elif OS.has_feature("editor"):
-		enemy_roster = _make_fallback_roster(0, 3)
-	else:
+	if not BattleLaunch.has_enemy_roster():
 		push_error("CombatStage requires an enemy roster via BattleLaunch.")
 		return
 
-	_run_battle(player_roster, enemy_roster)
+	start_battle(player_roster, BattleLaunch.take_enemy_roster())
 
 
 func _exit_tree() -> void:
 	Engine.time_scale = 1.0
+
+
+func start_battle(
+	player_roster: Array[RosterUnitData],
+	enemy_roster: Array[RosterUnitData]
+) -> void:
+	_run_battle(player_roster, enemy_roster)
 
 
 func _on_fast_forward_pressed() -> void:
@@ -64,27 +71,6 @@ func _set_fast_forward(enabled: bool) -> void:
 		_fast_forward_button.modulate = (
 			Color(1.0, 0.85, 0.35, 1.0) if enabled else Color.WHITE
 		)
-
-
-func _make_fallback_roster(melee_count: int, spear_count: int) -> Array[RosterUnitData]:
-	var roster: Array[RosterUnitData] = []
-	for _i in melee_count:
-		roster.append(
-			RosterUnitData.create(
-				UnitNames.pick(),
-				UnitStatsData.create_for_tier(UnitStatsData.PowerTier.AVERAGE),
-				_MELEE_WEAPON
-			)
-		)
-	for _i in spear_count:
-		roster.append(
-			RosterUnitData.create(
-				UnitNames.pick(),
-				UnitStatsData.create_for_tier(UnitStatsData.PowerTier.AVERAGE),
-				_SPEAR_WEAPON
-			)
-		)
-	return roster
 
 
 func _run_battle(
@@ -110,6 +96,7 @@ func _run_battle(
 		false
 	)
 	_refresh_unit_process_order()
+	_set_fast_forward(_fast_forward)
 	player_troop.begin_march()
 	enemy_troop.begin_march()
 
@@ -173,14 +160,15 @@ func _spawn_unit(
 
 
 func _on_unit_died(unit: Unit, is_player: bool) -> void:
-	if is_player and unit.roster_data != null:
-		_fallen_units.append(unit.roster_data)
-		GameState.troop.remove_unit(unit.roster_data)
-	elif not is_player:
-		var is_imago := unit.roster_data != null and unit.roster_data.is_imago
-		var reward := BiomassData.reward_for_kill(is_imago)
-		GameState.biomass.add(reward)
-		_biomass_earned_this_fight += reward
+	if not sandboxed:
+		if is_player and unit.roster_data != null:
+			_fallen_units.append(unit.roster_data)
+			GameState.troop.remove_unit(unit.roster_data)
+		elif not is_player:
+			var is_imago := unit.roster_data != null and unit.roster_data.is_imago
+			var reward := BiomassData.reward_for_kill(is_imago)
+			GameState.biomass.add(reward)
+			_biomass_earned_this_fight += reward
 	_check_battle_end()
 
 
@@ -191,6 +179,11 @@ func _check_battle_end() -> void:
 		return
 	_battle_over = true
 	Engine.time_scale = 1.0
+
+	if sandboxed:
+		battle_ended.emit(not player_troop.is_wiped_out())
+		return
+
 	if player_troop.is_wiped_out():
 		SceneTransition.change_scene(_GAME_OVER_SCENE_PATH)
 	else:

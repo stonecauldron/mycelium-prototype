@@ -539,10 +539,7 @@ func _get_world_node() -> Node:
 	var tree := get_tree()
 	if tree == null:
 		return null
-	var scene := tree.current_scene
-	if scene == null:
-		return null
-	return scene.get_node_or_null("World")
+	return tree.get_first_node_in_group("combat_world")
 
 
 func _spawn_damage_number(amount: int) -> void:

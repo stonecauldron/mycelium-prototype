@@ -457,7 +457,18 @@ func _cancel_attack() -> void:
 func _get_home_global() -> Vector2:
 	var flag_pos := _troop.flag_bearer.global_position
 	var facing := -1.0 if _troop.is_enemy else 1.0
-	return Vector2(flag_pos.x + facing * weapon.get_squad_offset(squad_index), flag_pos.y)
+	var index := squad_index
+	# BACK uses a negative offset, so increasing squad_index moves left for the player
+	# and mirrors War Chamber LTR. Reverse so left-in-selection stays left-on-screen.
+	if (
+		weapon != null
+		and not _troop.is_enemy
+		and weapon.formation_line == WeaponData.FormationLine.BACK
+	):
+		var line_count := _troop.get_living_formation_line_count(weapon.formation_line)
+		index = maxi(line_count - 1 - squad_index, 0)
+	var offset := weapon.get_squad_offset(index) if weapon != null else 0.0
+	return Vector2(flag_pos.x + facing * offset, flag_pos.y)
 
 
 func _axis_velocity(current: float, target: float, speed: float) -> float:

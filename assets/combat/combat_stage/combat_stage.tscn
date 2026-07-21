@@ -126,6 +126,12 @@ scale = Vector2(0.5, 0.5)
 texture = ExtResource("7_bg_lower_fg")
 centered = false
 
+[node name="LowerForegroundLayer2" type="Sprite2D" parent="World/Foreground/Segment1" unique_id=1365929773]
+position = Vector2(-72, 72)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("7_bg_lower_fg")
+centered = false
+
 [node name="Segment2" type="Node2D" parent="World/Foreground" unique_id=2100000130]
 position = Vector2(3840, 0)
 
@@ -135,11 +141,23 @@ scale = Vector2(0.5, 0.5)
 texture = ExtResource("7_bg_lower_fg")
 centered = false
 
+[node name="LowerForegroundLayer2" type="Sprite2D" parent="World/Foreground/Segment2" unique_id=1034094351]
+position = Vector2(-144, 59)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("7_bg_lower_fg")
+centered = false
+
 [node name="Segment3" type="Node2D" parent="World/Foreground" unique_id=2100000140]
 position = Vector2(5760, 0)
 
 [node name="LowerForegroundLayer" type="Sprite2D" parent="World/Foreground/Segment3" unique_id=2100000141]
 position = Vector2(-234, -42)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("7_bg_lower_fg")
+centered = false
+
+[node name="LowerForegroundLayer2" type="Sprite2D" parent="World/Foreground/Segment3" unique_id=1911997311]
+position = Vector2(-234, 55)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("7_bg_lower_fg")
 centered = false

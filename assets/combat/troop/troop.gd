@@ -86,10 +86,15 @@ func is_wiped_out() -> bool:
 
 
 func has_living_formation_line(formation_line: WeaponData.FormationLine) -> bool:
+	return get_living_formation_line_count(formation_line) > 0
+
+
+func get_living_formation_line_count(formation_line: WeaponData.FormationLine) -> int:
+	var count := 0
 	for unit in get_living_units():
 		if unit.weapon != null and unit.weapon.formation_line == formation_line:
-			return true
-	return false
+			count += 1
+	return count
 
 
 func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:

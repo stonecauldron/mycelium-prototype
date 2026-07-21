@@ -3,6 +3,9 @@ class_name FlagBearer
 
 const KNOCKBACK_UP_RATIO := 0.5
 const KNOCKBACK_IMPULSE_MULTIPLIER := 1.75
+const HIT_KNOCKBACK_MAX_MULT := 2
+const HIT_SLOW_PER_HIT := 0.25
+const HIT_SLOW_MIN_MULT := 0.5
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
 const HURT_FLASH_TIME := 0.12
 
@@ -23,6 +26,7 @@ const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_num
 var _march_speed_x: float = 0.0
 var _in_knockback: bool = false
 var _knockback_left_ground: bool = false
+var _hits_taken: int = 0
 var _hurt_tween: Tween
 var _shroom_modulate: Color = Color.WHITE
 
@@ -85,7 +89,7 @@ func _setup_collision() -> void:
 func set_march_velocity(speed: float) -> void:
 	if _in_knockback:
 		return
-	_march_speed_x = speed
+	_march_speed_x = speed * _march_speed_multiplier()
 
 
 func stop() -> void:
@@ -96,9 +100,13 @@ func is_in_knockback() -> bool:
 	return _in_knockback
 
 
+func _march_speed_multiplier() -> float:
+	return maxf(1.0 - float(_hits_taken) * HIT_SLOW_PER_HIT, HIT_SLOW_MIN_MULT)
+
 func reset_combat_state() -> void:
 	_in_knockback = false
 	_knockback_left_ground = false
+	_hits_taken = 0
 	velocity = Vector2.ZERO
 	stop()
 	if _hurt_tween:
@@ -112,6 +120,7 @@ func take_damage(
 	knockback_from: Vector2 = Vector2.ZERO,
 	knockback_force: float = 0.0
 ) -> void:
+	_hits_taken += 1
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
 	if knockback_from != Vector2.ZERO and knockback_force > 0.0:
@@ -124,13 +133,13 @@ func _apply_knockback(from_global: Vector2, knockback_force: float) -> void:
 	var direction := signf(global_position.x - from_global.x)
 	if direction == 0.0:
 		direction = 1.0
-	var impulse := knockback_force * KNOCKBACK_IMPULSE_MULTIPLIER
+	var hit_mult := mini(_hits_taken, HIT_KNOCKBACK_MAX_MULT)
+	var impulse := knockback_force * KNOCKBACK_IMPULSE_MULTIPLIER * float(hit_mult)
 	velocity.x = direction * impulse
 	velocity.y = -impulse * KNOCKBACK_UP_RATIO
 	_in_knockback = true
 	_knockback_left_ground = false
 	_march_speed_x = 0.0
-
 
 func _play_hurt_highlight() -> void:
 	if _hurt_tween:

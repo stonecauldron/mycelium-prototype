@@ -3,7 +3,8 @@ class_name FlagBearer
 
 const KNOCKBACK_UP_RATIO := 0.5
 const KNOCKBACK_IMPULSE_MULTIPLIER := 1.75
-const HIT_KNOCKBACK_MAX_MULT := 2
+const HIT_KNOCKBACK_PER_HIT := 0.25
+const HIT_KNOCKBACK_MAX_MULT := 2.0
 const HIT_SLOW_PER_HIT := 0.25
 const HIT_SLOW_MIN_MULT := 0.5
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
@@ -133,8 +134,11 @@ func _apply_knockback(from_global: Vector2, knockback_force: float) -> void:
 	var direction := signf(global_position.x - from_global.x)
 	if direction == 0.0:
 		direction = 1.0
-	var hit_mult := mini(_hits_taken, HIT_KNOCKBACK_MAX_MULT)
-	var impulse := knockback_force * KNOCKBACK_IMPULSE_MULTIPLIER * float(hit_mult)
+	var hit_mult := minf(
+		1.0 + float(_hits_taken - 1) * HIT_KNOCKBACK_PER_HIT,
+		HIT_KNOCKBACK_MAX_MULT
+	)
+	var impulse := knockback_force * KNOCKBACK_IMPULSE_MULTIPLIER * hit_mult
 	velocity.x = direction * impulse
 	velocity.y = -impulse * KNOCKBACK_UP_RATIO
 	_in_knockback = true

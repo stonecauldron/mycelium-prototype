@@ -1,17 +1,17 @@
-class_name SporeCard
+class_name FertilizerCard
 extends PanelContainer
 
 const CARD_SIZE := Vector2(120, 100)
-const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
+const _FERTILIZER_CARD_SCENE := preload("res://assets/base/nursery/fertilizer_card/fertilizer_card.tscn")
 const _HOVER_AMPLITUDE_PX := 5.0
 const _HOVER_HALF_DURATION_SEC := 1.35
 
-var spore: SporeData
+var fertilizer: FertilizerData
 var stock_index: int = 0
 
 @onready var _icon: TextureRect = %Icon
 @onready var _name_label: Label = %NameLabel
-@onready var _days_chip: StatChip = %DaysChip
+@onready var _subtitle_label: Label = %SubtitleLabel
 
 var _hover_tween: Tween
 var _hover_y: float = 0.0:
@@ -20,8 +20,8 @@ var _hover_y: float = 0.0:
 		_apply_hover_y()
 
 
-func setup(spore_data: SporeData, index: int) -> void:
-	spore = spore_data
+func setup(fertilizer_data: FertilizerData, index: int) -> void:
+	fertilizer = fertilizer_data
 	stock_index = index
 	if is_node_ready():
 		_refresh()
@@ -49,7 +49,7 @@ func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	reset_compact_layout()
-	if spore != null:
+	if fertilizer != null:
 		_refresh()
 	_restart_hover()
 
@@ -66,12 +66,12 @@ func _set_children_mouse_filter_ignore(node: Node) -> void:
 
 
 func _refresh() -> void:
-	if spore == null:
+	if fertilizer == null:
 		return
-	_name_label.text = spore.display_name
-	_days_chip.set_value(spore.days_to_mature)
+	_name_label.text = fertilizer.display_name
+	_subtitle_label.text = fertilizer.subtitle_text()
 	if _icon != null:
-		_icon.modulate = spore.tint
+		_icon.modulate = fertilizer.tint
 
 
 func _apply_hover_y() -> void:
@@ -118,31 +118,24 @@ func _stop_hover() -> void:
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
-	if spore == null:
+	if fertilizer == null:
 		return null
-	# Chess-piece pickup: leave the pad empty while dragging.
 	visible = false
-	# Instantiate fresh — duplicate() keeps @onready refs to this card, so the
-	# preview would animate the hidden source instead of itself.
-	var preview: SporeCard = _SPORE_CARD_SCENE.instantiate()
-	preview.setup(spore, stock_index)
+	var preview: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
+	preview.setup(fertilizer, stock_index)
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_drag_preview(_centered_drag_preview(preview, CARD_SIZE))
 	return {
-		"type": "spore",
+		"type": "fertilizer",
 		"stock_index": stock_index,
-		"spore": spore,
+		"fertilizer": fertilizer,
 	}
 
 
 func _centered_drag_preview(preview: Control, preview_size: Vector2) -> Control:
-	# Viewport pins the preview root origin to the cursor. Offset the child so the
-	# card center sits there. Must run after preview.ready — SporeCard._ready calls
-	# reset_compact_layout(), which clears any position set beforehand.
 	var host := Control.new()
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var center := func() -> void:
-		# Slight downward bias so the spore hangs under the cursor.
 		preview.position = Vector2(-preview_size.x * 0.5, -preview_size.y * 0.5 + 28.0)
 	preview.ready.connect(center, CONNECT_ONE_SHOT)
 	host.add_child(preview)
@@ -151,7 +144,6 @@ func _centered_drag_preview(preview: Control, preview_size: Vector2) -> Control:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_END:
-		# Restore if the drag was cancelled; successful drops rebuild the card.
 		if is_inside_tree():
 			visible = true
 
@@ -162,7 +154,8 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 		return slot._can_drop_data(at_position, data)
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
-	return str(data.get("type", "")) == "shop_spore" or str(data.get("type", "")) == "shop_fertilizer"
+	var drop_type := str(data.get("type", ""))
+	return drop_type == "shop_spore" or drop_type == "shop_fertilizer"
 
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:

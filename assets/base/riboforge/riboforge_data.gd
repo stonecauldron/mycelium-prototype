@@ -92,7 +92,7 @@ func add_weapon(weapon: WeaponData) -> bool:
 	return true
 
 
-func generate_weapon_offer() -> ShopOffer:
+func generate_weapon_offer(_slot_index: int = 0) -> ShopOffer:
 	var path: String = _SHOP_WEAPON_PATHS[randi() % _SHOP_WEAPON_PATHS.size()]
 	var weapon := load(path) as WeaponData
 	var offer := ShopOffer.new()

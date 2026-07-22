@@ -6,12 +6,15 @@ signal spore_dropped(tile: PlotTile, data: Dictionary)
 
 const TILE_SIZE := Vector2(220, 260)
 const _LOCKED_MODULATE := Color(0.55, 0.55, 0.55, 1.0)
+const _DROP_HIGHLIGHT := Color(0.7, 1.0, 0.75, 1.0)
 
 const _TEX_EMPTY := preload("res://assets/base/plot_tile/plot_empty.png")
 const _TEX_GROWTH0 := preload("res://assets/base/plot_tile/growth0.png")
 const _TEX_GROWTH1 := preload("res://assets/base/plot_tile/growth1.png")
 const _TEX_GROWTH2 := preload("res://assets/base/plot_tile/growth2.png")
 const _TEX_GROWTH3 := preload("res://assets/base/plot_tile/growth3.png")
+const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
+const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
 
 var plot_index: int = 0
 var is_unlockable: bool = false
@@ -19,9 +22,12 @@ var unlock_cost: int = 0
 var _plot: NurseryPlotData
 var _can_plant: bool = false
 var _base_modulate: Color = Color.WHITE
+var _fertilizer_chips: Array[StatChip] = []
+var _fertilizer_icon_atlas: AtlasTexture
 
 @onready var _plot_visual: TextureRect = %PlotVisual
 @onready var _days_chip: StatChip = %DaysChip
+@onready var _stats_row: HBoxContainer = %StatsRow
 @onready var _lock_spacer: Control = %LockSpacer
 @onready var _unlock_button: Button = %UnlockButton
 @onready var _unlock_cost_label: Label = %UnlockCostLabel
@@ -29,6 +35,9 @@ var _base_modulate: Color = Color.WHITE
 
 
 func _ready() -> void:
+	_fertilizer_icon_atlas = AtlasTexture.new()
+	_fertilizer_icon_atlas.atlas = _FERTILIZER_ICON
+	_fertilizer_icon_atlas.region = Rect2(183, 167, 169, 180)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	custom_minimum_size = TILE_SIZE
 	_base_modulate = modulate
@@ -79,6 +88,7 @@ func _set_children_mouse_filter_ignore(node: Node) -> void:
 func _refresh() -> void:
 	if is_unlockable:
 		_days_chip.visible = false
+		_clear_fertilizer_chips()
 		_plot_visual.visible = false
 		_lock_spacer.visible = true
 		_lock_icon.visible = true
@@ -93,6 +103,7 @@ func _refresh() -> void:
 		var button_mod := Color.WHITE / _LOCKED_MODULATE
 		_unlock_button.modulate = button_mod if can_unlock else button_mod * Color(1, 1, 1, 0.45)
 		_lock_icon.modulate = Color.WHITE / _LOCKED_MODULATE
+		tooltip_text = ""
 		return
 
 	_lock_icon.visible = false
@@ -103,6 +114,8 @@ func _refresh() -> void:
 	_plot_visual.visible = true
 	if _plot == null:
 		_days_chip.visible = false
+		_clear_fertilizer_chips()
+		tooltip_text = ""
 		_apply_visual_state()
 		return
 
@@ -115,8 +128,10 @@ func _refresh() -> void:
 			var left := 0
 			if _plot.planted_spore != null:
 				left = _plot.planted_spore.days_to_mature - _plot.days_grown
-			_days_chip.visible = true
-			_days_chip.set_value(maxi(0, left))
+			left = maxi(0, left)
+			_days_chip.visible = left > 0
+			if left > 0:
+				_days_chip.set_value(left)
 			modulate = Color.WHITE
 			_base_modulate = modulate
 		NurseryPlotData.State.READY:
@@ -124,7 +139,48 @@ func _refresh() -> void:
 			_days_chip.set_value(0)
 			modulate = Color.WHITE
 			_base_modulate = modulate
+	_refresh_fertilizer_chips()
+	tooltip_text = _plot.fertilizer_tooltip()
 	_apply_visual_state()
+
+
+func _clear_fertilizer_chips() -> void:
+	for chip in _fertilizer_chips:
+		if is_instance_valid(chip):
+			if chip.get_parent() != null:
+				chip.get_parent().remove_child(chip)
+			chip.free()
+	_fertilizer_chips.clear()
+
+
+func _refresh_fertilizer_chips() -> void:
+	_clear_fertilizer_chips()
+	if _plot == null or _stats_row == null:
+		return
+	if _plot.applied_fertilizers.is_empty():
+		return
+	var counts: Dictionary = {}
+	var order: Array[FertilizerData] = []
+	for fert in _plot.applied_fertilizers:
+		if fert == null:
+			continue
+		var key := fert.display_name
+		if not counts.has(key):
+			counts[key] = 0
+			order.append(fert)
+		counts[key] = int(counts[key]) + 1
+	for fert in order:
+		var count := int(counts.get(fert.display_name, 0))
+		if count <= 0:
+			continue
+		var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
+		chip.icon = _fertilizer_icon_atlas
+		_stats_row.add_child(chip)
+		chip.set_value(count)
+		var icon := chip.get_node_or_null("%Icon") as TextureRect
+		if icon != null:
+			icon.self_modulate = fert.tint
+		_fertilizer_chips.append(chip)
 
 
 func _apply_visual_state() -> void:
@@ -181,18 +237,28 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	if typeof(data) != TYPE_DICTIONARY:
 		clear_drop_highlight()
 		return false
-	if _plot == null or _plot.get_state() != NurseryPlotData.State.EMPTY:
+	if _plot == null:
 		clear_drop_highlight()
 		return false
 	var drop_type := str(data.get("type", ""))
-	if drop_type == "shop_spore":
-		modulate = Color(0.7, 1.0, 0.75, 1.0)
-		return true
-	if drop_type == "spore":
-		if not _can_plant:
+	var state := _plot.get_state()
+	if drop_type == "shop_spore" or drop_type == "spore":
+		if state != NurseryPlotData.State.EMPTY:
 			clear_drop_highlight()
 			return false
-		modulate = Color(0.7, 1.0, 0.75, 1.0)
+		if drop_type == "spore" and not _can_plant:
+			clear_drop_highlight()
+			return false
+		modulate = _DROP_HIGHLIGHT
+		return true
+	if drop_type == "shop_fertilizer" or drop_type == "fertilizer":
+		if state == NurseryPlotData.State.READY:
+			clear_drop_highlight()
+			return false
+		if state != NurseryPlotData.State.EMPTY and state != NurseryPlotData.State.GROWING:
+			clear_drop_highlight()
+			return false
+		modulate = _DROP_HIGHLIGHT
 		return true
 	clear_drop_highlight()
 	return false
@@ -205,7 +271,12 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	if typeof(data) != TYPE_DICTIONARY:
 		return
 	var drop_type := str(data.get("type", ""))
-	if drop_type != "spore" and drop_type != "shop_spore":
+	if (
+		drop_type != "spore"
+		and drop_type != "shop_spore"
+		and drop_type != "fertilizer"
+		and drop_type != "shop_fertilizer"
+	):
 		return
 	spore_dropped.emit(self, data)
 

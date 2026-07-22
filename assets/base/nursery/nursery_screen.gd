@@ -7,10 +7,12 @@ const _HATCH_TOAST_DURATION_SEC := 2.5
 const _HATCH_TOAST_FADE_SEC := 0.18
 const _PLOT_TILE_SCENE := preload("res://assets/base/plot_tile/plot_tile.tscn")
 const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
+const _FERTILIZER_CARD_SCENE := preload("res://assets/base/nursery/fertilizer_card/fertilizer_card.tscn")
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
 const _SPORE_ICON := preload("res://assets/base/nursery/spores.png")
+const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
 
 @onready var _stock_row: HBoxContainer = %StockRow
 @onready var _shop_drop_zone: ShopDropZone = %ShopDropZone
@@ -25,6 +27,7 @@ var _tiles: Array[PlotTile] = []
 var _stock_slots: Array[DropSlot] = []
 var _shop_cards: Array[ShopOfferCard] = []
 var _spore_icon_atlas: AtlasTexture
+var _fertilizer_icon_atlas: AtlasTexture
 var _hatch_toast: UnitDetailCard = null
 var _hatch_toast_dimmer: Control = null
 var _hatch_toast_tween: Tween = null
@@ -34,8 +37,12 @@ func _ready() -> void:
 	_spore_icon_atlas = AtlasTexture.new()
 	_spore_icon_atlas.atlas = _SPORE_ICON
 	_spore_icon_atlas.region = Rect2(171, 166, 171, 179)
+	_fertilizer_icon_atlas = AtlasTexture.new()
+	_fertilizer_icon_atlas.atlas = _FERTILIZER_ICON
+	# Crop padded 512x512 art to the bag (same idea as spore atlas).
+	_fertilizer_icon_atlas.region = Rect2(183, 167, 169, 180)
 	_reroll_button.pressed.connect(_on_reroll_pressed)
-	_shop_drop_zone.accepted_drag_types = PackedStringArray(["spore"])
+	_shop_drop_zone.accepted_drag_types = PackedStringArray(["spore", "fertilizer"])
 	_shop_drop_zone.item_dropped.connect(_on_shop_sell_dropped)
 	_build_stock_slots()
 	_build_plot_tiles()
@@ -76,7 +83,7 @@ func _build_stock_slots() -> void:
 	for i in STOCK_SLOT_COUNT:
 		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		slot.slot_index = i
-		slot.accepted_drag_types = PackedStringArray(["shop_spore"])
+		slot.accepted_drag_types = PackedStringArray(["shop_spore", "shop_fertilizer"])
 		slot.item_dropped.connect(_on_stock_item_dropped)
 		_stock_row.add_child(slot)
 		_stock_slots.append(slot)
@@ -96,7 +103,7 @@ func _build_plot_tiles() -> void:
 		var tile: PlotTile = _PLOT_TILE_SCENE.instantiate()
 		_plot_row.add_child(tile)
 		tile.plot_pressed.connect(_on_plot_pressed)
-		tile.spore_dropped.connect(_on_spore_dropped)
+		tile.spore_dropped.connect(_on_plot_item_dropped)
 		_tiles.append(tile)
 
 
@@ -118,27 +125,45 @@ func _rebuild_shop_cards() -> void:
 		if i >= shop.offers.size():
 			break
 		var offer := shop.offers[i]
-		if offer == null:
-			continue
-		var spore := offer.item as SporeData
-		if spore == null:
+		if offer == null or offer.item == null:
 			continue
 		var card: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
-		card.setup(
-			spore.display_name,
-			"growth: %d days" % spore.days_to_mature,
-			offer.cost,
-			{
-				"type": "shop_spore",
-				"spore": spore,
-				"cost": offer.cost,
-				"slot_index": i,
-			},
-			_spore_icon_atlas,
-			i,
-			offer.locked,
-			spore.tint
-		)
+		if offer.item is FertilizerData:
+			var fert := offer.item as FertilizerData
+			card.setup(
+				fert.display_name,
+				fert.subtitle_text(),
+				offer.cost,
+				{
+					"type": "shop_fertilizer",
+					"fertilizer": fert,
+					"cost": offer.cost,
+					"slot_index": i,
+				},
+				_fertilizer_icon_atlas,
+				i,
+				offer.locked,
+				fert.tint
+			)
+		elif offer.item is SporeData:
+			var spore := offer.item as SporeData
+			card.setup(
+				spore.display_name,
+				"growth: %d days" % spore.days_to_mature,
+				offer.cost,
+				{
+					"type": "shop_spore",
+					"spore": spore,
+					"cost": offer.cost,
+					"slot_index": i,
+				},
+				_spore_icon_atlas,
+				i,
+				offer.locked,
+				spore.tint
+			)
+		else:
+			continue
 		card.offer_clicked.connect(_on_shop_offer_clicked)
 		card.lock_toggled.connect(_on_shop_lock_toggled)
 		built[i] = card
@@ -164,20 +189,23 @@ func _rebuild_shop_cards() -> void:
 
 
 func _sync_stock_slots() -> void:
-	var stock := GameState.nursery.spore_stock
-	var can_add := GameState.nursery.can_add_spore()
+	var stock := GameState.nursery.stock
+	var can_add := GameState.nursery.can_add_stock_item()
 	for i in _stock_slots.size():
 		var slot := _stock_slots[i]
 		slot.accepts_drops = can_add
 		slot.clear_card()
 		if i >= stock.size():
 			continue
-		var spore := stock[i] as SporeData
-		if spore == null:
-			continue
-		var card: SporeCard = _SPORE_CARD_SCENE.instantiate()
-		card.setup(spore, i)
-		slot.set_card(card)
+		var item := stock[i]
+		if item is SporeData:
+			var card: SporeCard = _SPORE_CARD_SCENE.instantiate()
+			card.setup(item as SporeData, i)
+			slot.set_card(card)
+		elif item is FertilizerData:
+			var fert_card: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
+			fert_card.setup(item as FertilizerData, i)
+			slot.set_card(fert_card)
 
 
 func _refresh() -> void:
@@ -187,7 +215,7 @@ func _refresh() -> void:
 		expected_visible += 1
 	if _tiles.size() != expected_visible:
 		_build_plot_tiles()
-	var can_plant := not nursery.spore_stock.is_empty()
+	var can_plant := nursery.has_spore_in_stock()
 	_sync_stock_slots()
 	_refresh_shop_affordability()
 	for i in nursery.unlocked_plot_count:
@@ -238,23 +266,35 @@ func _on_stock_item_dropped(_slot: DropSlot, data: Dictionary) -> void:
 
 
 func _on_shop_sell_dropped(_zone: ShopDropZone, data: Dictionary) -> void:
-	if str(data.get("type", "")) != "spore":
+	var drop_type := str(data.get("type", ""))
+	if drop_type != "spore" and drop_type != "fertilizer":
 		return
 	var stock_index := int(data.get("stock_index", -1))
-	if GameState.try_sell_spore_from_stock(stock_index):
+	if GameState.try_sell_nursery_stock_item(stock_index):
 		_refresh()
 		_refresh_base_hud()
 
 
 func _try_buy_shop_payload(data: Dictionary) -> void:
-	var spore := data.get("spore") as SporeData
 	var cost := int(data.get("cost", 0))
 	var slot_index := int(data.get("slot_index", -1))
-	if spore == null:
+	var drop_type := str(data.get("type", ""))
+	if not GameState.nursery.can_add_stock_item():
 		return
-	if not GameState.nursery.can_add_spore():
+	var bought := false
+	if drop_type == "shop_spore":
+		var spore := data.get("spore") as SporeData
+		if spore == null:
+			return
+		bought = GameState.try_buy_spore(spore, cost)
+	elif drop_type == "shop_fertilizer":
+		var fertilizer := data.get("fertilizer") as FertilizerData
+		if fertilizer == null:
+			return
+		bought = GameState.try_buy_fertilizer(fertilizer, cost)
+	else:
 		return
-	if GameState.try_buy_spore(spore, cost):
+	if bought:
 		_replace_bought_shop_slot(slot_index)
 		_rebuild_shop_cards()
 		_refresh()
@@ -282,7 +322,7 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 
 	match plot.get_state():
 		NurseryPlotData.State.EMPTY:
-			if nursery.spore_stock.is_empty():
+			if not nursery.has_spore_in_stock():
 				return
 			if nursery.plant(tile.plot_index):
 				_refresh()
@@ -387,17 +427,23 @@ func _dismiss_hatch_toast(animated: bool) -> void:
 	)
 
 
-func _on_spore_dropped(tile: PlotTile, data: Dictionary) -> void:
+func _on_plot_item_dropped(tile: PlotTile, data: Dictionary) -> void:
 	if tile.is_unlockable:
 		return
 	var drop_type := str(data.get("type", ""))
-	if drop_type == "shop_spore":
-		_plant_from_shop(tile.plot_index, data)
-		return
-	if drop_type == "spore":
-		var stock_index := int(data.get("stock_index", 0))
-		if GameState.nursery.plant(tile.plot_index, stock_index):
-			_refresh()
+	match drop_type:
+		"shop_spore":
+			_plant_from_shop(tile.plot_index, data)
+		"spore":
+			var stock_index := int(data.get("stock_index", 0))
+			if GameState.nursery.plant(tile.plot_index, stock_index):
+				_refresh()
+		"shop_fertilizer":
+			_apply_fertilizer_from_shop(tile.plot_index, data)
+		"fertilizer":
+			var fert_index := int(data.get("stock_index", 0))
+			if GameState.nursery.apply_fertilizer_from_stock(tile.plot_index, fert_index):
+				_refresh()
 
 
 func _try_unlock_plot() -> void:
@@ -417,6 +463,24 @@ func _plant_from_shop(plot_index: int, data: Dictionary) -> void:
 	if not GameState.biomass.try_spend(cost):
 		return
 	if not GameState.nursery.plant_spore(plot_index, spore):
+		GameState.biomass.add(cost)
+		return
+	_replace_bought_shop_slot(slot_index)
+	_rebuild_shop_cards()
+	_refresh()
+	_refresh_base_hud()
+
+
+func _apply_fertilizer_from_shop(plot_index: int, data: Dictionary) -> void:
+	var fertilizer := data.get("fertilizer") as FertilizerData
+	var cost := int(data.get("cost", 0))
+	var slot_index := int(data.get("slot_index", -1))
+	if fertilizer == null:
+		return
+	GameState.ensure_nursery_seeded()
+	if not GameState.biomass.try_spend(cost):
+		return
+	if not GameState.nursery.apply_fertilizer_to_plot(plot_index, fertilizer):
 		GameState.biomass.add(cost)
 		return
 	_replace_bought_shop_slot(slot_index)

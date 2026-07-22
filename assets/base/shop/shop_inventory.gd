@@ -11,7 +11,7 @@ func clear() -> void:
 	offers.clear()
 
 
-## Fill empty inventory by calling generate_offer() once per slot.
+## Fill empty inventory by calling generate_offer(slot_index) once per slot.
 ## generate_offer must return a ShopOffer (unlocked; locked is forced false).
 func ensure_filled(generate_offer: Callable) -> void:
 	if not offers.is_empty():
@@ -21,7 +21,7 @@ func ensure_filled(generate_offer: Callable) -> void:
 
 
 ## Reroll every unlocked slot. Locked slots keep their current offer.
-## generate_offer must return a ShopOffer.
+## generate_offer must return a ShopOffer; receives the slot index.
 func reroll_unlocked(generate_offer: Callable) -> void:
 	ensure_filled(generate_offer)
 	for i in offers.size():
@@ -29,7 +29,7 @@ func reroll_unlocked(generate_offer: Callable) -> void:
 		if current != null and current.locked:
 			continue
 		var was_locked := current != null and current.locked
-		var next: ShopOffer = generate_offer.call() as ShopOffer
+		var next: ShopOffer = generate_offer.call(i) as ShopOffer
 		if next == null:
 			continue
 		next.locked = was_locked
@@ -41,7 +41,7 @@ func replace_slot(slot_index: int, generate_offer: Callable) -> void:
 	ensure_filled(generate_offer)
 	if slot_index < 0 or slot_index >= offers.size():
 		return
-	var next: ShopOffer = generate_offer.call() as ShopOffer
+	var next: ShopOffer = generate_offer.call(slot_index) as ShopOffer
 	if next == null:
 		next = ShopOffer.new()
 	next.locked = false
@@ -76,8 +76,8 @@ func is_locked(slot_index: int) -> bool:
 
 func _fill_all(generate_offer: Callable) -> void:
 	offers.clear()
-	for _i in slot_count:
-		var offer: ShopOffer = generate_offer.call() as ShopOffer
+	for i in slot_count:
+		var offer: ShopOffer = generate_offer.call(i) as ShopOffer
 		if offer == null:
 			offer = ShopOffer.new()
 		offer.locked = false
@@ -86,7 +86,8 @@ func _fill_all(generate_offer: Callable) -> void:
 
 func _normalize_size(generate_offer: Callable) -> void:
 	while offers.size() < slot_count:
-		var offer: ShopOffer = generate_offer.call() as ShopOffer
+		var i := offers.size()
+		var offer: ShopOffer = generate_offer.call(i) as ShopOffer
 		if offer == null:
 			offer = ShopOffer.new()
 		offer.locked = false

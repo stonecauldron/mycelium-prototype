@@ -80,11 +80,25 @@ func try_buy_spore(spore: SporeData, cost: int) -> bool:
 	if spore == null or cost < 0:
 		return false
 	ensure_nursery_seeded()
-	if not nursery.can_add_spore():
+	if not nursery.can_add_stock_item():
 		return false
 	if not biomass.try_spend(cost):
 		return false
 	if not nursery.add_spore(spore):
+		biomass.add(cost)
+		return false
+	return true
+
+
+func try_buy_fertilizer(fertilizer: FertilizerData, cost: int) -> bool:
+	if fertilizer == null or cost < 0:
+		return false
+	ensure_nursery_seeded()
+	if not nursery.can_add_stock_item():
+		return false
+	if not biomass.try_spend(cost):
+		return false
+	if not nursery.add_fertilizer(fertilizer):
 		biomass.add(cost)
 		return false
 	return true
@@ -165,14 +179,27 @@ func try_transfer_equipped_weapon(from_unit: RosterUnitData, to_unit: RosterUnit
 
 
 func try_sell_spore_from_stock(stock_index: int) -> bool:
+	return try_sell_nursery_stock_item(stock_index)
+
+
+func try_sell_fertilizer_from_stock(stock_index: int) -> bool:
+	return try_sell_nursery_stock_item(stock_index)
+
+
+func try_sell_nursery_stock_item(stock_index: int) -> bool:
 	ensure_nursery_seeded()
-	if stock_index < 0 or stock_index >= nursery.spore_stock.size():
+	if stock_index < 0 or stock_index >= nursery.stock.size():
 		return false
-	var spore := nursery.spore_stock[stock_index] as SporeData
-	if spore == null:
+	var item := nursery.stock[stock_index]
+	var buy_cost := 0
+	if item is SporeData:
+		buy_cost = (item as SporeData).biomass_cost
+	elif item is FertilizerData:
+		buy_cost = (item as FertilizerData).biomass_cost
+	else:
 		return false
-	nursery.spore_stock.remove_at(stock_index)
-	biomass.add(BiomassData.sell_value(spore.biomass_cost))
+	nursery.stock.remove_at(stock_index)
+	biomass.add(BiomassData.sell_value(buy_cost))
 	return true
 
 

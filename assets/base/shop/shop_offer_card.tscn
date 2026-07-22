@@ -77,10 +77,13 @@ autowrap_mode = 3
 
 [node name="SubtitleLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=639148190]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 15
 horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="PriceRow" type="HBoxContainer" parent="CardPanel/Margin/VBox" unique_id=216391871]
 layout_mode = 2

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="FertilizerData" format=3]
+
+[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+
+[resource]
+script = ExtResource("1_fert")
+display_name = "Feather Weight"
+biomass_cost = 6
+tint = Color(0.55, 0.78, 0.95, 1)
+con_delta = -2
+spd_delta = 2

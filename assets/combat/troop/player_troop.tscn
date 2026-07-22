@@ -6,14 +6,14 @@
 [node name="PlayerTroop" unique_id=489447478 instance=ExtResource("1_troop")]
 
 [node name="MeleeUnit" parent="Units" instance=ExtResource("2_melee")]
-body_color = Color(0.25, 0.75, 0.4, 1)
+body_color = Color(1, 1, 1, 1)
 squad_index = 0
 
 [node name="MeleeUnit2" parent="Units" instance=ExtResource("2_melee")]
-body_color = Color(0.25, 0.75, 0.4, 1)
+body_color = Color(1, 1, 1, 1)
 
 [node name="MeleeUnit3" parent="Units" instance=ExtResource("2_melee")]
-body_color = Color(0.25, 0.75, 0.4, 1)
+body_color = Color(1, 1, 1, 1)
 
 [node name="MeleeUnit4" parent="Units" instance=ExtResource("2_melee")]
-body_color = Color(0.25, 0.75, 0.4, 1)
+body_color = Color(1, 1, 1, 1)

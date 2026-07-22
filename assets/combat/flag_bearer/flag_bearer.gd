@@ -16,7 +16,7 @@ const COLLISION_ENEMY_UNITS := 16
 
 const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_number.tscn")
 
-@export var flag_color: Color = Color(0.25, 0.75, 0.4)
+@export var flag_color: Color = Color.WHITE
 @export var flag_faces_left: bool = false
 
 @onready var _visual: Node2D = $Visual

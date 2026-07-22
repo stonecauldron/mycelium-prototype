@@ -85,7 +85,7 @@ func _run_battle(
 		player_troop,
 		_player_spawn,
 		player_roster,
-		Color(0.25, 0.75, 0.4, 1.0),
+		Color.WHITE,
 		true
 	)
 	_reset_troop_from_roster(

@@ -43,7 +43,7 @@ const COLLISION_ENEMY_UNITS := 16
 @export var weapon: WeaponData
 @export var roll_random_stats: bool = true
 @export var squad_index: int = 0
-@export var body_color: Color = Color(0.4, 0.7, 0.5)
+@export var body_color: Color = Color.WHITE
 
 var current_hp: int
 var process_tiebreak: int = 0

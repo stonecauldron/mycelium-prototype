@@ -120,7 +120,8 @@ func _refresh() -> void:
 			modulate = Color.WHITE
 			_base_modulate = modulate
 		NurseryPlotData.State.READY:
-			_days_chip.visible = false
+			_days_chip.visible = true
+			_days_chip.set_value(0)
 			modulate = Color.WHITE
 			_base_modulate = modulate
 	_apply_visual_state()

@@ -46,16 +46,6 @@ func refresh_squad_indices() -> void:
 			units[i].squad_index = i
 
 
-func get_living_units_midpoint() -> Vector2:
-	var living := get_living_units()
-	if living.is_empty():
-		return flag_bearer.global_position
-	var sum := Vector2.ZERO
-	for unit in living:
-		sum += unit.global_position
-	return sum / float(living.size())
-
-
 func get_opponent() -> Troop:
 	return _opponent
 

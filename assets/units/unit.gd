@@ -368,7 +368,7 @@ func _spawn_spear_projectile() -> void:
 	if opponent == null:
 		return
 
-	var aim := opponent.get_living_units_midpoint()
+	var aim := _pick_ranged_aim_target(opponent)
 	aim += Vector2(
 		randf_range(-THROW_AIM_JITTER_X, THROW_AIM_JITTER_X),
 		randf_range(-THROW_AIM_JITTER_Y, THROW_AIM_JITTER_Y)
@@ -411,7 +411,7 @@ func _spawn_arrow_projectile() -> void:
 	if opponent == null:
 		return
 
-	var aim := opponent.get_living_units_midpoint()
+	var aim := _pick_ranged_aim_target(opponent)
 	aim += Vector2(
 		randf_range(-THROW_AIM_JITTER_X, THROW_AIM_JITTER_X),
 		randf_range(-THROW_AIM_JITTER_Y, THROW_AIM_JITTER_Y)
@@ -498,6 +498,61 @@ func _refresh_target() -> void:
 		var flag_distance := global_position.distance_squared_to(flag.global_position)
 		if flag_distance < closest_distance:
 			_target = flag
+
+
+func _get_ranged_aim_priority() -> Array[WeaponData.FormationLine]:
+	var line := (
+		weapon.formation_line if weapon != null else WeaponData.FormationLine.FRONT
+	)
+	match line:
+		WeaponData.FormationLine.MID:
+			return [
+				WeaponData.FormationLine.FRONT,
+				WeaponData.FormationLine.MID,
+				WeaponData.FormationLine.BACK,
+			]
+		WeaponData.FormationLine.BACK:
+			return [
+				WeaponData.FormationLine.MID,
+				WeaponData.FormationLine.FRONT,
+				WeaponData.FormationLine.BACK,
+			]
+		_:
+			return [
+				WeaponData.FormationLine.FRONT,
+				WeaponData.FormationLine.MID,
+				WeaponData.FormationLine.BACK,
+			]
+
+
+func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
+	for formation_line in _get_ranged_aim_priority():
+		var candidates: Array[Unit] = []
+		for unit in opponent.get_living_units():
+			if unit.weapon != null and unit.weapon.formation_line == formation_line:
+				candidates.append(unit)
+		if candidates.is_empty():
+			continue
+
+		var total_weight := 0.0
+		var weights: Array[float] = []
+		for unit in candidates:
+			var distance := global_position.distance_to(unit.global_position)
+			var weight := 1.0 / maxf(distance, 1.0)
+			weights.append(weight)
+			total_weight += weight
+
+		var roll := randf() * total_weight
+		var cumulative := 0.0
+		for i in candidates.size():
+			cumulative += weights[i]
+			if roll <= cumulative:
+				return candidates[i].global_position
+		return candidates[candidates.size() - 1].global_position
+
+	if opponent.flag_bearer != null and is_instance_valid(opponent.flag_bearer):
+		return opponent.flag_bearer.global_position
+	return global_position
 
 
 func _get_attack_damage() -> int:

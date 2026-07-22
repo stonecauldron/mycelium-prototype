@@ -315,4 +315,4 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"PrimaryButton"
 disabled = true
-text = "Start Combat"
+text = "Start Battle"

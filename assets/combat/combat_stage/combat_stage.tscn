@@ -184,14 +184,17 @@ position = Vector2(2988, 728)
 position = Vector2(4900, 691)
 
 [node name="MainCamera" type="Camera2D" parent="World" unique_id=723439616]
-position = Vector2(3846, 618)
+position = Vector2(3788, 618)
 process_callback = 0
 limit_left = 0
 limit_top = 0
-limit_right = 6720
+limit_right = 8000
 limit_bottom = 1080
 position_smoothing_enabled = true
 position_smoothing_speed = 2.5
+drag_horizontal_enabled = true
+drag_left_margin = 0.7
+editor_draw_drag_margin = true
 script = ExtResource("2_camera")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1373945268]

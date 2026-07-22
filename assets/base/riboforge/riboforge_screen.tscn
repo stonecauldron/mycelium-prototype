@@ -2,17 +2,21 @@
 
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://b8a0bnh5m5pjd" path="res://assets/base/riboforge/riboforge_screen.gd" id="2_screen"]
-[ext_resource type="Script" uid="uid://dd4blg84bwp5g" path="res://assets/base/riboforge/weapon_stock_drop_host.gd" id="3_stock"]
-[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="4_biomass"]
-[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="5_figtree"]
+[ext_resource type="Texture2D" uid="uid://clt2ubxc7lo1c" path="res://assets/base/background/upper_lane.png" id="3_upper_lane"]
+[ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="4_lower_lane"]
+[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="5_biomass"]
+[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="6_figtree"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
 [sub_resource type="FontVariation" id="Font_figtree_button"]
-base_font = ExtResource("5_figtree")
+base_font = ExtResource("6_figtree")
 variation_opentype = {
 2003265652: 600
 }
 
 [node name="RiboforgeScreen" type="Control" unique_id=436044927]
+custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,126 +26,118 @@ grow_vertical = 2
 theme = ExtResource("1_theme")
 script = ExtResource("2_screen")
 
-[node name="Margin" type="MarginContainer" parent="." unique_id=1442079447]
+[node name="UpperLaneLayer" type="TextureRect" parent="." unique_id=1298238025]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"ScreenMargin"
-theme_override_constants/margin_right = 48
+mouse_filter = 2
+texture = ExtResource("3_upper_lane")
+expand_mode = 1
 
-[node name="RootVBox" type="VBoxContainer" parent="Margin" unique_id=1717121022]
-layout_mode = 2
+[node name="LowerLaneLayer" type="TextureRect" parent="." unique_id=427991229]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_lower_lane")
+expand_mode = 1
+
+[node name="HeaderBlock" type="VBoxContainer" parent="." unique_id=826697549]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 16.0
+offset_top = 141.0
+offset_right = 900.0
+offset_bottom = 219.0
+mouse_filter = 2
 theme_type_variation = &"SectionVBox"
 
-[node name="Header" type="Label" parent="Margin/RootVBox" unique_id=347272208]
+[node name="Header" type="Label" parent="HeaderBlock" unique_id=347272208]
 layout_mode = 2
 theme_type_variation = &"PageTitleLabel"
 text = "Riboforge — Arm Units"
 
-[node name="Subtitle" type="Label" parent="Margin/RootVBox" unique_id=790898199]
+[node name="Subtitle" type="Label" parent="HeaderBlock" unique_id=790898199]
 layout_mode = 2
 theme_type_variation = &"PageSubtitleLabel"
-text = "Buy weapons from the shop. Drag stock onto a squad unit to equip, or drag a unit's weapon back to stock to unequip."
+text = "Buy weapons into stock, or drag onto a squad unit to equip."
 
-[node name="ContentHBox" type="HBoxContainer" parent="Margin/RootVBox" unique_id=634000526]
-layout_mode = 2
-size_flags_vertical = 3
-theme_type_variation = &"TightHBox"
-
-[node name="LeftVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox" unique_id=990785552]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_type_variation = &"SectionVBox"
-
-[node name="StockPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox" unique_id=1976366905]
+[node name="StockShopPanel" type="PanelContainer" parent="." unique_id=710296817]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 160)
-layout_mode = 2
-size_flags_vertical = 3
-script = ExtResource("3_stock")
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 218.0
+offset_right = -16.0
+offset_bottom = 518.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
-[node name="StockMargin" type="MarginContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel" unique_id=1997823994]
+[node name="StockShopMargin" type="MarginContainer" parent="StockShopPanel" unique_id=878538865]
 layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"PanelInnerMargin"
 
-[node name="StockVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel/StockMargin" unique_id=787232730]
+[node name="StockShopVBox" type="VBoxContainer" parent="StockShopPanel/StockShopMargin" unique_id=1807134095]
 layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"TightVBox"
 
-[node name="StockLabel" type="Label" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel/StockMargin/StockVBox" unique_id=296378961]
-unique_name_in_owner = true
+[node name="StockShopTitle" type="Label" parent="StockShopPanel/StockShopMargin/StockShopVBox" unique_id=1323217261]
 layout_mode = 2
 theme_type_variation = &"SectionTitleLabel"
-text = "Weapons in stock: 0"
+text = "Weapons"
 
-[node name="StockRow" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/StockPanel/StockMargin/StockVBox" unique_id=2102679230]
+[node name="StockShopRow" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox" unique_id=1082664112]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 240)
 layout_mode = 2
 size_flags_vertical = 3
-theme_type_variation = &"TightHBox"
+mouse_filter = 2
+theme_type_variation = &"SlotRow"
 
-[node name="SquadPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox" unique_id=1581450499]
-custom_minimum_size = Vector2(0, 220)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="SquadMargin" type="MarginContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/SquadPanel" unique_id=1473984313]
-layout_mode = 2
-theme_type_variation = &"PanelInnerMargin"
-
-[node name="SquadVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/SquadPanel/SquadMargin" unique_id=1603675607]
-layout_mode = 2
-theme_type_variation = &"TightVBox"
-
-[node name="SquadTitle" type="Label" parent="Margin/RootVBox/ContentHBox/LeftVBox/SquadPanel/SquadMargin/SquadVBox" unique_id=115160178]
-layout_mode = 2
-theme_type_variation = &"SectionTitleLabel"
-text = "Squad"
-
-[node name="SquadRow" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/LeftVBox/SquadPanel/SquadMargin/SquadVBox" unique_id=1505395259]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 200)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="ShopPanel" type="PanelContainer" parent="Margin/RootVBox/ContentHBox" unique_id=1792606371]
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="ShopMargin" type="MarginContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel" unique_id=1940679608]
-layout_mode = 2
-theme_type_variation = &"PanelInnerMargin"
-
-[node name="ShopVBox" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin" unique_id=1419540868]
-layout_mode = 2
-theme_type_variation = &"TightVBox"
-
-[node name="ShopTitle" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox" unique_id=710736294]
-layout_mode = 2
-theme_type_variation = &"SectionTitleLabel"
-text = "Shop"
-
-[node name="ShopColumn" type="VBoxContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox" unique_id=369488867]
+[node name="StockRow" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow" unique_id=1430706056]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
-theme_type_variation = &"TightVBox"
+size_flags_vertical = 0
+mouse_filter = 2
+theme_type_variation = &"SlotRow"
+
+[node name="LaneSpacer" type="Control" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow" unique_id=1430706057]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ShopRow" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow" unique_id=1108388942]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_constants/separation = 36
 alignment = 1
 
-[node name="RerollButton" type="Button" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox" unique_id=1275106666]
+[node name="MiddleShopColumn" type="VBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow" unique_id=1108388943]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="RerollButton" type="Button" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn" unique_id=1060688289]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(148, 48)
+layout_mode = 2
+size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 
-[node name="RerollContent" type="HBoxContainer" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton" unique_id=1700623062]
+[node name="RerollContent" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton" unique_id=1131437255]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -152,14 +148,14 @@ mouse_filter = 2
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="RerollLabel" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent" unique_id=386304212]
+[node name="RerollLabel" type="Label" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=1935055043]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 22
 text = "Reroll"
 
-[node name="RerollCostLabel" type="Label" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent" unique_id=1230356771]
+[node name="RerollCostLabel" type="Label" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=529388487]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
@@ -167,16 +163,45 @@ theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 22
 text = "2"
 
-[node name="RerollBiomassIcon" type="TextureRect" parent="Margin/RootVBox/ContentHBox/ShopPanel/ShopMargin/ShopVBox/RerollButton/RerollContent" unique_id=1444175617]
+[node name="RerollBiomassIcon" type="TextureRect" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=1970297507]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
-texture = ExtResource("4_biomass")
+texture = ExtResource("5_biomass")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatusLabel" type="Label" parent="Margin/RootVBox" unique_id=904717373]
+[node name="SquadPanel" type="PanelContainer" parent="." unique_id=1422856244]
 unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 588.0
+offset_right = -16.0
+offset_bottom = 868.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
+
+[node name="SquadMargin" type="MarginContainer" parent="SquadPanel" unique_id=1251518974]
 layout_mode = 2
-theme_type_variation = &"PageSubtitleLabel"
+mouse_filter = 2
+theme_type_variation = &"PanelInnerMargin"
+
+[node name="SquadVBox" type="VBoxContainer" parent="SquadPanel/SquadMargin" unique_id=1407487620]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"TightVBox"
+
+[node name="SquadTitle" type="Label" parent="SquadPanel/SquadMargin/SquadVBox" unique_id=150928833]
+layout_mode = 2
+theme_type_variation = &"SectionTitleLabel"
+text = "Squad"
+
+[node name="SquadRow" type="HBoxContainer" parent="SquadPanel/SquadMargin/SquadVBox" unique_id=103951673]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_type_variation = &"SlotRow"

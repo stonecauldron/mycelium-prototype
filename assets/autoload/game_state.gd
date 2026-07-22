@@ -101,14 +101,15 @@ func try_buy_weapon(weapon: WeaponData, cost: int) -> bool:
 	if weapon == null or cost < 0:
 		return false
 	ensure_riboforge_seeded()
+	if not riboforge.can_add_weapon():
+		return false
 	if not biomass.try_spend(cost):
 		return false
 	# Duplicate so purchased copies are distinct from the shared default melee.
 	var stock_weapon := weapon.duplicate() as WeaponData
-	if stock_weapon == null:
+	if stock_weapon == null or not riboforge.add_weapon(stock_weapon):
 		biomass.add(cost)
 		return false
-	riboforge.weapon_stock.append(stock_weapon)
 	return true
 
 
@@ -121,11 +122,13 @@ func try_equip_weapon_from_stock(unit: RosterUnitData, stock_index: int) -> bool
 	var stock_weapon := riboforge.weapon_stock[stock_index] as WeaponData
 	if stock_weapon == null:
 		return false
+	# Remove first so a displaced non-default weapon can re-enter without needing
+	# an extra stock slot beyond the cap.
+	riboforge.weapon_stock.remove_at(stock_index)
 	var previous := unit.weapon
+	unit.weapon = stock_weapon
 	if previous != null and not RiboforgeData.is_default_weapon(previous):
 		riboforge.weapon_stock.append(previous)
-	unit.weapon = stock_weapon
-	riboforge.weapon_stock.remove_at(stock_index)
 	return true
 
 
@@ -135,7 +138,10 @@ func try_unequip_weapon_to_stock(unit: RosterUnitData) -> bool:
 	ensure_riboforge_seeded()
 	if RiboforgeData.is_default_weapon(unit.weapon):
 		return false
-	riboforge.weapon_stock.append(unit.weapon)
+	if not riboforge.can_add_weapon():
+		return false
+	if not riboforge.add_weapon(unit.weapon):
+		return false
 	unit.weapon = RiboforgeData.get_default_weapon()
 	return true
 

@@ -3,10 +3,13 @@ extends BaseScreen
 
 const STOCK_SLOT_COUNT := NurseryData.STOCK_SLOT_COUNT
 const SHOP_SLOT_COUNT := NurseryData.SHOP_SLOT_COUNT
+const _HATCH_TOAST_DURATION_SEC := 2.5
+const _HATCH_TOAST_FADE_SEC := 0.18
 const _PLOT_TILE_SCENE := preload("res://assets/base/plot_tile/plot_tile.tscn")
 const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
+const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
 const _SPORE_ICON := preload("res://assets/base/nursery/spores.png")
 
 @onready var _stock_row: HBoxContainer = %StockRow
@@ -22,6 +25,9 @@ var _tiles: Array[PlotTile] = []
 var _stock_slots: Array[DropSlot] = []
 var _shop_cards: Array[ShopOfferCard] = []
 var _spore_icon_atlas: AtlasTexture
+var _hatch_toast: UnitDetailCard = null
+var _hatch_toast_dimmer: Control = null
+var _hatch_toast_tween: Tween = null
 
 
 func _ready() -> void:
@@ -292,7 +298,93 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 			if unit == null:
 				return
 			GameState.troop.try_add_unit(unit)
+			var toast_anchor := tile.get_global_rect()
 			_refresh()
+			_show_hatch_toast(unit, toast_anchor)
+
+
+func _show_hatch_toast(unit: RosterUnitData, anchor_global_rect: Rect2) -> void:
+	_dismiss_hatch_toast(false)
+	var dimmer := Control.new()
+	dimmer.name = "HatchToastDimmer"
+	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	dimmer.gui_input.connect(_on_hatch_toast_dimmer_input)
+	add_child(dimmer)
+	_hatch_toast_dimmer = dimmer
+
+	var card: UnitDetailCard = _UNIT_DETAIL_CARD_SCENE.instantiate()
+	card.setup(unit)
+	card.modulate.a = 0.0
+	add_child(card)
+	_hatch_toast = card
+	card.reset_compact_layout()
+	_position_hatch_toast(card, anchor_global_rect)
+	card.gui_input.connect(_on_hatch_toast_card_input)
+
+	var tween := create_tween()
+	_hatch_toast_tween = tween
+	tween.set_parallel(false)
+	tween.tween_property(card, "modulate:a", 1.0, _HATCH_TOAST_FADE_SEC)
+	tween.tween_interval(_HATCH_TOAST_DURATION_SEC)
+	tween.tween_property(card, "modulate:a", 0.0, _HATCH_TOAST_FADE_SEC)
+	tween.tween_callback(func() -> void: _dismiss_hatch_toast(false))
+
+
+func _position_hatch_toast(card: UnitDetailCard, anchor_global_rect: Rect2) -> void:
+	var card_size := UnitDetailCard.CARD_SIZE
+	var local_top_left := anchor_global_rect.position - global_position
+	var pos := Vector2(
+		local_top_left.x + (anchor_global_rect.size.x - card_size.x) * 0.5,
+		local_top_left.y - card_size.y + 24.0
+	)
+	pos.x = clampf(pos.x, 8.0, maxf(8.0, size.x - card_size.x - 8.0))
+	pos.y = clampf(pos.y, 8.0, maxf(8.0, size.y - card_size.y - 8.0))
+	card.position = pos
+
+
+func _on_hatch_toast_dimmer_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse := event as InputEventMouseButton
+		if mouse.pressed and mouse.button_index == MOUSE_BUTTON_LEFT:
+			_dismiss_hatch_toast(true)
+			accept_event()
+
+
+func _on_hatch_toast_card_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse := event as InputEventMouseButton
+		if mouse.pressed and mouse.button_index == MOUSE_BUTTON_LEFT:
+			_dismiss_hatch_toast(true)
+			accept_event()
+
+
+func _dismiss_hatch_toast(animated: bool) -> void:
+	if _hatch_toast_tween != null:
+		_hatch_toast_tween.kill()
+		_hatch_toast_tween = null
+	var card := _hatch_toast
+	var dimmer := _hatch_toast_dimmer
+	_hatch_toast_dimmer = null
+	if dimmer != null and is_instance_valid(dimmer):
+		dimmer.queue_free()
+	if card == null or not is_instance_valid(card):
+		_hatch_toast = null
+		return
+	if not animated:
+		_hatch_toast = null
+		card.queue_free()
+		return
+	var tween := create_tween()
+	_hatch_toast_tween = tween
+	tween.tween_property(card, "modulate:a", 0.0, _HATCH_TOAST_FADE_SEC)
+	tween.tween_callback(func() -> void:
+		if _hatch_toast == card:
+			_hatch_toast = null
+		if is_instance_valid(card):
+			card.queue_free()
+		_hatch_toast_tween = null
+	)
 
 
 func _on_spore_dropped(tile: PlotTile, data: Dictionary) -> void:

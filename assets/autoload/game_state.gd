@@ -164,6 +164,42 @@ func try_transfer_equipped_weapon(from_unit: RosterUnitData, to_unit: RosterUnit
 	return true
 
 
+func try_sell_spore_from_stock(stock_index: int) -> bool:
+	ensure_nursery_seeded()
+	if stock_index < 0 or stock_index >= nursery.spore_stock.size():
+		return false
+	var spore := nursery.spore_stock[stock_index] as SporeData
+	if spore == null:
+		return false
+	nursery.spore_stock.remove_at(stock_index)
+	biomass.add(BiomassData.sell_value(spore.biomass_cost))
+	return true
+
+
+func try_sell_weapon_from_stock(stock_index: int) -> bool:
+	ensure_riboforge_seeded()
+	if stock_index < 0 or stock_index >= riboforge.weapon_stock.size():
+		return false
+	var weapon := riboforge.weapon_stock[stock_index] as WeaponData
+	if weapon == null or RiboforgeData.is_default_weapon(weapon):
+		return false
+	riboforge.weapon_stock.remove_at(stock_index)
+	biomass.add(BiomassData.sell_value(weapon.biomass_cost))
+	return true
+
+
+func try_sell_equipped_weapon(unit: RosterUnitData) -> bool:
+	if unit == null:
+		return false
+	ensure_riboforge_seeded()
+	var weapon := unit.weapon
+	if weapon == null or RiboforgeData.is_default_weapon(weapon):
+		return false
+	unit.weapon = RiboforgeData.get_default_weapon()
+	biomass.add(BiomassData.sell_value(weapon.biomass_cost))
+	return true
+
+
 func try_unlock_plot() -> bool:
 	ensure_nursery_seeded()
 	if not nursery.can_unlock_plot():

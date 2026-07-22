@@ -10,6 +10,7 @@ const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _SPORE_ICON := preload("res://assets/base/nursery/spores.png")
 
 @onready var _stock_row: HBoxContainer = %StockRow
+@onready var _shop_drop_zone: ShopDropZone = %ShopDropZone
 @onready var _shop_row: HBoxContainer = %ShopRow
 @onready var _middle_shop_column: VBoxContainer = %MiddleShopColumn
 @onready var _stock_shop_panel: PanelContainer = %StockShopPanel
@@ -28,6 +29,8 @@ func _ready() -> void:
 	_spore_icon_atlas.atlas = _SPORE_ICON
 	_spore_icon_atlas.region = Rect2(171, 166, 171, 179)
 	_reroll_button.pressed.connect(_on_reroll_pressed)
+	_shop_drop_zone.accepted_drag_types = PackedStringArray(["spore"])
+	_shop_drop_zone.item_dropped.connect(_on_shop_sell_dropped)
 	_build_stock_slots()
 	_build_plot_tiles()
 	_set_structure_mouse_ignore()
@@ -226,6 +229,15 @@ func _on_shop_offer_clicked(card: ShopOfferCard) -> void:
 
 func _on_stock_item_dropped(_slot: DropSlot, data: Dictionary) -> void:
 	_try_buy_shop_payload(data)
+
+
+func _on_shop_sell_dropped(_zone: ShopDropZone, data: Dictionary) -> void:
+	if str(data.get("type", "")) != "spore":
+		return
+	var stock_index := int(data.get("stock_index", -1))
+	if GameState.try_sell_spore_from_stock(stock_index):
+		_refresh()
+		_refresh_base_hud()
 
 
 func _try_buy_shop_payload(data: Dictionary) -> void:

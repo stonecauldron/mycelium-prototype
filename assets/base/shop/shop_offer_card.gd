@@ -195,3 +195,25 @@ func _notification(what: int) -> void:
 		# Restore if the drag was cancelled; successful drops rebuild the card.
 		if is_inside_tree():
 			visible = true
+
+
+func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
+	var zone := _find_host_shop_zone()
+	if zone != null:
+		return zone._can_drop_data(at_position, data)
+	return false
+
+
+func _drop_data(at_position: Vector2, data: Variant) -> void:
+	var zone := _find_host_shop_zone()
+	if zone != null:
+		zone._drop_data(at_position, data)
+
+
+func _find_host_shop_zone() -> ShopDropZone:
+	var node: Node = get_parent()
+	while node != null:
+		if node is ShopDropZone:
+			return node as ShopDropZone
+		node = node.get_parent()
+	return null

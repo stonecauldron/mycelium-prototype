@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="4_lower_lane"]
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="5_biomass"]
 [ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="6_figtree"]
+[ext_resource type="PackedScene" path="res://assets/base/shop/shop_drop_zone.tscn" id="7_shop_zone"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
@@ -66,7 +67,7 @@ text = "Nursery — Grow Units"
 [node name="Subtitle" type="Label" parent="HeaderBlock" unique_id=1767566579]
 layout_mode = 2
 theme_type_variation = &"PageSubtitleLabel"
-text = "Buy spores into stock, or drag onto an empty plot to plant."
+text = "Buy spores into stock, drag onto an empty plot to plant, or drag spores onto the shop to sell."
 
 [node name="StockShopPanel" type="PanelContainer" parent="." unique_id=710296817]
 unique_name_in_owner = true
@@ -114,7 +115,12 @@ custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="ShopRow" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow" unique_id=1108388942]
+[node name="ShopDropZone" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow" unique_id=1108388941 instance=ExtResource("7_shop_zone")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="ShopRow" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopDropZone" unique_id=1108388942]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
@@ -122,7 +128,7 @@ mouse_filter = 2
 theme_override_constants/separation = 36
 alignment = 1
 
-[node name="MiddleShopColumn" type="VBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow" unique_id=1108388943]
+[node name="MiddleShopColumn" type="VBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopDropZone/ShopRow" unique_id=1108388943]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
@@ -130,14 +136,14 @@ mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="RerollButton" type="Button" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn" unique_id=1060688289]
+[node name="RerollButton" type="Button" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopDropZone/ShopRow/MiddleShopColumn" unique_id=1060688289]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(148, 48)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 
-[node name="RerollContent" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton" unique_id=1131437255]
+[node name="RerollContent" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopDropZone/ShopRow/MiddleShopColumn/RerollButton" unique_id=1131437255]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -148,14 +154,14 @@ mouse_filter = 2
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="RerollLabel" type="Label" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=1935055043]
+[node name="RerollLabel" type="Label" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopDropZone/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=1935055043]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 22
 text = "Reroll"
 
-[node name="RerollCostLabel" type="Label" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=529388487]
+[node name="RerollCostLabel" type="Label" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopDropZone/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=529388487]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
@@ -163,7 +169,7 @@ theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 22
 text = "2"
 
-[node name="RerollBiomassIcon" type="TextureRect" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=1970297507]
+[node name="RerollBiomassIcon" type="TextureRect" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopDropZone/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=1970297507]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4

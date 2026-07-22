@@ -10,6 +10,7 @@ const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _FLOOR_TILE_FORGE := preload("res://assets/base/background/floor_tile_forge.png")
 
 @onready var _stock_row: HBoxContainer = %StockRow
+@onready var _shop_drop_zone: ShopDropZone = %ShopDropZone
 @onready var _shop_row: HBoxContainer = %ShopRow
 @onready var _middle_shop_column: VBoxContainer = %MiddleShopColumn
 @onready var _stock_shop_panel: PanelContainer = %StockShopPanel
@@ -23,6 +24,8 @@ var _shop_cards: Array[ShopOfferCard] = []
 
 func _ready() -> void:
 	_reroll_button.pressed.connect(_on_reroll_pressed)
+	_shop_drop_zone.accepted_drag_types = PackedStringArray(["weapon", "equipped_weapon"])
+	_shop_drop_zone.item_dropped.connect(_on_shop_sell_dropped)
 	_build_stock_slots()
 	_set_structure_mouse_ignore()
 	_hydrate_and_refresh()
@@ -215,6 +218,18 @@ func _on_stock_item_dropped(_slot: DropSlot, data: Dictionary) -> void:
 		return
 	if drop_type == "equipped_weapon":
 		_try_unequip_to_stock(data)
+
+
+func _on_shop_sell_dropped(_zone: ShopDropZone, data: Dictionary) -> void:
+	var drop_type := str(data.get("type", ""))
+	var sold := false
+	if drop_type == "weapon":
+		sold = GameState.try_sell_weapon_from_stock(int(data.get("stock_index", -1)))
+	elif drop_type == "equipped_weapon":
+		sold = GameState.try_sell_equipped_weapon(data.get("unit") as RosterUnitData)
+	if sold:
+		_refresh()
+		_refresh_base_hud()
 
 
 func _try_unequip_to_stock(data: Dictionary) -> void:

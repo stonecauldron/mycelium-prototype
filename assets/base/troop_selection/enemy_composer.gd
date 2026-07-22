@@ -23,9 +23,9 @@ static func difficulty_score(specs: Array[EnemyUnitSpec]) -> float:
 		match spec.tier:
 			UnitStatsData.PowerTier.WEAK:
 				score += 1.0
-			UnitStatsData.PowerTier.AVERAGE:
+			UnitStatsData.PowerTier.COMMON:
 				score += 2.0
-			UnitStatsData.PowerTier.STRONG:
+			UnitStatsData.PowerTier.UNCOMMON:
 				score += 3.0
 		if spec.is_imago:
 			score += 1.0
@@ -141,9 +141,9 @@ static func _day_5_variant_a() -> Array[EnemyUnitSpec]:
 	## Balanced three-weapon mid-run check.
 	return [
 		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.WEAK, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.AVERAGE, true),
+		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.COMMON, true),
 		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.WEAK, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.AVERAGE, true),
+		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.COMMON, true),
 		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.WEAK, false),
 	]
 
@@ -151,39 +151,39 @@ static func _day_5_variant_a() -> Array[EnemyUnitSpec]:
 static func _day_5_variant_b() -> Array[EnemyUnitSpec]:
 	## Bow-heavier pressure, fewer spears.
 	return [
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.AVERAGE, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.AVERAGE, true),
+		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.COMMON, true),
+		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.COMMON, true),
 		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.WEAK, true),
 		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.WEAK, true),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.AVERAGE, false),
+		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.COMMON, false),
 	]
 
 
 static func _day_10_variant_a() -> Array[EnemyUnitSpec]:
-	## Finale: melee-heavy STRONG imagos.
+	## Finale: melee-heavy UNCOMMON imagos.
 	return [
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.STRONG, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.STRONG, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.AVERAGE, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.STRONG, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.STRONG, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.AVERAGE, false),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.STRONG, true),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.AVERAGE, false),
+		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.UNCOMMON, true),
+		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.UNCOMMON, true),
+		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.COMMON, true),
+		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.UNCOMMON, true),
+		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.UNCOMMON, true),
+		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.COMMON, false),
+		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.UNCOMMON, true),
+		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.COMMON, false),
 	]
 
 
 static func _day_10_variant_b() -> Array[EnemyUnitSpec]:
 	## Finale: spear/bow pressure with a thinner melee front.
 	return [
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.STRONG, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.STRONG, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.AVERAGE, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.STRONG, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.STRONG, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.AVERAGE, false),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.STRONG, true),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.STRONG, true),
+		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.UNCOMMON, true),
+		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.UNCOMMON, true),
+		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.COMMON, true),
+		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.UNCOMMON, true),
+		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.UNCOMMON, true),
+		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.COMMON, false),
+		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.UNCOMMON, true),
+		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.UNCOMMON, true),
 	]
 
 
@@ -231,7 +231,7 @@ static func _band_for_day(day: int) -> Dictionary:
 				"imago_chance": 0.4,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 2.0},
-					{"tier": UnitStatsData.PowerTier.AVERAGE, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
 				],
 			}
 		5, 6:
@@ -246,7 +246,7 @@ static func _band_for_day(day: int) -> Dictionary:
 				"imago_chance": 0.5,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
-					{"tier": UnitStatsData.PowerTier.AVERAGE, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
 				],
 			}
 		7, 8:
@@ -260,8 +260,8 @@ static func _band_for_day(day: int) -> Dictionary:
 				],
 				"imago_chance": 0.6,
 				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.AVERAGE, "weight": 2.0},
-					{"tier": UnitStatsData.PowerTier.STRONG, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 2.0},
+					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
 				],
 			}
 		_:
@@ -276,8 +276,8 @@ static func _band_for_day(day: int) -> Dictionary:
 				],
 				"imago_chance": 0.7,
 				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.AVERAGE, "weight": 1.0},
-					{"tier": UnitStatsData.PowerTier.STRONG, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
 				],
 			}
 

@@ -8,7 +8,17 @@ const STOCK_SLOT_COUNT := 5
 const STARTER_SPORE_COUNT := 0
 const SPORE_SHOP_SLOT := 0
 const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
+const _UNCOMMON_SPORE_PATH := "res://assets/base/nursery/uncommon_spore.tres"
 const _RARE_SPORE_PATH := "res://assets/base/nursery/rare_spore.tres"
+const _EPIC_SPORE_PATH := "res://assets/base/nursery/epic_spore.tres"
+const _LEGENDARY_SPORE_PATH := "res://assets/base/nursery/legendary_spore.tres"
+const _SPORE_SHOP_PATHS: Array[String] = [
+	_COMMON_SPORE_PATH,
+	_UNCOMMON_SPORE_PATH,
+	_RARE_SPORE_PATH,
+	_EPIC_SPORE_PATH,
+	_LEGENDARY_SPORE_PATH,
+]
 const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/reinforced_chitin.tres",
 	"res://assets/base/nursery/fertilizers/brute_force.tres",
@@ -145,13 +155,29 @@ func is_fertilizer_shop_slot(slot_index: int) -> bool:
 
 
 func generate_spore_offer(_slot_index: int = 0) -> ShopOffer:
-	var path := _RARE_SPORE_PATH if randf() < BiomassData.RARE_SPORE_CHANCE else _COMMON_SPORE_PATH
+	var path := _pick_weighted_spore_path()
 	var spore := load(path) as SporeData
 	var offer := ShopOffer.new()
 	offer.item = spore
 	offer.cost = spore.biomass_cost if spore != null else BiomassData.COMMON_SPORE_COST
 	offer.locked = false
 	return offer
+
+
+func _pick_weighted_spore_path() -> String:
+	var weights := BiomassData.SPORE_SHOP_WEIGHTS
+	var total := 0.0
+	for i in mini(weights.size(), _SPORE_SHOP_PATHS.size()):
+		total += maxf(weights[i], 0.0)
+	if total <= 0.0:
+		return _COMMON_SPORE_PATH
+	var roll := randf() * total
+	var cumulative := 0.0
+	for i in mini(weights.size(), _SPORE_SHOP_PATHS.size()):
+		cumulative += maxf(weights[i], 0.0)
+		if roll < cumulative:
+			return _SPORE_SHOP_PATHS[i]
+	return _SPORE_SHOP_PATHS[0]
 
 
 func generate_fertilizer_offer() -> ShopOffer:
@@ -261,7 +287,7 @@ func harvest(plot_index: int) -> RosterUnitData:
 
 func _make_harvest_unit(spore: SporeData, fertilizers: Array[FertilizerData]) -> RosterUnitData:
 	var weapon := RiboforgeData.get_default_weapon()
-	var tier := UnitStatsData.PowerTier.AVERAGE
+	var tier := UnitStatsData.PowerTier.COMMON
 	if spore != null:
 		tier = spore.power_tier
 	var stats := UnitStatsData.create_for_tier(tier)

@@ -144,7 +144,7 @@ func _make_units(weapon: WeaponData, count: int) -> Array[RosterUnitData]:
 func _make_unit(weapon: WeaponData) -> RosterUnitData:
 	var unit := RosterUnitData.create(
 		UnitNames.pick(),
-		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.AVERAGE),
+		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON),
 		weapon
 	)
 	if _imago_checkbox != null and _imago_checkbox.button_pressed:

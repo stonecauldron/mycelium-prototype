@@ -1,7 +1,7 @@
 class_name UnitStatsData
 extends Resource
 
-enum PowerTier { WEAK, AVERAGE, STRONG }
+enum PowerTier { WEAK, COMMON, UNCOMMON, RARE, EPIC, LEGENDARY }
 
 const NEUTRAL_STAT := 5
 const NEW_UNIT_MIN := 3
@@ -9,8 +9,11 @@ const NEW_UNIT_MAX := 7
 
 const TIER_RANGES := {
 	PowerTier.WEAK: Vector2i(2, 4),
-	PowerTier.AVERAGE: Vector2i(4, 6),
-	PowerTier.STRONG: Vector2i(6, 8),
+	PowerTier.COMMON: Vector2i(4, 6),
+	PowerTier.UNCOMMON: Vector2i(6, 8),
+	PowerTier.RARE: Vector2i(8, 10),
+	PowerTier.EPIC: Vector2i(10, 12),
+	PowerTier.LEGENDARY: Vector2i(12, 14),
 }
 
 @export_range(1, 99, 1) var strength: int = NEUTRAL_STAT
@@ -20,7 +23,7 @@ const TIER_RANGES := {
 
 
 static func create_random(rng: RandomNumberGenerator = null) -> UnitStatsData:
-	return create_for_tier(PowerTier.AVERAGE, rng)
+	return create_for_tier(PowerTier.COMMON, rng)
 
 
 static func create_for_tier(tier: PowerTier, rng: RandomNumberGenerator = null) -> UnitStatsData:
@@ -28,7 +31,7 @@ static func create_for_tier(tier: PowerTier, rng: RandomNumberGenerator = null) 
 	if rng == null:
 		generator.randomize()
 
-	var stat_range: Vector2i = TIER_RANGES.get(tier, TIER_RANGES[PowerTier.AVERAGE])
+	var stat_range: Vector2i = TIER_RANGES.get(tier, TIER_RANGES[PowerTier.COMMON])
 	var stats := UnitStatsData.new()
 	stats.strength = generator.randi_range(stat_range.x, stat_range.y)
 	stats.dex = generator.randi_range(stat_range.x, stat_range.y)

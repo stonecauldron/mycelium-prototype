@@ -6,7 +6,7 @@ extends Resource
 ## Extra days past maturity before harvest yields an imago (0 = imago on first READY harvest).
 @export_range(0, 99, 1) var extra_days_to_imago: int = 1
 @export var biomass_cost: int = 4
-@export var power_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.AVERAGE
+@export var power_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.COMMON
 @export var tint: Color = Color.WHITE
 
 

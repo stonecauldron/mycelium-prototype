@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="4_biomass"]
 [ext_resource type="Texture2D" uid="uid://bm2sipndchcwt" path="res://assets/base/shop/padlock_locked.png" id="5_padlock"]
 [ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="6_figtree"]
+[ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="7_hourglass"]
+[ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="8_chip"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
@@ -16,7 +18,7 @@ variation_opentype = {
 }
 
 [node name="PlotTile" type="PanelContainer" unique_id=1149444614]
-custom_minimum_size = Vector2(160, 200)
+custom_minimum_size = Vector2(220, 260)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_tile")
@@ -40,8 +42,8 @@ theme_type_variation = &"SlotMargin"
 [node name="Stack" type="VBoxContainer" parent="Content/Margin" unique_id=1962374868]
 layout_mode = 2
 mouse_filter = 2
-theme_type_variation = &"TightVBox"
-alignment = 1
+theme_override_constants/separation = -12
+alignment = 2
 
 [node name="LockSpacer" type="Control" parent="Content/Margin/Stack" unique_id=1087985864]
 unique_name_in_owner = true
@@ -52,21 +54,30 @@ mouse_filter = 2
 
 [node name="PlotVisual" type="TextureRect" parent="Content/Margin/Stack" unique_id=653384849]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 0
 mouse_filter = 2
 texture = ExtResource("3_empty")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HintLabel" type="Label" parent="Content/Margin/Stack" unique_id=61749301]
+[node name="StatsRow" type="HBoxContainer" parent="Content/Margin/Stack" unique_id=61749301]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
-theme_type_variation = &"CardMetaLabel"
-text = "Plant"
-horizontal_alignment = 1
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="DaysChip" parent="Content/Margin/Stack/StatsRow" unique_id=61749302 instance=ExtResource("8_chip")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+icon = ExtResource("7_hourglass")
 
 [node name="UnlockButton" type="Button" parent="Content/Margin/Stack" unique_id=216391873]
 unique_name_in_owner = true

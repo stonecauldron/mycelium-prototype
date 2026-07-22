@@ -24,7 +24,7 @@ corner_radius_bottom_left = 18
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_spore"]
 atlas = ExtResource("3_spores")
-region = Rect2(171, 166, 171, 179)
+region = Rect2(64, 80, 376, 336)
 
 [node name="ShopOfferCard" type="Control" unique_id=1617112971]
 custom_minimum_size = Vector2(148, 176)

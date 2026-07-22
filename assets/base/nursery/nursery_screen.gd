@@ -16,7 +16,6 @@ const _SPORE_ICON := preload("res://assets/base/nursery/spores.png")
 @onready var _plot_row: HBoxContainer = %PlotRow
 @onready var _reroll_button: Button = %RerollButton
 @onready var _reroll_cost_label: Label = %RerollCostLabel
-@onready var _status_label: Label = %StatusLabel
 
 var _tiles: Array[PlotTile] = []
 var _stock_slots: Array[DropSlot] = []
@@ -206,13 +205,11 @@ func _refresh_shop_affordability() -> void:
 
 func _on_reroll_pressed() -> void:
 	if not GameState.biomass.try_spend(BiomassData.SHOP_REROLL_COST):
-		_set_status("Not enough biomass")
 		return
 	GameState.nursery.reroll_unlocked_shop_offers()
 	_rebuild_shop_cards()
 	_refresh_shop_affordability()
 	_refresh_base_hud()
-	_set_status("Shop rerolled")
 
 
 func _on_shop_lock_toggled(card: ShopOfferCard) -> void:
@@ -221,7 +218,6 @@ func _on_shop_lock_toggled(card: ShopOfferCard) -> void:
 		return
 	var locked := shop.toggle_locked(card.slot_index)
 	card.set_locked(locked)
-	_set_status("Locked offer" if locked else "Unlocked offer")
 
 
 func _on_shop_offer_clicked(card: ShopOfferCard) -> void:
@@ -237,19 +233,14 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 	var cost := int(data.get("cost", 0))
 	var slot_index := int(data.get("slot_index", -1))
 	if spore == null:
-		_set_status("Could not buy")
 		return
 	if not GameState.nursery.can_add_spore():
-		_set_status("Stock full")
 		return
 	if GameState.try_buy_spore(spore, cost):
 		_replace_bought_shop_slot(slot_index)
-		_set_status("Bought %s" % spore.display_name)
 		_rebuild_shop_cards()
 		_refresh()
 		_refresh_base_hud()
-	else:
-		_set_status("Not enough biomass")
 
 
 func _replace_bought_shop_slot(slot_index: int) -> void:
@@ -274,32 +265,21 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 	match plot.get_state():
 		NurseryPlotData.State.EMPTY:
 			if nursery.spore_stock.is_empty():
-				_set_status("No spores left")
 				return
 			if nursery.plant(tile.plot_index):
-				_set_status("Planted spore in plot %d" % (tile.plot_index + 1))
 				_refresh()
-			else:
-				_set_status("Could not plant")
 		NurseryPlotData.State.GROWING:
-			_set_status("Still growing")
+			pass
 		NurseryPlotData.State.READY:
 			if not GameState.troop.is_seeded():
 				var empty_bench: Array[RosterUnitData] = []
 				GameState.troop.seed_if_empty(empty_bench)
 			if not GameState.troop.has_free_slot():
-				_set_status("Squad and bench are full")
 				return
-			var as_imago := plot.will_harvest_as_imago()
 			var unit := nursery.harvest(tile.plot_index)
 			if unit == null:
-				_set_status("Could not harvest")
 				return
-			var destination := GameState.troop.try_add_unit(unit)
-			if as_imago:
-				_set_status("Harvested imago %s → %s" % [unit.display_name, destination])
-			else:
-				_set_status("Harvested %s → %s" % [unit.display_name, destination])
+			GameState.troop.try_add_unit(unit)
 			_refresh()
 
 
@@ -313,21 +293,14 @@ func _on_spore_dropped(tile: PlotTile, data: Dictionary) -> void:
 	if drop_type == "spore":
 		var stock_index := int(data.get("stock_index", 0))
 		if GameState.nursery.plant(tile.plot_index, stock_index):
-			_set_status("Planted spore in plot %d" % (tile.plot_index + 1))
 			_refresh()
-		else:
-			_set_status("Could not plant")
 
 
 func _try_unlock_plot() -> void:
-	var cost := GameState.nursery.next_unlock_cost()
 	if GameState.try_unlock_plot():
-		_set_status("Unlocked plot for %d biomass" % cost)
 		_build_plot_tiles()
 		_refresh()
 		_refresh_base_hud()
-	else:
-		_set_status("Not enough biomass")
 
 
 func _plant_from_shop(plot_index: int, data: Dictionary) -> void:
@@ -335,19 +308,15 @@ func _plant_from_shop(plot_index: int, data: Dictionary) -> void:
 	var cost := int(data.get("cost", 0))
 	var slot_index := int(data.get("slot_index", -1))
 	if spore == null:
-		_set_status("Could not plant")
 		return
 	GameState.ensure_nursery_seeded()
 	if not GameState.biomass.try_spend(cost):
-		_set_status("Not enough biomass")
 		return
 	if not GameState.nursery.plant_spore(plot_index, spore):
 		GameState.biomass.add(cost)
-		_set_status("Could not plant")
 		return
 	_replace_bought_shop_slot(slot_index)
 	_rebuild_shop_cards()
-	_set_status("Bought & planted in plot %d" % (plot_index + 1))
 	_refresh()
 	_refresh_base_hud()
 
@@ -356,7 +325,3 @@ func _refresh_base_hud() -> void:
 	var base := get_tree().current_scene
 	if base != null and base.has_method("_refresh_hud"):
 		base._refresh_hud()
-
-
-func _set_status(text: String) -> void:
-	_status_label.text = text

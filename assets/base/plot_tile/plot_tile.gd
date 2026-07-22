@@ -4,14 +4,14 @@ extends PanelContainer
 signal plot_pressed(tile: PlotTile)
 signal spore_dropped(tile: PlotTile, data: Dictionary)
 
-const TILE_SIZE := Vector2(160, 200)
+const TILE_SIZE := Vector2(220, 260)
 const _LOCKED_MODULATE := Color(0.55, 0.55, 0.55, 1.0)
 
 const _TEX_EMPTY := preload("res://assets/base/plot_tile/plot_empty.png")
 const _TEX_GROWTH0 := preload("res://assets/base/plot_tile/growth0.png")
 const _TEX_GROWTH1 := preload("res://assets/base/plot_tile/growth1.png")
 const _TEX_GROWTH2 := preload("res://assets/base/plot_tile/growth2.png")
-const _TEX_GROWTH4 := preload("res://assets/base/plot_tile/growth4.png")
+const _TEX_GROWTH3 := preload("res://assets/base/plot_tile/growth3.png")
 
 var plot_index: int = 0
 var is_unlockable: bool = false
@@ -21,7 +21,7 @@ var _can_plant: bool = false
 var _base_modulate: Color = Color.WHITE
 
 @onready var _plot_visual: TextureRect = %PlotVisual
-@onready var _hint_label: Label = %HintLabel
+@onready var _days_chip: StatChip = %DaysChip
 @onready var _lock_spacer: Control = %LockSpacer
 @onready var _unlock_button: Button = %UnlockButton
 @onready var _unlock_cost_label: Label = %UnlockCostLabel
@@ -78,7 +78,7 @@ func _set_children_mouse_filter_ignore(node: Node) -> void:
 
 func _refresh() -> void:
 	if is_unlockable:
-		_hint_label.visible = false
+		_days_chip.visible = false
 		_plot_visual.visible = false
 		_lock_spacer.visible = true
 		_lock_icon.visible = true
@@ -101,23 +101,26 @@ func _refresh() -> void:
 	_unlock_button.modulate = Color.WHITE
 	_lock_icon.modulate = Color.WHITE
 	_plot_visual.visible = true
-	_hint_label.visible = true
 	if _plot == null:
-		_hint_label.text = ""
+		_days_chip.visible = false
 		_apply_visual_state()
 		return
 
 	match _plot.get_state():
 		NurseryPlotData.State.EMPTY:
-			_hint_label.text = "Plant / Drop spore"
+			_days_chip.visible = false
 			modulate = Color.WHITE
 			_base_modulate = modulate
 		NurseryPlotData.State.GROWING:
-			_hint_label.text = "Growing"
+			var left := 0
+			if _plot.planted_spore != null:
+				left = _plot.planted_spore.days_to_mature - _plot.days_grown
+			_days_chip.visible = true
+			_days_chip.set_value(maxi(0, left))
 			modulate = Color.WHITE
 			_base_modulate = modulate
 		NurseryPlotData.State.READY:
-			_hint_label.text = "Ready (imago)" if _plot.will_harvest_as_imago() else "Ready to harvest"
+			_days_chip.visible = false
 			modulate = Color.WHITE
 			_base_modulate = modulate
 	_apply_visual_state()
@@ -143,7 +146,7 @@ func _texture_for_plot() -> Texture2D:
 		return _TEX_EMPTY
 	if _plot.get_state() == NurseryPlotData.State.READY:
 		if _plot.will_harvest_as_imago():
-			return _TEX_GROWTH4
+			return _TEX_GROWTH3
 		return _TEX_GROWTH2
 	var needed := 1
 	if _plot.planted_spore != null:

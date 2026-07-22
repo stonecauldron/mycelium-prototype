@@ -6,15 +6,14 @@
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="4_hourglass"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_r2fro"]
 atlas = ExtResource("3_spores")
-region = Rect2(171, 166, 171, 179)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
+region = Rect2(157, 174, 211, 167)
 
 [node name="SporeCard" type="PanelContainer" unique_id=830281552]
 custom_minimum_size = Vector2(120, 100)
-clip_contents = false
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_card")
@@ -66,5 +65,4 @@ alignment = 1
 
 [node name="DaysChip" parent="Margin/VBox/StatsRow" unique_id=716405683 instance=ExtResource("5_chip")]
 unique_name_in_owner = true
-layout_mode = 2
 icon = ExtResource("4_hourglass")

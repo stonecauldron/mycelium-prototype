@@ -1,11 +1,10 @@
-[gd_resource type="Resource" script_class="SporeData" format=3]
+[gd_resource type="Resource" script_class="SporeData" format=3 uid="uid://nnmku5cdirao"]
 
 [ext_resource type="Script" uid="uid://48gu2x5oms10" path="res://assets/base/nursery/spore_data.gd" id="1_spore"]
 
 [resource]
 script = ExtResource("1_spore")
 display_name = "Rare Spore"
-days_to_mature = 3
 biomass_cost = 8
 power_tier = 2
 tint = Color(0.45, 1, 0.55, 1)

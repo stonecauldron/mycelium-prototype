@@ -13,6 +13,6 @@ attack_style = 2
 attack_range = 1300.0
 skirmish_distance = 320.0
 knockback_force = 0.0
-biomass_cost = 10
+biomass_cost = 7
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

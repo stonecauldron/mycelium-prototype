@@ -11,6 +11,10 @@ const BASE_ATTACK_INTERVAL := 0.75
 const RANGED_ATTACK_INTERVAL := 1.15
 const HOME_ARRIVE_THRESHOLD := 4.0
 const MARCH_CATCH_UP_MULTIPLIER := 2.0
+## Ignore facing updates when the aim/travel delta is within this many pixels.
+const FACE_FLIP_DEADZONE := 12.0
+## Keep the current target unless a new one is closer by at least this much.
+const TARGET_SWITCH_SLACK := 32.0
 const LUNGE_DISTANCE := 48.0
 const LUNGE_OUT_TIME := 0.08
 const LUNGE_BACK_TIME := 0.12
@@ -211,7 +215,8 @@ func _seek_home_marching() -> void:
 		velocity.x = troop_speed * march_direction
 	else:
 		velocity.x = signf(delta_pos) * troop_speed * MARCH_CATCH_UP_MULTIPLIER
-	_face_travel_direction()
+	# Always face the march direction so catch-up overshoot doesn't flip sprites.
+	_face_march_direction()
 
 
 func _process_combat(delta: float) -> void:
@@ -295,8 +300,11 @@ func _return_home() -> void:
 	_combat_phase = CombatPhase.RETURNING
 	var home := _get_home_global()
 	velocity.x = _axis_velocity(global_position.x, home.x, get_move_speed())
-	if is_zero_approx(velocity.x):
-		_face_toward(home)
+	# Prefer facing the threat so home overshoot doesn't reverse the sprite.
+	if _target != null and is_instance_valid(_target):
+		_face_toward(_target.global_position)
+	elif is_zero_approx(velocity.x):
+		_face_march_direction()
 	else:
 		_face_travel_direction()
 
@@ -479,6 +487,7 @@ func _axis_velocity(current: float, target: float, speed: float) -> float:
 
 
 func _refresh_target() -> void:
+	var previous := _target
 	_target = null
 	var opponent: Troop = _troop.get_opponent()
 	if opponent == null or opponent.is_wiped_out():
@@ -497,7 +506,25 @@ func _refresh_target() -> void:
 	if flag != null and is_instance_valid(flag):
 		var flag_distance := global_position.distance_squared_to(flag.global_position)
 		if flag_distance < closest_distance:
+			closest_distance = flag_distance
 			_target = flag
+
+	# Sticky target: avoid left/right thrashing when two foes are nearly equidistant.
+	if (
+		previous != null
+		and is_instance_valid(previous)
+		and previous != _target
+		and (
+			(previous is Unit and (previous as Unit).current_hp > 0)
+			or previous is FlagBearer
+		)
+	):
+		var previous_distance := global_position.distance_squared_to(
+			(previous as Node2D).global_position
+		)
+		var slack_sq := TARGET_SWITCH_SLACK * TARGET_SWITCH_SLACK
+		if previous_distance <= closest_distance + slack_sq:
+			_target = previous
 
 
 func _get_ranged_aim_priority() -> Array[WeaponData.FormationLine]:
@@ -526,21 +553,23 @@ func _get_ranged_aim_priority() -> Array[WeaponData.FormationLine]:
 
 
 func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
+	var attack_range := weapon.attack_range if weapon != null else 0.0
 	for formation_line in _get_ranged_aim_priority():
 		var candidates: Array[Unit] = []
-		for unit in opponent.get_living_units():
-			if unit.weapon != null and unit.weapon.formation_line == formation_line:
-				candidates.append(unit)
-		if candidates.is_empty():
-			continue
-
-		var total_weight := 0.0
 		var weights: Array[float] = []
-		for unit in candidates:
+		var total_weight := 0.0
+		for unit in opponent.get_living_units():
+			if unit.weapon == null or unit.weapon.formation_line != formation_line:
+				continue
 			var distance := global_position.distance_to(unit.global_position)
+			if distance > attack_range:
+				continue
+			candidates.append(unit)
 			var weight := 1.0 / maxf(distance, 1.0)
 			weights.append(weight)
 			total_weight += weight
+		if candidates.is_empty():
+			continue
 
 		var roll := randf() * total_weight
 		var cumulative := 0.0
@@ -661,10 +690,25 @@ func _on_hp_chip_health_changed(current: int, _maximum: int) -> void:
 func _face_toward(point: Vector2) -> void:
 	if _visual == null:
 		return
-	_visual.scale.x = -1.0 if point.x < global_position.x else 1.0
+	var delta_x := point.x - global_position.x
+	if absf(delta_x) < FACE_FLIP_DEADZONE:
+		return
+	_set_facing(signf(delta_x))
 
 
 func _face_travel_direction() -> void:
 	if _visual == null or is_zero_approx(velocity.x):
 		return
-	_visual.scale.x = signf(velocity.x)
+	_set_facing(signf(velocity.x))
+
+
+func _face_march_direction() -> void:
+	if _visual == null or _troop == null:
+		return
+	_set_facing(-1.0 if _troop.is_enemy else 1.0)
+
+
+func _set_facing(direction: float) -> void:
+	if is_zero_approx(direction) or _visual == null:
+		return
+	_visual.scale.x = direction

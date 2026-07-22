@@ -16,10 +16,23 @@ const TIER_RANGES := {
 	PowerTier.LEGENDARY: Vector2i(12, 14),
 }
 
+const TIER_TINTS := {
+	PowerTier.WEAK: Color(0.82, 0.82, 0.86, 1.0),
+	PowerTier.COMMON: Color.WHITE,
+	PowerTier.UNCOMMON: Color(0.78, 0.92, 0.8, 1.0),
+	PowerTier.RARE: Color(0.78, 0.84, 0.95, 1.0),
+	PowerTier.EPIC: Color(0.88, 0.78, 0.95, 1.0),
+	PowerTier.LEGENDARY: Color(0.95, 0.9, 0.78, 1.0),
+}
+
 @export_range(1, 99, 1) var strength: int = NEUTRAL_STAT
 @export_range(1, 99, 1) var dex: int = NEUTRAL_STAT
 @export_range(1, 99, 1) var con: int = NEUTRAL_STAT
 @export_range(1, 99, 1) var spd: int = NEUTRAL_STAT
+
+
+static func tint_for_tier(tier: PowerTier) -> Color:
+	return TIER_TINTS.get(tier, TIER_TINTS[PowerTier.COMMON])
 
 
 static func create_random(rng: RandomNumberGenerator = null) -> UnitStatsData:

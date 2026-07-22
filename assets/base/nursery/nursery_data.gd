@@ -294,7 +294,7 @@ func _make_harvest_unit(spore: SporeData, fertilizers: Array[FertilizerData]) ->
 	for fertilizer in fertilizers:
 		if fertilizer != null:
 			fertilizer.apply_to(stats)
-	return RosterUnitData.create(UnitNames.pick(), stats, weapon)
+	return RosterUnitData.create(UnitNames.pick(), stats, weapon, null, tier)
 
 
 func _ensure_plot_count() -> void:

@@ -145,7 +145,9 @@ func _make_unit(weapon: WeaponData) -> RosterUnitData:
 	var unit := RosterUnitData.create(
 		UnitNames.pick(),
 		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON),
-		weapon
+		weapon,
+		null,
+		UnitStatsData.PowerTier.COMMON
 	)
 	if _imago_checkbox != null and _imago_checkbox.button_pressed:
 		unit.promote_to_imago()

@@ -8,4 +8,3 @@ display_name = "Epic Spore"
 days_to_mature = 2
 biomass_cost = 32
 power_tier = 4
-tint = Color(0.75, 0.45, 1, 1)

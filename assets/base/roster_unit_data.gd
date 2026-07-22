@@ -10,6 +10,7 @@ const _IMAGO_STRAIN := preload("res://assets/units/imago_generalist/imago_genera
 @export var stats: UnitStatsData
 @export var weapon: WeaponData
 @export var strain: UnitStrain
+@export var power_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.COMMON
 @export var days_alive: int = 0
 @export var is_imago: bool = false
 
@@ -51,6 +52,7 @@ func mount_portrait(host: Control, portrait_scale: float = 0.55) -> UnitAppearan
 		return null
 	host.add_child(appearance)
 	appearance.scale = Vector2(portrait_scale, portrait_scale)
+	appearance.modulate = UnitStatsData.tint_for_tier(power_tier)
 	_ensure_portrait_host_sync(host)
 	_sync_portrait_in_host(host)
 	appearance.mount_weapon_appearance(weapon)
@@ -82,13 +84,15 @@ static func create(
 	unit_name: String,
 	unit_stats: UnitStatsData,
 	unit_weapon: WeaponData,
-	unit_strain: UnitStrain = null
+	unit_strain: UnitStrain = null,
+	unit_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.COMMON
 ) -> RosterUnitData:
 	var data := RosterUnitData.new()
 	data.display_name = unit_name
 	data.stats = unit_stats
 	data.weapon = unit_weapon
 	data.strain = unit_strain if unit_strain != null else _DEFAULT_STRAIN
+	data.power_tier = unit_tier
 	data.days_alive = 0
 	data.is_imago = false
 	return data

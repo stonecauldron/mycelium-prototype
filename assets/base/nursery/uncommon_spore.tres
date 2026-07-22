@@ -8,4 +8,3 @@ display_name = "Uncommon Spore"
 days_to_mature = 2
 biomass_cost = 8
 power_tier = 2
-tint = Color(0.45, 1, 0.55, 1)

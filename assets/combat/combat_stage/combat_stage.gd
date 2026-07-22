@@ -153,7 +153,7 @@ func _spawn_unit(
 		unit.stats = roster_data.stats.duplicate(true)
 	if roster_data.weapon != null:
 		unit.weapon = roster_data.weapon
-	unit.body_color = body_color
+	unit.body_color = body_color * UnitStatsData.tint_for_tier(roster_data.power_tier)
 	unit.squad_index = squad_index
 	unit.died.connect(_on_unit_died.bind(is_player))
 	units_root.add_child(unit)

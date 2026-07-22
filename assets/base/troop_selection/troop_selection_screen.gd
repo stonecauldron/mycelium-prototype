@@ -104,7 +104,7 @@ func _make_unit(
 	tier: UnitStatsData.PowerTier,
 	weapon: WeaponData
 ) -> RosterUnitData:
-	return RosterUnitData.create(unit_name, UnitStatsData.create_for_tier(tier), weapon)
+	return RosterUnitData.create(unit_name, UnitStatsData.create_for_tier(tier), weapon, null, tier)
 
 
 func _row(source: String) -> Array:

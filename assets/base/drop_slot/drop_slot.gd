@@ -15,8 +15,16 @@ var occupied_unit: Resource
 
 @onready var _placeholder: Label = %Placeholder
 @onready var _card_host: CenterContainer = %CardHost
+@onready var _floor_tile: TextureRect = %FloorTile
 
 var _base_modulate: Color = Color.WHITE
+
+
+func set_floor_texture(texture: Texture2D) -> void:
+	if _floor_tile == null:
+		_floor_tile = %FloorTile
+	if _floor_tile != null:
+		_floor_tile.texture = texture
 
 
 func _ready() -> void:

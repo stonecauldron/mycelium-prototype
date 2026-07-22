@@ -5,8 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="3_biomass"]
 [ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="4_figtree"]
 [ext_resource type="Texture2D" uid="uid://cnxfhca438svu" path="res://assets/base/background/background.png" id="5_bg_far"]
+[ext_resource type="Texture2D" uid="uid://cn2qum7e6bvx3" path="res://assets/base/background/background_forge.png" id="5_bg_far_forge"]
 [ext_resource type="Texture2D" uid="uid://brnicc8ghj3md" path="res://assets/base/background/upper_foreground.png" id="9_bg_upper_fg"]
 [ext_resource type="Texture2D" uid="uid://c00gqs4n3sm1c" path="res://assets/base/background/lower_foreground.png" id="10_bg_lower_fg"]
+[ext_resource type="Texture2D" uid="uid://c6ei56jr3jvom" path="res://assets/base/background/lower_foreground_forge.png" id="10_bg_lower_fg_forge"]
 [ext_resource type="PackedScene" uid="uid://c4swjtkoverfp" path="res://assets/base/nursery/nursery_screen.tscn" id="11_nursery"]
 [ext_resource type="PackedScene" uid="uid://ctgmgo4sqa1g7" path="res://assets/base/riboforge/riboforge_screen.tscn" id="12_riboforge"]
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
@@ -41,29 +43,6 @@ bg_color = Color(0.086, 0.122, 0.118, 0.68)
 [node name="Base" type="Node2D" unique_id=65120356]
 script = ExtResource("1_base")
 
-[node name="BackdropLayer" type="CanvasLayer" parent="." unique_id=885466703]
-layer = -10
-
-[node name="Backdrop" type="Control" parent="BackdropLayer" unique_id=1113877553]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="FarLayer" type="TextureRect" parent="BackdropLayer/Backdrop" unique_id=811087870]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("5_bg_far")
-expand_mode = 1
-
 [node name="World" type="Node2D" parent="." unique_id=48472731]
 
 [node name="BaseCamera" type="Camera2D" parent="World" unique_id=509771903]
@@ -81,6 +60,17 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
+
+[node name="FarBackgroundLayer" type="TextureRect" parent="World/Zones/NurseryZone/Host" unique_id=1090787678]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_bg_far")
+expand_mode = 1
 
 [node name="UpperForegroundLayer" type="TextureRect" parent="World/Zones/NurseryZone/Host" unique_id=1090787679]
 layout_mode = 1
@@ -121,6 +111,17 @@ anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 
+[node name="FarBackgroundLayer" type="TextureRect" parent="World/Zones/RiboforgeZone/Host" unique_id=1386009893]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_bg_far_forge")
+expand_mode = 1
+
 [node name="UpperForegroundLayer" type="TextureRect" parent="World/Zones/RiboforgeZone/Host" unique_id=1386009894]
 layout_mode = 1
 anchors_preset = 15
@@ -146,7 +147,7 @@ offset_bottom = 89.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("10_bg_lower_fg")
+texture = ExtResource("10_bg_lower_fg_forge")
 expand_mode = 1
 
 [node name="ColonyZone" type="Node2D" parent="World/Zones" unique_id=688036510]
@@ -159,6 +160,17 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
+
+[node name="FarBackgroundLayer" type="TextureRect" parent="World/Zones/ColonyZone/Host" unique_id=1500394443]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_bg_far")
+expand_mode = 1
 
 [node name="UpperForegroundLayer" type="TextureRect" parent="World/Zones/ColonyZone/Host" unique_id=1500394444]
 layout_mode = 1

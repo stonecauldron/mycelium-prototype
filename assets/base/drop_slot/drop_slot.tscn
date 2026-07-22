@@ -24,6 +24,7 @@ size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="FloorTile" type="TextureRect" parent="Margin/Stack" unique_id=363344841]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05

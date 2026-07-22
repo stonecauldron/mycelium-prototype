@@ -7,6 +7,7 @@ const _WEAPON_CARD_SCENE := preload("res://assets/base/riboforge/weapon_card.tsc
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
+const _FLOOR_TILE_FORGE := preload("res://assets/base/background/floor_tile_forge.png")
 
 @onready var _stock_row: HBoxContainer = %StockRow
 @onready var _shop_row: HBoxContainer = %ShopRow
@@ -63,6 +64,7 @@ func _build_stock_slots() -> void:
 		slot.accepted_drag_types = PackedStringArray(["shop_weapon", "equipped_weapon"])
 		slot.item_dropped.connect(_on_stock_item_dropped)
 		_stock_row.add_child(slot)
+		slot.set_floor_texture(_FLOOR_TILE_FORGE)
 		_stock_slots.append(slot)
 
 

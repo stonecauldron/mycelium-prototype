@@ -2,8 +2,8 @@
 
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://b8a0bnh5m5pjd" path="res://assets/base/riboforge/riboforge_screen.gd" id="2_screen"]
-[ext_resource type="Texture2D" uid="uid://clt2ubxc7lo1c" path="res://assets/base/background/upper_lane.png" id="3_upper_lane"]
-[ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="4_lower_lane"]
+[ext_resource type="Texture2D" uid="uid://b3cwr0j80yur4" path="res://assets/base/background/upper_lane_forge.png" id="3_upper_lane"]
+[ext_resource type="Texture2D" uid="uid://xovemgo41tww" path="res://assets/base/background/lower_lane_forge.png" id="4_lower_lane"]
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="5_biomass"]
 [ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="6_figtree"]
 

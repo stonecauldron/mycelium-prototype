@@ -168,7 +168,8 @@ func _mount_appearance() -> void:
 
 	var strain: UnitStrain = roster_data.strain if roster_data != null else null
 	if strain == null:
-		strain = preload("res://assets/units/capling/capling_strain.tres") as UnitStrain
+		# load() (not preload): breaks Unit↔strain appearance compile cycle on export.
+		strain = load("res://assets/units/capling/capling_strain.tres") as UnitStrain
 	if strain == null:
 		return
 

@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="UnitStrain" format=3 uid="uid://ciow0sv16a24k"]
 
-[ext_resource type="Script" uid="uid://bftxo0b154lgi" path="res://assets/units/unit_strain.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cunitstrain00001" path="res://assets/units/unit_strain.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://ciowtprn6kf4k" path="res://assets/units/imago_generalist/imago_generalist_appearance.tscn" id="2_scene"]
 
 [resource]

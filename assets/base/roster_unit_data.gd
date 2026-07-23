@@ -3,8 +3,8 @@ extends Resource
 
 const DAYS_TO_IMAGO := 2
 const IMAGO_STAT_BONUS := 2
-const _DEFAULT_STRAIN := preload("res://assets/units/capling/capling_strain.tres")
-const _IMAGO_STRAIN := preload("res://assets/units/imago_generalist/imago_generalist_strain.tres")
+const _DEFAULT_STRAIN_PATH := "res://assets/units/capling/capling_strain.tres"
+const _IMAGO_STRAIN_PATH := "res://assets/units/imago_generalist/imago_generalist_strain.tres"
 
 @export var display_name: String = "Unit"
 @export var stats: UnitStatsData
@@ -40,7 +40,7 @@ func promote_to_imago(imago_strain: UnitStrain = null) -> bool:
 		stats.con = clampi(stats.con + IMAGO_STAT_BONUS, 1, 99)
 		stats.spd = clampi(stats.spd + IMAGO_STAT_BONUS, 1, 99)
 	is_imago = true
-	strain = imago_strain if imago_strain != null else _IMAGO_STRAIN
+	strain = imago_strain if imago_strain != null else _imago_strain()
 	return true
 
 
@@ -91,8 +91,17 @@ static func create(
 	data.display_name = unit_name
 	data.stats = unit_stats
 	data.weapon = unit_weapon
-	data.strain = unit_strain if unit_strain != null else _DEFAULT_STRAIN
+	data.strain = unit_strain if unit_strain != null else _default_strain()
 	data.power_tier = unit_tier
 	data.days_alive = 0
 	data.is_imago = false
 	return data
+
+
+static func _default_strain() -> UnitStrain:
+	# load() (not preload): strain.tres → appearance → Unit would cycle at compile time.
+	return load(_DEFAULT_STRAIN_PATH) as UnitStrain
+
+
+static func _imago_strain() -> UnitStrain:
+	return load(_IMAGO_STRAIN_PATH) as UnitStrain

@@ -15,7 +15,7 @@ func receive_hit(
 	damage: int,
 	from_global: Vector2 = Vector2.ZERO,
 	knockback_force: float = 0.0,
-	killer: Unit = null
+	killer: Node = null
 ) -> void:
 	var combatant := get_combatant()
 	if combatant != null and combatant.has_method("take_damage"):

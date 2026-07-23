@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GameState="*res://assets/autoload/game_state.gd"
 SceneTransition="*res://assets/autoload/scene_transition.gd"
+Screenshot="*res://assets/autoload/screenshot.gd"
 
 [display]
 

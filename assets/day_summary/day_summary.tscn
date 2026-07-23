@@ -21,7 +21,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.32, 0.32, 0.32, 1)
+color = Color(0.24705882, 0.3529412, 0.34901962, 1)
 
 [node name="RootMargin" type="MarginContainer" parent="." unique_id=1270622962]
 layout_mode = 1

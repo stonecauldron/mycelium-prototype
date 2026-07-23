@@ -22,12 +22,22 @@ const THROW_JUMP_VELOCITY := -520.0
 const THROW_RELEASE_DELAY := 0.22
 const THROW_RECOVERY_TIME := 0.28
 const THROW_MAX_DURATION := 1.4
+const THROW_WINDUP_DEG := -15.0
+const THROW_STRIKE_DEG := 95.0
+const THROW_WINDUP_TIME := 0.18
+const THROW_STRIKE_TIME := 0.1
+const THROW_SETTLE_TIME := 0.2
 const THROW_AIM_JITTER_X := 40.0
 const THROW_AIM_JITTER_Y := 20.0
 const THROW_ORIGIN_HEIGHT := -48.0
 const RANGED_RELEASE_DELAY := 0.22
 const RANGED_RECOVERY_TIME := 0.42
 const RANGED_ORIGIN_HEIGHT := -40.0
+const BOW_AIM_LEAN_DEG := 36.0
+const BOW_AIM_RELEASE_KICK_DEG := 14.0
+const BOW_AIM_LEAN_TIME := 0.16
+const BOW_AIM_RELEASE_TIME := 0.08
+const BOW_AIM_SETTLE_TIME := 0.2
 const KNOCKBACK_UP_RATIO := 0.5
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
 const HURT_FLASH_TIME := 0.12
@@ -43,10 +53,16 @@ const SHAKE_ON_HIT := 0.1
 const SHAKE_ON_DEATH := 0.22
 const SPORE_COLOR := Color("b7b08d")
 const ENEMY_SPORE_COLOR := Color(0.85, 0.28, 0.18, 1.0)
+const CALLOUT_HEIGHT := -140.0
+const SWING_WINDUP_DEG := -120.0
+const SWING_STRIKE_DEG := 120.0
+const SWING_OUT_TIME := 0.14
+const SWING_BACK_TIME := 0.18
 
 const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_number.tscn")
 const _HIT_BURST_SCENE := preload("res://assets/vfx/hit_burst/hit_burst.tscn")
 const _SPORE_CLOUD_SCENE := preload("res://assets/vfx/spore_cloud/spore_cloud.tscn")
+const _COMBAT_CALLOUT_SCENE := preload("res://assets/vfx/combat_callout/combat_callout.tscn")
 const _SPEAR_PROJECTILE_SCENE := preload("res://assets/combat/spear_projectile/spear_projectile.tscn")
 const _ARROW_PROJECTILE_SCENE := preload("res://assets/combat/arrow_projectile/arrow_projectile.tscn")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
@@ -66,18 +82,23 @@ const COLLISION_ENEMY_UNITS := 16
 var current_hp: int
 var process_tiebreak: int = 0
 var roster_data: RosterUnitData = null
+var kill_streak: int = 0
 var _attack_timer: float = 0.0
 var _target: Node2D
 var _troop: Troop
 var _combat_phase: CombatPhase = CombatPhase.READY
 var _hurt_tween: Tween
 var _squash_tween: Tween
+var _swing_tween: Tween
+var _flip_tween: Tween
 var _in_knockback: bool = false
 var _knockback_left_ground: bool = false
 var _throw_released: bool = false
 var _throw_landed: bool = false
 var _throw_left_ground: bool = false
 var _throw_timer: float = 0.0
+var _ranged_aim: Vector2 = Vector2.ZERO
+var _bow_lean_angle: float = 0.0
 var _dying: bool = false
 var _last_hit_from: Vector2 = Vector2.ZERO
 
@@ -113,6 +134,7 @@ func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:
 	_combat_phase = CombatPhase.READY
 	_in_knockback = false
 	_knockback_left_ground = false
+	kill_streak = 0
 	_apply_body_color()
 
 
@@ -349,6 +371,7 @@ func _start_attack() -> void:
 		direction = 1.0
 
 	var forward := Vector2(direction * LUNGE_DISTANCE, 0.0)
+	_play_melee_swing()
 	var tween := create_tween()
 	tween.tween_property(_visual, "position", forward, LUNGE_OUT_TIME)
 	tween.tween_callback(_hitbox.disable)
@@ -362,6 +385,7 @@ func _start_throw_attack() -> void:
 	_throw_left_ground = false
 	_throw_timer = 0.0
 	velocity.y = THROW_JUMP_VELOCITY
+	_play_throw_body_swing()
 
 
 func _process_throw_attack(delta: float) -> void:
@@ -375,6 +399,8 @@ func _process_throw_attack(delta: float) -> void:
 	elif _throw_released and _throw_left_ground and not _throw_landed:
 		_throw_landed = true
 		_throw_timer = 0.0
+		_set_held_weapon_visible(true)
+		_reset_throw_flip()
 
 	if _throw_landed and _throw_timer >= THROW_RECOVERY_TIME:
 		_finish_attack()
@@ -408,11 +434,14 @@ func _spawn_spear_projectile() -> void:
 		weapon.knockback_force,
 		self
 	)
+	_set_held_weapon_visible(false)
 
 
 func _start_ranged_attack() -> void:
 	_throw_released = false
 	_throw_timer = 0.0
+	_ranged_aim = _pick_ranged_aim_with_jitter()
+	_play_bow_aim_lean(_ranged_aim)
 
 
 func _process_ranged_attack(delta: float) -> void:
@@ -420,6 +449,7 @@ func _process_ranged_attack(delta: float) -> void:
 	if not _throw_released and _throw_timer >= RANGED_RELEASE_DELAY:
 		_throw_released = true
 		_spawn_arrow_projectile()
+		_release_bow_aim_lean()
 		_throw_timer = 0.0
 		return
 
@@ -427,25 +457,34 @@ func _process_ranged_attack(delta: float) -> void:
 		_finish_attack()
 
 
-func _spawn_arrow_projectile() -> void:
-	var world := _get_world_node()
-	if world == null:
-		return
-
-	var opponent := _troop.get_opponent()
+func _pick_ranged_aim_with_jitter() -> Vector2:
+	var opponent := _troop.get_opponent() if _troop != null else null
 	if opponent == null:
-		return
-
+		var face := signf(_visual.scale.x) if _visual != null else 1.0
+		if face == 0.0:
+			face = 1.0
+		return global_position + Vector2(face * 240.0, -80.0)
 	var aim := _pick_ranged_aim_target(opponent)
 	aim += Vector2(
 		randf_range(-THROW_AIM_JITTER_X, THROW_AIM_JITTER_X),
 		randf_range(-THROW_AIM_JITTER_Y, THROW_AIM_JITTER_Y)
 	)
+	return aim
+
+
+func _spawn_arrow_projectile() -> void:
+	var world := _get_world_node()
+	if world == null:
+		return
+
+	var aim := _ranged_aim
+	if aim == Vector2.ZERO:
+		aim = _pick_ranged_aim_with_jitter()
 
 	var arrow: ArrowProjectile = _ARROW_PROJECTILE_SCENE.instantiate()
 	world.add_child(arrow)
 	arrow.launch(
-		global_position + Vector2(0.0, RANGED_ORIGIN_HEIGHT),
+		_get_ranged_spawn_global(),
 		aim,
 		_get_attack_damage(),
 		weapon.knockback_force,
@@ -453,9 +492,62 @@ func _spawn_arrow_projectile() -> void:
 	)
 
 
+func _get_ranged_spawn_global() -> Vector2:
+	var mount := _get_weapon_mount()
+	if mount != null:
+		return mount.global_position
+	return global_position + Vector2(0.0, RANGED_ORIGIN_HEIGHT)
+
+
+func _play_bow_aim_lean(aim: Vector2) -> void:
+	if _appearance == null or _visual == null:
+		return
+	if _flip_tween:
+		_flip_tween.kill()
+	# Windup: lean into the lobbed shot (local -angle = upward).
+	_bow_lean_angle = deg_to_rad(-BOW_AIM_LEAN_DEG)
+	var from_global := _get_ranged_spawn_global()
+	var local_dir := _visual.to_local(aim) - _visual.to_local(from_global)
+	if local_dir.length_squared() > 0.0001:
+		var aim_lean := clampf(local_dir.angle(), deg_to_rad(-55.0), deg_to_rad(10.0))
+		_bow_lean_angle = lerpf(_bow_lean_angle, aim_lean, 0.35)
+	_appearance.rotation = 0.0
+	_flip_tween = create_tween()
+	_flip_tween.tween_property(
+		_appearance,
+		"rotation",
+		_bow_lean_angle,
+		BOW_AIM_LEAN_TIME
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+func _release_bow_aim_lean() -> void:
+	if _appearance == null:
+		return
+	if _flip_tween:
+		_flip_tween.kill()
+	var lean_sign := -1.0 if _bow_lean_angle <= 0.0 else 1.0
+	var release_angle := _bow_lean_angle + lean_sign * deg_to_rad(BOW_AIM_RELEASE_KICK_DEG)
+	_flip_tween = create_tween()
+	_flip_tween.tween_property(
+		_appearance,
+		"rotation",
+		release_angle,
+		BOW_AIM_RELEASE_TIME
+	).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	_flip_tween.tween_property(_appearance, "rotation", 0.0, BOW_AIM_SETTLE_TIME)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_flip_tween.tween_callback(func() -> void:
+		_flip_tween = null
+	)
+
+
 func _finish_attack() -> void:
 	_hitbox.disable()
 	_visual.position = Vector2.ZERO
+	_reset_throw_flip()
+	if weapon != null and weapon.attack_style == WeaponData.AttackStyle.SPEAR_THROW:
+		_set_held_weapon_visible(true)
 	_throw_released = false
 	_throw_landed = false
 	_throw_left_ground = false
@@ -472,6 +564,8 @@ func _cancel_attack() -> void:
 		return
 	_hitbox.disable()
 	_visual.position = Vector2.ZERO
+	_reset_weapon_swing()
+	_reset_throw_flip()
 	_throw_released = false
 	_throw_landed = false
 	_throw_left_ground = false
@@ -609,7 +703,8 @@ func _get_attack_damage() -> int:
 func take_damage(
 	amount: int,
 	knockback_from: Vector2 = Vector2.ZERO,
-	knockback_force: float = 0.0
+	knockback_force: float = 0.0,
+	killer: Unit = null
 ) -> void:
 	if _dying:
 		return
@@ -627,19 +722,69 @@ func take_damage(
 	current_hp = maxi(current_hp - amount, 0)
 	health_changed.emit(current_hp, stats.get_max_hp())
 	if current_hp <= 0:
-		_die(knockback_from, knockback_force * knockback_mult)
+		_die(knockback_from, knockback_force * knockback_mult, killer)
 		return
 	if knockback_from != Vector2.ZERO and knockback_force > 0.0:
 		_apply_knockback(knockback_from, knockback_force * knockback_mult)
 
 
+func register_kill() -> void:
+	if _dying or current_hp <= 0 or not is_inside_tree():
+		return
+	kill_streak += 1
+	# Enemy streaks never show — player killers only.
+	if _troop == null or _troop.is_enemy:
+		return
+	if kill_streak < 2:
+		return
+	var title := _halo_title_for_streak(kill_streak)
+	if title.is_empty():
+		return
+	var unit_name := "Unit"
+	if roster_data != null and not roster_data.display_name.is_empty():
+		unit_name = roster_data.display_name
+	_spawn_combat_callout(
+		"%s: %s" % [unit_name, title],
+		CombatCallout.Kind.STREAK
+	)
+
+
+func _halo_title_for_streak(streak: int) -> String:
+	match streak:
+		2:
+			return "Double Kill"
+		3:
+			return "Triple Kill"
+		4:
+			return "Overkill"
+		5:
+			return "Killtacular"
+		6:
+			return "Killtrocity"
+		7:
+			return "Killimanjaro"
+		8:
+			return "Killtastrophe"
+		9:
+			return "Killpocalypse"
+		_:
+			if streak >= 10:
+				return "Killionaire"
+			return ""
+
+
 func _die(
 	knockback_from: Vector2 = Vector2.ZERO,
-	knockback_force: float = 0.0
+	knockback_force: float = 0.0,
+	killer: Unit = null
 ) -> void:
 	if _dying:
 		return
 	_dying = true
+	kill_streak = 0
+	if killer != null and is_instance_valid(killer):
+		killer.register_kill()
+
 	died.emit(self)
 	if _troop != null:
 		_troop.call_deferred("refresh_squad_indices")
@@ -656,6 +801,8 @@ func _die(
 		_hp_chip = null
 
 	_add_camera_shake(SHAKE_ON_DEATH)
+	if _troop != null and not _troop.is_enemy:
+		_spawn_fallen_callout()
 
 	if _hurt_tween:
 		_hurt_tween.kill()
@@ -770,6 +917,100 @@ func _spawn_damage_number(amount: int) -> void:
 	world.add_child(number)
 	number.global_position = global_position + Vector2(0, -72)
 	number.display(amount)
+
+
+func _spawn_fallen_callout() -> void:
+	var unit_name := "Unit"
+	if roster_data != null and not roster_data.display_name.is_empty():
+		unit_name = roster_data.display_name
+	_spawn_combat_callout("%s has fallen" % unit_name, CombatCallout.Kind.FALLEN)
+
+
+func _spawn_combat_callout(text: String, kind: CombatCallout.Kind) -> void:
+	var world := _get_world_node()
+	if world == null:
+		return
+	var callout: CombatCallout = _COMBAT_CALLOUT_SCENE.instantiate()
+	world.add_child(callout)
+	callout.global_position = global_position + Vector2(0.0, CALLOUT_HEIGHT)
+	callout.display(text, kind)
+
+
+func _play_melee_swing() -> void:
+	var mount := _get_weapon_mount()
+	if mount == null:
+		return
+	if _swing_tween:
+		_swing_tween.kill()
+	mount.rotation = deg_to_rad(SWING_WINDUP_DEG)
+	_swing_tween = create_tween()
+	_swing_tween.tween_property(
+		mount,
+		"rotation",
+		deg_to_rad(SWING_STRIKE_DEG),
+		SWING_OUT_TIME
+	).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	_swing_tween.tween_property(mount, "rotation", 0.0, SWING_BACK_TIME)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+func _reset_weapon_swing() -> void:
+	if _swing_tween:
+		_swing_tween.kill()
+		_swing_tween = null
+	var mount := _get_weapon_mount()
+	if mount != null:
+		mount.rotation = 0.0
+
+
+func _play_throw_body_swing() -> void:
+	if _appearance == null:
+		return
+	if _flip_tween:
+		_flip_tween.kill()
+	# Rotate the appearance under `_visual` so `_visual.scale.x` facing mirrors the lean.
+	_visual.rotation = 0.0
+	_appearance.rotation = 0.0
+	_flip_tween = create_tween()
+	_flip_tween.tween_property(
+		_appearance,
+		"rotation",
+		deg_to_rad(THROW_WINDUP_DEG),
+		THROW_WINDUP_TIME
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_flip_tween.tween_property(
+		_appearance,
+		"rotation",
+		deg_to_rad(THROW_STRIKE_DEG),
+		THROW_STRIKE_TIME
+	).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	_flip_tween.tween_property(_appearance, "rotation", 0.0, THROW_SETTLE_TIME)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_flip_tween.tween_callback(func() -> void:
+		_flip_tween = null
+	)
+
+
+func _reset_throw_flip() -> void:
+	if _flip_tween:
+		_flip_tween.kill()
+		_flip_tween = null
+	if _visual != null:
+		_visual.rotation = 0.0
+	if _appearance != null:
+		_appearance.rotation = 0.0
+
+
+func _get_weapon_mount() -> Node2D:
+	if _appearance == null:
+		return null
+	return _appearance.weapon_mount
+
+
+func _set_held_weapon_visible(is_visible: bool) -> void:
+	var mount := _get_weapon_mount()
+	if mount != null:
+		mount.visible = is_visible
 
 
 func _spawn_hit_burst() -> void:

@@ -129,7 +129,8 @@ func reset_combat_state() -> void:
 func take_damage(
 	amount: int,
 	knockback_from: Vector2 = Vector2.ZERO,
-	knockback_force: float = 0.0
+	knockback_force: float = 0.0,
+	_killer: Unit = null
 ) -> void:
 	_hits_taken += 1
 	_play_hurt_highlight()

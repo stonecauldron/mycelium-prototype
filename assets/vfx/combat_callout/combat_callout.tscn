@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://combatcallout01"]
+
+[ext_resource type="Script" path="res://assets/vfx/combat_callout/combat_callout.gd" id="1_script"]
+[ext_resource type="Theme" path="res://assets/themes/default.tres" id="2_theme"]
+
+[node name="CombatCallout" type="Node2D"]
+z_index = 25
+script = ExtResource("1_script")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -160.0
+offset_top = -18.0
+offset_right = 160.0
+offset_bottom = 18.0
+theme = ExtResource("2_theme")
+theme_type_variation = &"DamageLabel"
+text = "Callout"
+horizontal_alignment = 1
+vertical_alignment = 1

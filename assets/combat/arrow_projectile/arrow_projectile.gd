@@ -121,7 +121,8 @@ func _resolve_hit() -> void:
 	_spent = true
 	set_deferred("monitoring", false)
 	var from_pos := owner_unit.global_position if owner_unit != null else global_position
-	chosen.receive_hit(damage, from_pos, knockback_force)
+	var killer: Unit = owner_unit if owner_unit != null and is_instance_valid(owner_unit) else null
+	chosen.receive_hit(damage, from_pos, knockback_force, killer)
 	queue_free()
 
 

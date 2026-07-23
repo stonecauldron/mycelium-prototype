@@ -263,6 +263,7 @@ func _clear_world_vfx() -> void:
 	for child in world.get_children():
 		if (
 			child is DamageNumber
+			or child is CombatCallout
 			or child is SpearProjectile
 			or child is ArrowProjectile
 			or child is HitBurst

@@ -80,7 +80,8 @@ func _apply_hit(hurtbox: HurtboxComponent) -> void:
 	if target == null or _hit_combatants.has(target):
 		return
 	_hit_combatants[target] = true
-	hurtbox.receive_hit(damage, owner_unit.global_position, knockback_force)
+	var from_pos := owner_unit.global_position if owner_unit != null else global_position
+	hurtbox.receive_hit(damage, from_pos, knockback_force, owner_unit)
 
 
 func _get_valid_target(hurtbox: HurtboxComponent) -> Node:

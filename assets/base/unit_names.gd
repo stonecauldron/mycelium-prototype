@@ -8,7 +8,6 @@ const NAMES: Array[String] = [
 	"Mendel",
 	"Pasteur",
 	"Wallace",
-	"Hooker",
 	"Huxley",
 	"Lamarck",
 	"Cuvier",
@@ -43,6 +42,7 @@ const NAMES: Array[String] = [
 	"Theophrastus",
 	"Vesalius",
 	"Harvey",
+	"Dawkins",
 ]
 
 

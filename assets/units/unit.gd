@@ -15,6 +15,8 @@ const MARCH_CATCH_UP_MULTIPLIER := 2.0
 const FACE_FLIP_DEADZONE := 12.0
 ## Keep the current target unless a new one is closer by at least this much.
 const TARGET_SWITCH_SLACK := 32.0
+## Skirmish chase/retreat hysteresis so units don't oscillate on range edges.
+const SKIRMISH_RANGE_DEADZONE := 48.0
 const LUNGE_DISTANCE := 48.0
 const LUNGE_OUT_TIME := 0.08
 const LUNGE_BACK_TIME := 0.12
@@ -264,8 +266,13 @@ func _process_combat(delta: float) -> void:
 		_refresh_target()
 		if _target == null:
 			_hold_or_march()
+		elif _should_skirmish_retreat():
+			_return_home()
 		elif _should_chase():
 			_chase_target()
+		elif weapon != null and weapon.engagement_stance == WeaponData.EngagementStance.SKIRMISH:
+			# Hold the engagement band between shots — don't yo-yo home/chase.
+			_hold_skirmish_position()
 		else:
 			_return_home()
 		return
@@ -276,14 +283,15 @@ func _process_combat(delta: float) -> void:
 		return
 
 	var distance := global_position.distance_to(_target.global_position)
-	if (
-		weapon.engagement_stance == WeaponData.EngagementStance.SKIRMISH
-		and distance <= weapon.skirmish_distance
-	):
+	if _should_skirmish_retreat():
 		_return_home()
 		return
 
 	if distance <= weapon.attack_range:
+		# Projectiles only fire at combat units, never the flag bearer.
+		if _uses_projectile_attack() and not (_target is Unit):
+			_hold_or_march()
+			return
 		velocity.x = 0.0
 		_face_toward(_target.global_position)
 		_start_attack()
@@ -294,6 +302,25 @@ func _process_combat(delta: float) -> void:
 		return
 
 	_hold_or_march()
+
+
+func _hold_skirmish_position() -> void:
+	_combat_phase = CombatPhase.READY
+	velocity.x = 0.0
+	if _target != null and is_instance_valid(_target):
+		_face_toward(_target.global_position)
+
+
+func _should_skirmish_retreat() -> bool:
+	if weapon == null or _target == null or not is_instance_valid(_target):
+		return false
+	if weapon.engagement_stance != WeaponData.EngagementStance.SKIRMISH:
+		return false
+	var distance := global_position.distance_to(_target.global_position)
+	# Hysteresis: once kiting, keep going until clear of the danger zone.
+	if _combat_phase == CombatPhase.RETURNING:
+		return distance < weapon.skirmish_distance + SKIRMISH_RANGE_DEADZONE
+	return distance <= weapon.skirmish_distance
 
 
 func _should_chase() -> bool:
@@ -307,6 +334,15 @@ func _should_chase() -> bool:
 			if opponent == null:
 				return false
 			return not opponent.has_living_formation_line(WeaponData.FormationLine.FRONT)
+		WeaponData.EngagementStance.SKIRMISH:
+			# Close the gap when nothing is in attack range; kite handled separately.
+			if _target == null or not is_instance_valid(_target):
+				return false
+			var distance := global_position.distance_to(_target.global_position)
+			# Hysteresis: once approaching, keep closing past the outer edge.
+			if _combat_phase == CombatPhase.APPROACHING:
+				return distance > weapon.attack_range - SKIRMISH_RANGE_DEADZONE
+			return distance > weapon.attack_range
 		_:
 			return false
 
@@ -320,7 +356,13 @@ func _chase_target() -> void:
 
 	_combat_phase = CombatPhase.APPROACHING
 	var distance := global_position.distance_to(_target.global_position)
-	if distance <= weapon.attack_range:
+	var stop_range := weapon.attack_range
+	if weapon.engagement_stance == WeaponData.EngagementStance.SKIRMISH:
+		stop_range = maxf(
+			weapon.skirmish_distance + SKIRMISH_RANGE_DEADZONE,
+			weapon.attack_range - SKIRMISH_RANGE_DEADZONE
+		)
+	if distance <= stop_range:
 		velocity.x = 0.0
 	else:
 		velocity.x = _axis_velocity(global_position.x, _target.global_position.x, get_move_speed())
@@ -416,7 +458,7 @@ func _spawn_spear_projectile() -> void:
 		return
 
 	var opponent := _troop.get_opponent()
-	if opponent == null:
+	if opponent == null or opponent.get_living_unit_count() == 0:
 		return
 
 	var aim := _pick_ranged_aim_target(opponent)
@@ -459,17 +501,21 @@ func _process_ranged_attack(delta: float) -> void:
 
 func _pick_ranged_aim_with_jitter() -> Vector2:
 	var opponent := _troop.get_opponent() if _troop != null else null
-	if opponent == null:
-		var face := signf(_visual.scale.x) if _visual != null else 1.0
-		if face == 0.0:
-			face = 1.0
-		return global_position + Vector2(face * 240.0, -80.0)
+	if opponent == null or opponent.get_living_unit_count() == 0:
+		return _get_forward_aim_fallback()
 	var aim := _pick_ranged_aim_target(opponent)
 	aim += Vector2(
 		randf_range(-THROW_AIM_JITTER_X, THROW_AIM_JITTER_X),
 		randf_range(-THROW_AIM_JITTER_Y, THROW_AIM_JITTER_Y)
 	)
 	return aim
+
+
+func _get_forward_aim_fallback() -> Vector2:
+	var face := signf(_visual.scale.x) if _visual != null else 1.0
+	if face == 0.0:
+		face = -1.0 if _troop != null and _troop.is_enemy else 1.0
+	return global_position + Vector2(face * 240.0, -80.0)
 
 
 func _spawn_arrow_projectile() -> void:
@@ -597,6 +643,15 @@ func _axis_velocity(current: float, target: float, speed: float) -> float:
 	return signf(delta_pos) * speed
 
 
+func _uses_projectile_attack() -> bool:
+	if weapon == null:
+		return false
+	return (
+		weapon.attack_style == WeaponData.AttackStyle.SPEAR_THROW
+		or weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT
+	)
+
+
 func _refresh_target() -> void:
 	var previous := _target
 	_target = null
@@ -613,12 +668,15 @@ func _refresh_target() -> void:
 			closest_distance = distance
 			_target = unit
 
-	var flag := opponent.flag_bearer
-	if flag != null and is_instance_valid(flag):
-		var flag_distance := global_position.distance_squared_to(flag.global_position)
-		if flag_distance < closest_distance:
-			closest_distance = flag_distance
-			_target = flag
+	# Projectile weapons never engage the flag bearer — only combat units.
+	var allow_flag_target := not _uses_projectile_attack()
+	if allow_flag_target:
+		var flag := opponent.flag_bearer
+		if flag != null and is_instance_valid(flag):
+			var flag_distance := global_position.distance_squared_to(flag.global_position)
+			if flag_distance < closest_distance:
+				closest_distance = flag_distance
+				_target = flag
 
 	# Sticky target: avoid left/right thrashing when two foes are nearly equidistant.
 	if (
@@ -627,7 +685,7 @@ func _refresh_target() -> void:
 		and previous != _target
 		and (
 			(previous is Unit and (previous as Unit).current_hp > 0)
-			or previous is FlagBearer
+			or (allow_flag_target and previous is FlagBearer)
 		)
 	):
 		var previous_distance := global_position.distance_squared_to(
@@ -672,7 +730,9 @@ func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
 		for unit in opponent.get_living_units():
 			if unit.weapon == null or unit.weapon.formation_line != formation_line:
 				continue
-			var distance := global_position.distance_to(unit.global_position)
+			# Horizontal range only — jump height during spear throw must not
+			# invalidate an otherwise valid aim target.
+			var distance := absf(global_position.x - unit.global_position.x)
 			if distance > attack_range:
 				continue
 			candidates.append(unit)
@@ -690,9 +750,18 @@ func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
 				return candidates[i].global_position
 		return candidates[candidates.size() - 1].global_position
 
-	if opponent.flag_bearer != null and is_instance_valid(opponent.flag_bearer):
-		return opponent.flag_bearer.global_position
-	return global_position
+	# Prefer any remaining combatant over flag bearer / self (floor throws).
+	var closest: Unit = null
+	var closest_distance := INF
+	for unit in opponent.get_living_units():
+		var distance := absf(global_position.x - unit.global_position.x)
+		if distance < closest_distance:
+			closest_distance = distance
+			closest = unit
+	if closest != null:
+		return closest.global_position
+
+	return _get_forward_aim_fallback()
 
 
 func _get_attack_damage() -> int:

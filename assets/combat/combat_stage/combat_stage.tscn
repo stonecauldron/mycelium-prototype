@@ -185,9 +185,9 @@ position = Vector2(4900, 691)
 
 [node name="MainCamera" type="Camera2D" parent="World" unique_id=723439616]
 position = Vector2(3100, 618)
-offset = Vector2(550, 0)
+offset = Vector2(600, 0)
 process_callback = 0
-limit_left = 0
+limit_left = -600
 limit_top = 0
 limit_right = 8000
 limit_bottom = 1080

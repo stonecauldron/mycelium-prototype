@@ -241,6 +241,7 @@ func _check_battle_end() -> void:
 				str(entry.get("spore_name", "Spore")),
 				int(entry.get("plot_index", 0))
 			)
+		GameState.refresh_shops_for_new_day()
 		SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
 
 

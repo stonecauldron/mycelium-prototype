@@ -76,6 +76,14 @@ func ensure_riboforge_seeded() -> void:
 	riboforge.seed_if_empty()
 
 
+## Free daily refresh: reroll unlocked shop slots (locks persist).
+func refresh_shops_for_new_day() -> void:
+	ensure_nursery_seeded()
+	ensure_riboforge_seeded()
+	nursery.reroll_unlocked_shop_offers()
+	riboforge.reroll_unlocked_shop_offers()
+
+
 func try_buy_spore(spore: SporeData, cost: int) -> bool:
 	if spore == null or cost < 0:
 		return false

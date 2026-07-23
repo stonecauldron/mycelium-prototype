@@ -13,6 +13,7 @@ const HURT_SQUASH := Vector2(1.25, 0.75)
 const HURT_SQUASH_IN := 0.04
 const HURT_SQUASH_OUT := 0.12
 const SHAKE_ON_FLAG_HIT := 0.32
+const WALK_SPEED_EPSILON := 8.0
 
 const COLLISION_WORLD := 1
 const COLLISION_PLAYER_UNITS := 2
@@ -36,23 +37,49 @@ var _hits_taken: int = 0
 var _hurt_tween: Tween
 var _squash_tween: Tween
 var _shroom_modulate: Color = Color.WHITE
+var _shroom_rest_position: Vector2 = Vector2.ZERO
+var _shroom_rest_scale: Vector2 = Vector2.ONE
 
 
 func _ready() -> void:
 	if _shroom:
 		_shroom_modulate = _shroom.modulate
+		_shroom_rest_position = _shroom.position
+		_shroom_rest_scale = _shroom.scale
 	_apply_flag_appearance()
 	_setup_collision()
-	_start_idle_animation()
+	_play_idle_animation(true)
 
 
-func _start_idle_animation() -> void:
+func _play_idle_animation(randomize_start: bool = false) -> void:
 	if _animation_player == null or not _animation_player.has_animation(&"idle"):
 		return
+	if _animation_player.is_playing() and _animation_player.current_animation == &"idle":
+		return
+	_reset_shroom_rest_pose()
 	_animation_player.play(&"idle")
+	if not randomize_start:
+		return
 	var length := _animation_player.current_animation_length
 	if length > 0.0:
 		_animation_player.seek(randf() * length, true)
+
+
+func _play_walk_animation() -> void:
+	if _animation_player == null or not _animation_player.has_animation(&"walk"):
+		return
+	if _animation_player.is_playing() and _animation_player.current_animation == &"walk":
+		return
+	_animation_player.play(&"walk")
+
+
+func _reset_shroom_rest_pose() -> void:
+	if _shroom == null:
+		return
+	_shroom.position = _shroom_rest_position
+	_shroom.scale = _shroom_rest_scale
+	if _flag_banner != null:
+		_flag_banner.rotation = 0.0
 
 
 func _physics_process(delta: float) -> void:
@@ -66,10 +93,23 @@ func _physics_process(delta: float) -> void:
 			_in_knockback = false
 			_knockback_left_ground = false
 			velocity.x = 0.0
+		_update_locomotion_animation()
 		return
 
 	velocity.x = _march_speed_x
 	move_and_slide()
+	_update_locomotion_animation()
+
+
+func _update_locomotion_animation() -> void:
+	if (
+		_in_knockback
+		or not is_on_floor()
+		or absf(velocity.x) <= WALK_SPEED_EPSILON
+	):
+		_play_idle_animation(false)
+		return
+	_play_walk_animation()
 
 
 func _apply_flag_appearance() -> void:
@@ -124,6 +164,7 @@ func reset_combat_state() -> void:
 		_squash_tween.kill()
 		_squash_tween = null
 	_apply_flag_appearance()
+	_play_idle_animation(true)
 
 
 func take_damage(

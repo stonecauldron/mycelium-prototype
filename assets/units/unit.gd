@@ -11,6 +11,7 @@ const BASE_ATTACK_INTERVAL := 0.75
 const RANGED_ATTACK_INTERVAL := 1.15
 const HOME_ARRIVE_THRESHOLD := 4.0
 const MARCH_CATCH_UP_MULTIPLIER := 2.0
+const WALK_SPEED_EPSILON := 8.0
 ## Ignore facing updates when the aim/travel delta is within this many pixels.
 const FACE_FLIP_DEADZONE := 12.0
 ## Keep the current target unless a new one is closer by at least this much.
@@ -225,6 +226,7 @@ func _physics_process(delta: float) -> void:
 			_in_knockback = false
 			_knockback_left_ground = false
 			velocity.x = 0.0
+		_update_locomotion_animation()
 		return
 
 	if _combat_phase == CombatPhase.ATTACKING:
@@ -234,10 +236,26 @@ func _physics_process(delta: float) -> void:
 		elif weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 			_process_ranged_attack(delta)
 		move_and_slide()
+		_update_locomotion_animation()
 		return
 
 	_process_combat(delta)
 	move_and_slide()
+	_update_locomotion_animation()
+
+
+func _update_locomotion_animation() -> void:
+	if _appearance == null:
+		return
+	if (
+		_dying
+		or _combat_phase == CombatPhase.ATTACKING
+		or not is_on_floor()
+		or absf(velocity.x) <= WALK_SPEED_EPSILON
+	):
+		_appearance.play_idle(false)
+		return
+	_appearance.play_walk(false)
 
 
 func get_move_speed() -> float:

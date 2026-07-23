@@ -21,9 +21,39 @@ tracks/0/keys = {
 "values": [Vector2(0.4, 0.4), Vector2(0.375, 0.435), Vector2(0.4, 0.4)]
 }
 
+[sub_resource type="Animation" id="Animation_walk"]
+resource_name = "walk"
+length = 0.36
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.18, 0.36),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [Vector2(0, -54), Vector2(0, -62), Vector2(0, -54)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.18, 0.36),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [Vector2(0.41, 0.39), Vector2(0.385, 0.42), Vector2(0.41, 0.39)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_main"]
 _data = {
-&"idle": SubResource("Animation_idle")
+&"idle": SubResource("Animation_idle"),
+&"walk": SubResource("Animation_walk")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
@@ -43,7 +73,7 @@ polygon = PackedVector2Array(47.7, 0, 46.075, 3.841, 41.309, 7.42, 33.729, 10.49
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=288080520]
 position = Vector2(0, -54)
-scale = Vector2(0.37, 0.37)
+scale = Vector2(0.4, 0.4)
 texture = ExtResource("2_tex")
 region_enabled = true
 region_rect = Rect2(124, 186, 269, 323)

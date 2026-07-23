@@ -2,9 +2,12 @@ class_name SpearProjectile
 extends Area2D
 
 const MAX_LIFETIME := 2.5
-const FLOOR_Y := 880.0
+## Matches WorldBoundary/Floor in combat_stage.tscn.
+const FLOOR_Y := 786.0
 const LAUNCH_ANGLE := PI / 4.0
 const FALLBACK_SPEED := 600.0
+const STUCK_HOLD_TIME := 1.6
+const STUCK_FADE_TIME := 1.2
 
 var damage: int = 0
 var knockback_force: float = 0.0
@@ -41,12 +44,20 @@ func _physics_process(delta: float) -> void:
 		return
 
 	_lifetime += delta
-	if _lifetime >= MAX_LIFETIME or global_position.y >= FLOOR_Y:
-		_expire()
+	if _lifetime >= MAX_LIFETIME:
+		_stick_and_fade()
 		return
 
 	_velocity += _gravity_vector() * delta
-	global_position += _velocity * delta
+	var next_position := global_position + _velocity * delta
+	if next_position.y >= FLOOR_Y:
+		global_position = next_position
+		global_position.y = FLOOR_Y
+		_face_velocity()
+		_stick_and_fade()
+		return
+
+	global_position = next_position
 	_face_velocity()
 
 
@@ -106,6 +117,7 @@ func _resolve_hit() -> void:
 		return
 
 	_spent = true
+	set_deferred("monitoring", false)
 	var from_pos := owner_unit.global_position if owner_unit != null else global_position
 	chosen.receive_hit(damage, from_pos, knockback_force)
 	queue_free()
@@ -114,7 +126,7 @@ func _resolve_hit() -> void:
 func _on_body_entered(_body: Node2D) -> void:
 	if _spent:
 		return
-	_expire()
+	_stick_and_fade()
 
 
 func _is_valid_target(target: Node) -> bool:
@@ -135,6 +147,17 @@ func _get_troop(target: Node) -> Troop:
 	return null
 
 
-func _expire() -> void:
+func _stick_and_fade() -> void:
+	if _spent:
+		return
 	_spent = true
-	queue_free()
+	_velocity = Vector2.ZERO
+	set_deferred("monitoring", false)
+	set_physics_process(false)
+	if global_position.y > FLOOR_Y:
+		global_position.y = FLOOR_Y
+	var tween := create_tween()
+	tween.tween_interval(STUCK_HOLD_TIME)
+	tween.tween_property(self, "modulate:a", 0.0, STUCK_FADE_TIME)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.tween_callback(queue_free)

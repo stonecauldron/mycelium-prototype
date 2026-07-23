@@ -2,13 +2,15 @@ extends Node2D
 
 signal battle_ended(player_won: bool)
 
-const FLOOR_SURFACE_Y := 880.0
+const FLOOR_SURFACE_Y := 786.0
 const _MELEE_UNIT_SCENE := preload("res://assets/units/melee_unit/melee_unit.tscn")
 const _SPEAR_UNIT_SCENE := preload("res://assets/units/spear_unit/spear_unit.tscn")
 const _GAME_OVER_SCENE_PATH := "res://assets/game_over/game_over.tscn"
 const _VICTORY_SCENE_PATH := "res://assets/victory/victory.tscn"
 const _DAY_SUMMARY_SCENE_PATH := "res://assets/day_summary/day_summary.tscn"
 const _FAST_FORWARD_SCALE := 2.0
+const _HITSTOP_SCALE := 0.05
+const _HITSTOP_DURATION := 0.05
 
 @export var sandboxed: bool = false
 
@@ -22,6 +24,7 @@ var _battle_over: bool = false
 var _fallen_units: Array[RosterUnitData] = []
 var _biomass_earned_this_fight: int = 0
 var _fast_forward: bool = false
+var _hitstop_active: bool = false
 
 
 func _ready() -> void:
@@ -49,6 +52,7 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	_hitstop_active = false
 	Engine.time_scale = 1.0
 
 
@@ -66,11 +70,32 @@ func _on_fast_forward_pressed() -> void:
 func _set_fast_forward(enabled: bool) -> void:
 	_fast_forward = enabled
 	GameState.combat_fast_forward = enabled
-	Engine.time_scale = _FAST_FORWARD_SCALE if enabled else 1.0
+	if not _hitstop_active:
+		Engine.time_scale = _FAST_FORWARD_SCALE if enabled else 1.0
 	if _fast_forward_button != null:
 		_fast_forward_button.modulate = (
 			Color(1.0, 0.85, 0.35, 1.0) if enabled else Color.WHITE
 		)
+
+
+func _restore_time_scale() -> void:
+	if _battle_over:
+		Engine.time_scale = 1.0
+	else:
+		Engine.time_scale = _FAST_FORWARD_SCALE if _fast_forward else 1.0
+
+
+func request_hitstop() -> void:
+	if _battle_over or _hitstop_active:
+		return
+	_hitstop_active = true
+	Engine.time_scale = _HITSTOP_SCALE
+	var timer := get_tree().create_timer(_HITSTOP_DURATION, true, false, true)
+	await timer.timeout
+	if not is_inside_tree():
+		return
+	_hitstop_active = false
+	_restore_time_scale()
 
 
 func _run_battle(
@@ -78,6 +103,7 @@ func _run_battle(
 	enemy_roster: Array[RosterUnitData]
 ) -> void:
 	_battle_over = false
+	_hitstop_active = false
 	_fallen_units.clear()
 	_biomass_earned_this_fight = 0
 	_clear_world_vfx()
@@ -160,6 +186,7 @@ func _spawn_unit(
 
 
 func _on_unit_died(unit: Unit, is_player: bool) -> void:
+	request_hitstop()
 	if not sandboxed:
 		if is_player and unit.roster_data != null:
 			_fallen_units.append(unit.roster_data)
@@ -178,6 +205,7 @@ func _check_battle_end() -> void:
 	if not player_troop.is_wiped_out() and not enemy_troop.is_wiped_out():
 		return
 	_battle_over = true
+	_hitstop_active = false
 	Engine.time_scale = 1.0
 
 	if sandboxed:
@@ -232,5 +260,11 @@ func _refresh_unit_process_order() -> void:
 func _clear_world_vfx() -> void:
 	var world := $World
 	for child in world.get_children():
-		if child is DamageNumber or child is SpearProjectile or child is ArrowProjectile:
+		if (
+			child is DamageNumber
+			or child is SpearProjectile
+			or child is ArrowProjectile
+			or child is HitBurst
+			or child is SporeCloud
+		):
 			child.queue_free()

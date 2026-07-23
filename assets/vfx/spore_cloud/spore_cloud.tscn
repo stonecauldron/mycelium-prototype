@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://sporecloud001"]
+
+[ext_resource type="Script" path="res://assets/vfx/spore_cloud/spore_cloud.gd" id="1_script"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_scale"]
+_data = [Vector2(0, 0.55), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_alpha"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.85, 1, 1, 1, 0)
+
+[node name="SporeCloud" type="Node2D"]
+z_index = 14
+script = ExtResource("1_script")
+
+[node name="Particles" type="CPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_add")
+emitting = false
+amount = 18
+lifetime = 1.5
+one_shot = true
+explosiveness = 0.85
+randomness = 0.55
+lifetime_randomness = 0.4
+local_coords = false
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, -35)
+initial_velocity_min = 35.0
+initial_velocity_max = 110.0
+angular_velocity_min = -40.0
+angular_velocity_max = 40.0
+scale_amount_min = 0.45
+scale_amount_max = 1.35
+scale_amount_curve = SubResource("Curve_scale")
+color_ramp = SubResource("Gradient_alpha")

@@ -31,8 +31,22 @@ const RANGED_ORIGIN_HEIGHT := -40.0
 const KNOCKBACK_UP_RATIO := 0.5
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
 const HURT_FLASH_TIME := 0.12
+const HURT_SQUASH := Vector2(1.25, 0.75)
+const HURT_SQUASH_IN := 0.04
+const HURT_SQUASH_OUT := 0.12
+const DEATH_POP_TIME := 0.05
+const DEATH_FADE_TIME := 0.28
+const DEATH_HOP := Vector2(150.0, -95.0)
+const DEATH_KNOCKBACK_HOP_SCALE := 0.5
+const DEATH_SPORE_MOMENTUM_SCALE := 0.7
+const SHAKE_ON_HIT := 0.1
+const SHAKE_ON_DEATH := 0.22
+const SPORE_COLOR := Color("b7b08d")
+const ENEMY_SPORE_COLOR := Color(0.85, 0.28, 0.18, 1.0)
 
 const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_number.tscn")
+const _HIT_BURST_SCENE := preload("res://assets/vfx/hit_burst/hit_burst.tscn")
+const _SPORE_CLOUD_SCENE := preload("res://assets/vfx/spore_cloud/spore_cloud.tscn")
 const _SPEAR_PROJECTILE_SCENE := preload("res://assets/combat/spear_projectile/spear_projectile.tscn")
 const _ARROW_PROJECTILE_SCENE := preload("res://assets/combat/arrow_projectile/arrow_projectile.tscn")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
@@ -57,12 +71,15 @@ var _target: Node2D
 var _troop: Troop
 var _combat_phase: CombatPhase = CombatPhase.READY
 var _hurt_tween: Tween
+var _squash_tween: Tween
 var _in_knockback: bool = false
 var _knockback_left_ground: bool = false
 var _throw_released: bool = false
 var _throw_landed: bool = false
 var _throw_left_ground: bool = false
 var _throw_timer: float = 0.0
+var _dying: bool = false
+var _last_hit_from: Vector2 = Vector2.ZERO
 
 @onready var _visual: Node2D = $Visual
 @onready var _hitbox: HitboxComponent = $Visual/Hitbox
@@ -171,7 +188,7 @@ func _setup_collision() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if stats == null or weapon == null or _troop == null:
+	if _dying or stats == null or weapon == null or _troop == null:
 		return
 
 	velocity += get_gravity() * delta
@@ -594,28 +611,108 @@ func take_damage(
 	knockback_from: Vector2 = Vector2.ZERO,
 	knockback_force: float = 0.0
 ) -> void:
+	if _dying:
+		return
 	var incoming_mult: float = 1.0
 	var knockback_mult: float = 1.0
 	if weapon != null:
 		incoming_mult = weapon.incoming_damage_multiplier
 		knockback_mult = weapon.incoming_knockback_multiplier
 	amount = roundi(float(amount) * incoming_mult)
+	_last_hit_from = knockback_from
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
+	_spawn_hit_burst()
+	_add_camera_shake(SHAKE_ON_HIT)
 	current_hp = maxi(current_hp - amount, 0)
 	health_changed.emit(current_hp, stats.get_max_hp())
 	if current_hp <= 0:
-		_die()
+		_die(knockback_from, knockback_force * knockback_mult)
 		return
 	if knockback_from != Vector2.ZERO and knockback_force > 0.0:
 		_apply_knockback(knockback_from, knockback_force * knockback_mult)
 
 
-func _die() -> void:
+func _die(
+	knockback_from: Vector2 = Vector2.ZERO,
+	knockback_force: float = 0.0
+) -> void:
+	if _dying:
+		return
+	_dying = true
 	died.emit(self)
 	if _troop != null:
 		_troop.call_deferred("refresh_squad_indices")
-	queue_free()
+
+	_cancel_attack()
+	_in_knockback = false
+	velocity = Vector2.ZERO
+	collision_layer = 0
+	collision_mask = 0
+	_hitbox.monitoring = false
+	_disable_hurtbox()
+	if _hp_chip != null and is_instance_valid(_hp_chip):
+		_hp_chip.queue_free()
+		_hp_chip = null
+
+	_add_camera_shake(SHAKE_ON_DEATH)
+
+	if _hurt_tween:
+		_hurt_tween.kill()
+		_hurt_tween = null
+	if _squash_tween:
+		_squash_tween.kill()
+		_squash_tween = null
+	if _appearance != null:
+		_appearance.scale = Vector2.ONE
+		if _appearance.animation_player != null:
+			_appearance.animation_player.stop()
+
+	var face := signf(_visual.scale.x)
+	if face == 0.0:
+		face = 1.0
+	var hop_dir := face
+	if knockback_from != Vector2.ZERO:
+		_last_hit_from = knockback_from
+	if _last_hit_from != Vector2.ZERO:
+		var away := signf(global_position.x - _last_hit_from.x)
+		if away != 0.0:
+			hop_dir = away
+
+	var hop := DEATH_HOP
+	if knockback_force > 0.0:
+		hop = Vector2(
+			maxf(DEATH_HOP.x, knockback_force * DEATH_KNOCKBACK_HOP_SCALE),
+			minf(DEATH_HOP.y, -knockback_force * DEATH_KNOCKBACK_HOP_SCALE * KNOCKBACK_UP_RATIO)
+		)
+
+	var hop_offset := Vector2(hop_dir * hop.x, hop.y)
+	var spore_momentum := hop_offset / maxf(DEATH_FADE_TIME, 0.001) * DEATH_SPORE_MOMENTUM_SCALE
+	var spore_delay := DEATH_FADE_TIME * 0.5
+
+	var tween := create_tween()
+	tween.tween_property(_visual, "scale", Vector2(face * 1.35, 1.35), DEATH_POP_TIME)
+	tween.set_parallel(true)
+	tween.tween_property(_visual, "scale", Vector2(face * 1.5, 0.18), DEATH_FADE_TIME)\
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	tween.tween_property(_visual, "modulate", Color(0.15, 0.1, 0.15, 0.0), DEATH_FADE_TIME)
+	tween.tween_property(_visual, "position", hop_offset, DEATH_FADE_TIME)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(_spawn_spore_cloud.bind(spore_momentum)).set_delay(spore_delay)
+	tween.set_parallel(false)
+	tween.tween_callback(queue_free)
+
+
+func _disable_hurtbox() -> void:
+	if _appearance == null:
+		return
+	var hurtbox := _appearance.hurtbox
+	if hurtbox == null:
+		return
+	hurtbox.set_deferred("monitoring", false)
+	hurtbox.set_deferred("monitorable", false)
+	hurtbox.set_deferred("collision_layer", 0)
+	hurtbox.set_deferred("collision_mask", 0)
 
 
 func _apply_knockback(from_global: Vector2, knockback_force: float) -> void:
@@ -639,12 +736,29 @@ func _play_hurt_highlight() -> void:
 	_hurt_tween = create_tween()
 	_hurt_tween.tween_property(_appearance, "modulate", body_color, HURT_FLASH_TIME)
 
+	if _squash_tween:
+		_squash_tween.kill()
+	_appearance.scale = Vector2.ONE
+	_squash_tween = create_tween()
+	_squash_tween.tween_property(_appearance, "scale", HURT_SQUASH, HURT_SQUASH_IN)
+	_squash_tween.tween_property(_appearance, "scale", Vector2.ONE, HURT_SQUASH_OUT)\
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
 
 func _get_world_node() -> Node:
 	var tree := get_tree()
 	if tree == null:
 		return null
 	return tree.get_first_node_in_group("combat_world")
+
+
+func _add_camera_shake(amount: float) -> void:
+	var tree := get_tree()
+	if tree == null:
+		return
+	var camera := tree.get_first_node_in_group("battle_camera")
+	if camera != null and camera.has_method("add_shake"):
+		camera.add_shake(amount)
 
 
 func _spawn_damage_number(amount: int) -> void:
@@ -656,6 +770,32 @@ func _spawn_damage_number(amount: int) -> void:
 	world.add_child(number)
 	number.global_position = global_position + Vector2(0, -72)
 	number.display(amount)
+
+
+func _spawn_hit_burst() -> void:
+	var world := _get_world_node()
+	if world == null:
+		return
+	var burst: HitBurst = _HIT_BURST_SCENE.instantiate()
+	world.add_child(burst)
+	burst.global_position = global_position + Vector2(0.0, -40.0)
+	burst.burst()
+
+
+func _spawn_spore_cloud(momentum: Vector2 = Vector2.ZERO) -> void:
+	var world := _get_world_node()
+	if world == null:
+		return
+	var cloud: SporeCloud = _SPORE_CLOUD_SCENE.instantiate()
+	world.add_child(cloud)
+	var origin := global_position
+	if _visual != null:
+		origin = _visual.global_position
+	cloud.global_position = origin + Vector2(0.0, -20.0)
+	var spore_color := (
+		ENEMY_SPORE_COLOR if _troop != null and _troop.is_enemy else SPORE_COLOR
+	)
+	cloud.burst(spore_color, 1.0, momentum)
 
 
 func _ensure_hp_chip() -> void:

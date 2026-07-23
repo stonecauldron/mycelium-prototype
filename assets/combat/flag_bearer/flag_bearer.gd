@@ -9,12 +9,17 @@ const HIT_SLOW_PER_HIT := 0.25
 const HIT_SLOW_MIN_MULT := 0.5
 const HURT_FLASH_COLOR := Color(1.0, 0.35, 0.35, 1.0)
 const HURT_FLASH_TIME := 0.12
+const HURT_SQUASH := Vector2(1.25, 0.75)
+const HURT_SQUASH_IN := 0.04
+const HURT_SQUASH_OUT := 0.12
+const SHAKE_ON_FLAG_HIT := 0.32
 
 const COLLISION_WORLD := 1
 const COLLISION_PLAYER_UNITS := 2
 const COLLISION_ENEMY_UNITS := 16
 
 const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_number.tscn")
+const _HIT_BURST_SCENE := preload("res://assets/vfx/hit_burst/hit_burst.tscn")
 
 @export var flag_color: Color = Color.WHITE
 @export var flag_faces_left: bool = false
@@ -29,6 +34,7 @@ var _in_knockback: bool = false
 var _knockback_left_ground: bool = false
 var _hits_taken: int = 0
 var _hurt_tween: Tween
+var _squash_tween: Tween
 var _shroom_modulate: Color = Color.WHITE
 
 
@@ -69,6 +75,7 @@ func _physics_process(delta: float) -> void:
 func _apply_flag_appearance() -> void:
 	if _visual:
 		_visual.scale.x = -1.0 if flag_faces_left else 1.0
+		_visual.scale.y = 1.0
 	if _flag_banner:
 		_flag_banner.modulate = flag_color
 	if _shroom:
@@ -113,6 +120,9 @@ func reset_combat_state() -> void:
 	if _hurt_tween:
 		_hurt_tween.kill()
 		_hurt_tween = null
+	if _squash_tween:
+		_squash_tween.kill()
+		_squash_tween = null
 	_apply_flag_appearance()
 
 
@@ -124,6 +134,8 @@ func take_damage(
 	_hits_taken += 1
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
+	_spawn_hit_burst()
+	_add_camera_shake(SHAKE_ON_FLAG_HIT)
 	if knockback_from != Vector2.ZERO and knockback_force > 0.0:
 		_apply_knockback(knockback_from, knockback_force)
 
@@ -159,6 +171,22 @@ func _play_hurt_highlight() -> void:
 	if _shroom:
 		_hurt_tween.tween_property(_shroom, "modulate", _shroom_modulate, HURT_FLASH_TIME)
 
+	if _visual == null:
+		return
+	if _squash_tween:
+		_squash_tween.kill()
+	var face := -1.0 if flag_faces_left else 1.0
+	_visual.scale = Vector2(face, 1.0)
+	_squash_tween = create_tween()
+	_squash_tween.tween_property(
+		_visual,
+		"scale",
+		Vector2(face * HURT_SQUASH.x, HURT_SQUASH.y),
+		HURT_SQUASH_IN
+	)
+	_squash_tween.tween_property(_visual, "scale", Vector2(face, 1.0), HURT_SQUASH_OUT)\
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
 
 func _spawn_damage_number(amount: int) -> void:
 	var world := _get_world_node()
@@ -169,6 +197,25 @@ func _spawn_damage_number(amount: int) -> void:
 	world.add_child(number)
 	number.global_position = global_position + Vector2(0, -72)
 	number.display(amount)
+
+
+func _spawn_hit_burst() -> void:
+	var world := _get_world_node()
+	if world == null:
+		return
+	var burst: HitBurst = _HIT_BURST_SCENE.instantiate()
+	world.add_child(burst)
+	burst.global_position = global_position + Vector2(0.0, -48.0)
+	burst.burst(Color(1.0, 0.7, 0.25, 1.0), 1.25)
+
+
+func _add_camera_shake(amount: float) -> void:
+	var tree := get_tree()
+	if tree == null:
+		return
+	var camera := tree.get_first_node_in_group("battle_camera")
+	if camera != null and camera.has_method("add_shake"):
+		camera.add_shake(amount)
 
 
 func _get_world_node() -> Node:

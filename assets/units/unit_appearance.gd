@@ -9,14 +9,11 @@ extends Node2D
 
 var _sprite_rest_position: Vector2 = Vector2.ZERO
 var _sprite_rest_scale: Vector2 = Vector2.ONE
+var _sprite_rest_captured: bool = false
 
 
 func _ready() -> void:
-	if sprite == null:
-		sprite = get_node_or_null("Sprite") as Sprite2D
-	if sprite != null:
-		_sprite_rest_position = sprite.position
-		_sprite_rest_scale = sprite.scale
+	_capture_sprite_rest_pose()
 
 
 func mount_weapon_appearance(weapon: WeaponData) -> void:
@@ -73,9 +70,20 @@ func _is_playing(animation: StringName) -> bool:
 	return player.is_playing() and player.current_animation == animation
 
 
-func _reset_sprite_rest_pose() -> void:
+func _capture_sprite_rest_pose() -> void:
+	if _sprite_rest_captured:
+		return
 	if sprite == null:
 		sprite = get_node_or_null("Sprite") as Sprite2D
+	if sprite == null:
+		return
+	_sprite_rest_position = sprite.position
+	_sprite_rest_scale = sprite.scale
+	_sprite_rest_captured = true
+
+
+func _reset_sprite_rest_pose() -> void:
+	_capture_sprite_rest_pose()
 	if sprite == null:
 		return
 	sprite.position = _sprite_rest_position

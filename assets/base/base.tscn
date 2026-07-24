@@ -14,7 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icon"]
-bg_color = Color(0.1, 0.1, 0.1, 1)
+bg_color = Color(0.24705882, 0.3529412, 0.34901962, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -25,7 +25,7 @@ content_margin_left = 12.0
 content_margin_top = 8.0
 content_margin_right = 16.0
 content_margin_bottom = 8.0
-bg_color = Color(0.18, 0.18, 0.18, 1)
+bg_color = Color(0.031798195, 0.17988184, 0.1393677, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2

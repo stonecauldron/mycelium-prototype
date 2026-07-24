@@ -170,11 +170,11 @@ position = Vector2(0, 786)
 shape = SubResource("WorldBoundaryShape2D_floor")
 
 [node name="LeftEdge" type="CollisionShape2D" parent="World/WorldBoundary" unique_id=254316770]
-position = Vector2(-12, 540)
+position = Vector2(1568, 557)
 shape = SubResource("RectangleShape2D_left")
 
 [node name="RightEdge" type="CollisionShape2D" parent="World/WorldBoundary" unique_id=1093973712]
-position = Vector2(7417, 575)
+position = Vector2(5976, 575)
 shape = SubResource("RectangleShape2D_right")
 
 [node name="PlayerTroop" parent="World" unique_id=53838798 instance=ExtResource("3_player")]
@@ -189,7 +189,7 @@ offset = Vector2(600, 0)
 process_callback = 0
 limit_left = -600
 limit_top = 0
-limit_right = 8000
+limit_right = 6800
 limit_bottom = 1080
 position_smoothing_enabled = true
 position_smoothing_speed = 2.5

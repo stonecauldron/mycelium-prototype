@@ -77,6 +77,14 @@ func _wire_buttons() -> void:
 			return [_make_units(_SHIELD_WEAPON, 1), _make_units(_BOW_WEAPON, 1)]
 		)
 	)
+	_add_button("9v9 Mirror", func() -> void:
+		_set_matchup(func() -> Array:
+			return [
+				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _MELEE_WEAPON]),
+				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _MELEE_WEAPON]),
+			]
+		)
+	)
 	_add_button("9v9 Shield Line", func() -> void:
 		_set_matchup(func() -> Array:
 			return [

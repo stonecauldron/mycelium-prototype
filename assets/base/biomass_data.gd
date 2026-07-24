@@ -22,7 +22,7 @@ static func reward_for_kill(is_imago: bool) -> int:
 
 
 static func sell_value(buy_cost: int) -> int:
-	return maxi(1, buy_cost / 4)
+	return maxi(1, int(buy_cost / 4.0))
 
 
 func add(value: int) -> void:

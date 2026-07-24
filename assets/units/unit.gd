@@ -1095,10 +1095,10 @@ func _get_weapon_mount() -> Node2D:
 	return _appearance.weapon_mount
 
 
-func _set_held_weapon_visible(is_visible: bool) -> void:
+func _set_held_weapon_visible(weapon_visible: bool) -> void:
 	var mount := _get_weapon_mount()
 	if mount != null:
-		mount.visible = is_visible
+		mount.visible = weapon_visible
 
 
 func _spawn_hit_burst() -> void:

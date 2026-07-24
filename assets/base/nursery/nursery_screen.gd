@@ -118,7 +118,7 @@ func _rebuild_shop_cards() -> void:
 	var shop := GameState.nursery.spore_shop
 	if shop == null:
 		return
-	var middle_index := SHOP_SLOT_COUNT / 2
+	var middle_index := int(SHOP_SLOT_COUNT / 2.0)
 	var built: Array[ShopOfferCard] = []
 	built.resize(SHOP_SLOT_COUNT)
 	for i in SHOP_SLOT_COUNT:

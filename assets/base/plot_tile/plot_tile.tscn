@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dg3f8ior287wm" path="res://assets/base/plot_tile/plot_tile.gd" id="1_tile"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
-[ext_resource type="Texture2D" uid="uid://l5cgx8k0tdu4" path="res://assets/base/plot_tile/plot_empty.png" id="3_empty"]
+[ext_resource type="Texture2D" uid="uid://cqtuy3neuspkd" path="res://assets/base/plot_tile/plot_empty.png" id="3_empty"]
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="4_biomass"]
 [ext_resource type="Texture2D" uid="uid://bm2sipndchcwt" path="res://assets/base/shop/padlock_locked.png" id="5_padlock"]
 [ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="6_figtree"]

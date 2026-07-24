@@ -5,7 +5,8 @@
 [node name="BasicSpearAppearance" type="Node2D" unique_id=1152229545]
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=1772255643]
-rotation = 0.720796
-scale = Vector2(0.3, 0.2)
+position = Vector2(4, -18)
+rotation = 0.34906584
+scale = Vector2(0.3, 0.3)
 texture = ExtResource("1_spear")
-offset = Vector2(30, -90)
+offset = Vector2(1.7182007, -83.69536)

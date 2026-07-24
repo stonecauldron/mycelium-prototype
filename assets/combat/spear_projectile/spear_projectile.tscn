@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bj35arlgrvuum" path="res://assets/weapons/basic_spear/spear.png" id="2_c7uvy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_spear"]
-size = Vector2(97, 8)
+size = Vector2(147, 8)
 
 [node name="SpearProjectile" type="Area2D" unique_id=1082384796]
 collision_layer = 8
@@ -13,11 +13,11 @@ monitorable = false
 script = ExtResource("1_spear")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1024114994]
-position = Vector2(0.5, 0)
+position = Vector2(3.5, 0)
 shape = SubResource("RectangleShape2D_spear")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=324095007]
-position = Vector2(2, 9)
+position = Vector2(2, 0)
 rotation = 1.5707964
-scale = Vector2(0.3, 0.2)
+scale = Vector2(0.3, 0.3)
 texture = ExtResource("2_c7uvy")

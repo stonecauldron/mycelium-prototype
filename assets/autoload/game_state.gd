@@ -1,6 +1,8 @@
 extends Node
 
 ## Session owner for persistent run state.
+signal debug_cheats_applied
+
 const WIN_DAYS := 10
 const NURSERY_UNLOCK_DAY := 1
 const RIBOFORGE_UNLOCK_DAY := 2
@@ -21,10 +23,29 @@ var prefer_nursery_tab: bool = false
 var prefer_riboforge_tab: bool = false
 ## Session preference: combat fast-forward scale (1, 2, or 4; restored on next fight).
 var combat_fast_forward: int = 1
+## Debug (~): cheats active — force base screens unlocked and show debug HUD.
+var debug_mode_active: bool = false
 
 
 func _ready() -> void:
 	_roll_run_seed()
+
+
+## Debug (~): +100 biomass and unlock all base screens.
+func activate_debug_cheats() -> void:
+	biomass.add(100)
+	debug_mode_active = true
+	debug_cheats_applied.emit()
+
+
+## Debug: skip combat and apply one day of progression.
+func debug_advance_day() -> void:
+	ensure_nursery_seeded()
+	current_day += 1
+	clear_upcoming_enemy_formation()
+	troop.advance_unit_ages()
+	nursery.advance_day()
+	refresh_shops_for_new_day()
 
 
 func get_upcoming_day() -> int:
@@ -47,11 +68,11 @@ func has_won_run() -> bool:
 
 
 func is_nursery_unlocked() -> bool:
-	return current_day >= NURSERY_UNLOCK_DAY
+	return debug_mode_active or current_day >= NURSERY_UNLOCK_DAY
 
 
 func is_riboforge_unlocked() -> bool:
-	return current_day >= RIBOFORGE_UNLOCK_DAY
+	return debug_mode_active or current_day >= RIBOFORGE_UNLOCK_DAY
 
 
 func consume_prefer_nursery_tab() -> bool:
@@ -256,6 +277,7 @@ func reset_run() -> void:
 	current_day = 0
 	prefer_nursery_tab = false
 	prefer_riboforge_tab = false
+	debug_mode_active = false
 	clear_upcoming_enemy_formation()
 	_roll_run_seed()
 

@@ -17,6 +17,7 @@ const _BIOMASS_DIGITS := 4
 @onready var _tab_bar: HBoxContainer = %TabBar
 @onready var _day_label: Label = %DayLabel
 @onready var _biomass_amount: Label = %BiomassAmount
+@onready var _debug_advance_day_button: Button = %DebugAdvanceDayButton
 @onready var _start_combat_button: Button = %StartCombatButton
 @onready var _nursery_zone: Node2D = %NurseryZone
 @onready var _riboforge_zone: Node2D = %RiboforgeZone
@@ -37,6 +38,9 @@ func _ready() -> void:
 	_refresh_hud()
 	_build_tab_bar()
 	_start_combat_button.pressed.connect(_on_start_combat_pressed)
+	_debug_advance_day_button.pressed.connect(_on_debug_advance_day_pressed)
+	_debug_advance_day_button.visible = GameState.debug_mode_active
+	GameState.debug_cheats_applied.connect(_on_debug_cheats_applied)
 	set_start_combat_enabled(_colony_screen.can_start_combat())
 	var initial := TabId.COLONY
 	if GameState.consume_prefer_riboforge_tab():
@@ -44,6 +48,22 @@ func _ready() -> void:
 	elif GameState.consume_prefer_nursery_tab():
 		initial = TabId.NURSERY
 	_select_tab(initial, true)
+
+
+func _on_debug_cheats_applied() -> void:
+	_debug_advance_day_button.visible = true
+	_build_tab_bar()
+	_update_tab_visuals()
+	_refresh_hud()
+
+
+func _on_debug_advance_day_pressed() -> void:
+	GameState.debug_advance_day()
+	_build_tab_bar()
+	_update_tab_visuals()
+	if _current_screen != null:
+		_current_screen.on_screen_shown()
+	_refresh_hud()
 
 
 func set_start_combat_enabled(enabled: bool) -> void:

@@ -239,6 +239,16 @@ theme_type_variation = &"PageTitleLabel"
 text = "Day 1 / 10"
 vertical_alignment = 1
 
+[node name="DebugAdvanceDayButton" type="Button" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar" unique_id=2145001001]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(160, 56)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"NavButton"
+text = "Advance Day"
+focus_mode = 0
+
 [node name="BiomassChip" type="HBoxContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar" unique_id=1142113358]
 layout_mode = 2
 size_flags_horizontal = 0

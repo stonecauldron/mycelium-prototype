@@ -62,12 +62,7 @@ theme_type_variation = &"SectionVBox"
 [node name="Header" type="Label" parent="HeaderBlock" unique_id=347272208]
 layout_mode = 2
 theme_type_variation = &"PageTitleLabel"
-text = "Riboforge — Arm Units"
-
-[node name="Subtitle" type="Label" parent="HeaderBlock" unique_id=790898199]
-layout_mode = 2
-theme_type_variation = &"PageSubtitleLabel"
-text = "Buy weapons into stock, drag onto a squad unit to equip, or drag weapons onto the shop to sell."
+text = "Riboforge: Arm Units"
 
 [node name="StockShopPanel" type="PanelContainer" parent="." unique_id=710296817]
 unique_name_in_owner = true
@@ -117,8 +112,6 @@ mouse_filter = 2
 
 [node name="ShopDropZone" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow" unique_id=1108388941 instance=ExtResource("7_shop_zone")]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 4
 
 [node name="ShopRow" type="HBoxContainer" parent="StockShopPanel/StockShopMargin/StockShopVBox/StockShopRow/ShopDropZone" unique_id=1108388942]
 unique_name_in_owner = true
@@ -202,7 +195,7 @@ theme_type_variation = &"TightVBox"
 [node name="SquadTitle" type="Label" parent="SquadPanel/SquadMargin/SquadVBox" unique_id=150928833]
 layout_mode = 2
 theme_type_variation = &"SectionTitleLabel"
-text = "Squad"
+text = "Troop"
 
 [node name="SquadRow" type="HBoxContainer" parent="SquadPanel/SquadMargin/SquadVBox" unique_id=103951673]
 unique_name_in_owner = true

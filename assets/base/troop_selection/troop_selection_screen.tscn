@@ -50,10 +50,14 @@ scale = Vector2(-1, 1)
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
 offset_left = 1222.0
 offset_top = 212.0
 offset_right = 1724.0
 offset_bottom = 573.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [node name="HeaderBlock" type="VBoxContainer" parent="." unique_id=826697549]
 layout_mode = 1
@@ -68,12 +72,7 @@ theme_type_variation = &"SectionVBox"
 [node name="Header" type="Label" parent="HeaderBlock" unique_id=1708698391]
 layout_mode = 2
 theme_type_variation = &"PageTitleLabel"
-text = "War Chamber — Deploy Squad"
-
-[node name="Subtitle" type="Label" parent="HeaderBlock" unique_id=1767566579]
-layout_mode = 2
-theme_type_variation = &"PageSubtitleLabel"
-text = "Click or drag units between the bench and the troop row."
+text = "War Chamber: Deploy Troop"
 
 [node name="BenchPanel" type="PanelContainer" parent="." unique_id=710296817]
 unique_name_in_owner = true

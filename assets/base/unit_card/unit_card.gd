@@ -20,6 +20,7 @@ var _portrait_instance: Node2D = null
 @onready var _atk_chip: StatChip = %AtkChip
 @onready var _hp_chip: StatChip = %HpChip
 @onready var _portrait_host: Control = %PortraitHost
+@onready var _hover_punch: HoverPunch = %HoverPunch
 
 
 func setup(data: Resource, card_source: String = "bench", card_slot: Node = null) -> void:
@@ -43,6 +44,7 @@ func reset_compact_layout() -> void:
 	offset_bottom = CARD_SIZE.y
 	custom_minimum_size = CARD_SIZE
 	size = CARD_SIZE
+	pivot_offset = CARD_SIZE * 0.5
 	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 
@@ -169,6 +171,8 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		}
 	_drag_started_flag = true
 	drag_started.emit(self)
+	if _hover_punch != null:
+		_hover_punch.reset()
 	# Chess-piece pickup: leave the pad empty while dragging.
 	visible = false
 	# Instantiate fresh — duplicate() keeps @onready refs to this card, so the
@@ -214,9 +218,15 @@ func _gui_input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_END:
 		_drag_started_flag = false
+		if _hover_punch != null:
+			_hover_punch.reset()
+			# Don't replay hover when the pointer is still over the card after drop.
+			_hover_punch.suppress_enter()
 		# Restore if the drag was cancelled; successful drops rebuild the card.
 		if is_inside_tree():
 			visible = true
+		if _hover_punch != null:
+			_hover_punch.call_deferred("arm_enter_unless_hovered")
 
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:

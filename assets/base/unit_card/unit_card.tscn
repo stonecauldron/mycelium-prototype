@@ -5,38 +5,42 @@
 [ext_resource type="Texture2D" uid="uid://sdkqu2q3e1u" path="res://assets/base/unit_card/sword_icon.png" id="3_sword"]
 [ext_resource type="Texture2D" uid="uid://dqwo514d7ery6" path="res://assets/base/unit_card/hp_icon.png" id="4_hp"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
+[ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="6_punch"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
-[node name="UnitCard" type="PanelContainer"]
+[node name="UnitCard" type="PanelContainer" unique_id=2087829966]
 custom_minimum_size = Vector2(140, 200)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_card")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="HoverPunch" parent="." instance=ExtResource("6_punch")]
+unique_name_in_owner = true
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1750434272]
 layout_mode = 2
 theme_type_variation = &"CardMargin"
 
-[node name="VBox" type="VBoxContainer" parent="Margin"]
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=320423097]
 layout_mode = 2
 theme_type_variation = &"CardVBox"
 
-[node name="NameLabel" type="Label" parent="Margin/VBox"]
+[node name="NameLabel" type="Label" parent="Margin/VBox" unique_id=1278817116]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CardNameLabel"
 text = "Unit"
 horizontal_alignment = 1
 
-[node name="PortraitHost" type="Control" parent="Margin/VBox"]
+[node name="PortraitHost" type="Control" parent="Margin/VBox" unique_id=1183866462]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 130)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="WeaponLabel" type="Label" parent="Margin/VBox"]
+[node name="WeaponLabel" type="Label" parent="Margin/VBox" unique_id=1536132161]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -44,18 +48,16 @@ theme_type_variation = &"CardMetaLabel"
 text = "Weapon"
 horizontal_alignment = 1
 
-[node name="StatsRow" type="HBoxContainer" parent="Margin/VBox"]
+[node name="StatsRow" type="HBoxContainer" parent="Margin/VBox" unique_id=299043056]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="AtkChip" parent="Margin/VBox/StatsRow" instance=ExtResource("5_chip")]
+[node name="AtkChip" parent="Margin/VBox/StatsRow" unique_id=1355714170 instance=ExtResource("5_chip")]
 unique_name_in_owner = true
-layout_mode = 2
 icon = ExtResource("3_sword")
 
-[node name="HpChip" parent="Margin/VBox/StatsRow" instance=ExtResource("5_chip")]
+[node name="HpChip" parent="Margin/VBox/StatsRow" unique_id=1988214518 instance=ExtResource("5_chip")]
 unique_name_in_owner = true
-layout_mode = 2
 icon = ExtResource("4_hp")

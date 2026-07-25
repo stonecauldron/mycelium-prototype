@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://f8n1147me83h" path="res://assets/base/nursery/spores.png" id="3_spores"]
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="4_biomass"]
 [ext_resource type="Texture2D" uid="uid://bm2sipndchcwt" path="res://assets/base/shop/padlock_locked.png" id="5_padlock"]
+[ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="6_punch"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shop_card"]
 content_margin_left = 10.0
@@ -32,6 +33,9 @@ layout_mode = 3
 anchors_preset = 0
 theme = ExtResource("2_theme")
 script = ExtResource("1_card")
+
+[node name="HoverPunch" parent="." instance=ExtResource("6_punch")]
+unique_name_in_owner = true
 
 [node name="CardPanel" type="PanelContainer" parent="." unique_id=511557256]
 layout_mode = 1

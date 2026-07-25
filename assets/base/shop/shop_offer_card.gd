@@ -25,6 +25,7 @@ var _icon_texture: Texture2D = null
 @onready var _subtitle_label: Label = %SubtitleLabel
 @onready var _price_label: Label = %PriceLabel
 @onready var _lock_button: Button = %LockButton
+@onready var _hover_punch: HoverPunch = %HoverPunch
 
 
 func setup(
@@ -150,6 +151,8 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	if not _can_afford or payload.is_empty():
 		return null
 	_did_drag = true
+	if _hover_punch != null:
+		_hover_punch.reset()
 	# Chess-piece pickup: leave the pad empty while dragging.
 	visible = false
 	# Instantiate fresh — duplicate() keeps @onready refs to this card.
@@ -192,9 +195,14 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_END:
 		_did_drag = false
 		_pressing = false
+		if _hover_punch != null:
+			_hover_punch.reset()
+			_hover_punch.suppress_enter()
 		# Restore if the drag was cancelled; successful drops rebuild the card.
 		if is_inside_tree():
 			visible = true
+		if _hover_punch != null:
+			_hover_punch.call_deferred("arm_enter_unless_hovered")
 
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:

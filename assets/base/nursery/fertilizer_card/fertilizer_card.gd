@@ -12,6 +12,7 @@ var stock_index: int = 0
 @onready var _icon: TextureRect = %Icon
 @onready var _name_label: Label = %NameLabel
 @onready var _subtitle_label: Label = %SubtitleLabel
+@onready var _hover_punch: HoverPunch = %HoverPunch
 
 var _hover_tween: Tween
 var _hover_y: float = 0.0:
@@ -120,6 +121,8 @@ func _stop_hover() -> void:
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	if fertilizer == null:
 		return null
+	if _hover_punch != null:
+		_hover_punch.reset()
 	visible = false
 	var preview: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
 	preview.setup(fertilizer, stock_index)
@@ -144,8 +147,13 @@ func _centered_drag_preview(preview: Control, preview_size: Vector2) -> Control:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_END:
+		if _hover_punch != null:
+			_hover_punch.reset()
+			_hover_punch.suppress_enter()
 		if is_inside_tree():
 			visible = true
+		if _hover_punch != null:
+			_hover_punch.call_deferred("arm_enter_unless_hovered")
 
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:

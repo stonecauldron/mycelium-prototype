@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://assets/base/riboforge/weapon_card.gd" id="1_card"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="3_punch"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
@@ -10,6 +11,9 @@ custom_minimum_size = Vector2(120, 140)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_card")
+
+[node name="HoverPunch" parent="." instance=ExtResource("3_punch")]
+unique_name_in_owner = true
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2

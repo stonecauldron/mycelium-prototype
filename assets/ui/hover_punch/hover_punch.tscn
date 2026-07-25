@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b84ukneulnemi"]
+
+[ext_resource type="Script" uid="uid://d2bpybsnnlslw" path="res://assets/ui/hover_punch/hover_punch.gd" id="1_punch"]
+
+[node name="HoverPunch" type="Node"]
+script = ExtResource("1_punch")

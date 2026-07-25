@@ -46,8 +46,22 @@ func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	reset_compact_layout()
+	if unit_data == null and get_tree().current_scene == self:
+		unit_data = _make_mock_unit()
 	if unit_data != null:
 		_refresh()
+
+
+func _make_mock_unit() -> RosterUnitData:
+	var weapon := load(RiboforgeData.MELEE_WEAPON_PATH) as WeaponData
+	return RosterUnitData.create(
+		"Mock Capling",
+		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON),
+		weapon,
+		null,
+		UnitStatsData.PowerTier.COMMON,
+	)
+
 
 func _refresh() -> void:
 	if unit_data == null:

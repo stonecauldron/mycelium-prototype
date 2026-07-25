@@ -8,7 +8,9 @@ const _SPEAR_UNIT_SCENE := preload("res://assets/units/spear_unit/spear_unit.tsc
 const _GAME_OVER_SCENE_PATH := "res://assets/game_over/game_over.tscn"
 const _VICTORY_SCENE_PATH := "res://assets/victory/victory.tscn"
 const _DAY_SUMMARY_SCENE_PATH := "res://assets/day_summary/day_summary.tscn"
-const _FAST_FORWARD_SCALE := 2.0
+const _FAST_FORWARD_SCALES: Array[int] = [1, 2, 4]
+const _FAST_FORWARD_COLOR_2X := Color(1.0, 0.85, 0.35, 1.0)
+const _FAST_FORWARD_COLOR_4X := Color(1.0, 0.25, 0.25, 1.0)
 const _HITSTOP_SCALE := 0.05
 const _HITSTOP_DURATION := 0.05
 
@@ -23,7 +25,7 @@ var _enemy_spawn: Vector2
 var _battle_over: bool = false
 var _fallen_units: Array[RosterUnitData] = []
 var _biomass_earned_this_fight: int = 0
-var _fast_forward: bool = false
+var _fast_forward_scale: int = 1
 var _hitstop_active: bool = false
 
 
@@ -64,25 +66,35 @@ func start_battle(
 
 
 func _on_fast_forward_pressed() -> void:
-	_set_fast_forward(not _fast_forward)
+	var idx := _FAST_FORWARD_SCALES.find(_fast_forward_scale)
+	if idx < 0:
+		idx = 0
+	var next_scale := _FAST_FORWARD_SCALES[(idx + 1) % _FAST_FORWARD_SCALES.size()]
+	_set_fast_forward(next_scale)
 
 
-func _set_fast_forward(enabled: bool) -> void:
-	_fast_forward = enabled
-	GameState.combat_fast_forward = enabled
+func _set_fast_forward(ff_scale: int) -> void:
+	if ff_scale not in _FAST_FORWARD_SCALES:
+		ff_scale = 1
+	_fast_forward_scale = ff_scale
+	GameState.combat_fast_forward = ff_scale
 	if not _hitstop_active:
-		Engine.time_scale = _FAST_FORWARD_SCALE if enabled else 1.0
+		Engine.time_scale = float(ff_scale)
 	if _fast_forward_button != null:
-		_fast_forward_button.modulate = (
-			Color(1.0, 0.85, 0.35, 1.0) if enabled else Color.WHITE
-		)
+		match ff_scale:
+			2:
+				_fast_forward_button.modulate = _FAST_FORWARD_COLOR_2X
+			4:
+				_fast_forward_button.modulate = _FAST_FORWARD_COLOR_4X
+			_:
+				_fast_forward_button.modulate = Color.WHITE
 
 
 func _restore_time_scale() -> void:
 	if _battle_over:
 		Engine.time_scale = 1.0
 	else:
-		Engine.time_scale = _FAST_FORWARD_SCALE if _fast_forward else 1.0
+		Engine.time_scale = float(_fast_forward_scale)
 
 
 func request_hitstop() -> void:
@@ -122,7 +134,7 @@ func _run_battle(
 		false
 	)
 	_refresh_unit_process_order()
-	_set_fast_forward(_fast_forward)
+	_set_fast_forward(_fast_forward_scale)
 	player_troop.begin_march()
 	enemy_troop.begin_march()
 

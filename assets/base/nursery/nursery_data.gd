@@ -152,6 +152,17 @@ func first_spore_stock_index() -> int:
 	return -1
 
 
+func first_empty_plot_index() -> int:
+	_ensure_plot_count()
+	for i in unlocked_plot_count:
+		if i >= plots.size():
+			break
+		var plot := plots[i] as NurseryPlotData
+		if plot != null and plot.is_empty():
+			return i
+	return -1
+
+
 func generate_offer_for_slot(slot_index: int = 0) -> ShopOffer:
 	if is_fertilizer_shop_slot(slot_index):
 		return generate_fertilizer_offer()

@@ -200,6 +200,7 @@ func _sync_stock_slots() -> void:
 		if item is SporeData:
 			var card: SporeCard = _SPORE_CARD_SCENE.instantiate()
 			card.setup(item as SporeData, i)
+			card.spore_clicked.connect(_on_stock_spore_clicked)
 			slot.set_card(card)
 		elif item is FertilizerData:
 			var fert_card: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
@@ -276,6 +277,17 @@ func _on_stock_item_dropped(slot: DropSlot, data: Dictionary) -> void:
 		_refresh()
 		return
 	_try_buy_shop_payload(data)
+
+
+func _on_stock_spore_clicked(card: SporeCard) -> void:
+	if card == null:
+		return
+	var nursery := GameState.nursery
+	var plot_index := nursery.first_empty_plot_index()
+	if plot_index < 0:
+		return
+	if nursery.plant(plot_index, card.stock_index):
+		_refresh()
 
 
 func _on_shop_sell_dropped(_zone: ShopDropZone, data: Dictionary) -> void:

@@ -1,6 +1,8 @@
 class_name SporeCard
 extends PanelContainer
 
+signal spore_clicked(card: SporeCard)
+
 const CARD_SIZE := Vector2(120, 100)
 const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
 const _HOVER_AMPLITUDE_PX := 5.0
@@ -13,6 +15,8 @@ var stock_index: int = 0
 @onready var _name_label: Label = %NameLabel
 @onready var _days_chip: StatChip = %DaysChip
 
+var _pressing: bool = false
+var _did_drag: bool = false
 var _hover_tween: Tween
 var _hover_y: float = 0.0:
 	set(value):
@@ -117,9 +121,26 @@ func _stop_hover() -> void:
 	_apply_hover_y()
 
 
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse := event as InputEventMouseButton
+		if mouse.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mouse.pressed:
+			_pressing = true
+			_did_drag = false
+			return
+		if _pressing:
+			_pressing = false
+			if not _did_drag:
+				spore_clicked.emit(self)
+			accept_event()
+
+
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	if spore == null:
 		return null
+	_did_drag = true
 	# Chess-piece pickup: leave the pad empty while dragging.
 	visible = false
 	# Instantiate fresh — duplicate() keeps @onready refs to this card, so the

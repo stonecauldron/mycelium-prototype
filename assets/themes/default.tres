@@ -42,6 +42,8 @@ variation_opentype = {
 2003265652: 550
 }
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tooltip_panel"]
+
 [resource]
 BaseRootMargin/base_type = &"MarginContainer"
 BaseRootMargin/constants/margin_bottom = 10
@@ -159,4 +161,5 @@ TitleLabel/base_type = &"Label"
 TitleLabel/colors/font_color = Color(1, 1, 1, 1)
 TitleLabel/font_sizes/font_size = 64
 TitleLabel/fonts/font = SubResource("Font_fraunces_display")
+TooltipPanel/styles/panel = SubResource("StyleBoxEmpty_tooltip_panel")
 VBoxContainer/constants/separation = 8

@@ -8,6 +8,7 @@ signal weapon_loadout_changed(card: UnitCard)
 const CARD_SIZE := Vector2(140, 200)
 const PORTRAIT_SCALE := 1.0
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
+const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
 var unit_data: Resource
 var source: String = "bench"
 var slot: Node
@@ -100,17 +101,40 @@ func _refresh() -> void:
 		atk = roundi(float(atk) * outgoing_mult)
 		_atk_chip.set_value(atk)
 		_hp_chip.set_value(data.stats.get_max_hp())
-		tooltip_text = "STR %d  DEX %d\nCON %d  SPD %d" % [
-			data.stats.strength,
-			data.stats.dex,
-			data.stats.con,
-			data.stats.spd,
-		]
 	else:
 		_atk_chip.set_value("—")
 		_hp_chip.set_value("—")
-		tooltip_text = ""
+	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
+	tooltip_text = data.display_name
 	_refresh_portrait(data)
+
+
+func _make_custom_tooltip(_for_text: String) -> Object:
+	var data := unit_data as RosterUnitData
+	if data == null:
+		return null
+	var tip: UnitDetailCard = _UNIT_DETAIL_CARD_SCENE.instantiate()
+	# No portrait — UnitCard already shows it. Non-interactive so hover stays stable.
+	tip.setup(data, false, false)
+	var tip_size := tip.card_size()
+	tip.custom_minimum_size = tip_size
+	tip.size = tip_size
+	tip.tree_entered.connect(_configure_detail_tooltip_popup.bind(tip), CONNECT_ONE_SHOT)
+	return tip
+
+
+func _configure_detail_tooltip_popup(tip: UnitDetailCard) -> void:
+	var node: Node = tip.get_parent()
+	while node != null:
+		if node is PopupPanel:
+			var popup := node as PopupPanel
+			popup.transparent = true
+			popup.transparent_bg = true
+			popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+			var tip_size := tip.card_size()
+			popup.size = Vector2i(ceili(tip_size.x), ceili(tip_size.y))
+			return
+		node = node.get_parent()
 
 
 func _refresh_portrait(data: RosterUnitData) -> void:

@@ -398,7 +398,7 @@ func _show_hatch_toast(unit: RosterUnitData, anchor_global_rect: Rect2) -> void:
 
 
 func _position_hatch_toast(card: UnitDetailCard, anchor_global_rect: Rect2) -> void:
-	var card_size := UnitDetailCard.CARD_SIZE
+	var card_size := card.card_size()
 	var local_top_left := anchor_global_rect.position - global_position
 	var pos := Vector2(
 		local_top_left.x + (anchor_global_rect.size.x - card_size.x) * 0.5,

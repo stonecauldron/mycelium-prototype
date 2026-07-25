@@ -9,3 +9,6 @@
 
 # Mac OS:
 .DS_Store
+
+# Oversized local Steam source files (keep PNGs in repo)
+steam/**/*.psd

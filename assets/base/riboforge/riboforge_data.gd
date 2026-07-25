@@ -19,7 +19,7 @@ const _SHOP_WEAPON_PATHS := [
 
 static var _default_weapon: WeaponData
 
-@export var weapon_stock: Array[WeaponData] = []
+@export var weapon_stock: StockInventory
 ## Weapon shop state (offers + locks). Shared ShopInventory used by any shop screen.
 @export var weapon_shop: ShopInventory
 
@@ -28,6 +28,7 @@ var _seeded: bool = false
 
 func _init() -> void:
 	_ensure_weapon_shop()
+	_ensure_stock()
 
 
 static func get_default_weapon() -> WeaponData:
@@ -51,19 +52,21 @@ func is_seeded() -> bool:
 
 
 func seed_if_empty() -> void:
+	_ensure_weapon_shop()
+	_ensure_stock()
 	if _seeded:
 		return
-	_ensure_weapon_shop()
 	weapon_stock.clear()
 	weapon_shop.ensure_filled(generate_weapon_offer)
 	_seeded = true
 
 
 func reset() -> void:
-	weapon_stock.clear()
 	_ensure_weapon_shop()
 	weapon_shop.clear()
 	_seeded = false
+	_ensure_stock()
+	weapon_stock.clear()
 
 
 func ensure_shop_offers() -> void:
@@ -82,14 +85,16 @@ func replace_shop_slot(slot_index: int) -> void:
 
 
 func can_add_weapon() -> bool:
-	return weapon_stock.size() < STOCK_SLOT_COUNT
+	_ensure_stock()
+	return weapon_stock.can_add()
 
 
-func add_weapon(weapon: WeaponData) -> bool:
-	if weapon == null or not can_add_weapon():
-		return false
-	weapon_stock.append(weapon)
-	return true
+## Places weapon in first empty slot. Returns slot index, or -1 on failure.
+func add_weapon(weapon: WeaponData) -> int:
+	_ensure_stock()
+	if weapon == null:
+		return -1
+	return weapon_stock.add(weapon)
 
 
 func generate_weapon_offer(_slot_index: int = 0) -> ShopOffer:
@@ -106,3 +111,10 @@ func _ensure_weapon_shop() -> void:
 	if weapon_shop == null:
 		weapon_shop = ShopInventory.new()
 	weapon_shop.slot_count = SHOP_SLOT_COUNT
+
+
+func _ensure_stock() -> void:
+	if weapon_stock == null:
+		weapon_stock = StockInventory.new()
+	weapon_stock.slot_count = STOCK_SLOT_COUNT
+	weapon_stock.ensure_size()

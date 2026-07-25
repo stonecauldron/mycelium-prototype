@@ -119,38 +119,42 @@ func try_buy_common_spore() -> bool:
 	return try_buy_spore(spore, BiomassData.COMMON_SPORE_COST)
 
 
-func try_buy_weapon(weapon: WeaponData, cost: int) -> bool:
+## Buys into weapon stock. Returns the stock slot index, or -1 on failure.
+func try_buy_weapon(weapon: WeaponData, cost: int) -> int:
 	if weapon == null or cost < 0:
-		return false
+		return -1
 	ensure_riboforge_seeded()
 	if not riboforge.can_add_weapon():
-		return false
+		return -1
 	if not biomass.try_spend(cost):
-		return false
+		return -1
 	# Duplicate so purchased copies are distinct from the shared default melee.
 	var stock_weapon := weapon.duplicate() as WeaponData
-	if stock_weapon == null or not riboforge.add_weapon(stock_weapon):
+	var stock_index := riboforge.add_weapon(stock_weapon) if stock_weapon != null else -1
+	if stock_index < 0:
 		biomass.add(cost)
-		return false
-	return true
+		return -1
+	return stock_index
 
 
 func try_equip_weapon_from_stock(unit: RosterUnitData, stock_index: int) -> bool:
 	if unit == null:
 		return false
 	ensure_riboforge_seeded()
-	if stock_index < 0 or stock_index >= riboforge.weapon_stock.size():
-		return false
-	var stock_weapon := riboforge.weapon_stock[stock_index] as WeaponData
+	var stock_weapon := riboforge.weapon_stock.get_at(stock_index) as WeaponData
 	if stock_weapon == null:
 		return false
-	# Remove first so a displaced non-default weapon can re-enter without needing
+	# Clear first so a displaced non-default weapon can re-enter without needing
 	# an extra stock slot beyond the cap.
-	riboforge.weapon_stock.remove_at(stock_index)
+	riboforge.weapon_stock.clear_slot(stock_index)
 	var previous := unit.weapon
 	unit.weapon = stock_weapon
 	if previous != null and not RiboforgeData.is_default_weapon(previous):
-		riboforge.weapon_stock.append(previous)
+		if riboforge.add_weapon(previous) < 0:
+			# Should be unreachable after clearing the source slot; restore stock.
+			riboforge.weapon_stock.set_at(stock_index, stock_weapon)
+			unit.weapon = previous
+			return false
 	return true
 
 
@@ -162,7 +166,7 @@ func try_unequip_weapon_to_stock(unit: RosterUnitData) -> bool:
 		return false
 	if not riboforge.can_add_weapon():
 		return false
-	if not riboforge.add_weapon(unit.weapon):
+	if riboforge.add_weapon(unit.weapon) < 0:
 		return false
 	unit.weapon = RiboforgeData.get_default_weapon()
 	return true
@@ -196,9 +200,7 @@ func try_sell_fertilizer_from_stock(stock_index: int) -> bool:
 
 func try_sell_nursery_stock_item(stock_index: int) -> bool:
 	ensure_nursery_seeded()
-	if stock_index < 0 or stock_index >= nursery.stock.size():
-		return false
-	var item := nursery.stock[stock_index]
+	var item := nursery.stock.get_at(stock_index)
 	var buy_cost := 0
 	if item is SporeData:
 		buy_cost = (item as SporeData).biomass_cost
@@ -206,19 +208,17 @@ func try_sell_nursery_stock_item(stock_index: int) -> bool:
 		buy_cost = (item as FertilizerData).biomass_cost
 	else:
 		return false
-	nursery.stock.remove_at(stock_index)
+	nursery.stock.clear_slot(stock_index)
 	biomass.add(BiomassData.sell_value(buy_cost))
 	return true
 
 
 func try_sell_weapon_from_stock(stock_index: int) -> bool:
 	ensure_riboforge_seeded()
-	if stock_index < 0 or stock_index >= riboforge.weapon_stock.size():
-		return false
-	var weapon := riboforge.weapon_stock[stock_index] as WeaponData
+	var weapon := riboforge.weapon_stock.get_at(stock_index) as WeaponData
 	if weapon == null or RiboforgeData.is_default_weapon(weapon):
 		return false
-	riboforge.weapon_stock.remove_at(stock_index)
+	riboforge.weapon_stock.clear_slot(stock_index)
 	biomass.add(BiomassData.sell_value(weapon.biomass_cost))
 	return true
 

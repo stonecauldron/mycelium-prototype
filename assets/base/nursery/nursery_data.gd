@@ -29,7 +29,7 @@ const _FERTILIZER_PATHS: Array[String] = [
 
 @export var plots: Array = []
 ## Shared nursery inventory: SporeData and FertilizerData entries.
-@export var stock: Array[Resource] = []
+@export var stock: StockInventory
 ## Nursery shop state (offers + locks). Shared ShopInventory used by any shop screen.
 @export var spore_shop: ShopInventory
 @export var unlocked_plot_count: int = STARTING_UNLOCKED_PLOTS
@@ -40,6 +40,7 @@ var _seeded: bool = false
 func _init() -> void:
 	unlocked_plot_count = STARTING_UNLOCKED_PLOTS
 	_ensure_plot_count()
+	_ensure_stock()
 	_ensure_spore_shop()
 
 
@@ -48,27 +49,29 @@ func is_seeded() -> bool:
 
 
 func seed_if_empty() -> void:
-	if _seeded:
-		return
 	_ensure_plot_count()
 	_ensure_spore_shop()
+	_ensure_stock()
+	if _seeded:
+		return
 	stock.clear()
 	var common_spore := load(_COMMON_SPORE_PATH) as SporeData
 	if common_spore != null:
-		for _i in mini(STARTER_SPORE_COUNT, STOCK_SLOT_COUNT):
-			stock.append(common_spore)
+		for i in mini(STARTER_SPORE_COUNT, STOCK_SLOT_COUNT):
+			stock.set_at(i, common_spore)
 	spore_shop.ensure_filled(generate_offer_for_slot)
 	_seeded = true
 
 
 func reset() -> void:
 	plots.clear()
-	stock.clear()
 	unlocked_plot_count = STARTING_UNLOCKED_PLOTS
 	_ensure_spore_shop()
 	spore_shop.clear()
 	_seeded = false
 	_ensure_plot_count()
+	_ensure_stock()
+	stock.clear()
 
 
 func is_plot_unlocked(plot_index: int) -> bool:
@@ -109,16 +112,20 @@ func replace_shop_slot(slot_index: int) -> void:
 
 
 func can_add_stock_item() -> bool:
-	return stock.size() < STOCK_SLOT_COUNT
+	_ensure_stock()
+	return stock.can_add()
 
 
 func add_stock_item(item: Resource) -> bool:
-	if item == null or not can_add_stock_item():
-		return false
-	if not (item is SporeData or item is FertilizerData):
-		return false
-	stock.append(item)
-	return true
+	return add_stock_item_at(item, -1) >= 0
+
+
+## Places item in first empty slot (or `slot_index` if >= 0). Returns slot index, or -1.
+func add_stock_item_at(item: Resource, slot_index: int = -1) -> int:
+	_ensure_stock()
+	if item == null or not (item is SporeData or item is FertilizerData):
+		return -1
+	return stock.add(item, slot_index)
 
 
 func can_add_spore() -> bool:
@@ -138,8 +145,9 @@ func has_spore_in_stock() -> bool:
 
 
 func first_spore_stock_index() -> int:
-	for i in stock.size():
-		if stock[i] is SporeData:
+	_ensure_stock()
+	for i in stock.slots.size():
+		if stock.slots[i] is SporeData:
 			return i
 	return -1
 
@@ -197,18 +205,17 @@ func _ensure_spore_shop() -> void:
 
 
 func plant(plot_index: int, stock_index: int = -1) -> bool:
+	_ensure_stock()
 	if plot_index < 0 or plot_index >= plots.size():
 		return false
 	if stock_index < 0:
 		stock_index = first_spore_stock_index()
-	if stock_index < 0 or stock_index >= stock.size():
-		return false
-	var spore := stock[stock_index] as SporeData
+	var spore := stock.get_at(stock_index) as SporeData
 	if spore == null:
 		return false
 	if not plant_spore(plot_index, spore):
 		return false
-	stock.remove_at(stock_index)
+	stock.clear_slot(stock_index)
 	return true
 
 
@@ -228,14 +235,13 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 
 
 func apply_fertilizer_from_stock(plot_index: int, stock_index: int) -> bool:
-	if stock_index < 0 or stock_index >= stock.size():
-		return false
-	var fertilizer := stock[stock_index] as FertilizerData
+	_ensure_stock()
+	var fertilizer := stock.get_at(stock_index) as FertilizerData
 	if fertilizer == null:
 		return false
 	if not apply_fertilizer_to_plot(plot_index, fertilizer):
 		return false
-	stock.remove_at(stock_index)
+	stock.clear_slot(stock_index)
 	return true
 
 
@@ -306,3 +312,10 @@ func _ensure_plot_count() -> void:
 	for i in plots.size():
 		if plots[i] == null:
 			plots[i] = NurseryPlotData.new()
+
+
+func _ensure_stock() -> void:
+	if stock == null:
+		stock = StockInventory.new()
+	stock.slot_count = STOCK_SLOT_COUNT
+	stock.ensure_size()

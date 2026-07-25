@@ -162,7 +162,8 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 		return slot._can_drop_data(at_position, data)
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
-	return str(data.get("type", "")) == "shop_spore" or str(data.get("type", "")) == "shop_fertilizer"
+	var drop_type := str(data.get("type", ""))
+	return drop_type in ["shop_spore", "shop_fertilizer", "spore", "fertilizer"]
 
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:

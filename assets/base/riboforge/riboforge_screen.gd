@@ -3,6 +3,8 @@ extends BaseScreen
 
 const STOCK_SLOT_COUNT := RiboforgeData.STOCK_SLOT_COUNT
 const SHOP_SLOT_COUNT := RiboforgeData.SHOP_SLOT_COUNT
+var _stock_drag_types := PackedStringArray(["weapon"])
+var _intake_drag_types := PackedStringArray(["shop_weapon", "equipped_weapon"])
 const _WEAPON_CARD_SCENE := preload("res://assets/base/riboforge/weapon_card.tscn")
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
@@ -64,11 +66,11 @@ func _build_stock_slots() -> void:
 	for i in STOCK_SLOT_COUNT:
 		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		slot.slot_index = i
-		slot.accepted_drag_types = PackedStringArray(["shop_weapon", "equipped_weapon"])
 		slot.item_dropped.connect(_on_stock_item_dropped)
 		_stock_row.add_child(slot)
 		slot.set_floor_texture(_FLOOR_TILE_FORGE)
 		_stock_slots.append(slot)
+	_update_stock_slot_accepts()
 
 
 func _rebuild_shop_cards() -> void:
@@ -141,19 +143,25 @@ func _icon_for_weapon(weapon: WeaponData) -> Texture2D:
 
 func _sync_stock_slots() -> void:
 	var stock := GameState.riboforge.weapon_stock
-	var can_add := GameState.riboforge.can_add_weapon()
+	_update_stock_slot_accepts()
 	for i in _stock_slots.size():
 		var slot := _stock_slots[i]
-		slot.accepts_drops = can_add
 		slot.clear_card()
-		if i >= stock.size():
-			continue
-		var weapon := stock[i] as WeaponData
+		var weapon := stock.get_at(i) as WeaponData
 		if weapon == null:
 			continue
 		var card: WeaponCard = _WEAPON_CARD_SCENE.instantiate()
 		card.setup(weapon, i)
 		slot.set_card(card)
+
+
+func _update_stock_slot_accepts() -> void:
+	StockInventory.configure_drop_slots(
+		_stock_slots,
+		_stock_drag_types,
+		_intake_drag_types,
+		GameState.riboforge.can_add_weapon()
+	)
 
 
 func _refresh() -> void:
@@ -211,7 +219,12 @@ func _on_shop_offer_clicked(card: ShopOfferCard) -> void:
 	_try_buy_shop_payload(card.payload)
 
 
-func _on_stock_item_dropped(_slot: DropSlot, data: Dictionary) -> void:
+func _on_stock_item_dropped(slot: DropSlot, data: Dictionary) -> void:
+	if StockInventory.consume_stock_rearrange(
+		GameState.riboforge.weapon_stock, data, slot.slot_index, _stock_drag_types
+	):
+		_refresh()
+		return
 	var drop_type := str(data.get("type", ""))
 	if drop_type == "shop_weapon":
 		_try_buy_shop_payload(data)
@@ -251,7 +264,7 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 		return
 	if not GameState.riboforge.can_add_weapon():
 		return
-	if GameState.try_buy_weapon(weapon, cost):
+	if GameState.try_buy_weapon(weapon, cost) >= 0:
 		if slot_index >= 0:
 			GameState.riboforge.replace_shop_slot(slot_index)
 		_rebuild_shop_cards()

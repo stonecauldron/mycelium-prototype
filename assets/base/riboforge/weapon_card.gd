@@ -166,7 +166,7 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
 	var drop_type := str(data.get("type", ""))
-	return drop_type == "shop_weapon" or drop_type == "equipped_weapon"
+	return drop_type in ["shop_weapon", "equipped_weapon", "weapon"]
 
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:

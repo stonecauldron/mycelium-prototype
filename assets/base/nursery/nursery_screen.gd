@@ -3,6 +3,8 @@ extends BaseScreen
 
 const STOCK_SLOT_COUNT := NurseryData.STOCK_SLOT_COUNT
 const SHOP_SLOT_COUNT := NurseryData.SHOP_SLOT_COUNT
+var _stock_drag_types := PackedStringArray(["spore", "fertilizer"])
+var _intake_drag_types := PackedStringArray(["shop_spore", "shop_fertilizer"])
 const _HATCH_TOAST_DURATION_SEC := 2.5
 const _HATCH_TOAST_FADE_SEC := 0.18
 const _PLOT_TILE_SCENE := preload("res://assets/base/plot_tile/plot_tile.tscn")
@@ -83,10 +85,10 @@ func _build_stock_slots() -> void:
 	for i in STOCK_SLOT_COUNT:
 		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		slot.slot_index = i
-		slot.accepted_drag_types = PackedStringArray(["shop_spore", "shop_fertilizer"])
 		slot.item_dropped.connect(_on_stock_item_dropped)
 		_stock_row.add_child(slot)
 		_stock_slots.append(slot)
+	_update_stock_slot_accepts()
 
 
 func _build_plot_tiles() -> void:
@@ -190,14 +192,11 @@ func _rebuild_shop_cards() -> void:
 
 func _sync_stock_slots() -> void:
 	var stock := GameState.nursery.stock
-	var can_add := GameState.nursery.can_add_stock_item()
+	_update_stock_slot_accepts()
 	for i in _stock_slots.size():
 		var slot := _stock_slots[i]
-		slot.accepts_drops = can_add
 		slot.clear_card()
-		if i >= stock.size():
-			continue
-		var item := stock[i]
+		var item := stock.get_at(i)
 		if item is SporeData:
 			var card: SporeCard = _SPORE_CARD_SCENE.instantiate()
 			card.setup(item as SporeData, i)
@@ -206,6 +205,15 @@ func _sync_stock_slots() -> void:
 			var fert_card: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
 			fert_card.setup(item as FertilizerData, i)
 			slot.set_card(fert_card)
+
+
+func _update_stock_slot_accepts() -> void:
+	StockInventory.configure_drop_slots(
+		_stock_slots,
+		_stock_drag_types,
+		_intake_drag_types,
+		GameState.nursery.can_add_stock_item()
+	)
 
 
 func _refresh() -> void:
@@ -261,7 +269,12 @@ func _on_shop_offer_clicked(card: ShopOfferCard) -> void:
 	_try_buy_shop_payload(card.payload)
 
 
-func _on_stock_item_dropped(_slot: DropSlot, data: Dictionary) -> void:
+func _on_stock_item_dropped(slot: DropSlot, data: Dictionary) -> void:
+	if StockInventory.consume_stock_rearrange(
+		GameState.nursery.stock, data, slot.slot_index, _stock_drag_types
+	):
+		_refresh()
+		return
 	_try_buy_shop_payload(data)
 
 

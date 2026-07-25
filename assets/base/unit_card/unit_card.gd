@@ -241,11 +241,11 @@ func _try_receive_weapon(data: Dictionary) -> void:
 		var slot_index := int(data.get("slot_index", -1))
 		if weapon == null:
 			return
-		if not GameState.try_buy_weapon(weapon, cost):
+		var new_index := GameState.try_buy_weapon(weapon, cost)
+		if new_index < 0:
 			return
 		if slot_index >= 0:
 			GameState.riboforge.replace_shop_slot(slot_index)
-		var new_index := GameState.riboforge.weapon_stock.size() - 1
 		if GameState.try_equip_weapon_from_stock(unit, new_index):
 			_refresh()
 			weapon_loadout_changed.emit(self)

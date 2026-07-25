@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://d1cl6878jbaea"]
+
+[ext_resource type="Script" uid="uid://kbg1mwsim242" path="res://assets/ui/floating_arrow/floating_arrow.gd" id="1_arrow"]
+[ext_resource type="Texture2D" uid="uid://txw374s1xsda" path="res://assets/ui/arrow.png" id="2_tex"]
+
+[node name="FloatingArrow" type="Control" unique_id=1834536485]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("1_arrow")
+
+[node name="Icon" type="TextureRect" parent="." unique_id=1756510844]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_tex")
+expand_mode = 1
+stretch_mode = 5

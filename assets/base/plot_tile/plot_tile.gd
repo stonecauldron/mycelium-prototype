@@ -32,6 +32,7 @@ var _fertilizer_icon_atlas: AtlasTexture
 @onready var _unlock_button: Button = %UnlockButton
 @onready var _unlock_cost_label: Label = %UnlockCostLabel
 @onready var _lock_icon: TextureRect = %LockIcon
+@onready var _drop_arrow: FloatingArrow = %DropArrow
 
 
 func _ready() -> void:
@@ -78,6 +79,45 @@ func clear_drop_highlight() -> void:
 	modulate = _base_modulate
 
 
+func _set_drop_arrow_visible(should_show: bool) -> void:
+	if _drop_arrow == null:
+		return
+	if should_show:
+		_drop_arrow.show_arrow()
+	else:
+		_drop_arrow.hide_arrow()
+
+
+func _accepts_drag_data(data: Variant) -> bool:
+	if is_unlockable:
+		return false
+	if typeof(data) != TYPE_DICTIONARY:
+		return false
+	if _plot == null:
+		return false
+	var drop_type := str(data.get("type", ""))
+	var state := _plot.get_state()
+	if drop_type == "shop_spore" or drop_type == "spore":
+		if state != NurseryPlotData.State.EMPTY:
+			return false
+		if drop_type == "spore" and not _can_plant:
+			return false
+		return true
+	if drop_type == "shop_fertilizer" or drop_type == "fertilizer":
+		if state == NurseryPlotData.State.READY:
+			return false
+		return state == NurseryPlotData.State.EMPTY or state == NurseryPlotData.State.GROWING
+	return false
+
+
+func _refresh_drop_arrow_for_drag() -> void:
+	var viewport := get_viewport()
+	if viewport == null or not viewport.gui_is_dragging():
+		_set_drop_arrow_visible(false)
+		return
+	_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
+
+
 func _set_children_mouse_filter_ignore(node: Node) -> void:
 	for child in node.get_children():
 		if child is Control:
@@ -104,6 +144,7 @@ func _refresh() -> void:
 		_unlock_button.modulate = button_mod if can_unlock else button_mod * Color(1, 1, 1, 0.45)
 		_lock_icon.modulate = Color.WHITE / _LOCKED_MODULATE
 		tooltip_text = ""
+		_set_drop_arrow_visible(false)
 		return
 
 	_lock_icon.visible = false
@@ -117,6 +158,7 @@ func _refresh() -> void:
 		_clear_fertilizer_chips()
 		tooltip_text = ""
 		_apply_visual_state()
+		_refresh_drop_arrow_for_drag()
 		return
 
 	match _plot.get_state():
@@ -142,6 +184,7 @@ func _refresh() -> void:
 	_refresh_fertilizer_chips()
 	tooltip_text = _plot.fertilizer_tooltip()
 	_apply_visual_state()
+	_refresh_drop_arrow_for_drag()
 
 
 func _clear_fertilizer_chips() -> void:
@@ -231,56 +274,24 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	if is_unlockable:
+	if not _accepts_drag_data(data):
 		clear_drop_highlight()
 		return false
-	if typeof(data) != TYPE_DICTIONARY:
-		clear_drop_highlight()
-		return false
-	if _plot == null:
-		clear_drop_highlight()
-		return false
-	var drop_type := str(data.get("type", ""))
-	var state := _plot.get_state()
-	if drop_type == "shop_spore" or drop_type == "spore":
-		if state != NurseryPlotData.State.EMPTY:
-			clear_drop_highlight()
-			return false
-		if drop_type == "spore" and not _can_plant:
-			clear_drop_highlight()
-			return false
-		modulate = _DROP_HIGHLIGHT
-		return true
-	if drop_type == "shop_fertilizer" or drop_type == "fertilizer":
-		if state == NurseryPlotData.State.READY:
-			clear_drop_highlight()
-			return false
-		if state != NurseryPlotData.State.EMPTY and state != NurseryPlotData.State.GROWING:
-			clear_drop_highlight()
-			return false
-		modulate = _DROP_HIGHLIGHT
-		return true
-	clear_drop_highlight()
-	return false
+	modulate = _DROP_HIGHLIGHT
+	return true
 
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	clear_drop_highlight()
-	if is_unlockable:
-		return
-	if typeof(data) != TYPE_DICTIONARY:
-		return
-	var drop_type := str(data.get("type", ""))
-	if (
-		drop_type != "spore"
-		and drop_type != "shop_spore"
-		and drop_type != "fertilizer"
-		and drop_type != "shop_fertilizer"
-	):
+	_set_drop_arrow_visible(false)
+	if not _accepts_drag_data(data):
 		return
 	spore_dropped.emit(self, data)
 
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_DRAG_END:
+	if what == NOTIFICATION_DRAG_BEGIN:
+		_refresh_drop_arrow_for_drag()
+	elif what == NOTIFICATION_DRAG_END:
 		clear_drop_highlight()
+		_set_drop_arrow_visible(false)

@@ -1,10 +1,8 @@
 class_name RosterUnitData
 extends Resource
 
-const DAYS_TO_IMAGO := 2
 const IMAGO_STAT_BONUS := 2
-const _DEFAULT_STRAIN_PATH := "res://assets/units/capling/capling_strain.tres"
-const _IMAGO_STRAIN_PATH := "res://assets/units/imago_generalist/imago_generalist_strain.tres"
+const _DEFAULT_STRAIN_PATH := "res://assets/units/generalist/generalist_strain.tres"
 
 @export var display_name: String = "Unit"
 @export var stats: UnitStatsData
@@ -12,6 +10,7 @@ const _IMAGO_STRAIN_PATH := "res://assets/units/imago_generalist/imago_generalis
 @export var strain: UnitStrain
 @export var power_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.COMMON
 @export var days_alive: int = 0
+@export var life_stage_id: StringName = &"juvenile"
 @export var is_imago: bool = false
 
 
@@ -28,10 +27,12 @@ func get_attack_style() -> WeaponData.AttackStyle:
 
 
 func can_promote_to_imago() -> bool:
-	return not is_imago and days_alive >= DAYS_TO_IMAGO
+	if is_imago or strain == null:
+		return false
+	return days_alive >= strain.days_to_imago
 
 
-func promote_to_imago(imago_strain: UnitStrain = null) -> bool:
+func promote_to_imago() -> bool:
 	if is_imago:
 		return false
 	if stats != null:
@@ -39,15 +40,15 @@ func promote_to_imago(imago_strain: UnitStrain = null) -> bool:
 		stats.dex = clampi(stats.dex + IMAGO_STAT_BONUS, 1, 99)
 		stats.con = clampi(stats.con + IMAGO_STAT_BONUS, 1, 99)
 		stats.spd = clampi(stats.spd + IMAGO_STAT_BONUS, 1, 99)
+	life_stage_id = UnitStrain.STAGE_IMAGO
 	is_imago = true
-	strain = imago_strain if imago_strain != null else _imago_strain()
 	return true
 
 
 func mount_portrait(host: Control, portrait_scale: float = 0.55) -> UnitAppearance:
 	if host == null or strain == null:
 		return null
-	var appearance := strain.instantiate_appearance()
+	var appearance := strain.instantiate_appearance(life_stage_id)
 	if appearance == null:
 		return null
 	host.add_child(appearance)
@@ -94,6 +95,7 @@ static func create(
 	data.strain = unit_strain if unit_strain != null else _default_strain()
 	data.power_tier = unit_tier
 	data.days_alive = 0
+	data.life_stage_id = UnitStrain.STAGE_JUVENILE
 	data.is_imago = false
 	return data
 
@@ -101,7 +103,3 @@ static func create(
 static func _default_strain() -> UnitStrain:
 	# load() (not preload): strain.tres → appearance → Unit would cycle at compile time.
 	return load(_DEFAULT_STRAIN_PATH) as UnitStrain
-
-
-static func _imago_strain() -> UnitStrain:
-	return load(_IMAGO_STRAIN_PATH) as UnitStrain

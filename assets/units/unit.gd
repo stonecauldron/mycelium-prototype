@@ -169,11 +169,14 @@ func _mount_appearance() -> void:
 	var strain: UnitStrain = roster_data.strain if roster_data != null else null
 	if strain == null:
 		# load() (not preload): breaks Unit↔strain appearance compile cycle on export.
-		strain = load("res://assets/units/capling/capling_strain.tres") as UnitStrain
+		strain = load("res://assets/units/generalist/generalist_strain.tres") as UnitStrain
 	if strain == null:
 		return
 
-	_appearance = strain.instantiate_appearance()
+	var stage_id := UnitStrain.STAGE_JUVENILE
+	if roster_data != null:
+		stage_id = roster_data.life_stage_id
+	_appearance = strain.instantiate_appearance(stage_id)
 	if _appearance == null:
 		return
 

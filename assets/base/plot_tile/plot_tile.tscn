@@ -9,6 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="7_hourglass"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="8_chip"]
 [ext_resource type="PackedScene" uid="uid://d1cl6878jbaea" path="res://assets/ui/floating_arrow/floating_arrow.tscn" id="9_arrow"]
+[ext_resource type="Texture2D" uid="uid://6smol5kjpvmd" path="res://assets/base/plot_tile/egg0_shadow.png" id="10_egg_shadow"]
+[ext_resource type="Texture2D" uid="uid://cog6qekc0if3t" path="res://assets/base/plot_tile/egg0.png" id="11_egg0"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
@@ -53,14 +55,52 @@ custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="PlotVisual" type="TextureRect" parent="Content/Margin/Stack" unique_id=653384849]
+[node name="PlotVisualArea" type="Control" parent="Content/Margin/Stack" unique_id=653384848]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 mouse_filter = 2
+
+[node name="PlotVisual" type="TextureRect" parent="Content/Margin/Stack/PlotVisualArea" unique_id=653384849]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 texture = ExtResource("3_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EggShadow" type="TextureRect" parent="Content/Margin/Stack/PlotVisualArea" unique_id=653384850]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("10_egg_shadow")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EggVisual" type="TextureRect" parent="Content/Margin/Stack/PlotVisualArea" unique_id=653384851]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("11_egg0")
 expand_mode = 1
 stretch_mode = 5
 

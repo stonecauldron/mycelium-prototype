@@ -351,6 +351,7 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 			if unit == null:
 				return
 			GameState.troop.try_add_unit(unit)
+			GameState.show_plot_harvest_hint = false
 			var toast_anchor := tile.get_global_rect()
 			_refresh()
 			_show_hatch_toast(unit, toast_anchor)

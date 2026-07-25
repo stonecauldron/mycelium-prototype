@@ -23,6 +23,8 @@ var prefer_nursery_tab: bool = false
 var prefer_riboforge_tab: bool = false
 ## Session preference: combat fast-forward scale (1, 2, or 4; restored on next fight).
 var combat_fast_forward: int = 1
+## Session: hovering arrow on READY plots until the player harvests once.
+var show_plot_harvest_hint: bool = true
 ## Debug (~): cheats active — force base screens unlocked and show debug HUD.
 var debug_mode_active: bool = false
 
@@ -277,6 +279,7 @@ func reset_run() -> void:
 	current_day = 0
 	prefer_nursery_tab = false
 	prefer_riboforge_tab = false
+	show_plot_harvest_hint = true
 	debug_mode_active = false
 	clear_upcoming_enemy_formation()
 	_roll_run_seed()

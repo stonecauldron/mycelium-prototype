@@ -11,10 +11,21 @@ const _DROP_HIGHLIGHT := Color(0.7, 1.0, 0.75, 1.0)
 const _TEX_EMPTY := preload("res://assets/base/plot_tile/plot_empty.png")
 const _TEX_GROWTH0 := preload("res://assets/base/plot_tile/growth0.png")
 const _TEX_GROWTH1 := preload("res://assets/base/plot_tile/growth1.png")
-const _TEX_GROWTH2 := preload("res://assets/base/plot_tile/growth2.png")
-const _TEX_GROWTH3 := preload("res://assets/base/plot_tile/growth3.png")
+const _TEX_EGG0 := preload("res://assets/base/plot_tile/egg0.png")
+const _TEX_EGG1 := preload("res://assets/base/plot_tile/egg1.png")
+const _TEX_EGG0_SHADOW := preload("res://assets/base/plot_tile/egg0_shadow.png")
+const _TEX_EGG1_SHADOW := preload("res://assets/base/plot_tile/egg1_shadow.png")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
 const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
+
+const _SHAKE_IDLE_NORMAL_SEC := 1.5
+const _SHAKE_IDLE_IMAGO_SEC := 0.8
+const _SHAKE_STEP_NORMAL_SEC := 0.06
+const _SHAKE_STEP_IMAGO_SEC := 0.045
+const _SHAKE_ROT_NORMAL_DEG := 14.0
+const _SHAKE_ROT_IMAGO_DEG := 26.0
+const _SHAKE_NUDGE_NORMAL_PX := 4.0
+const _SHAKE_NUDGE_IMAGO_PX := 8.0
 
 var plot_index: int = 0
 var is_unlockable: bool = false
@@ -24,8 +35,21 @@ var _can_plant: bool = false
 var _base_modulate: Color = Color.WHITE
 var _fertilizer_chips: Array[StatChip] = []
 var _fertilizer_icon_atlas: AtlasTexture
+var _egg_shake_tween: Tween
+var _egg_shake_imago: bool = false
+var _egg_shake_x: float = 0.0:
+	set(value):
+		_egg_shake_x = value
+		_apply_egg_shake_transform()
+var _egg_shake_rot: float = 0.0:
+	set(value):
+		_egg_shake_rot = value
+		_apply_egg_shake_transform()
 
+@onready var _plot_visual_area: Control = %PlotVisualArea
 @onready var _plot_visual: TextureRect = %PlotVisual
+@onready var _egg_shadow: TextureRect = %EggShadow
+@onready var _egg_visual: TextureRect = %EggVisual
 @onready var _days_chip: StatChip = %DaysChip
 @onready var _stats_row: HBoxContainer = %StatsRow
 @onready var _lock_spacer: Control = %LockSpacer
@@ -47,6 +71,8 @@ func _ready() -> void:
 	_unlock_button.pressed.connect(_on_unlock_pressed)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	mouse_exited.connect(clear_drop_highlight)
+	if _egg_visual != null:
+		_egg_visual.resized.connect(_update_egg_pivot)
 	if is_unlockable or _plot != null:
 		_refresh()
 
@@ -110,12 +136,20 @@ func _accepts_drag_data(data: Variant) -> bool:
 	return false
 
 
-func _refresh_drop_arrow_for_drag() -> void:
+func _should_show_harvest_hint() -> bool:
+	if not GameState.show_plot_harvest_hint:
+		return false
+	if is_unlockable or _plot == null:
+		return false
+	return _plot.get_state() == NurseryPlotData.State.READY
+
+
+func _refresh_arrow() -> void:
 	var viewport := get_viewport()
-	if viewport == null or not viewport.gui_is_dragging():
-		_set_drop_arrow_visible(false)
+	if viewport != null and viewport.gui_is_dragging():
+		_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
 		return
-	_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
+	_set_drop_arrow_visible(_should_show_harvest_hint())
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:
@@ -129,7 +163,8 @@ func _refresh() -> void:
 	if is_unlockable:
 		_days_chip.visible = false
 		_clear_fertilizer_chips()
-		_plot_visual.visible = false
+		_plot_visual_area.visible = false
+		_hide_egg_layers()
 		_lock_spacer.visible = true
 		_lock_icon.visible = true
 		_unlock_button.visible = true
@@ -144,7 +179,7 @@ func _refresh() -> void:
 		_unlock_button.modulate = button_mod if can_unlock else button_mod * Color(1, 1, 1, 0.45)
 		_lock_icon.modulate = Color.WHITE / _LOCKED_MODULATE
 		tooltip_text = ""
-		_set_drop_arrow_visible(false)
+		_refresh_arrow()
 		return
 
 	_lock_icon.visible = false
@@ -152,13 +187,13 @@ func _refresh() -> void:
 	_unlock_button.visible = false
 	_unlock_button.modulate = Color.WHITE
 	_lock_icon.modulate = Color.WHITE
-	_plot_visual.visible = true
+	_plot_visual_area.visible = true
 	if _plot == null:
 		_days_chip.visible = false
 		_clear_fertilizer_chips()
 		tooltip_text = ""
 		_apply_visual_state()
-		_refresh_drop_arrow_for_drag()
+		_refresh_arrow()
 		return
 
 	match _plot.get_state():
@@ -184,7 +219,7 @@ func _refresh() -> void:
 	_refresh_fertilizer_chips()
 	tooltip_text = _plot.fertilizer_tooltip()
 	_apply_visual_state()
-	_refresh_drop_arrow_for_drag()
+	_refresh_arrow()
 
 
 func _clear_fertilizer_chips() -> void:
@@ -230,7 +265,13 @@ func _apply_visual_state() -> void:
 	if _plot_visual == null:
 		return
 	_plot_visual.texture = _texture_for_plot()
-	_plot_visual.modulate = _growth_tint()
+	var is_ready := _plot != null and _plot.get_state() == NurseryPlotData.State.READY
+	if is_ready:
+		_plot_visual.modulate = Color.WHITE
+		_show_egg_layers(_plot.will_harvest_as_imago())
+	else:
+		_plot_visual.modulate = _growth_tint()
+		_hide_egg_layers()
 
 
 func _growth_tint() -> Color:
@@ -245,9 +286,7 @@ func _texture_for_plot() -> Texture2D:
 	if _plot == null or _plot.get_state() == NurseryPlotData.State.EMPTY:
 		return _TEX_EMPTY
 	if _plot.get_state() == NurseryPlotData.State.READY:
-		if _plot.will_harvest_as_imago():
-			return _TEX_GROWTH3
-		return _TEX_GROWTH2
+		return _TEX_EMPTY
 	var needed := 1
 	if _plot.planted_spore != null:
 		needed = maxi(1, _plot.planted_spore.days_to_mature)
@@ -255,6 +294,80 @@ func _texture_for_plot() -> Texture2D:
 	if progress < 0.5:
 		return _TEX_GROWTH0
 	return _TEX_GROWTH1
+
+
+func _show_egg_layers(as_imago: bool) -> void:
+	if _egg_shadow == null or _egg_visual == null:
+		return
+	_egg_shadow.visible = true
+	_egg_visual.visible = true
+	_egg_shadow.texture = _TEX_EGG1_SHADOW if as_imago else _TEX_EGG0_SHADOW
+	_egg_visual.texture = _TEX_EGG1 if as_imago else _TEX_EGG0
+	_egg_visual.modulate = _growth_tint()
+	_update_egg_pivot()
+	_start_egg_shake(as_imago)
+
+
+func _hide_egg_layers() -> void:
+	_stop_egg_shake()
+	if _egg_shadow != null:
+		_egg_shadow.visible = false
+	if _egg_visual != null:
+		_egg_visual.visible = false
+		_egg_visual.modulate = Color.WHITE
+
+
+func _start_egg_shake(as_imago: bool) -> void:
+	if _egg_visual == null:
+		return
+	if _egg_shake_tween != null and _egg_shake_tween.is_valid() and _egg_shake_imago == as_imago:
+		return
+	_stop_egg_shake()
+	_egg_shake_imago = as_imago
+	_update_egg_pivot()
+
+	var rot := _SHAKE_ROT_IMAGO_DEG if as_imago else _SHAKE_ROT_NORMAL_DEG
+	var nudge := _SHAKE_NUDGE_IMAGO_PX if as_imago else _SHAKE_NUDGE_NORMAL_PX
+	var step := _SHAKE_STEP_IMAGO_SEC if as_imago else _SHAKE_STEP_NORMAL_SEC
+	var idle := _SHAKE_IDLE_IMAGO_SEC if as_imago else _SHAKE_IDLE_NORMAL_SEC
+
+	var tween := create_tween()
+	_egg_shake_tween = tween
+	tween.set_loops()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_interval(idle)
+	tween.tween_property(self, "_egg_shake_rot", -rot, step)
+	tween.parallel().tween_property(self, "_egg_shake_x", -nudge, step)
+	tween.tween_property(self, "_egg_shake_rot", rot, step)
+	tween.parallel().tween_property(self, "_egg_shake_x", nudge, step)
+	tween.tween_property(self, "_egg_shake_rot", -rot * 0.6, step)
+	tween.parallel().tween_property(self, "_egg_shake_x", -nudge * 0.6, step)
+	tween.tween_property(self, "_egg_shake_rot", 0.0, step)
+	tween.parallel().tween_property(self, "_egg_shake_x", 0.0, step)
+
+
+func _stop_egg_shake() -> void:
+	if _egg_shake_tween != null:
+		_egg_shake_tween.kill()
+		_egg_shake_tween = null
+	_egg_shake_x = 0.0
+	_egg_shake_rot = 0.0
+	_apply_egg_shake_transform()
+
+
+func _apply_egg_shake_transform() -> void:
+	if _egg_visual == null:
+		return
+	_egg_visual.rotation_degrees = _egg_shake_rot
+	_egg_visual.offset_left = _egg_shake_x
+	_egg_visual.offset_right = _egg_shake_x
+
+
+func _update_egg_pivot() -> void:
+	if _egg_visual == null:
+		return
+	_egg_visual.pivot_offset = _egg_visual.size * 0.5
 
 
 func _on_unlock_pressed() -> void:
@@ -283,7 +396,7 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	clear_drop_highlight()
-	_set_drop_arrow_visible(false)
+	_refresh_arrow()
 	if not _accepts_drag_data(data):
 		return
 	spore_dropped.emit(self, data)
@@ -291,7 +404,7 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_BEGIN:
-		_refresh_drop_arrow_for_drag()
+		_refresh_arrow()
 	elif what == NOTIFICATION_DRAG_END:
 		clear_drop_highlight()
-		_set_drop_arrow_visible(false)
+		_refresh_arrow()

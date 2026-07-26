@@ -20,6 +20,6 @@ appearance_scene = ExtResource("4_imago")
 [resource]
 script = ExtResource("1_script")
 display_name = "Generalist"
-short_description = "An all-rounder strain. A tad boring…"
+short_description = "An all-rounder. A tad boring…"
 days_to_imago = 2
 life_stages = [SubResource("Stage_juvenile"), SubResource("Stage_imago")]

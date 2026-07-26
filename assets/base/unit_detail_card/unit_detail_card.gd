@@ -1,9 +1,9 @@
 class_name UnitDetailCard
 extends Control
 
-const CARD_SIZE := Vector2(280, 420)
-const CARD_SIZE_NO_PORTRAIT := Vector2(280, 340)
-const PORTRAIT_SCALE := 0.95
+const CARD_SIZE := Vector2(300, 460)
+const CARD_SIZE_NO_PORTRAIT := Vector2(300, 360)
+const PORTRAIT_SCALE := 0.9
 
 var unit_data: RosterUnitData
 var show_portrait: bool = true
@@ -16,7 +16,6 @@ var _portrait_instance: Node2D = null
 @onready var _age_label: Label = %AgeLabel
 @onready var _stage_tag: TagChip = %StageTag
 @onready var _tier_tag: TagChip = %TierTag
-@onready var _role_tag: TagChip = %RoleTag
 @onready var _portrait_host: Control = %PortraitHost
 @onready var _atk_chip: StatChip = %AtkChip
 @onready var _hp_chip: StatChip = %HpChip
@@ -123,7 +122,7 @@ func _refresh() -> void:
 func _refresh_strain_meta() -> void:
 	var strain := unit_data.strain
 	if strain != null:
-		_type_label.text = strain.display_name
+		_type_label.text = "%s Strain" % strain.display_name
 		_desc_label.text = strain.short_description
 		_desc_label.visible = not strain.short_description.is_empty()
 	else:
@@ -137,8 +136,6 @@ func _refresh_tags() -> void:
 	_stage_tag.set_text("Adult" if unit_data.is_imago else "Child")
 	_tier_tag.set_text(UnitStatsData.label_for_tier(unit_data.power_tier))
 	_tier_tag.set_fill_color(UnitStatsData.tint_for_tier(unit_data.power_tier))
-	var role := str(WeaponData.FORMATION_LINE_LABELS.get(unit_data.get_formation_line(), "—"))
-	_role_tag.set_text(role)
 
 
 func _age_text(days: int) -> String:

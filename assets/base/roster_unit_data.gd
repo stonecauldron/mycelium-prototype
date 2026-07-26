@@ -73,11 +73,16 @@ static func _ensure_portrait_host_sync(host: Control) -> void:
 static func _sync_portrait_in_host(host: Control) -> void:
 	if not is_instance_valid(host):
 		return
+	# Feet-pivoted: origin is at the soles. Ground shadow extends below +Y, so
+	# keep a clearance from the clip edge (not size.y - 4).
+	var bottom_clearance := 24.0
 	for child in host.get_children():
 		if child is UnitAppearance:
-			(child as UnitAppearance).position = Vector2(
+			var appearance := child as UnitAppearance
+			bottom_clearance = maxf(24.0 * appearance.scale.y, 16.0)
+			appearance.position = Vector2(
 				host.size.x * 0.5,
-				host.size.y - 4.0
+				host.size.y - bottom_clearance
 			)
 
 

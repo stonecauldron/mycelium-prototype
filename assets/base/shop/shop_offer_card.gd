@@ -4,7 +4,7 @@ extends Control
 signal offer_clicked(card: ShopOfferCard)
 signal lock_toggled(card: ShopOfferCard)
 
-const CARD_SIZE := Vector2(148, 176)
+const CARD_SIZE := Vector2(168, 176)
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
 
 var cost: int = 0

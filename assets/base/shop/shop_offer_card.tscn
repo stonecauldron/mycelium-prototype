@@ -28,7 +28,7 @@ atlas = ExtResource("3_spores")
 region = Rect2(64, 80, 376, 336)
 
 [node name="ShopOfferCard" type="Control" unique_id=1617112971]
-custom_minimum_size = Vector2(148, 176)
+custom_minimum_size = Vector2(168, 176)
 layout_mode = 3
 anchors_preset = 0
 theme = ExtResource("2_theme")
@@ -70,7 +70,7 @@ stretch_mode = 5
 
 [node name="TitleLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=1142720565]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
@@ -81,7 +81,7 @@ autowrap_mode = 3
 
 [node name="SubtitleLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=639148190]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)

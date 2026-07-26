@@ -101,7 +101,7 @@ unique_name_in_owner = true
 layout_mode = 1
 offset_left = 828.0
 offset_top = 218.0
-offset_right = 1376.0
+offset_right = 1436.0
 offset_bottom = 518.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
@@ -141,7 +141,7 @@ alignment = 1
 
 [node name="RerollButton" type="Button" parent="ShopPanel/ShopMargin/ShopVBox/ShopDropZone/ShopRow/MiddleShopColumn" unique_id=1060688289]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(148, 48)
+custom_minimum_size = Vector2(168, 48)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"

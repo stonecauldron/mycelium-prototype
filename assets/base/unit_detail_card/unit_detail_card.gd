@@ -4,6 +4,8 @@ extends Control
 const CARD_SIZE := Vector2(300, 460)
 const CARD_SIZE_NO_PORTRAIT := Vector2(300, 360)
 const PORTRAIT_SCALE := 0.9
+## Extra room under feet so the ground shadow is not clipped (UnitCard keeps default).
+const PORTRAIT_SHADOW_CLEARANCE := 24.0
 
 var unit_data: RosterUnitData
 var show_portrait: bool = true
@@ -161,7 +163,11 @@ func _refresh_portrait() -> void:
 		_portrait_instance = null
 	if not show_portrait or _portrait_host == null or unit_data == null:
 		return
-	_portrait_instance = unit_data.mount_portrait(_portrait_host, PORTRAIT_SCALE)
+	_portrait_instance = unit_data.mount_portrait(
+		_portrait_host,
+		PORTRAIT_SCALE,
+		PORTRAIT_SHADOW_CLEARANCE
+	)
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

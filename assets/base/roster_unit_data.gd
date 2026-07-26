@@ -45,7 +45,13 @@ func promote_to_imago() -> bool:
 	return true
 
 
-func mount_portrait(host: Control, portrait_scale: float = 0.55) -> UnitAppearance:
+## shadow_clearance: detail-card only — space below feet for ground shadow (scaled).
+## Leave 0 for compact UnitCard / day-summary portraits (feet near clip bottom).
+func mount_portrait(
+	host: Control,
+	portrait_scale: float = 0.55,
+	shadow_clearance: float = 0.0
+) -> UnitAppearance:
 	if host == null or strain == null:
 		return null
 	var appearance := strain.instantiate_appearance(life_stage_id)
@@ -54,6 +60,7 @@ func mount_portrait(host: Control, portrait_scale: float = 0.55) -> UnitAppearan
 	host.add_child(appearance)
 	appearance.scale = Vector2(portrait_scale, portrait_scale)
 	appearance.modulate = UnitStatsData.tint_for_tier(power_tier)
+	host.set_meta("_portrait_shadow_clearance", shadow_clearance)
 	_ensure_portrait_host_sync(host)
 	_sync_portrait_in_host(host)
 	appearance.mount_weapon_appearance(weapon)
@@ -73,16 +80,19 @@ static func _ensure_portrait_host_sync(host: Control) -> void:
 static func _sync_portrait_in_host(host: Control) -> void:
 	if not is_instance_valid(host):
 		return
-	# Feet-pivoted: origin is at the soles. Ground shadow extends below +Y, so
-	# keep a clearance from the clip edge (not size.y - 4).
-	var bottom_clearance := 24.0
+	var shadow_clearance := 0.0
+	if host.has_meta("_portrait_shadow_clearance"):
+		shadow_clearance = float(host.get_meta("_portrait_shadow_clearance"))
 	for child in host.get_children():
 		if child is UnitAppearance:
 			var appearance := child as UnitAppearance
-			bottom_clearance = maxf(24.0 * appearance.scale.y, 16.0)
+			var bottom_pad := 4.0
+			if shadow_clearance > 0.0:
+				# Feet-pivoted: origin at soles; shadow extends below +Y.
+				bottom_pad = maxf(shadow_clearance * appearance.scale.y, 16.0)
 			appearance.position = Vector2(
 				host.size.x * 0.5,
-				host.size.y - bottom_clearance
+				host.size.y - bottom_pad
 			)
 
 

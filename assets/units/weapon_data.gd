@@ -5,6 +5,8 @@ enum FormationLine { FRONT, MID, BACK }
 enum EngagementStance { REFORM, HOLD, SKIRMISH }
 enum AttackStyle { MELEE_LUNGE, SPEAR_THROW, BOW_SHOT }
 enum TargetingMode { SINGLE, AOE }
+## Which unit stat feeds this weapon's damage bonus (independent of attack style / line).
+enum DamageStat { STRENGTH, DEX, FINESSE }
 
 const SQUAD_OFFSET := {
 	FormationLine.FRONT: 48.0,
@@ -18,13 +20,24 @@ const FORMATION_LINE_LABELS := {
 	FormationLine.BACK: "Ranged",
 }
 
+const DAMAGE_STAT_LABELS := {
+	DamageStat.STRENGTH: "STR",
+	DamageStat.DEX: "DEX",
+	DamageStat.FINESSE: "STR or DEX",
+}
+
 @export var display_name: String = ""
+@export_multiline var short_description: String = ""
 @export var formation_line: FormationLine = FormationLine.FRONT
 @export var engagement_stance: EngagementStance = EngagementStance.REFORM
 @export var attack_style: AttackStyle = AttackStyle.MELEE_LUNGE
+## Stat used for outgoing damage bonus. Not tied to formation line or attack style.
+@export var damage_stat: DamageStat = DamageStat.STRENGTH
 @export var targeting_mode: TargetingMode = TargetingMode.SINGLE
 @export var base_damage: int = 5
 @export var attack_range: float = 48.0
+## Seconds between attacks before SPD scaling. Lower = faster attacks.
+@export var attack_interval: float = 0.75
 ## When SKIRMISH: stop attacking and retreat if an enemy is this close.
 @export var skirmish_distance: float = 160.0
 @export var knockback_force: float = 280.0

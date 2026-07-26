@@ -1,7 +1,7 @@
 class_name ScoutBubble
 extends Control
 
-const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee/basic_melee.tres")
+const _SWORD_WEAPON := preload("res://assets/weapons/basic_sword/basic_sword.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
 const _SCOUT_ENTRY_SCENE := preload(
@@ -35,7 +35,7 @@ func refresh() -> void:
 	for spec in specs:
 		counts[spec.type] = int(counts[spec.type]) + 1
 	var entries: Array = [
-		{"count": counts[EnemyUnitSpec.UnitType.MELEE], "weapon": _MELEE_WEAPON},
+		{"count": counts[EnemyUnitSpec.UnitType.MELEE], "weapon": _SWORD_WEAPON},
 		{"count": counts[EnemyUnitSpec.UnitType.SPEAR], "weapon": _SPEAR_WEAPON},
 		{"count": counts[EnemyUnitSpec.UnitType.BOW], "weapon": _BOW_WEAPON},
 	]

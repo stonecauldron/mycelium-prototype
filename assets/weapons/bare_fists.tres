@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Bare Fists"
+short_description = "No weapon at all. Just knuckles and hope."
 formation_line = 0
 engagement_stance = 0
 attack_style = 0

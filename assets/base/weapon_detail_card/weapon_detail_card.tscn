@@ -1,0 +1,116 @@
+[gd_scene format=3 uid="uid://4stbxffn53n5"]
+
+[ext_resource type="Script" path="res://assets/base/weapon_detail_card/weapon_detail_card.gd" id="1_card"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="5_tag"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 16.0
+bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 8
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[node name="WeaponDetailCard" type="Control"]
+custom_minimum_size = Vector2(240, 280)
+clip_contents = false
+layout_mode = 3
+anchors_preset = 0
+theme = ExtResource("2_theme")
+script = ExtResource("1_card")
+
+[node name="CardPanel" type="PanelContainer" parent="."]
+clip_contents = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_detail_card")
+
+[node name="Margin" type="MarginContainer" parent="CardPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="CardPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="NameLabel" type="Label" parent="CardPanel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 24
+text = "Weapon"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="DescLabel" type="Label" parent="CardPanel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/font_size = 16
+text = "Flavor text."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="CombatRow" type="HBoxContainer" parent="CardPanel/Margin/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="DmgLabel" type="Label" parent="CardPanel/Margin/VBox/CombatRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 18
+text = "DMG 0"
+horizontal_alignment = 1
+
+[node name="SpeedLabel" type="Label" parent="CardPanel/Margin/VBox/CombatRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 18
+text = "Speed 0 secs"
+horizontal_alignment = 1
+
+[node name="TagMargin" type="MarginContainer" parent="CardPanel/Margin/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="TagRow" type="HFlowContainer" parent="CardPanel/Margin/VBox/TagMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+alignment = 1
+
+[node name="RangeTag" parent="CardPanel/Margin/VBox/TagMargin/TagRow" instance=ExtResource("5_tag")]
+unique_name_in_owner = true
+text = "Melee"
+
+[node name="ScalingTag" parent="CardPanel/Margin/VBox/TagMargin/TagRow" instance=ExtResource("5_tag")]
+unique_name_in_owner = true
+text = "STR"

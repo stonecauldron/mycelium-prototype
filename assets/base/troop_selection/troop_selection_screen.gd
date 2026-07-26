@@ -5,7 +5,7 @@ const SQUAD_SLOT_COUNT := TroopData.SQUAD_SLOT_COUNT
 const BENCH_SLOT_COUNT := TroopData.BENCH_SLOT_COUNT
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
-const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee/basic_melee.tres")
+const _SWORD_WEAPON := preload("res://assets/weapons/basic_sword/basic_sword.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
 
@@ -92,7 +92,7 @@ func _build_bench_ui() -> void:
 
 func _make_default_starters() -> Array[RosterUnitData]:
 	var names := UnitNames.pick_unique(3)
-	var weapons: Array[WeaponData] = [_BOW_WEAPON, _SPEAR_WEAPON, _MELEE_WEAPON]
+	var weapons: Array[WeaponData] = [_BOW_WEAPON, _SPEAR_WEAPON, _SWORD_WEAPON]
 	var units: Array[RosterUnitData] = []
 	for i in names.size():
 		units.append(_make_unit(names[i], UnitStatsData.PowerTier.COMMON, weapons[i]))
@@ -254,4 +254,4 @@ func _weapon_for_enemy_type(unit_type: EnemyUnitSpec.UnitType) -> WeaponData:
 		EnemyUnitSpec.UnitType.BOW:
 			return _BOW_WEAPON
 		_:
-			return _MELEE_WEAPON
+			return _SWORD_WEAPON

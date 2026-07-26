@@ -106,11 +106,9 @@ func _rebuild_shop_cards() -> void:
 		if weapon == null:
 			continue
 		var card: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
-		var range_name := str(WeaponData.FORMATION_LINE_LABELS.get(weapon.formation_line, "?"))
-		var display_dmg: int = roundi(float(weapon.base_damage) * weapon.outgoing_damage_multiplier)
 		card.setup(
 			weapon.display_name,
-			"%s · dmg %d" % [range_name, display_dmg],
+			weapon.short_description,
 			offer.cost,
 			{
 				"type": "shop_weapon",

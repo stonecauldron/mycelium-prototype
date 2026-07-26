@@ -6,6 +6,7 @@ signal lock_toggled(card: ShopOfferCard)
 
 const CARD_SIZE := Vector2(168, 176)
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
+const _WEAPON_DETAIL_CARD_SCENE := preload("res://assets/base/weapon_detail_card/weapon_detail_card.tscn")
 
 var cost: int = 0
 var payload: Dictionary = {}
@@ -111,6 +112,38 @@ func _apply_content(title: String, subtitle: String, icon: Texture2D) -> void:
 		_icon.texture = icon
 	if _icon != null:
 		_icon.modulate = _item_tint
+	# Weapon offers get a rich detail tooltip; other shop items leave this empty.
+	if payload.get("weapon") is WeaponData:
+		tooltip_text = title
+	else:
+		tooltip_text = ""
+
+
+func _make_custom_tooltip(_for_text: String) -> Object:
+	var weapon := payload.get("weapon") as WeaponData
+	if weapon == null:
+		return null
+	var tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
+	tip.setup(weapon, false)
+	var tip_size := tip.card_size()
+	tip.custom_minimum_size = tip_size
+	tip.size = tip_size
+	tip.tree_entered.connect(_configure_detail_tooltip_popup.bind(tip), CONNECT_ONE_SHOT)
+	return tip
+
+
+func _configure_detail_tooltip_popup(tip: WeaponDetailCard) -> void:
+	var node: Node = tip.get_parent()
+	while node != null:
+		if node is PopupPanel:
+			var popup := node as PopupPanel
+			popup.transparent = true
+			popup.transparent_bg = true
+			popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+			var tip_size := tip.card_size()
+			popup.size = Vector2i(ceili(tip_size.x), ceili(tip_size.y))
+			return
+		node = node.get_parent()
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

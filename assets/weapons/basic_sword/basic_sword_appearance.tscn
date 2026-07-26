@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cff2rfskam8sy"]
 
-[ext_resource type="Texture2D" uid="uid://dgrwl2tbl33wj" path="res://assets/weapons/basic_melee/sword.png" id="1_sword"]
+[ext_resource type="Texture2D" uid="uid://dgrwl2tbl33wj" path="res://assets/weapons/basic_sword/sword.png" id="1_sword"]
 
-[node name="BasicMeleeAppearance" type="Node2D" unique_id=123957747]
+[node name="BasicSwordAppearance" type="Node2D" unique_id=123957747]
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=227833974]
 rotation = 0.7784169

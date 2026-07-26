@@ -1,7 +1,7 @@
 extends Node
 
 const _RESTART_DELAY_SEC := 1.0
-const _MELEE_WEAPON := preload("res://assets/weapons/basic_melee/basic_melee.tres")
+const _SWORD_WEAPON := preload("res://assets/weapons/basic_sword/basic_sword.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
 const _SHIELD_WEAPON := preload("res://assets/weapons/basic_shield/basic_shield.tres")
@@ -18,7 +18,7 @@ func _ready() -> void:
 	_stage.battle_ended.connect(_on_battle_ended)
 	_wire_buttons()
 	_set_matchup(func() -> Array:
-		return [_make_units(_MELEE_WEAPON, 3), _make_units(_SPEAR_WEAPON, 3)]
+		return [_make_units(_SWORD_WEAPON, 3), _make_units(_SPEAR_WEAPON, 3)]
 	)
 
 
@@ -32,14 +32,14 @@ func _wire_buttons() -> void:
 	_add_button("3v3 Starters", func() -> void:
 		_set_matchup(func() -> Array:
 			return [
-				[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_MELEE_WEAPON)],
-				[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_MELEE_WEAPON)],
+				[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_SWORD_WEAPON)],
+				[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_SWORD_WEAPON)],
 			]
 		)
 	)
 	_add_button("3 Melee", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_MELEE_WEAPON, 3), _make_units(_MELEE_WEAPON, 3)]
+			return [_make_units(_SWORD_WEAPON, 3), _make_units(_SWORD_WEAPON, 3)]
 		)
 	)
 	_add_button("3 Spear", func() -> void:
@@ -54,12 +54,12 @@ func _wire_buttons() -> void:
 	)
 	_add_button("Melee vs Spear", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_MELEE_WEAPON, 1), _make_units(_SPEAR_WEAPON, 1)]
+			return [_make_units(_SWORD_WEAPON, 1), _make_units(_SPEAR_WEAPON, 1)]
 		)
 	)
 	_add_button("Melee vs Bow", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_MELEE_WEAPON, 1), _make_units(_BOW_WEAPON, 1)]
+			return [_make_units(_SWORD_WEAPON, 1), _make_units(_BOW_WEAPON, 1)]
 		)
 	)
 	_add_button("Spear vs Bow", func() -> void:
@@ -69,7 +69,7 @@ func _wire_buttons() -> void:
 	)
 	_add_button("Shield vs Melee", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SHIELD_WEAPON, 1), _make_units(_MELEE_WEAPON, 1)]
+			return [_make_units(_SHIELD_WEAPON, 1), _make_units(_SWORD_WEAPON, 1)]
 		)
 	)
 	_add_button("Shield vs Bow", func() -> void:
@@ -80,8 +80,8 @@ func _wire_buttons() -> void:
 	_add_button("9v9 Mirror", func() -> void:
 		_set_matchup(func() -> Array:
 			return [
-				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _MELEE_WEAPON]),
-				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _MELEE_WEAPON]),
+				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SWORD_WEAPON]),
+				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SWORD_WEAPON]),
 			]
 		)
 	)
@@ -89,7 +89,7 @@ func _wire_buttons() -> void:
 		_set_matchup(func() -> Array:
 			return [
 				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SHIELD_WEAPON]),
-				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _MELEE_WEAPON]),
+				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SWORD_WEAPON]),
 			]
 		)
 	)

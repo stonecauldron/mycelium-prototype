@@ -43,7 +43,6 @@ var _shroom_rest_scale: Vector2 = Vector2.ONE
 
 func _ready() -> void:
 	if _shroom:
-		_shroom_modulate = _shroom.modulate
 		_shroom_rest_position = _shroom.position
 		_shroom_rest_scale = _shroom.scale
 	_apply_flag_appearance()
@@ -116,10 +115,13 @@ func _apply_flag_appearance() -> void:
 	if _visual:
 		_visual.scale.x = -1.0 if flag_faces_left else 1.0
 		_visual.scale.y = 1.0
-	if _flag_banner:
-		_flag_banner.modulate = flag_color
+	# Flag is a child of Shroom, so tint the body and keep the banner white
+	# to avoid multiplying the army color twice.
+	_shroom_modulate = flag_color
 	if _shroom:
 		_shroom.modulate = _shroom_modulate
+	if _flag_banner:
+		_flag_banner.modulate = Color.WHITE
 
 
 func _setup_collision() -> void:
@@ -209,7 +211,7 @@ func _play_hurt_highlight() -> void:
 	_hurt_tween = create_tween()
 	_hurt_tween.set_parallel(true)
 	if _flag_banner:
-		_hurt_tween.tween_property(_flag_banner, "modulate", flag_color, HURT_FLASH_TIME)
+		_hurt_tween.tween_property(_flag_banner, "modulate", Color.WHITE, HURT_FLASH_TIME)
 	if _shroom:
 		_hurt_tween.tween_property(_shroom, "modulate", _shroom_modulate, HURT_FLASH_TIME)
 

@@ -245,9 +245,9 @@ visible = false
 custom_minimum_size = Vector2(160, 56)
 layout_mode = 2
 size_flags_vertical = 4
+focus_mode = 0
 theme_type_variation = &"NavButton"
 text = "Advance Day"
-focus_mode = 0
 
 [node name="BiomassChip" type="HBoxContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar" unique_id=1142113358]
 layout_mode = 2

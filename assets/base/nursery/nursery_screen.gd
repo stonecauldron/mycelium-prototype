@@ -20,7 +20,8 @@ const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertili
 @onready var _shop_drop_zone: ShopDropZone = %ShopDropZone
 @onready var _shop_row: HBoxContainer = %ShopRow
 @onready var _middle_shop_column: VBoxContainer = %MiddleShopColumn
-@onready var _stock_shop_panel: PanelContainer = %StockShopPanel
+@onready var _stock_panel: PanelContainer = %StockPanel
+@onready var _shop_panel: PanelContainer = %ShopPanel
 @onready var _plot_row: HBoxContainer = %PlotRow
 @onready var _reroll_button: Button = %RerollButton
 @onready var _reroll_cost_label: Label = %RerollCostLabel
@@ -65,12 +66,20 @@ func _hydrate_and_refresh() -> void:
 
 func _set_structure_mouse_ignore() -> void:
 	for path in [
-		"StockShopMargin",
-		"StockShopMargin/StockShopVBox",
-		"StockShopMargin/StockShopVBox/StockShopTitle",
-		"StockShopMargin/StockShopVBox/StockShopRow",
+		"StockMargin",
+		"StockMargin/StockVBox",
+		"StockMargin/StockVBox/StockTitle",
+		"StockMargin/StockVBox/StockRow",
 	]:
-		var node := _stock_shop_panel.get_node_or_null(path) as Control
+		var node := _stock_panel.get_node_or_null(path) as Control
+		if node:
+			node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for path in [
+		"ShopMargin",
+		"ShopMargin/ShopVBox",
+		"ShopMargin/ShopVBox/ShopTitle",
+	]:
+		var node := _shop_panel.get_node_or_null(path) as Control
 		if node:
 			node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stock_row.mouse_filter = Control.MOUSE_FILTER_IGNORE

@@ -92,9 +92,9 @@ text = "Weapons"
 
 [node name="StockRow" type="HBoxContainer" parent="StockPanel/StockMargin/StockVBox" unique_id=1430706056]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 240)
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
 mouse_filter = 2
 theme_type_variation = &"SlotRow"
 

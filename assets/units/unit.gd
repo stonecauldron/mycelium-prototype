@@ -788,7 +788,7 @@ func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
 
 func _get_attack_damage() -> int:
 	var raw: int = weapon.base_damage + stats.get_damage_bonus(weapon.attack_style)
-	return roundi(float(raw) * weapon.outgoing_damage_multiplier)
+	return maxi(roundi(float(raw) * weapon.outgoing_damage_multiplier), 0)
 
 
 func take_damage(
@@ -804,7 +804,7 @@ func take_damage(
 	if weapon != null:
 		incoming_mult = weapon.incoming_damage_multiplier
 		knockback_mult = weapon.incoming_knockback_multiplier
-	amount = roundi(float(amount) * incoming_mult)
+	amount = maxi(roundi(float(amount) * incoming_mult), 0)
 	_last_hit_from = knockback_from
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)

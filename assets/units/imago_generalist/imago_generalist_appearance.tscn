@@ -35,7 +35,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.18, 0.36),
 "transitions": PackedFloat32Array(-2, -2, -2),
 "update": 0,
-"values": [Vector2(0, -54), Vector2(0, -62), Vector2(0, -54)]
+"values": [Vector2(0, 7), Vector2(0, 5), Vector2(0, 7)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -72,14 +72,15 @@ color = Color(0, 0, 0, 0.25)
 polygon = PackedVector2Array(47.7, 0, 46.075, 3.841, 41.309, 7.42, 33.729, 10.493, 23.85, 12.852, 12.346, 14.334, 0, 14.84, -12.346, 14.334, -23.85, 12.852, -33.729, 10.493, -41.309, 7.42, -46.075, 3.841, -47.7, 0, -46.075, -3.841, -41.309, -7.42, -33.729, -10.493, -23.85, -12.852, -12.346, -14.334, 0, -14.84, 12.346, -14.334, 23.85, -12.852, 33.729, -10.493, 41.309, -7.42, 46.075, -3.841)
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=288080520]
-position = Vector2(0, -54)
+position = Vector2(0, 7)
 scale = Vector2(0.4, 0.4)
 texture = ExtResource("2_tex")
+offset = Vector2(0, -152.5)
 region_enabled = true
 region_rect = Rect2(124, 186, 269, 323)
 
 [node name="WeaponFollow" type="RemoteTransform2D" parent="Sprite" unique_id=2038425346]
-position = Vector2(87.5, 45)
+position = Vector2(87.5, -107.5)
 remote_path = NodePath("../../WeaponMount")
 update_rotation = false
 update_scale = false

@@ -7,10 +7,8 @@ signal health_changed(current: int, maximum: int)
 enum CombatPhase { READY, APPROACHING, ATTACKING, RETURNING }
 
 const BASE_MOVE_SPEED := 180.0
-const BASE_ATTACK_INTERVAL := 0.75
-const RANGED_ATTACK_INTERVAL := 1.15
+const RETREAT_SPEED_FACTOR := 0.5
 const HOME_ARRIVE_THRESHOLD := 4.0
-const MARCH_CATCH_UP_MULTIPLIER := 2.0
 const WALK_SPEED_EPSILON := 8.0
 ## Ignore facing updates when the aim/travel delta is within this many pixels.
 const FACE_FLIP_DEADZONE := 12.0
@@ -100,14 +98,18 @@ var _throw_released: bool = false
 var _throw_landed: bool = false
 var _throw_left_ground: bool = false
 var _throw_timer: float = 0.0
+## True while a spear throw or bow shot attack is in progress (not spear melee).
+var _projectile_attack_active: bool = false
 var _ranged_aim: Vector2 = Vector2.ZERO
 var _bow_lean_angle: float = 0.0
 var _dying: bool = false
 var _last_hit_from: Vector2 = Vector2.ZERO
+## Runtime engagement range; melee derives from weapon hitbox + lunge.
+var _attack_range: float = 0.0
 
 @onready var _visual: Node2D = $Visual
-@onready var _hitbox: HitboxComponent = $Visual/Hitbox
 
+var _hitbox: HitboxComponent = null
 var _appearance: UnitAppearance = null
 var _body_shape: CollisionShape2D = null
 var _hp_chip: StatChip = null
@@ -152,7 +154,9 @@ func _initialize_runtime() -> void:
 		push_error("Unit must be a child of Troop/Units.")
 		return
 
-	_hitbox.owner_unit = self
+	# Start on formation home so the army doesn't pile on the flag then fan out.
+	global_position = _get_home_global()
+
 	_setup_collision()
 	_mount_appearance()
 	_apply_body_color()
@@ -160,17 +164,19 @@ func _initialize_runtime() -> void:
 
 
 func _mount_appearance() -> void:
-	_clear_visual_non_hitbox_children()
+	_clear_visual_children()
 	if _body_shape != null and is_instance_valid(_body_shape):
 		_body_shape.queue_free()
 		_body_shape = null
 	_appearance = null
+	_hitbox = null
 
 	var strain: UnitStrain = roster_data.strain if roster_data != null else null
 	if strain == null:
 		# load() (not preload): breaks Unit↔strain appearance compile cycle on export.
 		strain = load("res://assets/units/generalist/generalist_strain.tres") as UnitStrain
 	if strain == null:
+		_refresh_attack_range()
 		return
 
 	var stage_id := UnitStrain.STAGE_JUVENILE
@@ -178,6 +184,7 @@ func _mount_appearance() -> void:
 		stage_id = roster_data.life_stage_id
 	_appearance = strain.instantiate_appearance(stage_id)
 	if _appearance == null:
+		_refresh_attack_range()
 		return
 
 	_visual.add_child(_appearance)
@@ -191,15 +198,103 @@ func _mount_appearance() -> void:
 		_body_shape = body
 
 	_appearance.mount_weapon_appearance(weapon)
+	_resolve_weapon_hitbox()
+	_refresh_attack_range()
 	_appearance.play_idle(true)
 
 
-func _clear_visual_non_hitbox_children() -> void:
+func _clear_visual_children() -> void:
 	for child in _visual.get_children():
-		if child == _hitbox:
-			continue
 		_visual.remove_child(child)
 		child.free()
+
+
+func _resolve_weapon_hitbox() -> void:
+	_hitbox = null
+	var mount := _get_weapon_mount()
+	if mount == null or mount.get_child_count() == 0:
+		return
+	var held := mount.get_child(0) as Node
+	if held == null:
+		return
+	_hitbox = held.get_node_or_null("Hitbox") as HitboxComponent
+	if _hitbox != null:
+		_hitbox.owner_unit = self
+
+
+func _refresh_attack_range() -> void:
+	if weapon == null:
+		_attack_range = 0.0
+		return
+	if (
+		weapon.attack_style == WeaponData.AttackStyle.MELEE_LUNGE
+		and _hitbox != null
+	):
+		_attack_range = _hitbox_forward_extent() + LUNGE_DISTANCE
+	else:
+		_attack_range = weapon.attack_range
+
+
+func _get_attack_range() -> float:
+	return _attack_range
+
+
+func _get_melee_range() -> float:
+	if _hitbox != null:
+		return _hitbox_forward_extent() + LUNGE_DISTANCE
+	return 96.0
+
+
+## Home-slot stagger inside weapon range so SKIRMISH/HYBRID units do not clump.
+func _preferred_skirmish_distance() -> float:
+	if weapon == null:
+		return 0.0
+	var preferred := weapon.skirmish_distance - Troop.HOME_SLOT_SPACING * float(squad_index)
+	return clampf(preferred, SKIRMISH_RANGE_DEADZONE, weapon.skirmish_distance)
+
+
+func _preferred_attack_distance() -> float:
+	var base := _get_attack_range()
+	var skirmish := _preferred_skirmish_distance()
+	var preferred := base - Troop.HOME_SLOT_SPACING * float(squad_index)
+	var floor_dist := minf(skirmish + SKIRMISH_RANGE_DEADZONE, base)
+	return clampf(preferred, floor_dist, base)
+
+
+## HYBRID: melee when inside personal skirmish band.
+func _wants_close_melee() -> bool:
+	if weapon == null or not weapon.is_hybrid_engagement():
+		return false
+	if _target == null or not is_instance_valid(_target):
+		return false
+	var distance := global_position.distance_to(_target.global_position)
+	return distance <= _preferred_skirmish_distance()
+
+
+func _hitbox_forward_extent() -> float:
+	if _hitbox == null:
+		return 0.0
+	var shape_node := _hitbox.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if shape_node == null or not (shape_node.shape is RectangleShape2D):
+		return 0.0
+	var size := (shape_node.shape as RectangleShape2D).size
+	var half := size * 0.5
+	var corners: Array[Vector2] = [
+		Vector2(-half.x, -half.y),
+		Vector2(half.x, -half.y),
+		Vector2(half.x, half.y),
+		Vector2(-half.x, half.y),
+	]
+	var max_forward := 0.0
+	for corner in corners:
+		var local_pt := to_local(shape_node.to_global(corner))
+		max_forward = maxf(max_forward, absf(local_pt.x))
+	return max_forward
+
+
+func _disable_hitbox() -> void:
+	if _hitbox != null:
+		_hitbox.disable()
 
 
 func _apply_body_color() -> void:
@@ -235,10 +330,11 @@ func _physics_process(delta: float) -> void:
 
 	if _combat_phase == CombatPhase.ATTACKING:
 		velocity.x = 0.0
-		if weapon.attack_style == WeaponData.AttackStyle.SPEAR_THROW:
-			_process_throw_attack(delta)
-		elif weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
-			_process_ranged_attack(delta)
+		if _projectile_attack_active:
+			if weapon.uses_throw_projectile():
+				_process_throw_attack(delta)
+			elif weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
+				_process_ranged_attack(delta)
 		move_and_slide()
 		_update_locomotion_animation()
 		return
@@ -262,23 +358,19 @@ func _update_locomotion_animation() -> void:
 	_appearance.play_walk(false)
 
 
-func get_move_speed() -> float:
-	if stats == null:
-		return BASE_MOVE_SPEED
-	return BASE_MOVE_SPEED * stats.get_speed_multiplier()
+func get_move_speed(retreating: bool = false) -> float:
+	if retreating:
+		return BASE_MOVE_SPEED * RETREAT_SPEED_FACTOR
+	return BASE_MOVE_SPEED
 
 
-func _seek_home_marching() -> void:
-	var home := _get_home_global()
-	var troop_speed := _troop.get_average_unit_speed()
-	var delta_pos := home.x - global_position.x
-	var march_direction := -1.0 if _troop.is_enemy else 1.0
-
-	if absf(delta_pos) <= HOME_ARRIVE_THRESHOLD:
-		velocity.x = troop_speed * march_direction
-	else:
-		velocity.x = signf(delta_pos) * troop_speed * MARCH_CATCH_UP_MULTIPLIER
-	# Always face the march direction so catch-up overshoot doesn't flip sprites.
+func _free_march_toward_enemy() -> void:
+	_combat_phase = CombatPhase.READY
+	if _troop.march_speed <= 0.0:
+		velocity.x = 0.0
+		return
+	var facing := _troop.get_facing()
+	velocity.x = facing * get_move_speed()
 	_face_march_direction()
 
 
@@ -289,14 +381,22 @@ func _process_combat(delta: float) -> void:
 		if _target == null:
 			_hold_or_march()
 		elif _should_skirmish_retreat():
-			_return_home()
+			_skirmish_kite_away()
 		elif _should_chase():
 			_chase_target()
 		elif weapon != null and weapon.engagement_stance == WeaponData.EngagementStance.SKIRMISH:
-			# Hold the engagement band between shots — don't yo-yo home/chase.
+			_hold_skirmish_position()
+		elif (
+			weapon != null
+			and weapon.engagement_stance == WeaponData.EngagementStance.FORMATION_FIGHT
+		):
+			_return_home()
+		elif weapon != null and weapon.engagement_stance == WeaponData.EngagementStance.HOLD_LINE:
+			_hold_line_position()
+		elif weapon != null and weapon.is_hybrid_engagement():
 			_hold_skirmish_position()
 		else:
-			_return_home()
+			_hold_or_march()
 		return
 
 	_refresh_target()
@@ -306,10 +406,19 @@ func _process_combat(delta: float) -> void:
 
 	var distance := global_position.distance_to(_target.global_position)
 	if _should_skirmish_retreat():
-		_return_home()
+		_skirmish_kite_away()
 		return
 
-	if distance <= weapon.attack_range:
+	if _wants_close_melee():
+		if distance <= _get_melee_range():
+			velocity.x = 0.0
+			_face_toward(_target.global_position)
+			_start_attack()
+		else:
+			_chase_target()
+		return
+
+	if distance <= _get_attack_range():
 		# Projectiles only fire at combat units, never the flag bearer.
 		if _uses_projectile_attack() and not (_target is Unit):
 			_hold_or_march()
@@ -319,7 +428,7 @@ func _process_combat(delta: float) -> void:
 		_start_attack()
 		return
 
-	if _troop.state == Troop.State.HALTED or _should_chase():
+	if _should_chase():
 		_chase_target()
 		return
 
@@ -339,32 +448,45 @@ func _should_skirmish_retreat() -> bool:
 	if weapon.engagement_stance != WeaponData.EngagementStance.SKIRMISH:
 		return false
 	var distance := global_position.distance_to(_target.global_position)
+	var skirmish := _preferred_skirmish_distance()
 	# Hysteresis: once kiting, keep going until clear of the danger zone.
 	if _combat_phase == CombatPhase.RETURNING:
-		return distance < weapon.skirmish_distance + SKIRMISH_RANGE_DEADZONE
-	return distance <= weapon.skirmish_distance
+		return distance < skirmish + SKIRMISH_RANGE_DEADZONE
+	return distance <= skirmish
+
+
+## Kite away from the threat to the personal stand-off band — not formation home
+## (home is often still inside skirmish range once the fight has closed).
+func _skirmish_kite_away() -> void:
+	_combat_phase = CombatPhase.RETURNING
+	if _target == null or not is_instance_valid(_target):
+		velocity.x = 0.0
+		return
+	var facing := _troop.get_facing()
+	# Preferred X puts the unit at preferred_attack_distance from the target.
+	var stand_x := _target.global_position.x - facing * _preferred_attack_distance()
+	velocity.x = _axis_velocity(global_position.x, stand_x, get_move_speed(true))
+	_face_toward(_target.global_position)
 
 
 func _should_chase() -> bool:
 	if weapon == null or _troop == null:
 		return false
+	if _target == null or not is_instance_valid(_target):
+		return false
+	if _wants_close_melee():
+		return global_position.distance_to(_target.global_position) > _get_melee_range()
 	match weapon.engagement_stance:
-		WeaponData.EngagementStance.HOLD:
+		WeaponData.EngagementStance.CHARGE:
 			return true
-		WeaponData.EngagementStance.REFORM:
-			var opponent := _troop.get_opponent()
-			if opponent == null:
-				return false
-			return not opponent.has_living_formation_line(WeaponData.FormationLine.FRONT)
-		WeaponData.EngagementStance.SKIRMISH:
-			# Close the gap when nothing is in attack range; kite handled separately.
-			if _target == null or not is_instance_valid(_target):
-				return false
+		WeaponData.EngagementStance.SKIRMISH, WeaponData.EngagementStance.HYBRID:
 			var distance := global_position.distance_to(_target.global_position)
-			# Hysteresis: once approaching, keep closing past the outer edge.
+			var preferred := _preferred_attack_distance()
 			if _combat_phase == CombatPhase.APPROACHING:
-				return distance > weapon.attack_range - SKIRMISH_RANGE_DEADZONE
-			return distance > weapon.attack_range
+				return distance > preferred - SKIRMISH_RANGE_DEADZONE
+			return distance > preferred
+		WeaponData.EngagementStance.FORMATION_FIGHT, WeaponData.EngagementStance.HOLD_LINE:
+			return false
 		_:
 			return false
 
@@ -378,12 +500,16 @@ func _chase_target() -> void:
 
 	_combat_phase = CombatPhase.APPROACHING
 	var distance := global_position.distance_to(_target.global_position)
-	var stop_range := weapon.attack_range
-	if weapon.engagement_stance == WeaponData.EngagementStance.SKIRMISH:
-		stop_range = maxf(
-			weapon.skirmish_distance + SKIRMISH_RANGE_DEADZONE,
-			weapon.attack_range - SKIRMISH_RANGE_DEADZONE
-		)
+	var stop_range := _get_attack_range()
+	if _wants_close_melee():
+		stop_range = _get_melee_range()
+	elif (
+		weapon.engagement_stance == WeaponData.EngagementStance.SKIRMISH
+		or weapon.engagement_stance == WeaponData.EngagementStance.HYBRID
+	):
+		var preferred := _preferred_attack_distance()
+		var skirmish := _preferred_skirmish_distance()
+		stop_range = maxf(skirmish + SKIRMISH_RANGE_DEADZONE, preferred - SKIRMISH_RANGE_DEADZONE)
 	if distance <= stop_range:
 		velocity.x = 0.0
 	else:
@@ -392,17 +518,48 @@ func _chase_target() -> void:
 
 
 func _hold_or_march() -> void:
-	if _troop.state == Troop.State.HALTED:
-		_return_home()
+	if weapon != null and weapon.engagement_stance == WeaponData.EngagementStance.HOLD_LINE:
+		_hold_line_position()
+		return
+	_free_march_toward_enemy()
+
+
+## HOLD_LINE: stay at formation home, but never fall behind allies with a lower
+## squad_index — advance to keep HOME_SLOT_SPACING * index_delta ahead of them.
+func _hold_line_position() -> void:
+	_combat_phase = CombatPhase.RETURNING
+	var hold := _get_hold_line_global()
+	velocity.x = _axis_velocity(global_position.x, hold.x, get_move_speed())
+	if _target != null and is_instance_valid(_target):
+		_face_toward(_target.global_position)
+	elif is_zero_approx(velocity.x):
+		_face_march_direction()
 	else:
-		_combat_phase = CombatPhase.READY
-		_seek_home_marching()
+		_face_travel_direction()
 
 
-func _return_home() -> void:
+func _get_hold_line_global() -> Vector2:
+	var home := _get_home_global()
+	if _troop == null:
+		return home
+	var facing := _troop.get_facing()
+	var target_x := home.x
+	for ally in _troop.get_living_units():
+		if ally == self or ally.squad_index >= squad_index:
+			continue
+		var required_x := (
+			ally.global_position.x
+			+ facing * Troop.HOME_SLOT_SPACING * float(squad_index - ally.squad_index)
+		)
+		if facing * (required_x - target_x) > 0.0:
+			target_x = required_x
+	return Vector2(target_x, home.y)
+
+
+func _return_home(retreating: bool = false) -> void:
 	_combat_phase = CombatPhase.RETURNING
 	var home := _get_home_global()
-	velocity.x = _axis_velocity(global_position.x, home.x, get_move_speed())
+	velocity.x = _axis_velocity(global_position.x, home.x, get_move_speed(retreating))
 	# Prefer facing the threat so home overshoot doesn't reverse the sprite.
 	if _target != null and is_instance_valid(_target):
 		_face_toward(_target.global_position)
@@ -417,18 +574,34 @@ func _start_attack() -> void:
 		return
 
 	_combat_phase = CombatPhase.ATTACKING
-	if weapon.attack_style == WeaponData.AttackStyle.SPEAR_THROW:
+	if weapon.is_hybrid_engagement() and weapon.uses_throw_projectile():
+		var distance := (
+			global_position.distance_to(_target.global_position)
+			if _target != null and is_instance_valid(_target)
+			else INF
+		)
+		if distance <= _get_melee_range():
+			_start_melee_lunge_attack()
+		else:
+			_start_throw_attack()
+		return
+	if weapon.uses_throw_projectile():
 		_start_throw_attack()
 		return
 	if weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 		_start_ranged_attack()
 		return
 
-	_hitbox.enable_for_attack(
-		_get_attack_damage(),
-		weapon.knockback_force,
-		weapon.targeting_mode
-	)
+	_start_melee_lunge_attack()
+
+
+func _start_melee_lunge_attack() -> void:
+	if _hitbox != null:
+		_hitbox.enable_for_attack(
+			_get_attack_damage(),
+			weapon.knockback_force,
+			weapon.targeting_mode
+		)
 
 	var direction := signf(_visual.scale.x)
 	if direction == 0.0:
@@ -438,12 +611,13 @@ func _start_attack() -> void:
 	_play_melee_swing()
 	var tween := create_tween()
 	tween.tween_property(_visual, "position", forward, LUNGE_OUT_TIME)
-	tween.tween_callback(_hitbox.disable)
+	tween.tween_callback(_disable_hitbox)
 	tween.tween_property(_visual, "position", Vector2.ZERO, LUNGE_BACK_TIME)
 	tween.tween_callback(_finish_attack)
 
 
 func _start_throw_attack() -> void:
+	_projectile_attack_active = true
 	_throw_released = false
 	_throw_landed = false
 	_throw_left_ground = false
@@ -502,6 +676,7 @@ func _spawn_spear_projectile() -> void:
 
 
 func _start_ranged_attack() -> void:
+	_projectile_attack_active = true
 	_throw_released = false
 	_throw_timer = 0.0
 	_ranged_aim = _pick_ranged_aim_with_jitter()
@@ -611,18 +786,17 @@ func _release_bow_aim_lean() -> void:
 
 
 func _finish_attack() -> void:
-	_hitbox.disable()
+	_disable_hitbox()
 	_visual.position = Vector2.ZERO
 	_reset_throw_flip()
-	if weapon != null and weapon.attack_style == WeaponData.AttackStyle.SPEAR_THROW:
+	if weapon != null and weapon.uses_throw_projectile():
 		_set_held_weapon_visible(true)
+	_projectile_attack_active = false
 	_throw_released = false
 	_throw_landed = false
 	_throw_left_ground = false
 	_throw_timer = 0.0
-	var interval := BASE_ATTACK_INTERVAL
-	if weapon != null and weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
-		interval = RANGED_ATTACK_INTERVAL
+	var interval := weapon.attack_interval if weapon != null else 0.75
 	_attack_timer = interval / stats.get_speed_multiplier()
 	_combat_phase = CombatPhase.RETURNING
 
@@ -630,10 +804,11 @@ func _finish_attack() -> void:
 func _cancel_attack() -> void:
 	if _combat_phase != CombatPhase.ATTACKING:
 		return
-	_hitbox.disable()
+	_disable_hitbox()
 	_visual.position = Vector2.ZERO
 	_reset_weapon_swing()
 	_reset_throw_flip()
+	_projectile_attack_active = false
 	_throw_released = false
 	_throw_landed = false
 	_throw_left_ground = false
@@ -642,19 +817,21 @@ func _cancel_attack() -> void:
 
 
 func _get_home_global() -> Vector2:
-	var flag_pos := _troop.flag_bearer.global_position
+	# Homes follow squad slot order (flag at rear). Aim priority still uses
+	# weapon formation_line as role tags — spatial retargeting is a follow-up.
+	# Prefer get_node: @onready flag_bearer is still null while Units children
+	# run _ready (children before parent) during troop scene load.
+	var flag: Node2D = _troop.flag_bearer
+	if flag == null:
+		flag = _troop.get_node_or_null("FlagBearer") as Node2D
+	if flag == null:
+		return global_position
+	var flag_pos := flag.global_position
 	var facing := -1.0 if _troop.is_enemy else 1.0
-	var index := squad_index
-	# BACK uses a negative offset, so increasing squad_index moves left for the player
-	# and mirrors War Chamber LTR. Reverse so left-in-selection stays left-on-screen.
-	if (
-		weapon != null
-		and not _troop.is_enemy
-		and weapon.formation_line == WeaponData.FormationLine.BACK
-	):
-		var line_count := _troop.get_living_formation_line_count(weapon.formation_line)
-		index = maxi(line_count - 1 - squad_index, 0)
-	var offset := weapon.get_squad_offset(index) if weapon != null else 0.0
+	# Slot 0 stands FLAG_REAR_CLEARANCE ahead of the flag; later slots step forward.
+	var offset := (
+		Troop.FLAG_REAR_CLEARANCE + Troop.HOME_SLOT_SPACING * float(squad_index)
+	)
 	return Vector2(flag_pos.x + facing * offset, flag_pos.y)
 
 
@@ -668,10 +845,7 @@ func _axis_velocity(current: float, target: float, speed: float) -> float:
 func _uses_projectile_attack() -> bool:
 	if weapon == null:
 		return false
-	return (
-		weapon.attack_style == WeaponData.AttackStyle.SPEAR_THROW
-		or weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT
-	)
+	return weapon.uses_projectile()
 
 
 func _refresh_target() -> void:
@@ -716,6 +890,13 @@ func _refresh_target() -> void:
 		var slack_sq := TARGET_SWITCH_SLACK * TARGET_SWITCH_SLACK
 		if previous_distance <= closest_distance + slack_sq:
 			_target = previous
+			closest_distance = previous_distance
+
+	# Free-march until an enemy enters engage range.
+	if _target != null:
+		var engage_sq := Troop.ENGAGE_RANGE * Troop.ENGAGE_RANGE
+		if closest_distance > engage_sq:
+			_target = null
 
 
 func _get_ranged_aim_priority() -> Array[WeaponData.FormationLine]:
@@ -744,7 +925,7 @@ func _get_ranged_aim_priority() -> Array[WeaponData.FormationLine]:
 
 
 func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
-	var attack_range := weapon.attack_range if weapon != null else 0.0
+	var attack_range := _get_attack_range()
 	for formation_line in _get_ranged_aim_priority():
 		var candidates: Array[Unit] = []
 		var weights: Array[float] = []
@@ -787,7 +968,7 @@ func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
 
 
 func _get_attack_damage() -> int:
-	var raw: int = weapon.base_damage + stats.get_damage_bonus(weapon.attack_style)
+	var raw: int = weapon.base_damage + stats.get_damage_bonus(weapon.damage_stat)
 	return maxi(roundi(float(raw) * weapon.outgoing_damage_multiplier), 0)
 
 
@@ -877,15 +1058,14 @@ func _die(
 		killer.register_kill()
 
 	died.emit(self)
-	if _troop != null:
-		_troop.call_deferred("refresh_squad_indices")
 
 	_cancel_attack()
 	_in_knockback = false
 	velocity = Vector2.ZERO
 	collision_layer = 0
 	collision_mask = 0
-	_hitbox.monitoring = false
+	if _hitbox != null:
+		_hitbox.monitoring = false
 	_disable_hurtbox()
 	if _hp_chip != null and is_instance_valid(_hp_chip):
 		_hp_chip.queue_free()
@@ -1095,7 +1275,10 @@ func _reset_throw_flip() -> void:
 func _get_weapon_mount() -> Node2D:
 	if _appearance == null:
 		return null
-	return _appearance.weapon_mount
+	var mount := _appearance.weapon_mount
+	if mount == null:
+		mount = _appearance.get_node_or_null("WeaponMount") as Node2D
+	return mount
 
 
 func _set_held_weapon_visible(weapon_visible: bool) -> void:

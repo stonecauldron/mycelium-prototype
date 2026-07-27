@@ -135,8 +135,6 @@ func _run_battle(
 	)
 	_refresh_unit_process_order()
 	_set_fast_forward(_fast_forward_scale)
-	player_troop.begin_march()
-	enemy_troop.begin_march()
 
 
 func _reset_troop_from_roster(
@@ -150,16 +148,24 @@ func _reset_troop_from_roster(
 	_clear_units(units_root)
 	troop.reset_for_scenario(spawn_global)
 
-	var index := 0
-	for data in roster:
-		if data == null:
-			continue
-		var scene := _scene_for_attack_style(data.get_attack_style())
-		_spawn_unit(scene, units_root, data, body_color, index, is_player)
-		index += 1
-
-	troop.refresh_squad_indices()
-	troop.cache_battle_march_speed()
+	# Player homes use War Chamber slot indices (nulls leave gaps). Enemies and
+	# sandbox battles use compact order from the passed roster.
+	if is_player and not sandboxed:
+		var squad: Array = GameState.troop.squad
+		for slot_index in squad.size():
+			var data := squad[slot_index] as RosterUnitData
+			if data == null:
+				continue
+			var scene := _scene_for_attack_style(data.get_attack_style())
+			_spawn_unit(scene, units_root, data, body_color, slot_index, is_player)
+	else:
+		var index := 0
+		for data in roster:
+			if data == null:
+				continue
+			var scene := _scene_for_attack_style(data.get_attack_style())
+			_spawn_unit(scene, units_root, data, body_color, index, is_player)
+			index += 1
 
 
 func _clear_units(units_root: Node2D) -> void:
@@ -170,7 +176,7 @@ func _clear_units(units_root: Node2D) -> void:
 
 func _scene_for_attack_style(attack_style: WeaponData.AttackStyle) -> PackedScene:
 	match attack_style:
-		WeaponData.AttackStyle.SPEAR_THROW:
+		WeaponData.AttackStyle.PROJECTILE_THROW:
 			return _SPEAR_UNIT_SCENE
 		_:
 			return _MELEE_UNIT_SCENE

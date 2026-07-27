@@ -70,13 +70,13 @@ func get_max_hp() -> int:
 	return maxi(con * 4, 1)
 
 
-func get_attack_stat(attack_style: WeaponData.AttackStyle) -> int:
-	match attack_style:
-		WeaponData.AttackStyle.MELEE_LUNGE:
+func get_attack_stat(damage_stat: WeaponData.DamageStat) -> int:
+	match damage_stat:
+		WeaponData.DamageStat.STRENGTH:
 			return strength
-		WeaponData.AttackStyle.BOW_SHOT:
+		WeaponData.DamageStat.DEX:
 			return dex
-		WeaponData.AttackStyle.SPEAR_THROW:
+		WeaponData.DamageStat.FINESSE:
 			return maxi(strength, dex)
 		_:
 			return NEUTRAL_STAT
@@ -86,25 +86,14 @@ func get_speed_multiplier() -> float:
 	return spd / float(NEUTRAL_STAT)
 
 
-func get_melee_damage_bonus() -> int:
-	return strength - NEUTRAL_STAT
-
-
-func get_ranged_damage_bonus() -> int:
-	return roundi((dex - NEUTRAL_STAT) / 2.0)
-
-
-func get_mid_damage_bonus() -> int:
-	return get_attack_stat(WeaponData.AttackStyle.SPEAR_THROW) - NEUTRAL_STAT
-
-
-func get_damage_bonus(attack_style: WeaponData.AttackStyle) -> int:
-	match attack_style:
-		WeaponData.AttackStyle.MELEE_LUNGE:
-			return get_melee_damage_bonus()
-		WeaponData.AttackStyle.BOW_SHOT:
-			return get_ranged_damage_bonus()
-		WeaponData.AttackStyle.SPEAR_THROW:
-			return get_mid_damage_bonus()
+func get_damage_bonus(damage_stat: WeaponData.DamageStat) -> int:
+	match damage_stat:
+		WeaponData.DamageStat.STRENGTH:
+			return strength - NEUTRAL_STAT
+		WeaponData.DamageStat.DEX:
+			# Half weight vs STR so dex weapons don't spike as hard per point.
+			return roundi((dex - NEUTRAL_STAT) / 2.0)
+		WeaponData.DamageStat.FINESSE:
+			return get_attack_stat(damage_stat) - NEUTRAL_STAT
 		_:
 			return 0

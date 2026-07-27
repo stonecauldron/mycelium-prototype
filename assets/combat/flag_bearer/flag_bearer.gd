@@ -142,6 +142,10 @@ func set_march_velocity(speed: float) -> void:
 	_march_speed_x = speed * _march_speed_multiplier()
 
 
+func get_march_velocity_x() -> float:
+	return _march_speed_x
+
+
 func stop() -> void:
 	_march_speed_x = 0.0
 

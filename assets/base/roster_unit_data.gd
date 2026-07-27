@@ -26,6 +26,12 @@ func get_attack_style() -> WeaponData.AttackStyle:
 	return weapon.attack_style
 
 
+func get_damage_stat() -> WeaponData.DamageStat:
+	if weapon == null:
+		return WeaponData.DamageStat.STRENGTH
+	return weapon.damage_stat
+
+
 func can_promote_to_imago() -> bool:
 	if is_imago or strain == null:
 		return false

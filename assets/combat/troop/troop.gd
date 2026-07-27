@@ -1,21 +1,19 @@
 extends Node2D
 class_name Troop
 
-enum State { MARCHING, HALTED }
-
-signal state_changed(new_state: State)
-
+## Distance at which units acquire combat targets (replaces army-wide halt gap).
+const ENGAGE_RANGE := 1800.0
 const DEFAULT_MARCH_SPEED := 120.0
-const DEFAULT_HALT_DISTANCE := 600.0
-const HALT_DISTANCE_TOLERANCE := 24.0
+## Distance from flag center to squad slot 0 home / gap behind rearmost unit.
+const FLAG_REAR_CLEARANCE := 100.0
+## Horizontal spacing between consecutive home slots.
+const HOME_SLOT_SPACING := 64.0
+const FLAG_ARRIVE_THRESHOLD := 4.0
 
 @export var march_speed: float = DEFAULT_MARCH_SPEED
-@export var halt_distance: float = DEFAULT_HALT_DISTANCE
 @export var is_enemy: bool = false
 
-var state: State = State.MARCHING
 var _opponent: Troop
-var _battle_march_speed: float = DEFAULT_MARCH_SPEED
 
 @onready var flag_bearer: FlagBearer = $FlagBearer
 
@@ -23,27 +21,6 @@ var _battle_march_speed: float = DEFAULT_MARCH_SPEED
 func _ready() -> void:
 	add_to_group("troops")
 	call_deferred("_acquire_opponent")
-	call_deferred("_assign_squad_indices")
-
-
-func _assign_squad_indices() -> void:
-	refresh_squad_indices()
-
-
-func refresh_squad_indices() -> void:
-	var by_line: Dictionary = {}
-	for unit in get_living_units():
-		var formation_line: WeaponData.FormationLine = (
-			unit.weapon.formation_line if unit.weapon != null else WeaponData.FormationLine.FRONT
-		)
-		if not by_line.has(formation_line):
-			by_line[formation_line] = []
-		by_line[formation_line].append(unit)
-
-	for formation_line in by_line:
-		var units: Array = by_line[formation_line]
-		for i in units.size():
-			units[i].squad_index = i
 
 
 func get_opponent() -> Troop:
@@ -90,34 +67,44 @@ func get_living_formation_line_count(formation_line: WeaponData.FormationLine) -
 func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:
 	for unit in get_units():
 		unit.apply_power_tier(tier)
-	refresh_squad_indices()
 
 
 func reset_for_scenario(spawn_global: Vector2) -> void:
 	flag_bearer.global_position = spawn_global
 	flag_bearer.reset_combat_state()
-	state = State.MARCHING
-	state_changed.emit(state)
-	_battle_march_speed = march_speed
-	refresh_squad_indices()
 
 
-func cache_battle_march_speed() -> void:
-	var total := 0.0
-	var count := 0
-	for unit in get_units():
-		if unit.current_hp <= 0:
-			continue
-		total += unit.get_move_speed()
-		count += 1
-	if count == 0:
-		_battle_march_speed = march_speed
-	else:
-		_battle_march_speed = total / float(count)
+func get_facing() -> float:
+	return -1.0 if is_enemy else 1.0
 
 
-func get_average_unit_speed() -> float:
-	return _battle_march_speed
+## Living unit furthest from the enemy (army rear).
+func get_rearmost_living_unit() -> Unit:
+	var facing := get_facing()
+	var rearmost: Unit = null
+	for unit in get_living_units():
+		if (
+			rearmost == null
+			or facing * (unit.global_position.x - rearmost.global_position.x) < 0.0
+		):
+			rearmost = unit
+	return rearmost
+
+
+func _anchor_flag_behind_rearmost() -> void:
+	var rearmost := get_rearmost_living_unit()
+	if rearmost == null:
+		flag_bearer.stop()
+		return
+	var facing := get_facing()
+	var target_x := rearmost.global_position.x - facing * FLAG_REAR_CLEARANCE
+	var delta_x := target_x - flag_bearer.global_position.x
+	if absf(delta_x) <= FLAG_ARRIVE_THRESHOLD:
+		flag_bearer.stop()
+		return
+	# Match unit move speed so the flag can keep up with free-march / catch up
+	# after the rearmost dies, without teleporting.
+	flag_bearer.set_march_velocity(signf(delta_x) * Unit.BASE_MOVE_SPEED)
 
 
 func _acquire_opponent() -> void:
@@ -146,54 +133,11 @@ func get_flag_global_position() -> Vector2:
 	return flag_bearer.global_position
 
 
-func begin_march() -> void:
-	if state == State.MARCHING:
-		return
-	state = State.MARCHING
-	state_changed.emit(state)
-
-
-func halt() -> void:
-	if state == State.HALTED:
-		return
-	state = State.HALTED
-	state_changed.emit(state)
-
-
 func _physics_process(_delta: float) -> void:
 	_acquire_opponent()
 	if flag_bearer.is_in_knockback():
 		return
 	if is_wiped_out():
 		flag_bearer.stop()
-		halt()
 		return
-	if _opponent == null:
-		flag_bearer.stop()
-		return
-	if is_enemy and march_speed <= 0.0:
-		flag_bearer.stop()
-		return
-
-	var gap := absf(_opponent.get_flag_global_x() - get_flag_global_x())
-	var toward_enemy := signf(_opponent.get_flag_global_x() - get_flag_global_x())
-	if toward_enemy == 0.0:
-		toward_enemy = 1.0 if not is_enemy else -1.0
-
-	var speed := get_average_unit_speed()
-	var error := gap - halt_distance
-
-	if absf(error) <= HALT_DISTANCE_TOLERANCE:
-		flag_bearer.stop()
-		halt()
-		return
-
-	if error > 0.0:
-		# Too far — close the gap.
-		flag_bearer.set_march_velocity(speed * toward_enemy)
-		if state == State.HALTED:
-			begin_march()
-	else:
-		# Too close — fall back to restore spacing.
-		flag_bearer.set_march_velocity(speed * -toward_enemy)
-		halt()
+	_anchor_flag_behind_rearmost()

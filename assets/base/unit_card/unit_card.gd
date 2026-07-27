@@ -95,7 +95,7 @@ func _refresh() -> void:
 	var range_name: String = str(WeaponData.FORMATION_LINE_LABELS.get(data.get_formation_line(), "?"))
 	_weapon_label.text = "%s (%s)" % [weapon_name, range_name]
 	if data.stats != null:
-		var atk: int = data.stats.get_damage_bonus(data.get_attack_style())
+		var atk: int = data.stats.get_damage_bonus(data.get_damage_stat())
 		var outgoing_mult: float = 1.0
 		if data.weapon != null:
 			atk += data.weapon.base_damage

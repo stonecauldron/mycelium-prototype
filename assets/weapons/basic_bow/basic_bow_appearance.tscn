@@ -2,9 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://ba54ju7pqqlac" path="res://assets/weapons/basic_bow/bow.png" id="1_bow"]
 
-[node name="BasicBowAppearance" type="Node2D"]
+[node name="BasicBowAppearance" type="Node2D" unique_id=1736989300]
 
-[node name="Visual" type="Sprite2D" parent="."]
+[node name="Visual" type="Sprite2D" parent="." unique_id=961525060]
 rotation = 0.2
 scale = Vector2(0.22, 0.22)
 texture = ExtResource("1_bow")

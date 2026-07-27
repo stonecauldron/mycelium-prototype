@@ -2,17 +2,11 @@ class_name WeaponData
 extends Resource
 
 enum FormationLine { FRONT, MID, BACK }
-enum EngagementStance { REFORM, HOLD, SKIRMISH }
-enum AttackStyle { MELEE_LUNGE, SPEAR_THROW, BOW_SHOT }
+enum EngagementStance { FORMATION_FIGHT, CHARGE, HOLD_LINE, SKIRMISH, HYBRID }
+enum AttackStyle { MELEE_LUNGE, PROJECTILE_THROW, BOW_SHOT }
 enum TargetingMode { SINGLE, AOE }
 ## Which unit stat feeds this weapon's damage bonus (independent of attack style / line).
 enum DamageStat { STRENGTH, DEX, FINESSE }
-
-const SQUAD_OFFSET := {
-	FormationLine.FRONT: 48.0,
-	FormationLine.MID: 52.0,
-	FormationLine.BACK: -140.0,
-}
 
 const FORMATION_LINE_LABELS := {
 	FormationLine.FRONT: "Melee",
@@ -29,7 +23,7 @@ const DAMAGE_STAT_LABELS := {
 @export var display_name: String = ""
 @export_multiline var short_description: String = ""
 @export var formation_line: FormationLine = FormationLine.FRONT
-@export var engagement_stance: EngagementStance = EngagementStance.REFORM
+@export var engagement_stance: EngagementStance = EngagementStance.FORMATION_FIGHT
 @export var attack_style: AttackStyle = AttackStyle.MELEE_LUNGE
 ## Stat used for outgoing damage bonus. Not tied to formation line or attack style.
 @export var damage_stat: DamageStat = DamageStat.STRENGTH
@@ -38,7 +32,8 @@ const DAMAGE_STAT_LABELS := {
 @export var attack_range: float = 48.0
 ## Seconds between attacks before SPD scaling. Lower = faster attacks.
 @export var attack_interval: float = 0.75
-## When SKIRMISH: stop attacking and retreat if an enemy is this close.
+## SKIRMISH: kite when an enemy is this close.
+## HYBRID: switch from throw to melee at this distance.
 @export var skirmish_distance: float = 160.0
 @export var knockback_force: float = 280.0
 @export var biomass_cost: int = 5
@@ -61,14 +56,16 @@ func instantiate_appearance() -> Node2D:
 	return appearance_scene.instantiate() as Node2D
 
 
-func get_squad_offset(squad_index: int) -> float:
-	var base: float = SQUAD_OFFSET.get(formation_line, 0.0)
-	if formation_line == FormationLine.MID:
-		return base * (float(squad_index) - 1.5)
-	if formation_line == FormationLine.FRONT:
-		# Start just past the forwardmost mid home (4 mids centered: ±1.5 steps).
-		var mid_forward_extent: float = SQUAD_OFFSET[FormationLine.MID] * 1.5
-		return mid_forward_extent + base * float(squad_index + 1)
-	if base == 0.0:
-		return 0.0
-	return base * float(squad_index + 1)
+func uses_throw_projectile() -> bool:
+	return attack_style == AttackStyle.PROJECTILE_THROW
+
+
+func uses_projectile() -> bool:
+	return (
+		uses_throw_projectile()
+		or attack_style == AttackStyle.BOW_SHOT
+	)
+
+
+func is_hybrid_engagement() -> bool:
+	return engagement_stance == EngagementStance.HYBRID

@@ -99,7 +99,7 @@ func _refresh() -> void:
 	_refresh_strain_meta()
 	_refresh_tags()
 	if unit_data.stats != null:
-		var atk: int = unit_data.stats.get_damage_bonus(unit_data.get_attack_style())
+		var atk: int = unit_data.stats.get_damage_bonus(unit_data.get_damage_stat())
 		var outgoing_mult: float = 1.0
 		if unit_data.weapon != null:
 			atk += unit_data.weapon.base_damage

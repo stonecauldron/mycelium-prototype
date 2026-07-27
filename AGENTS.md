@@ -32,3 +32,23 @@ On tab select, call the destination's `on_screen_shown()` / HUD refresh at **tra
 - Days 5 and 10 use skill-check override lists (seeded pick if multiple variants); other days use the day curve. Seeded by `GameState.run_seed` + day.
 - Combat spawns from roster weapon data (`WeaponRange.RANGED`, etc.) — builders map `EnemyUnitSpec.UnitType` to `basic_*.tres`.
 - Initial player troop / `_make_default_starters()`: one melee, one bow, one spear (common tier).
+
+## Cursor Cloud specific instructions
+
+Engine: **Godot 4.7.x** (project targets `4.7`, see `project.godot`). The setup installs `godot` (4.7.1-stable) on `PATH` and the matching export templates; both persist in the VM snapshot, so the startup/update script does not re-download them.
+
+Running the game (dev mode): there is no GPU/Vulkan in this VM, so the default Forward Plus renderer fails. Run with the Compatibility (OpenGL) renderer on the pre-running X server at display `:1`:
+
+```
+DISPLAY=:1 godot --path /workspace --rendering-driver opengl3
+```
+
+This uses Mesa `llvmpipe` software rendering — it works but is low-framerate, so screen recordings of fast events (e.g. a battle that resolves in ~7s) look choppy; prefer screenshots for evidence.
+
+Audio: no sound card exists, so ALSA `cannot find card '0'` errors print on launch and Godot falls back to the dummy audio driver. This is expected and harmless.
+
+Web build: `make build` exports the `Web` preset to `build/web/` (templates are installed); `make run` then serves it at `http://localhost:8060` via `python3 -m http.server`.
+
+Tests/lint: none exist — there is no test framework (no GUT/gdUnit) and no configured linter/formatter.
+
+Git assets quirk: `*.png`/`*.svg`/etc. are declared LFS in `.gitattributes` but are actually stored as normal git blobs (`git lfs ls-files` is empty). This makes those binary files show as perpetually "modified" in `git status`. Do **not** stage/commit them — leave them untouched.

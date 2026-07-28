@@ -13,6 +13,8 @@ const _FAST_FORWARD_COLOR_2X := Color(1.0, 0.85, 0.35, 1.0)
 const _FAST_FORWARD_COLOR_4X := Color(1.0, 0.25, 0.25, 1.0)
 const _HITSTOP_SCALE := 0.05
 const _HITSTOP_DURATION := 0.05
+## Keep physics step size fixed under time_scale so 2×/4× don't change combat outcomes.
+const _BASE_PHYSICS_TICKS := 60
 
 @export var sandboxed: bool = false
 
@@ -27,12 +29,16 @@ var _fallen_units: Array[RosterUnitData] = []
 var _biomass_earned_this_fight: int = 0
 var _fast_forward_scale: int = 1
 var _hitstop_active: bool = false
+var _saved_physics_ticks: int = _BASE_PHYSICS_TICKS
+var _saved_max_physics_steps: int = 8
 
 
 func _ready() -> void:
 	if get_tree().current_scene != self:
 		sandboxed = true
 
+	_saved_physics_ticks = Engine.physics_ticks_per_second
+	_saved_max_physics_steps = Engine.max_physics_steps_per_frame
 	_player_spawn = player_troop.flag_bearer.global_position
 	_enemy_spawn = enemy_troop.flag_bearer.global_position
 	_fast_forward_button.pressed.connect(_on_fast_forward_pressed)
@@ -55,7 +61,7 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_hitstop_active = false
-	Engine.time_scale = 1.0
+	_restore_engine_timing()
 
 
 func start_battle(
@@ -78,8 +84,7 @@ func _set_fast_forward(ff_scale: int) -> void:
 		ff_scale = 1
 	_fast_forward_scale = ff_scale
 	GameState.combat_fast_forward = ff_scale
-	if not _hitstop_active:
-		Engine.time_scale = float(ff_scale)
+	_apply_simulation_rate()
 	if _fast_forward_button != null:
 		match ff_scale:
 			2:
@@ -90,11 +95,26 @@ func _set_fast_forward(ff_scale: int) -> void:
 				_fast_forward_button.modulate = Color.WHITE
 
 
+## time_scale alone enlarges each physics delta; also raise tick rate so game-time
+## step size stays ~1/_BASE_PHYSICS_TICKS (projectiles/collisions stay consistent).
+func _apply_simulation_rate() -> void:
+	var ff := 1 if _battle_over else _fast_forward_scale
+	Engine.physics_ticks_per_second = _saved_physics_ticks * ff
+	# 4× at 60fps needs 4 steps/frame; headroom if render FPS dips.
+	Engine.max_physics_steps_per_frame = maxi(_saved_max_physics_steps, ff * 4)
+	if _hitstop_active:
+		return
+	Engine.time_scale = 1.0 if _battle_over else float(ff)
+
+
 func _restore_time_scale() -> void:
-	if _battle_over:
-		Engine.time_scale = 1.0
-	else:
-		Engine.time_scale = float(_fast_forward_scale)
+	_apply_simulation_rate()
+
+
+func _restore_engine_timing() -> void:
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = _saved_physics_ticks
+	Engine.max_physics_steps_per_frame = _saved_max_physics_steps
 
 
 func request_hitstop() -> void:
@@ -261,7 +281,7 @@ func _check_battle_end() -> void:
 		return
 	_battle_over = true
 	_hitstop_active = false
-	Engine.time_scale = 1.0
+	_restore_engine_timing()
 	_notify_battle_end()
 
 	if sandboxed:

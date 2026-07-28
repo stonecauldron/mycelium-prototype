@@ -21,9 +21,10 @@ On tab select, call the destination's `on_screen_shown()` / HUD refresh at **tra
 
 ## Combat fast-forward
 
-- Top-center HUD button toggles `Engine.time_scale` to 2×.
+- Top-center HUD button cycles `Engine.time_scale` through 1× / 2× / 4×.
 - Preference lives on `GameState.combat_fast_forward` for the session; restore on combat enter.
-- Always reset `Engine.time_scale` to `1.0` on battle end and `_exit_tree` so non-combat scenes stay normal speed. Do **not** clear the preference when resetting scale.
+- Also scale `Engine.physics_ticks_per_second` (and raise `max_physics_steps_per_frame`) with the same multiplier so each game-time physics step stays ~1/60s — plain `time_scale` alone enlarges deltas and changes collision/projectile outcomes.
+- Always reset `Engine.time_scale` and physics tick settings on battle end and `_exit_tree` so non-combat scenes stay normal speed. Do **not** clear the preference when resetting scale.
 
 ## Enemy / starter composition
 

@@ -379,11 +379,32 @@ func get_move_speed(retreating: bool = false) -> float:
 
 
 func get_engagement_stance() -> WeaponData.EngagementStance:
+	var stance := _configured_engagement_stance()
+	# All-HOLD armies deadlock: nobody marches into range. Promote to formation
+	# fight so the remaining holders advance like FORMATION_FIGHT.
+	if (
+		stance == WeaponData.EngagementStance.HOLD_LINE
+		and _all_living_allies_hold_line()
+	):
+		return WeaponData.EngagementStance.FORMATION_FIGHT
+	return stance
+
+
+func _configured_engagement_stance() -> WeaponData.EngagementStance:
 	if roster_data != null:
 		return roster_data.get_engagement_stance()
 	if weapon != null:
 		return weapon.engagement_stance
 	return WeaponData.EngagementStance.FORMATION_FIGHT
+
+
+func _all_living_allies_hold_line() -> bool:
+	if _troop == null:
+		return true
+	for ally in _troop.get_living_units():
+		if ally._configured_engagement_stance() != WeaponData.EngagementStance.HOLD_LINE:
+			return false
+	return true
 
 
 func notify_battle_start() -> void:

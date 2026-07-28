@@ -17,12 +17,17 @@ func add_shake(amount: float) -> void:
 	_trauma = minf(_trauma + amount, 1.0)
 
 
-func _process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
+	# Match Camera2D process_callback = PHYSICS so follow stays in sync with
+	# flag bearer movement and position smoothing.
 	var player_troop := _find_player_troop()
-	if player_troop != null:
-		global_position.x = player_troop.get_flag_global_position().x
-		global_position.y = fixed_y
+	if player_troop == null:
+		return
+	global_position.x = player_troop.get_flag_global_position().x
+	global_position.y = fixed_y
 
+
+func _process(delta: float) -> void:
 	if _trauma > 0.0:
 		_trauma = maxf(_trauma - trauma_decay * delta, 0.0)
 		var shake := _trauma * _trauma

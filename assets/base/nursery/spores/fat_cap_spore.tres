@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SporeData" format=3]
+
+[ext_resource type="Script" uid="uid://48gu2x5oms10" path="res://assets/base/nursery/spore_data.gd" id="1_spore"]
+[ext_resource type="Resource" path="res://assets/units/fat_cap/fat_cap_strain.tres" id="2_strain"]
+
+[resource]
+script = ExtResource("1_spore")
+display_name = "Fat Cap Spore"
+days_to_mature = 2
+biomass_cost = 5
+power_tier = 1
+strain = ExtResource("2_strain")

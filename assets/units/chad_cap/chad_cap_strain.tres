@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="UnitStrain" format=3]
+
+[ext_resource type="Script" uid="uid://cunitstrain00001" path="res://assets/units/unit_strain.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cstrlife000001" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
+[ext_resource type="PackedScene" path="res://assets/units/chad_cap/chad_cap_appearance.tscn" id="3_appear"]
+[ext_resource type="Script" path="res://assets/units/chad_cap/chad_cap_effect.gd" id="4_effect"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("4_effect")
+
+[sub_resource type="Resource" id="Stage_imago"]
+script = ExtResource("2_stage")
+id = &"imago"
+display_name = "Chad Cap"
+appearance_scene = ExtResource("3_appear")
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Chad Cap"
+short_description = "Strong early. Declines after every battle day."
+days_to_imago = 1
+life_stages = [SubResource("Stage_imago")]
+use_power_tier = false
+strength_delta = 3
+dex_delta = 3
+con_delta = 3
+spd_delta = 3
+effect = SubResource("Effect")

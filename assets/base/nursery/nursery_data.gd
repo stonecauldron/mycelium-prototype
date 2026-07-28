@@ -19,6 +19,22 @@ const _SPORE_SHOP_PATHS: Array[String] = [
 	_EPIC_SPORE_PATH,
 	_LEGENDARY_SPORE_PATH,
 ]
+const _STRAIN_SPORE_PATHS: Array[String] = [
+	"res://assets/base/nursery/spores/death_cap_spore.tres",
+	"res://assets/base/nursery/spores/inky_cap_spore.tres",
+	"res://assets/base/nursery/spores/boom_cap_spore.tres",
+	"res://assets/base/nursery/spores/mini_cap_spore.tres",
+	"res://assets/base/nursery/spores/lanky_cap_spore.tres",
+	"res://assets/base/nursery/spores/fat_cap_spore.tres",
+	"res://assets/base/nursery/spores/magi_cap_spore.tres",
+	"res://assets/base/nursery/spores/chad_cap_spore.tres",
+	"res://assets/base/nursery/spores/rush_cap_spore.tres",
+	"res://assets/base/nursery/spores/wall_cap_spore.tres",
+	"res://assets/base/nursery/spores/bank_cap_spore.tres",
+	"res://assets/base/nursery/spores/zombie_cap_spore.tres",
+	"res://assets/base/nursery/spores/rubber_cap_spore.tres",
+]
+const _STRAIN_SPORE_OFFER_CHANCE := 0.5
 const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/reinforced_chitin.tres",
 	"res://assets/base/nursery/fertilizers/brute_force.tres",
@@ -181,13 +197,19 @@ func is_fertilizer_shop_slot(slot_index: int) -> bool:
 
 
 func generate_spore_offer(_slot_index: int = 0) -> ShopOffer:
-	var path := _pick_weighted_spore_path()
+	var path := _pick_spore_shop_path()
 	var spore := load(path) as SporeData
 	var offer := ShopOffer.new()
 	offer.item = spore
 	offer.cost = spore.biomass_cost if spore != null else BiomassData.COMMON_SPORE_COST
 	offer.locked = false
 	return offer
+
+
+func _pick_spore_shop_path() -> String:
+	if not _STRAIN_SPORE_PATHS.is_empty() and randf() < _STRAIN_SPORE_OFFER_CHANCE:
+		return _STRAIN_SPORE_PATHS[randi() % _STRAIN_SPORE_PATHS.size()]
+	return _pick_weighted_spore_path()
 
 
 func _pick_weighted_spore_path() -> String:

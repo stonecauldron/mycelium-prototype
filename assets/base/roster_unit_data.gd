@@ -19,6 +19,8 @@ const NO_LIFE_EXPECTANCY := -1
 @export var biomass_bank: int = 0
 ## When set, overrides weapon engagement stance in combat (Amok fertiliser).
 @export var forced_engagement_stance: int = -1
+## Zombie Cap: true after the one-time combat respawn.
+@export var has_revived: bool = false
 
 
 func get_formation_line() -> WeaponData.FormationLine:

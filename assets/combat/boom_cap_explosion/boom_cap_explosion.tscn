@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://assets/combat/boom_cap_explosion/boom_cap_explosion.gd" id="1_script"]
+
+[node name="BoomCapExplosion" type="Node2D"]
+script = ExtResource("1_script")

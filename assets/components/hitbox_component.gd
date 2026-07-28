@@ -99,6 +99,10 @@ func _get_valid_target(hurtbox: HurtboxComponent, allow_allies: bool) -> Node:
 	var target: Node = hurtbox.get_combatant()
 	if target == null or target == owner_unit:
 		return null
+	if target.has_method("is_combat_obstacle") and target.call("is_combat_obstacle"):
+		if _hit_combatants.has(target):
+			return null
+		return target
 	if not allow_allies and _is_ally(target):
 		return null
 	if _hit_combatants.has(target):

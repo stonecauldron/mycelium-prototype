@@ -10,6 +10,7 @@ extends Node2D
 var _sprite_rest_position: Vector2 = Vector2.ZERO
 var _sprite_rest_scale: Vector2 = Vector2.ONE
 var _sprite_rest_captured: bool = false
+var _body_scale_factor: float = 1.0
 
 
 func _ready() -> void:
@@ -22,7 +23,16 @@ func _ready() -> void:
 func apply_body_scale(factor: float) -> void:
 	if factor <= 0.0 or is_equal_approx(factor, 1.0):
 		return
+	_body_scale_factor = factor
 	scale = Vector2(factor, factor)
+
+
+func get_body_scale() -> Vector2:
+	return Vector2(_body_scale_factor, _body_scale_factor)
+
+
+func reset_body_scale() -> void:
+	scale = get_body_scale()
 
 
 func mount_weapon_appearance(weapon: WeaponData) -> void:

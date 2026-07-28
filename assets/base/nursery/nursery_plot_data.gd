@@ -32,9 +32,9 @@ func will_harvest_as_imago() -> bool:
 func days_to_mature_effective() -> int:
 	if planted_spore == null:
 		return 1
-	var base_days := maxi(planted_spore.days_to_mature, 1)
+	var base_days := maxi(planted_spore.days_to_mature, 0)
 	if has_behavior(FertilizerData.Behavior.SLOW_STEADY):
-		return base_days * 2
+		return maxi(base_days * 2, 0)
 	return base_days
 
 

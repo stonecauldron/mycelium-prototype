@@ -8,7 +8,6 @@ const DEFAULT_MARCH_SPEED := 120.0
 const FLAG_REAR_CLEARANCE := 100.0
 ## Horizontal spacing between consecutive home slots.
 const HOME_SLOT_SPACING := 64.0
-const FLAG_ARRIVE_THRESHOLD := 4.0
 
 @export var march_speed: float = DEFAULT_MARCH_SPEED
 @export var is_enemy: bool = false
@@ -91,20 +90,19 @@ func get_rearmost_living_unit() -> Unit:
 	return rearmost
 
 
-func _anchor_flag_behind_rearmost() -> void:
+func _anchor_flag_behind_rearmost(delta: float) -> void:
 	var rearmost := get_rearmost_living_unit()
 	if rearmost == null:
 		flag_bearer.stop()
 		return
 	var facing := get_facing()
-	var target_x := rearmost.global_position.x - facing * FLAG_REAR_CLEARANCE
-	var delta_x := target_x - flag_bearer.global_position.x
-	if absf(delta_x) <= FLAG_ARRIVE_THRESHOLD:
-		flag_bearer.stop()
-		return
-	# Match unit move speed so the flag can keep up with free-march / catch up
-	# after the rearmost dies, without teleporting.
-	flag_bearer.set_march_velocity(signf(delta_x) * Unit.BASE_MOVE_SPEED)
+	# Predict one step so we track a retreating rearmost without lag/overshoot chatter.
+	var target_x := (
+		rearmost.global_position.x
+		+ rearmost.velocity.x * delta
+		- facing * FLAG_REAR_CLEARANCE
+	)
+	flag_bearer.follow_anchor_x(target_x, Unit.BASE_MOVE_SPEED, delta)
 
 
 func _acquire_opponent() -> void:
@@ -133,11 +131,11 @@ func get_flag_global_position() -> Vector2:
 	return flag_bearer.global_position
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	_acquire_opponent()
 	if flag_bearer.is_in_knockback():
 		return
 	if is_wiped_out():
 		flag_bearer.stop()
 		return
-	_anchor_flag_behind_rearmost()
+	_anchor_flag_behind_rearmost(delta)

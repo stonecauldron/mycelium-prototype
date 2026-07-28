@@ -104,7 +104,7 @@ var _ranged_aim: Vector2 = Vector2.ZERO
 var _bow_lean_angle: float = 0.0
 var _dying: bool = false
 var _last_hit_from: Vector2 = Vector2.ZERO
-## Runtime engagement range; melee derives from weapon hitbox + lunge.
+## Runtime engagement range from weapon data (strain-invariant).
 var _attack_range: float = 0.0
 var _statuses: Array[StatusEffect] = []
 ## Combat-only modifiers (strains / statuses compose on top).
@@ -117,6 +117,8 @@ var _attack_rate_multiplier: float = 1.0
 @onready var _visual: Node2D = $Visual
 
 var _hitbox: HitboxComponent = null
+var _melee_hitbox: HitboxComponent = null
+var _melee_hitbox_shape: RectangleShape2D = null
 var _appearance: UnitAppearance = null
 var _body_shape: CollisionShape2D = null
 var _hp_chip: StatChip = null
@@ -183,6 +185,7 @@ func _mount_appearance() -> void:
 		# load() (not preload): breaks Unit↔strain appearance compile cycle on export.
 		strain = load("res://assets/units/generalist/generalist_strain.tres") as UnitStrain
 	if strain == null:
+		_configure_melee_hitbox()
 		_refresh_attack_range()
 		return
 
@@ -191,6 +194,7 @@ func _mount_appearance() -> void:
 		stage_id = roster_data.life_stage_id
 	_appearance = strain.instantiate_appearance(stage_id)
 	if _appearance == null:
+		_configure_melee_hitbox()
 		_refresh_attack_range()
 		return
 
@@ -205,54 +209,76 @@ func _mount_appearance() -> void:
 		_body_shape = body
 
 	_appearance.mount_weapon_appearance(weapon)
-	_resolve_weapon_hitbox()
+	_configure_melee_hitbox()
 	_refresh_attack_range()
 	_appearance.play_idle(true)
 
 
 func _clear_visual_children() -> void:
 	for child in _visual.get_children():
+		if child == _melee_hitbox:
+			continue
 		_visual.remove_child(child)
 		child.free()
 
 
-func _resolve_weapon_hitbox() -> void:
+func _ensure_melee_hitbox() -> void:
+	if _melee_hitbox != null and is_instance_valid(_melee_hitbox):
+		if _melee_hitbox.get_parent() != _visual:
+			_visual.add_child(_melee_hitbox)
+		return
+	_melee_hitbox = HitboxComponent.new()
+	_melee_hitbox.name = "MeleeHitbox"
+	_melee_hitbox.collision_layer = 8
+	_melee_hitbox.collision_mask = 4
+	_melee_hitbox.monitoring = false
+	_melee_hitbox.monitorable = false
+	var shape_node := CollisionShape2D.new()
+	_melee_hitbox_shape = RectangleShape2D.new()
+	shape_node.shape = _melee_hitbox_shape
+	_melee_hitbox.add_child(shape_node)
+	_visual.add_child(_melee_hitbox)
+
+
+func _configure_melee_hitbox() -> void:
 	_hitbox = null
-	var mount := _get_weapon_mount()
-	if mount == null or mount.get_child_count() == 0:
+	_ensure_melee_hitbox()
+	if weapon == null or not weapon.uses_melee_hitbox():
+		_melee_hitbox.visible = false
+		_melee_hitbox.monitoring = false
 		return
-	var held := mount.get_child(0) as Node
-	if held == null:
-		return
-	_hitbox = held.get_node_or_null("Hitbox") as HitboxComponent
-	if _hitbox != null:
-		_hitbox.owner_unit = self
+	_melee_hitbox.visible = true
+	_melee_hitbox.position = weapon.get_melee_hitbox_offset(LUNGE_DISTANCE)
+	if _melee_hitbox_shape == null:
+		var shape_node := _melee_hitbox.get_node_or_null("CollisionShape2D") as CollisionShape2D
+		if shape_node != null:
+			_melee_hitbox_shape = shape_node.shape as RectangleShape2D
+	if _melee_hitbox_shape != null:
+		_melee_hitbox_shape.size = weapon.get_melee_hitbox_size()
+	_melee_hitbox.owner_unit = self
+	_hitbox = _melee_hitbox
 
 
 func _refresh_attack_range() -> void:
 	if weapon == null:
 		_attack_range = 0.0
 		return
-	if (
-		weapon.attack_style == WeaponData.AttackStyle.MELEE_LUNGE
-		and _hitbox != null
-	):
-		_attack_range = _hitbox_forward_extent() + LUNGE_DISTANCE
+	if weapon.attack_style == WeaponData.AttackStyle.MELEE_LUNGE:
+		_attack_range = weapon.melee_range
 	else:
-		_attack_range = weapon.attack_range
+		_attack_range = weapon.projectile_range
 
 
 func _get_attack_range() -> float:
 	return _attack_range
 
 
+## Close-range melee band for HYBRID / melee engage (from weapon.melee_range).
 func _get_melee_range() -> float:
-	if _hitbox != null:
-		return _hitbox_forward_extent() + LUNGE_DISTANCE
-	return 96.0
+	if weapon == null:
+		return 96.0
+	return weapon.melee_range
 
-
-## Home-slot stagger inside weapon range so SKIRMISH/HYBRID units do not clump.
 func _preferred_skirmish_distance() -> float:
 	if weapon == null:
 		return 0.0
@@ -276,27 +302,6 @@ func _wants_close_melee() -> bool:
 		return false
 	var distance := global_position.distance_to(_target.global_position)
 	return distance <= _preferred_skirmish_distance()
-
-
-func _hitbox_forward_extent() -> float:
-	if _hitbox == null:
-		return 0.0
-	var shape_node := _hitbox.get_node_or_null("CollisionShape2D") as CollisionShape2D
-	if shape_node == null or not (shape_node.shape is RectangleShape2D):
-		return 0.0
-	var size := (shape_node.shape as RectangleShape2D).size
-	var half := size * 0.5
-	var corners: Array[Vector2] = [
-		Vector2(-half.x, -half.y),
-		Vector2(half.x, -half.y),
-		Vector2(half.x, half.y),
-		Vector2(-half.x, half.y),
-	]
-	var max_forward := 0.0
-	for corner in corners:
-		var local_pt := to_local(shape_node.to_global(corner))
-		max_forward = maxf(max_forward, absf(local_pt.x))
-	return max_forward
 
 
 func _disable_hitbox() -> void:
@@ -984,7 +989,7 @@ func _get_ranged_aim_priority() -> Array[WeaponData.FormationLine]:
 
 
 func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
-	var attack_range := _get_attack_range()
+	var projectile_range := _get_attack_range()
 	for formation_line in _get_ranged_aim_priority():
 		var candidates: Array[Unit] = []
 		var weights: Array[float] = []
@@ -995,7 +1000,7 @@ func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
 			# Horizontal range only — jump height during spear throw must not
 			# invalidate an otherwise valid aim target.
 			var distance := absf(global_position.x - unit.global_position.x)
-			if distance > attack_range:
+			if distance > projectile_range:
 				continue
 			candidates.append(unit)
 			var weight := 1.0 / maxf(distance, 1.0)
@@ -1155,7 +1160,7 @@ func _die(
 		_squash_tween.kill()
 		_squash_tween = null
 	if _appearance != null:
-		_appearance.scale = Vector2.ONE
+		_appearance.reset_body_scale()
 		if _appearance.animation_player != null:
 			_appearance.animation_player.stop()
 
@@ -1229,10 +1234,11 @@ func _play_hurt_highlight() -> void:
 
 	if _squash_tween:
 		_squash_tween.kill()
-	_appearance.scale = Vector2.ONE
+	var body_scale := _appearance.get_body_scale()
+	_appearance.reset_body_scale()
 	_squash_tween = create_tween()
-	_squash_tween.tween_property(_appearance, "scale", HURT_SQUASH, HURT_SQUASH_IN)
-	_squash_tween.tween_property(_appearance, "scale", Vector2.ONE, HURT_SQUASH_OUT)\
+	_squash_tween.tween_property(_appearance, "scale", HURT_SQUASH * body_scale, HURT_SQUASH_IN)
+	_squash_tween.tween_property(_appearance, "scale", body_scale, HURT_SQUASH_OUT)\
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 

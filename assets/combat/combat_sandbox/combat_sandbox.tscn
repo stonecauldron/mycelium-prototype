@@ -3,29 +3,120 @@
 [ext_resource type="Script" uid="uid://dica0meys0kth" path="res://assets/combat/combat_sandbox/combat_sandbox.gd" id="1_sandbox"]
 [ext_resource type="PackedScene" uid="uid://btqr2qonpoxjc" path="res://assets/combat/combat_stage/combat_stage.tscn" id="2_stage"]
 
-[node name="CombatSandbox" type="Node" unique_id=1112878196]
+[node name="CombatSandbox" type="Node" unique_id=1489519964]
 script = ExtResource("1_sandbox")
 
-[node name="CombatStage" parent="." unique_id=1496738158 instance=ExtResource("2_stage")]
+[node name="CombatStage" parent="." unique_id=2095695153 instance=ExtResource("2_stage")]
 sandboxed = true
 
-[node name="SandboxHUD" type="CanvasLayer" parent="." unique_id=1868609093]
+[node name="SandboxHUD" type="CanvasLayer" parent="." unique_id=1099453127]
 layer = 10
 
-[node name="MatchupPanel" type="PanelContainer" parent="SandboxHUD" unique_id=1794513099]
+[node name="CustomMatchupPanel" type="PanelContainer" parent="SandboxHUD" unique_id=756273455]
 offset_left = 12.0
 offset_top = 12.0
-offset_right = 220.0
-offset_bottom = 500.0
+offset_right = 280.0
+offset_bottom = 420.0
 
-[node name="Margin" type="MarginContainer" parent="SandboxHUD/MatchupPanel" unique_id=945904680]
+[node name="Margin" type="MarginContainer" parent="SandboxHUD/CustomMatchupPanel" unique_id=1447422667]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="MatchupButtons" type="VBoxContainer" parent="SandboxHUD/MatchupPanel/Margin" unique_id=935106000]
+[node name="CustomMatchup" type="VBoxContainer" parent="SandboxHUD/CustomMatchupPanel/Margin" unique_id=971082154]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CustomTitle" type="Label" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=704877058]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Custom Matchup"
+
+[node name="PlayerLabel" type="Label" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=682412139]
+layout_mode = 2
+text = "Player"
+
+[node name="PlayerStrain" type="OptionButton" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=1776006658]
+unique_name_in_owner = true
+layout_mode = 2
+fit_to_longest_item = false
+
+[node name="PlayerWeapon" type="OptionButton" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=1500246175]
+unique_name_in_owner = true
+layout_mode = 2
+fit_to_longest_item = false
+
+[node name="EnemyLabel" type="Label" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=1603568560]
+layout_mode = 2
+text = "Enemy"
+
+[node name="EnemyStrain" type="OptionButton" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=930561108]
+unique_name_in_owner = true
+layout_mode = 2
+fit_to_longest_item = false
+
+[node name="EnemyWeapon" type="OptionButton" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=1027089905]
+unique_name_in_owner = true
+layout_mode = 2
+fit_to_longest_item = false
+
+[node name="CountRow" type="HBoxContainer" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=492019330]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CountLabel" type="Label" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup/CountRow" unique_id=178523944]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Count each side"
+
+[node name="UnitCount" type="SpinBox" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup/CountRow" unique_id=396611074]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+min_value = 1.0
+max_value = 9.0
+value = 1.0
+rounded = true
+
+[node name="RunCustom" type="Button" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=1040324986]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Run Custom"
+
+[node name="PresetsPanel" type="PanelContainer" parent="SandboxHUD" unique_id=151029723]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 520.0
+grow_horizontal = 0
+
+[node name="Margin" type="MarginContainer" parent="SandboxHUD/PresetsPanel" unique_id=1028544463]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Scroll" type="ScrollContainer" parent="SandboxHUD/PresetsPanel/Margin" unique_id=985806579]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Column" type="VBoxContainer" parent="SandboxHUD/PresetsPanel/Margin/Scroll" unique_id=1997447316]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="PresetTitle" type="Label" parent="SandboxHUD/PresetsPanel/Margin/Scroll/Column" unique_id=1538513034]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Presets"
+
+[node name="MatchupButtons" type="VBoxContainer" parent="SandboxHUD/PresetsPanel/Margin/Scroll/Column" unique_id=1157527143]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4

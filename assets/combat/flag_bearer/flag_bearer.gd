@@ -146,6 +146,18 @@ func get_march_velocity_x() -> float:
 	return _march_speed_x
 
 
+## Seek target_x without overshooting (avoids chase chatter when the rear unit retreats).
+func follow_anchor_x(target_x: float, max_speed: float, delta: float) -> void:
+	if _in_knockback:
+		return
+	if delta <= 0.0:
+		_march_speed_x = 0.0
+		return
+	var capped := max_speed * _march_speed_multiplier()
+	var delta_x := target_x - global_position.x
+	_march_speed_x = clampf(delta_x / delta, -capped, capped)
+
+
 func stop() -> void:
 	_march_speed_x = 0.0
 

@@ -13,6 +13,7 @@ const _FAST_FORWARD_COLOR_2X := Color(1.0, 0.85, 0.35, 1.0)
 const _FAST_FORWARD_COLOR_4X := Color(1.0, 0.25, 0.25, 1.0)
 const _HITSTOP_SCALE := 0.05
 const _HITSTOP_DURATION := 0.05
+const _ZOMBIE_RESPAWN_DELAY := 2.0
 ## Keep physics step size fixed under time_scale so 2×/4× don't change combat outcomes.
 const _BASE_PHYSICS_TICKS := 60
 
@@ -31,6 +32,8 @@ var _fast_forward_scale: int = 1
 var _hitstop_active: bool = false
 var _saved_physics_ticks: int = _BASE_PHYSICS_TICKS
 var _saved_max_physics_steps: int = 8
+var _pending_player_zombie_respawns: int = 0
+var _pending_enemy_zombie_respawns: int = 0
 
 
 func _ready() -> void:
@@ -138,6 +141,8 @@ func _run_battle(
 	_hitstop_active = false
 	_fallen_units.clear()
 	_biomass_earned_this_fight = 0
+	_pending_player_zombie_respawns = 0
+	_pending_enemy_zombie_respawns = 0
 	_clear_world_vfx()
 	_reset_troop_from_roster(
 		player_troop,
@@ -248,8 +253,9 @@ func _spawn_unit(
 	roster_data: RosterUnitData,
 	body_color: Color,
 	squad_index: int,
-	is_player: bool
-) -> void:
+	is_player: bool,
+	spawn_global: Vector2 = Vector2.INF
+) -> Unit:
 	var unit: Unit = scene.instantiate()
 	unit.roll_random_stats = false
 	unit.roster_data = roster_data
@@ -261,23 +267,98 @@ func _spawn_unit(
 	unit.squad_index = squad_index
 	unit.died.connect(_on_unit_died.bind(is_player))
 	units_root.add_child(unit)
+	if spawn_global != Vector2.INF:
+		unit.global_position = spawn_global
+	return unit
 
 
 func _on_unit_died(unit: Unit, is_player: bool) -> void:
 	request_hitstop()
+	var roster := unit.roster_data
+	var wants_zombie_respawn := (
+		roster != null
+		and not roster.has_revived
+		and roster.has_meta("zombie_cap_wants_respawn")
+		and bool(roster.get_meta("zombie_cap_wants_respawn"))
+	)
 	if not sandboxed:
-		if is_player and unit.roster_data != null:
-			_fallen_units.append(unit.roster_data)
-			GameState.troop.remove_unit(unit.roster_data)
+		if is_player and roster != null:
+			_fallen_units.append(roster)
+			GameState.troop.remove_unit(roster)
 		elif not is_player:
 			_award_kill_biomass(unit)
+	if wants_zombie_respawn:
+		_schedule_zombie_respawn(roster, is_player, unit.squad_index)
+	else:
+		_check_battle_end()
+
+
+func _schedule_zombie_respawn(
+	dead_roster: RosterUnitData,
+	is_player: bool,
+	squad_index: int
+) -> void:
+	if dead_roster == null:
+		return
+	if dead_roster.has_meta("zombie_cap_wants_respawn"):
+		dead_roster.remove_meta("zombie_cap_wants_respawn")
+	if is_player:
+		_pending_player_zombie_respawns += 1
+	else:
+		_pending_enemy_zombie_respawns += 1
+	await get_tree().create_timer(_ZOMBIE_RESPAWN_DELAY).timeout
+	if not is_inside_tree():
+		return
+	if is_player:
+		_pending_player_zombie_respawns = maxi(_pending_player_zombie_respawns - 1, 0)
+	else:
+		_pending_enemy_zombie_respawns = maxi(_pending_enemy_zombie_respawns - 1, 0)
+	if _battle_over:
+		return
+	_respawn_zombie_cap(dead_roster, is_player, squad_index)
 	_check_battle_end()
+
+
+func _respawn_zombie_cap(
+	dead_roster: RosterUnitData,
+	is_player: bool,
+	squad_index: int
+) -> void:
+	if dead_roster == null:
+		return
+	var clone := dead_roster.duplicate(true) as RosterUnitData
+	if clone == null:
+		return
+	if clone.stats != null:
+		clone.stats = dead_roster.stats.duplicate(true)
+	clone.has_revived = true
+	if clone.has_meta("zombie_cap_wants_respawn"):
+		clone.remove_meta("zombie_cap_wants_respawn")
+	if is_player and not sandboxed:
+		_fallen_units.erase(dead_roster)
+		if GameState.troop.try_add_unit(clone) == "":
+			return
+	var troop := player_troop if is_player else enemy_troop
+	var units_root: Node2D = troop.get_node("Units")
+	var color := Color.WHITE if is_player else Color(0.85, 0.25, 0.3, 1.0)
+	var scene := _scene_for_attack_style(clone.get_attack_style())
+	var spawn_pos := troop.get_flag_global_position()
+	var spawned := _spawn_unit(scene, units_root, clone, color, squad_index, is_player, spawn_pos)
+	if spawned != null:
+		spawned.notify_battle_start()
+	_refresh_unit_process_order()
 
 
 func _check_battle_end() -> void:
 	if _battle_over:
 		return
-	if not player_troop.is_wiped_out() and not enemy_troop.is_wiped_out():
+	var player_wiped := (
+		player_troop.is_wiped_out() and _pending_player_zombie_respawns <= 0
+	)
+	var enemy_wiped := (
+		enemy_troop.is_wiped_out() and _pending_enemy_zombie_respawns <= 0
+	)
+	if not player_wiped and not enemy_wiped:
 		return
 	_battle_over = true
 	_hitstop_active = false
@@ -285,10 +366,10 @@ func _check_battle_end() -> void:
 	_notify_battle_end()
 
 	if sandboxed:
-		battle_ended.emit(not player_troop.is_wiped_out())
+		battle_ended.emit(not player_wiped)
 		return
 
-	if player_troop.is_wiped_out():
+	if player_wiped:
 		SceneTransition.change_scene(_GAME_OVER_SCENE_PATH)
 	else:
 		GameState.ensure_nursery_seeded()

@@ -1,10 +1,6 @@
 [gd_scene format=3 uid="uid://cff2rfskam8sy"]
 
 [ext_resource type="Texture2D" uid="uid://dgrwl2tbl33wj" path="res://assets/weapons/basic_sword/sword.png" id="1_sword"]
-[ext_resource type="Script" uid="uid://cns4xbglj3l7t" path="res://assets/components/hitbox_component.gd" id="2_hitbox"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
-size = Vector2(28, 100)
 
 [node name="BasicSwordAppearance" type="Node2D"]
 
@@ -13,14 +9,3 @@ rotation = 0.7784169
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("1_sword")
 offset = Vector2(-2.5, -167)
-
-[node name="Hitbox" type="Area2D" parent="."]
-position = Vector2(5, -20)
-collision_layer = 8
-collision_mask = 4
-monitoring = false
-monitorable = false
-script = ExtResource("2_hitbox")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-shape = SubResource("RectangleShape2D_hitbox")

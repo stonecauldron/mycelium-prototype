@@ -3,7 +3,7 @@ extends Resource
 
 const STAGE_JUVENILE := &"juvenile"
 const STAGE_IMAGO := &"imago"
-const JUVENILE_SCALE_FALLBACK := 0.6
+const JUVENILE_SCALE_FALLBACK := 0.8
 const NO_LIFE_EXPECTANCY := -1
 
 @export var display_name: String = "Generalist"

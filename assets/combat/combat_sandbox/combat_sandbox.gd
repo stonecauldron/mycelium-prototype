@@ -5,21 +5,75 @@ const _SWORD_WEAPON := preload("res://assets/weapons/basic_sword/basic_sword.tre
 const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
 const _SHIELD_WEAPON := preload("res://assets/weapons/basic_shield/basic_shield.tres")
+const _FISTS_WEAPON := preload("res://assets/weapons/bare_fists.tres")
+
+const _WEAPON_OPTIONS: Array[Dictionary] = [
+	{"name": "Sword", "weapon": _SWORD_WEAPON},
+	{"name": "Spear", "weapon": _SPEAR_WEAPON},
+	{"name": "Bow", "weapon": _BOW_WEAPON},
+	{"name": "Shield", "weapon": _SHIELD_WEAPON},
+	{"name": "Fists", "weapon": _FISTS_WEAPON},
+]
+
+const _STRAIN_OPTIONS: Array[Dictionary] = [
+	{"name": "Generalist", "path": "res://assets/units/generalist/generalist_strain.tres"},
+	{"name": "Death Cap", "path": "res://assets/units/death_cap/death_cap_strain.tres"},
+	{"name": "Inky Cap", "path": "res://assets/units/inky_cap/inky_cap_strain.tres"},
+	{"name": "Boom Cap", "path": "res://assets/units/boom_cap/boom_cap_strain.tres"},
+	{"name": "Mini Cap", "path": "res://assets/units/mini_cap/mini_cap_strain.tres"},
+	{"name": "Lanky Cap", "path": "res://assets/units/lanky_cap/lanky_cap_strain.tres"},
+	{"name": "Fat Cap", "path": "res://assets/units/fat_cap/fat_cap_strain.tres"},
+	{"name": "Magi Cap", "path": "res://assets/units/magi_cap/magi_cap_strain.tres"},
+	{"name": "Chad Cap", "path": "res://assets/units/chad_cap/chad_cap_strain.tres"},
+	{"name": "Rush Cap", "path": "res://assets/units/rush_cap/rush_cap_strain.tres"},
+	{"name": "Wall Cap", "path": "res://assets/units/wall_cap/wall_cap_strain.tres"},
+	{"name": "Bank Cap", "path": "res://assets/units/bank_cap/bank_cap_strain.tres"},
+	{"name": "Zombie Cap", "path": "res://assets/units/zombie_cap/zombie_cap_strain.tres"},
+	{"name": "Rubber Cap", "path": "res://assets/units/rubber_cap/rubber_cap_strain.tres"},
+]
 
 @onready var _stage: Node2D = $CombatStage
 @onready var _buttons: VBoxContainer = %MatchupButtons
+@onready var _player_strain: OptionButton = %PlayerStrain
+@onready var _player_weapon: OptionButton = %PlayerWeapon
+@onready var _enemy_strain: OptionButton = %EnemyStrain
+@onready var _enemy_weapon: OptionButton = %EnemyWeapon
+@onready var _unit_count: SpinBox = %UnitCount
+@onready var _run_custom: Button = %RunCustom
 
 var _rebuild_matchup: Callable = Callable()
 var _restart_token: int = 0
 var _imago_checkbox: CheckBox
+var _strain_cache: Dictionary = {}
 
 
 func _ready() -> void:
 	_stage.battle_ended.connect(_on_battle_ended)
+	_populate_custom_controls()
 	_wire_buttons()
-	_set_matchup(func() -> Array:
-		return [_make_units(_SWORD_WEAPON, 3), _make_units(_SPEAR_WEAPON, 3)]
-	)
+	_set_matchup(_build_custom_matchup)
+
+
+func _populate_custom_controls() -> void:
+	_fill_strain_options(_player_strain)
+	_fill_strain_options(_enemy_strain)
+	_fill_weapon_options(_player_weapon)
+	_fill_weapon_options(_enemy_weapon)
+	_run_custom.pressed.connect(_on_run_custom_pressed)
+
+
+func _fill_strain_options(button: OptionButton) -> void:
+	button.clear()
+	for i in _STRAIN_OPTIONS.size():
+		button.add_item(str(_STRAIN_OPTIONS[i]["name"]), i)
+	button.select(0)
+
+
+func _fill_weapon_options(button: OptionButton) -> void:
+	button.clear()
+	for i in _WEAPON_OPTIONS.size():
+		button.add_item(str(_WEAPON_OPTIONS[i]["name"]), i)
+	button.select(0)
 
 
 func _wire_buttons() -> void:
@@ -102,6 +156,39 @@ func _add_button(label: String, callback: Callable) -> void:
 	_buttons.add_child(button)
 
 
+func _on_run_custom_pressed() -> void:
+	_set_matchup(_build_custom_matchup)
+
+
+func _build_custom_matchup() -> Array:
+	var count := clampi(int(_unit_count.value), 1, 9)
+	return [
+		_make_units(_selected_weapon(_player_weapon), count, _selected_strain(_player_strain)),
+		_make_units(_selected_weapon(_enemy_weapon), count, _selected_strain(_enemy_strain)),
+	]
+
+
+func _selected_weapon(button: OptionButton) -> WeaponData:
+	var index := button.get_selected_id()
+	if index < 0 or index >= _WEAPON_OPTIONS.size():
+		index = button.selected
+	if index < 0 or index >= _WEAPON_OPTIONS.size():
+		return _SWORD_WEAPON
+	return _WEAPON_OPTIONS[index]["weapon"] as WeaponData
+
+
+func _selected_strain(button: OptionButton) -> UnitStrain:
+	var index := button.get_selected_id()
+	if index < 0 or index >= _STRAIN_OPTIONS.size():
+		index = button.selected
+	if index < 0 or index >= _STRAIN_OPTIONS.size():
+		return null
+	var path := str(_STRAIN_OPTIONS[index]["path"])
+	if not _strain_cache.has(path):
+		_strain_cache[path] = load(path)
+	return _strain_cache[path] as UnitStrain
+
+
 func _on_imago_toggled(_pressed: bool) -> void:
 	_restart_current()
 
@@ -142,19 +229,26 @@ func _make_line(weapons: Array) -> Array[RosterUnitData]:
 	return roster
 
 
-func _make_units(weapon: WeaponData, count: int) -> Array[RosterUnitData]:
+func _make_units(
+	weapon: WeaponData,
+	count: int,
+	strain: UnitStrain = null
+) -> Array[RosterUnitData]:
 	var roster: Array[RosterUnitData] = []
 	for _i in count:
-		roster.append(_make_unit(weapon))
+		roster.append(_make_unit(weapon, strain))
 	return roster
 
 
-func _make_unit(weapon: WeaponData) -> RosterUnitData:
+func _make_unit(weapon: WeaponData, strain: UnitStrain = null) -> RosterUnitData:
+	var stats := UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON)
+	if strain != null:
+		strain.apply_hatch_stats(stats)
 	var unit := RosterUnitData.create(
 		UnitNames.pick(),
-		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON),
+		stats,
 		weapon,
-		null,
+		strain,
 		UnitStatsData.PowerTier.COMMON
 	)
 	if _imago_checkbox != null and _imago_checkbox.button_pressed:

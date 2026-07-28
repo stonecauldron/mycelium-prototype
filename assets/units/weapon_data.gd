@@ -21,6 +21,11 @@ const DAMAGE_STAT_LABELS := {
 	DamageStat.FINESSE: "STR or DEX",
 }
 
+## Shared melee overlap box thickness (facing +X). Independent of strain WeaponMount art.
+const MELEE_HITBOX_WIDTH := 28.0
+const MELEE_HITBOX_HEIGHT := 100.0
+const MELEE_HITBOX_Y := -20.0
+
 @export var display_name: String = ""
 @export_multiline var short_description: String = ""
 @export var formation_line: FormationLine = FormationLine.FRONT
@@ -31,7 +36,8 @@ const DAMAGE_STAT_LABELS := {
 @export var damage_type: DamageType = DamageType.SLASHING
 @export var targeting_mode: TargetingMode = TargetingMode.SINGLE
 @export var base_damage: int = 5
-@export var attack_range: float = 48.0
+## Max throw/shot distance for PROJECTILE_THROW / BOW_SHOT (and HYBRID throw band).
+@export var projectile_range: float = 48.0
 ## Seconds between attacks before SPD scaling. Lower = faster attacks.
 @export var attack_interval: float = 0.75
 ## SKIRMISH: kite when an enemy is this close.
@@ -45,6 +51,10 @@ const DAMAGE_STAT_LABELS := {
 @export var incoming_damage_multiplier: float = 1.0
 ## Scales knockback force received while this weapon is equipped. 1.0 = normal.
 @export var incoming_knockback_multiplier: float = 1.0
+## Center-to-center melee engage distance (facing +X). Hitbox is derived from this.
+## Pure MELEE_LUNGE uses this as attack start range; HYBRID uses it for close stick range
+## while projectile_range stays the throw/shot range.
+@export var melee_range: float = 96.0
 @export var appearance_scene: PackedScene
 ## Card icon shown in shop/stock UI. Lives on the resource itself so it
 ## survives duplicate() (unlike matching on resource_path, which is cleared
@@ -71,3 +81,23 @@ func uses_projectile() -> bool:
 
 func is_hybrid_engagement() -> bool:
 	return engagement_stance == EngagementStance.HYBRID
+
+
+## True when this weapon can enable the unit-owned melee hitbox.
+func uses_melee_hitbox() -> bool:
+	return (
+		attack_style == AttackStyle.MELEE_LUNGE
+		or is_hybrid_engagement()
+	)
+
+
+func get_melee_hitbox_size() -> Vector2:
+	return Vector2(MELEE_HITBOX_WIDTH, MELEE_HITBOX_HEIGHT)
+
+
+## Place the box so its forward edge after `lunge_distance` lands at `melee_range`.
+func get_melee_hitbox_offset(lunge_distance: float) -> Vector2:
+	return Vector2(
+		melee_range - lunge_distance - MELEE_HITBOX_WIDTH * 0.5,
+		MELEE_HITBOX_Y
+	)

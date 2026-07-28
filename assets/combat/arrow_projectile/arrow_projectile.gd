@@ -140,6 +140,8 @@ func _on_body_entered(_body: Node2D) -> void:
 func _is_valid_target(target: Node) -> bool:
 	if target == null or target == owner_unit or target is FlagBearer:
 		return false
+	if target.has_method("is_combat_obstacle") and target.call("is_combat_obstacle"):
+		return true
 	if owner_unit == null or owner_unit._troop == null:
 		return false
 	var owner_troop: Troop = owner_unit._troop

@@ -2,7 +2,7 @@ class_name SporeData
 extends Resource
 
 @export var display_name: String = "Spore"
-@export_range(1, 99, 1) var days_to_mature: int = 2
+@export_range(0, 99, 1) var days_to_mature: int = 2
 ## Extra days past maturity before harvest yields an imago (0 = imago on first READY harvest).
 @export_range(0, 99, 1) var extra_days_to_imago: int = 1
 @export var biomass_cost: int = 4

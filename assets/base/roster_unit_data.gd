@@ -3,6 +3,7 @@ extends Resource
 
 const IMAGO_STAT_BONUS := 2
 const _DEFAULT_STRAIN_PATH := "res://assets/units/generalist/generalist_strain.tres"
+const NO_LIFE_EXPECTANCY := -1
 
 @export var display_name: String = "Unit"
 @export var stats: UnitStatsData
@@ -12,6 +13,12 @@ const _DEFAULT_STRAIN_PATH := "res://assets/units/generalist/generalist_strain.t
 @export var days_alive: int = 0
 @export var life_stage_id: StringName = &"juvenile"
 @export var is_imago: bool = false
+## -1 = no age-out death.
+@export var max_days_alive: int = NO_LIFE_EXPECTANCY
+## Banked biomass for Piñata-style strains.
+@export var biomass_bank: int = 0
+## When set, overrides weapon engagement stance in combat (Amok fertiliser).
+@export var forced_engagement_stance: int = -1
 
 
 func get_formation_line() -> WeaponData.FormationLine:
@@ -32,10 +39,22 @@ func get_damage_stat() -> WeaponData.DamageStat:
 	return weapon.damage_stat
 
 
+func get_engagement_stance() -> WeaponData.EngagementStance:
+	if forced_engagement_stance >= 0:
+		return forced_engagement_stance as WeaponData.EngagementStance
+	if weapon == null:
+		return WeaponData.EngagementStance.FORMATION_FIGHT
+	return weapon.engagement_stance
+
+
 func can_promote_to_imago() -> bool:
 	if is_imago or strain == null:
 		return false
 	return days_alive >= strain.days_to_imago
+
+
+func has_exceeded_life_expectancy() -> bool:
+	return max_days_alive >= 0 and days_alive > max_days_alive
 
 
 func promote_to_imago() -> bool:
@@ -46,8 +65,16 @@ func promote_to_imago() -> bool:
 		stats.dex = clampi(stats.dex + IMAGO_STAT_BONUS, 1, 99)
 		stats.con = clampi(stats.con + IMAGO_STAT_BONUS, 1, 99)
 		stats.spd = clampi(stats.spd + IMAGO_STAT_BONUS, 1, 99)
+		if strain != null and strain.imago_stat_delta != 0:
+			var d := strain.imago_stat_delta
+			stats.strength = clampi(stats.strength + d, 1, 99)
+			stats.dex = clampi(stats.dex + d, 1, 99)
+			stats.con = clampi(stats.con + d, 1, 99)
+			stats.spd = clampi(stats.spd + d, 1, 99)
 	life_stage_id = UnitStrain.STAGE_IMAGO
 	is_imago = true
+	if strain != null:
+		strain.call_effect(&"on_imago", [self])
 	return true
 
 
@@ -64,7 +91,7 @@ func mount_portrait(
 	if appearance == null:
 		return null
 	host.add_child(appearance)
-	appearance.scale = Vector2(portrait_scale, portrait_scale)
+	appearance.scale *= Vector2(portrait_scale, portrait_scale)
 	appearance.modulate = UnitStatsData.tint_for_tier(power_tier)
 	host.set_meta("_portrait_shadow_clearance", shadow_clearance)
 	_ensure_portrait_host_sync(host)
@@ -118,6 +145,8 @@ static func create(
 	data.days_alive = 0
 	data.life_stage_id = UnitStrain.STAGE_JUVENILE
 	data.is_imago = false
+	if data.strain != null:
+		data.max_days_alive = data.strain.roll_max_days_alive()
 	return data
 
 

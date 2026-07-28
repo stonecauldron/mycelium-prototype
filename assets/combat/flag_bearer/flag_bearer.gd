@@ -177,7 +177,8 @@ func take_damage(
 	amount: int,
 	knockback_from: Vector2 = Vector2.ZERO,
 	knockback_force: float = 0.0,
-	_killer: Unit = null
+	_killer: Unit = null,
+	_damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
 ) -> void:
 	_hits_taken += 1
 	_play_hurt_highlight()

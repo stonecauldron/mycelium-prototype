@@ -16,6 +16,15 @@ func _ready() -> void:
 	_capture_sprite_rest_pose()
 
 
+## Scales visual + collision volumes (juvenile fallback from imago art).
+## Root scale is enough: hurtbox/body/weapon mount are children and inherit it.
+## Combat remounts BodyShape with global_transform preserved so volume stays correct.
+func apply_body_scale(factor: float) -> void:
+	if factor <= 0.0 or is_equal_approx(factor, 1.0):
+		return
+	scale = Vector2(factor, factor)
+
+
 func mount_weapon_appearance(weapon: WeaponData) -> void:
 	var mount := weapon_mount
 	if mount == null:

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="FertilizerData" format=3]
+
+[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+
+[resource]
+script = ExtResource("1_fert")
+display_name = "Stress Induced Growth"
+biomass_cost = 6
+tint = Color(0.72, 0.55, 0.28, 1)
+strength_delta = -2
+dex_delta = -2
+con_delta = -2
+spd_delta = -2
+growth_bonus = 2

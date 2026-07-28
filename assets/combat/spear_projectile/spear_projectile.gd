@@ -11,6 +11,7 @@ const STUCK_FADE_TIME := 1.2
 
 var damage: int = 0
 var knockback_force: float = 0.0
+var damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
 var owner_unit: Unit
 var _velocity: Vector2 = Vector2.ZERO
 var _lifetime: float = 0.0
@@ -28,6 +29,8 @@ func launch(
 	damage = attack_damage
 	knockback_force = attack_knockback
 	owner_unit = thrower
+	if thrower != null and thrower.weapon != null:
+		damage_type = thrower.weapon.damage_type
 	_velocity = _angle_launch_velocity(from_global, aim_global)
 	_face_velocity()
 	monitoring = true
@@ -120,7 +123,9 @@ func _resolve_hit() -> void:
 	set_deferred("monitoring", false)
 	var from_pos := owner_unit.global_position if owner_unit != null else global_position
 	var killer: Unit = owner_unit if owner_unit != null and is_instance_valid(owner_unit) else null
-	chosen.receive_hit(damage, from_pos, knockback_force, killer)
+	chosen.receive_hit(damage, from_pos, knockback_force, killer, damage_type)
+	if killer != null and killer.roster_data != null and killer.roster_data.strain != null:
+		killer.roster_data.strain.call_effect(&"on_hit_dealt", [killer, chosen.get_combatant(), damage])
 	queue_free()
 
 

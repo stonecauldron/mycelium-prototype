@@ -7,6 +7,7 @@ enum AttackStyle { MELEE_LUNGE, PROJECTILE_THROW, BOW_SHOT }
 enum TargetingMode { SINGLE, AOE }
 ## Which unit stat feeds this weapon's damage bonus (independent of attack style / line).
 enum DamageStat { STRENGTH, DEX, FINESSE }
+enum DamageType { SLASHING, BLUNT }
 
 const FORMATION_LINE_LABELS := {
 	FormationLine.FRONT: "Melee",
@@ -27,6 +28,7 @@ const DAMAGE_STAT_LABELS := {
 @export var attack_style: AttackStyle = AttackStyle.MELEE_LUNGE
 ## Stat used for outgoing damage bonus. Not tied to formation line or attack style.
 @export var damage_stat: DamageStat = DamageStat.STRENGTH
+@export var damage_type: DamageType = DamageType.SLASHING
 @export var targeting_mode: TargetingMode = TargetingMode.SINGLE
 @export var base_damage: int = 5
 @export var attack_range: float = 48.0

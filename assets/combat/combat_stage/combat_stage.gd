@@ -134,8 +134,48 @@ func _run_battle(
 		false
 	)
 	_refresh_unit_process_order()
+	_notify_battle_start()
 	_set_fast_forward(_fast_forward_scale)
 
+
+func _notify_battle_start() -> void:
+	for unit in player_troop.get_living_units():
+		unit.notify_battle_start()
+	for unit in enemy_troop.get_living_units():
+		unit.notify_battle_start()
+
+
+func _notify_battle_end() -> void:
+	for unit in player_troop.get_living_units():
+		unit.notify_battle_end()
+	for unit in enemy_troop.get_living_units():
+		unit.notify_battle_end()
+
+
+func _award_kill_biomass(victim: Unit) -> int:
+	var is_imago := victim.roster_data != null and victim.roster_data.is_imago
+	var reward := BiomassData.reward_for_kill(is_imago)
+	GameState.biomass.add(reward)
+	_biomass_earned_this_fight += reward
+	_notify_biomass_from_combat_death(reward, victim)
+	return reward
+
+
+func _notify_biomass_from_combat_death(amount: int, victim: Unit) -> void:
+	if amount <= 0:
+		return
+	for unit in player_troop.get_living_units():
+		if unit.roster_data != null and unit.roster_data.strain != null:
+			unit.roster_data.strain.call_effect(
+				&"on_combat_biomass_awarded",
+				[unit, amount, victim]
+			)
+	for unit in enemy_troop.get_living_units():
+		if unit.roster_data != null and unit.roster_data.strain != null:
+			unit.roster_data.strain.call_effect(
+				&"on_combat_biomass_awarded",
+				[unit, amount, victim]
+			)
 
 func _reset_troop_from_roster(
 	troop: Troop,
@@ -210,10 +250,7 @@ func _on_unit_died(unit: Unit, is_player: bool) -> void:
 			_fallen_units.append(unit.roster_data)
 			GameState.troop.remove_unit(unit.roster_data)
 		elif not is_player:
-			var is_imago := unit.roster_data != null and unit.roster_data.is_imago
-			var reward := BiomassData.reward_for_kill(is_imago)
-			GameState.biomass.add(reward)
-			_biomass_earned_this_fight += reward
+			_award_kill_biomass(unit)
 	_check_battle_end()
 
 
@@ -225,6 +262,7 @@ func _check_battle_end() -> void:
 	_battle_over = true
 	_hitstop_active = false
 	Engine.time_scale = 1.0
+	_notify_battle_end()
 
 	if sandboxed:
 		battle_ended.emit(not player_troop.is_wiped_out())

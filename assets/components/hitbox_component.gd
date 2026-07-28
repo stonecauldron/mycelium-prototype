@@ -6,6 +6,7 @@ extends Area2D
 @export var owner_unit: Unit
 
 var _targeting_mode: WeaponData.TargetingMode = WeaponData.TargetingMode.SINGLE
+var _damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
 var _hit_combatants: Dictionary = {}
 
 
@@ -16,11 +17,13 @@ func _ready() -> void:
 func enable_for_attack(
 	attack_damage: int,
 	attack_knockback: float,
-	targeting_mode: WeaponData.TargetingMode
+	targeting_mode: WeaponData.TargetingMode,
+	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
 ) -> void:
 	damage = attack_damage
 	knockback_force = attack_knockback
 	_targeting_mode = targeting_mode
+	_damage_type = damage_type
 	_hit_combatants.clear()
 	monitoring = true
 
@@ -48,7 +51,7 @@ func _hit_single_target() -> void:
 
 	for area in get_overlapping_areas():
 		var hurtbox := area as HurtboxComponent
-		var target := _get_valid_target(hurtbox)
+		var target := _get_valid_target(hurtbox, false)
 		if target == null:
 			continue
 		if target is FlagBearer:
@@ -70,7 +73,7 @@ func _hit_single_target() -> void:
 
 func _apply_hit_to_area(area: Area2D) -> void:
 	var hurtbox := area as HurtboxComponent
-	if _get_valid_target(hurtbox) == null:
+	if _get_valid_target(hurtbox, true) == null:
 		return
 	_apply_hit(hurtbox)
 
@@ -81,17 +84,22 @@ func _apply_hit(hurtbox: HurtboxComponent) -> void:
 		return
 	_hit_combatants[target] = true
 	var from_pos := owner_unit.global_position if owner_unit != null else global_position
-	hurtbox.receive_hit(damage, from_pos, knockback_force, owner_unit)
+	hurtbox.receive_hit(damage, from_pos, knockback_force, owner_unit, _damage_type)
+	if owner_unit != null and owner_unit.roster_data != null and owner_unit.roster_data.strain != null:
+		owner_unit.roster_data.strain.call_effect(
+			&"on_hit_dealt",
+			[owner_unit, target, damage]
+		)
 
 
-func _get_valid_target(hurtbox: HurtboxComponent) -> Node:
+func _get_valid_target(hurtbox: HurtboxComponent, allow_allies: bool) -> Node:
 	if hurtbox == null or owner_unit == null:
 		return null
 
 	var target: Node = hurtbox.get_combatant()
 	if target == null or target == owner_unit:
 		return null
-	if _is_ally(target):
+	if not allow_allies and _is_ally(target):
 		return null
 	if _hit_combatants.has(target):
 		return null

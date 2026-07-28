@@ -368,14 +368,21 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 				GameState.troop.seed_if_empty(empty_bench)
 			if not GameState.troop.has_free_slot():
 				return
-			var unit := nursery.harvest(tile.plot_index)
-			if unit == null:
+			var harvested := nursery.harvest(tile.plot_index)
+			if harvested.is_empty():
 				return
-			GameState.troop.try_add_unit(unit)
+			var kept: Array[RosterUnitData] = []
+			for unit in harvested:
+				if not GameState.troop.has_free_slot():
+					break
+				if GameState.troop.try_add_unit(unit) != "":
+					kept.append(unit)
+			if kept.is_empty():
+				return
 			GameState.show_plot_harvest_hint = false
 			var toast_anchor := tile.get_global_rect()
 			_refresh()
-			_show_hatch_toast(unit, toast_anchor)
+			_show_hatch_toast(kept[0], toast_anchor)
 
 
 func _show_hatch_toast(unit: RosterUnitData, anchor_global_rect: Rect2) -> void:

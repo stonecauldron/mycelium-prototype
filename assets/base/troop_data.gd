@@ -98,10 +98,22 @@ func pack_squad() -> void:
 
 func advance_unit_ages() -> Array[RosterUnitData]:
 	var matured: Array[RosterUnitData] = []
+	var aged_out: Array[RosterUnitData] = []
 	for unit in _iter_living_units():
 		unit.days_alive += 1
+		if unit.strain != null:
+			unit.strain.call_effect(&"on_day", [unit])
 		if unit.can_promote_to_imago() and unit.promote_to_imago():
 			matured.append(unit)
+		if unit.has_exceeded_life_expectancy():
+			aged_out.append(unit)
+	for unit in aged_out:
+		if unit.strain != null:
+			unit.strain.call_effect(
+				&"on_death",
+				[unit, StrainEffect.DeathContext.AGED_OUT, null]
+			)
+		remove_unit(unit)
 	return matured
 
 

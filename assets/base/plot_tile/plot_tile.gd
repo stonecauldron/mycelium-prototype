@@ -130,9 +130,13 @@ func _accepts_drag_data(data: Variant) -> bool:
 			return false
 		return true
 	if drop_type == "shop_fertilizer" or drop_type == "fertilizer":
-		if state == NurseryPlotData.State.READY:
+		if state == NurseryPlotData.State.EMPTY or state == NurseryPlotData.State.GROWING:
+			return true
+		# READY: only Fungicide (kills the plant for a capped active-growth bonus).
+		if state != NurseryPlotData.State.READY:
 			return false
-		return state == NurseryPlotData.State.EMPTY or state == NurseryPlotData.State.GROWING
+		var fert := data.get("fertilizer") as FertilizerData
+		return fert != null and fert.behavior == FertilizerData.Behavior.FUNGICIDE
 	return false
 
 
@@ -204,7 +208,7 @@ func _refresh() -> void:
 		NurseryPlotData.State.GROWING:
 			var left := 0
 			if _plot.planted_spore != null:
-				left = _plot.planted_spore.days_to_mature - _plot.days_grown
+				left = _plot.days_to_mature_effective() - _plot.days_grown
 			left = maxi(0, left)
 			_days_chip.visible = left > 0
 			if left > 0:
@@ -289,7 +293,7 @@ func _texture_for_plot() -> Texture2D:
 		return _TEX_EMPTY
 	var needed := 1
 	if _plot.planted_spore != null:
-		needed = maxi(1, _plot.planted_spore.days_to_mature)
+		needed = maxi(1, _plot.days_to_mature_effective())
 	var progress := float(_plot.days_grown) / float(needed)
 	if progress < 0.5:
 		return _TEX_GROWTH0

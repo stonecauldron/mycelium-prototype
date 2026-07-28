@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="FertilizerData" format=3]
+
+[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+
+[resource]
+script = ExtResource("1_fert")
+display_name = "Fungicide"
+biomass_cost = 5
+tint = Color(0.6, 0.35, 0.7, 1)
+behavior = 5

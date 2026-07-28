@@ -106,6 +106,13 @@ var _dying: bool = false
 var _last_hit_from: Vector2 = Vector2.ZERO
 ## Runtime engagement range; melee derives from weapon hitbox + lunge.
 var _attack_range: float = 0.0
+var _statuses: Array[StatusEffect] = []
+## Combat-only modifiers (strains / statuses compose on top).
+var _move_speed_multiplier: float = 1.0
+var _outgoing_damage_multiplier: float = 1.0
+var _blunt_resist: float = 0.0
+var _incoming_knockback_multiplier: float = 1.0
+var _attack_rate_multiplier: float = 1.0
 
 @onready var _visual: Node2D = $Visual
 
@@ -263,7 +270,7 @@ func _preferred_attack_distance() -> float:
 
 ## HYBRID: melee when inside personal skirmish band.
 func _wants_close_melee() -> bool:
-	if weapon == null or not weapon.is_hybrid_engagement():
+	if weapon == null or get_engagement_stance() != WeaponData.EngagementStance.HYBRID:
 		return false
 	if _target == null or not is_instance_valid(_target):
 		return false
@@ -315,6 +322,7 @@ func _physics_process(delta: float) -> void:
 	if _dying or stats == null or weapon == null or _troop == null:
 		return
 
+	_tick_statuses(delta)
 	velocity += get_gravity() * delta
 
 	if _in_knockback:
@@ -359,9 +367,59 @@ func _update_locomotion_animation() -> void:
 
 
 func get_move_speed(retreating: bool = false) -> float:
+	var speed := BASE_MOVE_SPEED * _move_speed_multiplier * _status_move_mult()
 	if retreating:
-		return BASE_MOVE_SPEED * RETREAT_SPEED_FACTOR
-	return BASE_MOVE_SPEED
+		return speed * RETREAT_SPEED_FACTOR
+	return speed
+
+
+func get_engagement_stance() -> WeaponData.EngagementStance:
+	if roster_data != null:
+		return roster_data.get_engagement_stance()
+	if weapon != null:
+		return weapon.engagement_stance
+	return WeaponData.EngagementStance.FORMATION_FIGHT
+
+
+func notify_battle_start() -> void:
+	if roster_data != null and roster_data.strain != null:
+		roster_data.strain.call_effect(&"on_battle_start", [self])
+
+
+func notify_battle_end() -> void:
+	if roster_data != null and roster_data.strain != null:
+		roster_data.strain.call_effect(&"on_battle_end", [self])
+
+
+func apply_status(effect: StatusEffect, replace_existing: bool = true) -> void:
+	if effect == null:
+		return
+	if replace_existing:
+		for i in range(_statuses.size() - 1, -1, -1):
+			if _statuses[i].id == effect.id:
+				_statuses.remove_at(i)
+	_statuses.append(effect)
+
+
+func _status_move_mult() -> float:
+	var mult := 1.0
+	for status in _statuses:
+		mult *= status.move_mult
+	return mult
+
+
+func _status_attack_rate_mult() -> float:
+	var mult := 1.0
+	for status in _statuses:
+		mult *= status.attack_rate_mult
+	return mult
+
+
+func _tick_statuses(delta: float) -> void:
+	for i in range(_statuses.size() - 1, -1, -1):
+		_statuses[i].remaining -= delta
+		if _statuses[i].remaining <= 0.0:
+			_statuses.remove_at(i)
 
 
 func _free_march_toward_enemy() -> void:
@@ -384,16 +442,15 @@ func _process_combat(delta: float) -> void:
 			_skirmish_kite_away()
 		elif _should_chase():
 			_chase_target()
-		elif weapon != null and weapon.engagement_stance == WeaponData.EngagementStance.SKIRMISH:
+		elif get_engagement_stance() == WeaponData.EngagementStance.SKIRMISH:
 			_hold_skirmish_position()
 		elif (
-			weapon != null
-			and weapon.engagement_stance == WeaponData.EngagementStance.FORMATION_FIGHT
+			get_engagement_stance() == WeaponData.EngagementStance.FORMATION_FIGHT
 		):
 			_return_home()
-		elif weapon != null and weapon.engagement_stance == WeaponData.EngagementStance.HOLD_LINE:
+		elif get_engagement_stance() == WeaponData.EngagementStance.HOLD_LINE:
 			_hold_line_position()
-		elif weapon != null and weapon.is_hybrid_engagement():
+		elif get_engagement_stance() == WeaponData.EngagementStance.HYBRID:
 			_hold_skirmish_position()
 		else:
 			_hold_or_march()
@@ -445,7 +502,7 @@ func _hold_skirmish_position() -> void:
 func _should_skirmish_retreat() -> bool:
 	if weapon == null or _target == null or not is_instance_valid(_target):
 		return false
-	if weapon.engagement_stance != WeaponData.EngagementStance.SKIRMISH:
+	if get_engagement_stance() != WeaponData.EngagementStance.SKIRMISH:
 		return false
 	var distance := global_position.distance_to(_target.global_position)
 	var skirmish := _preferred_skirmish_distance()
@@ -476,7 +533,7 @@ func _should_chase() -> bool:
 		return false
 	if _wants_close_melee():
 		return global_position.distance_to(_target.global_position) > _get_melee_range()
-	match weapon.engagement_stance:
+	match get_engagement_stance():
 		WeaponData.EngagementStance.CHARGE:
 			return true
 		WeaponData.EngagementStance.SKIRMISH, WeaponData.EngagementStance.HYBRID:
@@ -504,8 +561,8 @@ func _chase_target() -> void:
 	if _wants_close_melee():
 		stop_range = _get_melee_range()
 	elif (
-		weapon.engagement_stance == WeaponData.EngagementStance.SKIRMISH
-		or weapon.engagement_stance == WeaponData.EngagementStance.HYBRID
+		get_engagement_stance() == WeaponData.EngagementStance.SKIRMISH
+		or get_engagement_stance() == WeaponData.EngagementStance.HYBRID
 	):
 		var preferred := _preferred_attack_distance()
 		var skirmish := _preferred_skirmish_distance()
@@ -518,7 +575,7 @@ func _chase_target() -> void:
 
 
 func _hold_or_march() -> void:
-	if weapon != null and weapon.engagement_stance == WeaponData.EngagementStance.HOLD_LINE:
+	if get_engagement_stance() == WeaponData.EngagementStance.HOLD_LINE:
 		_hold_line_position()
 		return
 	_free_march_toward_enemy()
@@ -574,7 +631,7 @@ func _start_attack() -> void:
 		return
 
 	_combat_phase = CombatPhase.ATTACKING
-	if weapon.is_hybrid_engagement() and weapon.uses_throw_projectile():
+	if get_engagement_stance() == WeaponData.EngagementStance.HYBRID and weapon.uses_throw_projectile():
 		var distance := (
 			global_position.distance_to(_target.global_position)
 			if _target != null and is_instance_valid(_target)
@@ -600,7 +657,8 @@ func _start_melee_lunge_attack() -> void:
 		_hitbox.enable_for_attack(
 			_get_attack_damage(),
 			weapon.knockback_force,
-			weapon.targeting_mode
+			weapon.targeting_mode,
+			weapon.damage_type
 		)
 
 	var direction := signf(_visual.scale.x)
@@ -797,7 +855,8 @@ func _finish_attack() -> void:
 	_throw_left_ground = false
 	_throw_timer = 0.0
 	var interval := weapon.attack_interval if weapon != null else 0.75
-	_attack_timer = interval / stats.get_speed_multiplier()
+	var rate := stats.get_speed_multiplier() * _attack_rate_multiplier * _status_attack_rate_mult()
+	_attack_timer = interval / maxf(rate, 0.01)
 	_combat_phase = CombatPhase.RETURNING
 
 
@@ -969,23 +1028,29 @@ func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
 
 func _get_attack_damage() -> int:
 	var raw: int = weapon.base_damage + stats.get_damage_bonus(weapon.damage_stat)
-	return maxi(roundi(float(raw) * weapon.outgoing_damage_multiplier), 0)
+	var mult := weapon.outgoing_damage_multiplier * _outgoing_damage_multiplier
+	return maxi(roundi(float(raw) * mult), 0)
 
 
 func take_damage(
 	amount: int,
 	knockback_from: Vector2 = Vector2.ZERO,
 	knockback_force: float = 0.0,
-	killer: Unit = null
+	killer: Unit = null,
+	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
 ) -> void:
 	if _dying:
 		return
 	var incoming_mult: float = 1.0
-	var knockback_mult: float = 1.0
+	var knockback_mult: float = _incoming_knockback_multiplier
 	if weapon != null:
 		incoming_mult = weapon.incoming_damage_multiplier
-		knockback_mult = weapon.incoming_knockback_multiplier
+		knockback_mult *= weapon.incoming_knockback_multiplier
+	if damage_type == WeaponData.DamageType.BLUNT and _blunt_resist > 0.0:
+		incoming_mult *= maxf(1.0 - _blunt_resist, 0.0)
 	amount = maxi(roundi(float(amount) * incoming_mult), 0)
+	if roster_data != null and roster_data.strain != null:
+		roster_data.strain.call_effect(&"on_hit_taken", [self, amount, damage_type])
 	_last_hit_from = knockback_from
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
@@ -1000,10 +1065,12 @@ func take_damage(
 		_apply_knockback(knockback_from, knockback_force * knockback_mult)
 
 
-func register_kill() -> void:
+func register_kill(victim: Unit = null) -> void:
 	if _dying or current_hp <= 0 or not is_inside_tree():
 		return
 	kill_streak += 1
+	if roster_data != null and roster_data.strain != null and victim != null:
+		roster_data.strain.call_effect(&"on_kill", [self, victim])
 	# Enemy streaks never show — player killers only.
 	if _troop == null or _troop.is_enemy:
 		return
@@ -1055,7 +1122,13 @@ func _die(
 	_dying = true
 	kill_streak = 0
 	if killer != null and is_instance_valid(killer):
-		killer.register_kill()
+		killer.register_kill(self)
+
+	if roster_data != null and roster_data.strain != null:
+		roster_data.strain.call_effect(
+			&"on_death",
+			[roster_data, StrainEffect.DeathContext.COMBAT, self]
+		)
 
 	died.emit(self)
 

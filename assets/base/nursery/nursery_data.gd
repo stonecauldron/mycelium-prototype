@@ -25,6 +25,13 @@ const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/feather_weight.tres",
 	"res://assets/base/nursery/fertilizers/finesse.tres",
 	"res://assets/base/nursery/fertilizers/quick_growth.tres",
+	"res://assets/base/nursery/fertilizers/stress_induced_growth.tres",
+	"res://assets/base/nursery/fertilizers/volatile.tres",
+	"res://assets/base/nursery/fertilizers/overkill.tres",
+	"res://assets/base/nursery/fertilizers/meiosis.tres",
+	"res://assets/base/nursery/fertilizers/slow_and_steady.tres",
+	"res://assets/base/nursery/fertilizers/fungicide.tres",
+	"res://assets/base/nursery/fertilizers/amok.tres",
 ]
 
 @export var plots: Array = []
@@ -277,8 +284,9 @@ func advance_day() -> Array[Dictionary]:
 		var plot := plots[i] as NurseryPlotData
 		if plot == null or plot.planted_spore == null:
 			continue
+		var was_ready := plot.get_state() == NurseryPlotData.State.READY
 		plot.days_grown += 1
-		if plot.days_grown == plot.planted_spore.days_to_mature:
+		if not was_ready and plot.get_state() == NurseryPlotData.State.READY:
 			matured.append({
 				"plot_index": i,
 				"spore_name": plot.planted_spore.display_name,
@@ -286,32 +294,142 @@ func advance_day() -> Array[Dictionary]:
 	return matured
 
 
-func harvest(plot_index: int) -> RosterUnitData:
+## Harvests a READY plot into zero or more roster units (overflow handled by caller).
+func harvest(plot_index: int) -> Array[RosterUnitData]:
+	var result: Array[RosterUnitData] = []
 	if not is_plot_unlocked(plot_index):
-		return null
+		return result
 	if plot_index >= plots.size():
-		return null
+		return result
 	var plot := plots[plot_index] as NurseryPlotData
 	if plot == null or not plot.can_harvest():
-		return null
+		return result
 	var as_imago := plot.will_harvest_as_imago()
-	var unit := _make_harvest_unit(plot.planted_spore, plot.applied_fertilizers)
-	if as_imago and unit != null:
-		unit.promote_to_imago()
+	var pending := plot.consume_pending_stat_bonus()
+	result = _make_harvest_units(plot.planted_spore, plot.applied_fertilizers, pending)
+	if as_imago:
+		for unit in result:
+			if unit != null:
+				unit.promote_to_imago()
 	plot.clear()
-	return unit
+	return result
 
 
-func _make_harvest_unit(spore: SporeData, fertilizers: Array[FertilizerData]) -> RosterUnitData:
+func _make_harvest_units(
+	spore: SporeData,
+	fertilizers: Array[FertilizerData],
+	pending_stat_bonus: int
+) -> Array[RosterUnitData]:
+	var units: Array[RosterUnitData] = []
 	var weapon := RiboforgeData.get_default_weapon()
+	var unit_strain := spore.resolved_strain() if spore != null else null
 	var tier := UnitStatsData.PowerTier.COMMON
-	if spore != null:
+	if spore != null and (unit_strain == null or unit_strain.use_power_tier):
 		tier = spore.power_tier
 	var stats := UnitStatsData.create_for_tier(tier)
-	for fertilizer in fertilizers:
-		if fertilizer != null:
-			fertilizer.apply_to(stats)
-	return RosterUnitData.create(UnitNames.pick(), stats, weapon, null, tier)
+	_apply_fertilizer_stats(stats, fertilizers)
+	if pending_stat_bonus != 0:
+		stats.strength = clampi(stats.strength + pending_stat_bonus, 1, 99)
+		stats.dex = clampi(stats.dex + pending_stat_bonus, 1, 99)
+		stats.con = clampi(stats.con + pending_stat_bonus, 1, 99)
+		stats.spd = clampi(stats.spd + pending_stat_bonus, 1, 99)
+	if unit_strain != null:
+		unit_strain.apply_hatch_stats(stats)
+
+	var yield_count := 1
+	if unit_strain != null:
+		yield_count = maxi(unit_strain.hatch_count, 1)
+	for fert in fertilizers:
+		if fert != null and fert.behavior == FertilizerData.Behavior.MEIOSIS:
+			yield_count = maxi(yield_count, 2)
+			break
+
+	var force_amok := false
+	for fert in fertilizers:
+		if fert != null and fert.behavior == FertilizerData.Behavior.AMOK:
+			force_amok = true
+			break
+
+	var meiosis := false
+	for fert in fertilizers:
+		if fert != null and fert.behavior == FertilizerData.Behavior.MEIOSIS:
+			meiosis = true
+			break
+
+	for i in yield_count:
+		var unit_stats := stats.duplicate(true) as UnitStatsData
+		if meiosis:
+			unit_stats.strength = maxi(1, roundi(float(unit_stats.strength) * 0.5))
+			unit_stats.dex = maxi(1, roundi(float(unit_stats.dex) * 0.5))
+			unit_stats.con = maxi(1, roundi(float(unit_stats.con) * 0.5))
+			unit_stats.spd = maxi(1, roundi(float(unit_stats.spd) * 0.5))
+		var unit := RosterUnitData.create(
+			UnitNames.pick(),
+			unit_stats,
+			weapon,
+			unit_strain,
+			tier
+		)
+		if force_amok:
+			unit.forced_engagement_stance = WeaponData.EngagementStance.CHARGE
+		if unit_strain != null:
+			unit_strain.call_effect(&"on_hatch", [unit])
+		units.append(unit)
+	return units
+
+
+func _apply_fertilizer_stats(stats: UnitStatsData, fertilizers: Array[FertilizerData]) -> void:
+	if stats == null:
+		return
+	var volatile_count := 0
+	for fert in fertilizers:
+		if fert != null and fert.behavior == FertilizerData.Behavior.VOLATILE:
+			volatile_count += 1
+	var scale_factor := 1
+	if volatile_count > 0:
+		scale_factor = int(pow(2.0, float(volatile_count)))
+	for fert in fertilizers:
+		if fert == null:
+			continue
+		if fert.is_stat_source():
+			fert.apply_to(stats, scale_factor)
+	for fert in fertilizers:
+		if fert != null and fert.behavior == FertilizerData.Behavior.OVERKILL:
+			_apply_overkill(stats)
+			break
+
+
+func _apply_overkill(stats: UnitStatsData) -> void:
+	if stats == null:
+		return
+	var values: Array[int] = [stats.strength, stats.dex, stats.con, stats.spd]
+	var highest: int = values[0]
+	var lowest: int = values[0]
+	for v in values:
+		highest = maxi(highest, v)
+		lowest = mini(lowest, v)
+	var high_idxs: Array[int] = []
+	var low_idxs: Array[int] = []
+	for i in values.size():
+		if values[i] == highest:
+			high_idxs.append(i)
+		if values[i] == lowest:
+			low_idxs.append(i)
+	var high_i: int = high_idxs[randi() % high_idxs.size()]
+	var low_i: int = low_idxs[randi() % low_idxs.size()]
+	# Prefer distinct stats when possible.
+	if high_i == low_i and high_idxs.size() > 1:
+		high_idxs.erase(high_i)
+		high_i = high_idxs[randi() % high_idxs.size()]
+	elif high_i == low_i and low_idxs.size() > 1:
+		low_idxs.erase(low_i)
+		low_i = low_idxs[randi() % low_idxs.size()]
+	values[high_i] = clampi(values[high_i] + 2, 1, 99)
+	values[low_i] = clampi(values[low_i] - 2, 1, 99)
+	stats.strength = values[0]
+	stats.dex = values[1]
+	stats.con = values[2]
+	stats.spd = values[3]
 
 
 func _ensure_plot_count() -> void:

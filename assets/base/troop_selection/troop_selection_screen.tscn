@@ -48,6 +48,7 @@ scale = Vector2(-1, 1)
 
 [node name="ScoutBubble" parent="." unique_id=61723111 instance=ExtResource("6_scout")]
 unique_name_in_owner = true
+z_index = 1
 layout_mode = 1
 anchors_preset = 0
 anchor_right = 0.0

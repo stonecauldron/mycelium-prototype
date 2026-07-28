@@ -1,33 +1,32 @@
-[gd_scene format=3 uid="uid://b1rlhqb6vkv71"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://bws6s0bm4rr0h" path="res://assets/base/troop_selection/scout_bubble/scout_weapon_entry.gd" id="1_entry"]
+[ext_resource type="Script" uid="uid://lxrmtei7u8a3" path="res://assets/base/troop_selection/scout_bubble/scout_strain_entry.gd" id="1_entry"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="3_punch"]
 
-[node name="ScoutWeaponEntry" type="HBoxContainer" unique_id=1556365187]
+[node name="ScoutStrainEntry" type="HBoxContainer"]
 mouse_filter = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("2_theme")
-theme_override_constants/separation = 0
+theme_override_constants/separation = 4
 script = ExtResource("1_entry")
 
 [node name="HoverPunch" parent="." instance=ExtResource("3_punch")]
 unique_name_in_owner = true
 
-[node name="CountLabel" type="Label" parent="." unique_id=1451593452]
+[node name="CountLabel" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 24
 text = "2 ×"
 vertical_alignment = 1
 
-[node name="Icon" type="TextureRect" parent="." unique_id=1781018400]
+[node name="PortraitHost" type="Control" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(72, 72)
+clip_contents = true
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
-expand_mode = 1
-stretch_mode = 5

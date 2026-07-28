@@ -4,11 +4,16 @@ extends Control
 const _SWORD_WEAPON := preload("res://assets/weapons/basic_sword/basic_sword.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
+const _SHIELD_WEAPON := preload("res://assets/weapons/basic_shield/basic_shield.tres")
 const _SCOUT_ENTRY_SCENE := preload(
 	"res://assets/base/troop_selection/scout_bubble/scout_weapon_entry.tscn"
 )
+const _SCOUT_STRAIN_ENTRY_SCENE := preload(
+	"res://assets/base/troop_selection/scout_bubble/scout_strain_entry.tscn"
+)
 
 @onready var _scout_row: HBoxContainer = %ScoutRow
+@onready var _scout_strain_row: HBoxContainer = %ScoutStrainRow
 @onready var _scout_reward_label: Label = %ScoutRewardLabel
 @onready var _scout_reroll_button: Button = %ScoutRerollButton
 @onready var _scout_reroll_cost_label: Label = %ScoutRerollCostLabel
@@ -25,19 +30,32 @@ func refresh() -> void:
 		return
 	for child in _scout_row.get_children():
 		child.queue_free()
+	if _scout_strain_row != null:
+		for child in _scout_strain_row.get_children():
+			child.queue_free()
 	GameState.ensure_upcoming_enemy_formation()
 	var specs := GameState.upcoming_enemy_formation
 	var counts := {
 		EnemyUnitSpec.UnitType.MELEE: 0,
 		EnemyUnitSpec.UnitType.SPEAR: 0,
 		EnemyUnitSpec.UnitType.BOW: 0,
+		EnemyUnitSpec.UnitType.SHIELD: 0,
 	}
+	var strain_counts: Dictionary = {}
 	for spec in specs:
 		counts[spec.type] = int(counts[spec.type]) + 1
+		if spec.strain != null:
+			var key := spec.strain.resource_path
+			if key.is_empty():
+				key = spec.strain.display_name
+			if not strain_counts.has(key):
+				strain_counts[key] = {"count": 0, "strain": spec.strain}
+			strain_counts[key]["count"] = int(strain_counts[key]["count"]) + 1
 	var entries: Array = [
 		{"count": counts[EnemyUnitSpec.UnitType.MELEE], "weapon": _SWORD_WEAPON},
 		{"count": counts[EnemyUnitSpec.UnitType.SPEAR], "weapon": _SPEAR_WEAPON},
 		{"count": counts[EnemyUnitSpec.UnitType.BOW], "weapon": _BOW_WEAPON},
+		{"count": counts[EnemyUnitSpec.UnitType.SHIELD], "weapon": _SHIELD_WEAPON},
 	]
 	var reward := 0
 	for spec in specs:
@@ -50,6 +68,16 @@ func refresh() -> void:
 		var entry_card: ScoutWeaponEntry = _SCOUT_ENTRY_SCENE.instantiate()
 		_scout_row.add_child(entry_card)
 		entry_card.setup(count, weapon)
+	if _scout_strain_row != null:
+		for key in strain_counts.keys():
+			var strain_entry: Dictionary = strain_counts[key]
+			var strain_count: int = strain_entry["count"]
+			if strain_count <= 0:
+				continue
+			var strain: UnitStrain = strain_entry["strain"]
+			var strain_card: ScoutStrainEntry = _SCOUT_STRAIN_ENTRY_SCENE.instantiate()
+			_scout_strain_row.add_child(strain_card)
+			strain_card.setup(strain_count, strain)
 	if _scout_reward_label != null:
 		_scout_reward_label.text = "+%d" % reward
 	_refresh_reroll_affordability()

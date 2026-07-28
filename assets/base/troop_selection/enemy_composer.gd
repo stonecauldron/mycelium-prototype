@@ -3,8 +3,48 @@ extends RefCounted
 
 ## Day-curve procedural enemy specs + optional multi-variant skill-check overrides.
 
+enum ArmyArchetype { ONE_TRICK_PONY, HYBRID, GENERALIST }
+
 const _REROLL_CANDIDATE_COUNT := 8
 const _MIDPOINT_SAMPLE_COUNT := 8
+
+const _WEAPON_POOL: Array[EnemyUnitSpec.UnitType] = [
+	EnemyUnitSpec.UnitType.MELEE,
+	EnemyUnitSpec.UnitType.SPEAR,
+	EnemyUnitSpec.UnitType.BOW,
+	EnemyUnitSpec.UnitType.SHIELD,
+]
+
+const _STRAIN_PATHS: Array[String] = [
+	"res://assets/units/generalist/generalist_strain.tres",
+	"res://assets/units/death_cap/death_cap_strain.tres",
+	"res://assets/units/inky_cap/inky_cap_strain.tres",
+	"res://assets/units/boom_cap/boom_cap_strain.tres",
+	"res://assets/units/mini_cap/mini_cap_strain.tres",
+	"res://assets/units/lanky_cap/lanky_cap_strain.tres",
+	"res://assets/units/fat_cap/fat_cap_strain.tres",
+	"res://assets/units/magi_cap/magi_cap_strain.tres",
+	"res://assets/units/chad_cap/chad_cap_strain.tres",
+	"res://assets/units/rush_cap/rush_cap_strain.tres",
+	"res://assets/units/wall_cap/wall_cap_strain.tres",
+	"res://assets/units/zombie_cap/zombie_cap_strain.tres",
+	"res://assets/units/rubber_cap/rubber_cap_strain.tres",
+]
+
+## Excluded from procedural enemies on days 1–3.
+const _EARLY_DAY_EXCLUDED_STRAIN_PATHS: Array[String] = [
+	"res://assets/units/magi_cap/magi_cap_strain.tres",
+	"res://assets/units/chad_cap/chad_cap_strain.tres",
+]
+const _EARLY_DAY_STRAIN_LOCKOUT := 3
+
+const _ARCHETYPE_SHARES := {
+	ArmyArchetype.ONE_TRICK_PONY: [0.9, 0.1],
+	ArmyArchetype.HYBRID: [0.7, 0.3],
+	ArmyArchetype.GENERALIST: [0.33, 0.33, 0.34],
+}
+
+static var _cached_strain_pool: Array = []
 
 
 static func specs_for_day(day: int) -> Array[EnemyUnitSpec]:
@@ -107,7 +147,12 @@ static func _specs_equal(a: Array[EnemyUnitSpec], b: Array[EnemyUnitSpec]) -> bo
 	if a.size() != b.size():
 		return false
 	for i in a.size():
-		if a[i].type != b[i].type or a[i].tier != b[i].tier or a[i].is_imago != b[i].is_imago:
+		if (
+			a[i].type != b[i].type
+			or a[i].tier != b[i].tier
+			or a[i].is_imago != b[i].is_imago
+			or a[i].strain != b[i].strain
+		):
 			return false
 	return true
 
@@ -118,89 +163,121 @@ static func _rng_for_day(day: int) -> RandomNumberGenerator:
 	return rng
 
 
-static func _skill_check_variants(day: int) -> Array:
+static func _skill_check_variants(_day: int) -> Array:
 	## Each entry is Array[EnemyUnitSpec]. Empty → use day curve.
-	match day:
-		5:
-			return [_day_5_variant_a(), _day_5_variant_b()]
-		10:
-			return [_day_10_variant_a(), _day_10_variant_b()]
-		_:
-			return []
-
-
-static func _u(
-	unit_type: EnemyUnitSpec.UnitType,
-	tier: UnitStatsData.PowerTier,
-	imago: bool
-) -> EnemyUnitSpec:
-	return EnemyUnitSpec.make(unit_type, tier, imago)
-
-
-static func _day_5_variant_a() -> Array[EnemyUnitSpec]:
-	## Balanced three-weapon mid-run check.
-	return [
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.WEAK, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.COMMON, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.WEAK, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.COMMON, true),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.WEAK, false),
-	]
-
-
-static func _day_5_variant_b() -> Array[EnemyUnitSpec]:
-	## Bow-heavier pressure, fewer spears.
-	return [
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.COMMON, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.COMMON, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.WEAK, true),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.WEAK, true),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.COMMON, false),
-	]
-
-
-static func _day_10_variant_a() -> Array[EnemyUnitSpec]:
-	## Finale: melee-heavy UNCOMMON imagos.
-	return [
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.UNCOMMON, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.UNCOMMON, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.COMMON, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.UNCOMMON, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.UNCOMMON, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.COMMON, false),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.UNCOMMON, true),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.COMMON, false),
-	]
-
-
-static func _day_10_variant_b() -> Array[EnemyUnitSpec]:
-	## Finale: spear/bow pressure with a thinner melee front.
-	return [
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.UNCOMMON, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.UNCOMMON, true),
-		_u(EnemyUnitSpec.UnitType.MELEE, UnitStatsData.PowerTier.COMMON, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.UNCOMMON, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.UNCOMMON, true),
-		_u(EnemyUnitSpec.UnitType.SPEAR, UnitStatsData.PowerTier.COMMON, false),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.UNCOMMON, true),
-		_u(EnemyUnitSpec.UnitType.BOW, UnitStatsData.PowerTier.UNCOMMON, true),
-	]
+	## Hook for future authored turn overrides.
+	return []
 
 
 static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[EnemyUnitSpec]:
 	var band := _band_for_day(day)
 	var total: int = rng.randi_range(band.min_units, band.max_units)
-	var types: Array = band.types
 	var tier_weights: Array = band.tier_weights
 	var imago_chance: float = band.imago_chance
 
+	var weapon_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
+	var strain_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
+	var weapon_slots := _distribute_mix(_WEAPON_POOL, weapon_archetype, total, rng)
+	var strain_slots := _distribute_mix(_strain_pool_for_day(day), strain_archetype, total, rng)
+
 	var specs: Array[EnemyUnitSpec] = []
 	for i in total:
-		var unit_type: EnemyUnitSpec.UnitType = _pick_type(types, i, total, rng)
+		var unit_type: EnemyUnitSpec.UnitType = weapon_slots[i]
+		var unit_strain: UnitStrain = strain_slots[i]
 		var tier: UnitStatsData.PowerTier = _pick_weighted_tier(tier_weights, rng)
 		var imago := imago_chance > 0.0 and rng.randf() < imago_chance
-		specs.append(EnemyUnitSpec.make(unit_type, tier, imago))
+		specs.append(EnemyUnitSpec.make(unit_type, tier, imago, unit_strain))
 	return specs
+
+
+static func _strain_pool() -> Array:
+	if not _cached_strain_pool.is_empty():
+		return _cached_strain_pool
+	var pool: Array = []
+	for path in _STRAIN_PATHS:
+		var strain := load(path) as UnitStrain
+		if strain != null:
+			pool.append(strain)
+	_cached_strain_pool = pool
+	return _cached_strain_pool
+
+
+static func _strain_pool_for_day(day: int) -> Array:
+	var pool := _strain_pool()
+	if day > _EARLY_DAY_STRAIN_LOCKOUT:
+		return pool
+	var filtered: Array = []
+	for strain in pool:
+		var unit_strain := strain as UnitStrain
+		if unit_strain == null:
+			continue
+		if _EARLY_DAY_EXCLUDED_STRAIN_PATHS.has(unit_strain.resource_path):
+			continue
+		filtered.append(unit_strain)
+	return filtered
+
+
+static func _distribute_mix(
+	pool: Array,
+	archetype: ArmyArchetype,
+	total: int,
+	rng: RandomNumberGenerator
+) -> Array:
+	var shares: Array = _ARCHETYPE_SHARES[archetype]
+	var pick_count: int = mini(shares.size(), pool.size())
+	var picked := _pick_distinct(pool, pick_count, rng)
+	var counts := _shares_to_counts(shares.slice(0, picked.size()), total)
+	var slots: Array = []
+	for i in picked.size():
+		for _j in counts[i]:
+			slots.append(picked[i])
+	_shuffle_array(slots, rng)
+	return slots
+
+
+static func _pick_distinct(pool: Array, count: int, rng: RandomNumberGenerator) -> Array:
+	var remaining: Array = pool.duplicate()
+	var picked: Array = []
+	var n := mini(count, remaining.size())
+	for _i in n:
+		var index := rng.randi() % remaining.size()
+		picked.append(remaining[index])
+		remaining.remove_at(index)
+	return picked
+
+
+static func _shares_to_counts(shares: Array, total: int) -> Array[int]:
+	var counts: Array[int] = []
+	if shares.is_empty() or total <= 0:
+		return counts
+	var raw: Array[float] = []
+	var floored_sum := 0
+	for share in shares:
+		var value := float(share) * float(total)
+		raw.append(value)
+		var floored := int(floor(value))
+		counts.append(floored)
+		floored_sum += floored
+	var remainder := total - floored_sum
+	var order: Array[int] = []
+	for i in shares.size():
+		order.append(i)
+	order.sort_custom(func(a: int, b: int) -> bool:
+		return (raw[a] - float(counts[a])) > (raw[b] - float(counts[b]))
+	)
+	for i in remainder:
+		counts[order[i % order.size()]] += 1
+	# Prefer primary when secondary would be zero on tiny armies — already handled
+	# by flooring; if everything landed on primary, that is intentional.
+	return counts
+
+
+static func _shuffle_array(values: Array, rng: RandomNumberGenerator) -> void:
+	for i in range(values.size() - 1, 0, -1):
+		var j := rng.randi() % (i + 1)
+		var tmp = values[i]
+		values[i] = values[j]
+		values[j] = tmp
 
 
 static func _band_for_day(day: int) -> Dictionary:
@@ -209,11 +286,6 @@ static func _band_for_day(day: int) -> Dictionary:
 			return {
 				"min_units": 2,
 				"max_units": 3,
-				"types": [
-					EnemyUnitSpec.UnitType.MELEE,
-					EnemyUnitSpec.UnitType.SPEAR,
-					EnemyUnitSpec.UnitType.BOW,
-				],
 				"imago_chance": 0.0,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
@@ -223,11 +295,6 @@ static func _band_for_day(day: int) -> Dictionary:
 			return {
 				"min_units": 3,
 				"max_units": 5,
-				"types": [
-					EnemyUnitSpec.UnitType.MELEE,
-					EnemyUnitSpec.UnitType.SPEAR,
-					EnemyUnitSpec.UnitType.BOW,
-				],
 				"imago_chance": 0.4,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 2.0},
@@ -238,11 +305,6 @@ static func _band_for_day(day: int) -> Dictionary:
 			return {
 				"min_units": 4,
 				"max_units": 6,
-				"types": [
-					EnemyUnitSpec.UnitType.MELEE,
-					EnemyUnitSpec.UnitType.SPEAR,
-					EnemyUnitSpec.UnitType.BOW,
-				],
 				"imago_chance": 0.5,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
@@ -253,11 +315,6 @@ static func _band_for_day(day: int) -> Dictionary:
 			return {
 				"min_units": 5,
 				"max_units": 8,
-				"types": [
-					EnemyUnitSpec.UnitType.MELEE,
-					EnemyUnitSpec.UnitType.SPEAR,
-					EnemyUnitSpec.UnitType.BOW,
-				],
 				"imago_chance": 0.6,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 2.0},
@@ -265,37 +322,16 @@ static func _band_for_day(day: int) -> Dictionary:
 				],
 			}
 		_:
-			# Days 9–10 (day 10 normally overridden by skill check).
+			# Days 9–10.
 			return {
 				"min_units": 6,
 				"max_units": 10,
-				"types": [
-					EnemyUnitSpec.UnitType.MELEE,
-					EnemyUnitSpec.UnitType.SPEAR,
-					EnemyUnitSpec.UnitType.BOW,
-				],
 				"imago_chance": 0.7,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
 					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
 				],
 			}
-
-
-static func _pick_type(
-	types: Array,
-	slot_index: int,
-	total: int,
-	rng: RandomNumberGenerator
-) -> EnemyUnitSpec.UnitType:
-	if types.is_empty():
-		return EnemyUnitSpec.UnitType.MELEE
-	# Bias early slots toward melee when available so the front line isn't empty.
-	if types.has(EnemyUnitSpec.UnitType.MELEE) and slot_index == 0:
-		return EnemyUnitSpec.UnitType.MELEE
-	if types.has(EnemyUnitSpec.UnitType.MELEE) and slot_index == 1 and total >= 3 and rng.randf() < 0.6:
-		return EnemyUnitSpec.UnitType.MELEE
-	return types[rng.randi() % types.size()] as EnemyUnitSpec.UnitType
 
 
 static func _pick_weighted_tier(tier_weights: Array, rng: RandomNumberGenerator) -> UnitStatsData.PowerTier:

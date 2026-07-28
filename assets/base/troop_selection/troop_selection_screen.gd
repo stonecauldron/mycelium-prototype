@@ -8,6 +8,7 @@ const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _SWORD_WEAPON := preload("res://assets/weapons/basic_sword/basic_sword.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
+const _SHIELD_WEAPON := preload("res://assets/weapons/basic_shield/basic_shield.tres")
 
 var bench: Array = []
 var squad: Array = []
@@ -48,6 +49,8 @@ func _hydrate_from_troop_data() -> void:
 
 
 func _set_bench_structure_mouse_ignore() -> void:
+	# Panel spans full width and overlaps the scout bubble; it must not eat hovers.
+	_bench_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for path in ["BenchMargin", "BenchMargin/BenchVBox", "BenchMargin/BenchVBox/BenchTitle", "BenchMargin/BenchVBox/BenchGrid"]:
 		var node := _bench_panel.get_node_or_null(path) as Control
 		if node:
@@ -102,9 +105,13 @@ func _make_default_starters() -> Array[RosterUnitData]:
 func _make_unit(
 	unit_name: String,
 	tier: UnitStatsData.PowerTier,
-	weapon: WeaponData
+	weapon: WeaponData,
+	strain: UnitStrain = null
 ) -> RosterUnitData:
-	return RosterUnitData.create(unit_name, UnitStatsData.create_for_tier(tier), weapon, null, tier)
+	var stats := UnitStatsData.create_for_tier(tier)
+	if strain != null:
+		strain.apply_hatch_stats(stats)
+	return RosterUnitData.create(unit_name, stats, weapon, strain, tier)
 
 
 func _row(source: String) -> Array:
@@ -240,7 +247,12 @@ func _make_default_enemy_roster() -> Array[RosterUnitData]:
 	GameState.ensure_upcoming_enemy_formation()
 	var enemy: Array[RosterUnitData] = []
 	for spec in GameState.upcoming_enemy_formation:
-		var unit := _make_unit(UnitNames.pick(), spec.tier, _weapon_for_enemy_type(spec.type))
+		var unit := _make_unit(
+			UnitNames.pick(),
+			spec.tier,
+			_weapon_for_enemy_type(spec.type),
+			spec.strain
+		)
 		if spec.is_imago:
 			unit.promote_to_imago()
 		enemy.append(unit)
@@ -253,5 +265,7 @@ func _weapon_for_enemy_type(unit_type: EnemyUnitSpec.UnitType) -> WeaponData:
 			return _SPEAR_WEAPON
 		EnemyUnitSpec.UnitType.BOW:
 			return _BOW_WEAPON
+		EnemyUnitSpec.UnitType.SHIELD:
+			return _SHIELD_WEAPON
 		_:
 			return _SWORD_WEAPON

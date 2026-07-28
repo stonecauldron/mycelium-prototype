@@ -19,6 +19,8 @@ const SKIRMISH_RANGE_DEADZONE := 48.0
 const LUNGE_DISTANCE := 48.0
 const LUNGE_OUT_TIME := 0.08
 const LUNGE_BACK_TIME := 0.12
+## Start melee inside max reach so retreating targets still overlap at lunge apex.
+const MELEE_ENGAGE_SLACK := 18.0
 const THROW_JUMP_VELOCITY := -520.0
 const THROW_RELEASE_DELAY := 0.22
 const THROW_RECOVERY_TIME := 0.28
@@ -264,7 +266,7 @@ func _refresh_attack_range() -> void:
 		_attack_range = 0.0
 		return
 	if weapon.attack_style == WeaponData.AttackStyle.MELEE_LUNGE:
-		_attack_range = weapon.melee_range
+		_attack_range = _get_melee_engage_range()
 	else:
 		_attack_range = weapon.projectile_range
 
@@ -273,11 +275,16 @@ func _get_attack_range() -> float:
 	return _attack_range
 
 
-## Close-range melee band for HYBRID / melee engage (from weapon.melee_range).
+## Close-range melee reach (hitbox forward edge after lunge).
 func _get_melee_range() -> float:
 	if weapon == null:
 		return 96.0
 	return weapon.melee_range
+
+
+## Distance at which melee commits — inside `_get_melee_range()` by MELEE_ENGAGE_SLACK.
+func _get_melee_engage_range() -> float:
+	return maxf(_get_melee_range() - MELEE_ENGAGE_SLACK, 1.0)
 
 func _preferred_skirmish_distance() -> float:
 	if weapon == null:
@@ -493,7 +500,7 @@ func _process_combat(delta: float) -> void:
 		return
 
 	if _wants_close_melee():
-		if distance <= _get_melee_range():
+		if distance <= _get_melee_engage_range():
 			velocity.x = 0.0
 			_face_toward(_target.global_position)
 			_start_attack()
@@ -558,7 +565,7 @@ func _should_chase() -> bool:
 	if _target == null or not is_instance_valid(_target):
 		return false
 	if _wants_close_melee():
-		return global_position.distance_to(_target.global_position) > _get_melee_range()
+		return global_position.distance_to(_target.global_position) > _get_melee_engage_range()
 	match get_engagement_stance():
 		WeaponData.EngagementStance.CHARGE:
 			return true
@@ -585,7 +592,7 @@ func _chase_target() -> void:
 	var distance := global_position.distance_to(_target.global_position)
 	var stop_range := _get_attack_range()
 	if _wants_close_melee():
-		stop_range = _get_melee_range()
+		stop_range = _get_melee_engage_range()
 	elif (
 		get_engagement_stance() == WeaponData.EngagementStance.SKIRMISH
 		or get_engagement_stance() == WeaponData.EngagementStance.HYBRID
@@ -663,7 +670,7 @@ func _start_attack() -> void:
 			if _target != null and is_instance_valid(_target)
 			else INF
 		)
-		if distance <= _get_melee_range():
+		if distance <= _get_melee_engage_range():
 			_start_melee_lunge_attack()
 		else:
 			_start_throw_attack()

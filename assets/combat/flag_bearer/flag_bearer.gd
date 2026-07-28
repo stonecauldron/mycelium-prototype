@@ -16,8 +16,6 @@ const SHAKE_ON_FLAG_HIT := 0.32
 const WALK_SPEED_EPSILON := 8.0
 
 const COLLISION_WORLD := 1
-const COLLISION_PLAYER_UNITS := 2
-const COLLISION_ENEMY_UNITS := 16
 
 const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_number.tscn")
 const _HIT_BURST_SCENE := preload("res://assets/vfx/hit_burst/hit_burst.tscn")
@@ -125,15 +123,9 @@ func _apply_flag_appearance() -> void:
 
 
 func _setup_collision() -> void:
-	var troop := get_parent() as Troop
-	if troop == null:
-		return
-	if troop.is_enemy:
-		collision_layer = COLLISION_ENEMY_UNITS
-		collision_mask = COLLISION_WORLD | COLLISION_PLAYER_UNITS
-	else:
-		collision_layer = COLLISION_PLAYER_UNITS
-		collision_mask = COLLISION_WORLD | COLLISION_ENEMY_UNITS
+	# Floor only — units must not physically bump the flag (hurtbox stays hittable).
+	collision_layer = 0
+	collision_mask = COLLISION_WORLD
 
 
 func set_march_velocity(speed: float) -> void:

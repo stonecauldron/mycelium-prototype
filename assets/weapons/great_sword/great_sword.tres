@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://c4k3b8ta1842i"]
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
-[ext_resource type="PackedScene" uid="uid://kowbjwlhhibj5" path="res://assets/weapons/great_sword/great_sword_appearance.tscn" id="2_appear"]
+[ext_resource type="PackedScene" uid="uid://cx3kdsqyc3j1m" path="res://assets/weapons/great_sword/great_sword_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://cmaqi5lk5sase" path="res://assets/weapons/great_sword/great_sword.png" id="3_icon"]
 
 [resource]
@@ -11,8 +11,8 @@ short_description = "Slow, sweeping strikes. Hits everyone in the arc."
 targeting_mode = 1
 base_damage = 9
 attack_interval = 1.2
-biomass_cost = 12
-melee_range = 140.0
 knockback_force = 420.0
+biomass_cost = 4
+melee_range = 140.0
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

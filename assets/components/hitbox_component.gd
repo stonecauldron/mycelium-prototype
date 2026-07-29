@@ -184,6 +184,10 @@ func _get_valid_target(hurtbox: HurtboxComponent, allow_allies: bool) -> Node:
 	if target.has_method("is_combat_obstacle") and target.call("is_combat_obstacle"):
 		if _hit_combatants.has(target):
 			return null
+		# Friendly walls are not valid hit targets.
+		var owner_troop: Troop = owner_unit._troop
+		if owner_troop != null and bool(target.get("is_enemy")) == owner_troop.is_enemy:
+			return null
 		return target
 	if not allow_allies and _is_ally(target):
 		return null

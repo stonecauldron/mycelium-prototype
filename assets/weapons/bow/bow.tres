@@ -17,7 +17,6 @@ projectile_range = 1300.0
 attack_interval = 1.15
 skirmish_distance = 320.0
 knockback_force = 0.0
-biomass_cost = 7
 projectile_scene = ExtResource("4_proj")
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

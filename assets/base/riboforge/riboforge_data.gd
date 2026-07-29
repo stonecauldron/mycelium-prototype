@@ -1,7 +1,7 @@
 class_name RiboforgeData
 extends Resource
 
-const SHOP_SLOT_COUNT := 3
+const SHOP_SLOT_COUNT := 4
 const STOCK_SLOT_COUNT := 5
 ## Bare fists: the unremovable fallback weapon for units with nothing equipped.
 const DEFAULT_WEAPON_PATH := "res://assets/weapons/bare_fists.tres"
@@ -9,7 +9,7 @@ const SWORD_WEAPON_PATH := "res://assets/weapons/sword/sword.tres"
 const SPEAR_WEAPON_PATH := "res://assets/weapons/spear/spear.tres"
 const BOW_WEAPON_PATH := "res://assets/weapons/bow/bow.tres"
 const SHIELD_WEAPON_PATH := "res://assets/weapons/shield/shield.tres"
-const _DEFAULT_WEAPON_COST := 5
+const _DEFAULT_WEAPON_COST := 3
 const _SHOP_WEAPON_PATHS := [
 	SWORD_WEAPON_PATH,
 	SPEAR_WEAPON_PATH,
@@ -95,7 +95,7 @@ func reroll_unlocked_shop_offers() -> void:
 
 func replace_shop_slot(slot_index: int) -> void:
 	_ensure_weapon_shop()
-	weapon_shop.replace_slot(slot_index, generate_weapon_offer)
+	weapon_shop.replace_slot(slot_index)
 
 
 func can_add_weapon() -> bool:

@@ -8,6 +8,8 @@ const NO_LIFE_EXPECTANCY := -1
 
 @export var display_name: String = "Generalist"
 @export_multiline var short_description: String = ""
+## Spore / shop tint for this strain (white = untinted).
+@export var tint: Color = Color.WHITE
 @export_range(0, 99, 1) var days_to_imago: int = 2
 @export var life_stages: Array[StrainLifeStage] = []
 @export var effect: StrainEffect

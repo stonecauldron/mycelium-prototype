@@ -7,12 +7,12 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Lance"
-short_description = "Winds up, then charges through up to three foes. Shields and flags stop the rush."
+short_description = "Charges up to three foes. Stopped by shields."
 engagement_stance = 5
 base_damage = 7
 attack_interval = 0.9
 knockback_force = 400.0
-biomass_cost = 9
+biomass_cost = 4
 melee_range = 120.0
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

@@ -27,6 +27,8 @@ var _shop_cards: Array[ShopOfferCard] = []
 
 func _ready() -> void:
 	_reroll_button.pressed.connect(_on_reroll_pressed)
+	_reroll_button.mouse_entered.connect(_on_reroll_hover_entered)
+	_reroll_button.mouse_exited.connect(_on_reroll_hover_exited)
 	_shop_drop_zone.accepted_drag_types = PackedStringArray(["weapon", "equipped_weapon"])
 	_shop_drop_zone.item_dropped.connect(_on_shop_sell_dropped)
 	_build_stock_slots()
@@ -93,22 +95,21 @@ func _rebuild_shop_cards() -> void:
 	var shop := GameState.riboforge.weapon_shop
 	if shop == null:
 		return
-	var middle_index := int(SHOP_SLOT_COUNT / 2.0)
 	var built: Array[ShopOfferCard] = []
 	built.resize(SHOP_SLOT_COUNT)
 	for i in SHOP_SLOT_COUNT:
 		if i >= shop.offers.size():
 			break
 		var offer := shop.offers[i]
-		if offer == null:
+		if offer == null or offer.is_empty():
 			continue
 		var weapon := offer.item as WeaponData
 		if weapon == null:
 			continue
 		var card: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
 		card.setup(
+			"Weapon",
 			weapon.display_name,
-			weapon.short_description,
 			offer.cost,
 			{
 				"type": "shop_weapon",
@@ -118,30 +119,36 @@ func _rebuild_shop_cards() -> void:
 			},
 			_icon_for_weapon(weapon),
 			i,
-			offer.locked
+			offer.locked,
+			Color.WHITE,
+			weapon.short_description.strip_edges()
 		)
 		card.offer_clicked.connect(_on_shop_offer_clicked)
 		card.lock_toggled.connect(_on_shop_lock_toggled)
 		built[i] = card
 		_shop_cards.append(card)
-	for i in middle_index:
-		var left_card := built[i]
-		if left_card == null:
+	# First column: first card (or same-size spacer) on top, reroll fixed below.
+	_middle_shop_column.alignment = BoxContainer.ALIGNMENT_BEGIN
+	_shop_row.move_child(_middle_shop_column, 0)
+	var first_slot: Control = built[0] if not built.is_empty() and built[0] != null else _make_shop_card_spacer()
+	_middle_shop_column.add_child(first_slot)
+	_middle_shop_column.move_child(first_slot, 0)
+	_middle_shop_column.move_child(_reroll_button, 1)
+	first_slot.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	for i in range(1, SHOP_SLOT_COUNT):
+		var next_card := built[i] if i < built.size() else null
+		if next_card == null:
 			continue
-		_shop_row.add_child(left_card)
-		_shop_row.move_child(left_card, i)
-		left_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	var middle_card := built[middle_index] if middle_index < built.size() else null
-	if middle_card != null:
-		_middle_shop_column.add_child(middle_card)
-		_middle_shop_column.move_child(middle_card, 0)
-		_middle_shop_column.move_child(_reroll_button, 1)
-	for i in range(middle_index + 1, SHOP_SLOT_COUNT):
-		var right_card := built[i]
-		if right_card == null:
-			continue
-		_shop_row.add_child(right_card)
-		right_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		_shop_row.add_child(next_card)
+		next_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+
+func _make_shop_card_spacer() -> Control:
+	var spacer := Control.new()
+	spacer.custom_minimum_size = ShopOfferCard.CARD_SIZE
+	spacer.size = ShopOfferCard.CARD_SIZE
+	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return spacer
 
 
 func _icon_for_weapon(weapon: WeaponData) -> Texture2D:
@@ -182,8 +189,19 @@ func _refresh_shop_affordability() -> void:
 		card.set_affordable(GameState.biomass.can_afford(card.cost))
 	_reroll_cost_label.text = "%d" % BiomassData.SHOP_REROLL_COST
 	var can_reroll := GameState.biomass.can_afford(BiomassData.SHOP_REROLL_COST)
-	_reroll_button.disabled = not can_reroll
+	# Keep mouse events so hover preview still works when unaffordable.
+	_reroll_button.disabled = false
 	_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
+
+
+func _on_reroll_hover_entered() -> void:
+	for card in _shop_cards:
+		card.set_reroll_preview(true)
+
+
+func _on_reroll_hover_exited() -> void:
+	for card in _shop_cards:
+		card.set_reroll_preview(false)
 
 
 func _rebuild_squad_cards() -> void:
@@ -208,10 +226,18 @@ func _on_unit_weapon_changed(_card: UnitCard) -> void:
 func _on_reroll_pressed() -> void:
 	if not GameState.biomass.try_spend(BiomassData.SHOP_REROLL_COST):
 		return
+	for card in _shop_cards:
+		card.clear_reroll_preview()
 	GameState.riboforge.reroll_unlocked_shop_offers()
 	_rebuild_shop_cards()
 	_refresh_shop_affordability()
 	_refresh_base_hud()
+	_play_shop_reroll_shake()
+
+
+func _play_shop_reroll_shake() -> void:
+	for i in _shop_cards.size():
+		_shop_cards[i].play_reroll_shake(0.03 * float(i))
 
 
 func _on_shop_lock_toggled(card: ShopOfferCard) -> void:

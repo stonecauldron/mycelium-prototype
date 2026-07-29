@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="UnitStrain" format=3]
+[gd_resource type="Resource" script_class="UnitStrain" format=3 uid="uid://c152mtmnyrvop"]
 
-[ext_resource type="Script" uid="uid://cunitstrain00001" path="res://assets/units/unit_strain.gd" id="1_script"]
-[ext_resource type="Script" uid="uid://cstrlife000001" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
-[ext_resource type="PackedScene" path="res://assets/units/bank_cap/bank_cap_appearance.tscn" id="3_appear"]
-[ext_resource type="Script" path="res://assets/units/bank_cap/bank_cap_effect.gd" id="4_effect"]
+[ext_resource type="Script" uid="uid://bftxo0b154lgi" path="res://assets/units/unit_strain.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bssgi56hlkrc7" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
+[ext_resource type="PackedScene" uid="uid://dr4x3n613uww" path="res://assets/units/bank_cap/bank_cap_appearance.tscn" id="3_appear"]
+[ext_resource type="Script" uid="uid://df6rpth6sd8d8" path="res://assets/units/bank_cap/bank_cap_effect.gd" id="4_effect"]
 
 [sub_resource type="Resource" id="Effect"]
 script = ExtResource("4_effect")
@@ -17,12 +17,12 @@ appearance_scene = ExtResource("3_appear")
 [resource]
 script = ExtResource("1_script")
 display_name = "Bank Cap"
-short_description = "Banks biomass from combat deaths; pays out on death."
-days_to_imago = 2
-life_stages = [SubResource("Stage_imago")]
+short_description = "Absorbs biomass from combat deaths, cashes out upon death with 20% bonus."
+tint = Color(0.84978473, 0.4587953, 0.6893629, 1)
+life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
+effect = SubResource("Effect")
 use_power_tier = false
 strength_delta = -1
 dex_delta = -1
 con_delta = -1
 spd_delta = -1
-effect = SubResource("Effect")

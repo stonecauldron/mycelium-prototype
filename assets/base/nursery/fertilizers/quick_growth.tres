@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_fert")
 display_name = "Quick Growth"
-biomass_cost = 6
+biomass_cost = 2
 tint = Color(0.72, 0.92, 0.55, 1)
 growth_bonus = 1

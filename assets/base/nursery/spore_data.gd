@@ -11,7 +11,10 @@ extends Resource
 
 var tint: Color:
 	get:
-		return UnitStatsData.tint_for_tier(power_tier)
+		var resolved := resolved_strain()
+		if resolved != null:
+			return resolved.tint
+		return Color.WHITE
 
 
 func grants_imago_at(days_grown: int, days_required: int = -1) -> bool:

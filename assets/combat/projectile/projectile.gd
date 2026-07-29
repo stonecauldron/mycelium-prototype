@@ -316,7 +316,13 @@ func _is_valid_target(target: Node) -> bool:
 	if target == null or target == owner_unit:
 		return false
 	if target.has_method("is_combat_obstacle") and target.call("is_combat_obstacle"):
-		return true
+		if owner_unit == null:
+			return false
+		var owner_troop = owner_unit.get("_troop")
+		if owner_troop == null:
+			return false
+		# Only the opposing army can damage a wall.
+		return bool(owner_troop.get("is_enemy")) != bool(target.get("is_enemy"))
 	if owner_unit == null:
 		return false
 	var owner_troop = owner_unit.get("_troop")

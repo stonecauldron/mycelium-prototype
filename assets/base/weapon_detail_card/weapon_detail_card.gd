@@ -12,6 +12,8 @@ var interactive: bool = true
 @onready var _speed_label: Label = %SpeedLabel
 @onready var _range_tag: TagChip = %RangeTag
 @onready var _scaling_tag: TagChip = %ScalingTag
+@onready var _blunt_tag: TagChip = %BluntTag
+@onready var _aoe_tag: TagChip = %AoeTag
 
 
 func setup(weapon: WeaponData, p_interactive: bool = true) -> void:
@@ -73,6 +75,12 @@ func _refresh() -> void:
 	_scaling_tag.set_text(
 		str(WeaponData.DAMAGE_STAT_LABELS.get(weapon_data.damage_stat, "?"))
 	)
+	_blunt_tag.visible = weapon_data.damage_type == WeaponData.DamageType.BLUNT
+	if _blunt_tag.visible:
+		_blunt_tag.set_text("Blunt")
+	_aoe_tag.visible = weapon_data.targeting_mode == WeaponData.TargetingMode.AOE
+	if _aoe_tag.visible:
+		_aoe_tag.set_text("AOE")
 
 
 func _range_label(formation_line: WeaponData.FormationLine) -> String:

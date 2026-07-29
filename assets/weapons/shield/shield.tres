@@ -7,9 +7,8 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Shield"
-short_description = "Absorbs 75% of damage. Inflicts little damage."
+short_description = "Tanks 75% of damage. Only deals 50% of damage."
 engagement_stance = 2
-biomass_cost = 8
 outgoing_damage_multiplier = 0.5
 incoming_damage_multiplier = 0.25
 incoming_knockback_multiplier = 0.25

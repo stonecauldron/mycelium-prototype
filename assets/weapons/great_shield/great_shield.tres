@@ -7,10 +7,10 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Great Shield"
-short_description = "A wall of wood and chitin. Barely scrapes back."
+short_description = "Tanks 85% of incoming damage. Only deals 25% damage."
 engagement_stance = 2
 base_damage = 2
-biomass_cost = 14
+biomass_cost = 4
 outgoing_damage_multiplier = 0.25
 incoming_damage_multiplier = 0.15
 incoming_knockback_multiplier = 0.15

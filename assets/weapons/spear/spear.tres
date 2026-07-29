@@ -17,7 +17,6 @@ base_damage = 6
 projectile_range = 650.0
 skirmish_distance = 280.0
 knockback_force = 0.0
-biomass_cost = 8
 melee_range = 200.0
 projectile_scene = ExtResource("4_proj")
 appearance_scene = ExtResource("2_appear")

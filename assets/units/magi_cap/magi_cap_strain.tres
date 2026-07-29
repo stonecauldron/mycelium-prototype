@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="UnitStrain" format=3]
+[gd_resource type="Resource" script_class="UnitStrain" format=3 uid="uid://bcfqcre5yuoja"]
 
-[ext_resource type="Script" uid="uid://cunitstrain00001" path="res://assets/units/unit_strain.gd" id="1_script"]
-[ext_resource type="Script" uid="uid://cstrlife000001" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
-[ext_resource type="PackedScene" path="res://assets/units/magi_cap/magi_cap_appearance.tscn" id="3_appear"]
+[ext_resource type="Script" uid="uid://bftxo0b154lgi" path="res://assets/units/unit_strain.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bssgi56hlkrc7" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
+[ext_resource type="PackedScene" uid="uid://3tdscqw3aqm8" path="res://assets/units/magi_cap/magi_cap_appearance.tscn" id="3_appear"]
 
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
@@ -13,13 +13,10 @@ appearance_scene = ExtResource("3_appear")
 [resource]
 script = ExtResource("1_script")
 display_name = "Magi Cap"
-short_description = "Pitiful at hatch. Explodes in power at imago."
+short_description = "Pitiful at hatch. Explodes in power when in adult form (4 days)."
+tint = Color(0.55, 0.4, 0.95, 1)
 days_to_imago = 4
-life_stages = [SubResource("Stage_imago")]
+life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
 use_power_tier = false
-strength_delta = 0
-dex_delta = 0
-con_delta = 0
-spd_delta = 0
 hatch_stat_fraction = 0.25
 imago_stat_delta = 10

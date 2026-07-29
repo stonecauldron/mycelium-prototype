@@ -8,7 +8,7 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Halberd"
-short_description = "Heavy hybrid spear. Slow, but it hits hard."
+short_description = "Heavy spear. Slow, but it hits hard."
 formation_line = 1
 engagement_stance = 4
 attack_style = 1
@@ -18,7 +18,7 @@ projectile_range = 650.0
 attack_interval = 1.1
 skirmish_distance = 280.0
 knockback_force = 0.0
-biomass_cost = 11
+biomass_cost = 4
 melee_range = 210.0
 projectile_scene = ExtResource("4_proj")
 appearance_scene = ExtResource("2_appear")

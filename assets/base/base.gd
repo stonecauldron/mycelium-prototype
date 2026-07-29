@@ -12,6 +12,7 @@ const TAB_DEFS := [
 const VIEWPORT_SIZE := Vector2(1920, 1080)
 const CAMERA_TWEEN_SECONDS := 0.35
 const _BIOMASS_DIGITS := 4
+const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
 
 @onready var _camera: Camera2D = %BaseCamera
 @onready var _tab_bar: HBoxContainer = %TabBar
@@ -30,7 +31,9 @@ var _current_tab: TabId = TabId.COLONY
 var _current_screen: BaseScreen
 var _tab_buttons: Dictionary = {}
 var _tab_underlines: Dictionary = {}
+var _tab_key_order: Array[TabId] = []
 var _camera_tween: Tween
+var _start_arrow: FloatingArrow = null
 
 
 func _ready() -> void:
@@ -42,6 +45,7 @@ func _ready() -> void:
 	_debug_advance_day_button.visible = GameState.debug_mode_active
 	GameState.debug_cheats_applied.connect(_on_debug_cheats_applied)
 	set_start_combat_enabled(_colony_screen.can_start_combat())
+	_ensure_start_arrow()
 	var initial := TabId.COLONY
 	if GameState.consume_prefer_riboforge_tab():
 		initial = TabId.RIBOFORGE
@@ -66,15 +70,61 @@ func _on_debug_advance_day_pressed() -> void:
 	_refresh_hud()
 
 
+func _on_start_combat_pressed() -> void:
+	GameState.show_start_combat_hint = false
+	if _start_arrow != null:
+		_start_arrow.hide_arrow()
+	_colony_screen.start_combat()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not (event is InputEventKey and event.pressed and not event.echo):
+		return
+	var key := (event as InputEventKey).keycode
+	var index := -1
+	match key:
+		KEY_1:
+			index = 0
+		KEY_2:
+			index = 1
+		KEY_3:
+			index = 2
+		_:
+			return
+	if index < 0 or index >= _tab_key_order.size():
+		return
+	_select_tab(_tab_key_order[index], false)
+	get_viewport().set_input_as_handled()
+
+
+func _ensure_start_arrow() -> void:
+	if _start_arrow != null or _start_combat_button == null:
+		return
+	_start_arrow = _FLOATING_ARROW_SCENE.instantiate() as FloatingArrow
+	_start_combat_button.add_child(_start_arrow)
+	_start_arrow.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_start_arrow.offset_left = -FloatingArrow.ARROW_SIZE.x * 0.5
+	_start_arrow.offset_right = FloatingArrow.ARROW_SIZE.x * 0.5
+	_start_arrow.offset_top = -FloatingArrow.ARROW_SIZE.y - 4.0
+	_start_arrow.offset_bottom = -4.0
+	_refresh_start_arrow()
+
+
+func _refresh_start_arrow() -> void:
+	if _start_arrow == null:
+		return
+	if GameState.show_start_combat_hint and not _start_combat_button.disabled:
+		_start_arrow.show_arrow()
+	else:
+		_start_arrow.hide_arrow()
+
+
 func set_start_combat_enabled(enabled: bool) -> void:
 	# War Chamber screen _ready can run before this node's @onready vars are set.
 	if _start_combat_button == null:
 		return
 	_start_combat_button.disabled = not enabled
-
-
-func _on_start_combat_pressed() -> void:
-	_colony_screen.start_combat()
+	_refresh_start_arrow()
 
 
 func _refresh_hud() -> void:
@@ -122,7 +172,9 @@ func _build_tab_bar() -> void:
 		child.queue_free()
 	_tab_buttons.clear()
 	_tab_underlines.clear()
+	_tab_key_order.clear()
 
+	var key_index := 1
 	for def in TAB_DEFS:
 		var tab_id: TabId = def["id"]
 		if not _is_tab_visible(tab_id):
@@ -134,8 +186,8 @@ func _build_tab_bar() -> void:
 
 		var button := Button.new()
 		button.theme_type_variation = &"NavButton"
-		button.text = str(def["label"])
-		button.custom_minimum_size = Vector2(96, 56)
+		button.text = "%d  %s" % [key_index, str(def["label"])]
+		button.custom_minimum_size = Vector2(120, 56)
 		button.focus_mode = Control.FOCUS_NONE
 		button.pressed.connect(_select_tab.bind(tab_id, false))
 		column.add_child(button)
@@ -149,6 +201,8 @@ func _build_tab_bar() -> void:
 		_tab_bar.add_child(column)
 		_tab_buttons[tab_id] = button
 		_tab_underlines[tab_id] = underline
+		_tab_key_order.append(tab_id)
+		key_index += 1
 
 
 func _select_tab(tab_id: TabId, instant: bool = false) -> void:

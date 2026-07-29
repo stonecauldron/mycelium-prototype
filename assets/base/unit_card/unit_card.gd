@@ -225,9 +225,8 @@ func _notification(what: int) -> void:
 		# Restore if the drag was cancelled; successful drops rebuild the card.
 		if is_inside_tree():
 			visible = true
-		if _hover_punch != null:
-			_hover_punch.call_deferred("arm_enter_unless_hovered")
-
+		# Keep punch suppressed while still hovering after an equip drop.
+		# play_exit on mouse leave will re-arm enter.
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	if typeof(data) == TYPE_DICTIONARY and unit_data is RosterUnitData:
@@ -274,12 +273,14 @@ func _try_receive_weapon(data: Dictionary) -> void:
 		var stock_index := int(data.get("stock_index", -1))
 		if GameState.try_equip_weapon_from_stock(unit, stock_index):
 			_refresh()
+			_suppress_punch_after_equip()
 			weapon_loadout_changed.emit(self)
 		return
 	if drop_type == "equipped_weapon":
 		var from_unit := data.get("unit") as RosterUnitData
 		if GameState.try_transfer_equipped_weapon(from_unit, unit):
 			_refresh()
+			_suppress_punch_after_equip()
 			weapon_loadout_changed.emit(self)
 		return
 	if drop_type == "shop_weapon":
@@ -295,7 +296,15 @@ func _try_receive_weapon(data: Dictionary) -> void:
 			GameState.riboforge.replace_shop_slot(slot_index)
 		if GameState.try_equip_weapon_from_stock(unit, new_index):
 			_refresh()
+			_suppress_punch_after_equip()
 			weapon_loadout_changed.emit(self)
+
+
+func _suppress_punch_after_equip() -> void:
+	if _hover_punch == null:
+		return
+	_hover_punch.reset()
+	_hover_punch.suppress_enter()
 
 
 func _find_base() -> Node:

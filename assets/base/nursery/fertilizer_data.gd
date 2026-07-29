@@ -12,7 +12,7 @@ enum Behavior {
 }
 
 @export var display_name: String = "Fertilizer"
-@export var biomass_cost: int = 6
+@export var biomass_cost: int = 2
 @export var tint: Color = Color.WHITE
 @export var behavior: Behavior = Behavior.STAT
 @export var strength_delta: int = 0

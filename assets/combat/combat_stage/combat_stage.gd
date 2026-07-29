@@ -16,12 +16,15 @@ const _HITSTOP_DURATION := 0.05
 const _ZOMBIE_RESPAWN_DELAY := 2.0
 ## Keep physics step size fixed under time_scale so 2×/4× don't change combat outcomes.
 const _BASE_PHYSICS_TICKS := 60
+const _BIOMASS_NUMBER_SCENE := preload("res://assets/vfx/biomass_number/biomass_number.tscn")
+const _BIOMASS_DIGITS := 4
 
 @export var sandboxed: bool = false
 
 @onready var player_troop: Troop = $World/PlayerTroop
 @onready var enemy_troop: Troop = $World/EnemyTroop
 @onready var _fast_forward_button: Button = %FastForwardButton
+@onready var _biomass_amount: Label = %BiomassAmount
 
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2
@@ -30,6 +33,7 @@ var _fallen_units: Array[RosterUnitData] = []
 var _biomass_earned_this_fight: int = 0
 var _fast_forward_scale: int = 1
 var _hitstop_active: bool = false
+var _combat_paused: bool = false
 var _saved_physics_ticks: int = _BASE_PHYSICS_TICKS
 var _saved_max_physics_steps: int = 8
 var _pending_player_zombie_respawns: int = 0
@@ -44,8 +48,11 @@ func _ready() -> void:
 	_saved_max_physics_steps = Engine.max_physics_steps_per_frame
 	_player_spawn = player_troop.flag_bearer.global_position
 	_enemy_spawn = enemy_troop.flag_bearer.global_position
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	_fast_forward_button.process_mode = Node.PROCESS_MODE_WHEN_PAUSED
 	_fast_forward_button.pressed.connect(_on_fast_forward_pressed)
 	_set_fast_forward(GameState.combat_fast_forward)
+	_refresh_biomass_hud()
 
 	if sandboxed:
 		return
@@ -64,7 +71,31 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_hitstop_active = false
+	_set_combat_paused(false)
 	_restore_engine_timing()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if _battle_over:
+		return
+	if event is InputEventKey and event.pressed and not event.echo:
+		if (event as InputEventKey).keycode == KEY_ESCAPE:
+			_toggle_combat_pause()
+			get_viewport().set_input_as_handled()
+
+
+func _toggle_combat_pause() -> void:
+	if _battle_over:
+		return
+	_set_combat_paused(not _combat_paused)
+
+
+func _set_combat_paused(paused: bool) -> void:
+	_combat_paused = paused
+	if is_inside_tree():
+		get_tree().paused = paused
+	if not paused:
+		_apply_simulation_rate()
 
 
 func start_battle(
@@ -183,7 +214,27 @@ func _award_kill_biomass(victim: Unit) -> int:
 	GameState.biomass.add(reward)
 	_biomass_earned_this_fight += reward
 	_notify_biomass_from_combat_death(reward, victim)
+	_refresh_biomass_hud()
+	_spawn_biomass_number(victim.global_position, reward)
 	return reward
+
+
+func _spawn_biomass_number(at_global: Vector2, amount: int) -> void:
+	if amount <= 0:
+		return
+	var world := get_node_or_null("World") as Node2D
+	if world == null:
+		return
+	var number: BiomassNumber = _BIOMASS_NUMBER_SCENE.instantiate()
+	world.add_child(number)
+	number.global_position = at_global + Vector2(0, -128)
+	number.display(amount)
+
+
+func _refresh_biomass_hud() -> void:
+	if _biomass_amount == null:
+		return
+	_biomass_amount.text = "%0*d kg" % [_BIOMASS_DIGITS, GameState.biomass.amount]
 
 
 func _notify_biomass_from_combat_death(amount: int, victim: Unit) -> void:
@@ -377,6 +428,7 @@ func _check_battle_end() -> void:
 		return
 	_battle_over = true
 	_hitstop_active = false
+	_set_combat_paused(false)
 	_restore_engine_timing()
 	_notify_battle_end()
 

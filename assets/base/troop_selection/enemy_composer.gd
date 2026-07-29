@@ -15,8 +15,11 @@ const _WEAPON_POOL: Array[EnemyUnitSpec.UnitType] = [
 	EnemyUnitSpec.UnitType.SHIELD,
 ]
 
+const _GENERALIST_STRAIN_PATH := "res://assets/units/generalist/generalist_strain.tres"
+## Relative weight when picking strains for army mix (other strains = 1).
+const _GENERALIST_STRAIN_WEIGHT := 3.0
 const _STRAIN_PATHS: Array[String] = [
-	"res://assets/units/generalist/generalist_strain.tres",
+	_GENERALIST_STRAIN_PATH,
 	"res://assets/units/death_cap/death_cap_strain.tres",
 	"res://assets/units/inky_cap/inky_cap_strain.tres",
 	"res://assets/units/boom_cap/boom_cap_strain.tres",
@@ -178,7 +181,13 @@ static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[
 	var weapon_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
 	var strain_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
 	var weapon_slots := _distribute_mix(_WEAPON_POOL, weapon_archetype, total, rng)
-	var strain_slots := _distribute_mix(_strain_pool_for_day(day), strain_archetype, total, rng)
+	var strain_slots := _distribute_mix(
+		_strain_pool_for_day(day),
+		strain_archetype,
+		total,
+		rng,
+		_strain_pick_weight
+	)
 
 	var specs: Array[EnemyUnitSpec] = []
 	for i in total:
@@ -221,11 +230,12 @@ static func _distribute_mix(
 	pool: Array,
 	archetype: ArmyArchetype,
 	total: int,
-	rng: RandomNumberGenerator
+	rng: RandomNumberGenerator,
+	weight_for_entry: Callable = Callable()
 ) -> Array:
 	var shares: Array = _ARCHETYPE_SHARES[archetype]
 	var pick_count: int = mini(shares.size(), pool.size())
-	var picked := _pick_distinct(pool, pick_count, rng)
+	var picked := _pick_distinct(pool, pick_count, rng, weight_for_entry)
 	var counts := _shares_to_counts(shares.slice(0, picked.size()), total)
 	var slots: Array = []
 	for i in picked.size():
@@ -235,15 +245,53 @@ static func _distribute_mix(
 	return slots
 
 
-static func _pick_distinct(pool: Array, count: int, rng: RandomNumberGenerator) -> Array:
+static func _strain_pick_weight(entry) -> float:
+	var unit_strain := entry as UnitStrain
+	if unit_strain != null and unit_strain.resource_path == _GENERALIST_STRAIN_PATH:
+		return _GENERALIST_STRAIN_WEIGHT
+	return 1.0
+
+
+static func _pick_distinct(
+	pool: Array,
+	count: int,
+	rng: RandomNumberGenerator,
+	weight_for_entry: Callable = Callable()
+) -> Array:
 	var remaining: Array = pool.duplicate()
 	var picked: Array = []
 	var n := mini(count, remaining.size())
 	for _i in n:
-		var index := rng.randi() % remaining.size()
+		var index := _weighted_index(remaining, rng, weight_for_entry)
 		picked.append(remaining[index])
 		remaining.remove_at(index)
 	return picked
+
+
+static func _weighted_index(
+	pool: Array,
+	rng: RandomNumberGenerator,
+	weight_for_entry: Callable
+) -> int:
+	if pool.is_empty():
+		return 0
+	if not weight_for_entry.is_valid():
+		return rng.randi() % pool.size()
+	var total_weight := 0.0
+	var weights: Array[float] = []
+	for entry in pool:
+		var weight: float = maxf(float(weight_for_entry.call(entry)), 0.0)
+		weights.append(weight)
+		total_weight += weight
+	if total_weight <= 0.0:
+		return rng.randi() % pool.size()
+	var roll := rng.randf() * total_weight
+	var acc := 0.0
+	for i in weights.size():
+		acc += weights[i]
+		if roll <= acc:
+			return i
+	return weights.size() - 1
 
 
 static func _shares_to_counts(shares: Array, total: int) -> Array[int]:

@@ -44,6 +44,8 @@ func _ready() -> void:
 	# Crop padded 512x512 art to the bag (same idea as spore atlas).
 	_fertilizer_icon_atlas.region = Rect2(183, 167, 169, 180)
 	_reroll_button.pressed.connect(_on_reroll_pressed)
+	_reroll_button.mouse_entered.connect(_on_reroll_hover_entered)
+	_reroll_button.mouse_exited.connect(_on_reroll_hover_exited)
 	_shop_drop_zone.accepted_drag_types = PackedStringArray(["spore", "fertilizer"])
 	_shop_drop_zone.item_dropped.connect(_on_shop_sell_dropped)
 	_build_stock_slots()
@@ -128,21 +130,20 @@ func _rebuild_shop_cards() -> void:
 	var shop := GameState.nursery.spore_shop
 	if shop == null:
 		return
-	var middle_index := int(SHOP_SLOT_COUNT / 2.0)
 	var built: Array[ShopOfferCard] = []
 	built.resize(SHOP_SLOT_COUNT)
 	for i in SHOP_SLOT_COUNT:
 		if i >= shop.offers.size():
 			break
 		var offer := shop.offers[i]
-		if offer == null or offer.item == null:
+		if offer == null or offer.is_empty():
 			continue
 		var card: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
 		if offer.item is FertilizerData:
 			var fert := offer.item as FertilizerData
 			card.setup(
+				"Fertilizer",
 				fert.display_name,
-				fert.subtitle_text(),
 				offer.cost,
 				{
 					"type": "shop_fertilizer",
@@ -153,13 +154,16 @@ func _rebuild_shop_cards() -> void:
 				_fertilizer_icon_atlas,
 				i,
 				offer.locked,
-				fert.tint
+				fert.tint,
+				fert.subtitle_text()
 			)
 		elif offer.item is SporeData:
 			var spore := offer.item as SporeData
+			var strain_name := _spore_shop_strain_name(spore)
+			var description := _spore_shop_description(spore)
 			card.setup(
-				spore.display_name,
-				"growth: %d days" % spore.days_to_mature,
+				"Spore",
+				strain_name,
 				offer.cost,
 				{
 					"type": "shop_spore",
@@ -170,7 +174,8 @@ func _rebuild_shop_cards() -> void:
 				_spore_icon_atlas,
 				i,
 				offer.locked,
-				spore.tint
+				spore.tint,
+				description
 			)
 		else:
 			continue
@@ -178,24 +183,42 @@ func _rebuild_shop_cards() -> void:
 		card.lock_toggled.connect(_on_shop_lock_toggled)
 		built[i] = card
 		_shop_cards.append(card)
-	for i in middle_index:
-		var left_card := built[i]
-		if left_card == null:
+	# First column: first card (or same-size spacer) on top, reroll fixed below.
+	_middle_shop_column.alignment = BoxContainer.ALIGNMENT_BEGIN
+	_shop_row.move_child(_middle_shop_column, 0)
+	var first_slot: Control = built[0] if not built.is_empty() and built[0] != null else _make_shop_card_spacer()
+	_middle_shop_column.add_child(first_slot)
+	_middle_shop_column.move_child(first_slot, 0)
+	_middle_shop_column.move_child(_reroll_button, 1)
+	first_slot.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	for i in range(1, SHOP_SLOT_COUNT):
+		var next_card := built[i] if i < built.size() else null
+		if next_card == null:
 			continue
-		_shop_row.add_child(left_card)
-		_shop_row.move_child(left_card, i)
-		left_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	var middle_card := built[middle_index] if middle_index < built.size() else null
-	if middle_card != null:
-		_middle_shop_column.add_child(middle_card)
-		_middle_shop_column.move_child(middle_card, 0)
-		_middle_shop_column.move_child(_reroll_button, 1)
-	for i in range(middle_index + 1, SHOP_SLOT_COUNT):
-		var right_card := built[i]
-		if right_card == null:
-			continue
-		_shop_row.add_child(right_card)
-		right_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		_shop_row.add_child(next_card)
+		next_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+
+func _make_shop_card_spacer() -> Control:
+	var spacer := Control.new()
+	spacer.custom_minimum_size = ShopOfferCard.CARD_SIZE
+	spacer.size = ShopOfferCard.CARD_SIZE
+	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return spacer
+
+
+func _spore_shop_strain_name(spore: SporeData) -> String:
+	var strain := spore.resolved_strain() if spore != null else null
+	if strain == null:
+		return spore.display_name if spore != null else ""
+	return "%s Strain" % strain.display_name
+
+
+func _spore_shop_description(spore: SporeData) -> String:
+	var strain := spore.resolved_strain() if spore != null else null
+	if strain == null:
+		return ""
+	return strain.short_description.strip_edges()
 
 
 func _sync_stock_slots() -> void:
@@ -250,20 +273,39 @@ func _refresh_shop_affordability() -> void:
 		card.set_affordable(GameState.biomass.can_afford(card.cost))
 	_reroll_cost_label.text = "%d" % BiomassData.SHOP_REROLL_COST
 	var can_reroll := GameState.biomass.can_afford(BiomassData.SHOP_REROLL_COST)
-	_reroll_button.disabled = not can_reroll
+	# Keep mouse events so hover preview still works when unaffordable.
+	_reroll_button.disabled = false
 	_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
 	for tile in _tiles:
 		if tile.is_unlockable:
 			tile.setup_unlockable(tile.plot_index, tile.unlock_cost)
 
 
+func _on_reroll_hover_entered() -> void:
+	for card in _shop_cards:
+		card.set_reroll_preview(true)
+
+
+func _on_reroll_hover_exited() -> void:
+	for card in _shop_cards:
+		card.set_reroll_preview(false)
+
+
 func _on_reroll_pressed() -> void:
 	if not GameState.biomass.try_spend(BiomassData.SHOP_REROLL_COST):
 		return
+	for card in _shop_cards:
+		card.clear_reroll_preview()
 	GameState.nursery.reroll_unlocked_shop_offers()
 	_rebuild_shop_cards()
 	_refresh_shop_affordability()
 	_refresh_base_hud()
+	_play_shop_reroll_shake()
+
+
+func _play_shop_reroll_shake() -> void:
+	for i in _shop_cards.size():
+		_shop_cards[i].play_reroll_shake(0.03 * float(i))
 
 
 func _on_shop_lock_toggled(card: ShopOfferCard) -> void:

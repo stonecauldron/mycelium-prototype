@@ -71,9 +71,7 @@ func _refresh() -> void:
 	if weapon == null:
 		return
 	_name_label.text = weapon.display_name
-	var range_name := str(WeaponData.FORMATION_LINE_LABELS.get(weapon.formation_line, "?"))
-	var display_dmg: int = roundi(float(weapon.base_damage) * weapon.outgoing_damage_multiplier)
-	_meta_label.text = "%s · dmg %d" % [range_name, display_dmg]
+	_meta_label.visible = false
 	var icon := RiboforgeData.icon_for_weapon(weapon)
 	_icon.texture = icon
 	_icon.visible = icon != null

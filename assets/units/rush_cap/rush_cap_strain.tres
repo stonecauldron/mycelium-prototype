@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="UnitStrain" format=3]
+[gd_resource type="Resource" script_class="UnitStrain" format=3 uid="uid://c4r0gvlhlg5gs"]
 
-[ext_resource type="Script" uid="uid://cunitstrain00001" path="res://assets/units/unit_strain.gd" id="1_script"]
-[ext_resource type="Script" uid="uid://cstrlife000001" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
-[ext_resource type="PackedScene" path="res://assets/units/rush_cap/rush_cap_appearance.tscn" id="3_appear"]
+[ext_resource type="Script" uid="uid://bftxo0b154lgi" path="res://assets/units/unit_strain.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bssgi56hlkrc7" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
+[ext_resource type="PackedScene" uid="uid://benjjsh6renvu" path="res://assets/units/rush_cap/rush_cap_appearance.tscn" id="3_appear"]
 
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
@@ -13,9 +13,10 @@ appearance_scene = ExtResource("3_appear")
 [resource]
 script = ExtResource("1_script")
 display_name = "Rush Cap"
-short_description = "Three weaklings. Ready the moment you plant."
-days_to_imago = 2
-life_stages = [SubResource("Stage_imago")]
+short_description = "Three small fry. Ready the moment you plant."
+tint = Color(0.35, 0.85, 0.9, 1)
+days_to_imago = 1
+life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
 use_power_tier = false
 strength_delta = -4
 dex_delta = -4

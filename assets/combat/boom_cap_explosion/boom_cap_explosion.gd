@@ -41,6 +41,9 @@ func _apply_damage() -> void:
 	for node in get_tree().get_nodes_in_group("combat_obstacles"):
 		if not is_instance_valid(node) or not node.has_method("take_damage"):
 			continue
+		if _source != null and _source._troop != null:
+			if bool(node.get("is_enemy")) == _source._troop.is_enemy:
+				continue
 		if (node as Node2D).global_position.distance_to(global_position) > _radius:
 			continue
 		node.call("take_damage", _damage, global_position, _knockback, _source)

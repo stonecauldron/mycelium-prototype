@@ -44,7 +44,7 @@ const MELEE_HITBOX_Y := -20.0
 ## HYBRID: switch from throw to melee at this distance.
 @export var skirmish_distance: float = 160.0
 @export var knockback_force: float = 280.0
-@export var biomass_cost: int = 5
+@export var biomass_cost: int = 3
 ## Biomass granted to the player each time this weapon lands a hit. 0 = none.
 @export var biomass_on_hit: int = 0
 ## Scales total outgoing attack damage (base + stat bonus). 1.0 = normal.

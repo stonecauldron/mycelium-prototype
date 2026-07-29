@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="UnitStrain" format=3]
+[gd_resource type="Resource" script_class="UnitStrain" format=3 uid="uid://dadjwsu71y3cb"]
 
-[ext_resource type="Script" uid="uid://cunitstrain00001" path="res://assets/units/unit_strain.gd" id="1_script"]
-[ext_resource type="Script" uid="uid://cstrlife000001" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
-[ext_resource type="PackedScene" path="res://assets/units/wall_cap/wall_cap_appearance.tscn" id="3_appear"]
-[ext_resource type="Script" path="res://assets/units/wall_cap/wall_cap_effect.gd" id="4_effect"]
+[ext_resource type="Script" uid="uid://bftxo0b154lgi" path="res://assets/units/unit_strain.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bssgi56hlkrc7" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
+[ext_resource type="PackedScene" uid="uid://c0fcb7ws1s0gm" path="res://assets/units/wall_cap/wall_cap_appearance.tscn" id="3_appear"]
+[ext_resource type="Script" uid="uid://b3f33x1taw131" path="res://assets/units/wall_cap/wall_cap_effect.gd" id="4_effect"]
 
 [sub_resource type="Resource" id="Effect"]
 script = ExtResource("4_effect")
@@ -17,12 +17,12 @@ appearance_scene = ExtResource("3_appear")
 [resource]
 script = ExtResource("1_script")
 display_name = "Wall Cap"
-short_description = "Death leaves a destructible wall for both armies."
-days_to_imago = 2
-life_stages = [SubResource("Stage_imago")]
+short_description = "Death leaves a destructible wall."
+tint = Color(0.83336693, 0.30143315, 0.18721086, 1)
+life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
+effect = SubResource("Effect")
 use_power_tier = false
 strength_delta = -2
 dex_delta = -2
 con_delta = -2
 spd_delta = -2
-effect = SubResource("Effect")

@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="UnitStrain" format=3]
+[gd_resource type="Resource" script_class="UnitStrain" format=3 uid="uid://dei2k61fer1p4"]
 
-[ext_resource type="Script" uid="uid://cunitstrain00001" path="res://assets/units/unit_strain.gd" id="1_script"]
-[ext_resource type="Script" uid="uid://cstrlife000001" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
-[ext_resource type="PackedScene" path="res://assets/units/inky_cap/inky_cap_appearance.tscn" id="3_appear"]
-[ext_resource type="Script" path="res://assets/units/inky_cap/inky_cap_effect.gd" id="4_effect"]
+[ext_resource type="Script" uid="uid://bftxo0b154lgi" path="res://assets/units/unit_strain.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bssgi56hlkrc7" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
+[ext_resource type="PackedScene" uid="uid://dd6mhdr1mb5uj" path="res://assets/units/inky_cap/inky_cap_appearance.tscn" id="3_appear"]
+[ext_resource type="Script" uid="uid://6cuteeg84o87" path="res://assets/units/inky_cap/inky_cap_effect.gd" id="4_effect"]
 
 [sub_resource type="Resource" id="Effect"]
 script = ExtResource("4_effect")
@@ -17,12 +17,8 @@ appearance_scene = ExtResource("3_appear")
 [resource]
 script = ExtResource("1_script")
 display_name = "Inky Cap"
-short_description = "Sticky hits slow foes. Deals half damage."
-days_to_imago = 2
-life_stages = [SubResource("Stage_imago")]
-use_power_tier = false
-strength_delta = 0
-dex_delta = 0
-con_delta = 0
-spd_delta = 0
+short_description = "Deals half damage but every hit inflicts speed debuff."
+tint = Color(0.25, 0.35, 0.7, 1)
+life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
 effect = SubResource("Effect")
+use_power_tier = false

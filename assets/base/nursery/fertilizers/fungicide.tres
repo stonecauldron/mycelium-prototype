@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_fert")
 display_name = "Fungicide"
-biomass_cost = 5
+biomass_cost = 2
 tint = Color(0.6, 0.35, 0.7, 1)
 behavior = 5

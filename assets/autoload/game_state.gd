@@ -23,6 +23,8 @@ var prefer_nursery_tab: bool = false
 var prefer_riboforge_tab: bool = false
 ## Session preference: combat fast-forward scale (1, 2, or 4; restored on next fight).
 var combat_fast_forward: int = 1
+## Session: show floating arrow pointing at Start Combat until first launch.
+var show_start_combat_hint: bool = true
 ## Session: hovering arrow on READY plots until the player harvests once.
 var show_plot_harvest_hint: bool = true
 ## Debug (~): cheats active — force base screens unlocked and show debug HUD.

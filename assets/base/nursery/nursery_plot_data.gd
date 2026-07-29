@@ -109,6 +109,14 @@ func total_growth_bonus() -> int:
 
 func fertilizer_tooltip() -> String:
 	var lines: PackedStringArray = []
+	if planted_spore != null:
+		var strain := planted_spore.resolved_strain()
+		if strain != null:
+			var strain_line := strain.display_name
+			var desc := strain.short_description.strip_edges()
+			if not desc.is_empty():
+				strain_line = "%s — %s" % [strain.display_name, desc]
+			lines.append(strain_line)
 	if pending_stat_bonus > 0:
 		lines.append("Fungicide residue (+%d all)" % pending_stat_bonus)
 	for fert in applied_fertilizers:

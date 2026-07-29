@@ -8,7 +8,7 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Giant Horn"
-short_description = "Flat blunt blast that punches through a line of foes."
+short_description = "Flat blunt sonic blast that punches through a line of foes."
 formation_line = 1
 engagement_stance = 3
 attack_style = 2
@@ -16,7 +16,7 @@ damage_type = 1
 projectile_range = 700.0
 attack_interval = 1.35
 knockback_force = 200.0
-biomass_cost = 10
+biomass_cost = 4
 projectile_scene = ExtResource("4_proj")
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

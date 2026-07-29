@@ -330,7 +330,7 @@ alignment = 2
 
 [node name="StartCombatButton" type="Button" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow/RightPad" unique_id=1667727997]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 56)
+custom_minimum_size = Vector2(260, 72)
 layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"PrimaryButton"

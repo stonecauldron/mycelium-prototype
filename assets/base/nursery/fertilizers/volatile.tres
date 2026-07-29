@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_fert")
 display_name = "Volatile"
-biomass_cost = 6
+biomass_cost = 2
 tint = Color(0.95, 0.55, 0.15, 1)
 behavior = 1

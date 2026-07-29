@@ -114,3 +114,13 @@ text = "Melee"
 [node name="ScalingTag" parent="CardPanel/Margin/VBox/TagMargin/TagRow" instance=ExtResource("5_tag")]
 unique_name_in_owner = true
 text = "STR"
+
+[node name="BluntTag" parent="CardPanel/Margin/VBox/TagMargin/TagRow" instance=ExtResource("5_tag")]
+unique_name_in_owner = true
+visible = false
+text = "Blunt"
+
+[node name="AoeTag" parent="CardPanel/Margin/VBox/TagMargin/TagRow" instance=ExtResource("5_tag")]
+unique_name_in_owner = true
+visible = false
+text = "AOE"

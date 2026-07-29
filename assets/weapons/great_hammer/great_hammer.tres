@@ -1,19 +1,19 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://cfbv1ohe8fsv5"]
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
-[ext_resource type="PackedScene" uid="uid://nhi92yc8wegwt" path="res://assets/weapons/great_hammer/great_hammer_appearance.tscn" id="2_appear"]
+[ext_resource type="PackedScene" uid="uid://bvbobslh7rtnj" path="res://assets/weapons/great_hammer/great_hammer_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://bn6mua6yu84uw" path="res://assets/weapons/great_hammer/greathammer.png" id="3_icon"]
 
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Great Hammer"
 short_description = "A crushing great weapon. Blunt force with long reach."
-targeting_mode = 1
 damage_type = 1
+targeting_mode = 1
 base_damage = 9
 attack_interval = 1.25
-biomass_cost = 12
-melee_range = 140.0
 knockback_force = 450.0
+biomass_cost = 4
+melee_range = 140.0
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

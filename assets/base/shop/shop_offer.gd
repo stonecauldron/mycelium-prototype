@@ -7,3 +7,7 @@ extends Resource
 @export var locked: bool = false
 ## Opaque product for the owning shop (SporeData, WeaponData, etc.).
 @export var item: Resource
+
+
+func is_empty() -> bool:
+	return item == null

@@ -66,6 +66,7 @@ const SWING_OUT_TIME := 0.14
 const SWING_BACK_TIME := 0.18
 
 const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_number.tscn")
+const _BIOMASS_NUMBER_SCENE := preload("res://assets/vfx/biomass_number/biomass_number.tscn")
 const _HIT_BURST_SCENE := preload("res://assets/vfx/hit_burst/hit_burst.tscn")
 const _SPORE_CLOUD_SCENE := preload("res://assets/vfx/spore_cloud/spore_cloud.tscn")
 const _COMBAT_CALLOUT_SCENE := preload("res://assets/vfx/combat_callout/combat_callout.tscn")
@@ -78,6 +79,8 @@ const HP_CHIP_GAP := 4.0
 const COLLISION_WORLD := 1
 const COLLISION_PLAYER_UNITS := 2
 const COLLISION_ENEMY_UNITS := 16
+const COLLISION_PLAYER_WALLS := 32
+const COLLISION_ENEMY_WALLS := 64
 
 @export var stats: UnitStatsData
 @export var weapon: WeaponData
@@ -307,7 +310,10 @@ func _preferred_attack_distance() -> float:
 
 
 ## HYBRID: melee when inside personal skirmish band.
+## Combat obstacles are always smashed up close (projectiles fly over them).
 func _wants_close_melee() -> bool:
+	if _is_combat_obstacle_target(_target):
+		return true
 	if weapon == null or get_engagement_stance() != WeaponData.EngagementStance.HYBRID:
 		return false
 	if _target == null or not is_instance_valid(_target):
@@ -329,10 +335,10 @@ func _apply_body_color() -> void:
 func _setup_collision() -> void:
 	if _troop.is_enemy:
 		collision_layer = COLLISION_ENEMY_UNITS
-		collision_mask = COLLISION_WORLD | COLLISION_PLAYER_UNITS
+		collision_mask = COLLISION_WORLD | COLLISION_PLAYER_UNITS | COLLISION_PLAYER_WALLS
 	else:
 		collision_layer = COLLISION_PLAYER_UNITS
-		collision_mask = COLLISION_WORLD | COLLISION_ENEMY_UNITS
+		collision_mask = COLLISION_WORLD | COLLISION_ENEMY_UNITS | COLLISION_ENEMY_WALLS
 
 
 func _physics_process(delta: float) -> void:
@@ -527,9 +533,15 @@ func _process_combat(delta: float) -> void:
 
 	if distance <= _get_attack_range():
 		# Projectiles only fire at combat units, never the flag bearer.
+		# Obstacles are melee-only (they block the lane).
 		if _uses_projectile_attack() and not (_target is Unit):
-			_hold_or_march()
-			return
+			if _is_combat_obstacle_target(_target):
+				if distance > _get_melee_engage_range():
+					_chase_target()
+					return
+			else:
+				_hold_or_march()
+				return
 		velocity.x = 0.0
 		_face_toward(_target.global_position)
 		_start_attack()
@@ -1040,38 +1052,44 @@ func _uses_projectile_attack() -> bool:
 func _refresh_target() -> void:
 	var previous := _target
 	_target = null
-	var opponent: Troop = _troop.get_opponent()
-	if opponent == null or opponent.is_wiped_out():
-		return
-
+	var opponent: Troop = _troop.get_opponent() if _troop != null else null
 	var closest_distance := INF
-	for unit in opponent.get_units():
-		if unit.current_hp <= 0:
-			continue
-		var distance := global_position.distance_squared_to(unit.global_position)
-		if distance < closest_distance:
-			closest_distance = distance
-			_target = unit
 
-	# Projectile weapons never engage the flag bearer — only combat units.
-	var allow_flag_target := not _uses_projectile_attack()
-	if allow_flag_target:
-		var flag := opponent.flag_bearer
-		if flag != null and is_instance_valid(flag):
-			var flag_distance := global_position.distance_squared_to(flag.global_position)
-			if flag_distance < closest_distance:
-				closest_distance = flag_distance
-				_target = flag
+	if opponent != null and not opponent.is_wiped_out():
+		for unit in opponent.get_units():
+			if unit.current_hp <= 0:
+				continue
+			var distance := global_position.distance_squared_to(unit.global_position)
+			if distance < closest_distance:
+				closest_distance = distance
+				_target = unit
+
+		# Projectile weapons never engage the flag bearer — only combat units.
+		var allow_flag_target := not _uses_projectile_attack()
+		if allow_flag_target:
+			var flag := opponent.flag_bearer
+			if flag != null and is_instance_valid(flag):
+				var flag_distance := global_position.distance_squared_to(flag.global_position)
+				if flag_distance < closest_distance:
+					closest_distance = flag_distance
+					_target = flag
+
+	# Melee units smash combat obstacles (walls) that sit ahead of them.
+	# Projectiles arc over, so ranged units keep focusing living foes.
+	if not _uses_projectile_attack():
+		var obstacle := _closest_blocking_obstacle()
+		if obstacle != null:
+			var obstacle_distance := global_position.distance_squared_to(obstacle.global_position)
+			if obstacle_distance < closest_distance:
+				closest_distance = obstacle_distance
+				_target = obstacle
 
 	# Sticky target: avoid left/right thrashing when two foes are nearly equidistant.
 	if (
 		previous != null
 		and is_instance_valid(previous)
 		and previous != _target
-		and (
-			(previous is Unit and (previous as Unit).current_hp > 0)
-			or (allow_flag_target and previous is FlagBearer)
-		)
+		and _is_valid_sticky_target(previous)
 	):
 		var previous_distance := global_position.distance_squared_to(
 			(previous as Node2D).global_position
@@ -1081,11 +1099,69 @@ func _refresh_target() -> void:
 			_target = previous
 			closest_distance = previous_distance
 
-	# Free-march until an enemy enters engage range.
+	# Free-march until an enemy (or blocking wall) enters engage range.
 	if _target != null:
 		var engage_sq := Troop.ENGAGE_RANGE * Troop.ENGAGE_RANGE
 		if closest_distance > engage_sq:
 			_target = null
+
+
+func _is_valid_sticky_target(candidate: Node) -> bool:
+	if candidate is Unit:
+		return (candidate as Unit).current_hp > 0
+	if candidate is FlagBearer and not _uses_projectile_attack():
+		return true
+	if (
+		not _uses_projectile_attack()
+		and candidate.has_method("is_combat_obstacle")
+		and candidate.call("is_combat_obstacle")
+	):
+		if _troop != null and bool(candidate.get("is_enemy")) == _troop.is_enemy:
+			return false
+		if candidate.get("current_hp") != null and int(candidate.get("current_hp")) <= 0:
+			return false
+		return true
+	return false
+
+
+func _is_combat_obstacle_target(candidate: Node) -> bool:
+	return (
+		candidate != null
+		and is_instance_valid(candidate)
+		and candidate.has_method("is_combat_obstacle")
+		and candidate.call("is_combat_obstacle")
+	)
+
+
+## Nearest living combat obstacle ahead toward the enemy side.
+func _closest_blocking_obstacle() -> Node2D:
+	if not is_inside_tree() or _troop == null:
+		return null
+	var toward_enemy := -1.0 if _troop.is_enemy else 1.0
+	var best: Node2D = null
+	var best_distance := INF
+	for node in get_tree().get_nodes_in_group("combat_obstacles"):
+		if node == null or not is_instance_valid(node):
+			continue
+		var obstacle := node as Node2D
+		if obstacle == null:
+			continue
+		if not obstacle.has_method("is_combat_obstacle") or not obstacle.call("is_combat_obstacle"):
+			continue
+		# Never engage walls from our own army.
+		if bool(obstacle.get("is_enemy")) == _troop.is_enemy:
+			continue
+		if obstacle.get("current_hp") != null and int(obstacle.get("current_hp")) <= 0:
+			continue
+		var dx := obstacle.global_position.x - global_position.x
+		# Only consider walls ahead on the march toward the foe.
+		if dx * toward_enemy <= 0.0:
+			continue
+		var distance := global_position.distance_squared_to(obstacle.global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = obstacle
+	return best
 
 
 func _get_ranged_aim_priority() -> Array[WeaponData.FormationLine]:
@@ -1114,6 +1190,7 @@ func _get_ranged_aim_priority() -> Array[WeaponData.FormationLine]:
 
 
 func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
+	var from_global := _get_ranged_spawn_global()
 	var projectile_range := _get_attack_range()
 	for formation_line in _get_ranged_aim_priority():
 		var candidates: Array[Unit] = []
@@ -1139,8 +1216,8 @@ func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
 		for i in candidates.size():
 			cumulative += weights[i]
 			if roll <= cumulative:
-				return candidates[i].global_position
-		return candidates[candidates.size() - 1].global_position
+				return _lead_aim_point(from_global, candidates[i])
+		return _lead_aim_point(from_global, candidates[candidates.size() - 1])
 
 	# Prefer any remaining combatant over flag bearer / self (floor throws).
 	var closest: Unit = null
@@ -1151,9 +1228,46 @@ func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
 			closest_distance = distance
 			closest = unit
 	if closest != null:
-		return closest.global_position
+		return _lead_aim_point(from_global, closest)
 
 	return _get_forward_aim_fallback()
+
+
+## Lead aim by target velocity using an approximate ballistic flight time.
+func _lead_aim_point(from_global: Vector2, target: Unit) -> Vector2:
+	var aim := target.global_position
+	var launch_angle_deg := 45.0
+	var fallback_speed := 600.0
+	if weapon != null:
+		var scene := weapon.resolve_projectile_scene()
+		if scene == null and weapon.uses_throw_projectile():
+			scene = _SPEAR_PROJECTILE_FALLBACK
+		elif scene == null and weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
+			scene = _ARROW_PROJECTILE_FALLBACK
+		if scene != null:
+			var probe := scene.instantiate() as Projectile
+			if probe != null:
+				launch_angle_deg = probe.launch_angle_deg
+				fallback_speed = probe.fallback_speed
+				probe.free()
+	var gravity_y := get_gravity().y
+	if gravity_y <= 0.0:
+		gravity_y = 980.0
+	for _i in 2:
+		var displacement := aim - from_global
+		var dx := absf(displacement.x)
+		var dy := displacement.y
+		var launch_angle := deg_to_rad(launch_angle_deg)
+		var cos_a := cos(launch_angle)
+		var tan_a := tan(launch_angle)
+		var denominator := 2.0 * cos_a * cos_a * (dy + dx * tan_a)
+		var speed := fallback_speed
+		if denominator > 1.0:
+			speed = sqrt(gravity_y * dx * dx / denominator)
+		var vx := maxf(speed * cos_a, 1.0)
+		var flight_t := dx / vx
+		aim = target.global_position + target.velocity * flight_t
+	return aim
 
 
 func _get_attack_damage() -> int:
@@ -1204,7 +1318,31 @@ func grant_hit_biomass() -> void:
 		return
 	if _troop == null or _troop.is_enemy:
 		return
-	GameState.biomass.add(weapon.biomass_on_hit)
+	var amount := weapon.biomass_on_hit
+	GameState.biomass.add(amount)
+	_spawn_biomass_number(amount)
+	var stage := _find_combat_stage()
+	if stage != null and stage.has_method("_refresh_biomass_hud"):
+		stage._refresh_biomass_hud()
+
+
+func _spawn_biomass_number(amount: int) -> void:
+	var world := _get_world_node()
+	if world == null or amount <= 0:
+		return
+	var number: BiomassNumber = _BIOMASS_NUMBER_SCENE.instantiate()
+	world.add_child(number)
+	number.global_position = global_position + Vector2(0, -128)
+	number.display(amount)
+
+
+func _find_combat_stage() -> Node:
+	var node: Node = self
+	while node != null:
+		if node.has_method("_award_kill_biomass"):
+			return node
+		node = node.get_parent()
+	return null
 
 
 func register_kill(victim: Unit = null) -> void:

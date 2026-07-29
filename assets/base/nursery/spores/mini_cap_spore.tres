@@ -1,12 +1,10 @@
-[gd_resource type="Resource" script_class="SporeData" format=3]
+[gd_resource type="Resource" script_class="SporeData" format=3 uid="uid://bg2u6u1daehku"]
 
 [ext_resource type="Script" uid="uid://48gu2x5oms10" path="res://assets/base/nursery/spore_data.gd" id="1_spore"]
-[ext_resource type="Resource" path="res://assets/units/mini_cap/mini_cap_strain.tres" id="2_strain"]
+[ext_resource type="Resource" uid="uid://phsb72e5ofml" path="res://assets/units/mini_cap/mini_cap_strain.tres" id="2_strain"]
 
 [resource]
 script = ExtResource("1_spore")
 display_name = "Mini Cap Spore"
-days_to_mature = 2
-biomass_cost = 5
-power_tier = 1
+days_to_mature = 1
 strain = ExtResource("2_strain")

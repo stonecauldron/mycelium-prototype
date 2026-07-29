@@ -104,7 +104,7 @@ func _refresh() -> void:
 		if unit_data.weapon != null:
 			atk += unit_data.weapon.base_damage
 			outgoing_mult = unit_data.weapon.outgoing_damage_multiplier
-		atk = maxi(roundi(float(atk) * outgoing_mult), 0)
+		atk = maxi(roundi(float(atk) * outgoing_mult), 1)
 		_atk_chip.set_value(atk)
 		_hp_chip.set_value(unit_data.stats.get_max_hp())
 		_str_label.text = "STR %d" % unit_data.stats.strength

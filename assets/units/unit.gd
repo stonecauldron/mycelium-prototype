@@ -1273,7 +1273,7 @@ func _lead_aim_point(from_global: Vector2, target: Unit) -> Vector2:
 func _get_attack_damage() -> int:
 	var raw: int = weapon.base_damage + stats.get_damage_bonus(weapon.damage_stat)
 	var mult := weapon.outgoing_damage_multiplier * _outgoing_damage_multiplier
-	return maxi(roundi(float(raw) * mult), 0)
+	return maxi(roundi(float(raw) * mult), 1)
 
 
 func take_damage(

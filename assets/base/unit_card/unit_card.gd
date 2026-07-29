@@ -100,7 +100,7 @@ func _refresh() -> void:
 		if data.weapon != null:
 			atk += data.weapon.base_damage
 			outgoing_mult = data.weapon.outgoing_damage_multiplier
-		atk = maxi(roundi(float(atk) * outgoing_mult), 0)
+		atk = maxi(roundi(float(atk) * outgoing_mult), 1)
 		_atk_chip.set_value(atk)
 		_hp_chip.set_value(data.stats.get_max_hp())
 	else:

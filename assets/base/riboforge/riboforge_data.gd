@@ -19,6 +19,7 @@ const _SHOP_WEAPON_PATHS := [
 	"res://assets/weapons/rapier/rapier.tres",
 	"res://assets/weapons/great_sword/great_sword.tres",
 	"res://assets/weapons/great_hammer/great_hammer.tres",
+	"res://assets/weapons/mace/mace.tres",
 	"res://assets/weapons/lance/lance.tres",
 	"res://assets/weapons/scythe/scythe.tres",
 	"res://assets/weapons/halberd/halberd.tres",

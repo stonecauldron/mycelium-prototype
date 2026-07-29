@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://cx5yj5f8p0g2m"]
+
+[ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+[ext_resource type="PackedScene" uid="uid://cx5yhlccyqivn" path="res://assets/weapons/mace/mace_appearance.tscn" id="2_appear"]
+[ext_resource type="Texture2D" uid="uid://448j67losmqg" path="res://assets/weapons/mace/mace.png" id="3_icon"]
+
+[resource]
+script = ExtResource("1_weapon")
+display_name = "Mace"
+short_description = "Like a sword, but blunt."
+damage_type = 1
+appearance_scene = ExtResource("2_appear")
+icon = ExtResource("3_icon")

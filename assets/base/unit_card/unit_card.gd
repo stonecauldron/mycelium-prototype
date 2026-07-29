@@ -9,6 +9,8 @@ const CARD_SIZE := Vector2(140, 200)
 const PORTRAIT_SCALE := 1.0
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
+const _WEAPON_DETAIL_CARD_SCENE := preload("res://assets/base/weapon_detail_card/weapon_detail_card.tscn")
+const _DETAIL_TOOLTIP_SEPARATION := 8.0
 var unit_data: Resource
 var source: String = "bench"
 var slot: Node
@@ -115,17 +117,43 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	var data := unit_data as RosterUnitData
 	if data == null:
 		return null
-	var tip: UnitDetailCard = _UNIT_DETAIL_CARD_SCENE.instantiate()
+	var unit_tip: UnitDetailCard = _UNIT_DETAIL_CARD_SCENE.instantiate()
 	# No portrait — UnitCard already shows it. Non-interactive so hover stays stable.
-	tip.setup(data, false, false)
-	var tip_size := tip.card_size()
-	tip.custom_minimum_size = tip_size
-	tip.size = tip_size
-	tip.tree_entered.connect(_configure_detail_tooltip_popup.bind(tip), CONNECT_ONE_SHOT)
-	return tip
+	unit_tip.setup(data, false, false)
+	var unit_size := unit_tip.card_size()
+	unit_tip.custom_minimum_size = unit_size
+	unit_tip.size = unit_size
+
+	if data.weapon == null:
+		unit_tip.tree_entered.connect(
+			_configure_detail_tooltip_popup.bind(unit_tip, unit_size), CONNECT_ONE_SHOT
+		)
+		return unit_tip
+
+	var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
+	weapon_tip.setup(data.weapon, false)
+	var weapon_size := weapon_tip.card_size()
+	weapon_tip.custom_minimum_size = weapon_size
+	weapon_tip.size = weapon_size
+
+	var host := HBoxContainer.new()
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.add_theme_constant_override("separation", int(_DETAIL_TOOLTIP_SEPARATION))
+	host.add_child(unit_tip)
+	host.add_child(weapon_tip)
+	var combined := Vector2(
+		unit_size.x + weapon_size.x + _DETAIL_TOOLTIP_SEPARATION,
+		maxf(unit_size.y, weapon_size.y)
+	)
+	host.custom_minimum_size = combined
+	host.size = combined
+	host.tree_entered.connect(
+		_configure_detail_tooltip_popup.bind(host, combined), CONNECT_ONE_SHOT
+	)
+	return host
 
 
-func _configure_detail_tooltip_popup(tip: UnitDetailCard) -> void:
+func _configure_detail_tooltip_popup(tip: Control, tip_size: Vector2) -> void:
 	var node: Node = tip.get_parent()
 	while node != null:
 		if node is PopupPanel:
@@ -133,7 +161,6 @@ func _configure_detail_tooltip_popup(tip: UnitDetailCard) -> void:
 			popup.transparent = true
 			popup.transparent_bg = true
 			popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-			var tip_size := tip.card_size()
 			popup.size = Vector2i(ceili(tip_size.x), ceili(tip_size.y))
 			return
 		node = node.get_parent()

@@ -106,6 +106,7 @@ func refresh_shops_for_new_day() -> void:
 	ensure_nursery_seeded()
 	ensure_riboforge_seeded()
 	nursery.reroll_unlocked_shop_offers()
+	nursery.apply_day_start_shop_rules()
 	riboforge.reroll_unlocked_shop_offers()
 
 

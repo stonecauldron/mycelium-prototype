@@ -132,6 +132,11 @@ func reroll_unlocked_shop_offers() -> void:
 	spore_shop.reroll_unlocked(generate_offer_for_slot)
 
 
+## Day-start only: guarantee a Common Generalist among spore slots on day 2.
+func apply_day_start_shop_rules() -> void:
+	_ensure_day_two_common_generalist()
+
+
 func replace_shop_slot(slot_index: int) -> void:
 	_ensure_spore_shop()
 	spore_shop.replace_slot(slot_index)
@@ -201,6 +206,58 @@ func is_fertilizer_shop_slot(slot_index: int) -> bool:
 
 func generate_spore_offer(_slot_index: int = 0) -> ShopOffer:
 	var path := _pick_spore_shop_path()
+	return _make_spore_offer_from_path(path)
+
+
+## Day 2 (upcoming day == 2): keep at least one Common Generalist among spore slots.
+func _ensure_day_two_common_generalist() -> void:
+	if GameState.get_upcoming_day() != 2:
+		return
+	_ensure_spore_shop()
+	if _shop_has_common_generalist():
+		return
+	var target := _first_replaceable_spore_slot()
+	if target < 0:
+		target = 0
+	while spore_shop.offers.size() <= target:
+		spore_shop.offers.append(null)
+	spore_shop.offers[target] = _make_spore_offer_from_path(_COMMON_SPORE_PATH)
+
+
+func _shop_has_common_generalist() -> bool:
+	for i in SPORE_SHOP_SLOT_COUNT:
+		if i >= spore_shop.offers.size():
+			break
+		var offer := spore_shop.offers[i]
+		if offer == null or offer.is_empty():
+			continue
+		if _is_common_generalist_spore(offer.item as SporeData):
+			return true
+	return false
+
+
+func _first_replaceable_spore_slot() -> int:
+	for i in SPORE_SHOP_SLOT_COUNT:
+		if i >= spore_shop.offers.size():
+			return i
+		var offer := spore_shop.offers[i]
+		if offer == null or offer.is_empty() or not offer.locked:
+			return i
+	return -1
+
+
+func _is_common_generalist_spore(spore: SporeData) -> bool:
+	if spore == null:
+		return false
+	if not spore.resource_path.is_empty():
+		return spore.resource_path == _COMMON_SPORE_PATH
+	if spore.power_tier != UnitStatsData.PowerTier.COMMON:
+		return false
+	var strain := spore.resolved_strain()
+	return strain != null and strain.resource_path == "res://assets/units/generalist/generalist_strain.tres"
+
+
+func _make_spore_offer_from_path(path: String) -> ShopOffer:
 	var spore := load(path) as SporeData
 	var offer := ShopOffer.new()
 	offer.item = spore

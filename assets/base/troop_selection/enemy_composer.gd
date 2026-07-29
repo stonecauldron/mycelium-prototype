@@ -339,7 +339,18 @@ static func _band_for_day(day: int) -> Dictionary:
 					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
 				],
 			}
-		3, 4:
+		3:
+			# Soft bridge: fewer units, rare imagos, mostly weak — avoids the old 1–2→3–4 cliff.
+			return {
+				"min_units": 3,
+				"max_units": 4,
+				"imago_chance": 0.15,
+				"tier_weights": [
+					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 3.0},
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
+				],
+			}
+		4:
 			return {
 				"min_units": 3,
 				"max_units": 5,

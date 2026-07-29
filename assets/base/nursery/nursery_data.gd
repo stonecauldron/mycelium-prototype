@@ -3,15 +3,17 @@ extends Resource
 
 const MAX_PLOT_COUNT := 9
 const STARTING_UNLOCKED_PLOTS := 1
-const SHOP_SLOT_COUNT := 3
+const SHOP_SLOT_COUNT := 4
 const STOCK_SLOT_COUNT := 5
 const STARTER_SPORE_COUNT := 0
-const SPORE_SHOP_SLOT := 0
+## Slots 0..(SPORE_SHOP_SLOT_COUNT-1) are spores; the rest are fertilizers.
+const SPORE_SHOP_SLOT_COUNT := 2
 const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 const _UNCOMMON_SPORE_PATH := "res://assets/base/nursery/uncommon_spore.tres"
 const _RARE_SPORE_PATH := "res://assets/base/nursery/rare_spore.tres"
 const _EPIC_SPORE_PATH := "res://assets/base/nursery/epic_spore.tres"
 const _LEGENDARY_SPORE_PATH := "res://assets/base/nursery/legendary_spore.tres"
+## Rarity-tier spores are all Generalist at different power tiers.
 const _SPORE_SHOP_PATHS: Array[String] = [
 	_COMMON_SPORE_PATH,
 	_UNCOMMON_SPORE_PATH,
@@ -19,6 +21,7 @@ const _SPORE_SHOP_PATHS: Array[String] = [
 	_EPIC_SPORE_PATH,
 	_LEGENDARY_SPORE_PATH,
 ]
+## Named specialty strains (not Generalist — that comes from rarity rolls above).
 const _STRAIN_SPORE_PATHS: Array[String] = [
 	"res://assets/base/nursery/spores/death_cap_spore.tres",
 	"res://assets/base/nursery/spores/inky_cap_spore.tres",
@@ -131,7 +134,7 @@ func reroll_unlocked_shop_offers() -> void:
 
 func replace_shop_slot(slot_index: int) -> void:
 	_ensure_spore_shop()
-	spore_shop.replace_slot(slot_index, generate_offer_for_slot)
+	spore_shop.replace_slot(slot_index)
 
 
 func can_add_stock_item() -> bool:
@@ -193,7 +196,7 @@ func generate_offer_for_slot(slot_index: int = 0) -> ShopOffer:
 
 
 func is_fertilizer_shop_slot(slot_index: int) -> bool:
-	return slot_index != SPORE_SHOP_SLOT
+	return slot_index >= SPORE_SHOP_SLOT_COUNT
 
 
 func generate_spore_offer(_slot_index: int = 0) -> ShopOffer:
@@ -233,7 +236,7 @@ func generate_fertilizer_offer() -> ShopOffer:
 	var fertilizer := load(path) as FertilizerData
 	var offer := ShopOffer.new()
 	offer.item = fertilizer
-	offer.cost = fertilizer.biomass_cost if fertilizer != null else 6
+	offer.cost = fertilizer.biomass_cost if fertilizer != null else 2
 	offer.locked = false
 	return offer
 

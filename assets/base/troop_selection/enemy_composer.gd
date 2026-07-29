@@ -16,6 +16,9 @@ const _WEAPON_POOL: Array[EnemyUnitSpec.UnitType] = [
 ]
 
 const _GENERALIST_STRAIN_PATH := "res://assets/units/generalist/generalist_strain.tres"
+const _MAGI_CAP_STRAIN_PATH := "res://assets/units/magi_cap/magi_cap_strain.tres"
+## MagiCaps stay mostly juvenile even in late bands with high imago rates.
+const _MAGI_CAP_IMAGO_CHANCE := 0.1
 ## Relative weight when picking strains for army mix (other strains = 1).
 const _GENERALIST_STRAIN_WEIGHT := 3.0
 const _STRAIN_PATHS: Array[String] = [
@@ -26,7 +29,7 @@ const _STRAIN_PATHS: Array[String] = [
 	"res://assets/units/mini_cap/mini_cap_strain.tres",
 	"res://assets/units/lanky_cap/lanky_cap_strain.tres",
 	"res://assets/units/fat_cap/fat_cap_strain.tres",
-	"res://assets/units/magi_cap/magi_cap_strain.tres",
+	_MAGI_CAP_STRAIN_PATH,
 	"res://assets/units/chad_cap/chad_cap_strain.tres",
 	"res://assets/units/rush_cap/rush_cap_strain.tres",
 	"res://assets/units/wall_cap/wall_cap_strain.tres",
@@ -36,7 +39,7 @@ const _STRAIN_PATHS: Array[String] = [
 
 ## Excluded from procedural enemies on days 1–3.
 const _EARLY_DAY_EXCLUDED_STRAIN_PATHS: Array[String] = [
-	"res://assets/units/magi_cap/magi_cap_strain.tres",
+	_MAGI_CAP_STRAIN_PATH,
 	"res://assets/units/chad_cap/chad_cap_strain.tres",
 ]
 const _EARLY_DAY_STRAIN_LOCKOUT := 3
@@ -194,7 +197,10 @@ static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[
 		var unit_type: EnemyUnitSpec.UnitType = weapon_slots[i]
 		var unit_strain: UnitStrain = strain_slots[i]
 		var tier: UnitStatsData.PowerTier = _pick_weighted_tier(tier_weights, rng)
-		var imago := imago_chance > 0.0 and rng.randf() < imago_chance
+		var roll_chance := imago_chance
+		if unit_strain != null and unit_strain.resource_path == _MAGI_CAP_STRAIN_PATH:
+			roll_chance = minf(imago_chance, _MAGI_CAP_IMAGO_CHANCE)
+		var imago := roll_chance > 0.0 and rng.randf() < roll_chance
 		specs.append(EnemyUnitSpec.make(unit_type, tier, imago, unit_strain))
 	return specs
 

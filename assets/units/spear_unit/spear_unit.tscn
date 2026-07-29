@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cspearunit001"]
 
 [ext_resource type="Script" uid="uid://drm1bg6fdninn" path="res://assets/units/unit.gd" id="1_unit"]
-[ext_resource type="Resource" uid="uid://bm7kydjlcgjoi" path="res://assets/weapons/basic_spear/basic_spear.tres" id="2_weapon"]
+[ext_resource type="Resource" uid="uid://bm7kydjlcgjoi" path="res://assets/weapons/spear/spear.tres" id="2_weapon"]
 [ext_resource type="PackedScene" uid="uid://dq1q1a7s2xhy3" path="res://assets/units/capling/capling_appearance.tscn" id="5_appear"]
 
 [node name="SpearUnit" type="CharacterBody2D"]

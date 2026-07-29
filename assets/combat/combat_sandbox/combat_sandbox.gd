@@ -1,10 +1,10 @@
 extends Node
 
 const _RESTART_DELAY_SEC := 1.0
-const _SWORD_WEAPON := preload("res://assets/weapons/basic_sword/basic_sword.tres")
-const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
-const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
-const _SHIELD_WEAPON := preload("res://assets/weapons/basic_shield/basic_shield.tres")
+const _SWORD_WEAPON := preload("res://assets/weapons/sword/sword.tres")
+const _SPEAR_WEAPON := preload("res://assets/weapons/spear/spear.tres")
+const _BOW_WEAPON := preload("res://assets/weapons/bow/bow.tres")
+const _SHIELD_WEAPON := preload("res://assets/weapons/shield/shield.tres")
 const _FISTS_WEAPON := preload("res://assets/weapons/bare_fists.tres")
 
 const _WEAPON_OPTIONS: Array[Dictionary] = [

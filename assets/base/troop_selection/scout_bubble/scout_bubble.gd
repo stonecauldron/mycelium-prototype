@@ -1,10 +1,10 @@
 class_name ScoutBubble
 extends Control
 
-const _SWORD_WEAPON := preload("res://assets/weapons/basic_sword/basic_sword.tres")
-const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
-const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
-const _SHIELD_WEAPON := preload("res://assets/weapons/basic_shield/basic_shield.tres")
+const _SWORD_WEAPON := preload("res://assets/weapons/sword/sword.tres")
+const _SPEAR_WEAPON := preload("res://assets/weapons/spear/spear.tres")
+const _BOW_WEAPON := preload("res://assets/weapons/bow/bow.tres")
+const _SHIELD_WEAPON := preload("res://assets/weapons/shield/shield.tres")
 const _SCOUT_ENTRY_SCENE := preload(
 	"res://assets/base/troop_selection/scout_bubble/scout_weapon_entry.tscn"
 )

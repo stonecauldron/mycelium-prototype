@@ -5,10 +5,10 @@ const SQUAD_SLOT_COUNT := TroopData.SQUAD_SLOT_COUNT
 const BENCH_SLOT_COUNT := TroopData.BENCH_SLOT_COUNT
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
-const _SWORD_WEAPON := preload("res://assets/weapons/basic_sword/basic_sword.tres")
-const _SPEAR_WEAPON := preload("res://assets/weapons/basic_spear/basic_spear.tres")
-const _BOW_WEAPON := preload("res://assets/weapons/basic_bow/basic_bow.tres")
-const _SHIELD_WEAPON := preload("res://assets/weapons/basic_shield/basic_shield.tres")
+const _SWORD_WEAPON := preload("res://assets/weapons/sword/sword.tres")
+const _SPEAR_WEAPON := preload("res://assets/weapons/spear/spear.tres")
+const _BOW_WEAPON := preload("res://assets/weapons/bow/bow.tres")
+const _SHIELD_WEAPON := preload("res://assets/weapons/shield/shield.tres")
 
 var bench: Array = []
 var squad: Array = []

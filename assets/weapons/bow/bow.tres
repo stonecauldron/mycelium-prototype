@@ -1,12 +1,12 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://ru18fywxnj1u"]
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
-[ext_resource type="PackedScene" uid="uid://ru18fydvyq1u" path="res://assets/weapons/basic_bow/basic_bow_appearance.tscn" id="2_appear"]
-[ext_resource type="Texture2D" uid="uid://ba54ju7pqqlac" path="res://assets/weapons/basic_bow/bow.png" id="3_icon"]
+[ext_resource type="PackedScene" uid="uid://ru18fydvyq1u" path="res://assets/weapons/bow/bow_appearance.tscn" id="2_appear"]
+[ext_resource type="Texture2D" uid="uid://ba54ju7pqqlac" path="res://assets/weapons/bow/bow.png" id="3_icon"]
 
 [resource]
 script = ExtResource("1_weapon")
-display_name = "Basic Bow"
+display_name = "Bow"
 short_description = "Kill your enemies from afar."
 formation_line = 2
 engagement_stance = 3

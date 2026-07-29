@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bu5v7hyra0dme"]
 
-[ext_resource type="Texture2D" uid="uid://d3l7asolgd18o" path="res://assets/weapons/basic_shield/shield.png" id="1_shield"]
+[ext_resource type="Texture2D" uid="uid://d3l7asolgd18o" path="res://assets/weapons/shield/shield.png" id="1_shield"]
 
-[node name="BasicShieldAppearance" type="Node2D"]
+[node name="ShieldAppearance" type="Node2D"]
 
 [node name="Visual" type="Sprite2D" parent="."]
 position = Vector2(1, 3)

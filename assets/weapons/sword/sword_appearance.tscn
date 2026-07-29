@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cff2rfskam8sy"]
 
-[ext_resource type="Texture2D" uid="uid://dgrwl2tbl33wj" path="res://assets/weapons/basic_sword/sword.png" id="1_sword"]
+[ext_resource type="Texture2D" uid="uid://dgrwl2tbl33wj" path="res://assets/weapons/sword/sword.png" id="1_sword"]
 
-[node name="BasicSwordAppearance" type="Node2D"]
+[node name="SwordAppearance" type="Node2D"]
 
 [node name="Visual" type="Sprite2D" parent="."]
 rotation = 0.7784169

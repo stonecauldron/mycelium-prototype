@@ -7,12 +7,14 @@ enum ArmyArchetype { ONE_TRICK_PONY, HYBRID, GENERALIST }
 
 const _REROLL_CANDIDATE_COUNT := 8
 const _MIDPOINT_SAMPLE_COUNT := 8
+## Days 1–4: starter four only. Day 5+: full shop weapon catalog.
+const _FULL_WEAPON_UNLOCK_DAY := 5
 
-const _WEAPON_POOL: Array[EnemyUnitSpec.UnitType] = [
-	EnemyUnitSpec.UnitType.MELEE,
-	EnemyUnitSpec.UnitType.SPEAR,
-	EnemyUnitSpec.UnitType.BOW,
-	EnemyUnitSpec.UnitType.SHIELD,
+const _STARTER_WEAPON_PATHS: Array[String] = [
+	RiboforgeData.SWORD_WEAPON_PATH,
+	RiboforgeData.SPEAR_WEAPON_PATH,
+	RiboforgeData.BOW_WEAPON_PATH,
+	RiboforgeData.SHIELD_WEAPON_PATH,
 ]
 
 const _GENERALIST_STRAIN_PATH := "res://assets/units/generalist/generalist_strain.tres"
@@ -51,6 +53,8 @@ const _ARCHETYPE_SHARES := {
 }
 
 static var _cached_strain_pool: Array = []
+static var _cached_starter_weapons: Array = []
+static var _cached_full_weapons: Array = []
 
 
 static func specs_for_day(day: int) -> Array[EnemyUnitSpec]:
@@ -154,7 +158,7 @@ static func _specs_equal(a: Array[EnemyUnitSpec], b: Array[EnemyUnitSpec]) -> bo
 		return false
 	for i in a.size():
 		if (
-			a[i].type != b[i].type
+			a[i].weapon != b[i].weapon
 			or a[i].tier != b[i].tier
 			or a[i].is_imago != b[i].is_imago
 			or a[i].strain != b[i].strain
@@ -183,7 +187,7 @@ static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[
 
 	var weapon_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
 	var strain_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
-	var weapon_slots := _distribute_mix(_WEAPON_POOL, weapon_archetype, total, rng)
+	var weapon_slots := _distribute_mix(_weapon_pool_for_day(day), weapon_archetype, total, rng)
 	var strain_slots := _distribute_mix(
 		_strain_pool_for_day(day),
 		strain_archetype,
@@ -194,15 +198,44 @@ static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[
 
 	var specs: Array[EnemyUnitSpec] = []
 	for i in total:
-		var unit_type: EnemyUnitSpec.UnitType = weapon_slots[i]
+		var unit_weapon: WeaponData = weapon_slots[i]
 		var unit_strain: UnitStrain = strain_slots[i]
 		var tier: UnitStatsData.PowerTier = _pick_weighted_tier(tier_weights, rng)
 		var roll_chance := imago_chance
 		if unit_strain != null and unit_strain.resource_path == _MAGI_CAP_STRAIN_PATH:
 			roll_chance = minf(imago_chance, _MAGI_CAP_IMAGO_CHANCE)
 		var imago := roll_chance > 0.0 and rng.randf() < roll_chance
-		specs.append(EnemyUnitSpec.make(unit_type, tier, imago, unit_strain))
+		specs.append(EnemyUnitSpec.make(unit_weapon, tier, imago, unit_strain))
 	return specs
+
+
+static func _weapon_pool_for_day(day: int) -> Array:
+	if day >= _FULL_WEAPON_UNLOCK_DAY:
+		return _full_weapon_pool()
+	return _starter_weapon_pool()
+
+
+static func _starter_weapon_pool() -> Array:
+	if not _cached_starter_weapons.is_empty():
+		return _cached_starter_weapons
+	_cached_starter_weapons = _load_weapon_pool(_STARTER_WEAPON_PATHS)
+	return _cached_starter_weapons
+
+
+static func _full_weapon_pool() -> Array:
+	if not _cached_full_weapons.is_empty():
+		return _cached_full_weapons
+	_cached_full_weapons = _load_weapon_pool(RiboforgeData.SHOP_WEAPON_PATHS)
+	return _cached_full_weapons
+
+
+static func _load_weapon_pool(paths: Array[String]) -> Array:
+	var pool: Array = []
+	for path in paths:
+		var weapon := load(path) as WeaponData
+		if weapon != null:
+			pool.append(weapon)
+	return pool
 
 
 static func _strain_pool() -> Array:

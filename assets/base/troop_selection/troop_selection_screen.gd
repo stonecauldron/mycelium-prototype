@@ -8,7 +8,6 @@ const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _SWORD_WEAPON := preload("res://assets/weapons/sword/sword.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/spear/spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/bow/bow.tres")
-const _SHIELD_WEAPON := preload("res://assets/weapons/shield/shield.tres")
 
 var bench: Array = []
 var squad: Array = []
@@ -250,22 +249,10 @@ func _make_default_enemy_roster() -> Array[RosterUnitData]:
 		var unit := _make_unit(
 			UnitNames.pick(),
 			spec.tier,
-			_weapon_for_enemy_type(spec.type),
+			spec.weapon,
 			spec.strain
 		)
 		if spec.is_imago:
 			unit.promote_to_imago()
 		enemy.append(unit)
 	return enemy
-
-
-func _weapon_for_enemy_type(unit_type: EnemyUnitSpec.UnitType) -> WeaponData:
-	match unit_type:
-		EnemyUnitSpec.UnitType.SPEAR:
-			return _SPEAR_WEAPON
-		EnemyUnitSpec.UnitType.BOW:
-			return _BOW_WEAPON
-		EnemyUnitSpec.UnitType.SHIELD:
-			return _SHIELD_WEAPON
-		_:
-			return _SWORD_WEAPON

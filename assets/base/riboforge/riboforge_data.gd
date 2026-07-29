@@ -10,7 +10,8 @@ const SPEAR_WEAPON_PATH := "res://assets/weapons/spear/spear.tres"
 const BOW_WEAPON_PATH := "res://assets/weapons/bow/bow.tres"
 const SHIELD_WEAPON_PATH := "res://assets/weapons/shield/shield.tres"
 const _DEFAULT_WEAPON_COST := 3
-const _SHOP_WEAPON_PATHS := [
+## All buyable weapons; also the enemy pool from day 5 onward.
+const SHOP_WEAPON_PATHS: Array[String] = [
 	SWORD_WEAPON_PATH,
 	SPEAR_WEAPON_PATH,
 	BOW_WEAPON_PATH,
@@ -112,7 +113,7 @@ func add_weapon(weapon: WeaponData) -> int:
 
 
 func generate_weapon_offer(_slot_index: int = 0) -> ShopOffer:
-	var path: String = _SHOP_WEAPON_PATHS[randi() % _SHOP_WEAPON_PATHS.size()]
+	var path: String = SHOP_WEAPON_PATHS[randi() % SHOP_WEAPON_PATHS.size()]
 	var weapon := load(path) as WeaponData
 	var offer := ShopOffer.new()
 	offer.item = weapon

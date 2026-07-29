@@ -1174,7 +1174,9 @@ func take_damage(
 	var incoming_mult: float = 1.0
 	var knockback_mult: float = _incoming_knockback_multiplier
 	if weapon != null:
-		incoming_mult = weapon.incoming_damage_multiplier
+		# Blunt punches through shield / tank weapon damage soak.
+		if damage_type != WeaponData.DamageType.BLUNT:
+			incoming_mult = weapon.incoming_damage_multiplier
 		knockback_mult *= weapon.incoming_knockback_multiplier
 	if damage_type == WeaponData.DamageType.BLUNT and _blunt_resist > 0.0:
 		incoming_mult *= maxf(1.0 - _blunt_resist, 0.0)

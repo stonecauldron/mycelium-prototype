@@ -49,7 +49,8 @@ const MELEE_HITBOX_Y := -20.0
 @export var biomass_on_hit: int = 0
 ## Scales total outgoing attack damage (base + stat bonus). 1.0 = normal.
 @export var outgoing_damage_multiplier: float = 1.0
-## Scales all incoming hit damage while this weapon is equipped. 1.0 = normal.
+## Scales incoming SLASHING hit damage while equipped. 1.0 = normal.
+## BLUNT ignores this (shield tanking does not apply).
 @export var incoming_damage_multiplier: float = 1.0
 ## Scales knockback force received while this weapon is equipped. 1.0 = normal.
 @export var incoming_knockback_multiplier: float = 1.0

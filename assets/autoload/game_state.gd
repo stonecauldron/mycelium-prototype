@@ -27,6 +27,10 @@ var combat_fast_forward: int = 1
 var show_start_combat_hint: bool = true
 ## Session: hovering arrow on READY plots until the player harvests once.
 var show_plot_harvest_hint: bool = true
+## Session: hovering arrow on empty plots after buying a spore until first plant.
+var show_plot_plant_hint: bool = true
+## Session: arrow on the Common Generalist shop offer until it is bought.
+var show_common_spore_shop_hint: bool = true
 ## Debug (~): cheats active — force base screens unlocked and show debug HUD.
 var debug_mode_active: bool = false
 
@@ -283,6 +287,8 @@ func reset_run() -> void:
 	prefer_nursery_tab = false
 	prefer_riboforge_tab = false
 	show_plot_harvest_hint = true
+	show_plot_plant_hint = true
+	show_common_spore_shop_hint = true
 	debug_mode_active = false
 	clear_upcoming_enemy_formation()
 	_roll_run_seed()

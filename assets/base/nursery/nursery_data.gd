@@ -224,6 +224,17 @@ func _ensure_day_two_common_generalist() -> void:
 	spore_shop.offers[target] = _make_spore_offer_from_path(_COMMON_SPORE_PATH)
 
 
+func is_common_generalist_spore(spore: SporeData) -> bool:
+	if spore == null:
+		return false
+	if not spore.resource_path.is_empty():
+		return spore.resource_path == _COMMON_SPORE_PATH
+	if spore.power_tier != UnitStatsData.PowerTier.COMMON:
+		return false
+	var strain := spore.resolved_strain()
+	return strain != null and strain.resource_path == "res://assets/units/generalist/generalist_strain.tres"
+
+
 func _shop_has_common_generalist() -> bool:
 	for i in SPORE_SHOP_SLOT_COUNT:
 		if i >= spore_shop.offers.size():
@@ -231,7 +242,7 @@ func _shop_has_common_generalist() -> bool:
 		var offer := spore_shop.offers[i]
 		if offer == null or offer.is_empty():
 			continue
-		if _is_common_generalist_spore(offer.item as SporeData):
+		if is_common_generalist_spore(offer.item as SporeData):
 			return true
 	return false
 
@@ -244,17 +255,6 @@ func _first_replaceable_spore_slot() -> int:
 		if offer == null or offer.is_empty() or not offer.locked:
 			return i
 	return -1
-
-
-func _is_common_generalist_spore(spore: SporeData) -> bool:
-	if spore == null:
-		return false
-	if not spore.resource_path.is_empty():
-		return spore.resource_path == _COMMON_SPORE_PATH
-	if spore.power_tier != UnitStatsData.PowerTier.COMMON:
-		return false
-	var strain := spore.resolved_strain()
-	return strain != null and strain.resource_path == "res://assets/units/generalist/generalist_strain.tres"
 
 
 func _make_spore_offer_from_path(path: String) -> ShopOffer:

@@ -197,6 +197,17 @@ func _rebuild_shop_cards() -> void:
 			continue
 		_shop_row.add_child(next_card)
 		next_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	_refresh_common_spore_shop_hint()
+
+
+func _refresh_common_spore_shop_hint() -> void:
+	if not GameState.show_common_spore_shop_hint:
+		return
+	for card in _shop_cards:
+		var spore := card.payload.get("spore") as SporeData
+		if GameState.nursery.is_common_generalist_spore(spore):
+			card.set_buy_hint_visible(true)
+			return
 
 
 func _make_shop_card_spacer() -> Control:
@@ -337,6 +348,7 @@ func _on_stock_spore_clicked(card: SporeCard) -> void:
 	if plot_index < 0:
 		return
 	if nursery.plant(plot_index, card.stock_index):
+		GameState.show_plot_plant_hint = false
 		_refresh()
 
 
@@ -357,11 +369,14 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 	if not GameState.nursery.can_add_stock_item():
 		return
 	var bought := false
+	var bought_spore: SporeData = null
 	if drop_type == "shop_spore":
 		var spore := data.get("spore") as SporeData
 		if spore == null:
 			return
 		bought = GameState.try_buy_spore(spore, cost)
+		if bought:
+			bought_spore = spore
 	elif drop_type == "shop_fertilizer":
 		var fertilizer := data.get("fertilizer") as FertilizerData
 		if fertilizer == null:
@@ -370,6 +385,8 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 	else:
 		return
 	if bought:
+		if GameState.nursery.is_common_generalist_spore(bought_spore):
+			GameState.show_common_spore_shop_hint = false
 		_replace_bought_shop_slot(slot_index)
 		_rebuild_shop_cards()
 		_refresh()
@@ -400,6 +417,7 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 			if not nursery.has_spore_in_stock():
 				return
 			if nursery.plant(tile.plot_index):
+				GameState.show_plot_plant_hint = false
 				_refresh()
 		NurseryPlotData.State.GROWING:
 			pass
@@ -517,6 +535,7 @@ func _on_plot_item_dropped(tile: PlotTile, data: Dictionary) -> void:
 		"spore":
 			var stock_index := int(data.get("stock_index", 0))
 			if GameState.nursery.plant(tile.plot_index, stock_index):
+				GameState.show_plot_plant_hint = false
 				_refresh()
 		"shop_fertilizer":
 			_apply_fertilizer_from_shop(tile.plot_index, data)
@@ -545,6 +564,9 @@ func _plant_from_shop(plot_index: int, data: Dictionary) -> void:
 	if not GameState.nursery.plant_spore(plot_index, spore):
 		GameState.biomass.add(cost)
 		return
+	GameState.show_plot_plant_hint = false
+	if GameState.nursery.is_common_generalist_spore(spore):
+		GameState.show_common_spore_shop_hint = false
 	_replace_bought_shop_slot(slot_index)
 	_rebuild_shop_cards()
 	_refresh()

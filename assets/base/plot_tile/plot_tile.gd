@@ -149,12 +149,20 @@ func _should_show_harvest_hint() -> bool:
 	return _plot.get_state() == NurseryPlotData.State.READY
 
 
+func _should_show_plant_hint() -> bool:
+	if not GameState.show_plot_plant_hint:
+		return false
+	if is_unlockable or _plot == null or not _can_plant:
+		return false
+	return _plot.get_state() == NurseryPlotData.State.EMPTY
+
+
 func _refresh_arrow() -> void:
 	var viewport := get_viewport()
 	if viewport != null and viewport.gui_is_dragging():
 		_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
 		return
-	_set_drop_arrow_visible(_should_show_harvest_hint())
+	_set_drop_arrow_visible(_should_show_harvest_hint() or _should_show_plant_hint())
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

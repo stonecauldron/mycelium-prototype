@@ -13,6 +13,7 @@ const REROLL_SHAKE_STEP_SEC := 0.045
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
 const _WEAPON_DETAIL_CARD_SCENE := preload("res://assets/base/weapon_detail_card/weapon_detail_card.tscn")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
+const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
 
 var cost: int = 0
 var payload: Dictionary = {}
@@ -27,6 +28,7 @@ var _subtitle: String = ""
 var _description: String = ""
 var _icon_texture: Texture2D = null
 var _reroll_preview_tween: Tween = null
+var _buy_hint_arrow: FloatingArrow = null
 
 @onready var _content: Control = $CardPanel
 @onready var _icon: TextureRect = %Icon
@@ -92,6 +94,29 @@ func set_locked(locked: bool) -> void:
 	_lock_button.visible = locked
 	_lock_button.modulate = Color.WHITE
 	_lock_button.tooltip_text = "Unlock" if locked else "Lock"
+
+
+## Tutorial arrow above this offer (e.g. Common Generalist until first buy).
+func set_buy_hint_visible(should_show: bool) -> void:
+	if should_show:
+		_ensure_buy_hint_arrow()
+		# Arrow sits above the card; clipping would hide it.
+		clip_contents = false
+		_buy_hint_arrow.show_arrow()
+	elif _buy_hint_arrow != null:
+		_buy_hint_arrow.hide_arrow()
+
+
+func _ensure_buy_hint_arrow() -> void:
+	if _buy_hint_arrow != null:
+		return
+	_buy_hint_arrow = _FLOATING_ARROW_SCENE.instantiate() as FloatingArrow
+	add_child(_buy_hint_arrow)
+	_buy_hint_arrow.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_buy_hint_arrow.offset_left = -FloatingArrow.ARROW_SIZE.x * 0.5
+	_buy_hint_arrow.offset_right = FloatingArrow.ARROW_SIZE.x * 0.5
+	_buy_hint_arrow.offset_top = -FloatingArrow.ARROW_SIZE.y - 4.0
+	_buy_hint_arrow.offset_bottom = -4.0
 
 
 ## Soft scale used while the shop reroll button is hovered.

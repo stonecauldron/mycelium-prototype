@@ -6,6 +6,9 @@ extends Area2D
 ## Avoids typed refs to Unit/WeaponData so PackedScene links from WeaponData don't cycle.
 
 const FLOOR_Y := 786.0
+const _SPORE_CLOUD_SCENE := preload("res://assets/vfx/spore_cloud/spore_cloud.tscn")
+## Mortar blast tint — distinct from death-spore beige / enemy red.
+const _MORTAR_SPORE_COLOR := Color("9dcc6a")
 
 @export var launch_angle_deg: float = 45.0
 @export var fallback_speed: float = 600.0
@@ -18,7 +21,7 @@ const FLOOR_Y := 786.0
 @export var explode_delay: float = 0.0
 ## Keep flying through units, damaging each once (giant horn). Unrelated to blunt damage type.
 @export var piercing: bool = false
-## Steer toward a locked target with no gravity (sniper).
+## After ballistic apex, steer toward a locked target with no gravity (sniper).
 @export var homing: bool = false
 
 var damage: int = 0
@@ -32,6 +35,8 @@ var _lifetime: float = 0.0
 var _spent: bool = false
 var _hit_targets: Dictionary = {}
 var _fuse_armed: bool = false
+## Homing projectiles fly a normal arc until apex, then lock on.
+var _homing_active: bool = false
 
 
 func _ready() -> void:
@@ -56,6 +61,8 @@ func launch(
 		if w != null and w.get("damage_type") != null:
 			damage_type = int(w.damage_type)
 	_velocity = _compute_launch_velocity(from_global, aim_global)
+	# Homing waits for apex (vy crosses upward→down). Already descending → home now.
+	_homing_active = homing and _velocity.y >= 0.0
 	_face_velocity()
 	# Delayed bombs ignore units until they land.
 	monitoring = explode_delay <= 0.0
@@ -92,10 +99,13 @@ func _compute_launch_velocity(from_global: Vector2, aim_global: Vector2) -> Vect
 
 ## Override for homing / other in-flight behaviour. Default = gravity + integrate.
 func _physics_flight(delta: float) -> void:
-	if homing:
+	if homing and _homing_active:
 		_physics_homing_flight(delta)
 		return
+	var prev_vy := _velocity.y
 	_velocity += _gravity_vector() * delta
+	if homing and not _homing_active and prev_vy < 0.0 and _velocity.y >= 0.0:
+		_homing_active = true
 	var next_position := global_position + _velocity * delta
 	if next_position.y >= FLOOR_Y:
 		global_position = next_position
@@ -108,7 +118,7 @@ func _physics_flight(delta: float) -> void:
 
 
 func _physics_homing_flight(delta: float) -> void:
-	var speed := maxf(fallback_speed, 1.0)
+	var speed := maxf(fallback_speed * 2.0, 1.0)
 	if _is_homing_target_alive():
 		var to_target := (homing_target as Node2D).global_position - global_position
 		if to_target.length_squared() > 1.0:
@@ -158,6 +168,7 @@ func _explode_aoe() -> void:
 	if not is_inside_tree():
 		return
 	var origin := global_position
+	_spawn_aoe_spore_cloud(origin)
 	var radius_sq := aoe_radius * aoe_radius
 	for node in get_tree().get_nodes_in_group("units"):
 		if node == null or not is_instance_valid(node) or not (node is Node2D):
@@ -176,6 +187,18 @@ func _explode_aoe() -> void:
 			damage_type
 		)
 	queue_free()
+
+
+func _spawn_aoe_spore_cloud(origin: Vector2) -> void:
+	var parent := get_parent()
+	if parent == null or aoe_radius <= 0.0:
+		return
+	var cloud := _SPORE_CLOUD_SCENE.instantiate() as SporeCloud
+	if cloud == null:
+		return
+	parent.add_child(cloud)
+	cloud.global_position = origin
+	cloud.burst_aoe(aoe_radius, _MORTAR_SPORE_COLOR)
 
 
 ## Override for AOE / multi-hit. Default = damage closest valid hurtbox.

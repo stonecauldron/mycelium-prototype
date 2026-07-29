@@ -5,7 +5,6 @@ const STOCK_SLOT_COUNT := NurseryData.STOCK_SLOT_COUNT
 const SHOP_SLOT_COUNT := NurseryData.SHOP_SLOT_COUNT
 var _stock_drag_types := PackedStringArray(["spore", "fertilizer"])
 var _intake_drag_types := PackedStringArray(["shop_spore", "shop_fertilizer"])
-const _HATCH_TOAST_DURATION_SEC := 2.5
 const _HATCH_TOAST_FADE_SEC := 0.18
 const _PLOT_TILE_SCENE := preload("res://assets/base/plot_tile/plot_tile.tscn")
 const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
@@ -406,11 +405,8 @@ func _show_hatch_toast(unit: RosterUnitData, anchor_global_rect: Rect2) -> void:
 
 	var tween := create_tween()
 	_hatch_toast_tween = tween
-	tween.set_parallel(false)
 	tween.tween_property(card, "modulate:a", 1.0, _HATCH_TOAST_FADE_SEC)
-	tween.tween_interval(_HATCH_TOAST_DURATION_SEC)
-	tween.tween_property(card, "modulate:a", 0.0, _HATCH_TOAST_FADE_SEC)
-	tween.tween_callback(func() -> void: _dismiss_hatch_toast(false))
+	tween.tween_callback(func() -> void: _hatch_toast_tween = null)
 
 
 func _position_hatch_toast(card: UnitDetailCard, anchor_global_rect: Rect2) -> void:

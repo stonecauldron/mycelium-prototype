@@ -20,11 +20,18 @@ func on_death(_roster: Resource, context: DeathContext, combat_unit: Node = null
 		spawn_parent = world.get_parent()
 		if spawn_parent == null:
 			spawn_parent = world
-	var wall: Node2D = _WALL_SCENE.instantiate()
-	spawn_parent.add_child(wall)
-	wall.global_position = unit.global_position
 	var max_hp := 1
 	if unit.stats != null:
 		max_hp = unit.stats.get_max_hp()
+	# Defer: on_death often runs mid physics query flush (projectile area_entered).
+	call_deferred("_spawn_wall", spawn_parent, unit.global_position, max_hp)
+
+
+func _spawn_wall(spawn_parent: Node, pos: Vector2, max_hp: int) -> void:
+	if spawn_parent == null or not is_instance_valid(spawn_parent):
+		return
+	var wall: Node2D = _WALL_SCENE.instantiate()
+	spawn_parent.add_child(wall)
+	wall.global_position = pos
 	if wall.has_method("setup"):
 		wall.call("setup", max_hp)

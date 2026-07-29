@@ -12,9 +12,10 @@ extends Resource
 var tint: Color:
 	get:
 		var resolved := resolved_strain()
-		if resolved != null:
+		# Specialty strains use their own color; white means untinted → rarity.
+		if resolved != null and resolved.tint != Color.WHITE:
 			return resolved.tint
-		return Color.WHITE
+		return UnitStatsData.tint_for_tier(power_tier)
 
 
 func grants_imago_at(days_grown: int, days_required: int = -1) -> bool:

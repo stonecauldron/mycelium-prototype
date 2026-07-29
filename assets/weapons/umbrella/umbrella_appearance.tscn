@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dejy5vku3batw"]
+
+[ext_resource type="Texture2D" uid="uid://cm08y8uadclcn" path="res://assets/weapons/umbrella/umbrella.png" id="1_tex"]
+
+[node name="UmbrellaShieldAppearance" type="Node2D" unique_id=2028986092]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1050096546]
+rotation = 0.17453292
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_tex")
+offset = Vector2(0, -200)

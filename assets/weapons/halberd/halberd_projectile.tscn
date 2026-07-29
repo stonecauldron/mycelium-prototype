@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://bttq6ovw1twmi"]
+
+[ext_resource type="Script" uid="uid://cprojbase00001" path="res://assets/combat/projectile/projectile.gd" id="1_proj"]
+[ext_resource type="Texture2D" uid="uid://du6sw25k08ld8" path="res://assets/weapons/halberd/halberd.png" id="2_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_halberd"]
+size = Vector2(147, 8)
+
+[node name="HalberdProjectile" type="Area2D"]
+collision_layer = 8
+collision_mask = 5
+monitorable = false
+script = ExtResource("1_proj")
+launch_angle_deg = 45.0
+fallback_speed = 600.0
+max_lifetime = 2.5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(3.5, 0)
+shape = SubResource("RectangleShape2D_halberd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(2, 0)
+rotation = 1.5707964
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_tex")

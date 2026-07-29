@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://m0i6qdcha5s6"]
+
+[ext_resource type="Texture2D" uid="uid://d1b4gdj0q1iy5" path="res://assets/weapons/great_shield/great_shield.png" id="1_tex"]
+
+[node name="GreatShieldAppearance" type="Node2D" unique_id=47286940]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=247889831]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_tex")
+offset = Vector2(6.6666665, -46.666664)

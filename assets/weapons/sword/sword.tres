@@ -8,6 +8,5 @@
 script = ExtResource("1_weapon")
 display_name = "Sword"
 short_description = "As basic as it gets."
-melee_range = 96.0
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

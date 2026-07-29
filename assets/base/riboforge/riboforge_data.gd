@@ -15,6 +15,19 @@ const _SHOP_WEAPON_PATHS := [
 	SPEAR_WEAPON_PATH,
 	BOW_WEAPON_PATH,
 	SHIELD_WEAPON_PATH,
+	"res://assets/weapons/sickle/sickle.tres",
+	"res://assets/weapons/rapier/rapier.tres",
+	"res://assets/weapons/great_sword/great_sword.tres",
+	"res://assets/weapons/great_hammer/great_hammer.tres",
+	"res://assets/weapons/lance/lance.tres",
+	"res://assets/weapons/scythe/scythe.tres",
+	"res://assets/weapons/halberd/halberd.tres",
+	"res://assets/weapons/great_shield/great_shield.tres",
+	"res://assets/weapons/umbrella/umbrella.tres",
+	"res://assets/weapons/crossbow/crossbow.tres",
+	"res://assets/weapons/sniper/sniper.tres",
+	"res://assets/weapons/mortar/mortar.tres",
+	"res://assets/weapons/giant_horn/giant_horn.tres",
 ]
 
 static var _default_weapon: WeaponData

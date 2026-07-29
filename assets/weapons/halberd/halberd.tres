@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://kynx42eylmf0"]
+
+[ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+[ext_resource type="PackedScene" uid="uid://bps61y7f06hyf" path="res://assets/weapons/halberd/halberd_appearance.tscn" id="2_appear"]
+[ext_resource type="Texture2D" uid="uid://du6sw25k08ld8" path="res://assets/weapons/halberd/halberd.png" id="3_icon"]
+[ext_resource type="PackedScene" uid="uid://bttq6ovw1twmi" path="res://assets/weapons/halberd/halberd_projectile.tscn" id="4_proj"]
+
+[resource]
+script = ExtResource("1_weapon")
+display_name = "Halberd"
+short_description = "Heavy hybrid spear. Slow, but it hits hard."
+formation_line = 1
+engagement_stance = 4
+attack_style = 1
+damage_stat = 2
+base_damage = 9
+projectile_range = 650.0
+attack_interval = 1.1
+skirmish_distance = 280.0
+knockback_force = 0.0
+biomass_cost = 11
+melee_range = 210.0
+projectile_scene = ExtResource("4_proj")
+appearance_scene = ExtResource("2_appear")
+icon = ExtResource("3_icon")

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" uid="uid://cff827oxam8sy" path="res://assets/weapons/spear/spear_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://bj35arlgrvuum" path="res://assets/weapons/spear/spear.png" id="3_icon"]
+[ext_resource type="PackedScene" path="res://assets/weapons/spear/spear_projectile.tscn" id="4_proj"]
 
 [resource]
 script = ExtResource("1_weapon")
@@ -18,5 +19,6 @@ skirmish_distance = 280.0
 knockback_force = 0.0
 biomass_cost = 8
 melee_range = 200.0
+projectile_scene = ExtResource("4_proj")
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

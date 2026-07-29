@@ -6,6 +6,19 @@ const _SPEAR_WEAPON := preload("res://assets/weapons/spear/spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/bow/bow.tres")
 const _SHIELD_WEAPON := preload("res://assets/weapons/shield/shield.tres")
 const _FISTS_WEAPON := preload("res://assets/weapons/bare_fists.tres")
+const _SICKLE_WEAPON := preload("res://assets/weapons/sickle/sickle.tres")
+const _RAPIER_WEAPON := preload("res://assets/weapons/rapier/rapier.tres")
+const _GREAT_SWORD_WEAPON := preload("res://assets/weapons/great_sword/great_sword.tres")
+const _GREAT_HAMMER_WEAPON := preload("res://assets/weapons/great_hammer/great_hammer.tres")
+const _LANCE_WEAPON := preload("res://assets/weapons/lance/lance.tres")
+const _SCYTHE_WEAPON := preload("res://assets/weapons/scythe/scythe.tres")
+const _HALBERD_WEAPON := preload("res://assets/weapons/halberd/halberd.tres")
+const _GREAT_SHIELD_WEAPON := preload("res://assets/weapons/great_shield/great_shield.tres")
+const _UMBRELLA_WEAPON := preload("res://assets/weapons/umbrella/umbrella.tres")
+const _CROSSBOW_WEAPON := preload("res://assets/weapons/crossbow/crossbow.tres")
+const _SNIPER_WEAPON := preload("res://assets/weapons/sniper/sniper.tres")
+const _MORTAR_WEAPON := preload("res://assets/weapons/mortar/mortar.tres")
+const _GIANT_HORN_WEAPON := preload("res://assets/weapons/giant_horn/giant_horn.tres")
 
 const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Sword", "weapon": _SWORD_WEAPON},
@@ -13,6 +26,19 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Bow", "weapon": _BOW_WEAPON},
 	{"name": "Shield", "weapon": _SHIELD_WEAPON},
 	{"name": "Fists", "weapon": _FISTS_WEAPON},
+	{"name": "Sickle", "weapon": _SICKLE_WEAPON},
+	{"name": "Rapier", "weapon": _RAPIER_WEAPON},
+	{"name": "Great Sword", "weapon": _GREAT_SWORD_WEAPON},
+	{"name": "Great Hammer", "weapon": _GREAT_HAMMER_WEAPON},
+	{"name": "Lance", "weapon": _LANCE_WEAPON},
+	{"name": "Scythe", "weapon": _SCYTHE_WEAPON},
+	{"name": "Halberd", "weapon": _HALBERD_WEAPON},
+	{"name": "Great Shield", "weapon": _GREAT_SHIELD_WEAPON},
+	{"name": "Umbrella", "weapon": _UMBRELLA_WEAPON},
+	{"name": "Crossbow", "weapon": _CROSSBOW_WEAPON},
+	{"name": "Sniper", "weapon": _SNIPER_WEAPON},
+	{"name": "Mortar", "weapon": _MORTAR_WEAPON},
+	{"name": "Giant Horn", "weapon": _GIANT_HORN_WEAPON},
 ]
 
 const _STRAIN_OPTIONS: Array[Dictionary] = [

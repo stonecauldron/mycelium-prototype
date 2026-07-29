@@ -55,17 +55,32 @@ const MELEE_HITBOX_Y := -20.0
 ## Pure MELEE_LUNGE uses this as attack start range; HYBRID uses it for close stick range
 ## while projectile_range stays the throw/shot range.
 @export var melee_range: float = 96.0
+## Scene spawned for PROJECTILE_THROW / BOW_SHOT. Null = style fallback (spear/bow defaults).
+@export var projectile_scene: PackedScene
 @export var appearance_scene: PackedScene
 ## Card icon shown in shop/stock UI. Lives on the resource itself so it
 ## survives duplicate() (unlike matching on resource_path, which is cleared
 ## on duplicated resources).
 @export var icon: Texture2D
 
+const _DEFAULT_ARROW_PROJECTILE := "res://assets/weapons/bow/arrow_projectile.tscn"
+const _DEFAULT_SPEAR_PROJECTILE := "res://assets/weapons/spear/spear_projectile.tscn"
+
 
 func instantiate_appearance() -> Node2D:
 	if appearance_scene == null:
 		return null
 	return appearance_scene.instantiate() as Node2D
+
+
+func resolve_projectile_scene() -> PackedScene:
+	if projectile_scene != null:
+		return projectile_scene
+	if uses_throw_projectile():
+		return load(_DEFAULT_SPEAR_PROJECTILE) as PackedScene
+	if attack_style == AttackStyle.BOW_SHOT:
+		return load(_DEFAULT_ARROW_PROJECTILE) as PackedScene
+	return null
 
 
 func uses_throw_projectile() -> bool:

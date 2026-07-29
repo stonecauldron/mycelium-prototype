@@ -66,8 +66,8 @@ const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_num
 const _HIT_BURST_SCENE := preload("res://assets/vfx/hit_burst/hit_burst.tscn")
 const _SPORE_CLOUD_SCENE := preload("res://assets/vfx/spore_cloud/spore_cloud.tscn")
 const _COMBAT_CALLOUT_SCENE := preload("res://assets/vfx/combat_callout/combat_callout.tscn")
-const _SPEAR_PROJECTILE_SCENE := preload("res://assets/combat/spear_projectile/spear_projectile.tscn")
-const _ARROW_PROJECTILE_SCENE := preload("res://assets/combat/arrow_projectile/arrow_projectile.tscn")
+const _SPEAR_PROJECTILE_FALLBACK := preload("res://assets/weapons/spear/spear_projectile.tscn")
+const _ARROW_PROJECTILE_FALLBACK := preload("res://assets/weapons/bow/arrow_projectile.tscn")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
 const _HP_ICON := preload("res://assets/base/unit_card/hp_icon.png")
 const HP_CHIP_GAP := 4.0
@@ -740,28 +740,17 @@ func _process_throw_attack(delta: float) -> void:
 
 
 func _spawn_spear_projectile() -> void:
-	var world := _get_world_node()
-	if world == null:
-		return
-
-	var opponent := _troop.get_opponent()
+	var opponent := _troop.get_opponent() if _troop != null else null
 	if opponent == null or opponent.get_living_unit_count() == 0:
 		return
-
 	var aim := _pick_ranged_aim_target(opponent)
 	aim += Vector2(
 		randf_range(-THROW_AIM_JITTER_X, THROW_AIM_JITTER_X),
 		randf_range(-THROW_AIM_JITTER_Y, THROW_AIM_JITTER_Y)
 	)
-
-	var spear: SpearProjectile = _SPEAR_PROJECTILE_SCENE.instantiate()
-	world.add_child(spear)
-	spear.launch(
+	_spawn_weapon_projectile(
 		global_position + Vector2(0.0, THROW_ORIGIN_HEIGHT),
-		aim,
-		_get_attack_damage(),
-		weapon.knockback_force,
-		self
+		aim
 	)
 	_set_held_weapon_visible(false)
 
@@ -807,19 +796,32 @@ func _get_forward_aim_fallback() -> Vector2:
 
 
 func _spawn_arrow_projectile() -> void:
-	var world := _get_world_node()
-	if world == null:
-		return
-
 	var aim := _ranged_aim
 	if aim == Vector2.ZERO:
 		aim = _pick_ranged_aim_with_jitter()
+	_spawn_weapon_projectile(_get_ranged_spawn_global(), aim)
 
-	var arrow: ArrowProjectile = _ARROW_PROJECTILE_SCENE.instantiate()
-	world.add_child(arrow)
-	arrow.launch(
-		_get_ranged_spawn_global(),
-		aim,
+
+func _spawn_weapon_projectile(from_global: Vector2, aim_global: Vector2) -> void:
+	var world := _get_world_node()
+	if world == null or weapon == null:
+		return
+	var scene := weapon.resolve_projectile_scene()
+	if scene == null:
+		if weapon.uses_throw_projectile():
+			scene = _SPEAR_PROJECTILE_FALLBACK
+		elif weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
+			scene = _ARROW_PROJECTILE_FALLBACK
+	if scene == null:
+		return
+	var projectile := scene.instantiate() as Projectile
+	if projectile == null:
+		push_error("Weapon projectile_scene must use Projectile script: %s" % weapon.display_name)
+		return
+	world.add_child(projectile)
+	projectile.launch(
+		from_global,
+		aim_global,
 		_get_attack_damage(),
 		weapon.knockback_force,
 		self

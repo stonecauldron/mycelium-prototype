@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bm6kc8hkb8t5c"]
+
+[ext_resource type="Texture2D" uid="uid://gjxgv6j2rmgu" path="res://assets/weapons/sniper/sniper.png" id="1_tex"]
+
+[node name="SniperAppearance" type="Node2D" unique_id=926587832]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1508257398]
+rotation = 0.2
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("1_tex")
+offset = Vector2(42.484528, -170.27493)

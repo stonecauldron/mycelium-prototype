@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://0wenxe0v2i1a"]
+
+[ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+[ext_resource type="PackedScene" uid="uid://bm6kc8hkb8t5c" path="res://assets/weapons/sniper/sniper_appearance.tscn" id="2_appear"]
+[ext_resource type="Texture2D" uid="uid://gjxgv6j2rmgu" path="res://assets/weapons/sniper/sniper.png" id="3_icon"]
+[ext_resource type="PackedScene" uid="uid://c2tvvq5exk441" path="res://assets/weapons/bow/arrow_projectile.tscn" id="4_proj"]
+
+[resource]
+script = ExtResource("1_weapon")
+display_name = "Sniper"
+short_description = "Patient, precise, punishing. (Homing later.)"
+formation_line = 2
+engagement_stance = 3
+attack_style = 2
+damage_stat = 1
+base_damage = 14
+projectile_range = 1600.0
+attack_interval = 1.8
+skirmish_distance = 380.0
+knockback_force = 0.0
+biomass_cost = 14
+projectile_scene = ExtResource("4_proj")
+appearance_scene = ExtResource("2_appear")
+icon = ExtResource("3_icon")

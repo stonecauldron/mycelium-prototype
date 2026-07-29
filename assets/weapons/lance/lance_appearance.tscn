@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dxc85jyaxdr8v"]
+
+[ext_resource type="Texture2D" uid="uid://cvk673prvl8l5" path="res://assets/weapons/lance/lance.png" id="1_tex"]
+
+[node name="LanceAppearance" type="Node2D" unique_id=2088873007]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=715634253]
+rotation = 0.6091199
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_tex")
+offset = Vector2(1.0744288, -183.10794)

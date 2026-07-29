@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://bo7vhv7ticbnd"]
+
+[ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+[ext_resource type="PackedScene" uid="uid://b4ilvkq0rgkck" path="res://assets/weapons/scythe/scythe_appearance.tscn" id="2_appear"]
+[ext_resource type="Texture2D" uid="uid://ot2bsisgn1a4" path="res://assets/weapons/scythe/scythe.png" id="3_icon"]
+[ext_resource type="PackedScene" uid="uid://bb0oh5h783rc7" path="res://assets/weapons/scythe/scythe_projectile.tscn" id="4_proj"]
+
+[resource]
+script = ExtResource("1_weapon")
+display_name = "Scythe"
+short_description = "Economy mid weapon. Quicker throws, lighter hits."
+formation_line = 1
+engagement_stance = 4
+attack_style = 1
+damage_stat = 2
+base_damage = 4
+projectile_range = 550.0
+attack_interval = 0.6
+skirmish_distance = 240.0
+knockback_force = 0.0
+melee_range = 180.0
+projectile_scene = ExtResource("4_proj")
+appearance_scene = ExtResource("2_appear")
+icon = ExtResource("3_icon")

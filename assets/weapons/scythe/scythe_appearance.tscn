@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://b4ilvkq0rgkck"]
+
+[ext_resource type="Texture2D" uid="uid://ot2bsisgn1a4" path="res://assets/weapons/scythe/scythe.png" id="1_tex"]
+
+[node name="ScytheAppearance" type="Node2D"]
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(4, -18)
+rotation = 0.34906584
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_tex")
+offset = Vector2(1.7182007, -83.69536)

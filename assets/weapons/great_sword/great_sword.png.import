@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcxgnestn6j7v"
-path="res://.godot/imported/arrow.png-648e10b71b5f9a58101c2d0805adb893.ctex"
+uid="uid://cmaqi5lk5sase"
+path="res://.godot/imported/great_sword.png-724aa02b0578127ca51e0b8a2b34ff12.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/combat/arrow_projectile/arrow.png"
-dest_files=["res://.godot/imported/arrow.png-648e10b71b5f9a58101c2d0805adb893.ctex"]
+source_file="res://assets/weapons/great_sword/great_sword.png"
+dest_files=["res://.godot/imported/great_sword.png-724aa02b0578127ca51e0b8a2b34ff12.ctex"]
 
 [params]
 

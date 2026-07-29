@@ -421,8 +421,7 @@ func _clear_world_vfx() -> void:
 		if (
 			child is DamageNumber
 			or child is CombatCallout
-			or child is SpearProjectile
-			or child is ArrowProjectile
+			or child is Projectile
 			or child is HitBurst
 			or child is SporeCloud
 		):

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cspearproj001"]
 
-[ext_resource type="Script" uid="uid://2pt0qx2qnuuo" path="res://assets/combat/spear_projectile/spear_projectile.gd" id="1_spear"]
-[ext_resource type="Texture2D" uid="uid://bj35arlgrvuum" path="res://assets/weapons/basic_spear/spear.png" id="2_c7uvy"]
+[ext_resource type="Script" uid="uid://cprojbase00001" path="res://assets/combat/projectile/projectile.gd" id="1_proj"]
+[ext_resource type="Texture2D" uid="uid://bj35arlgrvuum" path="res://assets/weapons/spear/spear.png" id="2_c7uvy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_spear"]
 size = Vector2(147, 8)
@@ -10,7 +10,10 @@ size = Vector2(147, 8)
 collision_layer = 8
 collision_mask = 5
 monitorable = false
-script = ExtResource("1_spear")
+script = ExtResource("1_proj")
+launch_angle_deg = 45.0
+fallback_speed = 600.0
+max_lifetime = 2.5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1024114994]
 position = Vector2(3.5, 0)

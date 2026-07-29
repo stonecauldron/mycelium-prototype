@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bps61y7f06hyf"]
+
+[ext_resource type="Texture2D" uid="uid://du6sw25k08ld8" path="res://assets/weapons/halberd/halberd.png" id="1_tex"]
+
+[node name="HalberdAppearance" type="Node2D"]
+
+[node name="Visual" type="Sprite2D" parent="."]
+position = Vector2(4, -18)
+rotation = 0.34906584
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_tex")
+offset = Vector2(1.7182007, -83.69536)

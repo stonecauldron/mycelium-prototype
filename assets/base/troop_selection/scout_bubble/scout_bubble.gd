@@ -42,16 +42,11 @@ func refresh() -> void:
 				weapon_counts[weapon_key] = {"count": 0, "weapon": spec.weapon}
 			weapon_counts[weapon_key]["count"] = int(weapon_counts[weapon_key]["count"]) + 1
 		if spec.strain != null:
-			var path := spec.strain.resource_path
-			if path.is_empty():
-				path = spec.strain.display_name
-			var key := "%s|%s" % [path, "imago" if spec.is_imago else "juvenile"]
+			var key := spec.strain.resource_path
+			if key.is_empty():
+				key = spec.strain.display_name
 			if not strain_counts.has(key):
-				strain_counts[key] = {
-					"count": 0,
-					"strain": spec.strain,
-					"is_imago": spec.is_imago,
-				}
+				strain_counts[key] = {"count": 0, "strain": spec.strain}
 			strain_counts[key]["count"] = int(strain_counts[key]["count"]) + 1
 	var reward := 0
 	for spec in specs:
@@ -72,10 +67,9 @@ func refresh() -> void:
 			if strain_count <= 0:
 				continue
 			var strain: UnitStrain = strain_entry["strain"]
-			var is_imago: bool = bool(strain_entry["is_imago"])
 			var strain_card: ScoutStrainEntry = _SCOUT_STRAIN_ENTRY_SCENE.instantiate()
 			_scout_strain_row.add_child(strain_card)
-			strain_card.setup(strain_count, strain, is_imago)
+			strain_card.setup(strain_count, strain)
 	if _scout_reward_label != null:
 		_scout_reward_label.text = "+%d" % reward
 	_refresh_reroll_affordability()

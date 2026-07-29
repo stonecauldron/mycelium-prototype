@@ -11,14 +11,14 @@ var _portrait_instance: Node2D = null
 var _strain: UnitStrain = null
 
 
-func setup(count: int, strain: UnitStrain, is_imago: bool = false) -> void:
+func setup(count: int, strain: UnitStrain) -> void:
 	if is_node_ready():
-		_apply(count, strain, is_imago)
+		_apply(count, strain)
 	else:
-		ready.connect(_apply.bind(count, strain, is_imago), CONNECT_ONE_SHOT)
+		ready.connect(_apply.bind(count, strain), CONNECT_ONE_SHOT)
 
 
-func _apply(count: int, strain: UnitStrain, is_imago: bool = false) -> void:
+func _apply(count: int, strain: UnitStrain) -> void:
 	_strain = strain
 	_count_label.text = "%d ×" % count
 	if _portrait_instance != null:
@@ -28,9 +28,8 @@ func _apply(count: int, strain: UnitStrain, is_imago: bool = false) -> void:
 		tooltip_text = ""
 		return
 	var data := RosterUnitData.create("", null, null, strain)
-	if is_imago:
-		data.is_imago = true
-		data.life_stage_id = UnitStrain.STAGE_IMAGO
+	data.is_imago = true
+	data.life_stage_id = UnitStrain.STAGE_IMAGO
 	_portrait_instance = data.mount_portrait(_portrait_host, _PORTRAIT_SCALE)
 	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
 	# Theme blanks native TooltipPanel, so we must use a custom tooltip.

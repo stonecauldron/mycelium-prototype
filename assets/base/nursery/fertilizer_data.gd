@@ -50,7 +50,7 @@ func subtitle_text() -> String:
 		Behavior.FUNGICIDE:
 			return "kill plant → next +1/active day"
 		Behavior.AMOK:
-			return "always charges"
+			return "Unit always pushes forward, regardless of weapon."
 		_:
 			pass
 	var parts: PackedStringArray = []

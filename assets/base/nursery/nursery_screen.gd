@@ -58,6 +58,10 @@ func on_screen_shown() -> void:
 	_hydrate_and_refresh()
 
 
+func on_screen_hidden() -> void:
+	_dismiss_hatch_toast(false)
+
+
 func _hydrate_and_refresh() -> void:
 	GameState.ensure_nursery_seeded()
 	GameState.nursery.ensure_shop_offers()

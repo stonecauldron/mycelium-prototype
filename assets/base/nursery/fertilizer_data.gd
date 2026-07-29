@@ -40,7 +40,7 @@ func apply_to(stats: UnitStatsData, scale_factor: int = 1) -> void:
 func subtitle_text() -> String:
 	match behavior:
 		Behavior.VOLATILE:
-			return "×2 other fert stats (stacks)"
+			return "×2 times other fertiliser stats."
 		Behavior.OVERKILL:
 			return "+2 highest / -2 lowest"
 		Behavior.MEIOSIS:

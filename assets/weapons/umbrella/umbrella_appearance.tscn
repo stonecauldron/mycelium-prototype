@@ -1,11 +1,26 @@
-[gd_scene format=3 uid="uid://dejy5vku3batw"]
+[gd_scene format=3 uid="uid://5ge2990m1pe49"]
 
 [ext_resource type="Texture2D" uid="uid://cm08y8uadclcn" path="res://assets/weapons/umbrella/umbrella.png" id="1_tex"]
+[ext_resource type="Script" path="res://assets/combat/projectile/projectile_blocker.gd" id="2_blocker"]
 
-[node name="UmbrellaShieldAppearance" type="Node2D" unique_id=2028986092]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_canopy"]
+size = Vector2(120, 28)
 
-[node name="Visual" type="Sprite2D" parent="." unique_id=1050096546]
+[node name="UmbrellaShieldAppearance" type="Node2D"]
+
+[node name="Visual" type="Sprite2D" parent="."]
 rotation = 0.17453292
 scale = Vector2(0.4, 0.4)
 texture = ExtResource("1_tex")
 offset = Vector2(0, -200)
+
+[node name="ProjectileBlocker" type="Area2D" parent="."]
+position = Vector2(8, -110)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+monitorable = true
+script = ExtResource("2_blocker")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ProjectileBlocker"]
+shape = SubResource("RectangleShape2D_canopy")

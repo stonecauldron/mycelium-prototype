@@ -5,9 +5,12 @@ signal died(unit: Unit)
 signal health_changed(current: int, maximum: int)
 
 enum CombatPhase { READY, APPROACHING, ATTACKING, RETURNING }
+enum ChargePhase { NONE, WINDUP, RUSHING }
 
 const BASE_MOVE_SPEED := 180.0
 const RETREAT_SPEED_FACTOR := 0.5
+const LANCE_CHARGE_SPEED_MULT := 3.0
+const LANCE_CHARGE_MAX_DURATION := 2.5
 const HOME_ARRIVE_THRESHOLD := 4.0
 const WALK_SPEED_EPSILON := 8.0
 ## Ignore facing updates when the aim/travel delta is within this many pixels.
@@ -90,6 +93,8 @@ var _attack_timer: float = 0.0
 var _target: Node2D
 var _troop: Troop
 var _combat_phase: CombatPhase = CombatPhase.READY
+var _charge_phase: ChargePhase = ChargePhase.NONE
+var _charge_timer: float = 0.0
 var _hurt_tween: Tween
 var _squash_tween: Tween
 var _swing_tween: Tween
@@ -348,6 +353,12 @@ func _physics_process(delta: float) -> void:
 		_update_locomotion_animation()
 		return
 
+	if _charge_phase != ChargePhase.NONE:
+		_process_lance_charge(delta)
+		move_and_slide()
+		_update_locomotion_animation()
+		return
+
 	if _combat_phase == CombatPhase.ATTACKING:
 		velocity.x = 0.0
 		if _projectile_attack_active:
@@ -370,6 +381,7 @@ func _update_locomotion_animation() -> void:
 	if (
 		_dying
 		or _combat_phase == CombatPhase.ATTACKING
+		or _charge_phase == ChargePhase.WINDUP
 		or not is_on_floor()
 		or absf(velocity.x) <= WALK_SPEED_EPSILON
 	):
@@ -479,6 +491,7 @@ func _process_combat(delta: float) -> void:
 			_hold_skirmish_position()
 		elif (
 			get_engagement_stance() == WeaponData.EngagementStance.FORMATION_FIGHT
+			or get_engagement_stance() == WeaponData.EngagementStance.LANCE_CHARGE
 		):
 			_return_home()
 		elif get_engagement_stance() == WeaponData.EngagementStance.HOLD_LINE:
@@ -492,6 +505,10 @@ func _process_combat(delta: float) -> void:
 	_refresh_target()
 	if _target == null:
 		_hold_or_march()
+		return
+
+	if get_engagement_stance() == WeaponData.EngagementStance.LANCE_CHARGE:
+		_start_lance_windup()
 		return
 
 	var distance := global_position.distance_to(_target.global_position)
@@ -523,6 +540,76 @@ func _process_combat(delta: float) -> void:
 		return
 
 	_hold_or_march()
+
+
+func _effective_attack_interval() -> float:
+	var interval := weapon.attack_interval if weapon != null else 0.75
+	var rate := 1.0
+	if stats != null:
+		rate = stats.get_speed_multiplier() * _attack_rate_multiplier * _status_attack_rate_mult()
+	return interval / maxf(rate, 0.01)
+
+
+func _start_lance_windup() -> void:
+	_charge_phase = ChargePhase.WINDUP
+	_charge_timer = _effective_attack_interval()
+	_combat_phase = CombatPhase.ATTACKING
+	velocity.x = 0.0
+	if _target != null and is_instance_valid(_target):
+		_face_toward(_target.global_position)
+
+
+func _process_lance_charge(delta: float) -> void:
+	match _charge_phase:
+		ChargePhase.WINDUP:
+			velocity.x = 0.0
+			_refresh_target()
+			if _target != null and is_instance_valid(_target):
+				_face_toward(_target.global_position)
+			_charge_timer -= delta
+			if _charge_timer <= 0.0:
+				_begin_lance_rush()
+		ChargePhase.RUSHING:
+			_charge_timer -= delta
+			var facing := _troop.get_facing() if _troop != null else 1.0
+			velocity.x = facing * get_move_speed() * LANCE_CHARGE_SPEED_MULT
+			_face_march_direction()
+			if _hitbox != null:
+				_hitbox.poll_charge_overlaps()
+			if _charge_timer <= 0.0:
+				_end_lance_charge()
+		_:
+			_end_lance_charge()
+
+
+func _begin_lance_rush() -> void:
+	_charge_phase = ChargePhase.RUSHING
+	_charge_timer = LANCE_CHARGE_MAX_DURATION
+	if _hitbox != null:
+		if not _hitbox.charge_ended.is_connected(_on_lance_charge_ended):
+			_hitbox.charge_ended.connect(_on_lance_charge_ended)
+		_hitbox.enable_for_attack(
+			_get_attack_damage(),
+			weapon.knockback_force if weapon != null else 0.0,
+			WeaponData.TargetingMode.SINGLE,
+			weapon.damage_type if weapon != null else WeaponData.DamageType.SLASHING,
+			true
+		)
+
+
+func _on_lance_charge_ended() -> void:
+	if _charge_phase == ChargePhase.RUSHING:
+		_end_lance_charge()
+
+
+func _end_lance_charge() -> void:
+	if _charge_phase == ChargePhase.NONE:
+		return
+	_charge_phase = ChargePhase.NONE
+	_charge_timer = 0.0
+	if _hitbox != null and _hitbox.charge_ended.is_connected(_on_lance_charge_ended):
+		_hitbox.charge_ended.disconnect(_on_lance_charge_ended)
+	_finish_attack()
 
 
 func _hold_skirmish_position() -> void:
@@ -567,8 +654,10 @@ func _should_chase() -> bool:
 	if _wants_close_melee():
 		return global_position.distance_to(_target.global_position) > _get_melee_engage_range()
 	match get_engagement_stance():
-		WeaponData.EngagementStance.CHARGE:
+		WeaponData.EngagementStance.PRESS_FORWARD:
 			return true
+		WeaponData.EngagementStance.LANCE_CHARGE:
+			return false
 		WeaponData.EngagementStance.SKIRMISH, WeaponData.EngagementStance.HYBRID:
 			var distance := global_position.distance_to(_target.global_position)
 			var preferred := _preferred_attack_distance()
@@ -819,6 +908,8 @@ func _spawn_weapon_projectile(from_global: Vector2, aim_global: Vector2) -> void
 		push_error("Weapon projectile_scene must use Projectile script: %s" % weapon.display_name)
 		return
 	world.add_child(projectile)
+	if projectile.homing and _target != null and is_instance_valid(_target):
+		projectile.set_homing_target(_target)
 	projectile.launch(
 		from_global,
 		aim_global,
@@ -889,15 +980,17 @@ func _finish_attack() -> void:
 	_throw_landed = false
 	_throw_left_ground = false
 	_throw_timer = 0.0
-	var interval := weapon.attack_interval if weapon != null else 0.75
-	var rate := stats.get_speed_multiplier() * _attack_rate_multiplier * _status_attack_rate_mult()
-	_attack_timer = interval / maxf(rate, 0.01)
+	_charge_phase = ChargePhase.NONE
+	_charge_timer = 0.0
+	_attack_timer = _effective_attack_interval()
 	_combat_phase = CombatPhase.RETURNING
 
 
 func _cancel_attack() -> void:
-	if _combat_phase != CombatPhase.ATTACKING:
+	if _combat_phase != CombatPhase.ATTACKING and _charge_phase == ChargePhase.NONE:
 		return
+	if _hitbox != null and _hitbox.charge_ended.is_connected(_on_lance_charge_ended):
+		_hitbox.charge_ended.disconnect(_on_lance_charge_ended)
 	_disable_hitbox()
 	_visual.position = Vector2.ZERO
 	_reset_weapon_swing()
@@ -907,6 +1000,8 @@ func _cancel_attack() -> void:
 	_throw_landed = false
 	_throw_left_ground = false
 	_throw_timer = 0.0
+	_charge_phase = ChargePhase.NONE
+	_charge_timer = 0.0
 	_combat_phase = CombatPhase.RETURNING
 
 
@@ -1093,11 +1188,21 @@ func take_damage(
 	_add_camera_shake(SHAKE_ON_HIT)
 	current_hp = maxi(current_hp - amount, 0)
 	health_changed.emit(current_hp, stats.get_max_hp())
+	if _charge_phase != ChargePhase.NONE:
+		_end_lance_charge()
 	if current_hp <= 0:
 		_die(knockback_from, knockback_force * knockback_mult, killer)
 		return
 	if knockback_from != Vector2.ZERO and knockback_force > 0.0:
 		_apply_knockback(knockback_from, knockback_force * knockback_mult)
+
+
+func grant_hit_biomass() -> void:
+	if weapon == null or weapon.biomass_on_hit <= 0:
+		return
+	if _troop == null or _troop.is_enemy:
+		return
+	GameState.biomass.add(weapon.biomass_on_hit)
 
 
 func register_kill(victim: Unit = null) -> void:

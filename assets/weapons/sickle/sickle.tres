@@ -1,17 +1,17 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://b03djrg84qcb7"]
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
-[ext_resource type="PackedScene" uid="uid://2zgews9tftsb5" path="res://assets/weapons/sickle/sickle_appearance.tscn" id="2_appear"]
+[ext_resource type="PackedScene" uid="uid://xlbsft2hfn0s" path="res://assets/weapons/sickle/sickle_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://dfjdnkn50h4rm" path="res://assets/weapons/sickle/sickle.png" id="3_icon"]
 
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Sickle"
-short_description = "Faster swings, lighter cuts. Cheap steel for thrifty mycelia."
+short_description = "Faster swings, lighter cuts. +1 biomass per hit."
 base_damage = 3
 attack_interval = 0.55
-biomass_cost = 3
-melee_range = 96.0
 knockback_force = 200.0
+biomass_cost = 3
+biomass_on_hit = 1
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

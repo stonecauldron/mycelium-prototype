@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" uid="uid://5q8jm50vj1pd" path="res://assets/weapons/giant_horn/giant_horn_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://cuwnc024gpdrj" path="res://assets/weapons/giant_horn/horn.png" id="3_icon"]
-[ext_resource type="PackedScene" uid="uid://c2tvvq5exk441" path="res://assets/weapons/bow/arrow_projectile.tscn" id="4_proj"]
+[ext_resource type="PackedScene" uid="uid://b804io7ra6emi" path="res://assets/weapons/giant_horn/horn_projectile.tscn" id="4_proj"]
 
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Giant Horn"
-short_description = "A mid-line megaphone blast. Blunt. (AOE blob later.)"
+short_description = "Flat blunt blast that punches through a line of foes."
 formation_line = 1
 engagement_stance = 3
 attack_style = 2

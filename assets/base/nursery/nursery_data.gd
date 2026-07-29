@@ -393,7 +393,7 @@ func _make_harvest_units(
 			tier
 		)
 		if force_amok:
-			unit.forced_engagement_stance = WeaponData.EngagementStance.CHARGE
+			unit.forced_engagement_stance = WeaponData.EngagementStance.PRESS_FORWARD
 		if unit_strain != null:
 			unit_strain.call_effect(&"on_hatch", [unit])
 		units.append(unit)

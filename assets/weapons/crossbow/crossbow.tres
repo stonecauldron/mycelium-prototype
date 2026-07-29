@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" uid="uid://bmkinu7o7e7aj" path="res://assets/weapons/crossbow/crossbow_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://blicoaesbo4m4" path="res://assets/weapons/crossbow/crossbow.png" id="3_icon"]
-[ext_resource type="PackedScene" uid="uid://c2tvvq5exk441" path="res://assets/weapons/bow/arrow_projectile.tscn" id="4_proj"]
+[ext_resource type="PackedScene" uid="uid://bfu7ko1jmbv6w" path="res://assets/weapons/crossbow/crossbow_projectile.tscn" id="4_proj"]
 
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Crossbow"
-short_description = "STR-powered bolts. Blunt impact. (Flat arc later.)"
+short_description = "STR-powered bolts with a flat blunt arc."
 formation_line = 2
 engagement_stance = 3
 attack_style = 2

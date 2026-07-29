@@ -1,38 +1,118 @@
 class_name HitboxComponent
 extends Area2D
 
+signal charge_ended
+
 @export var damage: int = 0
 @export var knockback_force: float = 0.0
 @export var owner_unit: Unit
 
+const MAX_CHARGE_UNIT_HITS := 3
+
 var _targeting_mode: WeaponData.TargetingMode = WeaponData.TargetingMode.SINGLE
 var _damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
 var _hit_combatants: Dictionary = {}
+var _is_charge_strike: bool = false
+var _charge_unit_hits: int = 0
+var _charge_active: bool = false
 
 
 func _ready() -> void:
 	monitoring = false
+	if not area_entered.is_connected(_on_area_entered):
+		area_entered.connect(_on_area_entered)
 
 
 func enable_for_attack(
 	attack_damage: int,
 	attack_knockback: float,
 	targeting_mode: WeaponData.TargetingMode,
-	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
+	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING,
+	is_charge_strike: bool = false
 ) -> void:
 	damage = attack_damage
 	knockback_force = attack_knockback
 	_targeting_mode = targeting_mode
 	_damage_type = damage_type
+	_is_charge_strike = is_charge_strike
+	_charge_unit_hits = 0
 	_hit_combatants.clear()
 	monitoring = true
+	_charge_active = is_charge_strike
+	if is_charge_strike:
+		# Catch anything already overlapping when the rush starts.
+		call_deferred("poll_charge_overlaps")
 
 
 func disable() -> void:
-	if monitoring:
+	if monitoring and not _is_charge_strike:
 		_resolve_hits()
-	monitoring = false
+	# Must defer: disable() can run from area_entered → charge_ended → finish_attack.
+	set_deferred("monitoring", false)
+	_charge_active = false
+	_is_charge_strike = false
 	_hit_combatants.clear()
+	_charge_unit_hits = 0
+
+
+func _on_area_entered(area: Area2D) -> void:
+	if not _charge_active or not _is_charge_strike or not monitoring:
+		return
+	_try_charge_hit(area)
+
+
+func poll_charge_overlaps() -> void:
+	if not _charge_active or not monitoring:
+		return
+	for area in get_overlapping_areas():
+		_try_charge_hit(area)
+
+
+func _try_charge_hit(area: Area2D) -> void:
+	var hurtbox := area as HurtboxComponent
+	if hurtbox == null:
+		return
+	var target := _get_valid_target(hurtbox, false)
+	if target == null:
+		return
+	if _hit_combatants.has(target):
+		return
+
+	var hit_damage := damage
+	var hit_knockback := knockback_force
+	var end_charge := false
+
+	if target is FlagBearer:
+		end_charge = true
+	elif target is Unit:
+		var unit := target as Unit
+		if unit.weapon != null and unit.weapon.blocks_charges:
+			hit_damage = maxi(roundi(float(damage) * 0.5), 0)
+			hit_knockback = knockback_force * 0.5
+			end_charge = true
+		else:
+			_charge_unit_hits += 1
+			if _charge_unit_hits >= MAX_CHARGE_UNIT_HITS:
+				end_charge = true
+
+	_hit_combatants[target] = true
+	var from_pos := owner_unit.global_position if owner_unit != null else global_position
+	hurtbox.receive_hit(hit_damage, from_pos, hit_knockback, owner_unit, _damage_type)
+	if owner_unit != null:
+		owner_unit.grant_hit_biomass()
+		if owner_unit.roster_data != null and owner_unit.roster_data.strain != null:
+			owner_unit.roster_data.strain.call_effect(
+				&"on_hit_dealt",
+				[owner_unit, target, hit_damage]
+			)
+	if end_charge:
+		_charge_active = false
+		# Defer so finish_attack → disable() is not inside area_entered.
+		call_deferred("_emit_charge_ended")
+
+
+func _emit_charge_ended() -> void:
+	charge_ended.emit()
 
 
 func _resolve_hits() -> void:
@@ -85,11 +165,13 @@ func _apply_hit(hurtbox: HurtboxComponent) -> void:
 	_hit_combatants[target] = true
 	var from_pos := owner_unit.global_position if owner_unit != null else global_position
 	hurtbox.receive_hit(damage, from_pos, knockback_force, owner_unit, _damage_type)
-	if owner_unit != null and owner_unit.roster_data != null and owner_unit.roster_data.strain != null:
-		owner_unit.roster_data.strain.call_effect(
-			&"on_hit_dealt",
-			[owner_unit, target, damage]
-		)
+	if owner_unit != null:
+		owner_unit.grant_hit_biomass()
+		if owner_unit.roster_data != null and owner_unit.roster_data.strain != null:
+			owner_unit.roster_data.strain.call_effect(
+				&"on_hit_dealt",
+				[owner_unit, target, damage]
+			)
 
 
 func _get_valid_target(hurtbox: HurtboxComponent, allow_allies: bool) -> Node:

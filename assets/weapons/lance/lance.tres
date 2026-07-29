@@ -1,18 +1,18 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://b6lfetptgsyl7"]
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
-[ext_resource type="PackedScene" uid="uid://ln50cnsr2rjrf" path="res://assets/weapons/lance/lance_appearance.tscn" id="2_appear"]
+[ext_resource type="PackedScene" uid="uid://dxc85jyaxdr8v" path="res://assets/weapons/lance/lance_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://cvk673prvl8l5" path="res://assets/weapons/lance/lance.png" id="3_icon"]
 
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Lance"
-short_description = "Charges forward. High knockback on contact."
-engagement_stance = 1
+short_description = "Winds up, then charges through up to three foes. Shields and flags stop the rush."
+engagement_stance = 5
 base_damage = 7
 attack_interval = 0.9
+knockback_force = 400.0
 biomass_cost = 9
 melee_range = 120.0
-knockback_force = 400.0
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

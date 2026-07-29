@@ -13,5 +13,6 @@ biomass_cost = 8
 outgoing_damage_multiplier = 0.5
 incoming_damage_multiplier = 0.25
 incoming_knockback_multiplier = 0.25
+blocks_charges = true
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

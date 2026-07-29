@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://bmjkfjh783rc7"]
+
+[ext_resource type="Script" uid="uid://cprojbase00001" path="res://assets/combat/projectile/projectile.gd" id="1_proj"]
+[ext_resource type="Texture2D" uid="uid://dcxgnestn6j7v" path="res://assets/weapons/bow/arrow.png" id="2_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sniper"]
+size = Vector2(48, 4)
+
+[node name="SniperProjectile" type="Area2D"]
+collision_layer = 8
+collision_mask = 5
+monitorable = false
+script = ExtResource("1_proj")
+launch_angle_deg = 5.0
+fallback_speed = 1400.0
+max_lifetime = 4.0
+homing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_sniper")
+
+[node name="Visual" type="Sprite2D" parent="."]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_tex")

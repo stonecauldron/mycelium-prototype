@@ -2,7 +2,7 @@ class_name WeaponData
 extends Resource
 
 enum FormationLine { FRONT, MID, BACK }
-enum EngagementStance { FORMATION_FIGHT, CHARGE, HOLD_LINE, SKIRMISH, HYBRID }
+enum EngagementStance { FORMATION_FIGHT, PRESS_FORWARD, HOLD_LINE, SKIRMISH, HYBRID, LANCE_CHARGE }
 enum AttackStyle { MELEE_LUNGE, PROJECTILE_THROW, BOW_SHOT }
 enum TargetingMode { SINGLE, AOE }
 ## Which unit stat feeds this weapon's damage bonus (independent of attack style / line).
@@ -45,12 +45,16 @@ const MELEE_HITBOX_Y := -20.0
 @export var skirmish_distance: float = 160.0
 @export var knockback_force: float = 280.0
 @export var biomass_cost: int = 5
+## Biomass granted to the player each time this weapon lands a hit. 0 = none.
+@export var biomass_on_hit: int = 0
 ## Scales total outgoing attack damage (base + stat bonus). 1.0 = normal.
 @export var outgoing_damage_multiplier: float = 1.0
 ## Scales all incoming hit damage while this weapon is equipped. 1.0 = normal.
 @export var incoming_damage_multiplier: float = 1.0
 ## Scales knockback force received while this weapon is equipped. 1.0 = normal.
 @export var incoming_knockback_multiplier: float = 1.0
+## When true, a lance charge that contacts this unit stops and deals half damage/knockback.
+@export var blocks_charges: bool = false
 ## Center-to-center melee engage distance (facing +X). Hitbox is derived from this.
 ## Pure MELEE_LUNGE uses this as attack start range; HYBRID uses it for close stick range
 ## while projectile_range stays the throw/shot range.

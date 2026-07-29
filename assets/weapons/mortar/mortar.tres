@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" uid="uid://duqmhqo6qrv7o" path="res://assets/weapons/mortar/mortar_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://b4djg2vgfirwt" path="res://assets/weapons/mortar/mortar.png" id="3_icon"]
-[ext_resource type="PackedScene" uid="uid://c2tvvq5exk441" path="res://assets/weapons/bow/arrow_projectile.tscn" id="4_proj"]
+[ext_resource type="PackedScene" uid="uid://demfhncqeiiuq" path="res://assets/weapons/mortar/mortar_projectile.tscn" id="4_proj"]
 
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Spore Mortar"
-short_description = "Lobs trouble from afar. (True lobbed AOE later.)"
+short_description = "Lobs a spore bomb that detonates after landing."
 formation_line = 2
 engagement_stance = 3
 attack_style = 2

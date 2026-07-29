@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://dmug6lh8xurnq"]
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
-[ext_resource type="PackedScene" uid="uid://tx1u4zxlbbjlz" path="res://assets/weapons/great_shield/great_shield_appearance.tscn" id="2_appear"]
+[ext_resource type="PackedScene" uid="uid://m0i6qdcha5s6" path="res://assets/weapons/great_shield/great_shield_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://d1b4gdj0q1iy5" path="res://assets/weapons/great_shield/great_shield.png" id="3_icon"]
 
 [resource]
@@ -9,10 +9,11 @@ script = ExtResource("1_weapon")
 display_name = "Great Shield"
 short_description = "A wall of wood and chitin. Barely scrapes back."
 engagement_stance = 2
+base_damage = 2
 biomass_cost = 14
 outgoing_damage_multiplier = 0.25
 incoming_damage_multiplier = 0.15
 incoming_knockback_multiplier = 0.15
-base_damage = 2
+blocks_charges = true
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

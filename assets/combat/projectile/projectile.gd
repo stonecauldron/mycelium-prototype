@@ -12,15 +12,26 @@ const FLOOR_Y := 786.0
 @export var max_lifetime: float = 2.5
 @export var stick_hold_time: float = 1.6
 @export var stick_fade_time: float = 1.2
+## Explosion radius after landing (mortar). 0 = no AOE.
+@export var aoe_radius: float = 0.0
+## Fuse seconds after landing before AOE (mortar). >0 also ignores unit collisions in flight.
+@export var explode_delay: float = 0.0
+## Keep flying through units, damaging each once (giant horn). Unrelated to blunt damage type.
+@export var piercing: bool = false
+## Steer toward a locked target with no gravity (sniper).
+@export var homing: bool = false
 
 var damage: int = 0
 var knockback_force: float = 0.0
 ## Matches WeaponData.DamageType (int) without importing WeaponData here.
 var damage_type: int = 0
 var owner_unit: Node
+var homing_target: Node2D
 var _velocity: Vector2 = Vector2.ZERO
 var _lifetime: float = 0.0
 var _spent: bool = false
+var _hit_targets: Dictionary = {}
+var _fuse_armed: bool = false
 
 
 func _ready() -> void:
@@ -46,8 +57,13 @@ func launch(
 			damage_type = int(w.damage_type)
 	_velocity = _compute_launch_velocity(from_global, aim_global)
 	_face_velocity()
-	monitoring = true
+	# Delayed bombs ignore units until they land.
+	monitoring = explode_delay <= 0.0
 	monitorable = false
+
+
+func set_homing_target(target: Node2D) -> void:
+	homing_target = target
 
 
 ## Override for custom arcs (e.g. flatter crossbow). Default = lobbed ballistic.
@@ -76,22 +92,103 @@ func _compute_launch_velocity(from_global: Vector2, aim_global: Vector2) -> Vect
 
 ## Override for homing / other in-flight behaviour. Default = gravity + integrate.
 func _physics_flight(delta: float) -> void:
+	if homing:
+		_physics_homing_flight(delta)
+		return
 	_velocity += _gravity_vector() * delta
 	var next_position := global_position + _velocity * delta
 	if next_position.y >= FLOOR_Y:
 		global_position = next_position
 		global_position.y = FLOOR_Y
 		_face_velocity()
-		_stick_and_fade()
+		_on_reached_ground()
 		return
 	global_position = next_position
 	_face_velocity()
+
+
+func _physics_homing_flight(delta: float) -> void:
+	var speed := maxf(fallback_speed, 1.0)
+	if _is_homing_target_alive():
+		var to_target := (homing_target as Node2D).global_position - global_position
+		if to_target.length_squared() > 1.0:
+			_velocity = to_target.normalized() * speed
+	# Else keep last velocity and fly straight (no gravity).
+	var next_position := global_position + _velocity * delta
+	if next_position.y >= FLOOR_Y:
+		global_position = next_position
+		global_position.y = FLOOR_Y
+		_face_velocity()
+		_on_reached_ground()
+		return
+	global_position = next_position
+	_face_velocity()
+
+
+func _is_homing_target_alive() -> bool:
+	if homing_target == null or not is_instance_valid(homing_target):
+		return false
+	if homing_target.has_method("get") and homing_target.get("_dying") == true:
+		return false
+	if homing_target.get("current_hp") != null and int(homing_target.get("current_hp")) <= 0:
+		return false
+	return true
+
+
+func _on_reached_ground() -> void:
+	if explode_delay > 0.0 and aoe_radius > 0.0:
+		_arm_fuse()
+		return
+	_stick_and_fade()
+
+
+func _arm_fuse() -> void:
+	if _spent or _fuse_armed:
+		return
+	_fuse_armed = true
+	_spent = true
+	_velocity = Vector2.ZERO
+	set_deferred("monitoring", false)
+	set_physics_process(false)
+	var timer := get_tree().create_timer(explode_delay)
+	timer.timeout.connect(_explode_aoe)
+
+
+func _explode_aoe() -> void:
+	if not is_inside_tree():
+		return
+	var origin := global_position
+	var radius_sq := aoe_radius * aoe_radius
+	for node in get_tree().get_nodes_in_group("units"):
+		if node == null or not is_instance_valid(node) or not (node is Node2D):
+			continue
+		var unit := node as Node2D
+		if unit.global_position.distance_squared_to(origin) > radius_sq:
+			continue
+		if not unit.has_method("take_damage"):
+			continue
+		unit.call(
+			"take_damage",
+			damage,
+			origin,
+			knockback_force,
+			owner_unit if owner_unit != null and is_instance_valid(owner_unit) else null,
+			damage_type
+		)
+	queue_free()
 
 
 ## Override for AOE / multi-hit. Default = damage closest valid hurtbox.
 func _on_impact(hurtbox: Area2D) -> void:
 	if hurtbox == null or not hurtbox.has_method("receive_hit"):
 		return
+	var target: Node = null
+	if hurtbox.has_method("get_combatant"):
+		target = hurtbox.call("get_combatant")
+	if target != null and _hit_targets.has(target):
+		return
+	if target != null:
+		_hit_targets[target] = true
 	var from_pos := (
 		(owner_unit as Node2D).global_position
 		if owner_unit is Node2D
@@ -100,9 +197,10 @@ func _on_impact(hurtbox: Area2D) -> void:
 	var killer: Node = owner_unit if owner_unit != null and is_instance_valid(owner_unit) else null
 	hurtbox.call("receive_hit", damage, from_pos, knockback_force, killer, damage_type)
 	if killer != null:
+		if killer.has_method("grant_hit_biomass"):
+			killer.call("grant_hit_biomass")
 		var roster = killer.get("roster_data")
 		if roster != null and roster.get("strain") != null:
-			var target = hurtbox.call("get_combatant") if hurtbox.has_method("get_combatant") else null
 			roster.strain.call_effect(&"on_hit_dealt", [killer, target, damage])
 
 
@@ -111,7 +209,10 @@ func _physics_process(delta: float) -> void:
 		return
 	_lifetime += delta
 	if _lifetime >= max_lifetime:
-		_stick_and_fade()
+		if explode_delay > 0.0 and aoe_radius > 0.0:
+			_arm_fuse()
+		else:
+			_stick_and_fade()
 		return
 	_physics_flight(delta)
 
@@ -128,15 +229,29 @@ func _face_velocity() -> void:
 
 
 func _on_area_entered(_area: Area2D) -> void:
-	if _spent:
+	if _spent or explode_delay > 0.0:
 		return
 	_resolve_hit()
 
 
 func _resolve_hit() -> void:
+	# Umbrella / projectile blockers destroy the shot with no damage.
+	for area in get_overlapping_areas():
+		if area is ProjectileBlocker:
+			var blocker := area as ProjectileBlocker
+			if blocker.blocks_projectile_from(_get_owner_troop()):
+				_stick_and_fade()
+				return
+
+	if piercing:
+		_resolve_piercing_hits()
+		return
+
 	var chosen: Area2D = null
 	var closest_distance := INF
 	for area in get_overlapping_areas():
+		if area is ProjectileBlocker:
+			continue
 		if not area.has_method("get_combatant") or not area.has_method("receive_hit"):
 			continue
 		var target: Node = area.call("get_combatant")
@@ -154,10 +269,24 @@ func _resolve_hit() -> void:
 	queue_free()
 
 
+func _resolve_piercing_hits() -> void:
+	for area in get_overlapping_areas():
+		if area is ProjectileBlocker:
+			continue
+		if not area.has_method("get_combatant") or not area.has_method("receive_hit"):
+			continue
+		var target: Node = area.call("get_combatant")
+		if target == null or _hit_targets.has(target):
+			continue
+		if not _is_valid_target(target):
+			continue
+		_on_impact(area)
+
+
 func _on_body_entered(_body: Node2D) -> void:
 	if _spent:
 		return
-	_stick_and_fade()
+	_on_reached_ground()
 
 
 func _is_valid_target(target: Node) -> bool:
@@ -180,6 +309,12 @@ func _get_troop(target: Node) -> Node:
 	if target == null:
 		return null
 	return target.get("_troop")
+
+
+func _get_owner_troop() -> Node:
+	if owner_unit == null:
+		return null
+	return owner_unit.get("_troop")
 
 
 func _stick_and_fade() -> void:

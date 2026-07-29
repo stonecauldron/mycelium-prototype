@@ -1,18 +1,19 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://cwqkxjjdxy0jg"]
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
-[ext_resource type="PackedScene" uid="uid://5ge2990m1pe49" path="res://assets/weapons/umbrella/umbrella_appearance.tscn" id="2_appear"]
+[ext_resource type="PackedScene" uid="uid://dejy5vku3batw" path="res://assets/weapons/umbrella/umbrella_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://cm08y8uadclcn" path="res://assets/weapons/umbrella/umbrella.png" id="3_icon"]
 
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Umbrella Shield"
-short_description = "Built to weather a storm of arrows. (Projectile soak coming later.)"
+short_description = "Canopy that soaks enemy projectiles and braces against charges."
 engagement_stance = 2
+base_damage = 3
 biomass_cost = 10
 outgoing_damage_multiplier = 0.4
 incoming_damage_multiplier = 0.3
 incoming_knockback_multiplier = 0.35
-base_damage = 3
+blocks_charges = true
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

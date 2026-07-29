@@ -17,6 +17,7 @@ const _TEX_EGG0_SHADOW := preload("res://assets/base/plot_tile/egg0_shadow.png")
 const _TEX_EGG1_SHADOW := preload("res://assets/base/plot_tile/egg1_shadow.png")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
 const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
+const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 
 const _SHAKE_IDLE_NORMAL_SEC := 1.5
 const _SHAKE_IDLE_IMAGO_SEC := 0.8
@@ -221,9 +222,39 @@ func _refresh() -> void:
 			modulate = Color.WHITE
 			_base_modulate = modulate
 	_refresh_fertilizer_chips()
-	tooltip_text = _plot.fertilizer_tooltip()
+	if _plot.planted_spore != null:
+		# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
+		tooltip_text = _plot.planted_spore.display_name
+	else:
+		tooltip_text = ""
 	_apply_visual_state()
 	_refresh_arrow()
+
+
+func _make_custom_tooltip(_for_text: String) -> Object:
+	if _plot == null or _plot.planted_spore == null:
+		return null
+	var tip: SporeDetailCard = _SPORE_DETAIL_CARD_SCENE.instantiate()
+	tip.setup(_plot.planted_spore, false, _plot)
+	var tip_size := tip.card_size()
+	tip.custom_minimum_size = tip_size
+	tip.size = tip_size
+	tip.tree_entered.connect(_configure_detail_tooltip_popup.bind(tip), CONNECT_ONE_SHOT)
+	return tip
+
+
+func _configure_detail_tooltip_popup(tip: SporeDetailCard) -> void:
+	var node: Node = tip.get_parent()
+	while node != null:
+		if node is PopupPanel:
+			var popup := node as PopupPanel
+			popup.transparent = true
+			popup.transparent_bg = true
+			popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+			var tip_size := tip.card_size()
+			popup.size = Vector2i(ceili(tip_size.x), ceili(tip_size.y))
+			return
+		node = node.get_parent()
 
 
 func _clear_fertilizer_chips() -> void:

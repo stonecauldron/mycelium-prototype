@@ -5,6 +5,7 @@ signal spore_clicked(card: SporeCard)
 
 const CARD_SIZE := Vector2(120, 100)
 const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
+const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 const _HOVER_AMPLITUDE_PX := 5.0
 const _HOVER_HALF_DURATION_SEC := 1.35
 
@@ -77,6 +78,34 @@ func _refresh() -> void:
 	_days_chip.set_value(spore.days_to_mature)
 	if _icon != null:
 		_icon.modulate = spore.tint
+	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
+	tooltip_text = spore.display_name
+
+
+func _make_custom_tooltip(_for_text: String) -> Object:
+	if spore == null:
+		return null
+	var tip: SporeDetailCard = _SPORE_DETAIL_CARD_SCENE.instantiate()
+	tip.setup(spore, false)
+	var tip_size := tip.card_size()
+	tip.custom_minimum_size = tip_size
+	tip.size = tip_size
+	tip.tree_entered.connect(_configure_detail_tooltip_popup.bind(tip), CONNECT_ONE_SHOT)
+	return tip
+
+
+func _configure_detail_tooltip_popup(tip: SporeDetailCard) -> void:
+	var node: Node = tip.get_parent()
+	while node != null:
+		if node is PopupPanel:
+			var popup := node as PopupPanel
+			popup.transparent = true
+			popup.transparent_bg = true
+			popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+			var tip_size := tip.card_size()
+			popup.size = Vector2i(ceili(tip_size.x), ceili(tip_size.y))
+			return
+		node = node.get_parent()
 
 
 func _apply_hover_y() -> void:

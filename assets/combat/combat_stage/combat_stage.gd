@@ -49,7 +49,7 @@ func _ready() -> void:
 	_player_spawn = player_troop.flag_bearer.global_position
 	_enemy_spawn = enemy_troop.flag_bearer.global_position
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	_fast_forward_button.process_mode = Node.PROCESS_MODE_WHEN_PAUSED
+	_fast_forward_button.process_mode = Node.PROCESS_MODE_ALWAYS
 	_fast_forward_button.pressed.connect(_on_fast_forward_pressed)
 	_set_fast_forward(GameState.combat_fast_forward)
 	_refresh_biomass_hud()

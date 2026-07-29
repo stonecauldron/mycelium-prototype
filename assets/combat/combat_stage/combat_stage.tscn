@@ -276,7 +276,7 @@ text = "0000 kg"
 
 [node name="FastForwardButton" type="Button" parent="HUD" unique_id=428364516]
 unique_name_in_owner = true
-process_mode = 2
+process_mode = 3
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5

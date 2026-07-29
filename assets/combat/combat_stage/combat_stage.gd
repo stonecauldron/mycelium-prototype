@@ -319,6 +319,21 @@ func _schedule_zombie_respawn(
 	_check_battle_end()
 
 
+## Spawn just ahead of the opposing unit that has advanced furthest.
+func _zombie_respawn_global_position(troop: Troop) -> Vector2:
+	var opponent := troop.get_opponent()
+	if opponent == null:
+		return troop.get_flag_global_position()
+	var frontmost := opponent.get_frontmost_living_unit()
+	if frontmost == null:
+		return troop.get_flag_global_position()
+	# Place slightly in front of that unit (in the direction they face).
+	return frontmost.global_position + Vector2(
+		opponent.get_facing() * Troop.HOME_SLOT_SPACING,
+		0.0
+	)
+
+
 func _respawn_zombie_cap(
 	dead_roster: RosterUnitData,
 	is_player: bool,
@@ -342,7 +357,7 @@ func _respawn_zombie_cap(
 	var units_root: Node2D = troop.get_node("Units")
 	var color := Color.WHITE if is_player else Color(0.85, 0.25, 0.3, 1.0)
 	var scene := _scene_for_attack_style(clone.get_attack_style())
-	var spawn_pos := troop.get_flag_global_position()
+	var spawn_pos := _zombie_respawn_global_position(troop)
 	var spawned := _spawn_unit(scene, units_root, clone, color, squad_index, is_player, spawn_pos)
 	if spawned != null:
 		spawned.notify_battle_start()

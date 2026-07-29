@@ -90,6 +90,19 @@ func get_rearmost_living_unit() -> Unit:
 	return rearmost
 
 
+## Living unit that has advanced furthest toward the enemy (army front).
+func get_frontmost_living_unit() -> Unit:
+	var facing := get_facing()
+	var frontmost: Unit = null
+	for unit in get_living_units():
+		if (
+			frontmost == null
+			or facing * (unit.global_position.x - frontmost.global_position.x) > 0.0
+		):
+			frontmost = unit
+	return frontmost
+
+
 func _anchor_flag_behind_rearmost(delta: float) -> void:
 	var rearmost := get_rearmost_living_unit()
 	if rearmost == null:

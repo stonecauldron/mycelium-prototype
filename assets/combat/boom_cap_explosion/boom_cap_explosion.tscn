@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cp4um1lvp632g"]
 
-[ext_resource type="Script" path="res://assets/combat/boom_cap_explosion/boom_cap_explosion.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://d3dm5tx7umxf3" path="res://assets/combat/boom_cap_explosion/boom_cap_explosion.gd" id="1_script"]
 
-[node name="BoomCapExplosion" type="Node2D"]
+[node name="BoomCapExplosion" type="Node2D" unique_id=1759813709]
 script = ExtResource("1_script")

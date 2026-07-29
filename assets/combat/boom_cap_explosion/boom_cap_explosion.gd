@@ -2,14 +2,14 @@ class_name BoomCapExplosion
 extends Node2D
 
 var _damage: int = 0
-var _radius: float = 100.0
-var _knockback: float = 420.0
+var _radius: float = 200.0
+var _knockback: float = 820.0
 var _source: Unit = null
 var _spent: bool = false
 
 
 func trigger(strength: int, radius: float, knockback: float, source: Unit) -> void:
-	_damage = maxi(strength, 1)
+	_damage = maxi(strength * 3, 1)
 	_radius = radius
 	_knockback = knockback
 	_source = source

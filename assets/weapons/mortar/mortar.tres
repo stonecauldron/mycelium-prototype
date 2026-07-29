@@ -12,6 +12,7 @@ short_description = "Lobs a spore bomb that detonates after landing."
 formation_line = 2
 engagement_stance = 3
 attack_style = 2
+damage_stat = 1
 targeting_mode = 1
 base_damage = 6
 projectile_range = 900.0

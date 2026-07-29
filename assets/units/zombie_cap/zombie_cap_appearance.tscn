@@ -60,7 +60,7 @@ _data = {
 size = Vector2(88, 120)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(88, 120)
+size = Vector2(46, 120)
 
 [node name="ZombieCapAppearance" type="Node2D" unique_id=323651085]
 script = ExtResource("1_root")

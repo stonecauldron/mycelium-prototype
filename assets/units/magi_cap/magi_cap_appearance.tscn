@@ -60,7 +60,7 @@ _data = {
 size = Vector2(88, 120)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(88, 120)
+size = Vector2(42, 120)
 
 [node name="MagiCapAppearance" type="Node2D" unique_id=1227370134]
 script = ExtResource("1_root")
@@ -99,5 +99,5 @@ position = Vector2(1, -54)
 shape = SubResource("RectangleShape2D_hurtbox")
 
 [node name="BodyShape" type="CollisionShape2D" parent="." unique_id=2053335153]
-position = Vector2(1, -54)
+position = Vector2(-1, -54)
 shape = SubResource("RectangleShape2D_body")

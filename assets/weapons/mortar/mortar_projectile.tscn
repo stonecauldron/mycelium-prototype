@@ -1,16 +1,15 @@
 [gd_scene format=3 uid="uid://demfhncqeiiuq"]
 
-[ext_resource type="Script" uid="uid://cprojbase00001" path="res://assets/combat/projectile/projectile.gd" id="1_proj"]
+[ext_resource type="Script" uid="uid://cl38v3h35rm3y" path="res://assets/combat/projectile/projectile.gd" id="1_proj"]
 [ext_resource type="Texture2D" uid="uid://c021p5l2br0il" path="res://assets/weapons/mortar/spore_bomb_projectile.png" id="2_tex"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bomb"]
 radius = 18.0
 
-[node name="MortarProjectile" type="Area2D"]
+[node name="MortarProjectile" type="Area2D" unique_id=697305217]
 collision_layer = 8
-collision_mask = 1
-monitorable = false
 monitoring = false
+monitorable = false
 script = ExtResource("1_proj")
 launch_angle_deg = 72.0
 fallback_speed = 700.0
@@ -18,9 +17,9 @@ max_lifetime = 4.0
 aoe_radius = 100.0
 explode_delay = 1.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1742061256]
 shape = SubResource("CircleShape2D_bomb")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1359471407]
 scale = Vector2(0.35, 0.35)
 texture = ExtResource("2_tex")

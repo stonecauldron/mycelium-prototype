@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" uid="uid://ru18fydvyq1u" path="res://assets/weapons/bow/bow_appearance.tscn" id="2_appear"]
 [ext_resource type="Texture2D" uid="uid://ba54ju7pqqlac" path="res://assets/weapons/bow/bow.png" id="3_icon"]
-[ext_resource type="PackedScene" path="res://assets/weapons/bow/arrow_projectile.tscn" id="4_proj"]
+[ext_resource type="PackedScene" uid="uid://c2tvvq5exk441" path="res://assets/weapons/bow/arrow_projectile.tscn" id="4_proj"]
 
 [resource]
 script = ExtResource("1_weapon")

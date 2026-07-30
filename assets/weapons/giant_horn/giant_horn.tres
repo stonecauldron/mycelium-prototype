@@ -12,6 +12,7 @@ short_description = "Flat blunt sonic blast that punches through a line of foes.
 formation_line = 1
 engagement_stance = 3
 attack_style = 2
+damage_stat = 1
 damage_type = 1
 projectile_range = 700.0
 attack_interval = 1.35

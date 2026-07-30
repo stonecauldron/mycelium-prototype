@@ -33,7 +33,12 @@ func _ready() -> void:
 		_icon.texture = icon
 
 
-func set_value(value: Variant) -> void:
+func set_value(value: Variant = null) -> void:
+	if value == null:
+		_value_label.visible = false
+		_value_label.text = ""
+		return
+	_value_label.visible = true
 	_value_label.text = str(value)
 
 

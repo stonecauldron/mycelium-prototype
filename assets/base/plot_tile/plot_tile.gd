@@ -18,6 +18,9 @@ const _TEX_EGG1_SHADOW := preload("res://assets/base/plot_tile/egg1_shadow.png")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
 const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
+const _HOURGLASS_ICON := preload("res://assets/base/nursery/spore_card/hourglass_icon.png")
+const _HARVEST_ICON := preload("res://assets/combat/boom_cap_explosion/harvest_icon.png")
+const _HARVEST_CHIP_SIZE := Vector2(48, 48)
 
 const _SHAKE_IDLE_NORMAL_SEC := 1.5
 const _SHAKE_IDLE_IMAGO_SEC := 0.8
@@ -221,12 +224,16 @@ func _refresh() -> void:
 			left = maxi(0, left)
 			_days_chip.visible = left > 0
 			if left > 0:
+				_days_chip.chip_size = StatChip.CHIP_SIZE
+				_days_chip.icon = _HOURGLASS_ICON
 				_days_chip.set_value(left)
 			modulate = Color.WHITE
 			_base_modulate = modulate
 		NurseryPlotData.State.READY:
 			_days_chip.visible = true
-			_days_chip.set_value(0)
+			_days_chip.chip_size = _HARVEST_CHIP_SIZE
+			_days_chip.icon = _HARVEST_ICON
+			_days_chip.set_value()
 			modulate = Color.WHITE
 			_base_modulate = modulate
 	_refresh_fertilizer_chips()

@@ -1,0 +1,107 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://assets/base/shop/sell_overlay/sell_overlay.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="3_biomass"]
+[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="4_figtree"]
+
+[sub_resource type="FontVariation" id="Font_figtree_bold"]
+base_font = ExtResource("4_figtree")
+variation_opentype = {
+2003265652: 700
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
+content_margin_left = 36.0
+content_margin_top = 22.0
+content_margin_right = 36.0
+content_margin_bottom = 22.0
+bg_color = Color(0.92156863, 0.9098039, 0.87058824, 0.97)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.18, 0.55, 0.28, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 10
+shadow_offset = Vector2(0, 4)
+
+[node name="ShopSellOverlay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.06, 0.12, 0.07, 0.62)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Badge" type="PanelContainer" parent="Center"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="Row" type="HBoxContainer" parent="Center/Badge"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="SellLabel" type="Label" parent="Center/Badge/Row"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.35, 0.18, 1)
+theme_override_fonts/font = SubResource("Font_figtree_bold")
+theme_override_font_sizes/font_size = 56
+text = "SELL"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AmountRow" type="HBoxContainer" parent="Center/Badge/Row"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="AmountLabel" type="Label" parent="Center/Badge/Row/AmountRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.08, 0.08, 1)
+theme_override_fonts/font = SubResource("Font_figtree_bold")
+theme_override_font_sizes/font_size = 52
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BiomassIcon" type="TextureRect" parent="Center/Badge/Row/AmountRow"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("3_biomass")
+expand_mode = 1
+stretch_mode = 5

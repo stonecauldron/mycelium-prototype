@@ -224,7 +224,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	var weapon := payload.get("weapon") as WeaponData
 	if weapon != null:
 		var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
-		weapon_tip.setup(weapon, false)
+		weapon_tip.setup(weapon, false, true)
 		var weapon_tip_size := weapon_tip.card_size()
 		weapon_tip.custom_minimum_size = weapon_tip_size
 		weapon_tip.size = weapon_tip_size
@@ -236,7 +236,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	if spore == null:
 		return null
 	var tip: SporeDetailCard = _SPORE_DETAIL_CARD_SCENE.instantiate()
-	tip.setup(spore, false)
+	tip.setup(spore, false, null, true)
 	var tip_size := tip.card_size()
 	tip.custom_minimum_size = tip_size
 	tip.size = tip_size

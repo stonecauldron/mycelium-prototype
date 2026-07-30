@@ -8,12 +8,15 @@ const _MOCK_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 var spore_data: SporeData
 var plot_data: NurseryPlotData
 var interactive: bool = true
+## When true, footer shows buy cost instead of sell value (shop tooltips).
+var show_buy_price: bool = false
 
 @onready var _name_label: Label = %NameLabel
 @onready var _desc_label: Label = %DescLabel
 @onready var _days_chip: StatChip = %DaysChip
 @onready var _tier_tag: TagChip = %TierTag
 @onready var _hatch_tag: TagChip = %HatchTag
+@onready var _sell_row: HBoxContainer = %SellRow
 @onready var _sell_label: Label = %SellLabel
 @onready var _plot_section: VBoxContainer = %PlotSection
 @onready var _status_label: Label = %StatusLabel
@@ -23,11 +26,13 @@ var interactive: bool = true
 func setup(
 	spore: SporeData,
 	p_interactive: bool = true,
-	plot: NurseryPlotData = null
+	plot: NurseryPlotData = null,
+	p_show_buy_price: bool = false
 ) -> void:
 	spore_data = spore
 	plot_data = plot
 	interactive = p_interactive
+	show_buy_price = p_show_buy_price
 	if is_node_ready():
 		_apply_interaction_mode()
 		reset_compact_layout()
@@ -82,10 +87,19 @@ func _refresh() -> void:
 	_desc_label.text = desc
 	_desc_label.visible = not desc.is_empty()
 	_days_chip.set_value(spore_data.days_to_mature)
-	if _sell_label != null:
-		_sell_label.text = "Sell: %d" % BiomassData.sell_value(spore_data.biomass_cost)
+	_refresh_price_row()
 	_refresh_tags(strain)
 	_refresh_plot_section()
+
+
+func _refresh_price_row() -> void:
+	if _sell_row == null or _sell_label == null:
+		return
+	_sell_row.visible = true
+	if show_buy_price:
+		_sell_label.text = "Buy: %d" % spore_data.biomass_cost
+	else:
+		_sell_label.text = "Sell: %d" % BiomassData.sell_value(spore_data.biomass_cost)
 
 
 func _refresh_tags(strain: UnitStrain) -> void:

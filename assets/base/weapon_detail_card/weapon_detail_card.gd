@@ -5,6 +5,8 @@ const CARD_SIZE := Vector2(240, 280)
 
 var weapon_data: WeaponData
 var interactive: bool = true
+## When true, footer shows buy cost instead of sell value (shop tooltips).
+var show_buy_price: bool = false
 
 @onready var _name_label: Label = %NameLabel
 @onready var _desc_label: Label = %DescLabel
@@ -14,12 +16,18 @@ var interactive: bool = true
 @onready var _scaling_tag: TagChip = %ScalingTag
 @onready var _blunt_tag: TagChip = %BluntTag
 @onready var _aoe_tag: TagChip = %AoeTag
+@onready var _sell_row: HBoxContainer = %SellRow
 @onready var _sell_label: Label = %SellLabel
 
 
-func setup(weapon: WeaponData, p_interactive: bool = true) -> void:
+func setup(
+	weapon: WeaponData,
+	p_interactive: bool = true,
+	p_show_buy_price: bool = false
+) -> void:
 	weapon_data = weapon
 	interactive = p_interactive
+	show_buy_price = p_show_buy_price
 	if is_node_ready():
 		_apply_interaction_mode()
 		reset_compact_layout()
@@ -82,7 +90,19 @@ func _refresh() -> void:
 	_aoe_tag.visible = weapon_data.targeting_mode == WeaponData.TargetingMode.AOE
 	if _aoe_tag.visible:
 		_aoe_tag.set_text("AOE")
-	if _sell_label != null:
+	_refresh_price_row()
+
+
+func _refresh_price_row() -> void:
+	if _sell_row == null or _sell_label == null:
+		return
+	if RiboforgeData.is_default_weapon(weapon_data):
+		_sell_row.visible = false
+		return
+	_sell_row.visible = true
+	if show_buy_price:
+		_sell_label.text = "Buy: %d" % weapon_data.biomass_cost
+	else:
 		_sell_label.text = "Sell: %d" % BiomassData.sell_value(weapon_data.biomass_cost)
 
 

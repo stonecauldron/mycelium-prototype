@@ -45,19 +45,19 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 
 const _STRAIN_OPTIONS: Array[Dictionary] = [
 	{"name": "Generalist", "path": "res://assets/units/generalist/generalist_strain.tres"},
-	{"name": "Death Cap", "path": "res://assets/units/death_cap/death_cap_strain.tres"},
-	{"name": "Inky Cap", "path": "res://assets/units/inky_cap/inky_cap_strain.tres"},
-	{"name": "Boom Cap", "path": "res://assets/units/boom_cap/boom_cap_strain.tres"},
-	{"name": "Mini Cap", "path": "res://assets/units/mini_cap/mini_cap_strain.tres"},
-	{"name": "Lanky Cap", "path": "res://assets/units/lanky_cap/lanky_cap_strain.tres"},
-	{"name": "Fat Cap", "path": "res://assets/units/fat_cap/fat_cap_strain.tres"},
-	{"name": "Magi Cap", "path": "res://assets/units/magi_cap/magi_cap_strain.tres"},
-	{"name": "Chad Cap", "path": "res://assets/units/chad_cap/chad_cap_strain.tres"},
-	{"name": "Rush Cap", "path": "res://assets/units/rush_cap/rush_cap_strain.tres"},
-	{"name": "Wall Cap", "path": "res://assets/units/wall_cap/wall_cap_strain.tres"},
-	{"name": "Bank Cap", "path": "res://assets/units/bank_cap/bank_cap_strain.tres"},
-	{"name": "Zombie Cap", "path": "res://assets/units/zombie_cap/zombie_cap_strain.tres"},
-	{"name": "Rubber Cap", "path": "res://assets/units/rubber_cap/rubber_cap_strain.tres"},
+	{"name": "Death", "path": "res://assets/units/death_cap/death_cap_strain.tres"},
+	{"name": "Inky", "path": "res://assets/units/inky_cap/inky_cap_strain.tres"},
+	{"name": "Boom", "path": "res://assets/units/boom_cap/boom_cap_strain.tres"},
+	{"name": "Mini", "path": "res://assets/units/mini_cap/mini_cap_strain.tres"},
+	{"name": "Lanky", "path": "res://assets/units/lanky_cap/lanky_cap_strain.tres"},
+	{"name": "Fat", "path": "res://assets/units/fat_cap/fat_cap_strain.tres"},
+	{"name": "Magi", "path": "res://assets/units/magi_cap/magi_cap_strain.tres"},
+	{"name": "Chad", "path": "res://assets/units/chad_cap/chad_cap_strain.tres"},
+	{"name": "Rush", "path": "res://assets/units/rush_cap/rush_cap_strain.tres"},
+	{"name": "Wall", "path": "res://assets/units/wall_cap/wall_cap_strain.tres"},
+	{"name": "Bank", "path": "res://assets/units/bank_cap/bank_cap_strain.tres"},
+	{"name": "Zombie", "path": "res://assets/units/zombie_cap/zombie_cap_strain.tres"},
+	{"name": "Rubber", "path": "res://assets/units/rubber_cap/rubber_cap_strain.tres"},
 ]
 
 @onready var _stage: Node2D = $CombatStage

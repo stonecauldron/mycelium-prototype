@@ -27,8 +27,16 @@ static func add_base_unlock(feature_name: String) -> void:
 static func add_fallen_unit(unit: RosterUnitData) -> void:
 	if unit == null:
 		return
+	var text: String
+	if unit.last_death_biomass_yield > 0:
+		text = "%s died and yielded %d kg of biomass" % [
+			unit.display_name,
+			unit.last_death_biomass_yield,
+		]
+	else:
+		text = "%s has fallen" % unit.display_name
 	entries.append({
-		"text": "%s has fallen" % unit.display_name,
+		"text": text,
 		"formation_line": int(unit.get_formation_line()),
 		"unit": unit,
 	})

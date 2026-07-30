@@ -11,12 +11,12 @@ script = ExtResource("4_effect")
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
 id = &"imago"
-display_name = "Zombie Cap"
+display_name = "Zombie"
 appearance_scene = ExtResource("3_appear")
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Zombie Cap"
+display_name = "Zombie"
 short_description = "Comes back to life once. Frail constitution."
 tint = Color(0.67, 0.63985, 0.60969996, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])

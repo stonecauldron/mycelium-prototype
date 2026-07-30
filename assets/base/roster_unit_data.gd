@@ -17,6 +17,8 @@ const NO_LIFE_EXPECTANCY := -1
 @export var max_days_alive: int = NO_LIFE_EXPECTANCY
 ## Banked biomass for Piñata-style strains.
 @export var biomass_bank: int = 0
+## Biomass paid out on the most recent strain death (Bank Cap); used by UI / day summary.
+var last_death_biomass_yield: int = 0
 ## When set, overrides weapon engagement stance in combat (Amok fertiliser).
 @export var forced_engagement_stance: int = -1
 ## Zombie Cap: true after the one-time combat respawn.

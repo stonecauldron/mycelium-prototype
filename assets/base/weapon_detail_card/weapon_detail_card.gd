@@ -14,6 +14,7 @@ var interactive: bool = true
 @onready var _scaling_tag: TagChip = %ScalingTag
 @onready var _blunt_tag: TagChip = %BluntTag
 @onready var _aoe_tag: TagChip = %AoeTag
+@onready var _sell_label: Label = %SellLabel
 
 
 func setup(weapon: WeaponData, p_interactive: bool = true) -> void:
@@ -81,6 +82,8 @@ func _refresh() -> void:
 	_aoe_tag.visible = weapon_data.targeting_mode == WeaponData.TargetingMode.AOE
 	if _aoe_tag.visible:
 		_aoe_tag.set_text("AOE")
+	if _sell_label != null:
+		_sell_label.text = "Sell: %d" % BiomassData.sell_value(weapon_data.biomass_cost)
 
 
 func _range_label(formation_line: WeaponData.FormationLine) -> String:

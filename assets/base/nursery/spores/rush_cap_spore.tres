@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1_spore")
-display_name = "Rush Cap Spore"
+display_name = "Rush Spore"
 days_to_mature = 0
 biomass_cost = 4
 power_tier = 1

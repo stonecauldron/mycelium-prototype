@@ -7,12 +7,12 @@
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
 id = &"imago"
-display_name = "Magi Cap"
+display_name = "Magi"
 appearance_scene = ExtResource("3_appear")
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Magi Cap"
+display_name = "Magi"
 short_description = "Pitiful at hatch. Explodes in power when in adult form (4 days)."
 tint = Color(0.55, 0.4, 0.95, 1)
 days_to_imago = 4

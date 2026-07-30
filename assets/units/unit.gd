@@ -1409,6 +1409,11 @@ func _die(
 			&"on_death",
 			[roster_data, StrainEffect.DeathContext.COMBAT, self]
 		)
+		if roster_data.last_death_biomass_yield > 0:
+			_spawn_biomass_number(roster_data.last_death_biomass_yield)
+			var stage := _find_combat_stage()
+			if stage != null and stage.has_method("record_biomass_yield"):
+				stage.record_biomass_yield(roster_data.last_death_biomass_yield)
 
 	died.emit(self)
 

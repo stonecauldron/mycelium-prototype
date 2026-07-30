@@ -11,12 +11,12 @@ script = ExtResource("4_effect")
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
 id = &"imago"
-display_name = "Chad Cap"
+display_name = "Chad"
 appearance_scene = ExtResource("3_appear")
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Chad Cap"
+display_name = "Chad"
 short_description = "Strong early. Declines after every battle."
 tint = Color(0.95, 0.75, 0.25, 1)
 days_to_imago = 1

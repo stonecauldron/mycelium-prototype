@@ -7,12 +7,12 @@
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
 id = &"imago"
-display_name = "Rush Cap"
+display_name = "Rush"
 appearance_scene = ExtResource("3_appear")
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Rush Cap"
+display_name = "Rush"
 short_description = "Three small fry. Ready the moment you plant."
 tint = Color(0.35, 0.85, 0.9, 1)
 days_to_imago = 1

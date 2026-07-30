@@ -11,12 +11,12 @@ script = ExtResource("4_effect")
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
 id = &"imago"
-display_name = "Bank Cap"
+display_name = "Bank"
 appearance_scene = ExtResource("3_appear")
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Bank Cap"
+display_name = "Bank"
 short_description = "Absorbs biomass from combat deaths, cashes out upon death with 20% bonus."
 tint = Color(0.84978473, 0.4587953, 0.6893629, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])

@@ -11,12 +11,12 @@ script = ExtResource("4_effect")
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
 id = &"imago"
-display_name = "Rubber Cap"
+display_name = "Rubber"
 appearance_scene = ExtResource("3_appear")
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Rubber Cap"
+display_name = "Rubber"
 short_description = "Resists blunt hits. Gets knocked around hard."
 tint = Color(0.930263, 0.60786146, 0.34815294, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])

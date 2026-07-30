@@ -5,6 +5,6 @@
 
 [resource]
 script = ExtResource("1_spore")
-display_name = "Mini Cap Spore"
+display_name = "Mini Spore"
 days_to_mature = 1
 strain = ExtResource("2_strain")

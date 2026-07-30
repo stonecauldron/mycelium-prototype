@@ -6,11 +6,13 @@ const CARD_SIZE_NO_PORTRAIT := Vector2(300, 360)
 const PORTRAIT_SCALE := 0.9
 ## Extra room under feet so the ground shadow is not clipped (UnitCard keeps default).
 const PORTRAIT_SHADOW_CLEARANCE := 24.0
+const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
 
 var unit_data: RosterUnitData
 var show_portrait: bool = true
 var interactive: bool = true
 var _portrait_instance: Node2D = null
+var _strain_chip: StatChip = null
 
 @onready var _name_label: Label = %NameLabel
 @onready var _type_label: Label = %TypeLabel
@@ -118,7 +120,30 @@ func _refresh() -> void:
 		_dex_label.text = "DEX —"
 		_con_label.text = "CON —"
 		_spd_label.text = "SPD —"
+	_refresh_strain_chip()
 	_refresh_portrait()
+
+
+func _refresh_strain_chip() -> void:
+	if _strain_chip != null:
+		if is_instance_valid(_strain_chip):
+			_strain_chip.queue_free()
+		_strain_chip = null
+	if unit_data == null or unit_data.strain == null or _atk_chip == null:
+		return
+	var info := unit_data.strain.get_stat_chip(unit_data)
+	if info.is_empty():
+		return
+	var row := _atk_chip.get_parent() as Control
+	if row == null:
+		return
+	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
+	chip.chip_size = Vector2(48, 48)
+	chip.value_font_size = 22
+	chip.icon = info.get("icon") as Texture2D
+	row.add_child(chip)
+	chip.set_value(info.get("value", 0))
+	_strain_chip = chip
 
 
 func _refresh_strain_meta() -> void:

@@ -219,6 +219,13 @@ func _award_kill_biomass(victim: Unit) -> int:
 	return reward
 
 
+func record_biomass_yield(amount: int) -> void:
+	if amount <= 0:
+		return
+	_biomass_earned_this_fight += amount
+	_refresh_biomass_hud()
+
+
 func _spawn_biomass_number(at_global: Vector2, amount: int) -> void:
 	if amount <= 0:
 		return

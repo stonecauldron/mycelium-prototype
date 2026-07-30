@@ -11,18 +11,17 @@ script = ExtResource("4_effect")
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
 id = &"imago"
-display_name = "Boom Cap"
+display_name = "Boom"
 appearance_scene = ExtResource("3_appear")
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Boom Cap"
-short_description = "Explodes on death for high AoE damage (STR based) and knockback."
+display_name = "Boom"
+short_description = "Explodes upon death for STR x 3 AoE damage."
 tint = Color(0.21242, 0.38, 0.1748, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
 effect = SubResource("Effect")
 use_power_tier = false
-strength_delta = -2
 dex_delta = -2
 con_delta = -2
 spd_delta = -2

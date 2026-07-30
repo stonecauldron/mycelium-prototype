@@ -105,3 +105,9 @@ func call_effect(method: StringName, args: Array = []) -> void:
 	if effect == null or not effect.has_method(method):
 		return
 	effect.callv(method, args)
+
+
+func get_stat_chip(roster: Resource) -> Dictionary:
+	if effect == null:
+		return {}
+	return effect.get_stat_chip(roster)

@@ -10,12 +10,14 @@ const PORTRAIT_SCALE := 1.0
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
 const _WEAPON_DETAIL_CARD_SCENE := preload("res://assets/base/weapon_detail_card/weapon_detail_card.tscn")
+const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
 const _DETAIL_TOOLTIP_SEPARATION := 8.0
 var unit_data: Resource
 var source: String = "bench"
 var slot: Node
 var _drag_started_flag: bool = false
 var _portrait_instance: Node2D = null
+var _strain_chip: StatChip = null
 
 @onready var _name_label: Label = %NameLabel
 @onready var _weapon_label: Label = %WeaponLabel
@@ -108,9 +110,30 @@ func _refresh() -> void:
 	else:
 		_atk_chip.set_value("—")
 		_hp_chip.set_value("—")
+	_refresh_strain_chip(data)
 	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
 	tooltip_text = data.display_name
 	_refresh_portrait(data)
+
+
+func _refresh_strain_chip(data: RosterUnitData) -> void:
+	if _strain_chip != null:
+		if is_instance_valid(_strain_chip):
+			_strain_chip.queue_free()
+		_strain_chip = null
+	if data == null or data.strain == null or _atk_chip == null:
+		return
+	var info := data.strain.get_stat_chip(data)
+	if info.is_empty():
+		return
+	var row := _atk_chip.get_parent() as Control
+	if row == null:
+		return
+	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
+	chip.icon = info.get("icon") as Texture2D
+	row.add_child(chip)
+	chip.set_value(info.get("value", 0))
+	_strain_chip = chip
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:

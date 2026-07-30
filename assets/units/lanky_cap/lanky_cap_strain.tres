@@ -7,12 +7,12 @@
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
 id = &"imago"
-display_name = "Lanky Cap"
+display_name = "Lanky"
 appearance_scene = ExtResource("3_appear")
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Lanky Cap"
+display_name = "Lanky"
 short_description = "Very tall. Easy to hit, decent dexterity."
 tint = Color(0.5483871, 0.7277105, 0.9161829, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])

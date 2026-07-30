@@ -14,6 +14,7 @@ var interactive: bool = true
 @onready var _days_chip: StatChip = %DaysChip
 @onready var _tier_tag: TagChip = %TierTag
 @onready var _hatch_tag: TagChip = %HatchTag
+@onready var _sell_label: Label = %SellLabel
 @onready var _plot_section: VBoxContainer = %PlotSection
 @onready var _status_label: Label = %StatusLabel
 @onready var _plot_info_label: Label = %PlotInfoLabel
@@ -81,6 +82,8 @@ func _refresh() -> void:
 	_desc_label.text = desc
 	_desc_label.visible = not desc.is_empty()
 	_days_chip.set_value(spore_data.days_to_mature)
+	if _sell_label != null:
+		_sell_label.text = "Sell: %d" % BiomassData.sell_value(spore_data.biomass_cost)
 	_refresh_tags(strain)
 	_refresh_plot_section()
 

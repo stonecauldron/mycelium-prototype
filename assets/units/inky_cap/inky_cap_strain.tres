@@ -11,12 +11,12 @@ script = ExtResource("4_effect")
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
 id = &"imago"
-display_name = "Inky Cap"
+display_name = "Inky"
 appearance_scene = ExtResource("3_appear")
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Inky Cap"
+display_name = "Inky"
 short_description = "Deals half damage but every hit inflicts speed debuff."
 tint = Color(0.25, 0.35, 0.7, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])

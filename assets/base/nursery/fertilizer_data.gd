@@ -24,7 +24,11 @@ enum Behavior {
 
 
 func is_stat_source() -> bool:
-	return behavior == Behavior.STAT or behavior == Behavior.SLOW_STEADY
+	return (
+		behavior == Behavior.STAT
+		or behavior == Behavior.SLOW_STEADY
+		or behavior == Behavior.AMOK
+	)
 
 
 func apply_to(stats: UnitStatsData, scale_factor: int = 1) -> void:
@@ -50,7 +54,7 @@ func subtitle_text() -> String:
 		Behavior.FUNGICIDE:
 			return "kill plant → next +1/active day"
 		Behavior.AMOK:
-			return "Unit always pushes forward, regardless of weapon."
+			return "+2 STR / +2 SPD / always charges forward"
 		_:
 			pass
 	var parts: PackedStringArray = []

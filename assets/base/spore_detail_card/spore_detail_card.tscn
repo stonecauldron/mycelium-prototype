@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="4_hourglass"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="5_tag"]
+[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="6_biomass"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
 content_margin_left = 12.0
@@ -141,3 +142,32 @@ text = "Common"
 unique_name_in_owner = true
 visible = false
 text = "x2"
+
+[node name="FooterMidSpacer" type="Control" parent="CardPanel/Margin/VBox/FooterRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="SellRow" type="HBoxContainer" parent="CardPanel/Margin/VBox/FooterRow"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme_override_constants/separation = 4
+alignment = 2
+
+[node name="SellLabel" type="Label" parent="CardPanel/Margin/VBox/FooterRow/SellRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Sell: 1"
+horizontal_alignment = 2
+
+[node name="SellBiomassIcon" type="TextureRect" parent="CardPanel/Margin/VBox/FooterRow/SellRow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("6_biomass")
+expand_mode = 1
+stretch_mode = 5

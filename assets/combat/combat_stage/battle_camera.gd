@@ -3,45 +3,66 @@ extends Camera2D
 @export var fixed_y: float = 540.0
 @export var max_shake_offset: float = 14.0
 @export var trauma_decay: float = 2.6
+@export var frame_padding: float = 280.0
+@export var min_zoom: float = 0.55
+@export var max_zoom: float = 1.0
+@export var zoom_smooth: float = 6.0
 
 var _trauma: float = 0.0
-var _base_offset: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
 	add_to_group("battle_camera")
-	_base_offset = offset
+	# Dual-flag framing centers between both banners; drop the old look-ahead offset.
+	offset = Vector2.ZERO
+	zoom = Vector2(max_zoom, max_zoom)
 
 
 func add_shake(amount: float) -> void:
 	_trauma = minf(_trauma + amount, 1.0)
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	# Match Camera2D process_callback = PHYSICS so follow stays in sync with
 	# flag bearer movement and position smoothing.
-	var player_troop := _find_player_troop()
+	var player_troop := _find_troop(false)
 	if player_troop == null:
 		return
-	global_position.x = player_troop.get_flag_global_position().x
+	var player_flag_x := player_troop.get_flag_global_position().x
+	var left_x := player_flag_x
+	var right_x := player_flag_x
+	var enemy_troop := _find_troop(true)
+	if enemy_troop != null:
+		var enemy_flag_x := enemy_troop.get_flag_global_position().x
+		left_x = minf(player_flag_x, enemy_flag_x)
+		right_x = maxf(player_flag_x, enemy_flag_x)
+	var target_x := (left_x + right_x) * 0.5
+	var target_zoom := max_zoom
+	var span := right_x - left_x + frame_padding * 2.0
+	var view_w := get_viewport_rect().size.x
+	if view_w > 1.0 and span > 1.0:
+		target_zoom = clampf(view_w / span, min_zoom, max_zoom)
+	global_position.x = target_x
 	global_position.y = fixed_y
+	var z := lerpf(zoom.x, target_zoom, clampf(zoom_smooth * delta, 0.0, 1.0))
+	zoom = Vector2(z, z)
 
 
 func _process(delta: float) -> void:
 	if _trauma > 0.0:
 		_trauma = maxf(_trauma - trauma_decay * delta, 0.0)
 		var shake := _trauma * _trauma
-		offset = _base_offset + Vector2(
+		offset = Vector2(
 			max_shake_offset * shake * randf_range(-1.0, 1.0),
 			max_shake_offset * shake * randf_range(-1.0, 1.0) * 0.55
 		)
 	else:
-		offset = _base_offset
+		offset = Vector2.ZERO
 
 
-func _find_player_troop() -> Troop:
+func _find_troop(enemy: bool) -> Troop:
 	for node in get_tree().get_nodes_in_group("troops"):
 		var troop := node as Troop
-		if troop != null and not troop.is_enemy:
+		if troop != null and troop.is_enemy == enemy:
 			return troop
 	return null

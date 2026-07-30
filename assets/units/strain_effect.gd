@@ -46,3 +46,9 @@ func on_death(_roster: Resource, _context: DeathContext, _combat_unit: Node = nu
 ## Fired for each living unit when any combat death grants biomass (Piñata banking).
 func on_combat_biomass_awarded(_unit: Node, _amount: int, _victim: Node) -> void:
 	pass
+
+
+## Optional strain-specific chip for unit cards. Empty Dictionary = no chip.
+## Expected keys when present: `icon` (Texture2D), `value` (Variant).
+func get_stat_chip(_roster: Resource) -> Dictionary:
+	return {}

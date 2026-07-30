@@ -1,6 +1,93 @@
-[gd_scene format=3 uid="uid://cp4um1lvp632g"]
+[gd_scene load_steps=6 format=3 uid="uid://cp4um1lvp632g"]
 
 [ext_resource type="Script" uid="uid://d3dm5tx7umxf3" path="res://assets/combat/boom_cap_explosion/boom_cap_explosion.gd" id="1_script"]
 
-[node name="BoomCapExplosion" type="Node2D" unique_id=1759813709]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_add"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_ember_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.2, 1.15), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_spark_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_shard_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0.85), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="BoomCapExplosion" type="Node2D"]
+z_index = 16
 script = ExtResource("1_script")
+
+[node name="Embers" type="CPUParticles2D" parent="."]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_add")
+emitting = false
+amount = 72
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+randomness = 0.55
+lifetime_randomness = 0.35
+local_coords = false
+emission_shape = 1
+emission_sphere_radius = 8.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 780)
+initial_velocity_min = 180.0
+initial_velocity_max = 320.0
+angular_velocity_min = -180.0
+angular_velocity_max = 180.0
+scale_amount_min = 1.4
+scale_amount_max = 3.0
+scale_amount_curve = SubResource("Curve_ember_scale")
+color = Color(1, 0.5, 0.12, 1)
+
+[node name="Sparks" type="CPUParticles2D" parent="."]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_add")
+emitting = false
+amount = 56
+lifetime = 0.42
+one_shot = true
+explosiveness = 1.0
+randomness = 0.65
+lifetime_randomness = 0.4
+local_coords = false
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 520)
+initial_velocity_min = 220.0
+initial_velocity_max = 400.0
+scale_amount_min = 0.5
+scale_amount_max = 1.2
+scale_amount_curve = SubResource("Curve_spark_scale")
+color = Color(1, 0.9, 0.45, 1)
+
+[node name="Shards" type="CPUParticles2D" parent="."]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_add")
+emitting = false
+amount = 40
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+randomness = 0.7
+lifetime_randomness = 0.3
+local_coords = false
+emission_shape = 1
+emission_sphere_radius = 4.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 900)
+initial_velocity_min = 200.0
+initial_velocity_max = 360.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+scale_amount_min = 0.9
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_shard_scale")
+color = Color(0.95, 0.35, 0.08, 1)

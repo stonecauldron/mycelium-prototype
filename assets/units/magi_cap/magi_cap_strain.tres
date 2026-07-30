@@ -13,9 +13,9 @@ appearance_scene = ExtResource("3_appear")
 [resource]
 script = ExtResource("1_script")
 display_name = "Magi"
-short_description = "Pitiful at hatch. Explodes in power when in adult form (4 days)."
+short_description = "Pitiful at hatch. Explodes in power when in adult form (2 days)."
 tint = Color(0.55, 0.4, 0.95, 1)
-days_to_imago = 4
+days_to_imago = 2
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
 use_power_tier = false
 hatch_stat_fraction = 0.25

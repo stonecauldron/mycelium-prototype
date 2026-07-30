@@ -2,8 +2,19 @@ class_name BoomCapEffect
 extends StrainEffect
 
 const _EXPLOSION_SCENE := preload("res://assets/combat/boom_cap_explosion/boom_cap_explosion.tscn")
+const _EXPLOSION_ICON := preload("res://assets/units/boom_cap/explosion_icon.png")
 const RADIUS := 100.0
 const KNOCKBACK := 420.0
+
+
+func get_stat_chip(roster: Resource) -> Dictionary:
+	var data := roster as RosterUnitData
+	if data == null or data.stats == null:
+		return {}
+	return {
+		"icon": _EXPLOSION_ICON,
+		"value": maxi(data.stats.strength * 3, 1),
+	}
 
 
 func on_death(_roster: Resource, context: DeathContext, combat_unit: Node = null) -> void:

@@ -18,5 +18,5 @@ appearance_scene = ExtResource("4_imago")
 
 [resource]
 script = ExtResource("1_script")
-short_description = "An all-rounder. A tad boring…"
+short_description = "A basic all-rounder."
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_juvenile"), SubResource("Stage_imago")])

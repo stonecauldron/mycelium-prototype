@@ -113,6 +113,7 @@ var _projectile_attack_active: bool = false
 var _ranged_aim: Vector2 = Vector2.ZERO
 var _bow_lean_angle: float = 0.0
 var _dying: bool = false
+var _celebrating: bool = false
 var _last_hit_from: Vector2 = Vector2.ZERO
 ## Runtime engagement range from weapon data (strain-invariant).
 var _attack_range: float = 0.0
@@ -348,6 +349,22 @@ func _physics_process(delta: float) -> void:
 	_tick_statuses(delta)
 	velocity += get_gravity() * delta
 
+	if _celebrating:
+		if _in_knockback:
+			move_and_slide()
+			if not is_on_floor():
+				_knockback_left_ground = true
+			elif _knockback_left_ground and velocity.y >= 0.0:
+				_in_knockback = false
+				_knockback_left_ground = false
+				velocity.x = 0.0
+			_update_locomotion_animation()
+			return
+		_free_march_toward_enemy()
+		move_and_slide()
+		_update_locomotion_animation()
+		return
+
 	if _in_knockback:
 		move_and_slide()
 		if not is_on_floor():
@@ -438,8 +455,40 @@ func notify_battle_start() -> void:
 
 
 func notify_battle_end() -> void:
+	_celebrating = false
 	if roster_data != null and roster_data.strain != null:
 		roster_data.strain.call_effect(&"on_battle_end", [self])
+
+
+## Enter celebrate-march mode; weapon toss VFX is owned by VictoryCelebrationDirector.
+func begin_victory_celebration() -> void:
+	if _dying or _troop == null or _troop.is_enemy:
+		return
+	_celebrating = true
+	_cancel_attack()
+	_set_held_weapon_visible(true)
+	_target = null
+	_charge_phase = ChargePhase.NONE
+	_in_knockback = false
+	_knockback_left_ground = false
+
+
+func is_celebrating() -> bool:
+	return _celebrating
+
+
+func can_victory_toss() -> bool:
+	return _celebrating and not _dying and is_inside_tree() and current_hp > 0
+
+
+func get_victory_facing() -> float:
+	if _troop != null:
+		return _troop.get_facing()
+	return 1.0
+
+
+func get_weapon_mount_for_vfx() -> Node2D:
+	return _get_weapon_mount()
 
 
 func apply_status(effect: StatusEffect, replace_existing: bool = true) -> void:

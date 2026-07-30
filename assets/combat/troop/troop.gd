@@ -69,6 +69,8 @@ func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:
 
 
 func reset_for_scenario(spawn_global: Vector2) -> void:
+	if not has_flag_bearer():
+		return
 	flag_bearer.global_position = spawn_global
 	flag_bearer.reset_combat_state()
 
@@ -136,16 +138,26 @@ func _acquire_opponent() -> void:
 	_opponent = closest
 
 
+func has_flag_bearer() -> bool:
+	return flag_bearer != null and is_instance_valid(flag_bearer)
+
+
 func get_flag_global_x() -> float:
-	return flag_bearer.global_position.x
+	if has_flag_bearer():
+		return flag_bearer.global_position.x
+	return global_position.x
 
 
 func get_flag_global_position() -> Vector2:
-	return flag_bearer.global_position
+	if has_flag_bearer():
+		return flag_bearer.global_position
+	return global_position
 
 
 func _physics_process(delta: float) -> void:
 	_acquire_opponent()
+	if not has_flag_bearer():
+		return
 	if flag_bearer.is_in_knockback():
 		return
 	if is_wiped_out():

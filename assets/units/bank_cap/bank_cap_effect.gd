@@ -15,7 +15,7 @@ func get_stat_chip(roster: Resource) -> Dictionary:
 
 
 func on_combat_biomass_awarded(unit: Node, amount: int, _victim: Node) -> void:
-	var u := unit as Unit
+	var u: Unit = unit as Unit
 	if u == null or u.roster_data == null or amount <= 0:
 		return
 	u.roster_data.biomass_bank += int(round(float(amount) * 0.2))

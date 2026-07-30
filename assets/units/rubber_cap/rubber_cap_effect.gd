@@ -3,7 +3,7 @@ extends StrainEffect
 
 
 func on_battle_start(unit: Node) -> void:
-	var u := unit as Unit
+	var u: Unit = unit as Unit
 	if u == null:
 		return
 	u._blunt_resist = 0.5

@@ -17,7 +17,13 @@ const _ZOMBIE_RESPAWN_DELAY := 2.0
 ## Keep physics step size fixed under time_scale so 2×/4× don't change combat outcomes.
 const _BASE_PHYSICS_TICKS := 60
 const _BIOMASS_NUMBER_SCENE := preload("res://assets/vfx/biomass_number/biomass_number.tscn")
+const _COMBAT_CALLOUT_SCENE := preload("res://assets/vfx/combat_callout/combat_callout.tscn")
 const _BIOMASS_DIGITS := 4
+const _VICTORY_HITSTOP_SCALE := 0.12
+const _VICTORY_HITSTOP_DURATION := 0.7
+const _VICTORY_CELEBRATE_SEC := 3.8
+## Beat after the wipe before flag death / callout / tosses.
+const _VICTORY_LEAD_IN_SEC := 0.5
 
 @export var sandboxed: bool = false
 
@@ -38,11 +44,16 @@ var _saved_physics_ticks: int = _BASE_PHYSICS_TICKS
 var _saved_max_physics_steps: int = 8
 var _pending_player_zombie_respawns: int = 0
 var _pending_enemy_zombie_respawns: int = 0
+var _victory_celebrating: bool = false
+var _victory_director: VictoryCelebrationDirector = null
 
 
 func _ready() -> void:
 	if get_tree().current_scene != self:
 		sandboxed = true
+
+	_victory_director = VictoryCelebrationDirector.new()
+	add_child(_victory_director)
 
 	_saved_physics_ticks = Engine.physics_ticks_per_second
 	_saved_max_physics_steps = Engine.max_physics_steps_per_frame
@@ -71,6 +82,9 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_hitstop_active = false
+	_victory_celebrating = false
+	if _victory_director != null:
+		_victory_director.stop()
 	_set_combat_paused(false)
 	_restore_engine_timing()
 
@@ -160,7 +174,12 @@ func request_hitstop() -> void:
 	await timer.timeout
 	if not is_inside_tree():
 		return
+	# Victory celebration owns hitstop / time_scale after the killing blow.
+	if _victory_celebrating:
+		return
 	_hitstop_active = false
+	if _battle_over:
+		return
 	_restore_time_scale()
 
 
@@ -170,6 +189,9 @@ func _run_battle(
 ) -> void:
 	_battle_over = false
 	_hitstop_active = false
+	_victory_celebrating = false
+	if _victory_director != null:
+		_victory_director.stop()
 	_fallen_units.clear()
 	_biomass_earned_this_fight = 0
 	_pending_player_zombie_respawns = 0
@@ -202,6 +224,8 @@ func _notify_battle_start() -> void:
 
 
 func _notify_battle_end() -> void:
+	if _victory_director != null:
+		_victory_director.stop()
 	for unit in player_troop.get_living_units():
 		unit.notify_battle_end()
 	for unit in enemy_troop.get_living_units():
@@ -434,48 +458,115 @@ func _check_battle_end() -> void:
 	if not player_wiped and not enemy_wiped:
 		return
 	_battle_over = true
-	_hitstop_active = false
 	_set_combat_paused(false)
+
+	if player_wiped:
+		_hitstop_active = false
+		_restore_engine_timing()
+		_notify_battle_end()
+		if sandboxed:
+			battle_ended.emit(false)
+			return
+		SceneTransition.change_scene(_GAME_OVER_SCENE_PATH)
+		return
+
+	# Sandbox rematches skip the victory beat so flags/walls stay reset-friendly.
+	if sandboxed:
+		_hitstop_active = false
+		_restore_engine_timing()
+		_notify_battle_end()
+		battle_ended.emit(true)
+		return
+
+	_victory_celebrating = true
+	await get_tree().create_timer(_VICTORY_LEAD_IN_SEC, true, true, true).timeout
+	if not is_inside_tree():
+		return
+	await _play_victory_celebration()
+	if not is_inside_tree():
+		return
+	_victory_celebrating = false
+	_hitstop_active = false
 	_restore_engine_timing()
 	_notify_battle_end()
 
-	if sandboxed:
-		battle_ended.emit(not player_wiped)
+	GameState.ensure_nursery_seeded()
+	GameState.current_day += 1
+	GameState.clear_upcoming_enemy_formation()
+	if GameState.has_won_run():
+		SceneTransition.change_scene(_VICTORY_SCENE_PATH)
 		return
+	DaySummaryFeed.clear()
+	if GameState.current_day == GameState.NURSERY_UNLOCK_DAY:
+		GameState.prefer_nursery_tab = true
+		DaySummaryFeed.add_base_unlock("Nursery")
+	if GameState.current_day == GameState.RIBOFORGE_UNLOCK_DAY:
+		GameState.prefer_riboforge_tab = true
+		DaySummaryFeed.add_base_unlock("Riboforge")
+	if _biomass_earned_this_fight > 0:
+		DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)
+	for unit in _fallen_units:
+		DaySummaryFeed.add_fallen_unit(unit)
+	var grown := GameState.troop.advance_unit_ages()
+	for unit in grown:
+		DaySummaryFeed.add_unit_became_imago(unit)
+	var matured := GameState.nursery.advance_day()
+	for entry in matured:
+		DaySummaryFeed.add_nursery_matured(
+			str(entry.get("spore_name", "Spore")),
+			int(entry.get("plot_index", 0)),
+			entry.get("tint", Color.WHITE) as Color,
+			bool(entry.get("as_imago", false))
+		)
+	GameState.refresh_shops_for_new_day()
+	SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
 
-	if player_wiped:
-		SceneTransition.change_scene(_GAME_OVER_SCENE_PATH)
-	else:
-		GameState.ensure_nursery_seeded()
-		GameState.current_day += 1
-		GameState.clear_upcoming_enemy_formation()
-		if GameState.has_won_run():
-			SceneTransition.change_scene(_VICTORY_SCENE_PATH)
-			return
-		DaySummaryFeed.clear()
-		if GameState.current_day == GameState.NURSERY_UNLOCK_DAY:
-			GameState.prefer_nursery_tab = true
-			DaySummaryFeed.add_base_unlock("Nursery")
-		if GameState.current_day == GameState.RIBOFORGE_UNLOCK_DAY:
-			GameState.prefer_riboforge_tab = true
-			DaySummaryFeed.add_base_unlock("Riboforge")
-		if _biomass_earned_this_fight > 0:
-			DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)
-		for unit in _fallen_units:
-			DaySummaryFeed.add_fallen_unit(unit)
-		var grown := GameState.troop.advance_unit_ages()
-		for unit in grown:
-			DaySummaryFeed.add_unit_became_imago(unit)
-		var matured := GameState.nursery.advance_day()
-		for entry in matured:
-			DaySummaryFeed.add_nursery_matured(
-				str(entry.get("spore_name", "Spore")),
-				int(entry.get("plot_index", 0)),
-				entry.get("tint", Color.WHITE) as Color,
-				bool(entry.get("as_imago", false))
-			)
-		GameState.refresh_shops_for_new_day()
-		SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
+
+func _play_victory_celebration() -> void:
+	_hitstop_active = true
+	Engine.time_scale = _VICTORY_HITSTOP_SCALE
+	_destroy_all_walls()
+	if enemy_troop.has_flag_bearer():
+		enemy_troop.flag_bearer.play_death()
+	_spawn_victory_callout()
+	var celebrants: Array[Unit] = player_troop.get_living_units()
+	for unit in celebrants:
+		unit.begin_victory_celebration()
+	var world := get_node_or_null("World") as Node2D
+	if _victory_director != null:
+		_victory_director.play(celebrants, world)
+
+	# Real-time durations so slow-mo doesn't compress the celebration.
+	await get_tree().create_timer(_VICTORY_HITSTOP_DURATION, true, true, true).timeout
+	if not is_inside_tree():
+		return
+	_hitstop_active = false
+	Engine.time_scale = 1.0
+
+	await get_tree().create_timer(_VICTORY_CELEBRATE_SEC, true, true, true).timeout
+	if _victory_director != null:
+		_victory_director.stop()
+
+
+func _destroy_all_walls() -> void:
+	var tree := get_tree()
+	if tree == null:
+		return
+	for node in tree.get_nodes_in_group("combat_obstacles"):
+		var wall := node as WallObstacle
+		if wall != null:
+			wall.destroy()
+
+
+func _spawn_victory_callout() -> void:
+	var hud := get_node_or_null("HUD") as CanvasLayer
+	if hud == null:
+		return
+	var callout: CombatCallout = _COMBAT_CALLOUT_SCENE.instantiate()
+	hud.add_child(callout)
+	var viewport_size := get_viewport().get_visible_rect().size
+	callout.position = viewport_size * 0.5 + Vector2(0.0, -48.0)
+	callout.display("Victory!", CombatCallout.Kind.VICTORY)
 
 
 func _refresh_unit_process_order() -> void:
@@ -500,5 +591,6 @@ func _clear_world_vfx() -> void:
 			or child is Projectile
 			or child is HitBurst
 			or child is SporeCloud
+			or child is WallObstacle
 		):
 			child.queue_free()

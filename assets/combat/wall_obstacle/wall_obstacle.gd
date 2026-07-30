@@ -63,6 +63,11 @@ func is_combat_obstacle() -> bool:
 	return true
 
 
+## Crush / fade remove (victory cleanup or lethal damage).
+func destroy(knockback_from: Vector2 = Vector2.ZERO) -> void:
+	_die(knockback_from)
+
+
 func take_damage(
 	amount: int,
 	knockback_from: Vector2 = Vector2.ZERO,

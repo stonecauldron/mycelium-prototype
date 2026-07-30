@@ -13,7 +13,7 @@ var _trauma: float = 0.0
 
 func _ready() -> void:
 	add_to_group("battle_camera")
-	# Dual-flag framing centers between both banners; drop the old look-ahead offset.
+	# Frame army extents (dual flags, or player flag + frontmost friend after win).
 	offset = Vector2.ZERO
 	zoom = Vector2(max_zoom, max_zoom)
 
@@ -31,11 +31,19 @@ func _physics_process(delta: float) -> void:
 	var player_flag_x := player_troop.get_flag_global_position().x
 	var left_x := player_flag_x
 	var right_x := player_flag_x
+
 	var enemy_troop := _find_troop(true)
-	if enemy_troop != null:
+	if enemy_troop != null and enemy_troop.has_flag_bearer():
 		var enemy_flag_x := enemy_troop.get_flag_global_position().x
 		left_x = minf(player_flag_x, enemy_flag_x)
 		right_x = maxf(player_flag_x, enemy_flag_x)
+	else:
+		# Victory / enemy flag gone: frame own banner and the furthest friend.
+		var front := player_troop.get_frontmost_living_unit()
+		if front != null:
+			left_x = minf(player_flag_x, front.global_position.x)
+			right_x = maxf(player_flag_x, front.global_position.x)
+
 	var target_x := (left_x + right_x) * 0.5
 	var target_zoom := max_zoom
 	var span := right_x - left_x + frame_padding * 2.0

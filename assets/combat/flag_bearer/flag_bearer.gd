@@ -19,6 +19,14 @@ const COLLISION_WORLD := 1
 
 const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_number.tscn")
 const _HIT_BURST_SCENE := preload("res://assets/vfx/hit_burst/hit_burst.tscn")
+const _SPORE_CLOUD_SCENE := preload("res://assets/vfx/spore_cloud/spore_cloud.tscn")
+const DEATH_POP_TIME := 0.05
+const DEATH_FADE_TIME := 0.28
+const DEATH_HOP := Vector2(150.0, -95.0)
+const DEATH_SPORE_MOMENTUM_SCALE := 0.7
+const SHAKE_ON_DEATH := 0.22
+const ENEMY_SPORE_COLOR := Color(0.85, 0.28, 0.18, 1.0)
+const PLAYER_SPORE_COLOR := Color("b7b08d")
 
 @export var flag_color: Color = Color.WHITE
 @export var flag_faces_left: bool = false
@@ -32,6 +40,7 @@ var _march_speed_x: float = 0.0
 var _in_knockback: bool = false
 var _knockback_left_ground: bool = false
 var _hits_taken: int = 0
+var _dying: bool = false
 var _hurt_tween: Tween
 var _squash_tween: Tween
 var _shroom_modulate: Color = Color.WHITE
@@ -80,6 +89,8 @@ func _reset_shroom_rest_pose() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _dying:
+		return
 	velocity += get_gravity() * delta
 
 	if _in_knockback:
@@ -129,7 +140,7 @@ func _setup_collision() -> void:
 
 
 func set_march_velocity(speed: float) -> void:
-	if _in_knockback:
+	if _in_knockback or _dying:
 		return
 	_march_speed_x = speed * _march_speed_multiplier()
 
@@ -140,7 +151,7 @@ func get_march_velocity_x() -> float:
 
 ## Seek target_x without overshooting (avoids chase chatter when the rear unit retreats).
 func follow_anchor_x(target_x: float, max_speed: float, delta: float) -> void:
-	if _in_knockback:
+	if _in_knockback or _dying:
 		return
 	if delta <= 0.0:
 		_march_speed_x = 0.0
@@ -165,6 +176,7 @@ func reset_combat_state() -> void:
 	_in_knockback = false
 	_knockback_left_ground = false
 	_hits_taken = 0
+	_dying = false
 	velocity = Vector2.ZERO
 	stop()
 	if _hurt_tween:
@@ -173,8 +185,73 @@ func reset_combat_state() -> void:
 	if _squash_tween:
 		_squash_tween.kill()
 		_squash_tween = null
+	if _visual != null:
+		_visual.modulate = Color.WHITE
+		_visual.position = Vector2.ZERO
 	_apply_flag_appearance()
 	_play_idle_animation(true)
+
+
+## Crush / fade death with spore cloud (used when the army is wiped).
+func play_death(knockback_from: Vector2 = Vector2.ZERO) -> void:
+	if _dying:
+		return
+	_dying = true
+	_in_knockback = false
+	_knockback_left_ground = false
+	velocity = Vector2.ZERO
+	stop()
+	collision_layer = 0
+	collision_mask = 0
+	if _hurt_tween:
+		_hurt_tween.kill()
+		_hurt_tween = null
+	if _squash_tween:
+		_squash_tween.kill()
+		_squash_tween = null
+	if _animation_player != null:
+		_animation_player.stop()
+	_add_camera_shake(SHAKE_ON_DEATH)
+
+	var face := signf(_visual.scale.x) if _visual != null else 1.0
+	if face == 0.0:
+		face = -1.0 if flag_faces_left else 1.0
+	# Enemy banners (face left) get yeeted toward their backline (screen right).
+	var hop_dir := 1.0 if flag_faces_left else -1.0
+	if knockback_from != Vector2.ZERO and not flag_faces_left:
+		var away := signf(global_position.x - knockback_from.x)
+		if away != 0.0:
+			hop_dir = away
+	var hop_offset := Vector2(hop_dir * DEATH_HOP.x, DEATH_HOP.y)
+	var spore_momentum := hop_offset / maxf(DEATH_FADE_TIME, 0.001) * DEATH_SPORE_MOMENTUM_SCALE
+	var spore_delay := DEATH_FADE_TIME * 0.5
+	var spore_color := ENEMY_SPORE_COLOR if flag_faces_left else PLAYER_SPORE_COLOR
+
+	var visual: Node2D = _visual if _visual != null else self
+	var tween := create_tween()
+	tween.tween_property(visual, "scale", Vector2(face * 1.35, 1.35), DEATH_POP_TIME)
+	tween.set_parallel(true)
+	tween.tween_property(visual, "scale", Vector2(face * 1.5, 0.18), DEATH_FADE_TIME)\
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	tween.tween_property(visual, "modulate", Color(0.15, 0.1, 0.15, 0.0), DEATH_FADE_TIME)
+	tween.tween_property(visual, "position", visual.position + hop_offset, DEATH_FADE_TIME)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(_spawn_spore_cloud.bind(spore_color, spore_momentum)).set_delay(spore_delay)
+	tween.set_parallel(false)
+	tween.tween_callback(queue_free)
+
+
+func _spawn_spore_cloud(color: Color, momentum: Vector2 = Vector2.ZERO) -> void:
+	var world := _get_world_node()
+	if world == null:
+		return
+	var cloud: SporeCloud = _SPORE_CLOUD_SCENE.instantiate()
+	world.add_child(cloud)
+	var origin := global_position
+	if _visual != null:
+		origin = _visual.global_position
+	cloud.global_position = origin
+	cloud.burst(color, 1.15, momentum)
 
 
 func take_damage(

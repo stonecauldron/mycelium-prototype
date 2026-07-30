@@ -1266,7 +1266,8 @@ func _lead_aim_point(from_global: Vector2, target: Unit) -> Vector2:
 			speed = sqrt(gravity_y * dx * dx / denominator)
 		var vx := maxf(speed * cos_a, 1.0)
 		var flight_t := dx / vx
-		aim = target.global_position + target.velocity * flight_t
+		# Lead only on horizontal motion (ignore jump/knockback Y).
+		aim = target.global_position + Vector2(target.velocity.x * flight_t, 0.0)
 	return aim
 
 
@@ -1313,26 +1314,37 @@ func take_damage(
 		_apply_knockback(knockback_from, knockback_force * knockback_mult)
 
 
-func grant_hit_biomass() -> void:
+func grant_hit_biomass(hit_at: Node2D = null) -> void:
 	if weapon == null or weapon.biomass_on_hit <= 0:
 		return
 	if _troop == null or _troop.is_enemy:
 		return
 	var amount := weapon.biomass_on_hit
 	GameState.biomass.add(amount)
-	_spawn_biomass_number(amount)
+	var spawn_at := hit_at.global_position if hit_at != null else global_position
 	var stage := _find_combat_stage()
-	if stage != null and stage.has_method("_refresh_biomass_hud"):
-		stage._refresh_biomass_hud()
+	if stage != null:
+		if stage.has_method("record_biomass_yield"):
+			stage.record_biomass_yield(amount)
+		elif stage.has_method("_refresh_biomass_hud"):
+			stage._refresh_biomass_hud()
+		if stage.has_method("_spawn_biomass_number"):
+			stage._spawn_biomass_number(spawn_at, amount)
+			return
+	_spawn_biomass_number_at(spawn_at, amount)
 
 
 func _spawn_biomass_number(amount: int) -> void:
+	_spawn_biomass_number_at(global_position, amount)
+
+
+func _spawn_biomass_number_at(at_global: Vector2, amount: int) -> void:
 	var world := _get_world_node()
 	if world == null or amount <= 0:
 		return
 	var number: BiomassNumber = _BIOMASS_NUMBER_SCENE.instantiate()
 	world.add_child(number)
-	number.global_position = global_position + Vector2(0, -128)
+	number.global_position = at_global + Vector2(0, -128)
 	number.display(amount)
 
 

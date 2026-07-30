@@ -221,7 +221,8 @@ func _on_impact(hurtbox: Area2D) -> void:
 	hurtbox.call("receive_hit", damage, from_pos, knockback_force, killer, damage_type)
 	if killer != null:
 		if killer.has_method("grant_hit_biomass"):
-			killer.call("grant_hit_biomass")
+			var hit_at: Node2D = target as Node2D if target is Node2D else self
+			killer.call("grant_hit_biomass", hit_at)
 		var roster = killer.get("roster_data")
 		if roster != null and roster.get("strain") != null:
 			roster.strain.call_effect(&"on_hit_dealt", [killer, target, damage])

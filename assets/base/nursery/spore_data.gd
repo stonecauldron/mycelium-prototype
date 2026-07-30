@@ -21,7 +21,7 @@ var tint: Color:
 func extra_days_to_imago() -> int:
 	var resolved := resolved_strain()
 	var days := resolved.days_to_imago if resolved != null else 2
-	return maxi(1, days / 2)
+	return maxi(1, int(days / 2.0))
 
 
 func grants_imago_at(days_grown: int, days_required: int = -1) -> bool:

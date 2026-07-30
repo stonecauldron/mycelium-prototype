@@ -470,7 +470,9 @@ func _check_battle_end() -> void:
 		for entry in matured:
 			DaySummaryFeed.add_nursery_matured(
 				str(entry.get("spore_name", "Spore")),
-				int(entry.get("plot_index", 0))
+				int(entry.get("plot_index", 0)),
+				entry.get("tint", Color.WHITE) as Color,
+				bool(entry.get("as_imago", false))
 			)
 		GameState.refresh_shops_for_new_day()
 		SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)

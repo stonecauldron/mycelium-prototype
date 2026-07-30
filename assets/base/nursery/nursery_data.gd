@@ -372,6 +372,8 @@ func advance_day() -> Array[Dictionary]:
 			matured.append({
 				"plot_index": i,
 				"spore_name": plot.planted_spore.display_name,
+				"tint": plot.planted_spore.tint,
+				"as_imago": plot.will_harvest_as_imago(),
 			})
 	return matured
 

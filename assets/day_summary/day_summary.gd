@@ -5,6 +5,10 @@ const _PORTRAIT_HOST_SIZE := Vector2(52, 64)
 const _PORTRAIT_SCALE := 0.42
 const _BIOMASS_ICON := preload("res://assets/base/biomass.png")
 const _BIOMASS_ICON_SIZE := Vector2(72, 72)
+const _PLOT_EMPTY := preload("res://assets/base/plot_tile/plot_empty.png")
+const _EGG0 := preload("res://assets/base/plot_tile/egg0.png")
+const _EGG1 := preload("res://assets/base/plot_tile/egg1.png")
+const _PLOT_ICON_SIZE := Vector2(64, 72)
 
 const _FORMATION_COLORS := {
 	WeaponData.FormationLine.FRONT: Color(0.35, 0.75, 0.45),
@@ -40,6 +44,13 @@ func _populate_entries(entries: Array[Dictionary]) -> void:
 			continue
 		if bool(entry.get("biomass", false)):
 			_entries.add_child(_make_biomass_row(text))
+			continue
+		if bool(entry.get("nursery_ready", false)):
+			_entries.add_child(_make_nursery_row(
+				text,
+				entry.get("tint", Color.WHITE) as Color,
+				bool(entry.get("as_imago", false))
+			))
 			continue
 		var formation_line := int(entry.get("formation_line", -1))
 		if formation_line >= 0:
@@ -91,6 +102,39 @@ func _make_biomass_row(text: String) -> Control:
 	row.add_child(icon)
 	row.add_child(_make_entry_label(text))
 
+	return row
+
+
+func _make_nursery_row(text: String, tint: Color, as_imago: bool) -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+
+	var host := Control.new()
+	host.custom_minimum_size = _PLOT_ICON_SIZE
+	host.size = _PLOT_ICON_SIZE
+	host.clip_contents = true
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+
+	var bed := TextureRect.new()
+	bed.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bed.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bed.texture = _PLOT_EMPTY
+	bed.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bed.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	host.add_child(bed)
+
+	var egg := TextureRect.new()
+	egg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	egg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	egg.texture = _EGG1 if as_imago else _EGG0
+	egg.modulate = tint
+	egg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	egg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	host.add_child(egg)
+
+	row.add_child(host)
+	row.add_child(_make_entry_label(text))
 	return row
 
 

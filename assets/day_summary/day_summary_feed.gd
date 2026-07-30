@@ -2,7 +2,7 @@ class_name DaySummaryFeed
 extends RefCounted
 
 ## Pending end-of-day summary rows.
-## Keys: text, optional formation_line, optional unit, optional biomass.
+## Keys: text, optional formation_line, optional unit, optional biomass, optional nursery_ready.
 static var entries: Array[Dictionary] = []
 
 
@@ -52,8 +52,18 @@ static func add_unit_became_imago(unit: RosterUnitData) -> void:
 	})
 
 
-static func add_nursery_matured(spore_name: String, plot_index: int) -> void:
-	add_entry("%s matured in plot %d" % [spore_name, plot_index + 1])
+static func add_nursery_matured(
+	spore_name: String,
+	plot_index: int,
+	tint: Color = Color.WHITE,
+	as_imago: bool = false,
+) -> void:
+	entries.append({
+		"text": "%s matured in plot %d" % [spore_name, plot_index + 1],
+		"nursery_ready": true,
+		"tint": tint,
+		"as_imago": as_imago,
+	})
 
 
 static func add_biomass_earned(amount: int) -> void:

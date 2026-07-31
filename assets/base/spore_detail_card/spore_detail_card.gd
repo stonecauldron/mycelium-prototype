@@ -2,7 +2,7 @@ class_name SporeDetailCard
 extends Control
 
 const CARD_SIZE := Vector2(240, 280)
-const CARD_SIZE_WITH_PLOT := Vector2(240, 360)
+const CARD_SIZE_WITH_PLOT := Vector2(320, 360)
 const _MOCK_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 
 var spore_data: SporeData
@@ -13,7 +13,9 @@ var show_buy_price: bool = false
 
 @onready var _name_label: Label = %NameLabel
 @onready var _desc_label: Label = %DescLabel
+@onready var _grow_label: Label = %GrowLabel
 @onready var _days_chip: StatChip = %DaysChip
+@onready var _days_suffix_label: Label = %DaysSuffixLabel
 @onready var _tier_tag: TagChip = %TierTag
 @onready var _hatch_tag: TagChip = %HatchTag
 @onready var _sell_row: HBoxContainer = %SellRow
@@ -86,14 +88,28 @@ func _refresh() -> void:
 		desc = strain.short_description.strip_edges()
 	_desc_label.text = desc
 	_desc_label.visible = not desc.is_empty()
-	_days_chip.set_value(spore_data.days_to_mature)
+	_refresh_growth_row()
 	_refresh_price_row()
 	_refresh_tags(strain)
 	_refresh_plot_section()
 
 
+func _refresh_growth_row() -> void:
+	if plot_data != null:
+		_grow_label.text = "Remaining Time:"
+		var left := maxi(plot_data.days_to_mature_effective() - plot_data.days_grown, 0)
+		_days_chip.set_value(left)
+	else:
+		_grow_label.text = "Growth Time:"
+		_days_chip.set_value(spore_data.days_to_mature)
+	_days_suffix_label.text = "days"
+
+
 func _refresh_price_row() -> void:
 	if _sell_row == null or _sell_label == null:
+		return
+	if plot_data != null:
+		_sell_row.visible = false
 		return
 	_sell_row.visible = true
 	if show_buy_price:
@@ -126,14 +142,11 @@ func _refresh_plot_section() -> void:
 func _plot_status_text() -> String:
 	match plot_data.get_state():
 		NurseryPlotData.State.EMPTY:
-			return "Empty"
+			return "Status: Empty"
 		NurseryPlotData.State.GROWING:
-			var left := maxi(plot_data.days_to_mature_effective() - plot_data.days_grown, 0)
-			return "Growing — %d day%s left" % [left, "" if left == 1 else "s"]
+			return "Status: Growing"
 		NurseryPlotData.State.READY:
-			if plot_data.will_harvest_as_imago():
-				return "Ready — Imago"
-			return "Ready"
+			return "Status: Ready for Harvest"
 	return ""
 
 
@@ -142,13 +155,28 @@ func _plot_info_text() -> String:
 	var residue := plot_data.fungicide_residue_text()
 	if not residue.is_empty():
 		lines.append(residue)
+	var counts: Dictionary = {}
+	var order: Array[FertilizerData] = []
 	for fert in plot_data.applied_fertilizers:
 		if fert == null:
 			continue
 		if fert.behavior == FertilizerData.Behavior.FUNGICIDE:
 			continue
-		lines.append("%s (%s)" % [fert.display_name, fert.subtitle_text()])
-	return "\n".join(lines)
+		var key := fert.display_name
+		if not counts.has(key):
+			counts[key] = 0
+			order.append(fert)
+		counts[key] = int(counts[key]) + 1
+	for fert in order:
+		var count := int(counts.get(fert.display_name, 0))
+		var desc := "%s (%s)" % [fert.display_name, fert.subtitle_text()]
+		if count > 1:
+			lines.append("%d X %s" % [count, desc])
+		else:
+			lines.append(desc)
+	if lines.is_empty():
+		return ""
+	return "Fertilizers\n" + "\n".join(lines)
 
 
 func _apply_interaction_mode() -> void:

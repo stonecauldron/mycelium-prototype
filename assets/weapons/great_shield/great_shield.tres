@@ -7,9 +7,10 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Great Shield"
-short_description = "Tanks 85% of incoming damage. Only deals 25% damage."
+short_description = "Tanks 85% of incoming damage. Only deals 25% damage. Weak to blunt weapons."
 engagement_stance = 2
-base_damage = 2
+base_damage = 1
+attack_interval = 2.5
 biomass_cost = 4
 outgoing_damage_multiplier = 0.25
 incoming_damage_multiplier = 0.15

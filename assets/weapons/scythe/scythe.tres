@@ -8,18 +8,18 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Scythe"
-short_description = "Weaker but faster spear. Grants +2 biomass every hit."
+short_description = "Weaker but faster spear. +1 biomass every hit."
 formation_line = 1
 engagement_stance = 4
 attack_style = 1
 damage_stat = 2
-base_damage = 4
+base_damage = 3
 projectile_range = 550.0
 attack_interval = 0.6
 skirmish_distance = 240.0
 knockback_force = 0.0
 biomass_cost = 2
-biomass_on_hit = 2
+biomass_on_hit = 1
 melee_range = 180.0
 projectile_scene = ExtResource("4_proj")
 appearance_scene = ExtResource("2_appear")

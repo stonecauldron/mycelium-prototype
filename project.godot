@@ -36,6 +36,7 @@ combat_world=""
 [gui]
 
 theme/custom="res://assets/themes/default.tres"
+timers/tooltip_delay_sec=0.2
 
 [layer_names]
 

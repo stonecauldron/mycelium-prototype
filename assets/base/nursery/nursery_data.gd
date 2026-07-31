@@ -59,6 +59,8 @@ const _FERTILIZER_PATHS: Array[String] = [
 ## Nursery shop state (offers + locks). Shared ShopInventory used by any shop screen.
 @export var spore_shop: ShopInventory
 @export var unlocked_plot_count: int = STARTING_UNLOCKED_PLOTS
+## Paid shop reroll cost for this day; doubles after each successful paid reroll.
+@export var shop_reroll_cost: int = BiomassData.SHOP_REROLL_COST
 
 var _seeded: bool = false
 
@@ -98,6 +100,15 @@ func reset() -> void:
 	_ensure_plot_count()
 	_ensure_stock()
 	stock.clear()
+	reset_shop_reroll_cost()
+
+
+func advance_shop_reroll_cost() -> void:
+	shop_reroll_cost *= 2
+
+
+func reset_shop_reroll_cost() -> void:
+	shop_reroll_cost = BiomassData.SHOP_REROLL_COST
 
 
 func is_plot_unlocked(plot_index: int) -> bool:

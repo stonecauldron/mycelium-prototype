@@ -37,6 +37,8 @@ static var _default_weapon: WeaponData
 @export var weapon_stock: StockInventory
 ## Weapon shop state (offers + locks). Shared ShopInventory used by any shop screen.
 @export var weapon_shop: ShopInventory
+## Paid shop reroll cost for this day; doubles after each successful paid reroll.
+@export var shop_reroll_cost: int = BiomassData.SHOP_REROLL_COST
 
 var _seeded: bool = false
 
@@ -82,6 +84,15 @@ func reset() -> void:
 	_seeded = false
 	_ensure_stock()
 	weapon_stock.clear()
+	reset_shop_reroll_cost()
+
+
+func advance_shop_reroll_cost() -> void:
+	shop_reroll_cost *= 2
+
+
+func reset_shop_reroll_cost() -> void:
+	shop_reroll_cost = BiomassData.SHOP_REROLL_COST
 
 
 func ensure_shop_offers() -> void:

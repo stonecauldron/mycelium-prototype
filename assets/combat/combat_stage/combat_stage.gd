@@ -20,10 +20,10 @@ const _BIOMASS_NUMBER_SCENE := preload("res://assets/vfx/biomass_number/biomass_
 const _COMBAT_CALLOUT_SCENE := preload("res://assets/vfx/combat_callout/combat_callout.tscn")
 const _BIOMASS_DIGITS := 4
 const _VICTORY_HITSTOP_SCALE := 0.12
-const _VICTORY_HITSTOP_DURATION := 0.7
-const _VICTORY_CELEBRATE_SEC := 3.8
+const _VICTORY_HITSTOP_DURATION := 0.35
+const _VICTORY_CELEBRATE_SEC := 1.9
 ## Beat after the wipe before flag death / callout / tosses.
-const _VICTORY_LEAD_IN_SEC := 0.5
+const _VICTORY_LEAD_IN_SEC := 0.25
 
 @export var sandboxed: bool = false
 

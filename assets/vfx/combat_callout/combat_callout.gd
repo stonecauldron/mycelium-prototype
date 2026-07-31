@@ -6,7 +6,7 @@ enum Kind { STREAK, FALLEN, VICTORY }
 const FLOAT_DISTANCE := 40.0
 const STREAK_DURATION := 1.15
 const FALLEN_DURATION := 1.35
-const VICTORY_DURATION := 3.2
+const VICTORY_DURATION := 1.6
 const SPAWN_JITTER_X := 18.0
 const STREAK_COLOR := Color(1.0, 0.88, 0.35, 1.0)
 const FALLEN_COLOR := Color(0.75, 0.82, 0.95, 1.0)

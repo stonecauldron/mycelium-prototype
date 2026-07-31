@@ -15,6 +15,7 @@ attack_style = 1
 damage_stat = 2
 base_damage = 6
 projectile_range = 650.0
+attack_interval = 1.0
 skirmish_distance = 280.0
 knockback_force = 0.0
 melee_range = 200.0

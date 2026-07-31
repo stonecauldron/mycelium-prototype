@@ -7,8 +7,10 @@ enum ArmyArchetype { ONE_TRICK_PONY, HYBRID, GENERALIST }
 
 const _REROLL_CANDIDATE_COUNT := 8
 const _MIDPOINT_SAMPLE_COUNT := 8
-## Days 1–4: starter four only. Day 5+: full shop weapon catalog.
+## Days 1–4: starter weapons only. Day 5+: full shop weapon catalog.
 const _FULL_WEAPON_UNLOCK_DAY := 5
+## Shield excluded from procedural enemies on days 1–2.
+const _SHIELD_UNLOCK_DAY := 3
 
 const _STARTER_WEAPON_PATHS: Array[String] = [
 	RiboforgeData.SWORD_WEAPON_PATH,
@@ -39,6 +41,8 @@ const _STRAIN_PATHS: Array[String] = [
 	"res://assets/units/rubber_cap/rubber_cap_strain.tres",
 ]
 
+## Specialty strains excluded from procedural enemies on days 1–2 (Generalist only).
+const _SPECIALTY_STRAIN_UNLOCK_DAY := 3
 ## Excluded from procedural enemies on days 1–3.
 const _EARLY_DAY_EXCLUDED_STRAIN_PATHS: Array[String] = [
 	_MAGI_CAP_STRAIN_PATH,
@@ -212,7 +216,18 @@ static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[
 static func _weapon_pool_for_day(day: int) -> Array:
 	if day >= _FULL_WEAPON_UNLOCK_DAY:
 		return _full_weapon_pool()
-	return _starter_weapon_pool()
+	var pool := _starter_weapon_pool()
+	if day >= _SHIELD_UNLOCK_DAY:
+		return pool
+	var filtered: Array = []
+	for weapon in pool:
+		var unit_weapon := weapon as WeaponData
+		if unit_weapon == null:
+			continue
+		if unit_weapon.resource_path == RiboforgeData.SHIELD_WEAPON_PATH:
+			continue
+		filtered.append(unit_weapon)
+	return filtered
 
 
 static func _starter_weapon_pool() -> Array:
@@ -252,6 +267,13 @@ static func _strain_pool() -> Array:
 
 static func _strain_pool_for_day(day: int) -> Array:
 	var pool := _strain_pool()
+	if day < _SPECIALTY_STRAIN_UNLOCK_DAY:
+		var generalist_only: Array = []
+		for strain in pool:
+			var unit_strain := strain as UnitStrain
+			if unit_strain != null and unit_strain.resource_path == _GENERALIST_STRAIN_PATH:
+				generalist_only.append(unit_strain)
+		return generalist_only
 	if day > _EARLY_DAY_STRAIN_LOCKOUT:
 		return pool
 	var filtered: Array = []

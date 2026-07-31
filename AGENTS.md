@@ -31,7 +31,7 @@ On tab select, call the destination's `on_screen_shown()` / HUD refresh at **tra
 - Enemy specs come from `EnemyComposer.specs_for_day()` → `Array[EnemyUnitSpec]` (`weapon` / `tier` / `is_imago`; array order = spawn order within each weapon line).
 - Scout UI lives in `scout_bubble/scout_bubble.tscn` (`ScoutBubble`); it fills `GameState.upcoming_enemy_formation`. Roster build reads that array (combat via `BattleLaunch`). Scout reroll costs `BiomassData.SCOUT_REROLL_COST` and bias-picks a different difficulty.
 - Days 5 and 10 use skill-check override lists (seeded pick if multiple variants); other days use the day curve. Seeded by `GameState.run_seed` + day.
-- Days 1–4 enemies roll from the starter four (`sword` / `spear` / `bow` / `shield`). From day 5 onward the pool is the full shop catalog (`RiboforgeData.SHOP_WEAPON_PATHS`).
+- Days 1–2 enemies roll from `sword` / `spear` / `bow` only (no shield) and Generalist strains only. Days 3–4 add shield to the starter weapon pool and specialty strains (Magi/Chad still excluded through day 3). From day 5 onward the weapon pool is the full shop catalog (`RiboforgeData.SHOP_WEAPON_PATHS`).
 - Initial player troop / `_make_default_starters()`: one melee, one bow, one spear (common tier).
 
 ## Cursor Cloud specific instructions

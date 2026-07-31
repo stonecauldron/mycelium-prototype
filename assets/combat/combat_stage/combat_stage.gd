@@ -208,7 +208,7 @@ func _run_battle(
 		enemy_troop,
 		_enemy_spawn,
 		enemy_roster,
-		Color(0.85, 0.25, 0.3, 1.0),
+		Troop.ENEMY_TINT,
 		false
 	)
 	_refresh_unit_process_order()
@@ -437,7 +437,7 @@ func _respawn_zombie_cap(
 			return
 	var troop := player_troop if is_player else enemy_troop
 	var units_root: Node2D = troop.get_node("Units")
-	var color := Color.WHITE if is_player else Color(0.85, 0.25, 0.3, 1.0)
+	var color := Color.WHITE if is_player else Troop.ENEMY_TINT
 	var scene := _scene_for_attack_style(clone.get_attack_style())
 	var spawn_pos := _zombie_respawn_global_position(troop)
 	var spawned := _spawn_unit(scene, units_root, clone, color, squad_index, is_player, spawn_pos)
@@ -488,7 +488,8 @@ func _check_battle_end() -> void:
 	_victory_celebrating = false
 	_hitstop_active = false
 	_restore_engine_timing()
-	_notify_battle_end()
+	# Keep celebrate-march / weapon tosses running under the scene fade;
+	# _exit_tree stops the director when combat is replaced.
 
 	GameState.ensure_nursery_seeded()
 	GameState.current_day += 1
@@ -543,9 +544,8 @@ func _play_victory_celebration() -> void:
 	_hitstop_active = false
 	Engine.time_scale = 1.0
 
+	# Leave tosses/marching running so the day-summary fade doesn't cut them off.
 	await get_tree().create_timer(_VICTORY_CELEBRATE_SEC, true, true, true).timeout
-	if _victory_director != null:
-		_victory_director.stop()
 
 
 func _destroy_all_walls() -> void:

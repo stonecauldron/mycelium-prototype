@@ -10,7 +10,6 @@ const HP_CHIP_GAP := 4.0
 const COLLISION_WORLD := 1
 const COLLISION_PLAYER_WALLS := 32
 const COLLISION_ENEMY_WALLS := 64
-const ENEMY_TINT := Color(0.85, 0.25, 0.3, 1.0)
 const DEATH_POP_TIME := 0.06
 const DEATH_FADE_TIME := 0.28
 
@@ -34,7 +33,7 @@ func setup(hp: int, enemy_owned: bool = false) -> void:
 	max_hp = maxi(hp, 1)
 	current_hp = max_hp
 	is_enemy = enemy_owned
-	_base_modulate = ENEMY_TINT if enemy_owned else Color.WHITE
+	_base_modulate = Troop.ENEMY_TINT if enemy_owned else Color.WHITE
 	_set_body_modulate(_base_modulate)
 	add_to_group("combat_obstacles")
 	_apply_collision_layers()

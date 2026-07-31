@@ -8,6 +8,8 @@ const DEFAULT_MARCH_SPEED := 120.0
 const FLAG_REAR_CLEARANCE := 100.0
 ## Horizontal spacing between consecutive home slots.
 const HOME_SLOT_SPACING := 64.0
+## Body / flag tint for enemy-side units and UI previews.
+const ENEMY_TINT := Color(0.85, 0.25, 0.3, 1.0)
 
 @export var march_speed: float = DEFAULT_MARCH_SPEED
 @export var is_enemy: bool = false

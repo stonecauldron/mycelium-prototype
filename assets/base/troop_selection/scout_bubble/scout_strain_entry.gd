@@ -31,6 +31,8 @@ func _apply(count: int, strain: UnitStrain) -> void:
 	data.is_imago = true
 	data.life_stage_id = UnitStrain.STAGE_IMAGO
 	_portrait_instance = data.mount_portrait(_portrait_host, _PORTRAIT_SCALE)
+	if _portrait_instance != null:
+		_portrait_instance.modulate *= Troop.ENEMY_TINT
 	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
 	# Theme blanks native TooltipPanel, so we must use a custom tooltip.
 	tooltip_text = strain.display_name

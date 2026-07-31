@@ -17,7 +17,7 @@ appearance_scene = ExtResource("3_appear")
 [resource]
 script = ExtResource("1_script")
 display_name = "Inky"
-short_description = "Deals half damage but every hit inflicts speed debuff."
+short_description = "Deals half damage but every hit inflicts a movement and atk speed debuff."
 tint = Color(0.25, 0.35, 0.7, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
 effect = SubResource("Effect")

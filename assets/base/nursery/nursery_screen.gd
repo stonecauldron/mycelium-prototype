@@ -287,8 +287,8 @@ func _refresh() -> void:
 func _refresh_shop_affordability() -> void:
 	for card in _shop_cards:
 		card.set_affordable(GameState.biomass.can_afford(card.cost))
-	_reroll_cost_label.text = "%d" % GameState.nursery.shop_reroll_cost
-	var can_reroll := GameState.biomass.can_afford(GameState.nursery.shop_reroll_cost)
+	_reroll_cost_label.text = "%d" % GameState.nursery.current_shop_reroll_cost()
+	var can_reroll := GameState.biomass.can_afford(GameState.nursery.current_shop_reroll_cost())
 	# Keep mouse events so hover preview still works when unaffordable.
 	_reroll_button.disabled = false
 	_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
@@ -308,7 +308,7 @@ func _on_reroll_hover_exited() -> void:
 
 
 func _on_reroll_pressed() -> void:
-	if not GameState.biomass.try_spend(GameState.nursery.shop_reroll_cost):
+	if not GameState.biomass.try_spend(GameState.nursery.current_shop_reroll_cost()):
 		return
 	for card in _shop_cards:
 		card.clear_reroll_preview()

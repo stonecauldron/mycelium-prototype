@@ -58,6 +58,8 @@ func _on_debug_cheats_applied() -> void:
 	_debug_advance_day_button.visible = true
 	_build_tab_bar()
 	_update_tab_visuals()
+	if _current_screen != null:
+		_current_screen.on_screen_shown()
 	_refresh_hud()
 
 

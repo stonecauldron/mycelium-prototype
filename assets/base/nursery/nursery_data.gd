@@ -103,7 +103,15 @@ func reset() -> void:
 	reset_shop_reroll_cost()
 
 
+func current_shop_reroll_cost() -> int:
+	if GameState.debug_mode_active:
+		return BiomassData.SHOP_REROLL_COST
+	return shop_reroll_cost
+
+
 func advance_shop_reroll_cost() -> void:
+	if GameState.debug_mode_active:
+		return
 	shop_reroll_cost *= 2
 
 

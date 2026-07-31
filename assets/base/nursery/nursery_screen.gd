@@ -6,6 +6,7 @@ const SHOP_SLOT_COUNT := NurseryData.SHOP_SLOT_COUNT
 var _stock_drag_types := PackedStringArray(["spore", "fertilizer"])
 var _intake_drag_types := PackedStringArray(["shop_spore", "shop_fertilizer"])
 const _HATCH_TOAST_FADE_SEC := 0.18
+const _HATCH_TOAST_GAP := 10.0
 const _PLOT_TILE_SCENE := preload("res://assets/base/plot_tile/plot_tile.tscn")
 const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
 const _FERTILIZER_CARD_SCENE := preload("res://assets/base/nursery/fertilizer_card/fertilizer_card.tscn")
@@ -30,7 +31,7 @@ var _stock_slots: Array[DropSlot] = []
 var _shop_cards: Array[ShopOfferCard] = []
 var _spore_icon_atlas: AtlasTexture
 var _fertilizer_icon_atlas: AtlasTexture
-var _hatch_toast: UnitDetailCard = null
+var _hatch_toasts: Array[UnitDetailCard] = []
 var _hatch_toast_dimmer: Control = null
 var _hatch_toast_tween: Tween = null
 
@@ -445,11 +446,13 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 			GameState.show_plot_harvest_hint = false
 			var toast_anchor := tile.get_global_rect()
 			_refresh()
-			_show_hatch_toast(kept[0], toast_anchor)
+			_show_hatch_toasts(kept, toast_anchor)
 
 
-func _show_hatch_toast(unit: RosterUnitData, anchor_global_rect: Rect2) -> void:
+func _show_hatch_toasts(units: Array[RosterUnitData], anchor_global_rect: Rect2) -> void:
 	_dismiss_hatch_toast(false)
+	if units.is_empty():
+		return
 	var dimmer := Control.new()
 	dimmer.name = "HatchToastDimmer"
 	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -458,31 +461,42 @@ func _show_hatch_toast(unit: RosterUnitData, anchor_global_rect: Rect2) -> void:
 	add_child(dimmer)
 	_hatch_toast_dimmer = dimmer
 
-	var card: UnitDetailCard = _UNIT_DETAIL_CARD_SCENE.instantiate()
-	card.setup(unit)
-	card.modulate.a = 0.0
-	add_child(card)
-	_hatch_toast = card
-	card.reset_compact_layout()
-	_position_hatch_toast(card, anchor_global_rect)
-	card.gui_input.connect(_on_hatch_toast_card_input)
+	var cards: Array[UnitDetailCard] = []
+	for unit in units:
+		var card: UnitDetailCard = _UNIT_DETAIL_CARD_SCENE.instantiate()
+		card.setup(unit)
+		card.modulate.a = 0.0
+		add_child(card)
+		card.reset_compact_layout()
+		card.gui_input.connect(_on_hatch_toast_card_input)
+		cards.append(card)
+	_hatch_toasts = cards
+	_position_hatch_toasts(cards, anchor_global_rect)
 
 	var tween := create_tween()
 	_hatch_toast_tween = tween
-	tween.tween_property(card, "modulate:a", 1.0, _HATCH_TOAST_FADE_SEC)
-	tween.tween_callback(func() -> void: _hatch_toast_tween = null)
+	tween.set_parallel(true)
+	for card in cards:
+		tween.tween_property(card, "modulate:a", 1.0, _HATCH_TOAST_FADE_SEC)
+	tween.chain().tween_callback(func() -> void: _hatch_toast_tween = null)
 
 
-func _position_hatch_toast(card: UnitDetailCard, anchor_global_rect: Rect2) -> void:
-	var card_size := card.card_size()
+func _position_hatch_toasts(cards: Array[UnitDetailCard], anchor_global_rect: Rect2) -> void:
+	if cards.is_empty():
+		return
+	var card_size := cards[0].card_size()
+	var count := cards.size()
+	var total_width := card_size.x * count + _HATCH_TOAST_GAP * maxi(count - 1, 0)
 	var local_top_left := anchor_global_rect.position - global_position
-	var pos := Vector2(
-		local_top_left.x + (anchor_global_rect.size.x - card_size.x) * 0.5,
-		local_top_left.y - card_size.y + 24.0
-	)
-	pos.x = clampf(pos.x, 8.0, maxf(8.0, size.x - card_size.x - 8.0))
-	pos.y = clampf(pos.y, 8.0, maxf(8.0, size.y - card_size.y - 8.0))
-	card.position = pos
+	var row_x := local_top_left.x + (anchor_global_rect.size.x - total_width) * 0.5
+	var row_y := local_top_left.y - card_size.y + 24.0
+	row_x = clampf(row_x, 8.0, maxf(8.0, size.x - total_width - 8.0))
+	row_y = clampf(row_y, 8.0, maxf(8.0, size.y - card_size.y - 8.0))
+	for i in count:
+		cards[i].position = Vector2(
+			row_x + float(i) * (card_size.x + _HATCH_TOAST_GAP),
+			row_y
+		)
 
 
 func _on_hatch_toast_dimmer_input(event: InputEvent) -> void:
@@ -505,26 +519,34 @@ func _dismiss_hatch_toast(animated: bool) -> void:
 	if _hatch_toast_tween != null:
 		_hatch_toast_tween.kill()
 		_hatch_toast_tween = null
-	var card := _hatch_toast
+	var cards := _hatch_toasts
 	var dimmer := _hatch_toast_dimmer
 	_hatch_toast_dimmer = null
 	if dimmer != null and is_instance_valid(dimmer):
 		dimmer.queue_free()
-	if card == null or not is_instance_valid(card):
-		_hatch_toast = null
+	var valid_cards: Array[UnitDetailCard] = []
+	for card in cards:
+		if card != null and is_instance_valid(card):
+			valid_cards.append(card)
+	if valid_cards.is_empty():
+		_hatch_toasts = []
 		return
 	if not animated:
-		_hatch_toast = null
-		card.queue_free()
+		_hatch_toasts = []
+		for card in valid_cards:
+			card.queue_free()
 		return
 	var tween := create_tween()
 	_hatch_toast_tween = tween
-	tween.tween_property(card, "modulate:a", 0.0, _HATCH_TOAST_FADE_SEC)
-	tween.tween_callback(func() -> void:
-		if _hatch_toast == card:
-			_hatch_toast = null
-		if is_instance_valid(card):
-			card.queue_free()
+	tween.set_parallel(true)
+	for card in valid_cards:
+		tween.tween_property(card, "modulate:a", 0.0, _HATCH_TOAST_FADE_SEC)
+	tween.chain().tween_callback(func() -> void:
+		for card in valid_cards:
+			if is_instance_valid(card):
+				card.queue_free()
+		if not _hatch_toasts.is_empty() and _hatch_toasts[0] == valid_cards[0]:
+			_hatch_toasts = []
 		_hatch_toast_tween = null
 	)
 

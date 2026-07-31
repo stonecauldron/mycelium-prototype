@@ -3,6 +3,8 @@ extends Resource
 
 enum State { EMPTY, GROWING, READY }
 
+const FUNGICIDE_NEXT_SPORE_BONUS := 2
+
 @export var planted_spore: SporeData
 @export var days_grown: int = 0
 @export var applied_fertilizers: Array[FertilizerData] = []
@@ -78,25 +80,23 @@ func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 	return true
 
 
-func _apply_fungicide(_fertilizer: FertilizerData) -> bool:
-	# Any planted spore (just planted, growing, or READY). Empty plots rejected.
-	if planted_spore == null:
+func _apply_fungicide(fertilizer: FertilizerData) -> bool:
+	# Growing or READY spores. Empty plots rejected.
+	var state := get_state()
+	if state != State.GROWING and state != State.READY:
 		return false
-	pending_stat_bonus += _fungicide_active_growth_bonus()
+	pending_stat_bonus += FUNGICIDE_NEXT_SPORE_BONUS
 	planted_spore = null
 	days_grown = 0
+	# Drop fertilizers that died with the plant; keep prior Fungicide markers for chips.
+	var kept: Array[FertilizerData] = []
+	for fert in applied_fertilizers:
+		if fert != null and fert.behavior == FertilizerData.Behavior.FUNGICIDE:
+			kept.append(fert)
 	applied_fertilizers.clear()
+	applied_fertilizers.append_array(kept)
+	applied_fertilizers.append(fertilizer)
 	return true
-
-
-## +1 all-stats per active growth day. Just-planted (0 days) still grants 1.
-## READY / overgrown plants are capped at days spent before becoming harvestable.
-func _fungicide_active_growth_bonus() -> int:
-	var active_cap := days_to_mature_effective()
-	if get_state() == State.READY:
-		return maxi(mini(days_grown, active_cap), 1)
-	# GROWING: all days so far count; freshly planted still gets 1.
-	return maxi(days_grown, 1)
 
 
 func total_growth_bonus() -> int:
@@ -117,10 +117,14 @@ func fertilizer_tooltip() -> String:
 			if not desc.is_empty():
 				strain_line = "%s — %s" % [strain.display_name, desc]
 			lines.append(strain_line)
-	if pending_stat_bonus > 0:
-		lines.append("Fungicide residue (+%d all)" % pending_stat_bonus)
+	var residue := fungicide_residue_text()
+	if not residue.is_empty():
+		lines.append(residue)
 	for fert in applied_fertilizers:
 		if fert == null:
+			continue
+		# Fungicide markers are summarized by the residue line above.
+		if fert.behavior == FertilizerData.Behavior.FUNGICIDE:
 			continue
 		lines.append("%s (%s)" % [fert.display_name, fert.subtitle_text()])
 	return "\n".join(lines)
@@ -131,6 +135,12 @@ func clear() -> void:
 	days_grown = 0
 	applied_fertilizers.clear()
 	# pending_stat_bonus is consumed explicitly at harvest, not here.
+
+
+func fungicide_residue_text() -> String:
+	if pending_stat_bonus <= 0:
+		return ""
+	return "Extra nutrition. +%d all stats" % pending_stat_bonus
 
 
 func consume_pending_stat_bonus() -> int:

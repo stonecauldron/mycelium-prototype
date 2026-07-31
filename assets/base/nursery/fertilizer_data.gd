@@ -12,6 +12,7 @@ enum Behavior {
 }
 
 @export var display_name: String = "Fertilizer"
+@export_multiline var short_description: String = ""
 @export var biomass_cost: int = 2
 @export var tint: Color = Color.WHITE
 @export var behavior: Behavior = Behavior.STAT
@@ -42,58 +43,7 @@ func apply_to(stats: UnitStatsData, scale_factor: int = 1) -> void:
 
 
 func subtitle_text() -> String:
-	match behavior:
-		Behavior.VOLATILE:
-			return "×2 times other fertiliser stats."
-		Behavior.OVERKILL:
-			return "+2 highest / -2 lowest"
-		Behavior.MEIOSIS:
-			return "hatch ×2, half stats"
-		Behavior.SLOW_STEADY:
-			return "+2 all / ×2 growth time"
-		Behavior.FUNGICIDE:
-			return "kill plant → next +1/active day"
-		Behavior.AMOK:
-			return "+2 STR / +2 SPD / always charges forward"
-		_:
-			pass
-	var parts: PackedStringArray = []
-	if (
-		strength_delta != 0
-		and strength_delta == dex_delta
-		and strength_delta == con_delta
-		and strength_delta == spd_delta
-	):
-		var all_sign := "+" if strength_delta > 0 else ""
-		parts.append("%s%d all" % [all_sign, strength_delta])
-	else:
-		var bonuses: PackedStringArray = []
-		var maluses: PackedStringArray = []
-		_append_delta_part(bonuses, maluses, "STR", strength_delta)
-		_append_delta_part(bonuses, maluses, "DEX", dex_delta)
-		_append_delta_part(bonuses, maluses, "CON", con_delta)
-		_append_delta_part(bonuses, maluses, "SPD", spd_delta)
-		parts.append_array(bonuses)
-		parts.append_array(maluses)
-	if growth_bonus != 0:
-		var sign_text := "+" if growth_bonus > 0 else ""
-		parts.append("%s%d growth" % [sign_text, growth_bonus])
-	if parts.is_empty():
-		return "no effect"
-	return " / ".join(parts)
-
-
-func _append_delta_part(
-	bonuses: PackedStringArray,
-	maluses: PackedStringArray,
-	label: String,
-	delta: int
-) -> void:
-	if delta == 0:
-		return
-	var sign_text := "+" if delta > 0 else ""
-	var text := "%s%d %s" % [sign_text, delta, label]
-	if delta > 0:
-		bonuses.append(text)
-	else:
-		maluses.append(text)
+	var authored := short_description.strip_edges()
+	if not authored.is_empty():
+		return authored
+	return "no effect"

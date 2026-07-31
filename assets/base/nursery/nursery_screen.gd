@@ -159,7 +159,7 @@ func _rebuild_shop_cards() -> void:
 				i,
 				offer.locked,
 				fert.tint,
-				fert.subtitle_text()
+				fert.short_description.strip_edges()
 			)
 		elif offer.item is SporeData:
 			var spore := offer.item as SporeData

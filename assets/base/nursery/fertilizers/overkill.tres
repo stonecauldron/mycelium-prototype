@@ -1,10 +1,11 @@
-[gd_resource type="Resource" script_class="FertilizerData" format=3]
+[gd_resource type="Resource" script_class="FertilizerData" format=3 uid="uid://bugchf4wnbcp7"]
 
-[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+[ext_resource type="Script" uid="uid://d0mu0vimtxgur" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
 
 [resource]
 script = ExtResource("1_fert")
 display_name = "Overkill"
-biomass_cost = 2
+short_description = "+2 highest stat
+-2 lowest stat."
 tint = Color(0.75, 0.2, 0.35, 1)
 behavior = 2

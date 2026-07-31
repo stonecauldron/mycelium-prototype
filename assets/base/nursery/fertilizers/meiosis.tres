@@ -1,10 +1,11 @@
-[gd_resource type="Resource" script_class="FertilizerData" format=3]
+[gd_resource type="Resource" script_class="FertilizerData" format=3 uid="uid://bgghxpc7gimtd"]
 
-[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+[ext_resource type="Script" uid="uid://d0mu0vimtxgur" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
 
 [resource]
 script = ExtResource("1_fert")
 display_name = "Meiosis"
-biomass_cost = 2
+short_description = "Hatch amount x2
+Stats are halved."
 tint = Color(0.55, 0.75, 0.95, 1)
 behavior = 3

@@ -1,11 +1,12 @@
-[gd_resource type="Resource" script_class="FertilizerData" format=3]
+[gd_resource type="Resource" script_class="FertilizerData" format=3 uid="uid://dwfsh22skg350"]
 
-[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+[ext_resource type="Script" uid="uid://d0mu0vimtxgur" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
 
 [resource]
 script = ExtResource("1_fert")
 display_name = "Slow and Steady"
-biomass_cost = 2
+short_description = "+2 all stats
+×2 longer growth time."
 tint = Color(0.45, 0.7, 0.5, 1)
 behavior = 4
 strength_delta = 2

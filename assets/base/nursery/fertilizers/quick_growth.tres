@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="FertilizerData" format=3]
+[gd_resource type="Resource" script_class="FertilizerData" format=3 uid="uid://dmnb0i6imsvv2"]
 
-[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+[ext_resource type="Script" uid="uid://d0mu0vimtxgur" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
 
 [resource]
 script = ExtResource("1_fert")
 display_name = "Quick Growth"
-biomass_cost = 2
+short_description = "Hasten growth by 1 day"
 tint = Color(0.72, 0.92, 0.55, 1)
 growth_bonus = 1

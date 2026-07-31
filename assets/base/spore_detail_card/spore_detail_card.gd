@@ -139,10 +139,13 @@ func _plot_status_text() -> String:
 
 func _plot_info_text() -> String:
 	var lines: PackedStringArray = []
-	if plot_data.pending_stat_bonus > 0:
-		lines.append("Fungicide residue (+%d all)" % plot_data.pending_stat_bonus)
+	var residue := plot_data.fungicide_residue_text()
+	if not residue.is_empty():
+		lines.append(residue)
 	for fert in plot_data.applied_fertilizers:
 		if fert == null:
+			continue
+		if fert.behavior == FertilizerData.Behavior.FUNGICIDE:
 			continue
 		lines.append("%s (%s)" % [fert.display_name, fert.subtitle_text()])
 	return "\n".join(lines)

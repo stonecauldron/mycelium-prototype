@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_fert")
 display_name = "Amok"
+short_description = "+2 STR / +2 SPD
+Unit will always charge, regardless of weapon."
 tint = Color(0.9, 0.25, 0.2, 1)
 behavior = 6
 strength_delta = 2

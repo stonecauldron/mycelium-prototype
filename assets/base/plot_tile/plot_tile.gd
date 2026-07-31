@@ -134,13 +134,10 @@ func _accepts_drag_data(data: Variant) -> bool:
 			return false
 		return true
 	if drop_type == "shop_fertilizer" or drop_type == "fertilizer":
-		if state == NurseryPlotData.State.EMPTY or state == NurseryPlotData.State.GROWING:
-			return true
-		# READY: only Fungicide (kills the plant for a capped active-growth bonus).
-		if state != NurseryPlotData.State.READY:
-			return false
 		var fert := data.get("fertilizer") as FertilizerData
-		return fert != null and fert.behavior == FertilizerData.Behavior.FUNGICIDE
+		if fert != null and fert.behavior == FertilizerData.Behavior.FUNGICIDE:
+			return state == NurseryPlotData.State.GROWING or state == NurseryPlotData.State.READY
+		return state == NurseryPlotData.State.EMPTY or state == NurseryPlotData.State.GROWING
 	return false
 
 
@@ -308,7 +305,26 @@ func _refresh_fertilizer_chips() -> void:
 		var icon := chip.get_node_or_null("%Icon") as TextureRect
 		if icon != null:
 			icon.self_modulate = fert.tint
+		# StatChip defaults to IGNORE; re-enable so hover can show effects.
+		chip.mouse_filter = Control.MOUSE_FILTER_STOP
+		chip.tooltip_text = _fertilizer_chip_tooltip(fert, count)
 		_fertilizer_chips.append(chip)
+
+
+func _fertilizer_chip_tooltip(fert: FertilizerData, count: int) -> String:
+	if fert == null:
+		return ""
+	if fert.behavior == FertilizerData.Behavior.FUNGICIDE and _plot != null:
+		var residue := _plot.fungicide_residue_text()
+		if not residue.is_empty():
+			return residue
+	var title := fert.display_name
+	if count > 1:
+		title = "%s ×%d" % [title, count]
+	var effect := fert.subtitle_text()
+	if effect.is_empty():
+		return title
+	return "%s\n%s" % [title, effect]
 
 
 func _apply_visual_state() -> void:

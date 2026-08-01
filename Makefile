@@ -4,7 +4,7 @@ BUILD_DIR := build/web
 EXPORT_HTML := $(BUILD_DIR)/index.html
 PORT ?= 8060
 BUTLER ?= butler
-ITCH_TARGET := cauldron/spore-lord:html
+ITCH_TARGET := cauldron/auto-shrooms:html
 
 .PHONY: all build run serve open upload clean help
 

@@ -46,7 +46,7 @@ static func add_unit_became_imago(unit: RosterUnitData) -> void:
 	if unit == null:
 		return
 	entries.append({
-		"text": "%s has matured." % unit.display_name,
+		"text": "%s has matured (+2 all STATS)." % unit.display_name,
 		"formation_line": int(unit.get_formation_line()),
 		"unit": unit,
 	})

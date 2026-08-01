@@ -11,7 +11,7 @@ const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
 const _WEAPON_DETAIL_CARD_SCENE := preload("res://assets/base/weapon_detail_card/weapon_detail_card.tscn")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
-const _DETAIL_TOOLTIP_SEPARATION := 8.0
+const _DETAIL_TOOLTIP_SEPARATION := 12.0
 var unit_data: Resource
 var source: String = "bench"
 var slot: Node

@@ -1,7 +1,7 @@
 class_name FloatingArrow
 extends Control
 
-const ARROW_SIZE := Vector2(96, 96)
+const ARROW_SIZE := Vector2(128, 128)
 const _BOB_AMPLITUDE_PX := 6.0
 const _BOB_HALF_DURATION_SEC := 0.45
 

@@ -31,7 +31,7 @@ theme_override_constants/separation = 4
 
 [node name="CustomTitle" type="Label" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=704877058]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 22
 text = "Custom Matchup"
 
 [node name="PlayerLabel" type="Label" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=682412139]
@@ -113,7 +113,7 @@ theme_override_constants/separation = 4
 
 [node name="PresetTitle" type="Label" parent="SandboxHUD/PresetsPanel/Margin/Scroll/Column" unique_id=1538513034]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 22
 text = "Presets"
 
 [node name="MatchupButtons" type="VBoxContainer" parent="SandboxHUD/PresetsPanel/Margin/Scroll/Column" unique_id=1157527143]

@@ -20,7 +20,7 @@ const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertili
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 const _HOURGLASS_ICON := preload("res://assets/base/nursery/spore_card/hourglass_icon.png")
 const _HARVEST_ICON := preload("res://assets/combat/boom_cap_explosion/harvest_icon.png")
-const _HARVEST_CHIP_SIZE := Vector2(48, 48)
+const _HARVEST_CHIP_SIZE := Vector2(64, 64)
 
 const _SHAKE_IDLE_NORMAL_SEC := 1.5
 const _SHAKE_IDLE_IMAGO_SEC := 0.8

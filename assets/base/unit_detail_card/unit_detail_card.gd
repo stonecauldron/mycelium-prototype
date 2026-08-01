@@ -1,8 +1,8 @@
 class_name UnitDetailCard
 extends Control
 
-const CARD_SIZE := Vector2(300, 460)
-const CARD_SIZE_NO_PORTRAIT := Vector2(300, 360)
+const CARD_SIZE := Vector2(390, 600)
+const CARD_SIZE_NO_PORTRAIT := Vector2(390, 480)
 const PORTRAIT_SCALE := 0.9
 ## Extra room under feet so the ground shadow is not clipped (UnitCard keeps default).
 const PORTRAIT_SHADOW_CLEARANCE := 24.0
@@ -138,8 +138,8 @@ func _refresh_strain_chip() -> void:
 	if row == null:
 		return
 	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
-	chip.chip_size = Vector2(48, 48)
-	chip.value_font_size = 22
+	chip.chip_size = Vector2(72, 72)
+	chip.value_font_size = 30
 	chip.icon = info.get("icon") as Texture2D
 	row.add_child(chip)
 	chip.set_value(info.get("value", 0))

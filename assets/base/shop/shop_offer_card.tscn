@@ -9,27 +9,27 @@
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="7_tag"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shop_card"]
-content_margin_left = 10.0
-content_margin_top = 10.0
-content_margin_right = 10.0
-content_margin_bottom = 10.0
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
 bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
 border_width_left = 5
 border_width_top = 5
 border_width_right = 5
 border_width_bottom = 5
 border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_spore"]
 atlas = ExtResource("3_spores")
 region = Rect2(64, 80, 376, 336)
 
 [node name="ShopOfferCard" type="Control" unique_id=1617112971]
-custom_minimum_size = Vector2(192, 280)
+custom_minimum_size = Vector2(240, 360)
 clip_contents = true
 layout_mode = 3
 anchors_preset = 0
@@ -58,27 +58,27 @@ theme_override_constants/margin_bottom = 2
 
 [node name="VBox" type="VBoxContainer" parent="CardPanel/Margin" unique_id=1887111811]
 layout_mode = 2
-theme_override_constants/separation = 3
+theme_override_constants/separation = 6
 
 [node name="TitleLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=1142720565]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 19
 text = "Offer"
 autowrap_mode = 3
 
 [node name="IconSlot" type="MarginContainer" parent="CardPanel/Margin/VBox"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_bottom = 8
 
 [node name="Icon" type="TextureRect" parent="CardPanel/Margin/VBox/IconSlot" unique_id=638753186]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(72, 72)
-custom_maximum_size = Vector2(72, 72)
+custom_minimum_size = Vector2(112, 112)
+custom_maximum_size = Vector2(112, 112)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -88,22 +88,22 @@ stretch_mode = 5
 
 [node name="SubtitleLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=639148190]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 21
 text = "Name"
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="DescriptionLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=639148191]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.25, 0.27, 0.22, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 text = "Description"
 autowrap_mode = 3
 
@@ -115,11 +115,11 @@ mouse_filter = 2
 
 [node name="FooterRow" type="HBoxContainer" parent="CardPanel/Margin/VBox" unique_id=955763184]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 alignment = 0
 
 [node name="TierTag" parent="CardPanel/Margin/VBox/FooterRow" unique_id=816829022 instance=ExtResource("7_tag")]
@@ -143,13 +143,13 @@ alignment = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "10"
 horizontal_alignment = 1
 
 [node name="BiomassIcon" type="TextureRect" parent="CardPanel/Margin/VBox/FooterRow/PriceRow" unique_id=816829021]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("4_biomass")
@@ -158,18 +158,18 @@ stretch_mode = 5
 
 [node name="LockButton" type="Button" parent="." unique_id=1087985862]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(40, 40)
+custom_minimum_size = Vector2(56, 56)
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -44.0
-offset_top = 2.0
+offset_left = -60.0
+offset_top = 4.0
 offset_right = -4.0
-offset_bottom = 42.0
+offset_bottom = 60.0
 grow_horizontal = 0
 focus_mode = 0
-theme_override_constants/icon_max_width = 36
+theme_override_constants/icon_max_width = 44
 icon = ExtResource("5_padlock")
 flat = true
 expand_icon = true

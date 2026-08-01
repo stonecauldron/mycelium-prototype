@@ -1,8 +1,8 @@
 class_name StatChip
 extends Control
 
-const CHIP_SIZE := Vector2(32, 32)
-const DEFAULT_VALUE_FONT_SIZE := 16
+const CHIP_SIZE := Vector2(40, 40)
+const DEFAULT_VALUE_FONT_SIZE := 24
 
 @export var icon: Texture2D:
 	set(value):

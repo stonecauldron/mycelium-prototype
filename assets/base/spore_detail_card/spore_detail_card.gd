@@ -1,8 +1,8 @@
 class_name SporeDetailCard
 extends Control
 
-const CARD_SIZE := Vector2(240, 280)
-const CARD_SIZE_WITH_PLOT := Vector2(320, 360)
+const CARD_SIZE := Vector2(320, 390)
+const CARD_SIZE_WITH_PLOT := Vector2(430, 500)
 const _MOCK_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 
 var spore_data: SporeData

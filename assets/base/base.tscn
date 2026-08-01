@@ -256,7 +256,7 @@ size_flags_vertical = 4
 theme_override_constants/separation = 0
 
 [node name="IconFrame" type="PanelContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar/BiomassChip" unique_id=1237646514]
-custom_minimum_size = Vector2(72, 72)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_icon")
@@ -268,7 +268,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="InfoFrame" type="PanelContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar/BiomassChip" unique_id=1612260852]
-custom_minimum_size = Vector2(140, 72)
+custom_minimum_size = Vector2(176, 96)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_info")
@@ -280,9 +280,8 @@ alignment = 1
 
 [node name="BiomassTitle" type="Label" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar/BiomassChip/InfoFrame/InfoVBox" unique_id=1709637846]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
 theme_override_fonts/font = SubResource("Font_biomass_amount")
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 22
 text = "BIOMASS"
 
 [node name="BiomassAmount" type="Label" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar/BiomassChip/InfoFrame/InfoVBox" unique_id=1526240313]
@@ -290,7 +289,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_fonts/font = SubResource("Font_biomass_amount")
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 36
 text = "0000 kg"
 
 [node name="Spacer" type="Control" parent="HudLayer/HudRoot/RootMargin/RootVBox" unique_id=171144055]

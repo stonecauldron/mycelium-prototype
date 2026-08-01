@@ -11,7 +11,7 @@ const SPAWN_JITTER_X := 18.0
 const STREAK_COLOR := Color(1.0, 0.88, 0.35, 1.0)
 const FALLEN_COLOR := Color(0.75, 0.82, 0.95, 1.0)
 const VICTORY_COLOR := Color(1.0, 0.92, 0.35, 1.0)
-const VICTORY_FONT_SIZE := 64
+const VICTORY_FONT_SIZE := 80
 const VICTORY_FLOAT := 28.0
 
 @onready var _label: Label = $Label

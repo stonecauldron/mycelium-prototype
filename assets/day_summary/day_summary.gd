@@ -1,14 +1,14 @@
 extends Control
 
 const _BASE_SCENE_PATH := "res://assets/base/base.tscn"
-const _PORTRAIT_HOST_SIZE := Vector2(52, 64)
-const _PORTRAIT_SCALE := 0.42
+const _PORTRAIT_HOST_SIZE := Vector2(68, 84)
+const _PORTRAIT_SCALE := 0.54
 const _BIOMASS_ICON := preload("res://assets/base/biomass.png")
-const _BIOMASS_ICON_SIZE := Vector2(72, 72)
+const _BIOMASS_ICON_SIZE := Vector2(96, 96)
 const _PLOT_EMPTY := preload("res://assets/base/plot_tile/plot_empty.png")
 const _EGG0 := preload("res://assets/base/plot_tile/egg0.png")
 const _EGG1 := preload("res://assets/base/plot_tile/egg1.png")
-const _PLOT_ICON_SIZE := Vector2(64, 72)
+const _PLOT_ICON_SIZE := Vector2(84, 96)
 
 const _FORMATION_COLORS := {
 	WeaponData.FormationLine.FRONT: Color(0.35, 0.75, 0.45),
@@ -142,7 +142,7 @@ func _make_icon_row(text: String, formation_line: int) -> Control:
 	var row := HBoxContainer.new()
 
 	var icon := ColorRect.new()
-	icon.custom_minimum_size = Vector2(40, 40)
+	icon.custom_minimum_size = Vector2(56, 56)
 	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	icon.color = _FORMATION_COLORS.get(formation_line, Color(0.7, 0.7, 0.7))
 	row.add_child(icon)

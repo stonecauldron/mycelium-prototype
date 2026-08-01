@@ -189,7 +189,7 @@ func _build_tab_bar() -> void:
 		var button := Button.new()
 		button.theme_type_variation = &"NavButton"
 		button.text = "%d  %s" % [key_index, str(def["label"])]
-		button.custom_minimum_size = Vector2(120, 56)
+		button.custom_minimum_size = Vector2(144, 64)
 		button.focus_mode = Control.FOCUS_NONE
 		button.pressed.connect(_select_tab.bind(tab_id, false))
 		column.add_child(button)

@@ -62,18 +62,22 @@ grow_vertical = 1
 
 [node name="HeaderBlock" type="VBoxContainer" parent="." unique_id=826697549]
 layout_mode = 1
-anchors_preset = -1
-offset_left = 16.0
-offset_top = 141.0
-offset_right = 640.0
-offset_bottom = 219.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -352.0
+offset_right = 352.0
+offset_bottom = 78.0
+grow_horizontal = 2
 mouse_filter = 2
 theme_type_variation = &"SectionVBox"
 
 [node name="Header" type="Label" parent="HeaderBlock" unique_id=1708698391]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_type_variation = &"PageTitleLabel"
-text = "War Chamber: Deploy Troop"
+theme_override_font_sizes/font_size = 52
+text = "War Chamber"
 
 [node name="BenchPanel" type="PanelContainer" parent="." unique_id=710296817]
 unique_name_in_owner = true
@@ -112,9 +116,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 offset_left = 16.0
-offset_top = 591.0
+offset_top = 567.0
 offset_right = -16.0
-offset_bottom = 821.0
+offset_bottom = 889.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="SquadMargin" type="MarginContainer" parent="SquadPanel" unique_id=1251518974]

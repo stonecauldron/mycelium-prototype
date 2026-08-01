@@ -8,10 +8,10 @@
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="6_biomass"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 16.0
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 20.0
 bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
 border_width_left = 5
 border_width_top = 5
@@ -24,7 +24,7 @@ corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
 
 [node name="SporeDetailCard" type="Control"]
-custom_minimum_size = Vector2(240, 280)
+custom_minimum_size = Vector2(320, 390)
 clip_contents = false
 layout_mode = 3
 anchors_preset = 0
@@ -55,22 +55,22 @@ theme_override_constants/separation = 8
 
 [node name="NameLabel" type="Label" parent="CardPanel/Margin/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 32
 text = "Spore"
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="DescLabel" type="Label" parent="CardPanel/Margin/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 24
 text = "Flavor text."
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -85,7 +85,7 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 26
 text = "Growth Time:"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -98,7 +98,7 @@ icon = ExtResource("4_hourglass")
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 26
 text = "days"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -112,22 +112,22 @@ theme_override_constants/separation = 4
 
 [node name="StatusLabel" type="Label" parent="CardPanel/Margin/VBox/PlotSection"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 24
 text = "Growing — 2 days left"
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="PlotInfoLabel" type="Label" parent="CardPanel/Margin/VBox/PlotSection"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 22
 text = ""
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -169,12 +169,12 @@ alignment = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 24
 text = "Sell: 1"
 horizontal_alignment = 2
 
 [node name="SellBiomassIcon" type="TextureRect" parent="CardPanel/Margin/VBox/FooterRow/SellRow"]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2

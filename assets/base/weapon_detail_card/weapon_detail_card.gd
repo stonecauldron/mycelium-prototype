@@ -1,7 +1,7 @@
 class_name WeaponDetailCard
 extends Control
 
-const CARD_SIZE := Vector2(240, 280)
+const CARD_SIZE := Vector2(320, 390)
 
 var weapon_data: WeaponData
 var interactive: bool = true

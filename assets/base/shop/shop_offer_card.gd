@@ -4,7 +4,7 @@ extends Control
 signal offer_clicked(card: ShopOfferCard)
 signal lock_toggled(card: ShopOfferCard)
 
-const CARD_SIZE := Vector2(192, 280)
+const CARD_SIZE := Vector2(240, 360)
 const REROLL_PREVIEW_SCALE := 1.06
 const REROLL_PREVIEW_IN_SEC := 0.14
 const REROLL_PREVIEW_OUT_SEC := 0.1

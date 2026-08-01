@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://txw374s1xsda" path="res://assets/ui/arrow.png" id="2_tex"]
 
 [node name="FloatingArrow" type="Control" unique_id=1834536485]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(128, 128)
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2

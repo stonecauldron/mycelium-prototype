@@ -69,7 +69,7 @@ func _build_strain_tooltip(strain: UnitStrain) -> Control:
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	name_label.text = strain.display_name
 	name_label.add_theme_color_override("font_color", Color(0.03137255, 0.03529412, 0.02745098, 1))
-	name_label.add_theme_font_size_override("font_size", 22)
+	name_label.add_theme_font_size_override("font_size", 30)
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	name_label.custom_minimum_size = Vector2(_TOOLTIP_WIDTH, 0)
 	vbox.add_child(name_label)
@@ -80,7 +80,7 @@ func _build_strain_tooltip(strain: UnitStrain) -> Control:
 		desc_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		desc_label.text = description
 		desc_label.add_theme_color_override("font_color", Color(0.15, 0.18, 0.14, 1))
-		desc_label.add_theme_font_size_override("font_size", 16)
+		desc_label.add_theme_font_size_override("font_size", 24)
 		desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		desc_label.custom_minimum_size = Vector2(_TOOLTIP_WIDTH, 0)
 		vbox.add_child(desc_label)

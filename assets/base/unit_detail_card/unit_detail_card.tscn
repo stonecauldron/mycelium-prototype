@@ -8,10 +8,10 @@
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="6_tag"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
 bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
 border_width_left = 5
 border_width_top = 5
@@ -24,7 +24,7 @@ corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
 
 [node name="UnitDetailCard" type="Control" unique_id=1555166682]
-custom_minimum_size = Vector2(300, 460)
+custom_minimum_size = Vector2(390, 600)
 layout_mode = 3
 anchors_preset = 0
 theme = ExtResource("2_theme")
@@ -53,18 +53,18 @@ theme_override_constants/separation = 4
 
 [node name="NameLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=495877898]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 36
 text = "Unit"
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="PortraitHost" type="Control" parent="CardPanel/Margin/VBox" unique_id=1373002961]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 140)
+custom_minimum_size = Vector2(0, 200)
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -80,14 +80,14 @@ alignment = 1
 [node name="AtkChip" parent="CardPanel/Margin/VBox/CombatRow" unique_id=944571965 instance=ExtResource("5_chip")]
 unique_name_in_owner = true
 icon = ExtResource("3_sword")
-chip_size = Vector2(48, 48)
-value_font_size = 22
+chip_size = Vector2(72, 72)
+value_font_size = 30
 
 [node name="HpChip" parent="CardPanel/Margin/VBox/CombatRow" unique_id=1770126743 instance=ExtResource("5_chip")]
 unique_name_in_owner = true
 icon = ExtResource("4_hp")
-chip_size = Vector2(48, 48)
-value_font_size = 22
+chip_size = Vector2(72, 72)
+value_font_size = 30
 
 [node name="AttrGrid" type="GridContainer" parent="CardPanel/Margin/VBox" unique_id=389948497]
 layout_mode = 2
@@ -100,7 +100,7 @@ columns = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 26
 text = "STR 0"
 horizontal_alignment = 1
 
@@ -108,7 +108,7 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 26
 text = "DEX 0"
 horizontal_alignment = 1
 
@@ -116,7 +116,7 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 26
 text = "CON 0"
 horizontal_alignment = 1
 
@@ -124,7 +124,7 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 26
 text = "SPD 0"
 horizontal_alignment = 1
 
@@ -150,16 +150,16 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 30
 text = "Generalist Strain"
 
 [node name="DescLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=563188910]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 26
 text = "A basic all-rounder."
 autowrap_mode = 3
 
@@ -168,7 +168,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 26
 text = "Age: 0 days"
 
 [node name="FooterRow" type="HBoxContainer" parent="CardPanel/Margin/VBox" unique_id=955763184]

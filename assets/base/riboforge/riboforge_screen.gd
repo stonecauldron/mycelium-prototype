@@ -214,7 +214,12 @@ func _rebuild_squad_cards() -> void:
 		var card: UnitCard = _UNIT_CARD_SCENE.instantiate()
 		_squad_row.add_child(card)
 		card.setup(unit, "riboforge_squad", null)
+		card.clicked.connect(_on_unit_card_clicked)
 		card.weapon_loadout_changed.connect(_on_unit_weapon_changed)
+
+
+func _on_unit_card_clicked(card: UnitCard) -> void:
+	_try_unequip_to_stock({"unit": card.unit_data})
 
 
 func _on_unit_weapon_changed(_card: UnitCard) -> void:

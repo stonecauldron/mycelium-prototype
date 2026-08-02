@@ -566,6 +566,7 @@ func _check_battle_end() -> void:
 		SceneTransition.change_scene(_VICTORY_SCENE_PATH)
 		return
 	DaySummaryFeed.clear()
+	_push_combat_recap_to_day_summary()
 	if GameState.current_day == GameState.NURSERY_UNLOCK_DAY:
 		GameState.prefer_nursery_tab = true
 		DaySummaryFeed.add_base_unlock("Nursery")
@@ -589,6 +590,67 @@ func _check_battle_end() -> void:
 		)
 	GameState.refresh_shops_for_new_day()
 	SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
+
+
+func _push_combat_recap_to_day_summary() -> void:
+	var merged: Dictionary = {}
+	for unit in player_troop.get_units():
+		if unit == null or unit.roster_data == null:
+			continue
+		var key := unit.squad_index
+		if not merged.has(key):
+			merged[key] = {
+				"unit": unit.roster_data,
+				"dealt": 0,
+				"taken": 0,
+				"max_hp": 0,
+				"order": key,
+			}
+		var entry: Dictionary = merged[key]
+		entry["unit"] = unit.roster_data
+		entry["dealt"] = int(entry["dealt"]) + unit.damage_dealt
+		entry["taken"] = int(entry["taken"]) + unit.damage_taken
+		var unit_max_hp := 0
+		if unit.stats != null:
+			unit_max_hp = unit.stats.get_max_hp()
+		# Keep the highest max HP seen (same across Zombie Cap lives).
+		entry["max_hp"] = maxi(int(entry["max_hp"]), unit_max_hp)
+	var damage_rows: Array[Dictionary] = []
+	var keys: Array = merged.keys()
+	keys.sort()
+	for key in keys:
+		var entry: Dictionary = merged[key]
+		var roster := entry["unit"] as RosterUnitData
+		if roster == null:
+			continue
+		var max_hp := int(entry["max_hp"])
+		if max_hp <= 0 and roster.stats != null:
+			max_hp = roster.stats.get_max_hp()
+		damage_rows.append({
+			"unit": roster,
+			"dealt": int(entry["dealt"]),
+			"taken": int(entry["taken"]),
+			"max_hp": max_hp,
+			"order": int(entry["order"]),
+		})
+	damage_rows.sort_custom(_sort_unit_damage_rows_desc)
+	DaySummaryFeed.set_combat_recap(
+		_sum_troop_current_hp(player_troop),
+		_player_army_max_hp,
+		damage_rows
+	)
+
+
+func _sort_unit_damage_rows_desc(a: Dictionary, b: Dictionary) -> bool:
+	var a_dealt := int(a.get("dealt", 0))
+	var b_dealt := int(b.get("dealt", 0))
+	if a_dealt != b_dealt:
+		return a_dealt > b_dealt
+	var a_taken := int(a.get("taken", 0))
+	var b_taken := int(b.get("taken", 0))
+	if a_taken != b_taken:
+		return a_taken > b_taken
+	return int(a.get("order", 0)) < int(b.get("order", 0))
 
 
 func _play_victory_celebration() -> void:

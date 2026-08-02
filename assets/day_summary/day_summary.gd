@@ -3,12 +3,19 @@ extends Control
 const _BASE_SCENE_PATH := "res://assets/base/base.tscn"
 const _PORTRAIT_HOST_SIZE := Vector2(68, 84)
 const _PORTRAIT_SCALE := 0.54
+const _DAMAGE_PORTRAIT_HOST_SIZE := Vector2(100, 124)
+const _DAMAGE_PORTRAIT_SCALE := 0.78
 const _BIOMASS_ICON := preload("res://assets/base/biomass.png")
 const _BIOMASS_ICON_SIZE := Vector2(96, 96)
 const _PLOT_EMPTY := preload("res://assets/base/plot_tile/plot_empty.png")
 const _EGG0 := preload("res://assets/base/plot_tile/egg0.png")
 const _EGG1 := preload("res://assets/base/plot_tile/egg1.png")
 const _PLOT_ICON_SIZE := Vector2(84, 96)
+const _METRIC_BAR_HEIGHT := 28.0
+const _METRIC_BAR_TRACK := Color(0.08, 0.1, 0.1, 1)
+const _METRIC_BAR_DEALT := Color(0.35, 0.55, 0.9, 1)
+const _METRIC_BAR_RECEIVED := Color(0.85, 0.25, 0.3, 1)
+const _METRIC_BAR_FONT_SIZE := 18
 
 const _FORMATION_COLORS := {
 	WeaponData.FormationLine.FRONT: Color(0.35, 0.75, 0.45),
@@ -19,13 +26,154 @@ const _FORMATION_COLORS := {
 @onready var _entries: VBoxContainer = %Entries
 @onready var _continue_button: Button = %ContinueButton
 @onready var _title: Label = %Title
+@onready var _troop_hp_bar: ProgressBar = %TroopHpBar
+@onready var _troop_hp_label: Label = %TroopHpLabel
+@onready var _damage_boards: VBoxContainer = %DamageBoards
 
 
 func _ready() -> void:
 	_title.text = "Day %d => Day %d" % [GameState.current_day, GameState.current_day + 1]
+	_populate_combat_recap()
 	_populate_entries(DaySummaryFeed.take_entries())
 	_continue_button.pressed.connect(_on_continue_pressed)
 	_continue_button.grab_focus()
+
+
+func _populate_combat_recap() -> void:
+	_apply_troop_hp(DaySummaryFeed.troop_hp_current, DaySummaryFeed.troop_hp_max)
+	for child in _damage_boards.get_children():
+		child.queue_free()
+
+	var rows := DaySummaryFeed.unit_damage_rows
+	var max_dealt := 0
+	for row in rows:
+		max_dealt = maxi(max_dealt, int(row.get("dealt", 0)))
+
+	if rows.is_empty():
+		var empty := _make_entry_label("—")
+		empty.theme_type_variation = &"PageSubtitleLabel"
+		_damage_boards.add_child(empty)
+	else:
+		for row in rows:
+			var unit := row.get("unit") as RosterUnitData
+			if unit == null:
+				continue
+			_damage_boards.add_child(_make_unit_damage_row(
+				unit,
+				int(row.get("dealt", 0)),
+				int(row.get("taken", 0)),
+				max_dealt,
+				int(row.get("max_hp", 0))
+			))
+
+	DaySummaryFeed.troop_hp_current = 0
+	DaySummaryFeed.troop_hp_max = 0
+	DaySummaryFeed.unit_damage_rows.clear()
+
+
+func _apply_troop_hp(current: int, maximum: int) -> void:
+	var max_hp := maxi(maximum, 1)
+	_troop_hp_bar.max_value = max_hp
+	_troop_hp_bar.value = clampi(current, 0, max_hp)
+	_troop_hp_label.text = "%d / %d" % [current, maximum]
+
+
+func _make_unit_damage_row(
+	unit: RosterUnitData,
+	dealt: int,
+	taken: int,
+	max_dealt: int,
+	unit_max_hp: int
+) -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	var host := Control.new()
+	host.custom_minimum_size = _DAMAGE_PORTRAIT_HOST_SIZE
+	host.size = _DAMAGE_PORTRAIT_HOST_SIZE
+	host.clip_contents = true
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(host)
+	unit.mount_portrait(host, _DAMAGE_PORTRAIT_SCALE)
+
+	var text_col := VBoxContainer.new()
+	text_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	text_col.add_theme_constant_override("separation", 4)
+
+	var name_label := _make_metric_label(unit.display_name)
+	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.clip_text = true
+	text_col.add_child(name_label)
+
+	text_col.add_child(_make_metric_bar(
+		"DMG Dealt: %d" % dealt,
+		dealt,
+		max_dealt,
+		_METRIC_BAR_DEALT
+	))
+	var hp_basis := unit_max_hp
+	if hp_basis <= 0 and unit.stats != null:
+		hp_basis = unit.stats.get_max_hp()
+	text_col.add_child(_make_metric_bar(
+		"HP Lost: %d" % taken,
+		taken,
+		hp_basis,
+		_METRIC_BAR_RECEIVED,
+		true
+	))
+
+	row.add_child(text_col)
+	return row
+
+
+func _make_metric_bar(
+	label_text: String,
+	value: int,
+	max_value: int,
+	fill_color: Color,
+	clamp_fill: bool = false
+) -> ProgressBar:
+	var bar := ProgressBar.new()
+	bar.custom_minimum_size = Vector2(0, _METRIC_BAR_HEIGHT)
+	bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bar.show_percentage = false
+	bar.max_value = 1.0
+	var ratio := 0.0
+	if max_value > 0:
+		ratio = float(value) / float(max_value)
+		if clamp_fill:
+			ratio = minf(ratio, 1.0)
+	bar.value = ratio
+	bar.add_theme_stylebox_override("background", _make_bar_style(_METRIC_BAR_TRACK))
+	bar.add_theme_stylebox_override("fill", _make_bar_style(fill_color))
+
+	var label := Label.new()
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.text = label_text
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_color_override("font_color", Color(0.95, 0.95, 0.95, 1))
+	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.75))
+	label.add_theme_constant_override("outline_size", 4)
+	label.add_theme_font_size_override("font_size", _METRIC_BAR_FONT_SIZE)
+	bar.add_child(label)
+	return bar
+
+
+func _make_bar_style(color: Color) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = color
+	style.set_corner_radius_all(2)
+	return style
+
+
+func _make_metric_label(text: String) -> Label:
+	var label := _make_entry_label(text)
+	label.add_theme_font_size_override("font_size", 28)
+	return label
 
 
 func _populate_entries(entries: Array[Dictionary]) -> void:

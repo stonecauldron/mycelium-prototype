@@ -5,9 +5,29 @@ extends RefCounted
 ## Keys: text, optional formation_line, optional unit, optional biomass, optional nursery_ready.
 static var entries: Array[Dictionary] = []
 
+## Left-column combat recap (separate from event entries).
+static var troop_hp_current: int = 0
+static var troop_hp_max: int = 0
+## Rows: { unit: RosterUnitData, dealt: int, taken: int, max_hp: int, order: int }
+static var unit_damage_rows: Array[Dictionary] = []
+
 
 static func clear() -> void:
 	entries.clear()
+	troop_hp_current = 0
+	troop_hp_max = 0
+	unit_damage_rows.clear()
+
+
+static func set_combat_recap(
+	hp_current: int,
+	hp_max: int,
+	damage_rows: Array[Dictionary]
+) -> void:
+	troop_hp_current = maxi(hp_current, 0)
+	troop_hp_max = maxi(hp_max, 0)
+	unit_damage_rows.clear()
+	unit_damage_rows.assign(damage_rows)
 
 
 static func add_entry(text: String, formation_line: int = -1) -> void:

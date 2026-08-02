@@ -92,6 +92,8 @@ var current_hp: int
 var process_tiebreak: int = 0
 var roster_data: RosterUnitData = null
 var kill_streak: int = 0
+var damage_dealt: int = 0
+var damage_taken: int = 0
 var _attack_timer: float = 0.0
 var _target: Node2D
 var _troop: Troop
@@ -160,6 +162,8 @@ func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:
 	_in_knockback = false
 	_knockback_left_ground = false
 	kill_streak = 0
+	damage_dealt = 0
+	damage_taken = 0
 	_apply_body_color()
 
 
@@ -167,6 +171,8 @@ func _initialize_runtime() -> void:
 	current_hp = stats.get_max_hp()
 	health_changed.emit(current_hp, stats.get_max_hp())
 	process_tiebreak = randi()
+	damage_dealt = 0
+	damage_taken = 0
 
 	add_to_group("units")
 	_troop = get_parent().get_parent() as Troop
@@ -1345,6 +1351,10 @@ func take_damage(
 	if damage_type == WeaponData.DamageType.BLUNT and _blunt_resist > 0.0:
 		incoming_mult *= maxf(1.0 - _blunt_resist, 0.0)
 	amount = maxi(roundi(float(amount) * incoming_mult), 0)
+	if amount > 0:
+		damage_taken += amount
+		if killer != null and is_instance_valid(killer):
+			killer.damage_dealt += amount
 	if roster_data != null and roster_data.strain != null:
 		roster_data.strain.call_effect(&"on_hit_taken", [self, amount, damage_type])
 	_last_hit_from = knockback_from

@@ -31,6 +31,10 @@ const _VICTORY_LEAD_IN_SEC := 0.25
 @onready var enemy_troop: Troop = $World/EnemyTroop
 @onready var _fast_forward_button: Button = %FastForwardButton
 @onready var _biomass_amount: Label = %BiomassChip.get_node("%BiomassAmount")
+@onready var _player_army_hp_bar: ProgressBar = %PlayerArmyHpBar
+@onready var _enemy_army_hp_bar: ProgressBar = %EnemyArmyHpBar
+@onready var _player_army_hp_label: Label = %PlayerArmyHpLabel
+@onready var _enemy_army_hp_label: Label = %EnemyArmyHpLabel
 
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2
@@ -46,6 +50,8 @@ var _pending_player_zombie_respawns: int = 0
 var _pending_enemy_zombie_respawns: int = 0
 var _victory_celebrating: bool = false
 var _victory_director: VictoryCelebrationDirector = null
+var _player_army_max_hp: int = 0
+var _enemy_army_max_hp: int = 0
 
 
 func _ready() -> void:
@@ -196,6 +202,8 @@ func _run_battle(
 	_biomass_earned_this_fight = 0
 	_pending_player_zombie_respawns = 0
 	_pending_enemy_zombie_respawns = 0
+	_player_army_max_hp = 0
+	_enemy_army_max_hp = 0
 	_clear_world_vfx()
 	_reset_troop_from_roster(
 		player_troop,
@@ -212,6 +220,7 @@ func _run_battle(
 		false
 	)
 	_refresh_unit_process_order()
+	_setup_army_hp_hud()
 	_notify_battle_start()
 	_set_fast_forward(_fast_forward_scale)
 
@@ -266,6 +275,57 @@ func _refresh_biomass_hud() -> void:
 	if _biomass_amount == null:
 		return
 	_biomass_amount.text = "%0*d kg" % [_BIOMASS_DIGITS, GameState.biomass.amount]
+
+
+func _setup_army_hp_hud() -> void:
+	_player_army_max_hp = _sum_troop_max_hp(player_troop)
+	_enemy_army_max_hp = _sum_troop_max_hp(enemy_troop)
+	_refresh_army_hp_hud()
+
+
+func _sum_troop_max_hp(troop: Troop) -> int:
+	var total := 0
+	for unit in troop.get_units():
+		if unit.stats != null:
+			total += unit.stats.get_max_hp()
+	return total
+
+
+func _sum_troop_current_hp(troop: Troop) -> int:
+	var total := 0
+	for unit in troop.get_living_units():
+		total += unit.current_hp
+	return total
+
+
+func _refresh_army_hp_hud(_current: int = 0, _maximum: int = 0) -> void:
+	_apply_army_hp_bar(
+		_player_army_hp_bar,
+		_player_army_hp_label,
+		_sum_troop_current_hp(player_troop),
+		_player_army_max_hp
+	)
+	_apply_army_hp_bar(
+		_enemy_army_hp_bar,
+		_enemy_army_hp_label,
+		_sum_troop_current_hp(enemy_troop),
+		_enemy_army_max_hp
+	)
+
+
+func _apply_army_hp_bar(
+	bar: ProgressBar,
+	label: Label,
+	current: int,
+	maximum: int
+) -> void:
+	if bar == null:
+		return
+	var max_hp := maxi(maximum, 1)
+	bar.max_value = max_hp
+	bar.value = clampi(current, 0, max_hp)
+	if label != null:
+		label.text = "%d / %d" % [current, maximum]
 
 
 func _notify_biomass_from_combat_death(amount: int, victim: Unit) -> void:
@@ -348,6 +408,7 @@ func _spawn_unit(
 	unit.body_color = body_color * UnitStatsData.tint_for_tier(roster_data.power_tier)
 	unit.squad_index = squad_index
 	unit.died.connect(_on_unit_died.bind(is_player))
+	unit.health_changed.connect(_refresh_army_hp_hud)
 	units_root.add_child(unit)
 	if spawn_global != Vector2.INF:
 		unit.global_position = spawn_global
@@ -442,7 +503,14 @@ func _respawn_zombie_cap(
 	var spawn_pos := _zombie_respawn_global_position(troop)
 	var spawned := _spawn_unit(scene, units_root, clone, color, squad_index, is_player, spawn_pos)
 	if spawned != null:
+		if spawned.stats != null:
+			var respawn_max := spawned.stats.get_max_hp()
+			if is_player:
+				_player_army_max_hp += respawn_max
+			else:
+				_enemy_army_max_hp += respawn_max
 		spawned.notify_battle_start()
+		_refresh_army_hp_hud()
 	_refresh_unit_process_order()
 
 

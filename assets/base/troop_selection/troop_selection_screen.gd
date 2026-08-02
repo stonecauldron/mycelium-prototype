@@ -64,7 +64,7 @@ func _build_squad_ui() -> void:
 
 	var title := Label.new()
 	title.theme_type_variation = &"SectionTitleLabel"
-	title.text = "Troop (%d slots)" % SQUAD_SLOT_COUNT
+	title.text = "Troop"
 	_squad_rows.add_child(title)
 
 	var slots_row := HBoxContainer.new()

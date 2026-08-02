@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://c4swjtkoverfp" path="res://assets/base/nursery/nursery_screen.tscn" id="11_nursery"]
 [ext_resource type="PackedScene" uid="uid://ctgmgo4sqa1g7" path="res://assets/base/riboforge/riboforge_screen.tscn" id="12_riboforge"]
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
-[ext_resource type="PackedScene" uid="uid://cbiomasschip01" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
+[ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bottom_bg"]
 bg_color = Color(0.086, 0.122, 0.118, 0.68)

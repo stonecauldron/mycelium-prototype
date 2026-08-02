@@ -30,7 +30,7 @@ const _VICTORY_LEAD_IN_SEC := 0.25
 @onready var player_troop: Troop = $World/PlayerTroop
 @onready var enemy_troop: Troop = $World/EnemyTroop
 @onready var _fast_forward_button: Button = %FastForwardButton
-@onready var _biomass_amount: Label = %BiomassAmount
+@onready var _biomass_amount: Label = %BiomassChip.get_node("%BiomassAmount")
 
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2

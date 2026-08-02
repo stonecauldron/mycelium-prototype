@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://c00gqs4n3sm1c" path="res://assets/base/background/lower_foreground.png" id="7_bg_lower_fg"]
 [ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="9_lower_lane"]
 [ext_resource type="Texture2D" uid="uid://3vtn54xo3e3w" path="res://assets/combat/combat_stage/fast_forward.png" id="10_ff"]
-[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="11_biomass"]
+[ext_resource type="PackedScene" uid="uid://cbiomasschip01" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="11_biomass_chip"]
 [ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="13_figtree"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
@@ -20,23 +20,7 @@ size = Vector2(24, 1080)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_right"]
 size = Vector2(24, 1080)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icon"]
-bg_color = Color(0.24705882, 0.3529412, 0.34901962, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_info"]
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 16.0
-content_margin_bottom = 8.0
-bg_color = Color(0.031798195, 0.17988184, 0.1393677, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
 
 [sub_resource type="FontVariation" id="Font_biomass_amount"]
 base_font = ExtResource("13_figtree")
@@ -248,50 +232,12 @@ script = ExtResource("2_camera")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1373945268]
 
-[node name="BiomassChip" type="HBoxContainer" parent="HUD" unique_id=1625388454]
+[node name="BiomassChip" parent="HUD" unique_id=1625388454 instance=ExtResource("11_biomass_chip")]
+unique_name_in_owner = true
 offset_left = 24.0
 offset_top = 16.0
 offset_right = 296.0
 offset_bottom = 112.0
-theme_override_constants/separation = 0
-
-[node name="IconFrame" type="PanelContainer" parent="HUD/BiomassChip" unique_id=1936461698]
-custom_minimum_size = Vector2(96, 96)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_icon")
-
-[node name="Icon" type="TextureRect" parent="HUD/BiomassChip/IconFrame" unique_id=2055612632]
-layout_mode = 2
-texture = ExtResource("11_biomass")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="InfoFrame" type="PanelContainer" parent="HUD/BiomassChip" unique_id=1300727248]
-custom_minimum_size = Vector2(176, 96)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_info")
-
-[node name="InfoVBox" type="VBoxContainer" parent="HUD/BiomassChip/InfoFrame" unique_id=716138860]
-layout_mode = 2
-theme_override_constants/separation = 2
-alignment = 1
-
-[node name="BiomassTitle" type="Label" parent="HUD/BiomassChip/InfoFrame/InfoVBox" unique_id=1390143207]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.72, 0.72, 1)
-theme_override_fonts/font = SubResource("Font_biomass_amount")
-theme_override_font_sizes/font_size = 22
-text = "BIOMASS"
-
-[node name="BiomassAmount" type="Label" parent="HUD/BiomassChip/InfoFrame/InfoVBox" unique_id=1473285412]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
-theme_override_fonts/font = SubResource("Font_biomass_amount")
-theme_override_font_sizes/font_size = 36
-text = "0000 kg"
 
 [node name="FastForwardButton" type="Button" parent="HUD" unique_id=428364516]
 unique_name_in_owner = true

@@ -34,10 +34,12 @@ var _tab_underlines: Dictionary = {}
 var _tab_key_order: Array[TabId] = []
 var _camera_tween: Tween
 var _start_arrow: FloatingArrow = null
+var _progress_tracks: Array[CombatProgressTrack] = []
 
 
 func _ready() -> void:
 	_camera.make_current()
+	_wire_progress_tracks()
 	_refresh_hud()
 	_build_tab_bar()
 	_start_combat_button.pressed.connect(_on_start_combat_pressed)
@@ -133,6 +135,40 @@ func _refresh_hud() -> void:
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	_day_label.text = "Day %d / %d" % [day, GameState.WIN_DAYS]
 	_biomass_amount.text = "%0*d kg" % [_BIOMASS_DIGITS, GameState.biomass.amount]
+	for track in _progress_tracks:
+		track.refresh()
+
+
+func _wire_progress_tracks() -> void:
+	_progress_tracks.clear()
+	if _colony_screen == null:
+		return
+	var track := _colony_screen.get_node_or_null("HeaderBlock/CombatProgressTrack") as CombatProgressTrack
+	if track == null:
+		return
+	_progress_tracks.append(track)
+	if not track.elite_hovered.is_connected(_on_elite_track_hovered):
+		track.elite_hovered.connect(_on_elite_track_hovered)
+	if not track.elite_unhovered.is_connected(_on_elite_track_unhovered):
+		track.elite_unhovered.connect(_on_elite_track_unhovered)
+
+
+func _on_elite_track_hovered(day: int) -> void:
+	var scout := _scout_bubble()
+	if scout != null:
+		scout.preview_elite_for_day(day)
+
+
+func _on_elite_track_unhovered() -> void:
+	var scout := _scout_bubble()
+	if scout != null:
+		scout.clear_preview()
+
+
+func _scout_bubble() -> ScoutBubble:
+	if _colony_screen == null:
+		return null
+	return _colony_screen.get_node_or_null("ScoutBubble") as ScoutBubble
 
 
 func _is_tab_visible(tab_id: TabId) -> bool:

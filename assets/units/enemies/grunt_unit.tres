@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="EnemyUnitData" format=3 uid="uid://c21ydf8ch7aea"]
 
 [ext_resource type="Script" uid="uid://cou2fgplywkx5" path="res://assets/units/enemies/enemy_unit_data.gd" id="1_data"]
-[ext_resource type="Script" uid="uid://2mvqt4jqegr1" path="res://assets/units/combat_profile.gd" id="2_combat"]
+[ext_resource type="Script" uid="uid://bnh01kb4dohye" path="res://assets/units/combat_profile.gd" id="2_combat"]
 [ext_resource type="Texture2D" uid="uid://dgaokaw1gdrlu" path="res://assets/units/enemies/grunt.png" id="3_icon"]
 [ext_resource type="PackedScene" uid="uid://c21yc8557m1ea" path="res://assets/units/enemies/grunt_appearance.tscn" id="4_appear"]
 [ext_resource type="Resource" uid="uid://bw1v2csvvxpw7" path="res://assets/weapons/sword/sword.tres" id="5_held"]

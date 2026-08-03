@@ -204,12 +204,14 @@ theme_type_variation = &"RootStack"
 [node name="TopBar" type="HBoxContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox" unique_id=19804651]
 custom_minimum_size = Vector2(0, 125)
 layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"TightHBox"
 
 [node name="DayLabel" type="Label" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar" unique_id=30292540]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+mouse_filter = 2
 theme_type_variation = &"PageTitleLabel"
 text = "Day 1 / 10"
 vertical_alignment = 1

@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="4_lower_lane"]
 [ext_resource type="PackedScene" uid="uid://iwk60b5u7rf7" path="res://assets/combat/flag_bearer/flag_bearer_visual.tscn" id="5_u66j2"]
 [ext_resource type="PackedScene" path="res://assets/base/troop_selection/scout_bubble/scout_bubble.tscn" id="6_scout"]
+[ext_resource type="PackedScene" uid="uid://ccombatprogtrack1" path="res://assets/base/combat_progress_track/combat_progress_track.tscn" id="7_progress"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
@@ -67,17 +68,23 @@ anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -352.0
 offset_right = 352.0
-offset_bottom = 78.0
+offset_bottom = 180.0
 grow_horizontal = 2
-mouse_filter = 2
+mouse_filter = 0
 theme_type_variation = &"SectionVBox"
+theme_override_constants/separation = 8
 
 [node name="Header" type="Label" parent="HeaderBlock" unique_id=1708698391]
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_filter = 2
 theme_type_variation = &"PageTitleLabel"
 theme_override_font_sizes/font_size = 52
 text = "War Chamber"
+
+[node name="CombatProgressTrack" parent="HeaderBlock" instance=ExtResource("7_progress")]
+layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="BenchPanel" type="PanelContainer" parent="." unique_id=710296817]
 unique_name_in_owner = true

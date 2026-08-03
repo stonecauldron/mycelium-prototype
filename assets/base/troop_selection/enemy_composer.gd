@@ -288,6 +288,8 @@ static func _shuffle_array(values: Array, rng: RandomNumberGenerator) -> void:
 
 
 static func _band_for_day(day: int) -> Dictionary:
+	if GameState.is_elite_day(day):
+		return _elite_band_for_day(day)
 	match day:
 		1, 2:
 			return {
@@ -315,6 +317,7 @@ static func _band_for_day(day: int) -> Dictionary:
 				],
 			}
 		5:
+			# Non-elite fallback (elite days use `_elite_band_for_day`).
 			return {
 				"min_units": 5,
 				"max_units": 6,
@@ -359,13 +362,39 @@ static func _band_for_day(day: int) -> Dictionary:
 				],
 			}
 		_:
-			# Day 10.
+			# Day 10 non-elite fallback.
 			return {
 				"min_units": 14,
 				"max_units": 18,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
 					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
+				],
+			}
+
+
+## Harder procedural armies for elite days (+units, tiers shifted up).
+static func _elite_band_for_day(day: int) -> Dictionary:
+	match day:
+		5:
+			return {
+				"min_units": 7,
+				"max_units": 10,
+				"tier_weights": [
+					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 2.0},
+					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 2.0},
+				],
+			}
+		_:
+			# Day 10 (and any other elite day).
+			return {
+				"min_units": 16,
+				"max_units": 22,
+				"tier_weights": [
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 2.0},
+					{"tier": UnitStatsData.PowerTier.RARE, "weight": 1.0},
 				],
 			}
 

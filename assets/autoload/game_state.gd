@@ -60,6 +60,11 @@ func get_upcoming_day() -> int:
 	return current_day + 1
 
 
+## Every 5th battle (days 5 and 10 in a 10-day run) is an elite fight.
+func is_elite_day(day: int) -> bool:
+	return day > 0 and day % 5 == 0
+
+
 func clear_upcoming_enemy_formation() -> void:
 	upcoming_enemy_formation.clear()
 

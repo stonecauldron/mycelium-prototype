@@ -63,8 +63,8 @@ func _ready() -> void:
 
 	_saved_physics_ticks = Engine.physics_ticks_per_second
 	_saved_max_physics_steps = Engine.max_physics_steps_per_frame
-	_player_spawn = player_troop.flag_bearer.global_position
-	_enemy_spawn = enemy_troop.flag_bearer.global_position
+	_player_spawn = player_troop.get_formation_anchor_global()
+	_enemy_spawn = enemy_troop.get_formation_anchor_global()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_fast_forward_button.process_mode = Node.PROCESS_MODE_ALWAYS
 	_fast_forward_button.pressed.connect(_on_fast_forward_pressed)
@@ -216,7 +216,7 @@ func _run_battle(
 		enemy_troop,
 		_enemy_spawn,
 		enemy_roster,
-		Troop.ENEMY_TINT,
+		Color.WHITE,
 		false
 	)
 	_refresh_unit_process_order()
@@ -332,14 +332,14 @@ func _notify_biomass_from_combat_death(amount: int, victim: Unit) -> void:
 	if amount <= 0:
 		return
 	for unit in player_troop.get_living_units():
-		if unit.roster_data != null and unit.roster_data.strain != null:
-			unit.roster_data.strain.call_effect(
+		if unit.roster_data != null:
+			unit.roster_data.call_combat_effect(
 				&"on_combat_biomass_awarded",
 				[unit, amount, victim]
 			)
 	for unit in enemy_troop.get_living_units():
-		if unit.roster_data != null and unit.roster_data.strain != null:
-			unit.roster_data.strain.call_effect(
+		if unit.roster_data != null:
+			unit.roster_data.call_combat_effect(
 				&"on_combat_biomass_awarded",
 				[unit, amount, victim]
 			)
@@ -403,8 +403,9 @@ func _spawn_unit(
 	unit.roster_data = roster_data
 	if roster_data.stats != null:
 		unit.stats = roster_data.stats.duplicate(true)
-	if roster_data.weapon != null:
-		unit.weapon = roster_data.weapon
+	# Always assign (including null) so melee/spear scene defaults don't stick on enemies.
+	unit.weapon = roster_data.weapon
+	unit.combat = roster_data.ensure_combat_profile()
 	unit.body_color = body_color * UnitStatsData.tint_for_tier(roster_data.power_tier)
 	unit.squad_index = squad_index
 	unit.died.connect(_on_unit_died.bind(is_player))
@@ -498,7 +499,7 @@ func _respawn_zombie_cap(
 			return
 	var troop := player_troop if is_player else enemy_troop
 	var units_root: Node2D = troop.get_node("Units")
-	var color := Color.WHITE if is_player else Troop.ENEMY_TINT
+	var color := Color.WHITE
 	var scene := _scene_for_attack_style(clone.get_attack_style())
 	var spawn_pos := _zombie_respawn_global_position(troop)
 	var spawned := _spawn_unit(scene, units_root, clone, color, squad_index, is_player, spawn_pos)

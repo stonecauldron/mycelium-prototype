@@ -1,8 +1,8 @@
 class_name BiomassData
 extends Resource
 
-const PER_KILL := 5
-const PER_IMAGO_KILL := 7
+const PER_KILL := 4
+const PER_IMAGO_KILL := 6
 const COMMON_SPORE_COST := 4
 const UNCOMMON_SPORE_COST := 8
 const RARE_SPORE_COST := 16

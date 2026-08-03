@@ -13,7 +13,7 @@ var _trauma: float = 0.0
 
 func _ready() -> void:
 	add_to_group("battle_camera")
-	# Frame army extents (dual flags, or player flag + frontmost friend after win).
+	# Frame army extents (player flag + furthest enemy, or flag + frontmost friend after win).
 	offset = Vector2.ZERO
 	zoom = Vector2(max_zoom, max_zoom)
 
@@ -33,12 +33,13 @@ func _physics_process(delta: float) -> void:
 	var right_x := player_flag_x
 
 	var enemy_troop := _find_troop(true)
-	if enemy_troop != null and enemy_troop.has_flag_bearer():
-		var enemy_flag_x := enemy_troop.get_flag_global_position().x
-		left_x = minf(player_flag_x, enemy_flag_x)
-		right_x = maxf(player_flag_x, enemy_flag_x)
+	var furthest_enemy := _furthest_living_unit_from(enemy_troop, player_flag_x)
+	if furthest_enemy != null:
+		# Frame player banner ↔ deepest enemy (enemies no longer have a flag).
+		left_x = minf(player_flag_x, furthest_enemy.global_position.x)
+		right_x = maxf(player_flag_x, furthest_enemy.global_position.x)
 	else:
-		# Victory / enemy flag gone: frame own banner and the furthest friend.
+		# Victory / no enemies: frame own banner and the furthest friend.
 		var front := player_troop.get_frontmost_living_unit()
 		if front != null:
 			left_x = minf(player_flag_x, front.global_position.x)
@@ -54,6 +55,19 @@ func _physics_process(delta: float) -> void:
 	global_position.y = fixed_y
 	var z := lerpf(zoom.x, target_zoom, clampf(zoom_smooth * delta, 0.0, 1.0))
 	zoom = Vector2(z, z)
+
+
+func _furthest_living_unit_from(troop: Troop, from_x: float) -> Unit:
+	if troop == null:
+		return null
+	var furthest: Unit = null
+	var best_distance := -1.0
+	for unit in troop.get_living_units():
+		var distance := absf(unit.global_position.x - from_x)
+		if distance > best_distance:
+			best_distance = distance
+			furthest = unit
+	return furthest
 
 
 func _process(delta: float) -> void:

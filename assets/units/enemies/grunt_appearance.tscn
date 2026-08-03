@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://c21yc8557m1ea"]
+
+[ext_resource type="Script" uid="uid://nqw7ixv3u2we" path="res://assets/units/unit_appearance.gd" id="1_root"]
+[ext_resource type="Texture2D" uid="uid://dgaokaw1gdrlu" path="res://assets/units/enemies/grunt.png" id="2_tex"]
+[ext_resource type="Script" uid="uid://dk024gkwu740b" path="res://assets/components/hurtbox_component.gd" id="3_hurtbox"]
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6, 1.2),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [Vector2(0.35, 0.35), Vector2(0.329, 0.378), Vector2(0.35, 0.35)]
+}
+
+[sub_resource type="Animation" id="Animation_walk"]
+resource_name = "walk"
+length = 0.36
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.18, 0.36),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [Vector2(0, -3), Vector2(0, -5), Vector2(0, -3)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.18, 0.36),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [Vector2(0.357, 0.3395), Vector2(0.336, 0.3675), Vector2(0.357, 0.3395)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_main"]
+_data = {
+&"idle": SubResource("Animation_idle"),
+&"walk": SubResource("Animation_walk")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(35, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(29, 71)
+
+[node name="GruntAppearance" type="Node2D" unique_id=2048187538]
+script = ExtResource("1_root")
+
+[node name="GroundShadow" type="Polygon2D" parent="." unique_id=936311243]
+position = Vector2(-2, -2)
+color = Color(0, 0, 0, 0.25)
+polygon = PackedVector2Array(27.45, 0, 26.515, 2.21, 23.772, 4.27, 19.41, 6.039, 13.725, 7.396, 7.105, 8.249, 0, 8.54, -7.105, 8.249, -13.725, 7.396, -19.41, 6.039, -23.772, 4.27, -26.515, 2.21, -27.45, 0, -26.515, -2.21, -23.772, -4.27, -19.41, -6.039, -13.725, -7.396, -7.105, -8.249, 0, -8.54, 7.105, -8.249, 13.725, -7.396, 19.41, -6.039, 23.772, -4.27, 26.515, -2.21)
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1374910348]
+position = Vector2(0, -3)
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("2_tex")
+offset = Vector2(0, -256)
+
+[node name="WeaponMount" type="Node2D" parent="." unique_id=1820620520]
+position = Vector2(24, -40)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2135042374]
+libraries/ = SubResource("AnimationLibrary_main")
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=889223336]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("3_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=151805084]
+position = Vector2(-1.5, -36)
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="BodyShape" type="CollisionShape2D" parent="." unique_id=2111709905]
+position = Vector2(-1.5, -35.5)
+shape = SubResource("RectangleShape2D_body")

@@ -21,6 +21,11 @@ const _SNIPER_WEAPON := preload("res://assets/weapons/sniper/sniper.tres")
 const _MORTAR_WEAPON := preload("res://assets/weapons/mortar/mortar.tres")
 const _GIANT_HORN_WEAPON := preload("res://assets/weapons/giant_horn/giant_horn.tres")
 
+const _GRUNT_ENEMY := preload("res://assets/units/enemies/grunt_unit.tres")
+const _PIKER_ENEMY := preload("res://assets/units/enemies/piker_unit.tres")
+const _ARCHER_ENEMY := preload("res://assets/units/enemies/archer_unit.tres")
+const _BULWARK_ENEMY := preload("res://assets/units/enemies/bulwark_unit.tres")
+
 const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Sword", "weapon": _SWORD_WEAPON},
 	{"name": "Spear", "weapon": _SPEAR_WEAPON},
@@ -60,12 +65,18 @@ const _STRAIN_OPTIONS: Array[Dictionary] = [
 	{"name": "Rubber", "path": "res://assets/units/rubber_cap/rubber_cap_strain.tres"},
 ]
 
+const _ENEMY_OPTIONS: Array[Dictionary] = [
+	{"name": "Grunt", "unit": _GRUNT_ENEMY},
+	{"name": "Piker", "unit": _PIKER_ENEMY},
+	{"name": "Archer", "unit": _ARCHER_ENEMY},
+	{"name": "Bulwark", "unit": _BULWARK_ENEMY},
+]
+
 @onready var _stage: Node2D = $CombatStage
 @onready var _buttons: VBoxContainer = %MatchupButtons
 @onready var _player_strain: OptionButton = %PlayerStrain
 @onready var _player_weapon: OptionButton = %PlayerWeapon
-@onready var _enemy_strain: OptionButton = %EnemyStrain
-@onready var _enemy_weapon: OptionButton = %EnemyWeapon
+@onready var _enemy_type: OptionButton = %EnemyType
 @onready var _unit_count: SpinBox = %UnitCount
 @onready var _run_custom: Button = %RunCustom
 
@@ -84,9 +95,8 @@ func _ready() -> void:
 
 func _populate_custom_controls() -> void:
 	_fill_strain_options(_player_strain)
-	_fill_strain_options(_enemy_strain)
 	_fill_weapon_options(_player_weapon)
-	_fill_weapon_options(_enemy_weapon)
+	_fill_enemy_options(_enemy_type)
 	_run_custom.pressed.connect(_on_run_custom_pressed)
 
 
@@ -104,6 +114,13 @@ func _fill_weapon_options(button: OptionButton) -> void:
 	button.select(0)
 
 
+func _fill_enemy_options(button: OptionButton) -> void:
+	button.clear()
+	for i in _ENEMY_OPTIONS.size():
+		button.add_item(str(_ENEMY_OPTIONS[i]["name"]), i)
+	button.select(0)
+
+
 func _wire_buttons() -> void:
 	_imago_checkbox = CheckBox.new()
 	_imago_checkbox.text = "Imago units"
@@ -115,55 +132,65 @@ func _wire_buttons() -> void:
 		_set_matchup(func() -> Array:
 			return [
 				[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_SWORD_WEAPON)],
-				[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_SWORD_WEAPON)],
+				[_make_enemy(_ARCHER_ENEMY), _make_enemy(_PIKER_ENEMY), _make_enemy(_GRUNT_ENEMY)],
 			]
 		)
 	)
 	_add_button("3 Melee", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SWORD_WEAPON, 3), _make_units(_SWORD_WEAPON, 3)]
+			return [_make_units(_SWORD_WEAPON, 3), _make_enemies(_GRUNT_ENEMY, 3)]
 		)
 	)
 	_add_button("3 Spear", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SPEAR_WEAPON, 3), _make_units(_SPEAR_WEAPON, 3)]
+			return [_make_units(_SPEAR_WEAPON, 3), _make_enemies(_PIKER_ENEMY, 3)]
 		)
 	)
 	_add_button("3 Bow", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_BOW_WEAPON, 3), _make_units(_BOW_WEAPON, 3)]
+			return [_make_units(_BOW_WEAPON, 3), _make_enemies(_ARCHER_ENEMY, 3)]
 		)
 	)
-	_add_button("Melee vs Spear", func() -> void:
+	_add_button("Melee vs Grunt", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SWORD_WEAPON, 1), _make_units(_SPEAR_WEAPON, 1)]
+			return [_make_units(_SWORD_WEAPON, 1), _make_enemies(_GRUNT_ENEMY, 1)]
 		)
 	)
-	_add_button("Melee vs Bow", func() -> void:
+	_add_button("Melee vs Piker", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SWORD_WEAPON, 1), _make_units(_BOW_WEAPON, 1)]
+			return [_make_units(_SWORD_WEAPON, 1), _make_enemies(_PIKER_ENEMY, 1)]
 		)
 	)
-	_add_button("Spear vs Bow", func() -> void:
+	_add_button("Melee vs Archer", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SPEAR_WEAPON, 1), _make_units(_BOW_WEAPON, 1)]
+			return [_make_units(_SWORD_WEAPON, 1), _make_enemies(_ARCHER_ENEMY, 1)]
 		)
 	)
-	_add_button("Shield vs Melee", func() -> void:
+	_add_button("Spear vs Archer", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SHIELD_WEAPON, 1), _make_units(_SWORD_WEAPON, 1)]
+			return [_make_units(_SPEAR_WEAPON, 1), _make_enemies(_ARCHER_ENEMY, 1)]
 		)
 	)
-	_add_button("Shield vs Bow", func() -> void:
+	_add_button("Shield vs Grunt", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SHIELD_WEAPON, 1), _make_units(_BOW_WEAPON, 1)]
+			return [_make_units(_SHIELD_WEAPON, 1), _make_enemies(_GRUNT_ENEMY, 1)]
 		)
 	)
-	_add_button("9v9 Mirror", func() -> void:
+	_add_button("Shield vs Archer", func() -> void:
+		_set_matchup(func() -> Array:
+			return [_make_units(_SHIELD_WEAPON, 1), _make_enemies(_ARCHER_ENEMY, 1)]
+		)
+	)
+	_add_button("Shield vs Bulwark", func() -> void:
+		_set_matchup(func() -> Array:
+			return [_make_units(_SHIELD_WEAPON, 1), _make_enemies(_BULWARK_ENEMY, 1)]
+		)
+	)
+	_add_button("9v9 Mixed", func() -> void:
 		_set_matchup(func() -> Array:
 			return [
 				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SWORD_WEAPON]),
-				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SWORD_WEAPON]),
+				_make_enemy_line([_ARCHER_ENEMY, _PIKER_ENEMY, _GRUNT_ENEMY]),
 			]
 		)
 	)
@@ -171,7 +198,7 @@ func _wire_buttons() -> void:
 		_set_matchup(func() -> Array:
 			return [
 				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SHIELD_WEAPON]),
-				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SWORD_WEAPON]),
+				_make_enemy_line([_ARCHER_ENEMY, _PIKER_ENEMY, _BULWARK_ENEMY]),
 			]
 		)
 	)
@@ -189,10 +216,10 @@ func _on_run_custom_pressed() -> void:
 
 
 func _build_custom_matchup() -> Array:
-	var count := clampi(int(_unit_count.value), 1, 9)
+	var count := clampi(int(_unit_count.value), 1, 24)
 	return [
 		_make_units(_selected_weapon(_player_weapon), count, _selected_strain(_player_strain)),
-		_make_units(_selected_weapon(_enemy_weapon), count, _selected_strain(_enemy_strain)),
+		_make_enemies(_selected_enemy(_enemy_type), count),
 	]
 
 
@@ -215,6 +242,15 @@ func _selected_strain(button: OptionButton) -> UnitStrain:
 	if not _strain_cache.has(path):
 		_strain_cache[path] = load(path)
 	return _strain_cache[path] as UnitStrain
+
+
+func _selected_enemy(button: OptionButton) -> EnemyUnitData:
+	var index := button.get_selected_id()
+	if index < 0 or index >= _ENEMY_OPTIONS.size():
+		index = button.selected
+	if index < 0 or index >= _ENEMY_OPTIONS.size():
+		return _GRUNT_ENEMY
+	return _ENEMY_OPTIONS[index]["unit"] as EnemyUnitData
 
 
 func _on_imago_toggled(_pressed: bool) -> void:
@@ -257,6 +293,13 @@ func _make_line(weapons: Array) -> Array[RosterUnitData]:
 	return roster
 
 
+func _make_enemy_line(enemies: Array) -> Array[RosterUnitData]:
+	var roster: Array[RosterUnitData] = []
+	for enemy in enemies:
+		roster.append_array(_make_enemies(enemy as EnemyUnitData, 3))
+	return roster
+
+
 func _make_units(
 	weapon: WeaponData,
 	count: int,
@@ -265,6 +308,13 @@ func _make_units(
 	var roster: Array[RosterUnitData] = []
 	for _i in count:
 		roster.append(_make_unit(weapon, strain))
+	return roster
+
+
+func _make_enemies(unit_data: EnemyUnitData, count: int) -> Array[RosterUnitData]:
+	var roster: Array[RosterUnitData] = []
+	for _i in count:
+		roster.append(_make_enemy(unit_data))
 	return roster
 
 
@@ -282,3 +332,16 @@ func _make_unit(weapon: WeaponData, strain: UnitStrain = null) -> RosterUnitData
 	if _imago_checkbox != null and _imago_checkbox.button_pressed:
 		unit.promote_to_imago()
 	return unit
+
+
+func _make_enemy(unit_data: EnemyUnitData) -> RosterUnitData:
+	var stats := UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON)
+	var display_name := "Enemy"
+	if unit_data != null and not unit_data.display_name.is_empty():
+		display_name = unit_data.display_name
+	return RosterUnitData.create_enemy(
+		display_name,
+		stats,
+		unit_data,
+		UnitStatsData.PowerTier.COMMON
+	)

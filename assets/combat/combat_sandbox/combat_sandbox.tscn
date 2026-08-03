@@ -52,12 +52,7 @@ fit_to_longest_item = false
 layout_mode = 2
 text = "Enemy"
 
-[node name="EnemyStrain" type="OptionButton" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=930561108]
-unique_name_in_owner = true
-layout_mode = 2
-fit_to_longest_item = false
-
-[node name="EnemyWeapon" type="OptionButton" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=1027089905]
+[node name="EnemyType" type="OptionButton" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=930561108]
 unique_name_in_owner = true
 layout_mode = 2
 fit_to_longest_item = false
@@ -76,7 +71,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(72, 0)
 layout_mode = 2
 min_value = 1.0
-max_value = 9.0
+max_value = 24.0
 value = 1.0
 rounded = true
 

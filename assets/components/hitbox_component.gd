@@ -86,7 +86,7 @@ func _try_charge_hit(area: Area2D) -> void:
 		end_charge = true
 	elif target is Unit:
 		var unit := target as Unit
-		if unit.weapon != null and unit.weapon.blocks_charges:
+		if unit.combat != null and unit.combat.blocks_charges:
 			hit_damage = maxi(roundi(float(damage) * 0.5), 0)
 			hit_knockback = knockback_force * 0.5
 			end_charge = true
@@ -100,8 +100,8 @@ func _try_charge_hit(area: Area2D) -> void:
 	hurtbox.receive_hit(hit_damage, from_pos, hit_knockback, owner_unit, _damage_type)
 	if owner_unit != null:
 		owner_unit.grant_hit_biomass(target as Node2D)
-		if owner_unit.roster_data != null and owner_unit.roster_data.strain != null:
-			owner_unit.roster_data.strain.call_effect(
+		if owner_unit.roster_data != null:
+			owner_unit.roster_data.call_combat_effect(
 				&"on_hit_dealt",
 				[owner_unit, target, hit_damage]
 			)
@@ -167,8 +167,8 @@ func _apply_hit(hurtbox: HurtboxComponent) -> void:
 	hurtbox.receive_hit(damage, from_pos, knockback_force, owner_unit, _damage_type)
 	if owner_unit != null:
 		owner_unit.grant_hit_biomass(target as Node2D)
-		if owner_unit.roster_data != null and owner_unit.roster_data.strain != null:
-			owner_unit.roster_data.strain.call_effect(
+		if owner_unit.roster_data != null:
+			owner_unit.roster_data.call_combat_effect(
 				&"on_hit_dealt",
 				[owner_unit, target, damage]
 			)

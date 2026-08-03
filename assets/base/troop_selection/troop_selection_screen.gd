@@ -246,13 +246,13 @@ func _make_default_enemy_roster() -> Array[RosterUnitData]:
 	GameState.ensure_upcoming_enemy_formation()
 	var enemy: Array[RosterUnitData] = []
 	for spec in GameState.upcoming_enemy_formation:
-		var unit := _make_unit(
-			UnitNames.pick(),
-			spec.tier,
-			spec.weapon,
-			spec.strain
+		if spec.unit_data == null:
+			continue
+		var stats := UnitStatsData.create_for_tier(spec.tier)
+		var display_name := spec.unit_data.display_name
+		if display_name.is_empty():
+			display_name = UnitNames.pick()
+		enemy.append(
+			RosterUnitData.create_enemy(display_name, stats, spec.unit_data, spec.tier)
 		)
-		if spec.is_imago:
-			unit.promote_to_imago()
-		enemy.append(unit)
 	return enemy

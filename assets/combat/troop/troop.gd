@@ -4,11 +4,13 @@ class_name Troop
 ## Distance at which units acquire combat targets (replaces army-wide halt gap).
 const ENGAGE_RANGE := 1800.0
 const DEFAULT_MARCH_SPEED := 120.0
-## Distance from flag center to squad slot 0 home / gap behind rearmost unit.
+## Distance from flag/anchor center to squad slot 0 home / gap behind rearmost unit.
 const FLAG_REAR_CLEARANCE := 100.0
-## Horizontal spacing between consecutive home slots.
+## Horizontal spacing between consecutive home slots (player).
 const HOME_SLOT_SPACING := 64.0
-## Body / flag tint for enemy-side units and UI previews.
+## Tighter packing for larger enemy armies.
+const ENEMY_HOME_SLOT_SPACING := 44.0
+## Tint for enemy-owned props (e.g. walls). Enemy units use authored colors.
 const ENEMY_TINT := Color(0.85, 0.25, 0.3, 1.0)
 
 @export var march_speed: float = DEFAULT_MARCH_SPEED
@@ -16,11 +18,17 @@ const ENEMY_TINT := Color(0.85, 0.25, 0.3, 1.0)
 
 var _opponent: Troop
 
-@onready var flag_bearer: FlagBearer = $FlagBearer
+@onready var flag_bearer: FlagBearer = get_node_or_null("FlagBearer") as FlagBearer
+@onready var spawn_anchor: Node2D = get_node_or_null("SpawnAnchor") as Node2D
 
 
 func _ready() -> void:
 	add_to_group("troops")
+	if spawn_anchor == null and not has_flag_bearer():
+		spawn_anchor = Node2D.new()
+		spawn_anchor.name = "SpawnAnchor"
+		add_child(spawn_anchor)
+		move_child(spawn_anchor, 0)
 	call_deferred("_acquire_opponent")
 
 
@@ -60,7 +68,7 @@ func has_living_formation_line(formation_line: WeaponData.FormationLine) -> bool
 func get_living_formation_line_count(formation_line: WeaponData.FormationLine) -> int:
 	var count := 0
 	for unit in get_living_units():
-		if unit.weapon != null and unit.weapon.formation_line == formation_line:
+		if unit.combat != null and unit.combat.formation_line == formation_line:
 			count += 1
 	return count
 
@@ -71,14 +79,19 @@ func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:
 
 
 func reset_for_scenario(spawn_global: Vector2) -> void:
-	if not has_flag_bearer():
-		return
-	flag_bearer.global_position = spawn_global
-	flag_bearer.reset_combat_state()
+	if has_flag_bearer():
+		flag_bearer.global_position = spawn_global
+		flag_bearer.reset_combat_state()
+	elif spawn_anchor != null:
+		spawn_anchor.global_position = spawn_global
 
 
 func get_facing() -> float:
 	return -1.0 if is_enemy else 1.0
+
+
+func get_home_slot_spacing() -> float:
+	return ENEMY_HOME_SLOT_SPACING if is_enemy else HOME_SLOT_SPACING
 
 
 ## Living unit furthest from the enemy (army rear).
@@ -107,10 +120,11 @@ func get_frontmost_living_unit() -> Unit:
 	return frontmost
 
 
-func _anchor_flag_behind_rearmost(delta: float) -> void:
+func _anchor_formation_behind_rearmost(delta: float) -> void:
 	var rearmost := get_rearmost_living_unit()
 	if rearmost == null:
-		flag_bearer.stop()
+		if has_flag_bearer():
+			flag_bearer.stop()
 		return
 	var facing := get_facing()
 	# Predict one step so we track a retreating rearmost without lag/overshoot chatter.
@@ -119,7 +133,10 @@ func _anchor_flag_behind_rearmost(delta: float) -> void:
 		+ rearmost.velocity.x * delta
 		- facing * FLAG_REAR_CLEARANCE
 	)
-	flag_bearer.follow_anchor_x(target_x, Unit.BASE_MOVE_SPEED, delta)
+	if has_flag_bearer():
+		flag_bearer.follow_anchor_x(target_x, Unit.BASE_MOVE_SPEED, delta)
+	elif spawn_anchor != null:
+		spawn_anchor.global_position.x = target_x
 
 
 func _acquire_opponent() -> void:
@@ -145,24 +162,33 @@ func has_flag_bearer() -> bool:
 
 
 func get_flag_global_x() -> float:
-	if has_flag_bearer():
-		return flag_bearer.global_position.x
-	return global_position.x
+	return get_formation_anchor_global().x
 
 
 func get_flag_global_position() -> Vector2:
+	return get_formation_anchor_global()
+
+
+func get_formation_anchor_global() -> Vector2:
 	if has_flag_bearer():
 		return flag_bearer.global_position
+	if spawn_anchor != null and is_instance_valid(spawn_anchor):
+		return spawn_anchor.global_position
 	return global_position
 
 
 func _physics_process(delta: float) -> void:
 	_acquire_opponent()
-	if not has_flag_bearer():
+	if has_flag_bearer():
+		if flag_bearer.is_in_knockback():
+			return
+		if is_wiped_out():
+			flag_bearer.stop()
+			return
+		_anchor_formation_behind_rearmost(delta)
 		return
-	if flag_bearer.is_in_knockback():
+	if spawn_anchor == null:
 		return
 	if is_wiped_out():
-		flag_bearer.stop()
 		return
-	_anchor_flag_behind_rearmost(delta)
+	_anchor_formation_behind_rearmost(delta)

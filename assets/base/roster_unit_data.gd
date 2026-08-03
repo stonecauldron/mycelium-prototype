@@ -8,6 +8,8 @@ const NO_LIFE_EXPECTANCY := -1
 @export var display_name: String = "Unit"
 @export var stats: UnitStatsData
 @export var weapon: WeaponData
+@export var combat: CombatProfile
+@export var enemy_unit_data: EnemyUnitData
 @export var strain: UnitStrain
 @export var power_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.COMMON
 @export var days_alive: int = 0
@@ -25,30 +27,46 @@ var last_death_biomass_yield: int = 0
 @export var has_revived: bool = false
 
 
+func resolve_combat_profile() -> CombatProfile:
+	if enemy_unit_data != null:
+		return enemy_unit_data.get_combat_profile()
+	if weapon != null:
+		return weapon.get_combat_profile()
+	if combat != null:
+		return combat
+	return CombatProfile.new()
+
+
+## Always re-sync from weapon / enemy data so equip/unequip cannot leave a stale profile.
+func ensure_combat_profile() -> CombatProfile:
+	combat = resolve_combat_profile()
+	return combat
+
+
 func get_formation_line() -> WeaponData.FormationLine:
-	if weapon == null:
-		return WeaponData.FormationLine.FRONT
-	return weapon.formation_line
+	return ensure_combat_profile().formation_line
 
 
 func get_attack_style() -> WeaponData.AttackStyle:
-	if weapon == null:
-		return WeaponData.AttackStyle.MELEE_LUNGE
-	return weapon.attack_style
+	return ensure_combat_profile().attack_style
 
 
 func get_damage_stat() -> WeaponData.DamageStat:
-	if weapon == null:
-		return WeaponData.DamageStat.STRENGTH
-	return weapon.damage_stat
+	return ensure_combat_profile().damage_stat
 
 
 func get_engagement_stance() -> WeaponData.EngagementStance:
 	if forced_engagement_stance >= 0:
 		return forced_engagement_stance as WeaponData.EngagementStance
-	if weapon == null:
-		return WeaponData.EngagementStance.FORMATION_FIGHT
-	return weapon.engagement_stance
+	return ensure_combat_profile().engagement_stance
+
+
+func call_combat_effect(method_name: StringName, args: Array = []) -> void:
+	if strain != null:
+		strain.call_effect(method_name, args)
+		return
+	if enemy_unit_data != null:
+		enemy_unit_data.call_effect(method_name, args)
 
 
 func can_promote_to_imago() -> bool:
@@ -89,9 +107,13 @@ func mount_portrait(
 	portrait_scale: float = 0.55,
 	shadow_clearance: float = 0.0
 ) -> UnitAppearance:
-	if host == null or strain == null:
+	if host == null:
 		return null
-	var appearance := strain.instantiate_appearance(life_stage_id)
+	var appearance: UnitAppearance = null
+	if enemy_unit_data != null:
+		appearance = enemy_unit_data.instantiate_appearance()
+	elif strain != null:
+		appearance = strain.instantiate_appearance(life_stage_id)
 	if appearance == null:
 		return null
 	host.add_child(appearance)
@@ -100,7 +122,9 @@ func mount_portrait(
 	host.set_meta("_portrait_shadow_clearance", shadow_clearance)
 	_ensure_portrait_host_sync(host)
 	_sync_portrait_in_host(host)
-	appearance.mount_weapon_appearance(weapon)
+	var held := enemy_unit_data.held_weapon if enemy_unit_data != null else weapon
+	if held != null:
+		appearance.mount_weapon_appearance(held)
 	appearance.play_idle(true)
 	return appearance
 
@@ -120,17 +144,19 @@ static func _sync_portrait_in_host(host: Control) -> void:
 	var shadow_clearance := 0.0
 	if host.has_meta("_portrait_shadow_clearance"):
 		shadow_clearance = float(host.get_meta("_portrait_shadow_clearance"))
+	## 1.0 = feet at bottom (default). Lower values raise the portrait (e.g. 0.72 for scout).
+	var y_factor := 1.0
+	if host.has_meta("_portrait_y_factor"):
+		y_factor = clampf(float(host.get_meta("_portrait_y_factor")), 0.0, 1.0)
 	for child in host.get_children():
 		if child is UnitAppearance:
 			var appearance := child as UnitAppearance
 			var bottom_pad := 4.0
 			if shadow_clearance > 0.0:
 				# Feet-pivoted: origin at soles; shadow extends below +Y.
-				bottom_pad = maxf(shadow_clearance * appearance.scale.y, 16.0)
-			appearance.position = Vector2(
-				host.size.x * 0.5,
-				host.size.y - bottom_pad
-			)
+				bottom_pad = maxf(shadow_clearance * absf(appearance.scale.y), 16.0)
+			var feet_y := host.size.y * y_factor - bottom_pad
+			appearance.position = Vector2(host.size.x * 0.5, feet_y)
 
 
 static func create(
@@ -144,6 +170,8 @@ static func create(
 	data.display_name = unit_name
 	data.stats = unit_stats
 	data.weapon = unit_weapon
+	if unit_weapon != null:
+		data.combat = unit_weapon.get_combat_profile()
 	data.strain = unit_strain if unit_strain != null else _default_strain()
 	data.power_tier = unit_tier
 	data.days_alive = 0
@@ -151,6 +179,28 @@ static func create(
 	data.is_imago = false
 	if data.strain != null:
 		data.max_days_alive = data.strain.roll_max_days_alive()
+	return data
+
+
+static func create_enemy(
+	unit_name: String,
+	unit_stats: UnitStatsData,
+	unit_data: EnemyUnitData,
+	unit_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.FEEBLE
+) -> RosterUnitData:
+	var data := RosterUnitData.new()
+	data.display_name = unit_name
+	data.stats = unit_stats
+	data.enemy_unit_data = unit_data
+	data.weapon = null
+	data.strain = null
+	if unit_data != null:
+		data.combat = unit_data.get_combat_profile()
+	data.power_tier = unit_tier
+	data.days_alive = 0
+	data.life_stage_id = &""
+	data.is_imago = false
+	data.max_days_alive = NO_LIFE_EXPECTANCY
 	return data
 
 

@@ -1,13 +1,15 @@
 class_name UnitStatsData
 extends Resource
 
-enum PowerTier { WEAK, COMMON, UNCOMMON, RARE, EPIC, LEGENDARY }
+## FEEBLE is appended so existing spore/resource tier ints stay stable.
+enum PowerTier { WEAK, COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, FEEBLE }
 
 const NEUTRAL_STAT := 5
 const NEW_UNIT_MIN := 3
 const NEW_UNIT_MAX := 7
 
 const TIER_RANGES := {
+	PowerTier.FEEBLE: Vector2i(1, 2),
 	PowerTier.WEAK: Vector2i(2, 4),
 	PowerTier.COMMON: Vector2i(4, 6),
 	PowerTier.UNCOMMON: Vector2i(6, 8),
@@ -17,6 +19,7 @@ const TIER_RANGES := {
 }
 
 const TIER_TINTS := {
+	PowerTier.FEEBLE: Color(0.72, 0.72, 0.76, 1.0),
 	PowerTier.WEAK: Color(0.82, 0.82, 0.86, 1.0),
 	PowerTier.COMMON: Color.WHITE,
 	PowerTier.UNCOMMON: Color(0.78, 0.92, 0.8, 1.0),
@@ -26,6 +29,7 @@ const TIER_TINTS := {
 }
 
 const TIER_LABELS := {
+	PowerTier.FEEBLE: "Feeble",
 	PowerTier.WEAK: "Weak",
 	PowerTier.COMMON: "Common",
 	PowerTier.UNCOMMON: "Uncommon",

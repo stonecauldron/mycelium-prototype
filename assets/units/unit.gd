@@ -84,6 +84,8 @@ const COLLISION_ENEMY_WALLS := 64
 
 @export var stats: UnitStatsData
 @export var weapon: WeaponData
+## Resolved attack behaviour (from weapon or EnemyUnitData). Set at spawn / ready.
+var combat: CombatProfile = null
 @export var roll_random_stats: bool = true
 @export var squad_index: int = 0
 @export var body_color: Color = Color.WHITE
@@ -143,8 +145,9 @@ func _ready() -> void:
 	elif stats != null:
 		stats = stats.duplicate()
 
-	if weapon == null:
-		push_error("Unit requires a WeaponData resource.")
+	_ensure_combat_profile()
+	if combat == null:
+		push_error("Unit requires a CombatProfile (via weapon or enemy unit data).")
 		return
 
 	_initialize_runtime()
@@ -165,6 +168,17 @@ func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:
 	damage_dealt = 0
 	damage_taken = 0
 	_apply_body_color()
+
+
+func _ensure_combat_profile() -> void:
+	if roster_data != null:
+		if weapon == null and roster_data.weapon != null:
+			weapon = roster_data.weapon
+		# Prefer roster weapon over any combat assigned at spawn (may be stale).
+		combat = roster_data.ensure_combat_profile()
+		return
+	if weapon != null:
+		combat = weapon.get_combat_profile()
 
 
 func _initialize_runtime() -> void:
@@ -197,19 +211,7 @@ func _mount_appearance() -> void:
 	_appearance = null
 	_hitbox = null
 
-	var strain: UnitStrain = roster_data.strain if roster_data != null else null
-	if strain == null:
-		# load() (not preload): breaks Unit↔strain appearance compile cycle on export.
-		strain = load("res://assets/units/generalist/generalist_strain.tres") as UnitStrain
-	if strain == null:
-		_configure_melee_hitbox()
-		_refresh_attack_range()
-		return
-
-	var stage_id := UnitStrain.STAGE_JUVENILE
-	if roster_data != null:
-		stage_id = roster_data.life_stage_id
-	_appearance = strain.instantiate_appearance(stage_id)
+	_appearance = _instantiate_body_appearance()
 	if _appearance == null:
 		_configure_melee_hitbox()
 		_refresh_attack_range()
@@ -225,10 +227,33 @@ func _mount_appearance() -> void:
 		body.global_transform = global_xform
 		_body_shape = body
 
-	_appearance.mount_weapon_appearance(weapon)
+	var held := _held_weapon_for_appearance()
+	if held != null:
+		_appearance.mount_weapon_appearance(held)
 	_configure_melee_hitbox()
 	_refresh_attack_range()
 	_appearance.play_idle(true)
+
+
+func _held_weapon_for_appearance() -> WeaponData:
+	if roster_data != null and roster_data.enemy_unit_data != null:
+		return roster_data.enemy_unit_data.held_weapon
+	return weapon
+
+
+func _instantiate_body_appearance() -> UnitAppearance:
+	if roster_data != null and roster_data.enemy_unit_data != null:
+		return roster_data.enemy_unit_data.instantiate_appearance()
+	var strain: UnitStrain = roster_data.strain if roster_data != null else null
+	if strain == null:
+		# load() (not preload): breaks Unit↔strain appearance compile cycle on export.
+		strain = load("res://assets/units/generalist/generalist_strain.tres") as UnitStrain
+	if strain == null:
+		return null
+	var stage_id := UnitStrain.STAGE_JUVENILE
+	if roster_data != null:
+		stage_id = roster_data.life_stage_id
+	return strain.instantiate_appearance(stage_id)
 
 
 func _clear_visual_children() -> void:
@@ -260,30 +285,30 @@ func _ensure_melee_hitbox() -> void:
 func _configure_melee_hitbox() -> void:
 	_hitbox = null
 	_ensure_melee_hitbox()
-	if weapon == null or not weapon.uses_melee_hitbox():
+	if combat == null or not combat.uses_melee_hitbox():
 		_melee_hitbox.visible = false
 		_melee_hitbox.monitoring = false
 		return
 	_melee_hitbox.visible = true
-	_melee_hitbox.position = weapon.get_melee_hitbox_offset(LUNGE_DISTANCE)
+	_melee_hitbox.position = combat.get_melee_hitbox_offset(LUNGE_DISTANCE)
 	if _melee_hitbox_shape == null:
 		var shape_node := _melee_hitbox.get_node_or_null("CollisionShape2D") as CollisionShape2D
 		if shape_node != null:
 			_melee_hitbox_shape = shape_node.shape as RectangleShape2D
 	if _melee_hitbox_shape != null:
-		_melee_hitbox_shape.size = weapon.get_melee_hitbox_size()
+		_melee_hitbox_shape.size = combat.get_melee_hitbox_size()
 	_melee_hitbox.owner_unit = self
 	_hitbox = _melee_hitbox
 
 
 func _refresh_attack_range() -> void:
-	if weapon == null:
+	if combat == null:
 		_attack_range = 0.0
 		return
-	if weapon.attack_style == WeaponData.AttackStyle.MELEE_LUNGE:
+	if combat.attack_style == WeaponData.AttackStyle.MELEE_LUNGE:
 		_attack_range = _get_melee_engage_range()
 	else:
-		_attack_range = weapon.projectile_range
+		_attack_range = combat.projectile_range
 
 
 func _get_attack_range() -> float:
@@ -292,9 +317,9 @@ func _get_attack_range() -> float:
 
 ## Close-range melee reach (hitbox forward edge after lunge).
 func _get_melee_range() -> float:
-	if weapon == null:
+	if combat == null:
 		return 96.0
-	return weapon.melee_range
+	return combat.melee_range
 
 
 ## Distance at which melee commits — inside `_get_melee_range()` by MELEE_ENGAGE_SLACK.
@@ -302,16 +327,18 @@ func _get_melee_engage_range() -> float:
 	return maxf(_get_melee_range() - MELEE_ENGAGE_SLACK, 1.0)
 
 func _preferred_skirmish_distance() -> float:
-	if weapon == null:
+	if combat == null:
 		return 0.0
-	var preferred := weapon.skirmish_distance - Troop.HOME_SLOT_SPACING * float(squad_index)
-	return clampf(preferred, SKIRMISH_RANGE_DEADZONE, weapon.skirmish_distance)
+	var spacing := _troop.get_home_slot_spacing() if _troop != null else Troop.HOME_SLOT_SPACING
+	var preferred := combat.skirmish_distance - spacing * float(squad_index)
+	return clampf(preferred, SKIRMISH_RANGE_DEADZONE, combat.skirmish_distance)
 
 
 func _preferred_attack_distance() -> float:
 	var base := _get_attack_range()
 	var skirmish := _preferred_skirmish_distance()
-	var preferred := base - Troop.HOME_SLOT_SPACING * float(squad_index)
+	var spacing := _troop.get_home_slot_spacing() if _troop != null else Troop.HOME_SLOT_SPACING
+	var preferred := base - spacing * float(squad_index)
 	var floor_dist := minf(skirmish + SKIRMISH_RANGE_DEADZONE, base)
 	return clampf(preferred, floor_dist, base)
 
@@ -321,7 +348,7 @@ func _preferred_attack_distance() -> float:
 func _wants_close_melee() -> bool:
 	if _is_combat_obstacle_target(_target):
 		return true
-	if weapon == null or get_engagement_stance() != WeaponData.EngagementStance.HYBRID:
+	if combat == null or get_engagement_stance() != WeaponData.EngagementStance.HYBRID:
 		return false
 	if _target == null or not is_instance_valid(_target):
 		return false
@@ -349,7 +376,7 @@ func _setup_collision() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if _dying or stats == null or weapon == null or _troop == null:
+	if _dying or stats == null or combat == null or _troop == null:
 		return
 
 	_tick_statuses(delta)
@@ -391,9 +418,9 @@ func _physics_process(delta: float) -> void:
 	if _combat_phase == CombatPhase.ATTACKING:
 		velocity.x = 0.0
 		if _projectile_attack_active:
-			if weapon.uses_throw_projectile():
+			if combat.uses_throw_projectile():
 				_process_throw_attack(delta)
-			elif weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
+			elif combat.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 				_process_ranged_attack(delta)
 		move_and_slide()
 		_update_locomotion_animation()
@@ -419,6 +446,14 @@ func _update_locomotion_animation() -> void:
 	_appearance.play_walk(false)
 
 
+func display_name_for_errors() -> String:
+	if roster_data != null and not roster_data.display_name.is_empty():
+		return roster_data.display_name
+	if weapon != null and not weapon.display_name.is_empty():
+		return weapon.display_name
+	return name
+
+
 func get_move_speed(retreating: bool = false) -> float:
 	var speed := BASE_MOVE_SPEED * _move_speed_multiplier * _status_move_mult()
 	if retreating:
@@ -441,8 +476,8 @@ func get_engagement_stance() -> WeaponData.EngagementStance:
 func _configured_engagement_stance() -> WeaponData.EngagementStance:
 	if roster_data != null:
 		return roster_data.get_engagement_stance()
-	if weapon != null:
-		return weapon.engagement_stance
+	if combat != null:
+		return combat.engagement_stance
 	return WeaponData.EngagementStance.FORMATION_FIGHT
 
 
@@ -456,14 +491,14 @@ func _all_living_allies_hold_line() -> bool:
 
 
 func notify_battle_start() -> void:
-	if roster_data != null and roster_data.strain != null:
-		roster_data.strain.call_effect(&"on_battle_start", [self])
+	if roster_data != null:
+		roster_data.call_combat_effect(&"on_battle_start", [self])
 
 
 func notify_battle_end() -> void:
 	_celebrating = false
-	if roster_data != null and roster_data.strain != null:
-		roster_data.strain.call_effect(&"on_battle_end", [self])
+	if roster_data != null:
+		roster_data.call_combat_effect(&"on_battle_end", [self])
 
 
 ## Enter celebrate-march mode; weapon toss VFX is owned by VictoryCelebrationDirector.
@@ -610,7 +645,7 @@ func _process_combat(delta: float) -> void:
 
 
 func _effective_attack_interval() -> float:
-	var interval := weapon.attack_interval if weapon != null else 0.75
+	var interval := combat.attack_interval if combat != null else 0.75
 	var rate := 1.0
 	if stats != null:
 		rate = stats.get_speed_multiplier() * _attack_rate_multiplier * _status_attack_rate_mult()
@@ -657,9 +692,9 @@ func _begin_lance_rush() -> void:
 			_hitbox.charge_ended.connect(_on_lance_charge_ended)
 		_hitbox.enable_for_attack(
 			_get_attack_damage(),
-			weapon.knockback_force if weapon != null else 0.0,
+			combat.knockback_force if combat != null else 0.0,
 			WeaponData.TargetingMode.SINGLE,
-			weapon.damage_type if weapon != null else WeaponData.DamageType.SLASHING,
+			combat.damage_type if combat != null else WeaponData.DamageType.SLASHING,
 			true
 		)
 
@@ -687,7 +722,7 @@ func _hold_skirmish_position() -> void:
 
 
 func _should_skirmish_retreat() -> bool:
-	if weapon == null or _target == null or not is_instance_valid(_target):
+	if combat == null or _target == null or not is_instance_valid(_target):
 		return false
 	if get_engagement_stance() != WeaponData.EngagementStance.SKIRMISH:
 		return false
@@ -714,7 +749,7 @@ func _skirmish_kite_away() -> void:
 
 
 func _should_chase() -> bool:
-	if weapon == null or _troop == null:
+	if combat == null or _troop == null:
 		return false
 	if _target == null or not is_instance_valid(_target):
 		return false
@@ -793,9 +828,10 @@ func _get_hold_line_global() -> Vector2:
 	for ally in _troop.get_living_units():
 		if ally == self or ally.squad_index >= squad_index:
 			continue
+		var spacing := _troop.get_home_slot_spacing()
 		var required_x := (
 			ally.global_position.x
-			+ facing * Troop.HOME_SLOT_SPACING * float(squad_index - ally.squad_index)
+			+ facing * spacing * float(squad_index - ally.squad_index)
 		)
 		if facing * (required_x - target_x) > 0.0:
 			target_x = required_x
@@ -820,7 +856,7 @@ func _start_attack() -> void:
 		return
 
 	_combat_phase = CombatPhase.ATTACKING
-	if get_engagement_stance() == WeaponData.EngagementStance.HYBRID and weapon.uses_throw_projectile():
+	if get_engagement_stance() == WeaponData.EngagementStance.HYBRID and combat.uses_throw_projectile():
 		var distance := (
 			global_position.distance_to(_target.global_position)
 			if _target != null and is_instance_valid(_target)
@@ -831,10 +867,10 @@ func _start_attack() -> void:
 		else:
 			_start_throw_attack()
 		return
-	if weapon.uses_throw_projectile():
+	if combat.uses_throw_projectile():
 		_start_throw_attack()
 		return
-	if weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
+	if combat.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 		_start_ranged_attack()
 		return
 
@@ -845,9 +881,9 @@ func _start_melee_lunge_attack() -> void:
 	if _hitbox != null:
 		_hitbox.enable_for_attack(
 			_get_attack_damage(),
-			weapon.knockback_force,
-			weapon.targeting_mode,
-			weapon.damage_type
+			combat.knockback_force,
+			combat.targeting_mode,
+			combat.damage_type
 		)
 
 	var direction := signf(_visual.scale.x)
@@ -960,19 +996,20 @@ func _spawn_arrow_projectile() -> void:
 
 func _spawn_weapon_projectile(from_global: Vector2, aim_global: Vector2) -> void:
 	var world := _get_world_node()
-	if world == null or weapon == null:
+	if world == null or combat == null:
 		return
-	var scene := weapon.resolve_projectile_scene()
+	var scene := combat.resolve_projectile_scene()
 	if scene == null:
-		if weapon.uses_throw_projectile():
+		if combat.uses_throw_projectile():
 			scene = _SPEAR_PROJECTILE_FALLBACK
-		elif weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
+		elif combat.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 			scene = _ARROW_PROJECTILE_FALLBACK
 	if scene == null:
 		return
 	var projectile := scene.instantiate() as Projectile
 	if projectile == null:
-		push_error("Weapon projectile_scene must use Projectile script: %s" % weapon.display_name)
+		var label := display_name_for_errors()
+		push_error("Combat projectile_scene must use Projectile script: %s" % label)
 		return
 	world.add_child(projectile)
 	if projectile.homing and _target != null and is_instance_valid(_target):
@@ -981,7 +1018,7 @@ func _spawn_weapon_projectile(from_global: Vector2, aim_global: Vector2) -> void
 		from_global,
 		aim_global,
 		_get_attack_damage(),
-		weapon.knockback_force,
+		combat.knockback_force,
 		self
 	)
 
@@ -1040,7 +1077,7 @@ func _finish_attack() -> void:
 	_disable_hitbox()
 	_visual.position = Vector2.ZERO
 	_reset_throw_flip()
-	if weapon != null and weapon.uses_throw_projectile():
+	if combat != null and combat.uses_throw_projectile():
 		_set_held_weapon_visible(true)
 	_projectile_attack_active = false
 	_throw_released = false
@@ -1073,22 +1110,18 @@ func _cancel_attack() -> void:
 
 
 func _get_home_global() -> Vector2:
-	# Homes follow squad slot order (flag at rear). Aim priority still uses
-	# weapon formation_line as role tags — spatial retargeting is a follow-up.
-	# Prefer get_node: @onready flag_bearer is still null while Units children
-	# run _ready (children before parent) during troop scene load.
-	var flag: Node2D = _troop.flag_bearer
-	if flag == null:
-		flag = _troop.get_node_or_null("FlagBearer") as Node2D
-	if flag == null:
+	# Homes follow squad slot order (anchor/flag at rear). Aim priority still uses
+	# formation_line as role tags — spatial retargeting is a follow-up.
+	if _troop == null:
 		return global_position
-	var flag_pos := flag.global_position
-	var facing := -1.0 if _troop.is_enemy else 1.0
-	# Slot 0 stands FLAG_REAR_CLEARANCE ahead of the flag; later slots step forward.
+	var anchor_pos := _troop.get_formation_anchor_global()
+	var facing := _troop.get_facing()
+	# Slot 0 stands FLAG_REAR_CLEARANCE ahead of the anchor; later slots step forward.
 	var offset := (
-		Troop.FLAG_REAR_CLEARANCE + Troop.HOME_SLOT_SPACING * float(squad_index)
+		Troop.FLAG_REAR_CLEARANCE
+		+ _troop.get_home_slot_spacing() * float(squad_index)
 	)
-	return Vector2(flag_pos.x + facing * offset, flag_pos.y)
+	return Vector2(anchor_pos.x + facing * offset, anchor_pos.y)
 
 
 func _axis_velocity(current: float, target: float, speed: float) -> float:
@@ -1099,9 +1132,9 @@ func _axis_velocity(current: float, target: float, speed: float) -> float:
 
 
 func _uses_projectile_attack() -> bool:
-	if weapon == null:
+	if combat == null:
 		return false
-	return weapon.uses_projectile()
+	return combat.uses_projectile()
 
 
 func _refresh_target() -> void:
@@ -1221,7 +1254,7 @@ func _closest_blocking_obstacle() -> Node2D:
 
 func _get_ranged_aim_priority() -> Array[WeaponData.FormationLine]:
 	var line := (
-		weapon.formation_line if weapon != null else WeaponData.FormationLine.FRONT
+		combat.formation_line if combat != null else WeaponData.FormationLine.FRONT
 	)
 	match line:
 		WeaponData.FormationLine.MID:
@@ -1252,7 +1285,7 @@ func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
 		var weights: Array[float] = []
 		var total_weight := 0.0
 		for unit in opponent.get_living_units():
-			if unit.weapon == null or unit.weapon.formation_line != formation_line:
+			if unit.combat == null or unit.combat.formation_line != formation_line:
 				continue
 			# Horizontal range only — jump height during spear throw must not
 			# invalidate an otherwise valid aim target.
@@ -1293,11 +1326,11 @@ func _lead_aim_point(from_global: Vector2, target: Unit) -> Vector2:
 	var aim := target.global_position
 	var launch_angle_deg := 45.0
 	var fallback_speed := 600.0
-	if weapon != null:
-		var scene := weapon.resolve_projectile_scene()
-		if scene == null and weapon.uses_throw_projectile():
+	if combat != null:
+		var scene := combat.resolve_projectile_scene()
+		if scene == null and combat.uses_throw_projectile():
 			scene = _SPEAR_PROJECTILE_FALLBACK
-		elif scene == null and weapon.attack_style == WeaponData.AttackStyle.BOW_SHOT:
+		elif scene == null and combat.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 			scene = _ARROW_PROJECTILE_FALLBACK
 		if scene != null:
 			var probe := scene.instantiate() as Projectile
@@ -1327,8 +1360,8 @@ func _lead_aim_point(from_global: Vector2, target: Unit) -> Vector2:
 
 
 func _get_attack_damage() -> int:
-	var raw: int = weapon.base_damage + stats.get_damage_bonus(weapon.damage_stat)
-	var mult := weapon.outgoing_damage_multiplier * _outgoing_damage_multiplier
+	var raw: int = combat.base_damage + stats.get_damage_bonus(combat.damage_stat)
+	var mult := combat.outgoing_damage_multiplier * _outgoing_damage_multiplier
 	return maxi(roundi(float(raw) * mult), 1)
 
 
@@ -1343,11 +1376,11 @@ func take_damage(
 		return
 	var incoming_mult: float = 1.0
 	var knockback_mult: float = _incoming_knockback_multiplier
-	if weapon != null:
+	if combat != null:
 		# Blunt punches through shield / tank weapon damage soak.
 		if damage_type != WeaponData.DamageType.BLUNT:
-			incoming_mult = weapon.incoming_damage_multiplier
-		knockback_mult *= weapon.incoming_knockback_multiplier
+			incoming_mult = combat.incoming_damage_multiplier
+		knockback_mult *= combat.incoming_knockback_multiplier
 	if damage_type == WeaponData.DamageType.BLUNT and _blunt_resist > 0.0:
 		incoming_mult *= maxf(1.0 - _blunt_resist, 0.0)
 	amount = maxi(roundi(float(amount) * incoming_mult), 0)
@@ -1355,8 +1388,8 @@ func take_damage(
 		damage_taken += amount
 		if killer != null and is_instance_valid(killer):
 			killer.damage_dealt += amount
-	if roster_data != null and roster_data.strain != null:
-		roster_data.strain.call_effect(&"on_hit_taken", [self, amount, damage_type])
+	if roster_data != null:
+		roster_data.call_combat_effect(&"on_hit_taken", [self, amount, damage_type])
 	_last_hit_from = knockback_from
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)
@@ -1420,8 +1453,8 @@ func register_kill(victim: Unit = null) -> void:
 	if _dying or current_hp <= 0 or not is_inside_tree():
 		return
 	kill_streak += 1
-	if roster_data != null and roster_data.strain != null and victim != null:
-		roster_data.strain.call_effect(&"on_kill", [self, victim])
+	if roster_data != null and victim != null:
+		roster_data.call_combat_effect(&"on_kill", [self, victim])
 	# Enemy streaks never show — player killers only.
 	if _troop == null or _troop.is_enemy:
 		return
@@ -1475,8 +1508,8 @@ func _die(
 	if killer != null and is_instance_valid(killer):
 		killer.register_kill(self)
 
-	if roster_data != null and roster_data.strain != null:
-		roster_data.strain.call_effect(
+	if roster_data != null:
+		roster_data.call_combat_effect(
 			&"on_death",
 			[roster_data, StrainEffect.DeathContext.COMBAT, self]
 		)

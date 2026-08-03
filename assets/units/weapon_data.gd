@@ -68,8 +68,7 @@ const MELEE_HITBOX_Y := -20.0
 ## on duplicated resources).
 @export var icon: Texture2D
 
-const _DEFAULT_ARROW_PROJECTILE := "res://assets/weapons/bow/arrow_projectile.tscn"
-const _DEFAULT_SPEAR_PROJECTILE := "res://assets/weapons/spear/spear_projectile.tscn"
+var _combat_profile_cache: CombatProfile = null
 
 
 func instantiate_appearance() -> Node2D:
@@ -78,46 +77,38 @@ func instantiate_appearance() -> Node2D:
 	return appearance_scene.instantiate() as Node2D
 
 
+## Adapter so Unit can share CombatProfile with EnemyUnitData without rewriting .tres.
+func get_combat_profile() -> CombatProfile:
+	if _combat_profile_cache == null:
+		_combat_profile_cache = CombatProfile.from_weapon(self)
+	return _combat_profile_cache
+
+
 func resolve_projectile_scene() -> PackedScene:
-	if projectile_scene != null:
-		return projectile_scene
-	if uses_throw_projectile():
-		return load(_DEFAULT_SPEAR_PROJECTILE) as PackedScene
-	if attack_style == AttackStyle.BOW_SHOT:
-		return load(_DEFAULT_ARROW_PROJECTILE) as PackedScene
-	return null
+	return get_combat_profile().resolve_projectile_scene()
 
 
 func uses_throw_projectile() -> bool:
-	return attack_style == AttackStyle.PROJECTILE_THROW
+	return get_combat_profile().uses_throw_projectile()
 
 
 func uses_projectile() -> bool:
-	return (
-		uses_throw_projectile()
-		or attack_style == AttackStyle.BOW_SHOT
-	)
+	return get_combat_profile().uses_projectile()
 
 
 func is_hybrid_engagement() -> bool:
-	return engagement_stance == EngagementStance.HYBRID
+	return get_combat_profile().is_hybrid_engagement()
 
 
 ## True when this weapon can enable the unit-owned melee hitbox.
 func uses_melee_hitbox() -> bool:
-	return (
-		attack_style == AttackStyle.MELEE_LUNGE
-		or is_hybrid_engagement()
-	)
+	return get_combat_profile().uses_melee_hitbox()
 
 
 func get_melee_hitbox_size() -> Vector2:
-	return Vector2(MELEE_HITBOX_WIDTH, MELEE_HITBOX_HEIGHT)
+	return get_combat_profile().get_melee_hitbox_size()
 
 
 ## Place the box so its forward edge after `lunge_distance` lands at `melee_range`.
 func get_melee_hitbox_offset(lunge_distance: float) -> Vector2:
-	return Vector2(
-		melee_range - lunge_distance - MELEE_HITBOX_WIDTH * 0.5,
-		MELEE_HITBOX_Y
-	)
+	return get_combat_profile().get_melee_hitbox_offset(lunge_distance)

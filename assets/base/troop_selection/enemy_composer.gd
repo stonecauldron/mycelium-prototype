@@ -7,48 +7,13 @@ enum ArmyArchetype { ONE_TRICK_PONY, HYBRID, GENERALIST }
 
 const _REROLL_CANDIDATE_COUNT := 8
 const _MIDPOINT_SAMPLE_COUNT := 8
-## Days 1–4: starter weapons only. Day 5+: full shop weapon catalog.
-const _FULL_WEAPON_UNLOCK_DAY := 5
-## Shield excluded from procedural enemies on days 1–2.
-const _SHIELD_UNLOCK_DAY := 3
 
-const _STARTER_WEAPON_PATHS: Array[String] = [
-	RiboforgeData.SWORD_WEAPON_PATH,
-	RiboforgeData.SPEAR_WEAPON_PATH,
-	RiboforgeData.BOW_WEAPON_PATH,
-	RiboforgeData.SHIELD_WEAPON_PATH,
+const _ENEMY_UNIT_PATHS: Array[String] = [
+	"res://assets/units/enemies/grunt_unit.tres",
+	"res://assets/units/enemies/piker_unit.tres",
+	"res://assets/units/enemies/archer_unit.tres",
+	"res://assets/units/enemies/bulwark_unit.tres",
 ]
-
-const _GENERALIST_STRAIN_PATH := "res://assets/units/generalist/generalist_strain.tres"
-const _MAGI_CAP_STRAIN_PATH := "res://assets/units/magi_cap/magi_cap_strain.tres"
-## MagiCaps stay mostly juvenile even in late bands with high imago rates.
-const _MAGI_CAP_IMAGO_CHANCE := 0.1
-## Relative weight when picking strains for army mix (other strains = 1).
-const _GENERALIST_STRAIN_WEIGHT := 3.0
-const _STRAIN_PATHS: Array[String] = [
-	_GENERALIST_STRAIN_PATH,
-	"res://assets/units/death_cap/death_cap_strain.tres",
-	"res://assets/units/inky_cap/inky_cap_strain.tres",
-	"res://assets/units/boom_cap/boom_cap_strain.tres",
-	"res://assets/units/mini_cap/mini_cap_strain.tres",
-	"res://assets/units/lanky_cap/lanky_cap_strain.tres",
-	"res://assets/units/fat_cap/fat_cap_strain.tres",
-	_MAGI_CAP_STRAIN_PATH,
-	"res://assets/units/chad_cap/chad_cap_strain.tres",
-	"res://assets/units/rush_cap/rush_cap_strain.tres",
-	"res://assets/units/wall_cap/wall_cap_strain.tres",
-	"res://assets/units/zombie_cap/zombie_cap_strain.tres",
-	"res://assets/units/rubber_cap/rubber_cap_strain.tres",
-]
-
-## Specialty strains excluded from procedural enemies on days 1–2 (Generalist only).
-const _SPECIALTY_STRAIN_UNLOCK_DAY := 3
-## Excluded from procedural enemies on days 1–3.
-const _EARLY_DAY_EXCLUDED_STRAIN_PATHS: Array[String] = [
-	_MAGI_CAP_STRAIN_PATH,
-	"res://assets/units/chad_cap/chad_cap_strain.tres",
-]
-const _EARLY_DAY_STRAIN_LOCKOUT := 3
 
 const _ARCHETYPE_SHARES := {
 	ArmyArchetype.ONE_TRICK_PONY: [0.9, 0.1],
@@ -56,9 +21,7 @@ const _ARCHETYPE_SHARES := {
 	ArmyArchetype.GENERALIST: [0.33, 0.33, 0.34],
 }
 
-static var _cached_strain_pool: Array = []
-static var _cached_starter_weapons: Array = []
-static var _cached_full_weapons: Array = []
+static var _cached_enemy_pool: Array = []
 
 
 static func specs_for_day(day: int) -> Array[EnemyUnitSpec]:
@@ -75,14 +38,16 @@ static func difficulty_score(specs: Array[EnemyUnitSpec]) -> float:
 	var score := 0.0
 	for spec in specs:
 		match spec.tier:
+			UnitStatsData.PowerTier.FEEBLE:
+				score += 0.5
 			UnitStatsData.PowerTier.WEAK:
 				score += 1.0
 			UnitStatsData.PowerTier.COMMON:
 				score += 2.0
 			UnitStatsData.PowerTier.UNCOMMON:
 				score += 3.0
-		if spec.is_imago:
-			score += 1.0
+			_:
+				score += 4.0
 	return score
 
 
@@ -161,12 +126,7 @@ static func _specs_equal(a: Array[EnemyUnitSpec], b: Array[EnemyUnitSpec]) -> bo
 	if a.size() != b.size():
 		return false
 	for i in a.size():
-		if (
-			a[i].weapon != b[i].weapon
-			or a[i].tier != b[i].tier
-			or a[i].is_imago != b[i].is_imago
-			or a[i].strain != b[i].strain
-		):
+		if a[i].unit_data != b[i].unit_data or a[i].tier != b[i].tier:
 			return false
 	return true
 
@@ -187,104 +147,51 @@ static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[
 	var band := _band_for_day(day)
 	var total: int = rng.randi_range(band.min_units, band.max_units)
 	var tier_weights: Array = band.tier_weights
-	var imago_chance: float = band.imago_chance
-
-	var weapon_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
-	var strain_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
-	var weapon_slots := _distribute_mix(_weapon_pool_for_day(day), weapon_archetype, total, rng)
-	var strain_slots := _distribute_mix(
-		_strain_pool_for_day(day),
-		strain_archetype,
+	var unit_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
+	var unit_slots := _distribute_mix(
+		_enemy_pool_for_day(day),
+		unit_archetype,
 		total,
 		rng,
-		_strain_pick_weight
+		_enemy_pick_weight
 	)
 
 	var specs: Array[EnemyUnitSpec] = []
 	for i in total:
-		var unit_weapon: WeaponData = weapon_slots[i]
-		var unit_strain: UnitStrain = strain_slots[i]
+		var unit_data: EnemyUnitData = unit_slots[i]
 		var tier: UnitStatsData.PowerTier = _pick_weighted_tier(tier_weights, rng)
-		var roll_chance := imago_chance
-		if unit_strain != null and unit_strain.resource_path == _MAGI_CAP_STRAIN_PATH:
-			roll_chance = minf(imago_chance, _MAGI_CAP_IMAGO_CHANCE)
-		var imago := roll_chance > 0.0 and rng.randf() < roll_chance
-		specs.append(EnemyUnitSpec.make(unit_weapon, tier, imago, unit_strain))
+		specs.append(EnemyUnitSpec.make(unit_data, tier))
 	return specs
 
 
-static func _weapon_pool_for_day(day: int) -> Array:
-	if day >= _FULL_WEAPON_UNLOCK_DAY:
-		return _full_weapon_pool()
-	var pool := _starter_weapon_pool()
-	if day >= _SHIELD_UNLOCK_DAY:
-		return pool
-	var filtered: Array = []
-	for weapon in pool:
-		var unit_weapon := weapon as WeaponData
-		if unit_weapon == null:
-			continue
-		if unit_weapon.resource_path == RiboforgeData.SHIELD_WEAPON_PATH:
-			continue
-		filtered.append(unit_weapon)
-	return filtered
-
-
-static func _starter_weapon_pool() -> Array:
-	if not _cached_starter_weapons.is_empty():
-		return _cached_starter_weapons
-	_cached_starter_weapons = _load_weapon_pool(_STARTER_WEAPON_PATHS)
-	return _cached_starter_weapons
-
-
-static func _full_weapon_pool() -> Array:
-	if not _cached_full_weapons.is_empty():
-		return _cached_full_weapons
-	_cached_full_weapons = _load_weapon_pool(RiboforgeData.SHOP_WEAPON_PATHS)
-	return _cached_full_weapons
-
-
-static func _load_weapon_pool(paths: Array[String]) -> Array:
+static func _enemy_pool() -> Array:
+	if not _cached_enemy_pool.is_empty():
+		return _cached_enemy_pool
 	var pool: Array = []
-	for path in paths:
-		var weapon := load(path) as WeaponData
-		if weapon != null:
-			pool.append(weapon)
+	for path in _ENEMY_UNIT_PATHS:
+		var unit_data := load(path) as EnemyUnitData
+		if unit_data != null:
+			pool.append(unit_data)
+	_cached_enemy_pool = pool
+	return _cached_enemy_pool
+
+
+static func _enemy_pool_for_day(day: int) -> Array:
+	var pool: Array = []
+	for entry in _enemy_pool():
+		var unit_data := entry as EnemyUnitData
+		if unit_data == null:
+			continue
+		if unit_data.min_day <= day:
+			pool.append(unit_data)
 	return pool
 
 
-static func _strain_pool() -> Array:
-	if not _cached_strain_pool.is_empty():
-		return _cached_strain_pool
-	var pool: Array = []
-	for path in _STRAIN_PATHS:
-		var strain := load(path) as UnitStrain
-		if strain != null:
-			pool.append(strain)
-	_cached_strain_pool = pool
-	return _cached_strain_pool
-
-
-static func _strain_pool_for_day(day: int) -> Array:
-	var pool := _strain_pool()
-	if day < _SPECIALTY_STRAIN_UNLOCK_DAY:
-		var generalist_only: Array = []
-		for strain in pool:
-			var unit_strain := strain as UnitStrain
-			if unit_strain != null and unit_strain.resource_path == _GENERALIST_STRAIN_PATH:
-				generalist_only.append(unit_strain)
-		return generalist_only
-	if day > _EARLY_DAY_STRAIN_LOCKOUT:
-		return pool
-	var filtered: Array = []
-	for strain in pool:
-		var unit_strain := strain as UnitStrain
-		if unit_strain == null:
-			continue
-		if _EARLY_DAY_EXCLUDED_STRAIN_PATHS.has(unit_strain.resource_path):
-			continue
-		filtered.append(unit_strain)
-	return filtered
+static func _enemy_pick_weight(entry) -> float:
+	var unit_data := entry as EnemyUnitData
+	if unit_data == null:
+		return 1.0
+	return maxf(unit_data.composition_weight, 0.0)
 
 
 static func _distribute_mix(
@@ -304,13 +211,6 @@ static func _distribute_mix(
 			slots.append(picked[i])
 	_shuffle_array(slots, rng)
 	return slots
-
-
-static func _strain_pick_weight(entry) -> float:
-	var unit_strain := entry as UnitStrain
-	if unit_strain != null and unit_strain.resource_path == _GENERALIST_STRAIN_PATH:
-		return _GENERALIST_STRAIN_WEIGHT
-	return 1.0
 
 
 static func _pick_distinct(
@@ -376,8 +276,6 @@ static func _shares_to_counts(shares: Array, total: int) -> Array[int]:
 	)
 	for i in remainder:
 		counts[order[i % order.size()]] += 1
-	# Prefer primary when secondary would be zero on tiny armies — already handled
-	# by flooring; if everything landed on primary, that is intentional.
 	return counts
 
 
@@ -395,58 +293,76 @@ static func _band_for_day(day: int) -> Dictionary:
 			return {
 				"min_units": 2,
 				"max_units": 3,
-				"imago_chance": 0.0,
 				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.FEEBLE, "weight": 1.0},
 				],
 			}
 		3:
-			# Soft bridge: fewer units, rare imagos, mostly weak — avoids the old 1–2→3–4 cliff.
 			return {
 				"min_units": 3,
 				"max_units": 4,
-				"imago_chance": 0.15,
 				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 3.0},
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
 				],
 			}
 		4:
 			return {
-				"min_units": 3,
-				"max_units": 5,
-				"imago_chance": 0.4,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 2.0},
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
-				],
-			}
-		5, 6:
-			return {
 				"min_units": 4,
-				"max_units": 6,
-				"imago_chance": 0.5,
+				"max_units": 5,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
 					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
 				],
 			}
-		7, 8:
+		5:
 			return {
 				"min_units": 5,
+				"max_units": 6,
+				"tier_weights": [
+					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 2.0},
+				],
+			}
+		6:
+			return {
+				"min_units": 6,
 				"max_units": 8,
-				"imago_chance": 0.6,
+				"tier_weights": [
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
+				],
+			}
+		7:
+			return {
+				"min_units": 7,
+				"max_units": 10,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 2.0},
 					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
 				],
 			}
-		_:
-			# Days 9–10.
+		8:
 			return {
-				"min_units": 6,
-				"max_units": 10,
-				"imago_chance": 0.7,
+				"min_units": 9,
+				"max_units": 12,
+				"tier_weights": [
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 2.0},
+					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
+				],
+			}
+		9:
+			return {
+				"min_units": 11,
+				"max_units": 15,
+				"tier_weights": [
+					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
+					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
+				],
+			}
+		_:
+			# Day 10.
+			return {
+				"min_units": 14,
+				"max_units": 18,
 				"tier_weights": [
 					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
 					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
@@ -456,7 +372,7 @@ static func _band_for_day(day: int) -> Dictionary:
 
 static func _pick_weighted_tier(tier_weights: Array, rng: RandomNumberGenerator) -> UnitStatsData.PowerTier:
 	if tier_weights.is_empty():
-		return UnitStatsData.PowerTier.WEAK
+		return UnitStatsData.PowerTier.FEEBLE
 	var total_weight := 0.0
 	for entry in tier_weights:
 		total_weight += float(entry["weight"])

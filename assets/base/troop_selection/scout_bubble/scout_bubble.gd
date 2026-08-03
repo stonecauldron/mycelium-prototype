@@ -2,10 +2,7 @@ class_name ScoutBubble
 extends Control
 
 const _SCOUT_ENTRY_SCENE := preload(
-	"res://assets/base/troop_selection/scout_bubble/scout_weapon_entry.tscn"
-)
-const _SCOUT_STRAIN_ENTRY_SCENE := preload(
-	"res://assets/base/troop_selection/scout_bubble/scout_strain_entry.tscn"
+	"res://assets/base/troop_selection/scout_bubble/scout_enemy_entry.tscn"
 )
 
 @onready var _scout_row: HBoxContainer = %ScoutRow
@@ -18,6 +15,8 @@ const _SCOUT_STRAIN_ENTRY_SCENE := preload(
 func _ready() -> void:
 	if _scout_reroll_button != null:
 		_scout_reroll_button.pressed.connect(_on_scout_reroll_pressed)
+	if _scout_strain_row != null:
+		_scout_strain_row.visible = false
 	refresh()
 
 
@@ -31,45 +30,28 @@ func refresh() -> void:
 			child.queue_free()
 	GameState.ensure_upcoming_enemy_formation()
 	var specs := GameState.upcoming_enemy_formation
-	var weapon_counts: Dictionary = {}
-	var strain_counts: Dictionary = {}
+	var type_counts: Dictionary = {}
 	for spec in specs:
-		if spec.weapon != null:
-			var weapon_key := spec.weapon.resource_path
-			if weapon_key.is_empty():
-				weapon_key = str(spec.weapon.get_instance_id())
-			if not weapon_counts.has(weapon_key):
-				weapon_counts[weapon_key] = {"count": 0, "weapon": spec.weapon}
-			weapon_counts[weapon_key]["count"] = int(weapon_counts[weapon_key]["count"]) + 1
-		if spec.strain != null:
-			var key := spec.strain.resource_path
-			if key.is_empty():
-				key = spec.strain.display_name
-			if not strain_counts.has(key):
-				strain_counts[key] = {"count": 0, "strain": spec.strain}
-			strain_counts[key]["count"] = int(strain_counts[key]["count"]) + 1
+		if spec.unit_data == null:
+			continue
+		var key := spec.unit_data.resource_path
+		if key.is_empty():
+			key = str(spec.unit_data.id)
+		if not type_counts.has(key):
+			type_counts[key] = {"count": 0, "unit_data": spec.unit_data}
+		type_counts[key]["count"] = int(type_counts[key]["count"]) + 1
 	var reward := 0
-	for spec in specs:
-		reward += BiomassData.reward_for_kill(spec.is_imago)
-	for weapon_key in weapon_counts.keys():
-		var entry: Dictionary = weapon_counts[weapon_key]
+	for _spec in specs:
+		reward += BiomassData.reward_for_kill(false)
+	for key in type_counts.keys():
+		var entry: Dictionary = type_counts[key]
 		var count: int = entry["count"]
 		if count <= 0:
 			continue
-		var weapon: WeaponData = entry["weapon"]
-		var entry_card: ScoutWeaponEntry = _SCOUT_ENTRY_SCENE.instantiate()
+		var unit_data: EnemyUnitData = entry["unit_data"]
+		var entry_card: ScoutEnemyEntry = _SCOUT_ENTRY_SCENE.instantiate()
 		_scout_row.add_child(entry_card)
-		entry_card.setup(count, weapon)
-	if _scout_strain_row != null:
-		for key in strain_counts.keys():
-			var strain_entry: Dictionary = strain_counts[key]
-			var strain_count: int = strain_entry["count"]
-			if strain_count <= 0:
-				continue
-			var strain: UnitStrain = strain_entry["strain"]
-			var strain_card: ScoutStrainEntry = _SCOUT_STRAIN_ENTRY_SCENE.instantiate()
-			_scout_strain_row.add_child(strain_card)
-			strain_card.setup(strain_count, strain)
+		entry_card.setup(count, unit_data)
 	if _scout_reward_label != null:
 		_scout_reward_label.text = "+%d" % reward
 	_refresh_reroll_affordability()

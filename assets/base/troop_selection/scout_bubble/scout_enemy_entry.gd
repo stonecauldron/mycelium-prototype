@@ -6,6 +6,14 @@ const _PORTRAIT_SCALE := 0.7
 ## Raise feet above the host bottom so the body lines up with the count label.
 const _PORTRAIT_Y_FACTOR := 0.82
 const _TOOLTIP_WIDTH := 260.0
+const _CHIP_SIZE := Vector2(40, 40)
+const _CHIP_FONT_SIZE := 24
+
+const _STAT_CHIP_SCENE: PackedScene = preload("res://assets/ui/stat_chip/stat_chip.tscn")
+const _TAG_CHIP_SCENE: PackedScene = preload("res://assets/ui/tag_chip/tag_chip.tscn")
+const _SWORD_ICON: Texture2D = preload("res://assets/base/unit_card/sword_icon.png")
+const _HP_ICON: Texture2D = preload("res://assets/base/unit_card/hp_icon.png")
+const _BIOMASS_ICON: Texture2D = preload("res://assets/base/biomass.png")
 
 @onready var _count_label: Label = %CountLabel
 @onready var _portrait_host: Control = %PortraitHost
@@ -80,6 +88,42 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 	name_label.custom_minimum_size = Vector2(_TOOLTIP_WIDTH, 0)
 	vbox.add_child(name_label)
 
+	var combat := unit_data.get_combat_profile()
+	var atk: int = combat.base_damage
+	if unit_data.stats != null:
+		atk += unit_data.stats.get_damage_bonus(combat.damage_stat)
+	atk = maxi(roundi(float(atk) * combat.outgoing_damage_multiplier), 1)
+	var hp: int = unit_data.stats.get_max_hp() if unit_data.stats != null else 0
+
+	var combat_row := HBoxContainer.new()
+	combat_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	combat_row.add_theme_constant_override("separation", 10)
+	combat_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_child(combat_row)
+
+	combat_row.add_child(_make_stat_chip(_SWORD_ICON, atk))
+	combat_row.add_child(_make_stat_chip(_HP_ICON, hp))
+
+	var speed_label := Label.new()
+	speed_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	speed_label.text = "Speed %s secs" % str(combat.attack_interval)
+	speed_label.add_theme_color_override("font_color", Color(0.03137255, 0.03529412, 0.02745098, 1))
+	speed_label.add_theme_font_size_override("font_size", 24)
+	combat_row.add_child(speed_label)
+
+	var show_blunt := combat.damage_type == WeaponData.DamageType.BLUNT
+	var show_aoe := combat.targeting_mode == WeaponData.TargetingMode.AOE
+	if show_blunt or show_aoe:
+		var tag_row := HBoxContainer.new()
+		tag_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tag_row.add_theme_constant_override("separation", 4)
+		tag_row.alignment = BoxContainer.ALIGNMENT_CENTER
+		vbox.add_child(tag_row)
+		if show_blunt:
+			tag_row.add_child(_make_tag_chip("Blunt"))
+		if show_aoe:
+			tag_row.add_child(_make_tag_chip("AOE"))
+
 	var description := unit_data.short_description.strip_edges()
 	if not description.is_empty():
 		var desc_label := Label.new()
@@ -91,8 +135,49 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 		desc_label.custom_minimum_size = Vector2(_TOOLTIP_WIDTH, 0)
 		vbox.add_child(desc_label)
 
+	var reward_row := HBoxContainer.new()
+	reward_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	reward_row.add_theme_constant_override("separation", 4)
+	reward_row.alignment = BoxContainer.ALIGNMENT_END
+	vbox.add_child(reward_row)
+
+	var reward_label := Label.new()
+	reward_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	reward_label.text = "+%d" % unit_data.biomass_reward
+	reward_label.add_theme_color_override("font_color", Color(0, 0, 0, 1))
+	reward_label.add_theme_font_size_override("font_size", 24)
+	reward_row.add_child(reward_label)
+
+	var biomass_icon := TextureRect.new()
+	biomass_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	biomass_icon.custom_minimum_size = Vector2(40, 40)
+	biomass_icon.texture = _BIOMASS_ICON
+	biomass_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	biomass_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	reward_row.add_child(biomass_icon)
+
 	panel.reset_size()
 	return panel
+
+
+func _make_stat_chip(icon: Texture2D, value: int) -> StatChip:
+	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
+	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.icon = icon
+	chip.chip_size = _CHIP_SIZE
+	chip.value_font_size = _CHIP_FONT_SIZE
+	if chip.is_node_ready():
+		chip.set_value(value)
+	else:
+		chip.ready.connect(chip.set_value.bind(value), CONNECT_ONE_SHOT)
+	return chip
+
+
+func _make_tag_chip(text: String) -> TagChip:
+	var tag: TagChip = _TAG_CHIP_SCENE.instantiate()
+	tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tag.set_text(text)
+	return tag
 
 
 func _configure_tooltip_popup(tip: Control) -> void:

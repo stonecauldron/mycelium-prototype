@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyUnitData" format=3 uid="uid://c21yenudmrt05"]
+
+[ext_resource type="Script" uid="uid://cou2fgplywkx5" path="res://assets/units/enemies/enemy_unit_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://bnh01kb4dohye" path="res://assets/units/combat_profile.gd" id="2_combat"]
+[ext_resource type="Texture2D" uid="uid://cyqn0s0bxub21" path="res://assets/units/enemies/mortar.png" id="3_icon"]
+[ext_resource type="PackedScene" uid="uid://c21yenmymrt05" path="res://assets/units/enemies/mortar_appearance.tscn" id="4_appear"]
+[ext_resource type="PackedScene" uid="uid://demfhncqeiiuq" path="res://assets/weapons/mortar/mortar_projectile.tscn" id="5_proj"]
+[ext_resource type="Resource" uid="uid://banrgncs1hs7u" path="res://assets/weapons/mortar/mortar.tres" id="6_held"]
+
+[sub_resource type="Resource" id="Combat_mortar"]
+script = ExtResource("2_combat")
+formation_line = 2
+engagement_stance = 3
+attack_style = 2
+damage_stat = 1
+targeting_mode = 1
+base_damage = 3
+projectile_range = 1200.0
+attack_interval = 2.0
+skirmish_distance = 280.0
+knockback_force = 120.0
+projectile_scene = ExtResource("5_proj")
+
+[resource]
+script = ExtResource("1_data")
+id = &"mortar"
+display_name = "Lobber"
+short_description = "Lobs spore bombs from the back line."
+icon = ExtResource("3_icon")
+appearance_scene = ExtResource("4_appear")
+combat = SubResource("Combat_mortar")
+held_weapon = ExtResource("6_held")
+min_day = 4
+composition_weight = 0.7

@@ -13,6 +13,12 @@ const _ENEMY_UNIT_PATHS: Array[String] = [
 	"res://assets/units/enemies/piker_unit.tres",
 	"res://assets/units/enemies/archer_unit.tres",
 	"res://assets/units/enemies/bulwark_unit.tres",
+	"res://assets/units/enemies/great_sword_unit.tres",
+	"res://assets/units/enemies/giant_hammer_unit.tres",
+	"res://assets/units/enemies/great_shield_unit.tres",
+	"res://assets/units/enemies/umbrella_unit.tres",
+	"res://assets/units/enemies/mortar_unit.tres",
+	"res://assets/units/enemies/knight_unit.tres",
 ]
 
 const _ARCHETYPE_SHARES := {

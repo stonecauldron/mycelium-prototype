@@ -25,6 +25,12 @@ const _GRUNT_ENEMY := preload("res://assets/units/enemies/grunt_unit.tres")
 const _PIKER_ENEMY := preload("res://assets/units/enemies/piker_unit.tres")
 const _ARCHER_ENEMY := preload("res://assets/units/enemies/archer_unit.tres")
 const _BULWARK_ENEMY := preload("res://assets/units/enemies/bulwark_unit.tres")
+const _CLEAVER_ENEMY := preload("res://assets/units/enemies/great_sword_unit.tres")
+const _CRUSHER_ENEMY := preload("res://assets/units/enemies/giant_hammer_unit.tres")
+const _BASTION_ENEMY := preload("res://assets/units/enemies/great_shield_unit.tres")
+const _CANOPY_ENEMY := preload("res://assets/units/enemies/umbrella_unit.tres")
+const _LOBBER_ENEMY := preload("res://assets/units/enemies/mortar_unit.tres")
+const _KNIGHT_ENEMY := preload("res://assets/units/enemies/knight_unit.tres")
 
 const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Sword", "weapon": _SWORD_WEAPON},
@@ -70,6 +76,12 @@ const _ENEMY_OPTIONS: Array[Dictionary] = [
 	{"name": "Piker", "unit": _PIKER_ENEMY},
 	{"name": "Archer", "unit": _ARCHER_ENEMY},
 	{"name": "Bulwark", "unit": _BULWARK_ENEMY},
+	{"name": "Cleaver", "unit": _CLEAVER_ENEMY},
+	{"name": "Crusher", "unit": _CRUSHER_ENEMY},
+	{"name": "Bastion", "unit": _BASTION_ENEMY},
+	{"name": "Canopy", "unit": _CANOPY_ENEMY},
+	{"name": "Lobber", "unit": _LOBBER_ENEMY},
+	{"name": "Knight", "unit": _KNIGHT_ENEMY},
 ]
 
 @onready var _stage: Node2D = $CombatStage

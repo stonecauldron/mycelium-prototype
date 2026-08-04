@@ -28,11 +28,11 @@ On tab select, call the destination's `on_screen_shown()` / HUD refresh at **tra
 
 ## Enemy / starter composition
 
-- Enemy specs come from `EnemyComposer.specs_for_day()` → `Array[EnemyUnitSpec]` (`unit_data` / `tier`). Armies are authored `EnemyUnitData` types (Grunt/Piker/Archer/Bulwark), not shop weapons.
+- Enemy specs come from `EnemyComposer.specs_for_day()` → `Array[EnemyUnitSpec]` (`unit_data` / `tier`). Armies are authored `EnemyUnitData` types (Grunt/Piker/Archer/Bulwark plus Cleaver/Crusher/Bastion/Canopy/Lobber/Knight), not shop weapons.
 - Scout UI lives in `scout_bubble/scout_bubble.tscn` (`ScoutBubble`); it fills `GameState.upcoming_enemy_formation`. Roster build reads that array (combat via `BattleLaunch`). Scout reroll costs `BiomassData.SCOUT_REROLL_COST` and bias-picks a different difficulty — **disabled on elite days**.
 - Every 5th battle is elite (`GameState.is_elite_day`: days 5 and 10): harder procedural band (more units / higher tiers), seeded by `GameState.run_seed` + day. No scout reroll; skull hover on the base progression track previews that elite army in the scout bubble.
 - War Chamber header (under the title) shows `CombatProgressTrack`: current 5-battle chapter (4 circles + elite skull) with a marker under the upcoming day.
-- Days 1–2 are Grunt-only (`min_day` gates other types). Initial player troop / `_make_default_starters()`: one melee, one bow, one spear (common tier).
+- Days 1–2 are Grunt-only (`min_day` gates other types); day 3 unlocks Piker/Archer/Bulwark; day 4+ can include Cleaver/Crusher/Bastion/Canopy/Lobber/Knight. Initial player troop / `_make_default_starters()`: one melee, one bow, one spear (common tier).
 
 ## Cursor Cloud specific instructions
 

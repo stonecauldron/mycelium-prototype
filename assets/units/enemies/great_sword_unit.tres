@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="EnemyUnitData" format=3 uid="uid://c21yenudgs001"]
+
+[ext_resource type="Script" uid="uid://cou2fgplywkx5" path="res://assets/units/enemies/enemy_unit_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://bnh01kb4dohye" path="res://assets/units/combat_profile.gd" id="2_combat"]
+[ext_resource type="Texture2D" uid="uid://bt1lgtsug1dyo" path="res://assets/units/enemies/great_sword.png" id="3_icon"]
+[ext_resource type="PackedScene" uid="uid://c21yenmygs001" path="res://assets/units/enemies/great_sword_appearance.tscn" id="4_appear"]
+[ext_resource type="Resource" uid="uid://c4k3b8ta1842i" path="res://assets/weapons/great_sword/great_sword.tres" id="5_held"]
+
+[sub_resource type="Resource" id="Combat_great_sword"]
+script = ExtResource("2_combat")
+targeting_mode = 1
+base_damage = 7
+attack_interval = 2.5
+knockback_force = 420.0
+melee_range = 140.0
+
+[resource]
+script = ExtResource("1_data")
+id = &"great_sword"
+display_name = "Cleaver"
+short_description = "Wide, heavy swings that cut through the front line."
+icon = ExtResource("3_icon")
+appearance_scene = ExtResource("4_appear")
+combat = SubResource("Combat_great_sword")
+held_weapon = ExtResource("5_held")
+min_day = 4
+composition_weight = 0.7

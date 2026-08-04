@@ -9,16 +9,16 @@ const _REROLL_CANDIDATE_COUNT := 8
 const _MIDPOINT_SAMPLE_COUNT := 8
 
 const _ENEMY_UNIT_PATHS: Array[String] = [
-	"res://assets/units/enemies/grunt_unit.tres",
-	"res://assets/units/enemies/piker_unit.tres",
-	"res://assets/units/enemies/archer_unit.tres",
-	"res://assets/units/enemies/bulwark_unit.tres",
-	"res://assets/units/enemies/great_sword_unit.tres",
-	"res://assets/units/enemies/giant_hammer_unit.tres",
-	"res://assets/units/enemies/great_shield_unit.tres",
-	"res://assets/units/enemies/umbrella_unit.tres",
-	"res://assets/units/enemies/mortar_unit.tres",
-	"res://assets/units/enemies/knight_unit.tres",
+	"res://assets/units/enemies/grunt/grunt_unit.tres",
+	"res://assets/units/enemies/piker/piker_unit.tres",
+	"res://assets/units/enemies/archer/archer_unit.tres",
+	"res://assets/units/enemies/bulwark/bulwark_unit.tres",
+	"res://assets/units/enemies/great_sword/great_sword_unit.tres",
+	"res://assets/units/enemies/giant_hammer/giant_hammer_unit.tres",
+	"res://assets/units/enemies/great_shield/great_shield_unit.tres",
+	"res://assets/units/enemies/umbrella/umbrella_unit.tres",
+	"res://assets/units/enemies/mortar/mortar_unit.tres",
+	"res://assets/units/enemies/knight/knight_unit.tres",
 ]
 
 const _ARCHETYPE_SHARES := {

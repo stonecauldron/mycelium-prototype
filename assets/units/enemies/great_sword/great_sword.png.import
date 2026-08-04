@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bt1lgtsug1dyo"
-path="res://.godot/imported/great_sword.png-f335f85c7f8572039dfa2e1ae380799d.ctex"
+path="res://.godot/imported/great_sword.png-4145ce93e1f78cb13a6e016b65de2c11.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/units/enemies/great_sword.png"
-dest_files=["res://.godot/imported/great_sword.png-f335f85c7f8572039dfa2e1ae380799d.ctex"]
+source_file="res://assets/units/enemies/great_sword/great_sword.png"
+dest_files=["res://.godot/imported/great_sword.png-4145ce93e1f78cb13a6e016b65de2c11.ctex"]
 
 [params]
 

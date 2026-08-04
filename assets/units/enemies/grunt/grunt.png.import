@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dgaokaw1gdrlu"
-path="res://.godot/imported/grunt.png-20249eb7360192d26d26b15d871816fa.ctex"
+path="res://.godot/imported/grunt.png-d6759166a5233ff80f182002111a60c1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/units/enemies/grunt.png"
-dest_files=["res://.godot/imported/grunt.png-20249eb7360192d26d26b15d871816fa.ctex"]
+source_file="res://assets/units/enemies/grunt/grunt.png"
+dest_files=["res://.godot/imported/grunt.png-d6759166a5233ff80f182002111a60c1.ctex"]
 
 [params]
 

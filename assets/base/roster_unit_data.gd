@@ -118,11 +118,17 @@ func mount_portrait(
 		return null
 	host.add_child(appearance)
 	appearance.scale *= Vector2(portrait_scale, portrait_scale)
-	appearance.modulate = UnitStatsData.tint_for_tier(power_tier)
+	if enemy_unit_data == null:
+		appearance.modulate = UnitStatsData.tint_for_tier(power_tier)
 	host.set_meta("_portrait_shadow_clearance", shadow_clearance)
 	_ensure_portrait_host_sync(host)
 	_sync_portrait_in_host(host)
-	var held := enemy_unit_data.held_weapon if enemy_unit_data != null else weapon
+	var held: WeaponData = null
+	if enemy_unit_data != null:
+		if enemy_unit_data.show_held_weapon:
+			held = enemy_unit_data.held_weapon
+	else:
+		held = weapon
 	if held != null:
 		appearance.mount_weapon_appearance(held)
 	appearance.play_idle(true)
@@ -185,8 +191,7 @@ static func create(
 static func create_enemy(
 	unit_name: String,
 	unit_stats: UnitStatsData,
-	unit_data: EnemyUnitData,
-	unit_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.FEEBLE
+	unit_data: EnemyUnitData
 ) -> RosterUnitData:
 	var data := RosterUnitData.new()
 	data.display_name = unit_name
@@ -196,7 +201,7 @@ static func create_enemy(
 	data.strain = null
 	if unit_data != null:
 		data.combat = unit_data.get_combat_profile()
-	data.power_tier = unit_tier
+	data.power_tier = UnitStatsData.PowerTier.COMMON
 	data.days_alive = 0
 	data.life_stage_id = &""
 	data.is_imago = false

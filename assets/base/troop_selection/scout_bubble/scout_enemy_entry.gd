@@ -33,8 +33,7 @@ func _apply(count: int, unit_data: EnemyUnitData) -> void:
 	var data := RosterUnitData.create_enemy(
 		unit_data.display_name,
 		null,
-		unit_data,
-		UnitStatsData.PowerTier.COMMON
+		unit_data
 	)
 	_portrait_host.set_meta("_portrait_y_factor", _PORTRAIT_Y_FACTOR)
 	_portrait_instance = data.mount_portrait(_portrait_host, _PORTRAIT_SCALE)

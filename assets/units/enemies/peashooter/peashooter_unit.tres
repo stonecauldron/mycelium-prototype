@@ -2,12 +2,13 @@
 
 [ext_resource type="Script" uid="uid://cou2fgplywkx5" path="res://assets/units/enemies/enemy_unit_data.gd" id="1_data"]
 [ext_resource type="Script" uid="uid://bnh01kb4dohye" path="res://assets/units/combat_profile.gd" id="2_combat"]
-[ext_resource type="Texture2D" uid="uid://c0gskmmen7dp7" path="res://assets/units/enemies/archer/archer.png" id="3_icon"]
-[ext_resource type="PackedScene" uid="uid://c21yc8557m1ec" path="res://assets/units/enemies/archer/archer_appearance.tscn" id="4_appear"]
+[ext_resource type="Script" uid="uid://d0sxroj31nsv7" path="res://assets/units/unit_stats_data.gd" id="2_stats"]
+[ext_resource type="Texture2D" uid="uid://c0gskmmen7dp7" path="res://assets/units/enemies/peashooter/peashooter.png" id="3_icon"]
+[ext_resource type="PackedScene" uid="uid://c21yc8557m1ec" path="res://assets/units/enemies/peashooter/peashooter_appearance.tscn" id="4_appear"]
 [ext_resource type="PackedScene" uid="uid://c2tvvq5exk441" path="res://assets/weapons/bow/arrow_projectile.tscn" id="5_proj"]
 [ext_resource type="Resource" uid="uid://ru18fywxnj1u" path="res://assets/weapons/bow/bow.tres" id="6_held"]
 
-[sub_resource type="Resource" id="Combat_archer"]
+[sub_resource type="Resource" id="Combat_peashooter"]
 script = ExtResource("2_combat")
 formation_line = 2
 engagement_stance = 3
@@ -19,13 +20,21 @@ skirmish_distance = 320.0
 knockback_force = 0.0
 projectile_scene = ExtResource("5_proj")
 
+[sub_resource type="Resource" id="Stats_peashooter"]
+script = ExtResource("2_stats")
+strength = 2
+dex = 4
+con = 3
+spd = 3
+
 [resource]
 script = ExtResource("1_data")
-id = &"archer"
-display_name = "Archer"
+id = &"peashooter"
+display_name = "Peashooter"
 short_description = "Keeps distance and looses shots from the back."
 icon = ExtResource("3_icon")
 appearance_scene = ExtResource("4_appear")
-combat = SubResource("Combat_archer")
+combat = SubResource("Combat_peashooter")
 held_weapon = ExtResource("6_held")
+stats = SubResource("Stats_peashooter")
 min_day = 3

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c21yenmyknt06"]
 
 [ext_resource type="Script" uid="uid://nqw7ixv3u2we" path="res://assets/units/unit_appearance.gd" id="1_root"]
-[ext_resource type="Texture2D" uid="uid://cyjku4vb3lddx" path="res://assets/units/enemies/knight/knight.png" id="2_tex"]
+[ext_resource type="Texture2D" uid="uid://cyjku4vb3lddx" path="res://assets/units/enemies/acorn_knight/acorn_knight.png" id="2_tex"]
 [ext_resource type="Script" uid="uid://dk024gkwu740b" path="res://assets/components/hurtbox_component.gd" id="3_hurtbox"]
 
 [sub_resource type="Animation" id="Animation_idle"]
@@ -62,7 +62,7 @@ size = Vector2(53, 112)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(35, 85)
 
-[node name="KnightAppearance" type="Node2D" unique_id=1888771123]
+[node name="AcornKnightAppearance" type="Node2D" unique_id=1888771123]
 script = ExtResource("1_root")
 
 [node name="GroundShadow" type="Polygon2D" parent="." unique_id=991234567]

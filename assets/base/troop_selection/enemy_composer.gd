@@ -9,16 +9,16 @@ const _REROLL_CANDIDATE_COUNT := 8
 const _MIDPOINT_SAMPLE_COUNT := 8
 
 const _ENEMY_UNIT_PATHS: Array[String] = [
-	"res://assets/units/enemies/grunt/grunt_unit.tres",
-	"res://assets/units/enemies/piker/piker_unit.tres",
-	"res://assets/units/enemies/archer/archer_unit.tres",
-	"res://assets/units/enemies/bulwark/bulwark_unit.tres",
-	"res://assets/units/enemies/great_sword/great_sword_unit.tres",
-	"res://assets/units/enemies/giant_hammer/giant_hammer_unit.tres",
-	"res://assets/units/enemies/great_shield/great_shield_unit.tres",
-	"res://assets/units/enemies/umbrella/umbrella_unit.tres",
-	"res://assets/units/enemies/mortar/mortar_unit.tres",
-	"res://assets/units/enemies/knight/knight_unit.tres",
+	"res://assets/units/enemies/solar_sword/solar_sword_unit.tres",
+	"res://assets/units/enemies/rose_thorn/rose_thorn_unit.tres",
+	"res://assets/units/enemies/peashooter/peashooter_unit.tres",
+	"res://assets/units/enemies/stump/stump_unit.tres",
+	"res://assets/units/enemies/solar_cleaver/solar_cleaver_unit.tres",
+	"res://assets/units/enemies/durian/durian_unit.tres",
+	"res://assets/units/enemies/log/log_unit.tres",
+	"res://assets/units/enemies/canopy/canopy_unit.tres",
+	"res://assets/units/enemies/seed_lobber/seed_lobber_unit.tres",
+	"res://assets/units/enemies/acorn_knight/acorn_knight_unit.tres",
 ]
 
 const _ARCHETYPE_SHARES := {
@@ -43,17 +43,9 @@ static func specs_for_day(day: int) -> Array[EnemyUnitSpec]:
 static func difficulty_score(specs: Array[EnemyUnitSpec]) -> float:
 	var score := 0.0
 	for spec in specs:
-		match spec.tier:
-			UnitStatsData.PowerTier.FEEBLE:
-				score += 0.5
-			UnitStatsData.PowerTier.WEAK:
-				score += 1.0
-			UnitStatsData.PowerTier.COMMON:
-				score += 2.0
-			UnitStatsData.PowerTier.UNCOMMON:
-				score += 3.0
-			_:
-				score += 4.0
+		if spec.unit_data == null:
+			continue
+		score += float(spec.unit_data.average_stat_sum())
 	return score
 
 
@@ -132,7 +124,7 @@ static func _specs_equal(a: Array[EnemyUnitSpec], b: Array[EnemyUnitSpec]) -> bo
 	if a.size() != b.size():
 		return false
 	for i in a.size():
-		if a[i].unit_data != b[i].unit_data or a[i].tier != b[i].tier:
+		if a[i].unit_data != b[i].unit_data:
 			return false
 	return true
 
@@ -152,7 +144,6 @@ static func _skill_check_variants(_day: int) -> Array:
 static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[EnemyUnitSpec]:
 	var band := _band_for_day(day)
 	var total: int = rng.randi_range(band.min_units, band.max_units)
-	var tier_weights: Array = band.tier_weights
 	var unit_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
 	var unit_slots := _distribute_mix(
 		_enemy_pool_for_day(day),
@@ -165,8 +156,7 @@ static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[
 	var specs: Array[EnemyUnitSpec] = []
 	for i in total:
 		var unit_data: EnemyUnitData = unit_slots[i]
-		var tier: UnitStatsData.PowerTier = _pick_weighted_tier(tier_weights, rng)
-		specs.append(EnemyUnitSpec.make(unit_data, tier))
+		specs.append(EnemyUnitSpec.make(unit_data))
 	return specs
 
 
@@ -298,123 +288,32 @@ static func _band_for_day(day: int) -> Dictionary:
 		return _elite_band_for_day(day)
 	match day:
 		1, 2:
-			return {
-				"min_units": 2,
-				"max_units": 3,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.FEEBLE, "weight": 1.0},
-				],
-			}
+			return {"min_units": 2, "max_units": 3}
 		3:
-			return {
-				"min_units": 3,
-				"max_units": 4,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
-				],
-			}
+			return {"min_units": 3, "max_units": 4}
 		4:
-			return {
-				"min_units": 4,
-				"max_units": 5,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
-				],
-			}
+			return {"min_units": 4, "max_units": 5}
 		5:
 			# Non-elite fallback (elite days use `_elite_band_for_day`).
-			return {
-				"min_units": 5,
-				"max_units": 6,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 2.0},
-				],
-			}
+			return {"min_units": 5, "max_units": 6}
 		6:
-			return {
-				"min_units": 6,
-				"max_units": 8,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
-				],
-			}
+			return {"min_units": 6, "max_units": 8}
 		7:
-			return {
-				"min_units": 7,
-				"max_units": 10,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 2.0},
-					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
-				],
-			}
+			return {"min_units": 7, "max_units": 10}
 		8:
-			return {
-				"min_units": 9,
-				"max_units": 12,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 2.0},
-					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
-				],
-			}
+			return {"min_units": 9, "max_units": 12}
 		9:
-			return {
-				"min_units": 11,
-				"max_units": 15,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
-					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
-				],
-			}
+			return {"min_units": 11, "max_units": 15}
 		_:
 			# Day 10 non-elite fallback.
-			return {
-				"min_units": 14,
-				"max_units": 18,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
-					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 1.0},
-				],
-			}
+			return {"min_units": 14, "max_units": 18}
 
 
-## Harder procedural armies for elite days (+units, tiers shifted up).
+## Harder procedural armies for elite days (more units; typed stats come from EnemyUnitData).
 static func _elite_band_for_day(day: int) -> Dictionary:
 	match day:
 		5:
-			return {
-				"min_units": 7,
-				"max_units": 10,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.WEAK, "weight": 1.0},
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 2.0},
-					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 2.0},
-				],
-			}
+			return {"min_units": 7, "max_units": 10}
 		_:
 			# Day 10 (and any other elite day).
-			return {
-				"min_units": 16,
-				"max_units": 22,
-				"tier_weights": [
-					{"tier": UnitStatsData.PowerTier.COMMON, "weight": 1.0},
-					{"tier": UnitStatsData.PowerTier.UNCOMMON, "weight": 2.0},
-					{"tier": UnitStatsData.PowerTier.RARE, "weight": 1.0},
-				],
-			}
-
-
-static func _pick_weighted_tier(tier_weights: Array, rng: RandomNumberGenerator) -> UnitStatsData.PowerTier:
-	if tier_weights.is_empty():
-		return UnitStatsData.PowerTier.FEEBLE
-	var total_weight := 0.0
-	for entry in tier_weights:
-		total_weight += float(entry["weight"])
-	var roll := rng.randf() * total_weight
-	var acc := 0.0
-	for entry in tier_weights:
-		acc += float(entry["weight"])
-		if roll <= acc:
-			return entry["tier"] as UnitStatsData.PowerTier
-	return tier_weights[tier_weights.size() - 1]["tier"] as UnitStatsData.PowerTier
+			return {"min_units": 16, "max_units": 22}

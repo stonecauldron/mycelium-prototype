@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cyqn0s0bxub21"
-path="res://.godot/imported/mortar.png-5697dd2bfdbf775fe8d41da76f6b17e8.ctex"
+path="res://.godot/imported/seed_lobber.png-fee6a03e576e908fe0897e85b02c607b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/units/enemies/mortar/mortar.png"
-dest_files=["res://.godot/imported/mortar.png-5697dd2bfdbf775fe8d41da76f6b17e8.ctex"]
+source_file="res://assets/units/enemies/seed_lobber/seed_lobber.png"
+dest_files=["res://.godot/imported/seed_lobber.png-fee6a03e576e908fe0897e85b02c607b.ctex"]
 
 [params]
 

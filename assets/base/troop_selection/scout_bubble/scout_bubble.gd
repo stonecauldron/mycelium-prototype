@@ -70,8 +70,10 @@ func show_specs(specs: Array[EnemyUnitSpec], title: String) -> void:
 			type_counts[key] = {"count": 0, "unit_data": spec.unit_data}
 		type_counts[key]["count"] = int(type_counts[key]["count"]) + 1
 	var reward := 0
-	for _spec in specs:
-		reward += BiomassData.reward_for_kill(false)
+	for spec in specs:
+		if spec.unit_data == null:
+			continue
+		reward += spec.unit_data.biomass_reward
 	for key in type_counts.keys():
 		var entry: Dictionary = type_counts[key]
 		var count: int = entry["count"]

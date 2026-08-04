@@ -2,12 +2,13 @@
 
 [ext_resource type="Script" uid="uid://cou2fgplywkx5" path="res://assets/units/enemies/enemy_unit_data.gd" id="1_data"]
 [ext_resource type="Script" uid="uid://bnh01kb4dohye" path="res://assets/units/combat_profile.gd" id="2_combat"]
-[ext_resource type="Texture2D" uid="uid://cyqn0s0bxub21" path="res://assets/units/enemies/mortar/mortar.png" id="3_icon"]
-[ext_resource type="PackedScene" uid="uid://c21yenmymrt05" path="res://assets/units/enemies/mortar/mortar_appearance.tscn" id="4_appear"]
+[ext_resource type="Script" uid="uid://d0sxroj31nsv7" path="res://assets/units/unit_stats_data.gd" id="2_stats"]
+[ext_resource type="Texture2D" uid="uid://cyqn0s0bxub21" path="res://assets/units/enemies/seed_lobber/seed_lobber.png" id="3_icon"]
+[ext_resource type="PackedScene" uid="uid://c21yenmymrt05" path="res://assets/units/enemies/seed_lobber/seed_lobber_appearance.tscn" id="4_appear"]
 [ext_resource type="PackedScene" uid="uid://demfhncqeiiuq" path="res://assets/weapons/mortar/mortar_projectile.tscn" id="5_proj"]
 [ext_resource type="Resource" uid="uid://banrgncs1hs7u" path="res://assets/weapons/mortar/mortar.tres" id="6_held"]
 
-[sub_resource type="Resource" id="Combat_mortar"]
+[sub_resource type="Resource" id="Combat_seed_lobber"]
 script = ExtResource("2_combat")
 formation_line = 2
 engagement_stance = 3
@@ -21,14 +22,23 @@ skirmish_distance = 280.0
 knockback_force = 120.0
 projectile_scene = ExtResource("5_proj")
 
+[sub_resource type="Resource" id="Stats_seed_lobber"]
+script = ExtResource("2_stats")
+dex = 8
+con = 6
+spd = 6
+
 [resource]
 script = ExtResource("1_data")
-id = &"mortar"
-display_name = "Lobber"
+id = &"seed_lobber"
+display_name = "Seed Lobber"
 short_description = "Lobs spore bombs from the back line."
 icon = ExtResource("3_icon")
 appearance_scene = ExtResource("4_appear")
-combat = SubResource("Combat_mortar")
+combat = SubResource("Combat_seed_lobber")
 held_weapon = ExtResource("6_held")
+show_held_weapon = false
+biomass_reward = 6
+stats = SubResource("Stats_seed_lobber")
 min_day = 4
 composition_weight = 0.7

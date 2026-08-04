@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c21yenmyumb04"]
 
 [ext_resource type="Script" uid="uid://nqw7ixv3u2we" path="res://assets/units/unit_appearance.gd" id="1_root"]
-[ext_resource type="Texture2D" uid="uid://bitiwjylbmqwm" path="res://assets/units/enemies/umbrella/umbrella.png" id="2_tex"]
+[ext_resource type="Texture2D" uid="uid://bitiwjylbmqwm" path="res://assets/units/enemies/canopy/canopy.png" id="2_tex"]
 [ext_resource type="Script" uid="uid://dk024gkwu740b" path="res://assets/components/hurtbox_component.gd" id="3_hurtbox"]
 
 [sub_resource type="Animation" id="Animation_idle"]
@@ -62,7 +62,7 @@ size = Vector2(78, 166)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(40, 120)
 
-[node name="UmbrellaAppearance" type="Node2D" unique_id=415644918]
+[node name="CanopyAppearance" type="Node2D" unique_id=415644918]
 script = ExtResource("1_root")
 
 [node name="GroundShadow" type="Polygon2D" parent="." unique_id=1094948290]

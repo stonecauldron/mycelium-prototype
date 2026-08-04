@@ -242,8 +242,13 @@ func _notify_battle_end() -> void:
 
 
 func _award_kill_biomass(victim: Unit) -> int:
-	var is_imago := victim.roster_data != null and victim.roster_data.is_imago
-	var reward := BiomassData.reward_for_kill(is_imago)
+	var reward := 0
+	var roster := victim.roster_data
+	if roster != null and roster.enemy_unit_data != null:
+		reward = roster.enemy_unit_data.biomass_reward
+	else:
+		var is_imago := roster != null and roster.is_imago
+		reward = BiomassData.reward_for_kill(is_imago)
 	GameState.biomass.add(reward)
 	_biomass_earned_this_fight += reward
 	_notify_biomass_from_combat_death(reward, victim)
@@ -406,7 +411,10 @@ func _spawn_unit(
 	# Always assign (including null) so melee/spear scene defaults don't stick on enemies.
 	unit.weapon = roster_data.weapon
 	unit.combat = roster_data.ensure_combat_profile()
-	unit.body_color = body_color * UnitStatsData.tint_for_tier(roster_data.power_tier)
+	if roster_data.enemy_unit_data != null:
+		unit.body_color = body_color
+	else:
+		unit.body_color = body_color * UnitStatsData.tint_for_tier(roster_data.power_tier)
 	unit.squad_index = squad_index
 	unit.died.connect(_on_unit_died.bind(is_player))
 	unit.health_changed.connect(_refresh_army_hp_hud)

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bitiwjylbmqwm"
-path="res://.godot/imported/umbrella.png-6352bcf09bee93df2b8727368205831a.ctex"
+path="res://.godot/imported/canopy.png-0d20d4517a86de263013126b1452335f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/units/enemies/umbrella/umbrella.png"
-dest_files=["res://.godot/imported/umbrella.png-6352bcf09bee93df2b8727368205831a.ctex"]
+source_file="res://assets/units/enemies/canopy/canopy.png"
+dest_files=["res://.godot/imported/canopy.png-0d20d4517a86de263013126b1452335f.ctex"]
 
 [params]
 

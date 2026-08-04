@@ -21,16 +21,16 @@ const _SNIPER_WEAPON := preload("res://assets/weapons/sniper/sniper.tres")
 const _MORTAR_WEAPON := preload("res://assets/weapons/mortar/mortar.tres")
 const _GIANT_HORN_WEAPON := preload("res://assets/weapons/giant_horn/giant_horn.tres")
 
-const _GRUNT_ENEMY := preload("res://assets/units/enemies/grunt/grunt_unit.tres")
-const _PIKER_ENEMY := preload("res://assets/units/enemies/piker/piker_unit.tres")
-const _ARCHER_ENEMY := preload("res://assets/units/enemies/archer/archer_unit.tres")
-const _BULWARK_ENEMY := preload("res://assets/units/enemies/bulwark/bulwark_unit.tres")
-const _CLEAVER_ENEMY := preload("res://assets/units/enemies/great_sword/great_sword_unit.tres")
-const _CRUSHER_ENEMY := preload("res://assets/units/enemies/giant_hammer/giant_hammer_unit.tres")
-const _BASTION_ENEMY := preload("res://assets/units/enemies/great_shield/great_shield_unit.tres")
-const _CANOPY_ENEMY := preload("res://assets/units/enemies/umbrella/umbrella_unit.tres")
-const _LOBBER_ENEMY := preload("res://assets/units/enemies/mortar/mortar_unit.tres")
-const _KNIGHT_ENEMY := preload("res://assets/units/enemies/knight/knight_unit.tres")
+const _SOLAR_SWORD_ENEMY := preload("res://assets/units/enemies/solar_sword/solar_sword_unit.tres")
+const _ROSE_THORN_ENEMY := preload("res://assets/units/enemies/rose_thorn/rose_thorn_unit.tres")
+const _PEASHOOTER_ENEMY := preload("res://assets/units/enemies/peashooter/peashooter_unit.tres")
+const _STUMP_ENEMY := preload("res://assets/units/enemies/stump/stump_unit.tres")
+const _SOLAR_CLEAVER_ENEMY := preload("res://assets/units/enemies/solar_cleaver/solar_cleaver_unit.tres")
+const _DURIAN_ENEMY := preload("res://assets/units/enemies/durian/durian_unit.tres")
+const _LOG_ENEMY := preload("res://assets/units/enemies/log/log_unit.tres")
+const _CANOPY_ENEMY := preload("res://assets/units/enemies/canopy/canopy_unit.tres")
+const _SEED_LOBBER_ENEMY := preload("res://assets/units/enemies/seed_lobber/seed_lobber_unit.tres")
+const _ACORN_KNIGHT_ENEMY := preload("res://assets/units/enemies/acorn_knight/acorn_knight_unit.tres")
 
 const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Sword", "weapon": _SWORD_WEAPON},
@@ -72,16 +72,16 @@ const _STRAIN_OPTIONS: Array[Dictionary] = [
 ]
 
 const _ENEMY_OPTIONS: Array[Dictionary] = [
-	{"name": "Grunt", "unit": _GRUNT_ENEMY},
-	{"name": "Piker", "unit": _PIKER_ENEMY},
-	{"name": "Archer", "unit": _ARCHER_ENEMY},
-	{"name": "Bulwark", "unit": _BULWARK_ENEMY},
-	{"name": "Cleaver", "unit": _CLEAVER_ENEMY},
-	{"name": "Crusher", "unit": _CRUSHER_ENEMY},
-	{"name": "Bastion", "unit": _BASTION_ENEMY},
+	{"name": "Solar Sword", "unit": _SOLAR_SWORD_ENEMY},
+	{"name": "Rose Thorn", "unit": _ROSE_THORN_ENEMY},
+	{"name": "Peashooter", "unit": _PEASHOOTER_ENEMY},
+	{"name": "Stump", "unit": _STUMP_ENEMY},
+	{"name": "Solar Cleaver", "unit": _SOLAR_CLEAVER_ENEMY},
+	{"name": "Durian", "unit": _DURIAN_ENEMY},
+	{"name": "Log", "unit": _LOG_ENEMY},
 	{"name": "Canopy", "unit": _CANOPY_ENEMY},
-	{"name": "Lobber", "unit": _LOBBER_ENEMY},
-	{"name": "Knight", "unit": _KNIGHT_ENEMY},
+	{"name": "Seed Lobber", "unit": _SEED_LOBBER_ENEMY},
+	{"name": "Acorn Knight", "unit": _ACORN_KNIGHT_ENEMY},
 ]
 
 @onready var _stage: Node2D = $CombatStage
@@ -144,65 +144,65 @@ func _wire_buttons() -> void:
 		_set_matchup(func() -> Array:
 			return [
 				[_make_unit(_BOW_WEAPON), _make_unit(_SPEAR_WEAPON), _make_unit(_SWORD_WEAPON)],
-				[_make_enemy(_ARCHER_ENEMY), _make_enemy(_PIKER_ENEMY), _make_enemy(_GRUNT_ENEMY)],
+				[_make_enemy(_PEASHOOTER_ENEMY), _make_enemy(_ROSE_THORN_ENEMY), _make_enemy(_SOLAR_SWORD_ENEMY)],
 			]
 		)
 	)
 	_add_button("3 Melee", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SWORD_WEAPON, 3), _make_enemies(_GRUNT_ENEMY, 3)]
+			return [_make_units(_SWORD_WEAPON, 3), _make_enemies(_SOLAR_SWORD_ENEMY, 3)]
 		)
 	)
 	_add_button("3 Spear", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SPEAR_WEAPON, 3), _make_enemies(_PIKER_ENEMY, 3)]
+			return [_make_units(_SPEAR_WEAPON, 3), _make_enemies(_ROSE_THORN_ENEMY, 3)]
 		)
 	)
 	_add_button("3 Bow", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_BOW_WEAPON, 3), _make_enemies(_ARCHER_ENEMY, 3)]
+			return [_make_units(_BOW_WEAPON, 3), _make_enemies(_PEASHOOTER_ENEMY, 3)]
 		)
 	)
-	_add_button("Melee vs Grunt", func() -> void:
+	_add_button("Melee vs Solar Sword", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SWORD_WEAPON, 1), _make_enemies(_GRUNT_ENEMY, 1)]
+			return [_make_units(_SWORD_WEAPON, 1), _make_enemies(_SOLAR_SWORD_ENEMY, 1)]
 		)
 	)
-	_add_button("Melee vs Piker", func() -> void:
+	_add_button("Melee vs Rose Thorn", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SWORD_WEAPON, 1), _make_enemies(_PIKER_ENEMY, 1)]
+			return [_make_units(_SWORD_WEAPON, 1), _make_enemies(_ROSE_THORN_ENEMY, 1)]
 		)
 	)
-	_add_button("Melee vs Archer", func() -> void:
+	_add_button("Melee vs Peashooter", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SWORD_WEAPON, 1), _make_enemies(_ARCHER_ENEMY, 1)]
+			return [_make_units(_SWORD_WEAPON, 1), _make_enemies(_PEASHOOTER_ENEMY, 1)]
 		)
 	)
-	_add_button("Spear vs Archer", func() -> void:
+	_add_button("Spear vs Peashooter", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SPEAR_WEAPON, 1), _make_enemies(_ARCHER_ENEMY, 1)]
+			return [_make_units(_SPEAR_WEAPON, 1), _make_enemies(_PEASHOOTER_ENEMY, 1)]
 		)
 	)
-	_add_button("Shield vs Grunt", func() -> void:
+	_add_button("Shield vs Solar Sword", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SHIELD_WEAPON, 1), _make_enemies(_GRUNT_ENEMY, 1)]
+			return [_make_units(_SHIELD_WEAPON, 1), _make_enemies(_SOLAR_SWORD_ENEMY, 1)]
 		)
 	)
-	_add_button("Shield vs Archer", func() -> void:
+	_add_button("Shield vs Peashooter", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SHIELD_WEAPON, 1), _make_enemies(_ARCHER_ENEMY, 1)]
+			return [_make_units(_SHIELD_WEAPON, 1), _make_enemies(_PEASHOOTER_ENEMY, 1)]
 		)
 	)
-	_add_button("Shield vs Bulwark", func() -> void:
+	_add_button("Shield vs Stump", func() -> void:
 		_set_matchup(func() -> Array:
-			return [_make_units(_SHIELD_WEAPON, 1), _make_enemies(_BULWARK_ENEMY, 1)]
+			return [_make_units(_SHIELD_WEAPON, 1), _make_enemies(_STUMP_ENEMY, 1)]
 		)
 	)
 	_add_button("9v9 Mixed", func() -> void:
 		_set_matchup(func() -> Array:
 			return [
 				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SWORD_WEAPON]),
-				_make_enemy_line([_ARCHER_ENEMY, _PIKER_ENEMY, _GRUNT_ENEMY]),
+				_make_enemy_line([_PEASHOOTER_ENEMY, _ROSE_THORN_ENEMY, _SOLAR_SWORD_ENEMY]),
 			]
 		)
 	)
@@ -210,7 +210,7 @@ func _wire_buttons() -> void:
 		_set_matchup(func() -> Array:
 			return [
 				_make_line([_BOW_WEAPON, _SPEAR_WEAPON, _SHIELD_WEAPON]),
-				_make_enemy_line([_ARCHER_ENEMY, _PIKER_ENEMY, _BULWARK_ENEMY]),
+				_make_enemy_line([_PEASHOOTER_ENEMY, _ROSE_THORN_ENEMY, _STUMP_ENEMY]),
 			]
 		)
 	)
@@ -261,7 +261,7 @@ func _selected_enemy(button: OptionButton) -> EnemyUnitData:
 	if index < 0 or index >= _ENEMY_OPTIONS.size():
 		index = button.selected
 	if index < 0 or index >= _ENEMY_OPTIONS.size():
-		return _GRUNT_ENEMY
+		return _SOLAR_SWORD_ENEMY
 	return _ENEMY_OPTIONS[index]["unit"] as EnemyUnitData
 
 
@@ -347,13 +347,8 @@ func _make_unit(weapon: WeaponData, strain: UnitStrain = null) -> RosterUnitData
 
 
 func _make_enemy(unit_data: EnemyUnitData) -> RosterUnitData:
-	var stats := UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON)
+	var stats := unit_data.make_stats() if unit_data != null else UnitStatsData.new()
 	var display_name := "Enemy"
 	if unit_data != null and not unit_data.display_name.is_empty():
 		display_name = unit_data.display_name
-	return RosterUnitData.create_enemy(
-		display_name,
-		stats,
-		unit_data,
-		UnitStatsData.PowerTier.COMMON
-	)
+	return RosterUnitData.create_enemy(display_name, stats, unit_data)

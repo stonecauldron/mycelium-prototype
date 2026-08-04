@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c0gskmmen7dp7"
-path="res://.godot/imported/archer.png-f796625cd4ffc5a9fbce34699744e81b.ctex"
+path="res://.godot/imported/peashooter.png-94fe1bf122f61dbc9784112df57819ee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/units/enemies/archer/archer.png"
-dest_files=["res://.godot/imported/archer.png-f796625cd4ffc5a9fbce34699744e81b.ctex"]
+source_file="res://assets/units/enemies/peashooter/peashooter.png"
+dest_files=["res://.godot/imported/peashooter.png-94fe1bf122f61dbc9784112df57819ee.ctex"]
 
 [params]
 

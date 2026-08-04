@@ -237,7 +237,10 @@ func _mount_appearance() -> void:
 
 func _held_weapon_for_appearance() -> WeaponData:
 	if roster_data != null and roster_data.enemy_unit_data != null:
-		return roster_data.enemy_unit_data.held_weapon
+		var enemy := roster_data.enemy_unit_data
+		if not enemy.show_held_weapon:
+			return null
+		return enemy.held_weapon
 	return weapon
 
 

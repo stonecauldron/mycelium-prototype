@@ -424,7 +424,7 @@ func _make_harvest_units(
 	pending_stat_bonus: int
 ) -> Array[RosterUnitData]:
 	var units: Array[RosterUnitData] = []
-	var weapon := RiboforgeData.get_default_weapon()
+	var weapon := WeaponSchool.sickle()
 	var unit_strain := spore.resolved_strain() if spore != null else null
 	var tier := UnitStatsData.PowerTier.COMMON
 	if spore != null and (unit_strain == null or unit_strain.use_power_tier):
@@ -473,6 +473,8 @@ func _make_harvest_units(
 			unit_strain,
 			tier
 		)
+		unit.weapon_trainings = []
+		unit.sync_weapon_from_trainings()
 		if force_amok:
 			unit.forced_engagement_stance = WeaponData.EngagementStance.PRESS_FORWARD
 		if unit_strain != null:

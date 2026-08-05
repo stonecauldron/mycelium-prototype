@@ -5,8 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://clt2ubxc7lo1c" path="res://assets/base/background/upper_lane.png" id="3_upper_lane"]
 [ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="4_lower_lane"]
 [ext_resource type="PackedScene" uid="uid://iwk60b5u7rf7" path="res://assets/combat/flag_bearer/flag_bearer_visual.tscn" id="5_u66j2"]
-[ext_resource type="PackedScene" path="res://assets/base/troop_selection/scout_bubble/scout_bubble.tscn" id="6_scout"]
-[ext_resource type="PackedScene" uid="uid://ccombatprogtrack1" path="res://assets/base/combat_progress_track/combat_progress_track.tscn" id="7_progress"]
+[ext_resource type="PackedScene" uid="uid://dxyk18fxa87f7" path="res://assets/base/troop_selection/scout_bubble/scout_bubble.tscn" id="6_scout"]
+[ext_resource type="PackedScene" uid="uid://k1npp5blvyao" path="res://assets/base/combat_progress_track/combat_progress_track.tscn" id="7_progress"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
@@ -54,10 +54,10 @@ layout_mode = 1
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 1222.0
-offset_top = 212.0
-offset_right = 1724.0
-offset_bottom = 573.0
+offset_left = 1380.0
+offset_top = 200.0
+offset_right = 1882.0
+offset_bottom = 561.0
 grow_horizontal = 1
 grow_vertical = 1
 
@@ -77,24 +77,54 @@ theme_override_constants/separation = 8
 [node name="Header" type="Label" parent="HeaderBlock" unique_id=1708698391]
 layout_mode = 2
 size_flags_horizontal = 4
-mouse_filter = 2
 theme_type_variation = &"PageTitleLabel"
 theme_override_font_sizes/font_size = 52
 text = "War Chamber"
 
-[node name="CombatProgressTrack" parent="HeaderBlock" instance=ExtResource("7_progress")]
-layout_mode = 2
+[node name="CombatProgressTrack" parent="HeaderBlock" unique_id=1173882520 instance=ExtResource("7_progress")]
 size_flags_horizontal = 4
+
+[node name="CocoonPanel" type="PanelContainer" parent="." unique_id=26021277]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -325.0
+offset_top = 216.0
+offset_right = 300.0
+offset_bottom = 536.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
+
+[node name="CocoonMargin" type="MarginContainer" parent="CocoonPanel" unique_id=309864513]
+layout_mode = 2
+theme_type_variation = &"PanelInnerMargin"
+
+[node name="CocoonVBox" type="VBoxContainer" parent="CocoonPanel/CocoonMargin" unique_id=920397991]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CocoonTitle" type="Label" parent="CocoonPanel/CocoonMargin/CocoonVBox" unique_id=700392347]
+layout_mode = 2
+theme_type_variation = &"SectionTitleLabel"
+text = "Cocoons"
+
+[node name="CocoonRow" type="HBoxContainer" parent="CocoonPanel/CocoonMargin/CocoonVBox" unique_id=201677009]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+theme_type_variation = &"SlotRow"
+alignment = 1
 
 [node name="BenchPanel" type="PanelContainer" parent="." unique_id=710296817]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-offset_left = 16.0
-offset_top = 216.0
-offset_right = -16.0
-offset_bottom = 448.0
+offset_left = 11.0
+offset_top = 200.0
+offset_right = -1285.0
+offset_bottom = 462.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="BenchMargin" type="MarginContainer" parent="BenchPanel" unique_id=878538865]
@@ -122,10 +152,10 @@ unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-offset_left = 16.0
-offset_top = 567.0
-offset_right = -16.0
-offset_bottom = 889.0
+offset_left = 12.0
+offset_top = 596.0
+offset_right = -20.0
+offset_bottom = 918.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="SquadMargin" type="MarginContainer" parent="SquadPanel" unique_id=1251518974]

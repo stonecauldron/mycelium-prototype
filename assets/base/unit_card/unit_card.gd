@@ -201,6 +201,9 @@ func _refresh_portrait(data: RosterUnitData) -> void:
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	if unit_data == null:
 		return null
+	# Cocoon: click to cancel; no drag.
+	if source == "cocoon":
+		return null
 	# Riboforge: drag unequips non-default weapons onto the stock panel.
 	if source == "riboforge_squad":
 		var roster := unit_data as RosterUnitData

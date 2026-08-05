@@ -66,7 +66,24 @@ static func add_unit_became_imago(unit: RosterUnitData) -> void:
 	if unit == null:
 		return
 	entries.append({
-		"text": "%s has matured (+2 all STATS)." % unit.display_name,
+		"text": "%s has matured (+1 all STATS)." % unit.display_name,
+		"formation_line": int(unit.get_formation_line()),
+		"unit": unit,
+	})
+
+
+static func add_unit_emerged_from_pupation(unit: RosterUnitData, school: int) -> void:
+	if unit == null:
+		return
+	var weapon_name := "a new form"
+	if unit.weapon != null and not unit.weapon.display_name.is_empty():
+		weapon_name = unit.weapon.display_name
+	entries.append({
+		"text": "%s emerged with %s (%s training)." % [
+			unit.display_name,
+			weapon_name,
+			WeaponSchool.display_name(school),
+		],
 		"formation_line": int(unit.get_formation_line()),
 		"unit": unit,
 	})

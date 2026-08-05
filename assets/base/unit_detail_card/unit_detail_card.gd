@@ -160,7 +160,12 @@ func _refresh_strain_meta() -> void:
 
 
 func _refresh_tags() -> void:
-	_stage_tag.set_text("Adult" if unit_data.is_imago else "Child")
+	if unit_data.is_fully_evolved():
+		_stage_tag.set_text("Evolved")
+	elif unit_data.is_imago:
+		_stage_tag.set_text("Adult")
+	else:
+		_stage_tag.set_text("Child")
 	_tier_tag.set_text(UnitStatsData.label_for_tier(unit_data.power_tier))
 	_tier_tag.set_fill_color(UnitStatsData.tint_for_tier(unit_data.power_tier))
 

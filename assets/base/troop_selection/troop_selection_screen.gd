@@ -5,6 +5,8 @@ const SQUAD_SLOT_COUNT := TroopData.SQUAD_SLOT_COUNT
 const BENCH_SLOT_COUNT := TroopData.BENCH_SLOT_COUNT
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
+const _COCOON_SLOT_SCENE := preload("res://assets/base/pupation/cocoon_slot.tscn")
+const _PUPATION_CONFIRM_SCENE := preload("res://assets/base/pupation/pupation_confirm_dialog.tscn")
 const _SWORD_WEAPON := preload("res://assets/weapons/sword/sword.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/spear/spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/bow/bow.tres")
@@ -15,16 +17,20 @@ var squad: Array = []
 @onready var _squad_rows: VBoxContainer = %SquadRows
 @onready var _bench_grid: HBoxContainer = %BenchGrid
 @onready var _bench_panel: PanelContainer = %BenchPanel
+@onready var _cocoon_row: HBoxContainer = %CocoonRow
 @onready var _scout_bubble: ScoutBubble = %ScoutBubble
 
 var _squad_slots: Array[DropSlot] = []
 var _bench_slots: Array[DropSlot] = []
+var _cocoon_slots: Array = []
+var _pupation_dialog: PupationConfirmDialog = null
 
 
 func _ready() -> void:
 	_hydrate_from_troop_data()
 	_build_squad_ui()
 	_build_bench_ui()
+	_build_cocoon_ui()
 	_sync_all_slots()
 	_bench_panel.set_drag_forwarding(Callable(), _bench_can_drop, _bench_drop)
 	_set_bench_structure_mouse_ignore()
@@ -90,6 +96,22 @@ func _build_bench_ui() -> void:
 		slot.unit_dropped.connect(_on_unit_dropped.bind("bench"))
 		_bench_grid.add_child(slot)
 		_bench_slots.append(slot)
+
+
+func _build_cocoon_ui() -> void:
+	if _cocoon_row == null:
+		return
+	for child in _cocoon_row.get_children():
+		child.queue_free()
+	_cocoon_slots.clear()
+	for school in WeaponSchool.COUNT:
+		var slot := _COCOON_SLOT_SCENE.instantiate() as CocoonSlot
+		if slot == null:
+			continue
+		slot.school = school
+		slot.unit_dropped_on_cocoon.connect(_on_cocoon_drop)
+		_cocoon_row.add_child(slot)
+		_cocoon_slots.append(slot)
 
 
 func _make_default_starters() -> Array[RosterUnitData]:
@@ -198,11 +220,52 @@ func _bench_drop(_at_position: Vector2, data: Variant) -> void:
 
 
 func _sync_all_slots() -> void:
+	bench = GameState.troop.bench
+	squad = GameState.troop.squad
 	for slot in _squad_slots:
 		_sync_slot_card(slot, "squad")
 	for slot in _bench_slots:
 		_sync_slot_card(slot, "bench")
+	for slot in _cocoon_slots:
+		slot.sync_from_state()
 	_notify_start_combat_state()
+
+
+func _on_cocoon_drop(slot: CocoonSlot, drag_data: Dictionary) -> void:
+	var unit := drag_data.get("unit") as RosterUnitData
+	if unit == null or slot == null:
+		return
+	if _pupation_dialog != null and is_instance_valid(_pupation_dialog):
+		return
+	if not GameState.can_seal_for_pupation(unit, slot.school):
+		return
+	_open_pupation_confirm(unit, slot.school)
+
+
+func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
+	var dialog: PupationConfirmDialog = _PUPATION_CONFIRM_SCENE.instantiate()
+	_pupation_dialog = dialog
+	dialog.confirmed.connect(_on_pupation_confirmed)
+	dialog.tree_exited.connect(_on_pupation_dialog_closed)
+	add_child(dialog)
+	dialog.setup(unit, school)
+
+
+func _on_pupation_confirmed(unit: RosterUnitData, school: int) -> void:
+	_pupation_dialog = null
+	if GameState.try_seal_for_pupation(unit, school):
+		_sync_all_slots()
+		_refresh_base_hud()
+
+
+func _on_pupation_dialog_closed() -> void:
+	_pupation_dialog = null
+
+
+func _refresh_base_hud() -> void:
+	var base := get_tree().current_scene
+	if base != null and base.has_method("_refresh_hud"):
+		base._refresh_hud()
 
 
 func _sync_slot_card(slot: DropSlot, source: String) -> void:

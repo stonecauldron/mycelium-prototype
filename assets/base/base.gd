@@ -3,9 +3,9 @@ extends Node2D
 enum TabId { COLONY, NURSERY, RIBOFORGE }
 
 ## Left-to-right world order; matches zone positions on X.
+## Riboforge is kept in the scene/codebase but hidden from nav (pupation owns loadouts).
 const TAB_DEFS := [
 	{"id": TabId.NURSERY, "label": "Nursery"},
-	{"id": TabId.RIBOFORGE, "label": "Riboforge"},
 	{"id": TabId.COLONY, "label": "War Chamber"},
 ]
 
@@ -49,9 +49,9 @@ func _ready() -> void:
 	set_start_combat_enabled(_colony_screen.can_start_combat())
 	_ensure_start_arrow()
 	var initial := TabId.COLONY
-	if GameState.consume_prefer_riboforge_tab():
-		initial = TabId.RIBOFORGE
-	elif GameState.consume_prefer_nursery_tab():
+	# prefer_riboforge_tab ignored while Riboforge tab is hidden.
+	GameState.consume_prefer_riboforge_tab()
+	if GameState.consume_prefer_nursery_tab():
 		initial = TabId.NURSERY
 	_select_tab(initial, true)
 
@@ -176,7 +176,7 @@ func _is_tab_visible(tab_id: TabId) -> bool:
 		TabId.NURSERY:
 			return GameState.is_nursery_unlocked()
 		TabId.RIBOFORGE:
-			return GameState.is_riboforge_unlocked()
+			return false
 		_:
 			return true
 

@@ -2,7 +2,7 @@ class_name TroopData
 extends Resource
 
 const SQUAD_SLOT_COUNT := 10
-const BENCH_SLOT_COUNT := 5
+const BENCH_SLOT_COUNT := 4
 
 @export var bench: Array = []
 @export var squad: Array = []
@@ -70,6 +70,10 @@ func get_squad_roster() -> Array[RosterUnitData]:
 
 func squad_unit_count() -> int:
 	return get_squad_roster().size()
+
+
+func living_unit_count() -> int:
+	return _iter_living_units().size()
 
 
 func remove_unit(unit_data: RosterUnitData) -> void:

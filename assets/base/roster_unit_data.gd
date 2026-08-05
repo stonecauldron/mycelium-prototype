@@ -1,7 +1,8 @@
 class_name RosterUnitData
 extends Resource
 
-const IMAGO_STAT_BONUS := 2
+## Natural (untrained) imago maturity bonus per stat.
+const IMAGO_STAT_BONUS := 1
 const _DEFAULT_STRAIN_PATH := "res://assets/units/generalist/generalist_strain.tres"
 const NO_LIFE_EXPECTANCY := -1
 
@@ -15,6 +16,8 @@ const NO_LIFE_EXPECTANCY := -1
 @export var days_alive: int = 0
 @export var life_stage_id: StringName = &"juvenile"
 @export var is_imago: bool = false
+## Ordered weapon-school trainings (0–2). Lookup treats as unordered multiset.
+@export var weapon_trainings: Array[int] = []
 ## -1 = no age-out death.
 @export var max_days_alive: int = NO_LIFE_EXPECTANCY
 ## Banked biomass for Piñata-style strains.
@@ -69,8 +72,16 @@ func call_combat_effect(method_name: StringName, args: Array = []) -> void:
 		enemy_unit_data.call_effect(method_name, args)
 
 
+func is_fully_evolved() -> bool:
+	return life_stage_id == UnitStrain.STAGE_FULLY_EVOLVED
+
+
+func is_adult_stage() -> bool:
+	return is_imago or is_fully_evolved()
+
+
 func can_promote_to_imago() -> bool:
-	if is_imago or strain == null:
+	if is_imago or is_fully_evolved() or strain == null:
 		return false
 	return days_alive >= strain.days_to_imago
 
@@ -79,10 +90,11 @@ func has_exceeded_life_expectancy() -> bool:
 	return max_days_alive >= 0 and days_alive > max_days_alive
 
 
-func promote_to_imago() -> bool:
-	if is_imago:
+## Natural age / imago-harvest promotion. Applies +1-all (+ strain delta) and Scythe if untrained.
+func promote_to_imago(apply_maturity_stats: bool = true) -> bool:
+	if is_imago or is_fully_evolved():
 		return false
-	if stats != null:
+	if apply_maturity_stats and stats != null:
 		stats.strength = clampi(stats.strength + IMAGO_STAT_BONUS, 1, 99)
 		stats.dex = clampi(stats.dex + IMAGO_STAT_BONUS, 1, 99)
 		stats.con = clampi(stats.con + IMAGO_STAT_BONUS, 1, 99)
@@ -95,8 +107,53 @@ func promote_to_imago() -> bool:
 			stats.spd = clampi(stats.spd + d, 1, 99)
 	life_stage_id = UnitStrain.STAGE_IMAGO
 	is_imago = true
+	sync_weapon_from_trainings()
 	if strain != null:
 		strain.call_effect(&"on_imago", [self])
+	return true
+
+
+func promote_to_fully_evolved() -> bool:
+	if is_fully_evolved():
+		return false
+	life_stage_id = UnitStrain.STAGE_FULLY_EVOLVED
+	is_imago = true
+	return true
+
+
+func can_pupate() -> bool:
+	if enemy_unit_data != null:
+		return false
+	if is_fully_evolved():
+		return false
+	if life_stage_id == UnitStrain.STAGE_JUVENILE:
+		return weapon_trainings.size() < 2
+	if life_stage_id == UnitStrain.STAGE_IMAGO:
+		return weapon_trainings.size() < 2
+	return false
+
+
+func sync_weapon_from_trainings() -> void:
+	if enemy_unit_data != null:
+		return
+	weapon = WeaponSchool.resolve_weapon(weapon_trainings, is_adult_stage())
+	ensure_combat_profile()
+
+
+## Apply one school training from pupation emerge. Returns false if illegal.
+func apply_pupation_training(school: int) -> bool:
+	if not can_pupate():
+		return false
+	if school < 0 or school >= WeaponSchool.COUNT:
+		return false
+	var was_juvenile := life_stage_id == UnitStrain.STAGE_JUVENILE
+	WeaponSchool.apply_school_stats(stats, school)
+	weapon_trainings.append(school)
+	if was_juvenile:
+		promote_to_imago(false)
+	else:
+		promote_to_fully_evolved()
+		sync_weapon_from_trainings()
 	return true
 
 
@@ -183,6 +240,7 @@ static func create(
 	data.days_alive = 0
 	data.life_stage_id = UnitStrain.STAGE_JUVENILE
 	data.is_imago = false
+	data.weapon_trainings = []
 	if data.strain != null:
 		data.max_days_alive = data.strain.roll_max_days_alive()
 	return data
@@ -205,6 +263,7 @@ static func create_enemy(
 	data.days_alive = 0
 	data.life_stage_id = &""
 	data.is_imago = false
+	data.weapon_trainings = []
 	data.max_days_alive = NO_LIFE_EXPECTANCY
 	return data
 

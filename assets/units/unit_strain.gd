@@ -3,6 +3,7 @@ extends Resource
 
 const STAGE_JUVENILE := &"juvenile"
 const STAGE_IMAGO := &"imago"
+const STAGE_FULLY_EVOLVED := &"fully_evolved"
 const JUVENILE_SCALE_FALLBACK := 0.8
 const NO_LIFE_EXPECTANCY := -1
 
@@ -21,7 +22,7 @@ const NO_LIFE_EXPECTANCY := -1
 @export var spd_delta: int = 0
 ## Multiplies the rolled hatch stats (e.g. Magikarp 0.25). Applied before deltas.
 @export_range(0.0, 4.0, 0.01) var hatch_stat_fraction: float = 1.0
-## Extra flat bonus applied on imago promotion (after global +2).
+## Extra flat bonus applied on natural imago promotion (after global maturity bonus).
 @export var imago_stat_delta: int = 0
 ## Inclusive range rolled at hatch into RosterUnitData.max_days_alive. -1 = no limit.
 @export var life_expectancy_min: int = NO_LIFE_EXPECTANCY
@@ -58,6 +59,8 @@ func stage_after(stage_id: StringName) -> StrainLifeStage:
 func instantiate_appearance(stage_id: StringName = STAGE_JUVENILE) -> UnitAppearance:
 	var used_fallback_scale := false
 	var scene := appearance_for(stage_id)
+	if scene == null and stage_id == STAGE_FULLY_EVOLVED:
+		scene = appearance_for(STAGE_IMAGO)
 	if scene == null and stage_id == STAGE_JUVENILE:
 		scene = appearance_for(STAGE_IMAGO)
 		used_fallback_scale = scene != null

@@ -579,9 +579,7 @@ func _check_battle_end() -> void:
 	if GameState.current_day == GameState.NURSERY_UNLOCK_DAY:
 		GameState.prefer_nursery_tab = true
 		DaySummaryFeed.add_base_unlock("Nursery")
-	if GameState.current_day == GameState.RIBOFORGE_UNLOCK_DAY:
-		GameState.prefer_riboforge_tab = true
-		DaySummaryFeed.add_base_unlock("Riboforge")
+	# Riboforge remains in codebase but is hidden from base nav; no unlock toast.
 	if _biomass_earned_this_fight > 0:
 		DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)
 	for unit in _fallen_units:
@@ -589,6 +587,12 @@ func _check_battle_end() -> void:
 	var grown := GameState.troop.advance_unit_ages()
 	for unit in grown:
 		DaySummaryFeed.add_unit_became_imago(unit)
+	var emerged := GameState.emerge_pupations()
+	for entry in emerged:
+		DaySummaryFeed.add_unit_emerged_from_pupation(
+			entry.get("unit") as RosterUnitData,
+			int(entry.get("school", 0))
+		)
 	var matured := GameState.nursery.advance_day()
 	for entry in matured:
 		DaySummaryFeed.add_nursery_matured(

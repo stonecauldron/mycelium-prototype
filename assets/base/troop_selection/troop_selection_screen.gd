@@ -7,9 +7,7 @@ const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _COCOON_SLOT_SCENE := preload("res://assets/base/pupation/cocoon_slot.tscn")
 const _PUPATION_CONFIRM_SCENE := preload("res://assets/base/pupation/pupation_confirm_dialog.tscn")
-const _SWORD_WEAPON := preload("res://assets/weapons/sword/sword.tres")
-const _SPEAR_WEAPON := preload("res://assets/weapons/spear/spear.tres")
-const _BOW_WEAPON := preload("res://assets/weapons/bow/bow.tres")
+const _STARTER_CHOICE_SCENE := preload("res://assets/base/troop_selection/starter_choice_dialog.tscn")
 
 var bench: Array = []
 var squad: Array = []
@@ -24,6 +22,7 @@ var _squad_slots: Array[DropSlot] = []
 var _bench_slots: Array[DropSlot] = []
 var _cocoon_slots: Array = []
 var _pupation_dialog: PupationConfirmDialog = null
+var _starter_dialog: StarterChoiceDialog = null
 
 
 func _ready() -> void:
@@ -37,6 +36,7 @@ func _ready() -> void:
 	if _scout_bubble != null:
 		_scout_bubble.refresh()
 	_notify_start_combat_state()
+	_ensure_starter_choice()
 
 
 func on_screen_shown() -> void:
@@ -44,11 +44,10 @@ func on_screen_shown() -> void:
 	if _scout_bubble != null:
 		_scout_bubble.refresh()
 	_notify_start_combat_state()
+	_ensure_starter_choice()
 
 
 func _hydrate_from_troop_data() -> void:
-	if not GameState.troop.is_seeded():
-		GameState.troop.seed_if_empty(_make_default_starters())
 	bench = GameState.troop.bench
 	squad = GameState.troop.squad
 
@@ -114,25 +113,45 @@ func _build_cocoon_ui() -> void:
 		_cocoon_slots.append(slot)
 
 
-func _make_default_starters() -> Array[RosterUnitData]:
-	var names := UnitNames.pick_unique(3)
-	var weapons: Array[WeaponData] = [_BOW_WEAPON, _SPEAR_WEAPON, _SWORD_WEAPON]
-	var units: Array[RosterUnitData] = []
-	for i in names.size():
-		units.append(_make_unit(names[i], UnitStatsData.PowerTier.COMMON, weapons[i]))
-	return units
+func _ensure_starter_choice() -> void:
+	if GameState.troop.is_seeded():
+		return
+	if _starter_dialog != null and is_instance_valid(_starter_dialog):
+		return
+	var dialog: StarterChoiceDialog = _STARTER_CHOICE_SCENE.instantiate()
+	_starter_dialog = dialog
+	dialog.package_chosen.connect(_on_starter_package_chosen)
+	dialog.tree_exited.connect(_on_starter_dialog_closed)
+	# Parent into HudRoot so the modal stacks above the biomass chip / top bar.
+	var hud := _hud_root()
+	if hud != null:
+		dialog.z_index = 100
+		hud.add_child(dialog)
+	else:
+		add_child(dialog)
 
 
-func _make_unit(
-	unit_name: String,
-	tier: UnitStatsData.PowerTier,
-	weapon: WeaponData,
-	strain: UnitStrain = null
-) -> RosterUnitData:
-	var stats := UnitStatsData.create_for_tier(tier)
-	if strain != null:
-		strain.apply_hatch_stats(stats)
-	return RosterUnitData.create(unit_name, stats, weapon, strain, tier)
+func _hud_root() -> Control:
+	var base := get_tree().current_scene
+	if base == null:
+		return null
+	return base.get_node_or_null("HudLayer/HudRoot") as Control
+
+
+func _on_starter_package_chosen(package_id: StringName) -> void:
+	_starter_dialog = null
+	var units := StarterPackages.build_units(package_id)
+	GameState.troop.seed_if_empty(units)
+	bench = GameState.troop.bench
+	squad = GameState.troop.squad
+	_sync_all_slots()
+
+
+func _on_starter_dialog_closed() -> void:
+	_starter_dialog = null
+	if not GameState.troop.is_seeded():
+		# Recreate if closed without a choice (should not happen for blocking dialog).
+		call_deferred("_ensure_starter_choice")
 
 
 func _row(source: String) -> Array:

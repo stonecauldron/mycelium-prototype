@@ -33,7 +33,7 @@ On tab select, call the destination's `on_screen_shown()` / HUD refresh at **tra
 - Scout UI lives in `scout_bubble/scout_bubble.tscn` (`ScoutBubble`); it fills `GameState.upcoming_enemy_formation`. Roster build reads that array (combat via `BattleLaunch`). Scout reroll costs `BiomassData.SCOUT_REROLL_COST` and bias-picks a different difficulty (scored from authored average stats) — **disabled on elite days**.
 - Every 5th battle is elite (`GameState.is_elite_day`: days 5 and 10): harder procedural band (more units), seeded by `GameState.run_seed` + day. No scout reroll; skull hover on the base progression track previews that elite army in the scout bubble.
 - War Chamber header (under the title) shows `CombatProgressTrack`: current 5-battle chapter (4 circles + elite skull) with a marker under the upcoming day.
-- Days 1–2 are Solar Sword-only (`min_day` gates other types); day 3 unlocks Rose Thorn/Peashooter/Stump; day 4+ can include Solar Cleaver/Durian/Log/Canopy/Seed Lobber/Acorn Knight. Day curve scales unit count only. Initial player troop / `_make_default_starters()`: one melee, one bow, one spear (common tier).
+- Days 1–2 are Solar Sword-only (`min_day` gates other types); day 3 unlocks Rose Thorn/Peashooter/Stump; day 4+ can include Solar Cleaver/Durian/Log/Canopy/Seed Lobber/Acorn Knight. Day curve scales unit count only. Initial player troop: blocking War Chamber package pick (`StarterPackages` / `StarterChoiceDialog`) — one Evolved (dual-trained combo) + one Adult (single-school base weapon), common tier.
 
 ## Cursor Cloud specific instructions
 

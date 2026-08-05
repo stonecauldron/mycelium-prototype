@@ -63,6 +63,7 @@ func available_fighter_count() -> int:
 	return troop.living_unit_count()
 
 
+## Eligibility to open the pupation confirm (funds checked separately on confirm).
 func can_seal_for_pupation(unit: RosterUnitData, school: int) -> bool:
 	if unit == null or school < 0 or school >= WeaponSchool.COUNT:
 		return false
@@ -71,8 +72,6 @@ func can_seal_for_pupation(unit: RosterUnitData, school: int) -> bool:
 	if pupation.is_school_filled(school):
 		return false
 	if pupation.find_school_for_unit(unit) >= 0:
-		return false
-	if not biomass.can_afford(WeaponSchool.SEAL_COST):
 		return false
 	# Must leave at least one fighter after removing this unit from troop.
 	if available_fighter_count() <= 1:
@@ -83,6 +82,8 @@ func can_seal_for_pupation(unit: RosterUnitData, school: int) -> bool:
 ## Seal unit into a school cocoon (spend biomass, remove from troop).
 func try_seal_for_pupation(unit: RosterUnitData, school: int) -> bool:
 	if not can_seal_for_pupation(unit, school):
+		return false
+	if not biomass.can_afford(WeaponSchool.SEAL_COST):
 		return false
 	if not biomass.try_spend(WeaponSchool.SEAL_COST):
 		return false

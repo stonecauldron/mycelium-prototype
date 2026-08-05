@@ -94,6 +94,7 @@ func _refresh() -> void:
 	var can_afford := GameState.biomass.can_afford(WeaponSchool.SEAL_COST)
 	_confirm_button.text = "%d  Confirm" % WeaponSchool.SEAL_COST
 	_confirm_button.disabled = not can_afford
+	_confirm_button.modulate = Color.WHITE if can_afford else Color(0.55, 0.55, 0.55, 1)
 
 
 func _refresh_duration_chip() -> void:
@@ -224,6 +225,8 @@ func _on_cancel_pressed() -> void:
 
 func _on_confirm_pressed() -> void:
 	if _unit == null:
+		return
+	if not GameState.biomass.can_afford(WeaponSchool.SEAL_COST):
 		return
 	confirmed.emit(_unit, _school)
 	queue_free()

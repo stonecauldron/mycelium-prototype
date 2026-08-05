@@ -83,7 +83,27 @@ static func build_units(package_id: StringName) -> Array[RosterUnitData]:
 		units.append(evolved)
 	if adult != null:
 		units.append(adult)
+	units.sort_custom(_compare_by_range_class)
 	return units
+
+
+## Squad slot order: ranged, mid, melee.
+static func _compare_by_range_class(a: RosterUnitData, b: RosterUnitData) -> bool:
+	return _range_sort_key(a) < _range_sort_key(b)
+
+
+static func _range_sort_key(unit: RosterUnitData) -> int:
+	if unit == null or unit.weapon == null:
+		return 99
+	match unit.weapon.formation_line:
+		WeaponData.FormationLine.BACK:
+			return 0
+		WeaponData.FormationLine.MID:
+			return 1
+		WeaponData.FormationLine.FRONT:
+			return 2
+		_:
+			return 99
 
 
 static func _make_adult(unit_name: String, school: int) -> RosterUnitData:

@@ -32,7 +32,6 @@ icon = ExtResource("3_icon")
 appearance_scene = ExtResource("4_appear")
 combat = SubResource("Combat_log")
 held_weapon = ExtResource("5_held")
-show_held_weapon = false
 biomass_reward = 6
 stats = SubResource("Stats_log")
 min_day = 4

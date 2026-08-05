@@ -20,7 +20,7 @@ static func display_name(package_id: StringName) -> String:
 		&"great_sword_spear":
 			return "Frontliners"
 		&"sniper_shield":
-			return "Long-range Deah"
+			return "Long-range Death"
 		&"halberd_sword":
 			return "Pikes"
 		&"great_shield_bow":

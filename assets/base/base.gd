@@ -54,6 +54,7 @@ func _ready() -> void:
 	if GameState.consume_prefer_nursery_tab():
 		initial = TabId.NURSERY
 	_select_tab(initial, true)
+	_colony_screen.ensure_pending_modals()
 
 
 func _on_debug_cheats_applied() -> void:
@@ -62,6 +63,7 @@ func _on_debug_cheats_applied() -> void:
 	_update_tab_visuals()
 	if _current_screen != null:
 		_current_screen.on_screen_shown()
+	_colony_screen.ensure_pending_modals()
 	_refresh_hud()
 
 
@@ -71,10 +73,14 @@ func _on_debug_advance_day_pressed() -> void:
 	_update_tab_visuals()
 	if _current_screen != null:
 		_current_screen.on_screen_shown()
+	_colony_screen.ensure_pending_modals()
 	_refresh_hud()
 
 
 func _on_start_combat_pressed() -> void:
+	if GameState.pending_seal_choice:
+		_colony_screen.ensure_pending_modals()
+		return
 	GameState.show_start_combat_hint = false
 	if _start_arrow != null:
 		_start_arrow.hide_arrow()

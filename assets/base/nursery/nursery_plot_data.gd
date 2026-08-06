@@ -22,7 +22,9 @@ func can_harvest() -> bool:
 
 func can_apply_fertilizer() -> bool:
 	var state := get_state()
-	return state == State.EMPTY or state == State.GROWING
+	if state != State.EMPTY and state != State.GROWING:
+		return false
+	return applied_fertilizers.size() < SealModifiers.max_fertilizer_stacks()
 
 
 func will_harvest_as_imago() -> bool:
@@ -34,7 +36,7 @@ func will_harvest_as_imago() -> bool:
 func days_to_mature_effective() -> int:
 	if planted_spore == null:
 		return 1
-	var base_days := maxi(planted_spore.days_to_mature, 0)
+	var base_days := maxi(planted_spore.days_to_mature - SealModifiers.greenhouse_day_reduction(), 0)
 	if has_behavior(FertilizerData.Behavior.SLOW_STEADY):
 		return maxi(base_days * 2, 0)
 	return base_days
@@ -93,6 +95,10 @@ func _apply_fungicide(fertilizer: FertilizerData) -> bool:
 	for fert in applied_fertilizers:
 		if fert != null and fert.behavior == FertilizerData.Behavior.FUNGICIDE:
 			kept.append(fert)
+	# Cap still applies: fungicide markers + new fungicide must fit max stacks.
+	var max_stacks := SealModifiers.max_fertilizer_stacks()
+	while kept.size() >= max_stacks and not kept.is_empty():
+		kept.pop_front()
 	applied_fertilizers.clear()
 	applied_fertilizers.append_array(kept)
 	applied_fertilizers.append(fertilizer)

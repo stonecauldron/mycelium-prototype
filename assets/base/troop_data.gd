@@ -72,6 +72,33 @@ func squad_unit_count() -> int:
 	return get_squad_roster().size()
 
 
+## Lowest occupied squad index (nearest flag / rearmost).
+func get_rearmost_squad_unit() -> RosterUnitData:
+	for entry in squad:
+		var unit := entry as RosterUnitData
+		if unit != null:
+			return unit
+	return null
+
+
+## Highest occupied squad index (frontmost).
+func get_frontmost_squad_unit() -> RosterUnitData:
+	var front: RosterUnitData = null
+	for entry in squad:
+		var unit := entry as RosterUnitData
+		if unit != null:
+			front = unit
+	return front
+
+
+func is_rearmost_squad_unit(unit: RosterUnitData) -> bool:
+	return unit != null and unit == get_rearmost_squad_unit()
+
+
+func is_frontmost_squad_unit(unit: RosterUnitData) -> bool:
+	return unit != null and unit == get_frontmost_squad_unit()
+
+
 func living_unit_count() -> int:
 	return _iter_living_units().size()
 

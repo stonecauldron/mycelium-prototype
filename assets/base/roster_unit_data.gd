@@ -34,6 +34,8 @@ var emitted_death_spore: bool = false
 @export var forced_engagement_stance: int = -1
 ## Zombie Cap: true after the one-time combat respawn.
 @export var has_revived: bool = false
+## Favourite Child seal: permanent 1.5x ATK/HP from first hatch of a day.
+@export var favourite_child_buff: bool = false
 
 
 func resolve_combat_profile() -> CombatProfile:

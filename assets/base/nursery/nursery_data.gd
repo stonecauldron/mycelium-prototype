@@ -158,6 +158,19 @@ func reroll_unlocked_shop_offers() -> void:
 ## Day-start only: guarantee a Common Generalist among spore slots on day 2.
 func apply_day_start_shop_rules() -> void:
 	_ensure_day_two_common_generalist()
+	refresh_spore_offer_costs()
+
+
+## Recompute shop spore costs from current seals (e.g. Rotten Thumb).
+func refresh_spore_offer_costs() -> void:
+	_ensure_spore_shop()
+	for offer in spore_shop.offers:
+		if offer == null or offer.item == null:
+			continue
+		var spore := offer.item as SporeData
+		if spore == null:
+			continue
+		offer.cost = SealModifiers.spore_shop_cost(spore.biomass_cost)
 
 
 func replace_shop_slot(slot_index: int) -> void:
@@ -328,7 +341,8 @@ func _make_spore_offer_from_path(path: String) -> ShopOffer:
 	var spore := load(path) as SporeData
 	var offer := ShopOffer.new()
 	offer.item = spore
-	offer.cost = spore.biomass_cost if spore != null else BiomassData.COMMON_SPORE_COST
+	var base_cost := spore.biomass_cost if spore != null else BiomassData.COMMON_SPORE_COST
+	offer.cost = SealModifiers.spore_shop_cost(base_cost)
 	offer.locked = false
 	return offer
 
@@ -462,8 +476,22 @@ func harvest(plot_index: int) -> Array[RosterUnitData]:
 		for unit in result:
 			if unit != null:
 				unit.promote_to_imago()
+	_apply_favourite_child_if_first_hatch(result)
 	plot.clear()
 	return result
+
+
+func _apply_favourite_child_if_first_hatch(units: Array[RosterUnitData]) -> void:
+	if units.is_empty():
+		return
+	if not SealModifiers.favourite_child_owned():
+		return
+	if GameState.favourite_child_used_today:
+		return
+	GameState.favourite_child_used_today = true
+	for unit in units:
+		if unit != null:
+			unit.favourite_child_buff = true
 
 
 func _make_harvest_units(

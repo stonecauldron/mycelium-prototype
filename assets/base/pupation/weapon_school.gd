@@ -5,9 +5,9 @@ extends RefCounted
 enum Id { SWORD, SHIELD, SPEAR, BOW }
 
 const COUNT := 4
-const SEAL_COST := 3
-## Days sealed in a cocoon before emerge (day advances tick this down).
-const SEAL_DURATION_DAYS := 1
+const COCOON_COST := 3
+## Days in a cocoon before emerge (day advances tick this down).
+const COCOON_DURATION_DAYS := 1
 
 const _SICKLE_PATH := "res://assets/weapons/sickle/sickle.tres"
 const _SCYTHE_PATH := "res://assets/weapons/scythe/scythe.tres"
@@ -271,5 +271,5 @@ static func stage_display_name(stage_id: StringName) -> String:
 	return "Child"
 
 
-static func day_word(days: int = SEAL_DURATION_DAYS) -> String:
+static func day_word(days: int = COCOON_DURATION_DAYS) -> String:
 	return "day" if days == 1 else "days"

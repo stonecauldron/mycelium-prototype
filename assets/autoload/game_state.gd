@@ -13,6 +13,7 @@ var nursery: NurseryData = NurseryData.new()
 var riboforge: RiboforgeData = RiboforgeData.new()
 var pupation: PupationData = PupationData.new()
 var biomass: BiomassData = BiomassData.new()
+var seals: SealsCollection = SealsCollection.new()
 var current_day: int = 0
 ## Seeds deterministic enemy compositions for this run (scout matches combat).
 var run_seed: int = 0
@@ -34,10 +35,15 @@ var show_plot_plant_hint: bool = true
 var show_common_spore_shop_hint: bool = true
 ## Debug (~): cheats active — force base screens unlocked and show debug HUD.
 var debug_mode_active: bool = false
+## Mandatory seal pick waiting when returning to base (after days 2 / 5 / 8).
+var pending_seal_choice: bool = false
+## Favourite Child: first harvest of the current day already claimed.
+var favourite_child_used_today: bool = false
 
 
 func _ready() -> void:
 	_roll_run_seed()
+	begin_day()
 
 
 ## Debug (~): +100 biomass and unlock all base screens.
@@ -56,15 +62,31 @@ func debug_advance_day() -> void:
 	emerge_pupations()
 	nursery.advance_day()
 	refresh_shops_for_new_day()
+	begin_day()
+	maybe_queue_seal_choice()
 
 
-## Available fighters = living troop units (sealed units are already out of troop).
+## Day-start effects (Golden Mould, Favourite Child day flag). Call after day advances and on run start.
+func begin_day() -> void:
+	favourite_child_used_today = false
+	var mould := SealModifiers.golden_mould_biomass()
+	if mould > 0:
+		biomass.add(mould)
+
+
+func maybe_queue_seal_choice() -> void:
+	# After completing days 2 / 5 / 8 (one fight earlier than 3 / 6 / 9).
+	if current_day == 2 or current_day == 5 or current_day == 8:
+		pending_seal_choice = true
+
+
+## Available fighters = living troop units (cocooned units are already out of troop).
 func available_fighter_count() -> int:
 	return troop.living_unit_count()
 
 
 ## Eligibility to open the pupation confirm (funds checked separately on confirm).
-func can_seal_for_pupation(unit: RosterUnitData, school: int) -> bool:
+func can_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
 	if unit == null or school < 0 or school >= WeaponSchool.COUNT:
 		return false
 	if not unit.can_pupate():
@@ -79,35 +101,35 @@ func can_seal_for_pupation(unit: RosterUnitData, school: int) -> bool:
 	return true
 
 
-## Seal unit into a school cocoon (spend biomass, remove from troop).
-func try_seal_for_pupation(unit: RosterUnitData, school: int) -> bool:
-	if not can_seal_for_pupation(unit, school):
+## Cocoon a unit for school training (spend biomass, remove from troop).
+func try_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
+	if not can_cocoon_for_pupation(unit, school):
 		return false
-	if not biomass.can_afford(WeaponSchool.SEAL_COST):
+	if not biomass.can_afford(WeaponSchool.COCOON_COST):
 		return false
-	if not biomass.try_spend(WeaponSchool.SEAL_COST):
+	if not biomass.try_spend(WeaponSchool.COCOON_COST):
 		return false
 	troop.remove_unit(unit)
 	if not pupation.try_place(unit, school):
-		biomass.add(WeaponSchool.SEAL_COST)
+		biomass.add(WeaponSchool.COCOON_COST)
 		troop.try_add_unit(unit)
 		return false
 	return true
 
 
-## Cancel seal before day advance: refund biomass, return to squad-then-bench.
+## Cancel cocoon before day advance: refund biomass, return to squad-then-bench.
 func try_cancel_pupation(school: int) -> bool:
 	var unit := pupation.take_occupant(school)
 	if unit == null:
 		return false
-	biomass.add(WeaponSchool.SEAL_COST)
+	biomass.add(WeaponSchool.COCOON_COST)
 	if troop.try_add_unit(unit).is_empty():
 		# Should not happen with normal roster sizes; keep unit in a bench overflow sense.
 		push_warning("Pupation cancel: no troop slot for %s" % unit.display_name)
 	return true
 
 
-## Tick sealed cocoons and return units that finished pupation. Call after advance_unit_ages.
+## Tick cocoons and return units that finished pupation. Call after advance_unit_ages.
 func emerge_pupations() -> Array[Dictionary]:
 	var emerged := pupation.advance_day()
 	for entry in emerged:
@@ -116,6 +138,20 @@ func emerge_pupations() -> Array[Dictionary]:
 			continue
 		troop.try_add_unit(unit)
 	return emerged
+
+
+func try_add_seal(seal: SealData) -> bool:
+	if seal == null:
+		return false
+	if not seals.add(seal):
+		return false
+	ensure_nursery_seeded()
+	nursery.refresh_spore_offer_costs()
+	return true
+
+
+func clear_pending_seal_choice() -> void:
+	pending_seal_choice = false
 
 
 func get_upcoming_day() -> int:
@@ -215,7 +251,7 @@ func try_buy_common_spore() -> bool:
 	var spore := load(_COMMON_SPORE_PATH) as SporeData
 	if spore == null:
 		return false
-	return try_buy_spore(spore, BiomassData.COMMON_SPORE_COST)
+	return try_buy_spore(spore, SealModifiers.spore_shop_cost(BiomassData.COMMON_SPORE_COST))
 
 
 ## Buys into weapon stock. Returns the stock slot index, or -1 on failure.
@@ -353,6 +389,7 @@ func reset_run() -> void:
 	riboforge.reset()
 	pupation.reset()
 	biomass.reset()
+	seals.reset()
 	current_day = 0
 	prefer_nursery_tab = false
 	prefer_riboforge_tab = false
@@ -360,8 +397,11 @@ func reset_run() -> void:
 	show_plot_plant_hint = true
 	show_common_spore_shop_hint = true
 	debug_mode_active = false
+	pending_seal_choice = false
+	favourite_child_used_today = false
 	clear_upcoming_enemy_formation()
 	_roll_run_seed()
+	begin_day()
 
 
 func _roll_run_seed() -> void:

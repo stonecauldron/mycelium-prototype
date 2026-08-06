@@ -53,7 +53,7 @@ func find_school_for_unit(unit: RosterUnitData) -> int:
 	return -1
 
 
-func sealed_count() -> int:
+func cocooned_count() -> int:
 	_ensure_slots()
 	var n := 0
 	for entry in occupants:
@@ -68,7 +68,7 @@ func reset() -> void:
 	_ensure_slots()
 
 
-## Seal a unit into a school cocoon. Caller must have already removed them from troop
+## Place a unit into a school cocoon. Caller must have already removed them from troop
 ## and spent biomass. Returns false if slot full or args invalid.
 func try_place(unit: RosterUnitData, school: int) -> bool:
 	_ensure_slots()
@@ -79,7 +79,7 @@ func try_place(unit: RosterUnitData, school: int) -> bool:
 	if find_school_for_unit(unit) >= 0:
 		return false
 	occupants[school] = unit
-	days_remaining[school] = maxi(WeaponSchool.SEAL_DURATION_DAYS, 1)
+	days_remaining[school] = maxi(WeaponSchool.COCOON_DURATION_DAYS, 1)
 	return true
 
 

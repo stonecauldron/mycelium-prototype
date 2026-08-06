@@ -99,14 +99,8 @@ func _refresh() -> void:
 	var range_name: String = str(WeaponData.FORMATION_LINE_LABELS.get(data.get_formation_line(), "?"))
 	_weapon_label.text = "%s (%s)" % [weapon_name, range_name]
 	if data.stats != null:
-		var atk: int = data.stats.get_damage_bonus(data.get_damage_stat())
-		var outgoing_mult: float = 1.0
-		if data.weapon != null:
-			atk += data.weapon.base_damage
-			outgoing_mult = data.weapon.outgoing_damage_multiplier
-		atk = maxi(roundi(float(atk) * outgoing_mult), 1)
-		_atk_chip.set_value(atk)
-		_hp_chip.set_value(data.stats.get_max_hp())
+		_atk_chip.set_value(SealModifiers.effective_attack_damage(data))
+		_hp_chip.set_value(SealModifiers.effective_max_hp(data))
 	else:
 		_atk_chip.set_value("—")
 		_hp_chip.set_value("—")

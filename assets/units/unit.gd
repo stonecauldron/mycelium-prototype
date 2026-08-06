@@ -157,8 +157,8 @@ func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:
 	_cancel_attack()
 	stats = UnitStatsData.create_for_tier(tier)
 	process_tiebreak = randi()
-	current_hp = stats.get_max_hp()
-	health_changed.emit(current_hp, stats.get_max_hp())
+	current_hp = get_effective_max_hp()
+	health_changed.emit(current_hp, get_effective_max_hp())
 	_attack_timer = 0.0
 	_target = null
 	_combat_phase = CombatPhase.READY
@@ -182,8 +182,6 @@ func _ensure_combat_profile() -> void:
 
 
 func _initialize_runtime() -> void:
-	current_hp = stats.get_max_hp()
-	health_changed.emit(current_hp, stats.get_max_hp())
 	process_tiebreak = randi()
 	damage_dealt = 0
 	damage_taken = 0
@@ -193,6 +191,8 @@ func _initialize_runtime() -> void:
 	if _troop == null:
 		push_error("Unit must be a child of Troop/Units.")
 		return
+	current_hp = get_effective_max_hp()
+	health_changed.emit(current_hp, get_effective_max_hp())
 
 	# Start on formation home so the army doesn't pile on the flag then fan out.
 	global_position = _get_home_global()
@@ -531,6 +531,10 @@ func get_victory_facing() -> float:
 	return 1.0
 
 
+func is_player_controlled() -> bool:
+	return _troop != null and not _troop.is_enemy
+
+
 func get_weapon_mount_for_vfx() -> Node2D:
 	return _get_weapon_mount()
 
@@ -694,7 +698,7 @@ func _begin_lance_rush() -> void:
 		if not _hitbox.charge_ended.is_connected(_on_lance_charge_ended):
 			_hitbox.charge_ended.connect(_on_lance_charge_ended)
 		_hitbox.enable_for_attack(
-			_get_attack_damage(),
+			_get_attack_damage(false),
 			combat.knockback_force if combat != null else 0.0,
 			WeaponData.TargetingMode.SINGLE,
 			combat.damage_type if combat != null else WeaponData.DamageType.SLASHING,
@@ -883,7 +887,7 @@ func _start_attack() -> void:
 func _start_melee_lunge_attack() -> void:
 	if _hitbox != null:
 		_hitbox.enable_for_attack(
-			_get_attack_damage(),
+			_get_attack_damage(false),
 			combat.knockback_force,
 			combat.targeting_mode,
 			combat.damage_type
@@ -1020,7 +1024,7 @@ func _spawn_weapon_projectile(from_global: Vector2, aim_global: Vector2) -> void
 	projectile.launch(
 		from_global,
 		aim_global,
-		_get_attack_damage(),
+		_get_attack_damage(true),
 		combat.knockback_force,
 		self
 	)
@@ -1362,10 +1366,18 @@ func _lead_aim_point(from_global: Vector2, target: Unit) -> Vector2:
 	return aim
 
 
-func _get_attack_damage() -> int:
+func _get_attack_damage(is_projectile_attack: bool) -> int:
 	var raw: int = combat.base_damage + stats.get_damage_bonus(combat.damage_stat)
 	var mult := combat.outgoing_damage_multiplier * _outgoing_damage_multiplier
-	return maxi(roundi(float(raw) * mult), 1)
+	return SealModifiers.combat_attack_damage(self, raw, mult, is_projectile_attack)
+
+
+func get_effective_max_hp() -> int:
+	if is_player_controlled() and roster_data != null:
+		return SealModifiers.effective_max_hp(roster_data)
+	if stats == null:
+		return 0
+	return stats.get_max_hp()
 
 
 func take_damage(
@@ -1399,7 +1411,7 @@ func take_damage(
 	_spawn_hit_burst()
 	_add_camera_shake(SHAKE_ON_HIT)
 	current_hp = maxi(current_hp - amount, 0)
-	health_changed.emit(current_hp, stats.get_max_hp())
+	health_changed.emit(current_hp, get_effective_max_hp())
 	if _charge_phase != ChargePhase.NONE:
 		_end_lance_charge()
 	if current_hp <= 0:

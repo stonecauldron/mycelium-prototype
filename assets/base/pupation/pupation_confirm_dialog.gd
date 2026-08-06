@@ -91,14 +91,14 @@ func _refresh() -> void:
 	_fill_current_side()
 	_fill_result_side()
 
-	var can_afford := GameState.biomass.can_afford(WeaponSchool.SEAL_COST)
-	_confirm_button.text = "%d  Confirm" % WeaponSchool.SEAL_COST
+	var can_afford := GameState.biomass.can_afford(WeaponSchool.COCOON_COST)
+	_confirm_button.text = "%d  Confirm" % WeaponSchool.COCOON_COST
 	_confirm_button.disabled = not can_afford
 	_confirm_button.modulate = Color.WHITE if can_afford else Color(0.55, 0.55, 0.55, 1)
 
 
 func _refresh_duration_chip() -> void:
-	var days := maxi(WeaponSchool.SEAL_DURATION_DAYS, 1)
+	var days := maxi(WeaponSchool.COCOON_DURATION_DAYS, 1)
 	_duration_chip.set_value(days)
 	_duration_suffix.text = WeaponSchool.day_word(days)
 
@@ -196,14 +196,8 @@ func _set_combat_chips(roster: RosterUnitData, atk_chip: StatChip, hp_chip: Stat
 		atk_chip.set_value("—")
 		hp_chip.set_value("—")
 		return
-	var atk: int = roster.stats.get_damage_bonus(roster.get_damage_stat())
-	var outgoing_mult := 1.0
-	if roster.weapon != null:
-		atk += roster.weapon.base_damage
-		outgoing_mult = roster.weapon.outgoing_damage_multiplier
-	atk = maxi(roundi(float(atk) * outgoing_mult), 1)
-	atk_chip.set_value(atk)
-	hp_chip.set_value(roster.stats.get_max_hp())
+	atk_chip.set_value(SealModifiers.effective_attack_damage(roster))
+	hp_chip.set_value(SealModifiers.effective_max_hp(roster))
 
 
 func _clear_portrait(host: Control) -> void:
@@ -229,7 +223,7 @@ func _on_cancel_pressed() -> void:
 func _on_confirm_pressed() -> void:
 	if _unit == null:
 		return
-	if not GameState.biomass.can_afford(WeaponSchool.SEAL_COST):
+	if not GameState.biomass.can_afford(WeaponSchool.COCOON_COST):
 		return
 	confirmed.emit(_unit, _school)
 	queue_free()

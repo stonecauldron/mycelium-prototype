@@ -8,6 +8,8 @@ const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _COCOON_SLOT_SCENE := preload("res://assets/base/pupation/cocoon_slot.tscn")
 const _PUPATION_CONFIRM_SCENE := preload("res://assets/base/pupation/pupation_confirm_dialog.tscn")
 const _STARTER_CHOICE_SCENE := preload("res://assets/base/troop_selection/starter_choice_dialog.tscn")
+const _SEAL_CHOICE_SCENE := preload("res://assets/base/seals/seal_choice_dialog.tscn")
+const _FLAG_SEALS_SCENE := preload("res://assets/base/seals/flag_seals_overlay.tscn")
 
 var bench: Array = []
 var squad: Array = []
@@ -23,6 +25,8 @@ var _bench_slots: Array[DropSlot] = []
 var _cocoon_slots: Array = []
 var _pupation_dialog: PupationConfirmDialog = null
 var _starter_dialog: StarterChoiceDialog = null
+var _seal_dialog: SealChoiceDialog = null
+var _flag_seals: FlagSealsOverlay = null
 
 
 func _ready() -> void:
@@ -30,21 +34,29 @@ func _ready() -> void:
 	_build_squad_ui()
 	_build_bench_ui()
 	_build_cocoon_ui()
+	_ensure_flag_seals_overlay()
 	_sync_all_slots()
 	_bench_panel.set_drag_forwarding(Callable(), _bench_can_drop, _bench_drop)
 	_set_bench_structure_mouse_ignore()
 	if _scout_bubble != null:
 		_scout_bubble.refresh()
 	_notify_start_combat_state()
-	_ensure_starter_choice()
+	ensure_pending_modals()
 
 
 func on_screen_shown() -> void:
 	_sync_all_slots()
 	if _scout_bubble != null:
 		_scout_bubble.refresh()
+	_refresh_flag_seals()
 	_notify_start_combat_state()
+	ensure_pending_modals()
+
+
+## Starter / seal picks — safe to call from base even when another tab is active.
+func ensure_pending_modals() -> void:
 	_ensure_starter_choice()
+	_ensure_seal_choice()
 
 
 func _hydrate_from_troop_data() -> void:
@@ -152,6 +164,66 @@ func _on_starter_dialog_closed() -> void:
 	if not GameState.troop.is_seeded():
 		# Recreate if closed without a choice (should not happen for blocking dialog).
 		call_deferred("_ensure_starter_choice")
+	else:
+		call_deferred("_ensure_seal_choice")
+
+
+func _ensure_flag_seals_overlay() -> void:
+	if _flag_seals != null and is_instance_valid(_flag_seals):
+		return
+	var flag := get_node_or_null("LowerLaneLayer/FlagBearer/Shroom/Flag") as Node2D
+	if flag == null:
+		return
+	_flag_seals = _FLAG_SEALS_SCENE.instantiate() as FlagSealsOverlay
+	flag.add_child(_flag_seals)
+	_refresh_flag_seals()
+
+
+func _refresh_flag_seals() -> void:
+	if _flag_seals != null and is_instance_valid(_flag_seals):
+		_flag_seals.refresh()
+
+
+func _ensure_seal_choice() -> void:
+	if not GameState.pending_seal_choice:
+		return
+	if not GameState.troop.is_seeded():
+		return
+	if _starter_dialog != null and is_instance_valid(_starter_dialog):
+		return
+	if _seal_dialog != null and is_instance_valid(_seal_dialog):
+		return
+	var offers := SealCatalog.roll_offers(3, GameState.seals)
+	if offers.is_empty():
+		GameState.clear_pending_seal_choice()
+		return
+	var dialog: SealChoiceDialog = _SEAL_CHOICE_SCENE.instantiate()
+	dialog.setup(offers)
+	_seal_dialog = dialog
+	dialog.seal_chosen.connect(_on_seal_chosen)
+	dialog.tree_exited.connect(_on_seal_dialog_closed)
+	var hud := _hud_root()
+	if hud != null:
+		dialog.z_index = 100
+		hud.add_child(dialog)
+	else:
+		add_child(dialog)
+
+
+func _on_seal_chosen(seal: SealData) -> void:
+	_seal_dialog = null
+	GameState.try_add_seal(seal)
+	GameState.clear_pending_seal_choice()
+	_refresh_flag_seals()
+	_sync_all_slots()
+	_notify_start_combat_state()
+	_refresh_base_hud()
+
+
+func _on_seal_dialog_closed() -> void:
+	_seal_dialog = null
+	if GameState.pending_seal_choice:
+		call_deferred("_ensure_seal_choice")
 
 
 func _row(source: String) -> Array:
@@ -256,7 +328,7 @@ func _on_cocoon_drop(slot: CocoonSlot, drag_data: Dictionary) -> void:
 		return
 	if _pupation_dialog != null and is_instance_valid(_pupation_dialog):
 		return
-	if not GameState.can_seal_for_pupation(unit, slot.school):
+	if not GameState.can_cocoon_for_pupation(unit, slot.school):
 		return
 	_open_pupation_confirm(unit, slot.school)
 
@@ -272,7 +344,7 @@ func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
 
 func _on_pupation_confirmed(unit: RosterUnitData, school: int) -> void:
 	_pupation_dialog = null
-	if GameState.try_seal_for_pupation(unit, school):
+	if GameState.try_cocoon_for_pupation(unit, school):
 		_sync_all_slots()
 		_refresh_base_hud()
 
@@ -300,6 +372,8 @@ func _sync_slot_card(slot: DropSlot, source: String) -> void:
 
 
 func can_start_combat() -> bool:
+	if GameState.pending_seal_choice:
+		return false
 	return _squad_unit_count() > 0
 
 

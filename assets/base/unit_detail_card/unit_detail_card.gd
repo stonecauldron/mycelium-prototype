@@ -101,14 +101,8 @@ func _refresh() -> void:
 	_refresh_strain_meta()
 	_refresh_tags()
 	if unit_data.stats != null:
-		var atk: int = unit_data.stats.get_damage_bonus(unit_data.get_damage_stat())
-		var outgoing_mult: float = 1.0
-		if unit_data.weapon != null:
-			atk += unit_data.weapon.base_damage
-			outgoing_mult = unit_data.weapon.outgoing_damage_multiplier
-		atk = maxi(roundi(float(atk) * outgoing_mult), 1)
-		_atk_chip.set_value(atk)
-		_hp_chip.set_value(unit_data.stats.get_max_hp())
+		_atk_chip.set_value(SealModifiers.effective_attack_damage(unit_data))
+		_hp_chip.set_value(SealModifiers.effective_max_hp(unit_data))
 		_str_label.text = "STR %d" % unit_data.stats.strength
 		_dex_label.text = "DEX %d" % unit_data.stats.dex
 		_con_label.text = "CON %d" % unit_data.stats.con

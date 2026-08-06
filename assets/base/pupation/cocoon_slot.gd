@@ -118,7 +118,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	var unit := get_occupant()
 	if unit == null:
 		return _make_empty_training_tooltip()
-	return _make_sealed_unit_tooltip(unit)
+	return _make_cocooned_unit_tooltip(unit)
 
 
 func _make_empty_training_tooltip() -> Object:
@@ -133,7 +133,7 @@ func _make_empty_training_tooltip() -> Object:
 	return tip
 
 
-func _make_sealed_unit_tooltip(unit: RosterUnitData) -> Object:
+func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
 	var preview := WeaponSchool.preview_emerged_unit(unit, school)
 	if preview == null:
 		return null
@@ -235,7 +235,7 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	if source != "squad" and source != "bench":
 		_set_drag_hover(false)
 		return false
-	if not GameState.can_seal_for_pupation(unit, school):
+	if not GameState.can_cocoon_for_pupation(unit, school):
 		_set_drag_hover(false)
 		return false
 	_set_drag_hover(true)

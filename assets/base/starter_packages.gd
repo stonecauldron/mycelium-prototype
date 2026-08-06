@@ -110,7 +110,7 @@ static func _make_adult(unit_name: String, school: int) -> RosterUnitData:
 	var unit := _make_blank(unit_name)
 	if unit == null:
 		return null
-	# Starters skip pupation gate (adults can no longer seal in play).
+	# Starters skip pupation gate (adults can no longer cocoon in play).
 	WeaponSchool.apply_school_stats(unit.stats, school)
 	unit.weapon_trainings.append(school)
 	unit.promote_to_imago(false)

@@ -677,6 +677,8 @@ func _check_battle_end() -> void:
 			bool(entry.get("as_imago", false))
 		)
 	GameState.refresh_shops_for_new_day()
+	GameState.begin_day()
+	GameState.maybe_queue_seal_choice()
 	SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
 
 

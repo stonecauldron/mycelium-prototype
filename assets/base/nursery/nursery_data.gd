@@ -63,6 +63,9 @@ const _FERTILIZER_PATHS: Array[String] = [
 @export var shop_reroll_cost: int = BiomassData.SHOP_REROLL_COST
 
 var _seeded: bool = false
+## Monotonic stamp for FIFO eviction when death-spores overflow stock.
+var _next_stock_seq: int = 1
+const _STOCK_SEQ_META := &"_nursery_stock_seq"
 
 
 func _init() -> void:
@@ -97,6 +100,7 @@ func reset() -> void:
 	_ensure_spore_shop()
 	spore_shop.clear()
 	_seeded = false
+	_next_stock_seq = 1
 	_ensure_plot_count()
 	_ensure_stock()
 	stock.clear()
@@ -175,7 +179,10 @@ func add_stock_item_at(item: Resource, slot_index: int = -1) -> int:
 	_ensure_stock()
 	if item == null or not (item is SporeData or item is FertilizerData):
 		return -1
-	return stock.add(item, slot_index)
+	var dest := stock.add(item, slot_index)
+	if dest >= 0:
+		_stamp_stock_seq(item)
+	return dest
 
 
 func can_add_spore() -> bool:
@@ -184,6 +191,47 @@ func can_add_spore() -> bool:
 
 func add_spore(spore: SporeData) -> bool:
 	return add_stock_item(spore)
+
+
+## Build a lineage spore from a fallen adult and place it in stock (FIFO if full).
+func add_death_spore(unit: RosterUnitData) -> SporeData:
+	if unit == null or not unit.is_adult_stage():
+		return null
+	var spore := SporeData.from_fallen_unit(unit)
+	if spore == null:
+		return null
+	_ensure_stock()
+	if not stock.can_add():
+		_evict_oldest_stock_item()
+	if not add_stock_item(spore):
+		return null
+	unit.emitted_death_spore = true
+	return spore
+
+
+func _stamp_stock_seq(item: Resource) -> void:
+	if item == null:
+		return
+	item.set_meta(_STOCK_SEQ_META, _next_stock_seq)
+	_next_stock_seq += 1
+
+
+func _evict_oldest_stock_item() -> void:
+	_ensure_stock()
+	var oldest_idx := -1
+	var oldest_seq := 0x7fffffff
+	for i in stock.slots.size():
+		var item: Resource = stock.slots[i]
+		if item == null:
+			continue
+		var seq := 0
+		if item.has_meta(_STOCK_SEQ_META):
+			seq = int(item.get_meta(_STOCK_SEQ_META))
+		if oldest_idx < 0 or seq < oldest_seq:
+			oldest_seq = seq
+			oldest_idx = i
+	if oldest_idx >= 0:
+		stock.clear_slot(oldest_idx)
 
 
 func add_fertilizer(fertilizer: FertilizerData) -> bool:
@@ -429,7 +477,14 @@ func _make_harvest_units(
 	var tier := UnitStatsData.PowerTier.COMMON
 	if spore != null and (unit_strain == null or unit_strain.use_power_tier):
 		tier = spore.power_tier
-	var stats := UnitStatsData.create_for_tier(tier)
+	var lineage := spore != null and spore.is_lineage_spore()
+	if lineage:
+		tier = spore.power_tier
+	var stats: UnitStatsData
+	if lineage:
+		stats = UnitStatsData.create_around(spore.mean_stats)
+	else:
+		stats = UnitStatsData.create_for_tier(tier)
 	_apply_fertilizer_stats(stats, fertilizers)
 	if pending_stat_bonus != 0:
 		stats.strength = clampi(stats.strength + pending_stat_bonus, 1, 99)
@@ -466,14 +521,29 @@ func _make_harvest_units(
 			unit_stats.dex = maxi(1, roundi(float(unit_stats.dex) * 0.5))
 			unit_stats.con = maxi(1, roundi(float(unit_stats.con) * 0.5))
 			unit_stats.spd = maxi(1, roundi(float(unit_stats.spd) * 0.5))
+		var hatch_name := UnitNames.pick()
+		var hatch_generation := 1
+		var hatch_lineage := hatch_name
+		if lineage:
+			hatch_lineage = spore.lineage_name
+			hatch_generation = maxi(spore.parent_generation, 1) + 1
+			hatch_name = UnitNames.format_unit_name(hatch_lineage, hatch_generation)
 		var unit := RosterUnitData.create(
-			UnitNames.pick(),
+			hatch_name,
 			unit_stats,
 			weapon,
 			unit_strain,
 			tier
 		)
-		unit.weapon_trainings = []
+		unit.lineage_name = hatch_lineage
+		unit.generation = hatch_generation
+		unit.display_name = hatch_name
+		if lineage:
+			unit.weapon_trainings = []
+			for training in spore.weapon_trainings:
+				unit.weapon_trainings.append(int(training))
+		else:
+			unit.weapon_trainings = []
 		unit.sync_weapon_from_trainings()
 		if force_amok:
 			unit.forced_engagement_stance = WeaponData.EngagementStance.PRESS_FORWARD

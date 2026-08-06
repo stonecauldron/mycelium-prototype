@@ -17,6 +17,7 @@ const _ZOMBIE_RESPAWN_DELAY := 2.0
 ## Keep physics step size fixed under time_scale so 2×/4× don't change combat outcomes.
 const _BASE_PHYSICS_TICKS := 60
 const _BIOMASS_NUMBER_SCENE := preload("res://assets/vfx/biomass_number/biomass_number.tscn")
+const _SPORE_GENERATED_SCENE := preload("res://assets/vfx/spore_generated/spore_generated.tscn")
 const _COMBAT_CALLOUT_SCENE := preload("res://assets/vfx/combat_callout/combat_callout.tscn")
 const _BIOMASS_DIGITS := 4
 const _VICTORY_HITSTOP_SCALE := 0.12
@@ -24,6 +25,8 @@ const _VICTORY_HITSTOP_DURATION := 0.35
 const _VICTORY_CELEBRATE_SEC := 1.9
 ## Beat after the wipe before flag death / callout / tosses.
 const _VICTORY_LEAD_IN_SEC := 0.25
+## Debug click-to-kill: max distance from cursor to a living player unit (world px).
+const _DEBUG_KILL_PICK_RADIUS := 96.0
 
 @export var sandboxed: bool = false
 
@@ -70,6 +73,8 @@ func _ready() -> void:
 	_fast_forward_button.pressed.connect(_on_fast_forward_pressed)
 	_set_fast_forward(GameState.combat_fast_forward)
 	_refresh_biomass_hud()
+	_setup_debug_kill_hint()
+	GameState.debug_cheats_applied.connect(_on_debug_cheats_applied)
 
 	if sandboxed:
 		return
@@ -102,6 +107,54 @@ func _unhandled_input(event: InputEvent) -> void:
 		if (event as InputEventKey).keycode == KEY_ESCAPE:
 			_toggle_combat_pause()
 			get_viewport().set_input_as_handled()
+			return
+	if not GameState.debug_mode_active:
+		return
+	# Debug (~): left-click a living player unit to kill it (tests death spores).
+	if event is InputEventMouseButton:
+		var mouse := event as InputEventMouseButton
+		if mouse.pressed and mouse.button_index == MOUSE_BUTTON_LEFT:
+			if _debug_kill_nearest_player_unit():
+				get_viewport().set_input_as_handled()
+
+
+func _debug_kill_nearest_player_unit() -> bool:
+	if player_troop == null:
+		return false
+	var mouse_world := get_global_mouse_position()
+	var best: Unit = null
+	var best_dist := _DEBUG_KILL_PICK_RADIUS
+	for unit in player_troop.get_living_units():
+		if unit == null or not is_instance_valid(unit):
+			continue
+		var dist := unit.global_position.distance_to(mouse_world)
+		if dist <= best_dist:
+			best_dist = dist
+			best = unit
+	if best == null:
+		return false
+	best.take_damage(maxi(best.current_hp, 9999), best.global_position + Vector2(-40, 0), 120.0)
+	return true
+
+
+func _setup_debug_kill_hint() -> void:
+	var hud := get_node_or_null("HUD") as CanvasLayer
+	if hud == null:
+		return
+	var hint := hud.get_node_or_null("DebugKillHint") as Label
+	if hint == null:
+		hint = Label.new()
+		hint.name = "DebugKillHint"
+		hint.text = "Debug: click ally to kill"
+		hint.theme_type_variation = &"SummaryEntryLabel"
+		hint.position = Vector2(24, 220)
+		hint.modulate = Color(1.0, 0.85, 0.4, 0.9)
+		hud.add_child(hint)
+	hint.visible = GameState.debug_mode_active
+
+
+func _on_debug_cheats_applied() -> void:
+	_setup_debug_kill_hint()
 
 
 func _toggle_combat_pause() -> void:
@@ -437,12 +490,34 @@ func _on_unit_died(unit: Unit, is_player: bool) -> void:
 		if is_player and roster != null:
 			_fallen_units.append(roster)
 			GameState.troop.remove_unit(roster)
+			if not wants_zombie_respawn:
+				_try_emit_death_spore(roster, unit.global_position)
 		elif not is_player:
 			_award_kill_biomass(unit)
 	if wants_zombie_respawn:
 		_schedule_zombie_respawn(roster, is_player, unit.squad_index)
 	else:
 		_check_battle_end()
+
+
+func _try_emit_death_spore(roster: RosterUnitData, at_global: Vector2) -> void:
+	if roster == null or not roster.is_adult_stage():
+		return
+	var spore := GameState.nursery.add_death_spore(roster)
+	if spore == null:
+		return
+	_spawn_spore_generated(at_global, spore.tint)
+
+
+func _spawn_spore_generated(at_global: Vector2, tint: Color = Color.WHITE) -> void:
+	var world := get_node_or_null("World") as Node2D
+	if world == null:
+		return
+	var callout: SporeGenerated = _SPORE_GENERATED_SCENE.instantiate()
+	world.add_child(callout)
+	# Higher than biomass/damage numbers so the wider label doesn't clip the body.
+	callout.global_position = at_global + Vector2(0, -220)
+	callout.display(tint)
 
 
 func _schedule_zombie_respawn(

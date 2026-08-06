@@ -2,7 +2,8 @@ class_name DaySummaryFeed
 extends RefCounted
 
 ## Pending end-of-day summary rows.
-## Keys: text, optional formation_line, optional unit, optional biomass, optional nursery_ready.
+## Keys: text, optional formation_line, optional unit, optional biomass, optional nursery_ready,
+## optional emitted_spores + spore_tint.
 static var entries: Array[Dictionary] = []
 
 ## Left-column combat recap (separate from event entries).
@@ -44,29 +45,52 @@ static func add_base_unlock(feature_name: String) -> void:
 	add_entry("%s unlocked" % trimmed)
 
 
-static func add_fallen_unit(unit: RosterUnitData) -> void:
+static func add_fallen_unit(
+	unit: RosterUnitData,
+	context: StrainEffect.DeathContext = StrainEffect.DeathContext.COMBAT
+) -> void:
 	if unit == null:
 		return
+	var emitted := unit.emitted_death_spore
 	var text: String
 	if unit.last_death_biomass_yield > 0:
 		text = "%s died and yielded %d kg of biomass" % [
 			unit.display_name,
 			unit.last_death_biomass_yield,
 		]
+	elif emitted:
+		if context == StrainEffect.DeathContext.AGED_OUT:
+			text = "%s has died of old age and emitted spores" % unit.display_name
+		else:
+			text = "%s has died and emitted spores" % unit.display_name
 	else:
 		text = "%s has fallen" % unit.display_name
-	entries.append({
+	var entry := {
 		"text": text,
 		"formation_line": int(unit.get_formation_line()),
 		"unit": unit,
-	})
+		"emitted_spores": emitted,
+	}
+	if emitted:
+		entry["spore_tint"] = UnitStatsData.tint_for_tier(unit.power_tier)
+		if unit.strain != null and unit.strain.tint != Color.WHITE:
+			entry["spore_tint"] = unit.strain.tint
+	entries.append(entry)
 
 
 static func add_unit_became_imago(unit: RosterUnitData) -> void:
 	if unit == null:
 		return
+	var bonus := unit.maturity_stat_bonus()
+	var text: String
+	if bonus > 0:
+		text = "%s has matured (+%d all STATS)." % [unit.display_name, bonus]
+	elif bonus < 0:
+		text = "%s has matured (%d all STATS)." % [unit.display_name, bonus]
+	else:
+		text = "%s has matured." % unit.display_name
 	entries.append({
-		"text": "%s has matured (+1 all STATS)." % unit.display_name,
+		"text": text,
 		"formation_line": int(unit.get_formation_line()),
 		"unit": unit,
 	})

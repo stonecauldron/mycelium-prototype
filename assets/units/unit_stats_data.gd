@@ -70,6 +70,45 @@ static func create_for_tier(tier: PowerTier, rng: RandomNumberGenerator = null) 
 	return stats
 
 
+## Midpoint of the tier roll range (UI / expected hatch average before variance).
+static func average_for_tier(tier: PowerTier) -> UnitStatsData:
+	var stat_range: Vector2i = TIER_RANGES.get(tier, TIER_RANGES[PowerTier.COMMON])
+	var mid := int(round((float(stat_range.x) + float(stat_range.y)) * 0.5))
+	var stats := UnitStatsData.new()
+	stats.strength = mid
+	stats.dex = mid
+	stats.con = mid
+	stats.spd = mid
+	return stats
+
+
+## Roll each stat independently around `mean` by ±`variance` (clamped 1–99).
+static func create_around(
+	mean: UnitStatsData,
+	variance: int = 1,
+	rng: RandomNumberGenerator = null
+) -> UnitStatsData:
+	var generator := rng if rng != null else RandomNumberGenerator.new()
+	if rng == null:
+		generator.randomize()
+	var stats := UnitStatsData.new()
+	var base_str := NEUTRAL_STAT
+	var base_dex := NEUTRAL_STAT
+	var base_con := NEUTRAL_STAT
+	var base_spd := NEUTRAL_STAT
+	if mean != null:
+		base_str = mean.strength
+		base_dex = mean.dex
+		base_con = mean.con
+		base_spd = mean.spd
+	var v := maxi(variance, 0)
+	stats.strength = clampi(base_str + generator.randi_range(-v, v), 1, 99)
+	stats.dex = clampi(base_dex + generator.randi_range(-v, v), 1, 99)
+	stats.con = clampi(base_con + generator.randi_range(-v, v), 1, 99)
+	stats.spd = clampi(base_spd + generator.randi_range(-v, v), 1, 99)
+	return stats
+
+
 func get_max_hp() -> int:
 	return maxi(con * 4, 1)
 

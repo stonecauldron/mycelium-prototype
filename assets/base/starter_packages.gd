@@ -110,7 +110,11 @@ static func _make_adult(unit_name: String, school: int) -> RosterUnitData:
 	var unit := _make_blank(unit_name)
 	if unit == null:
 		return null
-	unit.apply_pupation_training(school)
+	# Starters skip pupation gate (adults can no longer seal in play).
+	WeaponSchool.apply_school_stats(unit.stats, school)
+	unit.weapon_trainings.append(school)
+	unit.promote_to_imago(false)
+	unit.sync_weapon_from_trainings()
 	return unit
 
 
@@ -119,7 +123,10 @@ static func _make_evolved(unit_name: String, schools: Array) -> RosterUnitData:
 	if unit == null:
 		return null
 	for school in schools:
-		unit.apply_pupation_training(int(school))
+		WeaponSchool.apply_school_stats(unit.stats, int(school))
+		unit.weapon_trainings.append(int(school))
+	unit.promote_to_fully_evolved()
+	unit.sync_weapon_from_trainings()
 	return unit
 
 

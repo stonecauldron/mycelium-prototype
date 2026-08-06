@@ -64,3 +64,31 @@ static func pick_unique(count: int) -> Array[String]:
 		else:
 			result.append(pool.pop_back())
 	return result
+
+
+## Generation 1 has no suffix; generation 2+ is "Name II", "Name III", …
+static func format_unit_name(lineage_name: String, generation: int) -> String:
+	var base := lineage_name.strip_edges()
+	if base.is_empty():
+		base = "Unit"
+	if generation <= 1:
+		return base
+	return "%s %s" % [base, roman_numeral(generation)]
+
+
+static func roman_numeral(value: int) -> String:
+	if value <= 0:
+		return ""
+	var n := value
+	var result := ""
+	var amounts: Array[int] = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
+	var glyphs: Array[String] = [
+		"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I",
+	]
+	for i in amounts.size():
+		var amount := amounts[i]
+		var glyph := glyphs[i]
+		while n >= amount:
+			result += glyph
+			n -= amount
+	return result

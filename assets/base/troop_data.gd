@@ -117,8 +117,10 @@ func advance_unit_ages() -> Array[RosterUnitData]:
 				&"on_death",
 				[unit, StrainEffect.DeathContext.AGED_OUT, null]
 			)
-		if unit.last_death_biomass_yield > 0:
-			DaySummaryFeed.add_fallen_unit(unit)
+		if unit.is_adult_stage():
+			GameState.nursery.add_death_spore(unit)
+		if unit.emitted_death_spore or unit.last_death_biomass_yield > 0:
+			DaySummaryFeed.add_fallen_unit(unit, StrainEffect.DeathContext.AGED_OUT)
 		remove_unit(unit)
 	return matured
 

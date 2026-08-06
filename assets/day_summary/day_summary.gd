@@ -7,6 +7,8 @@ const _DAMAGE_PORTRAIT_HOST_SIZE := Vector2(100, 124)
 const _DAMAGE_PORTRAIT_SCALE := 0.78
 const _BIOMASS_ICON := preload("res://assets/base/biomass.png")
 const _BIOMASS_ICON_SIZE := Vector2(96, 96)
+const _SPORE_ICON := preload("res://assets/base/nursery/spores.png")
+const _SPORE_ICON_SIZE := Vector2(160, 160)
 const _PLOT_EMPTY := preload("res://assets/base/plot_tile/plot_empty.png")
 const _EGG0 := preload("res://assets/base/plot_tile/egg0.png")
 const _EGG1 := preload("res://assets/base/plot_tile/egg1.png")
@@ -188,7 +190,11 @@ func _populate_entries(entries: Array[Dictionary]) -> void:
 		var text := str(entry.get("text", ""))
 		var unit := entry.get("unit") as RosterUnitData
 		if unit != null:
-			_entries.add_child(_make_unit_row(text, unit))
+			var spore_tint := Color.WHITE
+			var show_spore := bool(entry.get("emitted_spores", false))
+			if show_spore and entry.has("spore_tint"):
+				spore_tint = entry.get("spore_tint") as Color
+			_entries.add_child(_make_unit_row(text, unit, show_spore, spore_tint))
 			continue
 		if bool(entry.get("biomass", false)):
 			_entries.add_child(_make_biomass_row(text))
@@ -220,7 +226,12 @@ func _make_entry_label(text: String) -> Label:
 	return label
 
 
-func _make_unit_row(text: String, unit: RosterUnitData) -> Control:
+func _make_unit_row(
+	text: String,
+	unit: RosterUnitData,
+	show_spore: bool = false,
+	spore_tint: Color = Color.WHITE
+) -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
 
@@ -233,6 +244,15 @@ func _make_unit_row(text: String, unit: RosterUnitData) -> Control:
 	row.add_child(host)
 	unit.mount_portrait(host, _PORTRAIT_SCALE)
 	row.add_child(_make_entry_label(text))
+	if show_spore:
+		var spore_icon := TextureRect.new()
+		spore_icon.custom_minimum_size = _SPORE_ICON_SIZE
+		spore_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		spore_icon.texture = _SPORE_ICON
+		spore_icon.modulate = spore_tint if spore_tint != Color.WHITE else Color.WHITE
+		spore_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		spore_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		row.add_child(spore_icon)
 
 	return row
 

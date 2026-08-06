@@ -7,6 +7,10 @@ const _DEFAULT_STRAIN_PATH := "res://assets/units/generalist/generalist_strain.t
 const NO_LIFE_EXPECTANCY := -1
 
 @export var display_name: String = "Unit"
+## Base name without generation suffix (e.g. "Darwin"). Used for death-spore naming.
+@export var lineage_name: String = ""
+## 1 = founding unit (no roman suffix); 2+ → "Darwin II", …
+@export var generation: int = 1
 @export var stats: UnitStatsData
 @export var weapon: WeaponData
 @export var combat: CombatProfile
@@ -24,6 +28,8 @@ const NO_LIFE_EXPECTANCY := -1
 @export var biomass_bank: int = 0
 ## Biomass paid out on the most recent strain death (Bank Cap); used by UI / day summary.
 var last_death_biomass_yield: int = 0
+## Set when this unit's true death emitted a lineage spore (day summary).
+var emitted_death_spore: bool = false
 ## When set, overrides weapon engagement stance in combat (Amok fertiliser).
 @export var forced_engagement_stance: int = -1
 ## Zombie Cap: true after the one-time combat respawn.
@@ -91,16 +97,18 @@ func has_exceeded_life_expectancy() -> bool:
 
 
 ## Natural age / imago-harvest promotion. Applies +1-all (+ strain delta) and Scythe if untrained.
+## Maturity bonuses scale with generation (same falloff as pupation training gains).
 func promote_to_imago(apply_maturity_stats: bool = true) -> bool:
 	if is_imago or is_fully_evolved():
 		return false
 	if apply_maturity_stats and stats != null:
-		stats.strength = clampi(stats.strength + IMAGO_STAT_BONUS, 1, 99)
-		stats.dex = clampi(stats.dex + IMAGO_STAT_BONUS, 1, 99)
-		stats.con = clampi(stats.con + IMAGO_STAT_BONUS, 1, 99)
-		stats.spd = clampi(stats.spd + IMAGO_STAT_BONUS, 1, 99)
+		var bonus := maturity_stat_bonus()
+		stats.strength = clampi(stats.strength + bonus, 1, 99)
+		stats.dex = clampi(stats.dex + bonus, 1, 99)
+		stats.con = clampi(stats.con + bonus, 1, 99)
+		stats.spd = clampi(stats.spd + bonus, 1, 99)
 		if strain != null and strain.imago_stat_delta != 0:
-			var d := strain.imago_stat_delta
+			var d := WeaponSchool.scale_stat_delta(strain.imago_stat_delta, generation)
 			stats.strength = clampi(stats.strength + d, 1, 99)
 			stats.dex = clampi(stats.dex + d, 1, 99)
 			stats.con = clampi(stats.con + d, 1, 99)
@@ -111,6 +119,11 @@ func promote_to_imago(apply_maturity_stats: bool = true) -> bool:
 	if strain != null:
 		strain.call_effect(&"on_imago", [self])
 	return true
+
+
+## Scaled IMAGO_STAT_BONUS for this unit's generation (toward zero).
+func maturity_stat_bonus() -> int:
+	return WeaponSchool.scale_stat_delta(IMAGO_STAT_BONUS, generation)
 
 
 func promote_to_fully_evolved() -> bool:
@@ -124,13 +137,7 @@ func promote_to_fully_evolved() -> bool:
 func can_pupate() -> bool:
 	if enemy_unit_data != null:
 		return false
-	if is_fully_evolved():
-		return false
-	if life_stage_id == UnitStrain.STAGE_JUVENILE:
-		return weapon_trainings.size() < 2
-	if life_stage_id == UnitStrain.STAGE_IMAGO:
-		return weapon_trainings.size() < 2
-	return false
+	return life_stage_id == UnitStrain.STAGE_JUVENILE
 
 
 func sync_weapon_from_trainings() -> void:
@@ -141,19 +148,21 @@ func sync_weapon_from_trainings() -> void:
 
 
 ## Apply one school training from pupation emerge. Returns false if illegal.
+## At 2 trainings, evicts oldest (weapon list only; prior school stats stay).
 func apply_pupation_training(school: int) -> bool:
 	if not can_pupate():
 		return false
 	if school < 0 or school >= WeaponSchool.COUNT:
 		return false
-	var was_juvenile := life_stage_id == UnitStrain.STAGE_JUVENILE
-	WeaponSchool.apply_school_stats(stats, school)
+	if weapon_trainings.size() >= 2:
+		weapon_trainings.pop_front()
+	WeaponSchool.apply_school_stats(stats, school, generation)
 	weapon_trainings.append(school)
-	if was_juvenile:
-		promote_to_imago(false)
-	else:
+	if weapon_trainings.size() >= 2:
 		promote_to_fully_evolved()
-		sync_weapon_from_trainings()
+	else:
+		promote_to_imago(false)
+	sync_weapon_from_trainings()
 	return true
 
 
@@ -231,6 +240,8 @@ static func create(
 ) -> RosterUnitData:
 	var data := RosterUnitData.new()
 	data.display_name = unit_name
+	data.lineage_name = unit_name
+	data.generation = 1
 	data.stats = unit_stats
 	data.weapon = unit_weapon
 	if unit_weapon != null:
@@ -253,6 +264,8 @@ static func create_enemy(
 ) -> RosterUnitData:
 	var data := RosterUnitData.new()
 	data.display_name = unit_name
+	data.lineage_name = unit_name
+	data.generation = 1
 	data.stats = unit_stats
 	data.enemy_unit_data = unit_data
 	data.weapon = null

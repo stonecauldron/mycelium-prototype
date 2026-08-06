@@ -103,6 +103,97 @@ text = "days"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="LineageSection" type="VBoxContainer" parent="CardPanel/Margin/VBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="PortraitHost" type="Control" parent="CardPanel/Margin/VBox/LineageSection"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 140)
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="ChildNameLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 24
+text = "Darwin II"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="GenerationLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/font_size = 22
+text = "Generation II"
+horizontal_alignment = 1
+
+[node name="AttrGrid" type="GridContainer" parent="CardPanel/Margin/VBox/LineageSection"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 2
+columns = 2
+
+[node name="StrLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 22
+text = "STR 0"
+horizontal_alignment = 1
+
+[node name="DexLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 22
+text = "DEX 0"
+horizontal_alignment = 1
+
+[node name="ConLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 22
+text = "CON 0"
+horizontal_alignment = 1
+
+[node name="SpdLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 22
+text = "SPD 0"
+horizontal_alignment = 1
+
+[node name="TrainingsLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/font_size = 20
+text = "Trainings"
+horizontal_alignment = 1
+
+[node name="TrainingsRow" type="HBoxContainer" parent="CardPanel/Margin/VBox/LineageSection"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 8
+alignment = 1
+
 [node name="PlotSection" type="VBoxContainer" parent="CardPanel/Margin/VBox"]
 unique_name_in_owner = true
 visible = false

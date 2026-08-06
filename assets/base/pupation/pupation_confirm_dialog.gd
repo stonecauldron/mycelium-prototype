@@ -131,7 +131,10 @@ func _fill_current_side() -> void:
 
 func _fill_result_side() -> void:
 	_preview_unit = WeaponSchool.preview_emerged_unit(_unit, _school)
-	var deltas := WeaponSchool.school_stat_deltas(_school)
+	var generation := 1
+	if _unit != null:
+		generation = maxi(_unit.generation, 1)
+	var deltas := WeaponSchool.scaled_school_deltas(_school, generation)
 	var next_stage := (
 		_preview_unit.life_stage_id if _preview_unit != null
 		else WeaponSchool.next_stage_after_training(_unit)

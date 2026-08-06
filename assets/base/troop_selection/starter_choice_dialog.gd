@@ -88,9 +88,17 @@ func _make_package_card(package_id: StringName) -> Control:
 	vbox.add_child(title)
 
 	var preview_units := StarterPackages.build_units(package_id)
-	var evolved: RosterUnitData = preview_units[0] if preview_units.size() > 0 else null
-	var adult: RosterUnitData = preview_units[1] if preview_units.size() > 1 else null
+	var evolved: RosterUnitData = null
+	var adult: RosterUnitData = null
+	for unit in preview_units:
+		if unit == null:
+			continue
+		if unit.is_fully_evolved() and evolved == null:
+			evolved = unit
+		elif adult == null:
+			adult = unit
 
+	# Package cards always list Evolved above Adult (squad seeding stays range-ordered).
 	vbox.add_child(_make_unit_block(evolved))
 
 	var divider := ColorRect.new()

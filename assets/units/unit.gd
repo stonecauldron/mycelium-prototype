@@ -1398,7 +1398,12 @@ func take_damage(
 		knockback_mult *= combat.incoming_knockback_multiplier
 	if damage_type == WeaponData.DamageType.BLUNT and _blunt_resist > 0.0:
 		incoming_mult *= maxf(1.0 - _blunt_resist, 0.0)
-	amount = maxi(roundi(float(amount) * incoming_mult), 0)
+	var pre_mitigation := amount
+	amount = roundi(float(amount) * incoming_mult)
+	if pre_mitigation > 0:
+		amount = maxi(amount, 1)
+	else:
+		amount = maxi(amount, 0)
 	if amount > 0:
 		damage_taken += amount
 		if killer != null and is_instance_valid(killer):

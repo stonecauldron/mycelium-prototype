@@ -27,6 +27,11 @@ const _VICTORY_CELEBRATE_SEC := 1.9
 const _VICTORY_LEAD_IN_SEC := 0.25
 ## Debug click-to-kill: max distance from cursor to a living player unit (world px).
 const _DEBUG_KILL_PICK_RADIUS := 96.0
+## Acid Rain stalemate breaker (battle time).
+const _ACID_RAIN_GRACE_SEC := 30.0
+const _ACID_RAIN_TICK_SEC := 1.0
+const _ACID_RAIN_ESCALATE_SEC := 10.0
+const _ACID_RAIN_BASE_DAMAGE := 1
 
 @export var sandboxed: bool = false
 
@@ -38,6 +43,7 @@ const _DEBUG_KILL_PICK_RADIUS := 96.0
 @onready var _enemy_army_hp_bar: ProgressBar = %EnemyArmyHpBar
 @onready var _player_army_hp_label: Label = %PlayerArmyHpLabel
 @onready var _enemy_army_hp_label: Label = %EnemyArmyHpLabel
+@onready var _hud: CanvasLayer = $HUD
 
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2
@@ -55,6 +61,11 @@ var _victory_celebrating: bool = false
 var _victory_director: VictoryCelebrationDirector = null
 var _player_army_max_hp: int = 0
 var _enemy_army_max_hp: int = 0
+var _battle_elapsed_sec: float = 0.0
+var _acid_rain_active: bool = false
+var _acid_rain_tick_accum: float = 0.0
+var _acid_rain_active_elapsed: float = 0.0
+var _acid_rain_label: Label = null
 
 
 func _ready() -> void:
@@ -74,6 +85,7 @@ func _ready() -> void:
 	_set_fast_forward(GameState.combat_fast_forward)
 	_refresh_biomass_hud()
 	_setup_debug_kill_hint()
+	_ensure_acid_rain_label()
 	GameState.debug_cheats_applied.connect(_on_debug_cheats_applied)
 
 	if sandboxed:
@@ -178,6 +190,25 @@ func start_battle(
 	_run_battle(player_roster, enemy_roster)
 
 
+func _process(delta: float) -> void:
+	if _battle_over or _combat_paused:
+		return
+	_battle_elapsed_sec += delta
+	if not _acid_rain_active:
+		if _battle_elapsed_sec < _ACID_RAIN_GRACE_SEC:
+			return
+		_start_acid_rain()
+		if _battle_over:
+			return
+	_acid_rain_active_elapsed += delta
+	_acid_rain_tick_accum += delta
+	while _acid_rain_tick_accum >= _ACID_RAIN_TICK_SEC:
+		_acid_rain_tick_accum -= _ACID_RAIN_TICK_SEC
+		_tick_acid_rain()
+		if _battle_over:
+			return
+
+
 func _on_fast_forward_pressed() -> void:
 	var idx := _FAST_FORWARD_SCALES.find(_fast_forward_scale)
 	if idx < 0:
@@ -257,6 +288,7 @@ func _run_battle(
 	_pending_enemy_zombie_respawns = 0
 	_player_army_max_hp = 0
 	_enemy_army_max_hp = 0
+	_reset_acid_rain()
 	_clear_world_vfx()
 	_reset_troop_from_roster(
 		player_troop,
@@ -285,6 +317,80 @@ func _notify_battle_start() -> void:
 	for unit in enemy_troop.get_living_units():
 		unit.notify_battle_start(context)
 	context.flush()
+
+
+func _reset_acid_rain() -> void:
+	_battle_elapsed_sec = 0.0
+	_acid_rain_active = false
+	_acid_rain_tick_accum = 0.0
+	_acid_rain_active_elapsed = 0.0
+	_ensure_acid_rain_label()
+	if _acid_rain_label != null:
+		_acid_rain_label.visible = false
+
+
+func _ensure_acid_rain_label() -> void:
+	if _acid_rain_label != null and is_instance_valid(_acid_rain_label):
+		return
+	if _hud == null:
+		return
+	var label := Label.new()
+	label.name = "AcidRainLabel"
+	label.visible = false
+	label.text = "Acid Rain"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override(&"font_size", 36)
+	label.add_theme_color_override(&"font_color", Color(0.55, 0.95, 0.35, 1.0))
+	label.add_theme_color_override(&"font_outline_color", Color(0, 0, 0, 1.0))
+	label.add_theme_constant_override(&"outline_size", 6)
+	label.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	label.offset_left = -160.0
+	label.offset_right = 160.0
+	label.offset_top = 112.0
+	label.offset_bottom = 156.0
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hud.add_child(label)
+	_acid_rain_label = label
+
+
+func _start_acid_rain() -> void:
+	_acid_rain_active = true
+	_acid_rain_tick_accum = 0.0
+	_acid_rain_active_elapsed = 0.0
+	_ensure_acid_rain_label()
+	if _acid_rain_label != null:
+		_acid_rain_label.visible = true
+	_show_acid_rain_callout()
+	_tick_acid_rain()
+
+
+func _show_acid_rain_callout() -> void:
+	if _hud == null:
+		return
+	var callout: CombatCallout = _COMBAT_CALLOUT_SCENE.instantiate()
+	_hud.add_child(callout)
+	callout.position = Vector2(960.0, 220.0)
+	callout.display("Acid Rain!", CombatCallout.Kind.STREAK)
+
+
+func _acid_rain_damage() -> int:
+	var steps := int(_acid_rain_active_elapsed / _ACID_RAIN_ESCALATE_SEC)
+	return _ACID_RAIN_BASE_DAMAGE + maxi(steps, 0)
+
+
+func _tick_acid_rain() -> void:
+	if _battle_over:
+		return
+	var amount := _acid_rain_damage()
+	var units: Array[Unit] = []
+	units.append_array(player_troop.get_living_units())
+	units.append_array(enemy_troop.get_living_units())
+	for unit in units:
+		if unit == null or not is_instance_valid(unit):
+			continue
+		unit.take_damage(amount, unit.global_position, 0.0, null)
+	if _acid_rain_label != null:
+		_acid_rain_label.text = "Acid Rain  %d" % amount
 
 
 func _notify_battle_end() -> void:
@@ -612,6 +718,8 @@ func _check_battle_end() -> void:
 	if not player_wiped and not enemy_wiped:
 		return
 	_battle_over = true
+	if _acid_rain_label != null:
+		_acid_rain_label.visible = false
 	_set_combat_paused(false)
 
 	if player_wiped:

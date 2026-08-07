@@ -47,6 +47,7 @@ func reset_compact_layout() -> void:
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	clip_contents = true
 	_set_children_mouse_filter_ignore(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	reset_compact_layout()
@@ -70,7 +71,11 @@ func _refresh() -> void:
 	if fertilizer == null:
 		return
 	_name_label.text = fertilizer.display_name
-	_subtitle_label.text = fertilizer.subtitle_text()
+	# Compact stock card: name + icon only; full effect text lives on tooltip.
+	if _subtitle_label != null:
+		_subtitle_label.visible = false
+		_subtitle_label.text = ""
+	tooltip_text = fertilizer.subtitle_text()
 	if _icon != null:
 		_icon.modulate = fertilizer.tint
 

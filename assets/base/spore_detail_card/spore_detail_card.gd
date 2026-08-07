@@ -119,7 +119,7 @@ func _refresh_growth_row() -> void:
 		_days_chip.set_value(left)
 	else:
 		_grow_label.text = "Growth Time:"
-		_days_chip.set_value(spore_data.days_to_mature)
+		_days_chip.set_value(spore_data.days_to_mature_effective())
 	_days_suffix_label.text = "days"
 
 

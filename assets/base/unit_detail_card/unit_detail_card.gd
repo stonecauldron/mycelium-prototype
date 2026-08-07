@@ -27,6 +27,7 @@ var _strain_chip: StatChip = null
 @onready var _dex_label: Label = %DexLabel
 @onready var _con_label: Label = %ConLabel
 @onready var _spd_label: Label = %SpdLabel
+@onready var _fertilizer_info_label: Label = %FertilizerInfoLabel
 
 
 func setup(
@@ -101,12 +102,15 @@ func _refresh() -> void:
 	_refresh_strain_meta()
 	_refresh_tags()
 	if unit_data.stats != null:
-		_atk_chip.set_value(SealModifiers.effective_attack_damage(unit_data))
-		_hp_chip.set_value(SealModifiers.effective_max_hp(unit_data))
-		_str_label.text = "STR %d" % unit_data.stats.strength
-		_dex_label.text = "DEX %d" % unit_data.stats.dex
-		_con_label.text = "CON %d" % unit_data.stats.con
-		_spd_label.text = "SPD %d" % unit_data.stats.spd
+		var display_stats := BroodEmpressEffect.hub_preview_stats(unit_data)
+		if display_stats == null:
+			display_stats = unit_data.stats
+		_atk_chip.set_value(BroodEmpressEffect.hub_effective_attack(unit_data))
+		_hp_chip.set_value(BroodEmpressEffect.hub_effective_max_hp(unit_data))
+		_str_label.text = "STR %d" % display_stats.strength
+		_dex_label.text = "DEX %d" % display_stats.dex
+		_con_label.text = "CON %d" % display_stats.con
+		_spd_label.text = "SPD %d" % display_stats.spd
 	else:
 		_atk_chip.set_value("—")
 		_hp_chip.set_value("—")
@@ -115,7 +119,43 @@ func _refresh() -> void:
 		_con_label.text = "CON —"
 		_spd_label.text = "SPD —"
 	_refresh_strain_chip()
+	_refresh_fertilizer_info()
 	_refresh_portrait()
+
+
+func _refresh_fertilizer_info() -> void:
+	if _fertilizer_info_label == null:
+		return
+	_fertilizer_info_label.text = _fertilizer_info_text()
+	_fertilizer_info_label.visible = not _fertilizer_info_label.text.is_empty()
+
+
+func _fertilizer_info_text() -> String:
+	if unit_data == null or unit_data.applied_fertilizers.is_empty():
+		return ""
+	var counts: Dictionary = {}
+	var order: Array[FertilizerData] = []
+	for fert in unit_data.applied_fertilizers:
+		if fert == null:
+			continue
+		if fert.behavior == FertilizerData.Behavior.FUNGICIDE:
+			continue
+		var key := fert.display_name
+		if not counts.has(key):
+			counts[key] = 0
+			order.append(fert)
+		counts[key] = int(counts[key]) + 1
+	var lines: PackedStringArray = []
+	for fert in order:
+		var count := int(counts.get(fert.display_name, 0))
+		var desc := "%s (%s)" % [fert.display_name, fert.subtitle_text()]
+		if count > 1:
+			lines.append("%d X %s" % [count, desc])
+		else:
+			lines.append(desc)
+	if lines.is_empty():
+		return ""
+	return "Fertilizers\n" + "\n".join(lines)
 
 
 func _refresh_strain_chip() -> void:
@@ -154,9 +194,7 @@ func _refresh_strain_meta() -> void:
 
 
 func _refresh_tags() -> void:
-	if unit_data.is_fully_evolved():
-		_stage_tag.set_text("Evolved")
-	elif unit_data.is_imago:
+	if unit_data.is_adult_stage():
 		_stage_tag.set_text("Adult")
 	else:
 		_stage_tag.set_text("Child")

@@ -137,6 +137,8 @@ func _accepts_drag_data(data: Variant) -> bool:
 		var fert := data.get("fertilizer") as FertilizerData
 		if fert != null and fert.behavior == FertilizerData.Behavior.FUNGICIDE:
 			return state == NurseryPlotData.State.GROWING or state == NurseryPlotData.State.READY
+		if not _plot.can_apply_fertilizer():
+			return false
 		return state == NurseryPlotData.State.EMPTY or state == NurseryPlotData.State.GROWING
 	return false
 
@@ -334,7 +336,7 @@ func _apply_visual_state() -> void:
 	var is_ready := _plot != null and _plot.get_state() == NurseryPlotData.State.READY
 	if is_ready:
 		_plot_visual.modulate = Color.WHITE
-		_show_egg_layers(_plot.will_harvest_as_imago())
+		_show_egg_layers(true)
 	else:
 		_plot_visual.modulate = _growth_tint()
 		_hide_egg_layers()

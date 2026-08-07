@@ -47,17 +47,9 @@ func is_lineage_spore() -> bool:
 	return not lineage_name.strip_edges().is_empty()
 
 
-## Extra days past maturity before harvest yields an imago.
-## Half the strain's days-to-imago, floored, with a minimum of 1.
-func extra_days_to_imago() -> int:
-	var resolved := resolved_strain()
-	var days := resolved.days_to_imago if resolved != null else 2
-	return maxi(1, int(days / 2.0))
-
-
-func grants_imago_at(days_grown: int, days_required: int = -1) -> bool:
-	var mature_at := days_to_mature if days_required < 0 else days_required
-	return days_grown >= mature_at + extra_days_to_imago()
+## Authored growth days after Greenhouse seal reduction (fertilizers applied on the plot).
+func days_to_mature_effective() -> int:
+	return maxi(days_to_mature - SealModifiers.greenhouse_day_reduction(), 0)
 
 
 func resolved_strain() -> UnitStrain:

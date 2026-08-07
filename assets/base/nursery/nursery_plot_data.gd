@@ -27,16 +27,15 @@ func can_apply_fertilizer() -> bool:
 	return applied_fertilizers.size() < SealModifiers.max_fertilizer_stacks()
 
 
+## Overgrowth removed: harvest always yields Child units.
 func will_harvest_as_imago() -> bool:
-	if planted_spore == null:
-		return false
-	return planted_spore.grants_imago_at(days_grown, days_to_mature_effective())
+	return false
 
 
 func days_to_mature_effective() -> int:
 	if planted_spore == null:
 		return 1
-	var base_days := maxi(planted_spore.days_to_mature - SealModifiers.greenhouse_day_reduction(), 0)
+	var base_days := planted_spore.days_to_mature_effective()
 	if has_behavior(FertilizerData.Behavior.SLOW_STEADY):
 		base_days *= 2
 	if has_behavior(FertilizerData.Behavior.SLOW_METABOLISM):

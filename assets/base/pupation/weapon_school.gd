@@ -240,9 +240,7 @@ static func resulting_training_count(unit: RosterUnitData) -> int:
 	return unit.weapon_trainings.size() + 1
 
 
-static func next_stage_after_training(unit: RosterUnitData) -> StringName:
-	if resulting_training_count(unit) >= 2:
-		return UnitStrain.STAGE_FULLY_EVOLVED
+static func next_stage_after_training(_unit: RosterUnitData) -> StringName:
 	return UnitStrain.STAGE_IMAGO
 
 
@@ -293,9 +291,10 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 
 
 static func stage_display_name(stage_id: StringName) -> String:
-	if stage_id == UnitStrain.STAGE_FULLY_EVOLVED:
-		return "Evolved"
-	if stage_id == UnitStrain.STAGE_IMAGO:
+	if (
+		stage_id == UnitStrain.STAGE_IMAGO
+		or stage_id == UnitStrain.STAGE_FULLY_EVOLVED
+	):
 		return "Adult"
 	return "Child"
 

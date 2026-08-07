@@ -153,7 +153,7 @@ func _hit_single_target() -> void:
 
 func _apply_hit_to_area(area: Area2D) -> void:
 	var hurtbox := area as HurtboxComponent
-	if _get_valid_target(hurtbox, true) == null:
+	if _get_valid_target(hurtbox, false) == null:
 		return
 	_apply_hit(hurtbox)
 

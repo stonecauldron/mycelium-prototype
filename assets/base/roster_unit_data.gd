@@ -44,6 +44,8 @@ var emitted_death_spore: bool = false
 @export var daily_stat_decay: int = 0
 ## One-shot +all stats granted on promote_to_imago (Late Bloomer).
 @export var pending_adult_stat_bonus: int = 0
+## Fertilizers applied in the nursery plot that produced this unit (display / lineage).
+@export var applied_fertilizers: Array[FertilizerData] = []
 
 
 func resolve_combat_profile() -> CombatProfile:
@@ -106,7 +108,7 @@ func has_exceeded_life_expectancy() -> bool:
 	return max_days_alive >= 0 and days_alive > max_days_alive
 
 
-## Natural age / imago-harvest promotion. Applies +1-all (+ strain delta) and Scythe if untrained.
+## Natural age / pupation promotion. Applies +1-all (+ strain delta) and Scythe if untrained.
 ## Maturity bonuses scale with generation (same falloff as pupation training gains).
 func promote_to_imago(apply_maturity_stats: bool = true) -> bool:
 	if is_imago or is_fully_evolved():
@@ -155,12 +157,13 @@ func maturity_stat_bonus() -> int:
 	return WeaponSchool.scale_stat_delta(IMAGO_STAT_BONUS, generation)
 
 
+## Legacy alias — Adult/Evolved collapsed; dual training no longer uses a separate stage.
 func promote_to_fully_evolved() -> bool:
 	if is_fully_evolved():
-		return false
-	life_stage_id = UnitStrain.STAGE_FULLY_EVOLVED
-	is_imago = true
-	return true
+		life_stage_id = UnitStrain.STAGE_IMAGO
+		is_imago = true
+		return true
+	return promote_to_imago(false)
 
 
 func can_pupate() -> bool:
@@ -187,10 +190,7 @@ func apply_pupation_training(school: int) -> bool:
 		weapon_trainings.pop_front()
 	WeaponSchool.apply_school_stats(stats, school, generation, pupation_stat_multiplier)
 	weapon_trainings.append(school)
-	if weapon_trainings.size() >= 2:
-		promote_to_fully_evolved()
-	else:
-		promote_to_imago(false)
+	promote_to_imago(false)
 	sync_weapon_from_trainings()
 	return true
 

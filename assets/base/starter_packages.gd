@@ -1,7 +1,7 @@
 class_name StarterPackages
 extends RefCounted
 
-## Curated starter packages: one Evolved (dual training) + one Adult (base weapon).
+## Curated starter packages: one dual-trained Adult (combo weapon) + one Adult (base weapon).
 
 const PACKAGE_IDS: Array[StringName] = [
 	&"great_sword_spear",
@@ -125,7 +125,7 @@ static func _make_evolved(unit_name: String, schools: Array) -> RosterUnitData:
 	for school in schools:
 		WeaponSchool.apply_school_stats(unit.stats, int(school))
 		unit.weapon_trainings.append(int(school))
-	unit.promote_to_fully_evolved()
+	unit.promote_to_imago(false)
 	unit.sync_weapon_from_trainings()
 	return unit
 

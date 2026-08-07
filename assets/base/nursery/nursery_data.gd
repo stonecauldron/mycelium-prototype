@@ -457,7 +457,7 @@ func advance_day() -> Array[Dictionary]:
 				"plot_index": i,
 				"spore_name": plot.planted_spore.display_name,
 				"tint": plot.planted_spore.tint,
-				"as_imago": plot.will_harvest_as_imago(),
+				"as_imago": false,
 			})
 	return matured
 
@@ -472,13 +472,8 @@ func harvest(plot_index: int) -> Array[RosterUnitData]:
 	var plot := plots[plot_index] as NurseryPlotData
 	if plot == null or not plot.can_harvest():
 		return result
-	var as_imago := plot.will_harvest_as_imago()
 	var pending := plot.consume_pending_stat_bonus()
 	result = _make_harvest_units(plot.planted_spore, plot.applied_fertilizers, pending)
-	if as_imago:
-		for unit in result:
-			if unit != null:
-				unit.promote_to_imago()
 	_apply_favourite_child_if_first_hatch(result)
 	plot.clear()
 	return result
@@ -608,6 +603,7 @@ func _make_harvest_units(
 			unit.pending_adult_stat_bonus = 6
 		if cocooning:
 			unit.pupation_stat_multiplier = 2
+		unit.applied_fertilizers = _copy_display_fertilizers(fertilizers)
 		unit.cocoon_duration_days = _baked_cocoon_duration(cocooning, fast_metabolism, slow_metabolism)
 		if unit.max_days_alive >= 0:
 			if fast_metabolism:
@@ -618,6 +614,15 @@ func _make_harvest_units(
 			unit_strain.call_effect(&"on_hatch", [unit])
 		units.append(unit)
 	return units
+
+
+func _copy_display_fertilizers(fertilizers: Array[FertilizerData]) -> Array[FertilizerData]:
+	var copied: Array[FertilizerData] = []
+	for fert in fertilizers:
+		if fert == null or fert.behavior == FertilizerData.Behavior.FUNGICIDE:
+			continue
+		copied.append(fert)
+	return copied
 
 
 func _baked_cocoon_duration(cocooning: bool, fast_metabolism: bool, slow_metabolism: bool) -> int:

@@ -112,19 +112,6 @@ func remove_unit(unit_data: RosterUnitData) -> void:
 	for i in bench.size():
 		if bench[i] == unit_data:
 			bench[i] = null
-	pack_squad()
-
-
-func pack_squad() -> void:
-	var occupied: Array = []
-	for entry in squad:
-		var unit := entry as RosterUnitData
-		if unit != null:
-			occupied.append(unit)
-	squad.clear()
-	for unit in occupied:
-		squad.append(unit)
-	_ensure_squad_size()
 
 
 func advance_unit_ages() -> Array[RosterUnitData]:

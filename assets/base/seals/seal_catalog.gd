@@ -85,7 +85,7 @@ static func _build_all() -> Array[SealData]:
 		),
 		_make(ID_BULWARK, "Bulwark", "The frontmost unit gains 2x HP", icon),
 		_make(ID_RANGER, "Ranger", "The rearmost unit gains 2x ATK", icon),
-		_make(ID_GREENHOUSE, "Greenhouse", "Spores take 1 day less to hatch", icon),
+		_make(ID_GREENHOUSE, "Greenhouse", "Spores take 1 day less to hatch", icon, true),
 		_make(
 			ID_COMMONERS_DELIGHT,
 			"Commoners' Delight",
@@ -100,14 +100,15 @@ static func _make(
 	seal_id: StringName,
 	display_name: String,
 	description: String,
-	icon: Texture2D
+	icon: Texture2D,
+	is_unique: bool = false
 ) -> SealData:
 	var seal := SealData.new()
 	seal.id = seal_id
 	seal.display_name = display_name
 	seal.description = description
 	seal.icon = icon
-	seal.is_unique = false
+	seal.is_unique = is_unique
 	return seal
 
 

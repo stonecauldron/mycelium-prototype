@@ -99,8 +99,8 @@ func _refresh() -> void:
 	var range_name: String = str(WeaponData.FORMATION_LINE_LABELS.get(data.get_formation_line(), "?"))
 	_weapon_label.text = "%s (%s)" % [weapon_name, range_name]
 	if data.stats != null:
-		_atk_chip.set_value(SealModifiers.effective_attack_damage(data))
-		_hp_chip.set_value(SealModifiers.effective_max_hp(data))
+		_atk_chip.set_value(BroodEmpressEffect.hub_effective_attack(data))
+		_hp_chip.set_value(BroodEmpressEffect.hub_effective_max_hp(data))
 	else:
 		_atk_chip.set_value("—")
 		_hp_chip.set_value("—")

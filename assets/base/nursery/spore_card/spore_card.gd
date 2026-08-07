@@ -75,7 +75,7 @@ func _refresh() -> void:
 	if spore == null:
 		return
 	_name_label.text = spore.display_name
-	_days_chip.set_value(spore.days_to_mature)
+	_days_chip.set_value(spore.days_to_mature_effective())
 	if _icon != null:
 		_icon.modulate = spore.tint
 	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.

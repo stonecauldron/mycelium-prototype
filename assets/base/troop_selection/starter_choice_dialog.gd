@@ -88,18 +88,18 @@ func _make_package_card(package_id: StringName) -> Control:
 	vbox.add_child(title)
 
 	var preview_units := StarterPackages.build_units(package_id)
-	var evolved: RosterUnitData = null
-	var adult: RosterUnitData = null
+	var combo: RosterUnitData = null
+	var base_adult: RosterUnitData = null
 	for unit in preview_units:
 		if unit == null:
 			continue
-		if unit.is_fully_evolved() and evolved == null:
-			evolved = unit
-		elif adult == null:
-			adult = unit
+		if unit.weapon_trainings.size() >= 2 and combo == null:
+			combo = unit
+		elif base_adult == null:
+			base_adult = unit
 
-	# Package cards always list Evolved above Adult (squad seeding stays range-ordered).
-	vbox.add_child(_make_unit_block(evolved))
+	# Package cards list combo Adult above base-weapon Adult (squad seeding stays range-ordered).
+	vbox.add_child(_make_unit_block(combo))
 
 	var divider := ColorRect.new()
 	divider.custom_minimum_size = Vector2(0, 2)
@@ -107,7 +107,7 @@ func _make_package_card(package_id: StringName) -> Control:
 	divider.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(divider)
 
-	vbox.add_child(_make_unit_block(adult))
+	vbox.add_child(_make_unit_block(base_adult))
 	return root
 
 

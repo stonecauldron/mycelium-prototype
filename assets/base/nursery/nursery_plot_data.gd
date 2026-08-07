@@ -41,7 +41,7 @@ func days_to_mature_effective() -> int:
 	if has_behavior(FertilizerData.Behavior.SLOW_METABOLISM):
 		base_days *= 2
 	if has_behavior(FertilizerData.Behavior.FAST_METABOLISM):
-		base_days = int(base_days / 2)
+		base_days = base_days // 2
 	return maxi(base_days, 0)
 
 

@@ -1385,7 +1385,8 @@ func take_damage(
 	knockback_from: Vector2 = Vector2.ZERO,
 	knockback_force: float = 0.0,
 	killer: Unit = null,
-	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
+	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING,
+	count_in_recap: bool = true
 ) -> void:
 	if _dying:
 		return
@@ -1404,7 +1405,7 @@ func take_damage(
 		amount = maxi(amount, 1)
 	else:
 		amount = maxi(amount, 0)
-	if amount > 0:
+	if amount > 0 and count_in_recap:
 		damage_taken += amount
 		if killer != null and is_instance_valid(killer):
 			killer.damage_dealt += amount

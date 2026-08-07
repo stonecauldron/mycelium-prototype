@@ -53,4 +53,12 @@ func flush() -> void:
 		if victim._dying or victim.current_hp <= 0:
 			continue
 		var lethal := maxi(victim.current_hp, victim.get_effective_max_hp()) + 999
-		victim.take_damage(lethal, killer.global_position if killer != null else Vector2.ZERO, 0.0, killer)
+		# Omit from post-battle damage recap (Death Cap sacrifices, etc.).
+		victim.take_damage(
+			lethal,
+			killer.global_position if killer != null else Vector2.ZERO,
+			0.0,
+			killer,
+			WeaponData.DamageType.SLASHING,
+			false
+		)

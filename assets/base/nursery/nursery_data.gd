@@ -35,7 +35,8 @@ const _STRAIN_SPORE_PATHS: Array[String] = [
 	"res://assets/base/nursery/spores/rubber_cap_spore.tres",
 	"res://assets/base/nursery/spores/brood_empress_spore.tres",
 ]
-const _STRAIN_SPORE_OFFER_CHANCE := 0.5
+## Chance a spore slot rolls a named specialty instead of a Generalist rarity tier.
+const _STRAIN_SPORE_OFFER_CHANCE := 0.8
 const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/reinforced_chitin.tres",
 	"res://assets/base/nursery/fertilizers/brute_force.tres",

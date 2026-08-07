@@ -6,17 +6,20 @@ signal unit_dropped_on_cocoon(slot: CocoonSlot, drag_data: Dictionary)
 const _COCOON_CLOSED := preload("res://assets/base/pupation/cocoon.png")
 const _COCOON_OPEN := preload("res://assets/base/pupation/cocoon_open.png")
 const _HOURGLASS_ICON := preload("res://assets/base/nursery/spore_card/hourglass_icon.png")
+const _SKULL_ICON := preload("res://assets/base/combat_progress_track/skull.png")
 const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
 const _WEAPON_DETAIL_CARD_SCENE := preload("res://assets/base/weapon_detail_card/weapon_detail_card.tscn")
 const _SCHOOL_TRAINING_DETAIL_CARD_SCENE := preload(
 	"res://assets/base/pupation/school_training_detail_card.tscn"
 )
 const _DETAIL_TOOLTIP_SEPARATION := 12.0
-const _SLOT_SIZE := Vector2(160, 260)
+const _SLOT_SIZE := Vector2(132, 260)
 const _HOVER_SCALE := 1.18
 const _TWEEN_SECONDS := 0.14
+const _COMPOST_COCOON_TINT := Color(1.0, 0.45, 0.45, 1.0)
 
 @export var school: int = 0
+@export var is_compost_slot: bool = false
 
 var _base_modulate: Color = Color.WHITE
 var _drag_hover_active: bool = false
@@ -47,6 +50,8 @@ func _accepts_drag_data(data: Variant) -> bool:
 	var source := str(data.get("source", ""))
 	if source != "squad" and source != "bench":
 		return false
+	if is_compost_slot:
+		return GameState.can_compost_unit(unit)
 	return GameState.can_cocoon_for_pupation(unit, school)
 
 
@@ -94,6 +99,9 @@ func _set_structure_mouse_ignore(node: Node) -> void:
 func _refresh_weapon_icon() -> void:
 	if _weapon_icon == null:
 		return
+	if is_compost_slot:
+		_weapon_icon.texture = _SKULL_ICON
+		return
 	var weapon := WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(school))
 	_weapon_icon.texture = weapon.icon if weapon != null else null
 
@@ -107,11 +115,19 @@ func _refresh_visuals() -> void:
 func _update_cocoon_art() -> void:
 	if _cocoon_image == null:
 		return
+	if is_compost_slot:
+		_cocoon_image.texture = _COCOON_OPEN
+		_cocoon_image.modulate = _COMPOST_COCOON_TINT
+		return
+	_cocoon_image.modulate = Color.WHITE
 	_cocoon_image.texture = _COCOON_CLOSED if get_occupant() != null else _COCOON_OPEN
 
 
 func _update_days_chip() -> void:
 	if _days_chip == null:
+		return
+	if is_compost_slot:
+		_days_chip.visible = false
 		return
 	var left := 0
 	if get_occupant() != null:
@@ -124,6 +140,9 @@ func _update_days_chip() -> void:
 
 
 func _update_tooltip() -> void:
+	if is_compost_slot:
+		tooltip_text = "Composting"
+		return
 	var unit := get_occupant()
 	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
 	if unit != null:
@@ -133,6 +152,8 @@ func _update_tooltip() -> void:
 
 
 func get_occupant() -> RosterUnitData:
+	if is_compost_slot:
+		return null
 	return GameState.pupation.get_occupant(school)
 
 
@@ -146,10 +167,53 @@ func sync_from_state() -> void:
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:
+	if is_compost_slot:
+		return _make_compost_tooltip()
 	var unit := get_occupant()
 	if unit == null:
 		return _make_empty_training_tooltip()
 	return _make_cocooned_unit_tooltip(unit)
+
+
+func _make_compost_tooltip() -> Object:
+	var tip := PanelContainer.new()
+	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
+	style.border_color = Color(0, 0, 0, 1)
+	style.set_border_width_all(3)
+	style.set_corner_radius_all(12)
+	style.content_margin_left = 14
+	style.content_margin_top = 12
+	style.content_margin_right = 14
+	style.content_margin_bottom = 12
+	tip.add_theme_stylebox_override("panel", style)
+	var box := VBoxContainer.new()
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_theme_constant_override("separation", 6)
+	tip.add_child(box)
+	var title := Label.new()
+	title.text = "Composting"
+	title.add_theme_font_size_override("font_size", 22)
+	title.add_theme_color_override("font_color", Color(0.03, 0.035, 0.027, 1))
+	box.add_child(title)
+	var body := Label.new()
+	body.text = "Kill a unit for biomass.\nAdults also emit spores.\nChild +%d kg · Adult +%d kg" % [
+		BiomassData.COMPOST_CHILD,
+		BiomassData.COMPOST_ADULT,
+	]
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.custom_minimum_size = Vector2(220, 0)
+	body.add_theme_font_size_override("font_size", 16)
+	body.add_theme_color_override("font_color", Color(0.03, 0.035, 0.027, 1))
+	box.add_child(body)
+	var tip_size := Vector2(248, 140)
+	tip.custom_minimum_size = tip_size
+	tip.size = tip_size
+	tip.tree_entered.connect(
+		_configure_detail_tooltip_popup.bind(tip, tip_size), CONNECT_ONE_SHOT
+	)
+	return tip
 
 
 func _make_empty_training_tooltip() -> Object:

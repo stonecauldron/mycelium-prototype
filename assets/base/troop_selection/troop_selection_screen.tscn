@@ -90,9 +90,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -325.0
+offset_left = -340.0
 offset_top = 216.0
-offset_right = 300.0
+offset_right = 340.0
 offset_bottom = 536.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
@@ -114,6 +114,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 260)
 layout_mode = 2
 theme_type_variation = &"SlotRow"
+theme_override_constants/separation = 0
 alignment = 1
 
 [node name="BenchPanel" type="PanelContainer" parent="." unique_id=710296817]

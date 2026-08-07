@@ -23,7 +23,11 @@ func on_battle_start(unit: Node, _context: BattleStartContext = null) -> void:
 
 
 func on_death(roster: Resource, context: DeathContext, _combat_unit: Node = null) -> void:
-	if context != DeathContext.COMBAT and context != DeathContext.AGED_OUT:
+	if (
+		context != DeathContext.COMBAT
+		and context != DeathContext.AGED_OUT
+		and context != DeathContext.COMPOSTED
+	):
 		return
 	var data := roster as RosterUnitData
 	if data == null:

@@ -608,7 +608,7 @@ func _make_harvest_units(
 		unit.cocoon_duration_days = _baked_cocoon_duration(cocooning, fast_metabolism, slow_metabolism)
 		if unit.max_days_alive >= 0:
 			if fast_metabolism:
-				unit.max_days_alive = unit.max_days_alive // 2
+				unit.max_days_alive = int(unit.max_days_alive / 2.0)
 			if slow_metabolism:
 				unit.max_days_alive = unit.max_days_alive * 2
 		if unit_strain != null:
@@ -633,7 +633,7 @@ func _baked_cocoon_duration(cocooning: bool, fast_metabolism: bool, slow_metabol
 	if slow_metabolism:
 		days *= 2
 	if fast_metabolism:
-		days = days // 2
+		days = int(days / 2.0)
 	return days
 
 

@@ -3,6 +3,8 @@ extends Resource
 
 const PER_KILL := 4
 const PER_IMAGO_KILL := 6
+const COMPOST_CHILD := 2
+const COMPOST_ADULT := 3
 const COMMON_SPORE_COST := 4
 const UNCOMMON_SPORE_COST := 8
 const RARE_SPORE_COST := 16
@@ -20,6 +22,10 @@ const SPORE_SHOP_WEIGHTS: Array[float] = [76.0, 20.0, 4.0, 0.0, 0.0]
 
 static func reward_for_kill(is_imago: bool) -> int:
 	return PER_IMAGO_KILL if is_imago else PER_KILL
+
+
+static func reward_for_compost(is_adult: bool) -> int:
+	return COMPOST_ADULT if is_adult else COMPOST_CHILD
 
 
 static func sell_value(buy_cost: int) -> int:

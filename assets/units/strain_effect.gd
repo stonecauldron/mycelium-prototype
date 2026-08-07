@@ -1,7 +1,7 @@
 class_name StrainEffect
 extends Resource
 
-enum DeathContext { COMBAT, AGED_OUT }
+enum DeathContext { COMBAT, AGED_OUT, COMPOSTED }
 
 
 ## Called once when the unit is created at nursery harvest.

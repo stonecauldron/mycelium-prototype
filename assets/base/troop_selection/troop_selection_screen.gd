@@ -7,6 +7,7 @@ const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _COCOON_SLOT_SCENE := preload("res://assets/base/pupation/cocoon_slot.tscn")
 const _PUPATION_CONFIRM_SCENE := preload("res://assets/base/pupation/pupation_confirm_dialog.tscn")
+const _COMPOST_CONFIRM_SCENE := preload("res://assets/base/pupation/compost_confirm_dialog.tscn")
 const _STARTER_CHOICE_SCENE := preload("res://assets/base/troop_selection/starter_choice_dialog.tscn")
 const _SEAL_CHOICE_SCENE := preload("res://assets/base/seals/seal_choice_dialog.tscn")
 const _FLAG_SEALS_SCENE := preload("res://assets/base/seals/flag_seals_overlay.tscn")
@@ -24,6 +25,7 @@ var _squad_slots: Array[DropSlot] = []
 var _bench_slots: Array[DropSlot] = []
 var _cocoon_slots: Array = []
 var _pupation_dialog: PupationConfirmDialog = null
+var _compost_dialog: CompostConfirmDialog = null
 var _starter_dialog: StarterChoiceDialog = null
 var _seal_dialog: SealChoiceDialog = null
 var _flag_seals: FlagSealsOverlay = null
@@ -115,6 +117,12 @@ func _build_cocoon_ui() -> void:
 	for child in _cocoon_row.get_children():
 		child.queue_free()
 	_cocoon_slots.clear()
+	var compost_slot := _COCOON_SLOT_SCENE.instantiate() as CocoonSlot
+	if compost_slot != null:
+		compost_slot.is_compost_slot = true
+		compost_slot.unit_dropped_on_cocoon.connect(_on_compost_drop)
+		_cocoon_row.add_child(compost_slot)
+		_cocoon_slots.append(compost_slot)
 	for school in WeaponSchool.COUNT:
 		var slot := _COCOON_SLOT_SCENE.instantiate() as CocoonSlot
 		if slot == null:
@@ -327,15 +335,34 @@ func _sync_all_slots() -> void:
 	_notify_start_combat_state()
 
 
+func _has_open_cocoon_dialog() -> bool:
+	if _pupation_dialog != null and is_instance_valid(_pupation_dialog):
+		return true
+	if _compost_dialog != null and is_instance_valid(_compost_dialog):
+		return true
+	return false
+
+
 func _on_cocoon_drop(slot: CocoonSlot, drag_data: Dictionary) -> void:
 	var unit := drag_data.get("unit") as RosterUnitData
 	if unit == null or slot == null:
 		return
-	if _pupation_dialog != null and is_instance_valid(_pupation_dialog):
+	if _has_open_cocoon_dialog():
 		return
 	if not GameState.can_cocoon_for_pupation(unit, slot.school):
 		return
 	_open_pupation_confirm(unit, slot.school)
+
+
+func _on_compost_drop(slot: CocoonSlot, drag_data: Dictionary) -> void:
+	var unit := drag_data.get("unit") as RosterUnitData
+	if unit == null or slot == null:
+		return
+	if _has_open_cocoon_dialog():
+		return
+	if not GameState.can_compost_unit(unit):
+		return
+	_open_compost_confirm(unit)
 
 
 func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
@@ -347,6 +374,15 @@ func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
 	dialog.setup(unit, school)
 
 
+func _open_compost_confirm(unit: RosterUnitData) -> void:
+	var dialog: CompostConfirmDialog = _COMPOST_CONFIRM_SCENE.instantiate()
+	_compost_dialog = dialog
+	dialog.confirmed.connect(_on_compost_confirmed)
+	dialog.tree_exited.connect(_on_compost_dialog_closed)
+	add_child(dialog)
+	dialog.setup(unit)
+
+
 func _on_pupation_confirmed(unit: RosterUnitData, school: int) -> void:
 	_pupation_dialog = null
 	if GameState.try_cocoon_for_pupation(unit, school):
@@ -354,8 +390,19 @@ func _on_pupation_confirmed(unit: RosterUnitData, school: int) -> void:
 		_refresh_base_hud()
 
 
+func _on_compost_confirmed(unit: RosterUnitData) -> void:
+	_compost_dialog = null
+	if GameState.try_compost_unit(unit):
+		_sync_all_slots()
+		_refresh_base_hud()
+
+
 func _on_pupation_dialog_closed() -> void:
 	_pupation_dialog = null
+
+
+func _on_compost_dialog_closed() -> void:
+	_compost_dialog = null
 
 
 func _refresh_base_hud() -> void:

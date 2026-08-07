@@ -86,6 +86,63 @@ func available_fighter_count() -> int:
 	return troop.living_unit_count()
 
 
+## Preview compost payout without mutating state. Keys: biomass (int), emits_spore (bool).
+func preview_compost_outcome(unit: RosterUnitData) -> Dictionary:
+	if unit == null:
+		return {"biomass": 0, "emits_spore": false}
+	var stage_reward := BiomassData.reward_for_compost(unit.is_adult_stage())
+	var bank := maxi(unit.biomass_bank, 0)
+	return {
+		"biomass": stage_reward + bank,
+		"emits_spore": unit.is_adult_stage(),
+	}
+
+
+func can_compost_unit(unit: RosterUnitData) -> bool:
+	if unit == null:
+		return false
+	if not _troop_contains(unit):
+		return false
+	if pupation.find_school_for_unit(unit) >= 0:
+		return false
+	# Must leave at least one fighter after composting this unit.
+	if available_fighter_count() <= 1:
+		return false
+	return true
+
+
+## Instantly compost a unit: death hooks, stage biomass, adult spore, remove from troop.
+func try_compost_unit(unit: RosterUnitData) -> bool:
+	if not can_compost_unit(unit):
+		return false
+	unit.last_death_biomass_yield = 0
+	if unit.strain != null:
+		unit.strain.call_effect(
+			&"on_death",
+			[unit, StrainEffect.DeathContext.COMPOSTED, null]
+		)
+	var compost_reward := BiomassData.reward_for_compost(unit.is_adult_stage())
+	if compost_reward > 0:
+		unit.last_death_biomass_yield += compost_reward
+		biomass.add(compost_reward)
+	if unit.is_adult_stage():
+		nursery.add_death_spore(unit)
+	troop.remove_unit(unit)
+	return true
+
+
+func _troop_contains(unit: RosterUnitData) -> bool:
+	if unit == null:
+		return false
+	for entry in troop.squad:
+		if entry == unit:
+			return true
+	for entry in troop.bench:
+		if entry == unit:
+			return true
+	return false
+
+
 ## Eligibility to open the pupation confirm (funds checked separately on confirm).
 func can_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
 	if unit == null or school < 0 or school >= WeaponSchool.COUNT:

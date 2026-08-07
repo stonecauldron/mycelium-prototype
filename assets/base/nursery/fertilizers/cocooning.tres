@@ -4,9 +4,8 @@
 
 [resource]
 script = ExtResource("1_fert")
-display_name = "Reinforced Chitin"
-short_description = "+4 CON / -2 SPD"
+display_name = "Cocooning"
+short_description = "Pupation take 2 days, but stats gains of training are doubled"
 biomass_cost = 2
-tint = Color(0.78, 0.62, 0.42, 1)
-con_delta = 4
-spd_delta = -2
+tint = Color(0.85, 0.6, 0.75, 1)
+behavior = 9

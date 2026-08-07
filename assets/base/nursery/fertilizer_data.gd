@@ -3,12 +3,17 @@ extends Resource
 
 enum Behavior {
 	STAT,
-	VOLATILE,
-	OVERKILL,
 	MEIOSIS,
 	SLOW_STEADY,
 	FUNGICIDE,
 	AMOK,
+	FAST_METABOLISM,
+	SLOW_METABOLISM,
+	TRIPLOID,
+	TRAINING_AMNESIA,
+	COCOONING,
+	STIMULANTS,
+	LATE_BLOOMER,
 }
 
 @export var display_name: String = "Fertilizer"
@@ -22,6 +27,8 @@ enum Behavior {
 @export var spd_delta: int = 0
 ## Extra growth days granted when this fertilizer is applied (or when planting onto a prepared plot).
 @export var growth_bonus: int = 0
+## When true, snap the plot to READY after apply / plant.
+@export var force_ready: bool = false
 
 
 func is_stat_source() -> bool:
@@ -29,6 +36,8 @@ func is_stat_source() -> bool:
 		behavior == Behavior.STAT
 		or behavior == Behavior.SLOW_STEADY
 		or behavior == Behavior.AMOK
+		or behavior == Behavior.STIMULANTS
+		or behavior == Behavior.LATE_BLOOMER
 	)
 
 

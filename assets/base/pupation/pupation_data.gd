@@ -79,7 +79,7 @@ func try_place(unit: RosterUnitData, school: int) -> bool:
 	if find_school_for_unit(unit) >= 0:
 		return false
 	occupants[school] = unit
-	days_remaining[school] = maxi(WeaponSchool.COCOON_DURATION_DAYS, 1)
+	days_remaining[school] = unit.effective_cocoon_days()
 	return true
 
 

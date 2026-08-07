@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_fert")
 display_name = "Brute Force"
-short_description = "+2 STR / -2 DEX"
+short_description = "+4 STR / -2 DEX"
 biomass_cost = 2
 tint = Color(0.85, 0.35, 0.32, 1)
-strength_delta = 2
+strength_delta = 4
 dex_delta = -2

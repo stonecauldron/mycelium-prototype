@@ -36,6 +36,14 @@ var emitted_death_spore: bool = false
 @export var has_revived: bool = false
 ## Favourite Child seal: permanent 1.5x ATK/HP from first hatch of a day.
 @export var favourite_child_buff: bool = false
+## Baked cocoon duration in days (−1 = use WeaponSchool.COCOON_DURATION_DAYS).
+@export var cocoon_duration_days: int = -1
+## Multiplier for pupation school stat gains (Cocooning fertiliser).
+@export var pupation_stat_multiplier: int = 1
+## Flat −all stats applied each day while in troop (Stimulants).
+@export var daily_stat_decay: int = 0
+## One-shot +all stats granted on promote_to_imago (Late Bloomer).
+@export var pending_adult_stat_bonus: int = 0
 
 
 func resolve_combat_profile() -> CombatProfile:
@@ -115,12 +123,31 @@ func promote_to_imago(apply_maturity_stats: bool = true) -> bool:
 			stats.dex = clampi(stats.dex + d, 1, 99)
 			stats.con = clampi(stats.con + d, 1, 99)
 			stats.spd = clampi(stats.spd + d, 1, 99)
+	_apply_pending_adult_stat_bonus()
 	life_stage_id = UnitStrain.STAGE_IMAGO
 	is_imago = true
 	sync_weapon_from_trainings()
 	if strain != null:
 		strain.call_effect(&"on_imago", [self])
 	return true
+
+
+func _apply_pending_adult_stat_bonus() -> void:
+	if pending_adult_stat_bonus == 0 or stats == null:
+		return
+	var bonus := pending_adult_stat_bonus
+	pending_adult_stat_bonus = 0
+	stats.strength = clampi(stats.strength + bonus, 1, 99)
+	stats.dex = clampi(stats.dex + bonus, 1, 99)
+	stats.con = clampi(stats.con + bonus, 1, 99)
+	stats.spd = clampi(stats.spd + bonus, 1, 99)
+
+
+## Cocoon wait in days. 0 or less means instant emerge on place.
+func effective_cocoon_days() -> int:
+	if cocoon_duration_days >= 0:
+		return cocoon_duration_days
+	return WeaponSchool.COCOON_DURATION_DAYS
 
 
 ## Scaled IMAGO_STAT_BONUS for this unit's generation (toward zero).
@@ -158,7 +185,7 @@ func apply_pupation_training(school: int) -> bool:
 		return false
 	if weapon_trainings.size() >= 2:
 		weapon_trainings.pop_front()
-	WeaponSchool.apply_school_stats(stats, school, generation)
+	WeaponSchool.apply_school_stats(stats, school, generation, pupation_stat_multiplier)
 	weapon_trainings.append(school)
 	if weapon_trainings.size() >= 2:
 		promote_to_fully_evolved()

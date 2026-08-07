@@ -161,15 +161,17 @@ static func preview_weapon_after_training(
 static func apply_school_stats(
 	stats: UnitStatsData,
 	school: int,
-	generation: int = 1
+	generation: int = 1,
+	multiplier: int = 1
 ) -> void:
 	if stats == null:
 		return
 	var deltas := scaled_school_deltas(school, generation)
-	stats.strength = clampi(stats.strength + int(deltas.get("strength", 0)), 1, 99)
-	stats.dex = clampi(stats.dex + int(deltas.get("dex", 0)), 1, 99)
-	stats.con = clampi(stats.con + int(deltas.get("con", 0)), 1, 99)
-	stats.spd = clampi(stats.spd + int(deltas.get("spd", 0)), 1, 99)
+	var m := maxi(multiplier, 1)
+	stats.strength = clampi(stats.strength + int(deltas.get("strength", 0)) * m, 1, 99)
+	stats.dex = clampi(stats.dex + int(deltas.get("dex", 0)) * m, 1, 99)
+	stats.con = clampi(stats.con + int(deltas.get("con", 0)) * m, 1, 99)
+	stats.spd = clampi(stats.spd + int(deltas.get("spd", 0)) * m, 1, 99)
 
 
 static func school_stat_deltas(school: int) -> Dictionary:
@@ -191,17 +193,25 @@ static func scaled_school_deltas(school: int, generation: int = 1) -> Dictionary
 static func preview_stats_after_training(
 	stats: UnitStatsData,
 	school: int,
-	generation: int = 1
+	generation: int = 1,
+	multiplier: int = 1
 ) -> UnitStatsData:
 	if stats == null:
 		return null
 	var preview := stats.duplicate(true) as UnitStatsData
-	apply_school_stats(preview, school, generation)
+	apply_school_stats(preview, school, generation, multiplier)
 	return preview
 
 
-static func school_stat_delta_text(school: int, generation: int = 1) -> String:
+static func school_stat_delta_text(
+	school: int,
+	generation: int = 1,
+	multiplier: int = 1
+) -> String:
 	var deltas := scaled_school_deltas(school, generation)
+	var m := maxi(multiplier, 1)
+	for key in deltas.keys():
+		deltas[key] = int(deltas[key]) * m
 	var parts: PackedStringArray = []
 	var keys: Array[String] = ["strength", "dex", "con", "spd"]
 	for key in keys:
@@ -244,7 +254,22 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 	var next_trainings := trainings_after_training(unit.weapon_trainings, school)
 	var next_stage := next_stage_after_training(unit)
 	var next_weapon := resolve_weapon(next_trainings, true)
-	var preview_stats := preview_stats_after_training(unit.stats, school, generation)
+	var preview_stats := preview_stats_after_training(
+		unit.stats,
+		school,
+		generation,
+		unit.pupation_stat_multiplier
+	)
+	if (
+		preview_stats != null
+		and unit.pending_adult_stat_bonus != 0
+		and unit.life_stage_id == UnitStrain.STAGE_JUVENILE
+	):
+		var adult_bonus := unit.pending_adult_stat_bonus
+		preview_stats.strength = clampi(preview_stats.strength + adult_bonus, 1, 99)
+		preview_stats.dex = clampi(preview_stats.dex + adult_bonus, 1, 99)
+		preview_stats.con = clampi(preview_stats.con + adult_bonus, 1, 99)
+		preview_stats.spd = clampi(preview_stats.spd + adult_bonus, 1, 99)
 	var data := RosterUnitData.new()
 	data.display_name = unit.display_name
 	data.lineage_name = unit.lineage_name
@@ -258,6 +283,10 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 	data.days_alive = unit.days_alive
 	data.max_days_alive = unit.max_days_alive
 	data.weapon_trainings = next_trainings
+	data.cocoon_duration_days = unit.cocoon_duration_days
+	data.pupation_stat_multiplier = unit.pupation_stat_multiplier
+	data.daily_stat_decay = unit.daily_stat_decay
+	data.pending_adult_stat_bonus = 0
 	if next_weapon != null:
 		data.combat = next_weapon.get_combat_profile()
 	return data

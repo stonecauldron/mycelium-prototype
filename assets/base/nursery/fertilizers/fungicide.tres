@@ -8,4 +8,4 @@ display_name = "Fungicide"
 short_description = "Kills growing spore.
 Grants +2 all stats to the next spore on plot."
 tint = Color(0.6, 0.35, 0.7, 1)
-behavior = 5
+behavior = 3

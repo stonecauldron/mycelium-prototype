@@ -4,9 +4,13 @@
 
 [resource]
 script = ExtResource("1_fert")
-display_name = "Reinforced Chitin"
-short_description = "+4 CON / -2 SPD"
+display_name = "Late Bloomer"
+short_description = "-3 to all stats as a child
++6 upon becoming an adult"
 biomass_cost = 2
-tint = Color(0.78, 0.62, 0.42, 1)
-con_delta = 4
-spd_delta = -2
+tint = Color(0.35, 0.7, 0.45, 1)
+behavior = 11
+strength_delta = -3
+dex_delta = -3
+con_delta = -3
+spd_delta = -3

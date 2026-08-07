@@ -4,9 +4,8 @@
 
 [resource]
 script = ExtResource("1_fert")
-display_name = "Feather Weight"
-short_description = "+2 SPD / -2 CON"
+display_name = "Fast metabolism"
+short_description = "Growth, pupation, and life expectancy are halved"
 biomass_cost = 2
-tint = Color(0.55, 0.78, 0.95, 1)
-con_delta = -2
-spd_delta = 2
+tint = Color(0.95, 0.7, 0.25, 1)
+behavior = 5

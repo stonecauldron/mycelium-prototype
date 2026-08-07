@@ -132,6 +132,12 @@ func advance_unit_ages() -> Array[RosterUnitData]:
 	var aged_out: Array[RosterUnitData] = []
 	for unit in _iter_living_units():
 		unit.days_alive += 1
+		if unit.daily_stat_decay > 0 and unit.stats != null:
+			var decay := unit.daily_stat_decay
+			unit.stats.strength = clampi(unit.stats.strength - decay, 1, 99)
+			unit.stats.dex = clampi(unit.stats.dex - decay, 1, 99)
+			unit.stats.con = clampi(unit.stats.con - decay, 1, 99)
+			unit.stats.spd = clampi(unit.stats.spd - decay, 1, 99)
 		if unit.strain != null:
 			unit.strain.call_effect(&"on_day", [unit])
 		if unit.can_promote_to_imago() and unit.promote_to_imago():

@@ -5,10 +5,11 @@
 [resource]
 script = ExtResource("1_fert")
 display_name = "Stress Induced Growth"
-short_description = "-2 all stats / hasten growth by 2 days"
+short_description = "Spore can be harvested immediately.
+-2 to ALL stats"
 tint = Color(0.72, 0.55, 0.28, 1)
 strength_delta = -2
 dex_delta = -2
 con_delta = -2
 spd_delta = -2
-growth_bonus = 2
+force_ready = true

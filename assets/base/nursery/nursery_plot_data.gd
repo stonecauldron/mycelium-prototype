@@ -38,8 +38,12 @@ func days_to_mature_effective() -> int:
 		return 1
 	var base_days := maxi(planted_spore.days_to_mature - SealModifiers.greenhouse_day_reduction(), 0)
 	if has_behavior(FertilizerData.Behavior.SLOW_STEADY):
-		return maxi(base_days * 2, 0)
-	return base_days
+		base_days *= 2
+	if has_behavior(FertilizerData.Behavior.SLOW_METABOLISM):
+		base_days *= 2
+	if has_behavior(FertilizerData.Behavior.FAST_METABOLISM):
+		base_days = int(base_days / 2)
+	return maxi(base_days, 0)
 
 
 func get_state() -> State:
@@ -57,6 +61,13 @@ func has_fertilizers() -> bool:
 func has_behavior(behavior: FertilizerData.Behavior) -> bool:
 	for fert in applied_fertilizers:
 		if fert != null and fert.behavior == behavior:
+			return true
+	return false
+
+
+func has_force_ready() -> bool:
+	for fert in applied_fertilizers:
+		if fert != null and fert.force_ready:
 			return true
 	return false
 
@@ -79,6 +90,7 @@ func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 	applied_fertilizers.append(fertilizer)
 	if planted_spore != null and fertilizer.growth_bonus != 0:
 		days_grown += fertilizer.growth_bonus
+	_snap_force_ready_if_needed()
 	return true
 
 
@@ -111,6 +123,16 @@ func total_growth_bonus() -> int:
 		if fert != null:
 			total += fert.growth_bonus
 	return total
+
+
+func snap_after_plant() -> void:
+	_snap_force_ready_if_needed()
+
+
+func _snap_force_ready_if_needed() -> void:
+	if planted_spore == null or not has_force_ready():
+		return
+	days_grown = maxi(days_grown, days_to_mature_effective())
 
 
 func fertilizer_tooltip() -> String:

@@ -98,7 +98,13 @@ func _refresh() -> void:
 
 
 func _refresh_duration_chip() -> void:
-	var days := maxi(WeaponSchool.COCOON_DURATION_DAYS, 1)
+	var days := 0
+	if _unit != null:
+		days = _unit.effective_cocoon_days()
+	if days <= 0:
+		_duration_chip.set_value(0)
+		_duration_suffix.text = "instant"
+		return
 	_duration_chip.set_value(days)
 	_duration_suffix.text = WeaponSchool.day_word(days)
 
@@ -134,7 +140,13 @@ func _fill_result_side() -> void:
 	var generation := 1
 	if _unit != null:
 		generation = maxi(_unit.generation, 1)
+	var mult := 1
+	if _unit != null:
+		mult = maxi(_unit.pupation_stat_multiplier, 1)
 	var deltas := WeaponSchool.scaled_school_deltas(_school, generation)
+	var adult_bonus := 0
+	if _unit != null and _unit.life_stage_id == UnitStrain.STAGE_JUVENILE:
+		adult_bonus = _unit.pending_adult_stat_bonus
 	var next_stage := (
 		_preview_unit.life_stage_id if _preview_unit != null
 		else WeaponSchool.next_stage_after_training(_unit)
@@ -153,10 +165,22 @@ func _fill_result_side() -> void:
 	_set_combat_chips(_preview_unit, _right_atk_chip, _right_hp_chip)
 
 	if preview_stats != null:
-		_apply_result_stat(_right_str, _mid_str, "STR", preview_stats.strength, int(deltas.get("strength", 0)))
-		_apply_result_stat(_right_dex, _mid_dex, "DEX", preview_stats.dex, int(deltas.get("dex", 0)))
-		_apply_result_stat(_right_con, _mid_con, "CON", preview_stats.con, int(deltas.get("con", 0)))
-		_apply_result_stat(_right_spd, _mid_spd, "SPD", preview_stats.spd, int(deltas.get("spd", 0)))
+		_apply_result_stat(
+			_right_str, _mid_str, "STR", preview_stats.strength,
+			int(deltas.get("strength", 0)) * mult + adult_bonus
+		)
+		_apply_result_stat(
+			_right_dex, _mid_dex, "DEX", preview_stats.dex,
+			int(deltas.get("dex", 0)) * mult + adult_bonus
+		)
+		_apply_result_stat(
+			_right_con, _mid_con, "CON", preview_stats.con,
+			int(deltas.get("con", 0)) * mult + adult_bonus
+		)
+		_apply_result_stat(
+			_right_spd, _mid_spd, "SPD", preview_stats.spd,
+			int(deltas.get("spd", 0)) * mult + adult_bonus
+		)
 	else:
 		_right_str.text = "STR —"
 		_right_dex.text = "DEX —"

@@ -5,11 +5,11 @@
 [resource]
 script = ExtResource("1_fert")
 display_name = "Slow and Steady"
-short_description = "+2 all stats
+short_description = "+3 ALL stats
 ×2 longer growth time."
 tint = Color(0.45, 0.7, 0.5, 1)
-behavior = 4
-strength_delta = 2
-dex_delta = 2
-con_delta = 2
-spd_delta = 2
+behavior = 2
+strength_delta = 3
+dex_delta = 3
+con_delta = 3
+spd_delta = 3

@@ -39,16 +39,20 @@ const _STRAIN_SPORE_OFFER_CHANCE := 0.5
 const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/reinforced_chitin.tres",
 	"res://assets/base/nursery/fertilizers/brute_force.tres",
-	"res://assets/base/nursery/fertilizers/feather_weight.tres",
+	"res://assets/base/nursery/fertilizers/hollow_chitin.tres",
 	"res://assets/base/nursery/fertilizers/finesse.tres",
-	"res://assets/base/nursery/fertilizers/quick_growth.tres",
 	"res://assets/base/nursery/fertilizers/stress_induced_growth.tres",
-	"res://assets/base/nursery/fertilizers/volatile.tres",
-	"res://assets/base/nursery/fertilizers/overkill.tres",
-	"res://assets/base/nursery/fertilizers/meiosis.tres",
 	"res://assets/base/nursery/fertilizers/slow_and_steady.tres",
+	"res://assets/base/nursery/fertilizers/fast_metabolism.tres",
+	"res://assets/base/nursery/fertilizers/slow_metabolism.tres",
+	"res://assets/base/nursery/fertilizers/meiosis.tres",
+	"res://assets/base/nursery/fertilizers/triploid_cells.tres",
 	"res://assets/base/nursery/fertilizers/fungicide.tres",
 	"res://assets/base/nursery/fertilizers/amok.tres",
+	"res://assets/base/nursery/fertilizers/training_amnesia.tres",
+	"res://assets/base/nursery/fertilizers/cocooning.tres",
+	"res://assets/base/nursery/fertilizers/stimulants.tres",
+	"res://assets/base/nursery/fertilizers/late_bloomer.tres",
 ]
 
 @export var plots: Array = []
@@ -410,6 +414,7 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 		return false
 	plot.planted_spore = spore
 	plot.days_grown = plot.total_growth_bonus()
+	plot.snap_after_plant()
 	return true
 
 
@@ -523,22 +528,41 @@ func _make_harvest_units(
 	var yield_count := 1
 	if unit_strain != null:
 		yield_count = maxi(unit_strain.hatch_count, 1)
-	for fert in fertilizers:
-		if fert != null and fert.behavior == FertilizerData.Behavior.MEIOSIS:
-			yield_count = maxi(yield_count, 2)
-			break
-
-	var force_amok := false
-	for fert in fertilizers:
-		if fert != null and fert.behavior == FertilizerData.Behavior.AMOK:
-			force_amok = true
-			break
-
 	var meiosis := false
+	var triploid := false
+	var force_amok := false
+	var training_amnesia := false
+	var cocooning := false
+	var stimulants := false
+	var late_bloomer := false
+	var fast_metabolism := false
+	var slow_metabolism := false
 	for fert in fertilizers:
-		if fert != null and fert.behavior == FertilizerData.Behavior.MEIOSIS:
-			meiosis = true
-			break
+		if fert == null:
+			continue
+		match fert.behavior:
+			FertilizerData.Behavior.MEIOSIS:
+				meiosis = true
+			FertilizerData.Behavior.TRIPLOID:
+				triploid = true
+			FertilizerData.Behavior.AMOK:
+				force_amok = true
+			FertilizerData.Behavior.TRAINING_AMNESIA:
+				training_amnesia = true
+			FertilizerData.Behavior.COCOONING:
+				cocooning = true
+			FertilizerData.Behavior.STIMULANTS:
+				stimulants = true
+			FertilizerData.Behavior.LATE_BLOOMER:
+				late_bloomer = true
+			FertilizerData.Behavior.FAST_METABOLISM:
+				fast_metabolism = true
+			FertilizerData.Behavior.SLOW_METABOLISM:
+				slow_metabolism = true
+	if meiosis:
+		yield_count *= 2
+	if triploid:
+		yield_count *= 3
 
 	for i in yield_count:
 		var unit_stats := stats.duplicate(true) as UnitStatsData
@@ -547,6 +571,11 @@ func _make_harvest_units(
 			unit_stats.dex = maxi(1, roundi(float(unit_stats.dex) * 0.5))
 			unit_stats.con = maxi(1, roundi(float(unit_stats.con) * 0.5))
 			unit_stats.spd = maxi(1, roundi(float(unit_stats.spd) * 0.5))
+		if triploid:
+			unit_stats.strength = maxi(1, roundi(float(unit_stats.strength) / 3.0))
+			unit_stats.dex = maxi(1, roundi(float(unit_stats.dex) / 3.0))
+			unit_stats.con = maxi(1, roundi(float(unit_stats.con) / 3.0))
+			unit_stats.spd = maxi(1, roundi(float(unit_stats.spd) / 3.0))
 		var hatch_name := UnitNames.pick()
 		var hatch_generation := 1
 		var hatch_lineage := hatch_name
@@ -564,7 +593,7 @@ func _make_harvest_units(
 		unit.lineage_name = hatch_lineage
 		unit.generation = hatch_generation
 		unit.display_name = hatch_name
-		if lineage:
+		if lineage and not training_amnesia:
 			unit.weapon_trainings = []
 			for training in spore.weapon_trainings:
 				unit.weapon_trainings.append(int(training))
@@ -573,64 +602,43 @@ func _make_harvest_units(
 		unit.sync_weapon_from_trainings()
 		if force_amok:
 			unit.forced_engagement_stance = WeaponData.EngagementStance.PRESS_FORWARD
+		if stimulants:
+			unit.daily_stat_decay = 1
+		if late_bloomer:
+			unit.pending_adult_stat_bonus = 6
+		if cocooning:
+			unit.pupation_stat_multiplier = 2
+		unit.cocoon_duration_days = _baked_cocoon_duration(cocooning, fast_metabolism, slow_metabolism)
+		if unit.max_days_alive >= 0:
+			if fast_metabolism:
+				unit.max_days_alive = int(unit.max_days_alive / 2)
+			if slow_metabolism:
+				unit.max_days_alive = unit.max_days_alive * 2
 		if unit_strain != null:
 			unit_strain.call_effect(&"on_hatch", [unit])
 		units.append(unit)
 	return units
 
 
+func _baked_cocoon_duration(cocooning: bool, fast_metabolism: bool, slow_metabolism: bool) -> int:
+	var days := WeaponSchool.COCOON_DURATION_DAYS
+	if cocooning:
+		days = 2
+	if slow_metabolism:
+		days *= 2
+	if fast_metabolism:
+		days = int(days / 2)
+	return days
+
+
 func _apply_fertilizer_stats(stats: UnitStatsData, fertilizers: Array[FertilizerData]) -> void:
 	if stats == null:
 		return
-	var volatile_count := 0
-	for fert in fertilizers:
-		if fert != null and fert.behavior == FertilizerData.Behavior.VOLATILE:
-			volatile_count += 1
-	var scale_factor := 1
-	if volatile_count > 0:
-		scale_factor = int(pow(2.0, float(volatile_count)))
 	for fert in fertilizers:
 		if fert == null:
 			continue
 		if fert.is_stat_source():
-			fert.apply_to(stats, scale_factor)
-	for fert in fertilizers:
-		if fert != null and fert.behavior == FertilizerData.Behavior.OVERKILL:
-			_apply_overkill(stats)
-			break
-
-
-func _apply_overkill(stats: UnitStatsData) -> void:
-	if stats == null:
-		return
-	var values: Array[int] = [stats.strength, stats.dex, stats.con, stats.spd]
-	var highest: int = values[0]
-	var lowest: int = values[0]
-	for v in values:
-		highest = maxi(highest, v)
-		lowest = mini(lowest, v)
-	var high_idxs: Array[int] = []
-	var low_idxs: Array[int] = []
-	for i in values.size():
-		if values[i] == highest:
-			high_idxs.append(i)
-		if values[i] == lowest:
-			low_idxs.append(i)
-	var high_i: int = high_idxs[randi() % high_idxs.size()]
-	var low_i: int = low_idxs[randi() % low_idxs.size()]
-	# Prefer distinct stats when possible.
-	if high_i == low_i and high_idxs.size() > 1:
-		high_idxs.erase(high_i)
-		high_i = high_idxs[randi() % high_idxs.size()]
-	elif high_i == low_i and low_idxs.size() > 1:
-		low_idxs.erase(low_i)
-		low_i = low_idxs[randi() % low_idxs.size()]
-	values[high_i] = clampi(values[high_i] + 2, 1, 99)
-	values[low_i] = clampi(values[low_i] - 2, 1, 99)
-	stats.strength = values[0]
-	stats.dex = values[1]
-	stats.con = values[2]
-	stats.spd = values[3]
+			fert.apply_to(stats)
 
 
 func _ensure_plot_count() -> void:

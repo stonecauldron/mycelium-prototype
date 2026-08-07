@@ -4,9 +4,13 @@
 
 [resource]
 script = ExtResource("1_fert")
-display_name = "Reinforced Chitin"
-short_description = "+4 CON / -2 SPD"
+display_name = "Stimulants"
+short_description = "+5 to ALL stats upon hatch
+-1 to ALL stats after every day"
 biomass_cost = 2
-tint = Color(0.78, 0.62, 0.42, 1)
-con_delta = 4
-spd_delta = -2
+tint = Color(0.95, 0.4, 0.55, 1)
+behavior = 10
+strength_delta = 5
+dex_delta = 5
+con_delta = 5
+spd_delta = 5

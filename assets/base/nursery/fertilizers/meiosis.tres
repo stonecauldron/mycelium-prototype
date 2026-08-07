@@ -8,4 +8,4 @@ display_name = "Meiosis"
 short_description = "Hatch amount x2
 Stats are halved."
 tint = Color(0.55, 0.75, 0.95, 1)
-behavior = 3
+behavior = 1

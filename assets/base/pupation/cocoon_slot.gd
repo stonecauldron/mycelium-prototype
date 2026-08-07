@@ -29,6 +29,35 @@ var _scale_tween: Tween
 @onready var _drop_arrow: FloatingArrow = %DropArrow
 
 
+func _set_drop_arrow_visible(should_show: bool) -> void:
+	if _drop_arrow == null:
+		return
+	if should_show:
+		_drop_arrow.show_arrow()
+	else:
+		_drop_arrow.hide_arrow()
+
+
+func _accepts_drag_data(data: Variant) -> bool:
+	if typeof(data) != TYPE_DICTIONARY:
+		return false
+	var unit := data.get("unit") as RosterUnitData
+	if unit == null:
+		return false
+	var source := str(data.get("source", ""))
+	if source != "squad" and source != "bench":
+		return false
+	return GameState.can_cocoon_for_pupation(unit, school)
+
+
+func _refresh_arrow() -> void:
+	var viewport := get_viewport()
+	if viewport != null and viewport.gui_is_dragging():
+		_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
+		return
+	_set_drop_arrow_visible(false)
+
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	custom_minimum_size = _SLOT_SIZE
@@ -39,7 +68,6 @@ func _ready() -> void:
 	_refresh_weapon_icon()
 	_refresh_visuals()
 	_prepare_cocoon_pivot()
-	_refresh_arrow()
 
 
 func _prepare_cocoon_pivot() -> void:
@@ -115,35 +143,6 @@ func sync_from_state() -> void:
 	if _hover_punch != null:
 		_hover_punch.reset()
 		_hover_punch.call_deferred("arm_enter_unless_hovered")
-
-
-func _set_drop_arrow_visible(should_show: bool) -> void:
-	if _drop_arrow == null:
-		return
-	if should_show:
-		_drop_arrow.show_arrow()
-	else:
-		_drop_arrow.hide_arrow()
-
-
-func _accepts_drag_data(data: Variant) -> bool:
-	if typeof(data) != TYPE_DICTIONARY:
-		return false
-	var unit := data.get("unit") as RosterUnitData
-	if unit == null:
-		return false
-	var source := str(data.get("source", ""))
-	if source != "squad" and source != "bench":
-		return false
-	return GameState.can_cocoon_for_pupation(unit, school)
-
-
-func _refresh_arrow() -> void:
-	var viewport := get_viewport()
-	if viewport != null and viewport.gui_is_dragging():
-		_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
-		return
-	_set_drop_arrow_visible(false)
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:

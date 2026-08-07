@@ -30,7 +30,7 @@ const _SNIPER_PATH := "res://assets/weapons/sniper/sniper.tres"
 const SCHOOL_STAT_DELTAS := {
 	0: {"strength": 3, "dex": -1, "con": 2, "spd": 0},
 	1: {"strength": 1, "dex": 0, "con": 4, "spd": -1},
-	2: {"strength": 1, "dex": 1, "con": -1, "spd": 3},
+	2: {"strength": 1, "dex": 1, "con": 1, "spd": 2},
 	3: {"strength": 0, "dex": 3, "con": -1, "spd": 2},
 }
 

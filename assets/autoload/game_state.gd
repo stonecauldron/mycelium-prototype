@@ -44,6 +44,7 @@ var favourite_child_used_today: bool = false
 func _ready() -> void:
 	_roll_run_seed()
 	begin_day()
+	pending_seal_choice = true
 
 
 ## Debug (~): +100 biomass and unlock all base screens.
@@ -151,6 +152,11 @@ func try_add_seal(seal: SealData) -> bool:
 		return false
 	if not seals.add(seal):
 		return false
+	# Opening seal is chosen after day-0 begin_day(); grant missed Golden Mould once.
+	if current_day == 0 and seal.id == SealCatalog.ID_GOLDEN_MOULD:
+		var mould := SealModifiers.golden_mould_biomass()
+		if mould > 0:
+			biomass.add(mould)
 	ensure_nursery_seeded()
 	nursery.refresh_spore_offer_costs()
 	return true
@@ -403,11 +409,11 @@ func reset_run() -> void:
 	show_plot_plant_hint = true
 	show_common_spore_shop_hint = true
 	debug_mode_active = false
-	pending_seal_choice = false
 	favourite_child_used_today = false
 	clear_upcoming_enemy_formation()
 	_roll_run_seed()
 	begin_day()
+	pending_seal_choice = true
 
 
 func _roll_run_seed() -> void:

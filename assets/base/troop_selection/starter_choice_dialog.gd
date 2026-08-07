@@ -3,7 +3,7 @@ extends Control
 
 signal package_chosen(package_id: StringName)
 
-const _CARD_SIZE := Vector2(280, 620)
+const _CARD_SIZE := Vector2(280, 380)
 const _PORTRAIT_SIZE := Vector2(0, 140)
 const _PORTRAIT_SCALE := 0.7
 const _TAG_CHIP_SCENE := preload("res://assets/ui/tag_chip/tag_chip.tscn")
@@ -87,27 +87,8 @@ func _make_package_card(package_id: StringName) -> Control:
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(title)
 
-	var preview_units := StarterPackages.build_units(package_id)
-	var combo: RosterUnitData = null
-	var base_adult: RosterUnitData = null
-	for unit in preview_units:
-		if unit == null:
-			continue
-		if unit.weapon_trainings.size() >= 2 and combo == null:
-			combo = unit
-		elif base_adult == null:
-			base_adult = unit
-
-	# Package cards list combo Adult above base-weapon Adult (squad seeding stays range-ordered).
-	vbox.add_child(_make_unit_block(combo))
-
-	var divider := ColorRect.new()
-	divider.custom_minimum_size = Vector2(0, 2)
-	divider.color = Color(0, 0, 0, 0.18)
-	divider.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vbox.add_child(divider)
-
-	vbox.add_child(_make_unit_block(base_adult))
+	# Combo Adult only — untrained Child is seeded but not shown here.
+	vbox.add_child(_make_unit_block(StarterPackages.preview_unit(package_id)))
 	return root
 
 

@@ -1,7 +1,8 @@
 class_name StarterPackages
 extends RefCounted
 
-## Curated starter packages: one dual-trained Adult (combo weapon) + one Adult (base weapon).
+## Curated starter packages: one dual-trained Adult (combo weapon).
+## build_units also appends a hidden untrained Child (not shown in the picker UI).
 
 const PACKAGE_IDS: Array[StringName] = [
 	&"great_sword_spear",
@@ -29,28 +30,24 @@ static func display_name(package_id: StringName) -> String:
 			return str(package_id)
 
 
-## Returns {evolved_schools: Array[int], adult_school: int} or empty if unknown.
+## Returns {evolved_schools: Array[int]} or empty if unknown.
 static func def_for(package_id: StringName) -> Dictionary:
 	match package_id:
 		&"great_sword_spear":
 			return {
 				"evolved_schools": [WeaponSchool.Id.SWORD, WeaponSchool.Id.SWORD],
-				"adult_school": WeaponSchool.Id.SPEAR,
 			}
 		&"sniper_shield":
 			return {
 				"evolved_schools": [WeaponSchool.Id.BOW, WeaponSchool.Id.BOW],
-				"adult_school": WeaponSchool.Id.SHIELD,
 			}
 		&"halberd_sword":
 			return {
 				"evolved_schools": [WeaponSchool.Id.SPEAR, WeaponSchool.Id.SPEAR],
-				"adult_school": WeaponSchool.Id.SWORD,
 			}
 		&"great_shield_bow":
 			return {
 				"evolved_schools": [WeaponSchool.Id.SHIELD, WeaponSchool.Id.SHIELD],
-				"adult_school": WeaponSchool.Id.BOW,
 			}
 		_:
 			return {}
@@ -64,11 +61,13 @@ static func evolved_weapon(package_id: StringName) -> WeaponData:
 	return WeaponSchool.resolve_weapon(schools, true)
 
 
-static func adult_weapon(package_id: StringName) -> WeaponData:
+## Dual-trained Adult only — for starter picker preview (no Child).
+static func preview_unit(package_id: StringName) -> RosterUnitData:
 	var def := def_for(package_id)
 	if def.is_empty():
 		return null
-	return WeaponSchool.resolve_weapon([int(def["adult_school"])], true)
+	var names := UnitNames.pick_unique(1)
+	return _make_evolved(names[0], def["evolved_schools"])
 
 
 static func build_units(package_id: StringName) -> Array[RosterUnitData]:
@@ -78,11 +77,11 @@ static func build_units(package_id: StringName) -> Array[RosterUnitData]:
 		return units
 	var names := UnitNames.pick_unique(2)
 	var evolved := _make_evolved(names[0], def["evolved_schools"])
-	var adult := _make_adult(names[1], int(def["adult_school"]))
+	var child := _make_untrained_child(names[1])
 	if evolved != null:
 		units.append(evolved)
-	if adult != null:
-		units.append(adult)
+	if child != null:
+		units.append(child)
 	units.sort_custom(_compare_by_range_class)
 	return units
 
@@ -106,18 +105,6 @@ static func _range_sort_key(unit: RosterUnitData) -> int:
 			return 99
 
 
-static func _make_adult(unit_name: String, school: int) -> RosterUnitData:
-	var unit := _make_blank(unit_name)
-	if unit == null:
-		return null
-	# Starters skip pupation gate (adults can no longer cocoon in play).
-	WeaponSchool.apply_school_stats(unit.stats, school)
-	unit.weapon_trainings.append(school)
-	unit.promote_to_imago(false)
-	unit.sync_weapon_from_trainings()
-	return unit
-
-
 static func _make_evolved(unit_name: String, schools: Array) -> RosterUnitData:
 	var unit := _make_blank(unit_name)
 	if unit == null:
@@ -126,6 +113,14 @@ static func _make_evolved(unit_name: String, schools: Array) -> RosterUnitData:
 		WeaponSchool.apply_school_stats(unit.stats, int(school))
 		unit.weapon_trainings.append(int(school))
 	unit.promote_to_imago(false)
+	unit.sync_weapon_from_trainings()
+	return unit
+
+
+static func _make_untrained_child(unit_name: String) -> RosterUnitData:
+	var unit := _make_blank(unit_name)
+	if unit == null:
+		return null
 	unit.sync_weapon_from_trainings()
 	return unit
 

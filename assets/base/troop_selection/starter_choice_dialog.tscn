@@ -51,7 +51,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(1280, 960)
+custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 mouse_filter = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
@@ -71,14 +71,14 @@ theme_override_constants/separation = 14
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 40
-text = "Choose Your Starters"
+text = "Choose Your Starter"
 horizontal_alignment = 1
 
 [node name="Prompt" type="Label" parent="Center/Panel/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 24
-text = "Pick a package: two Adults — one with a combo weapon and one with a base weapon."
+text = "Pick a dual-trained Adult with a combo weapon."
 horizontal_alignment = 1
 autowrap_mode = 3
 

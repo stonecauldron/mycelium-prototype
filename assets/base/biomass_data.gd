@@ -11,10 +11,11 @@ const LEGENDARY_SPORE_COST := 64
 const SHOP_REROLL_COST := 1
 const SCOUT_REROLL_COST := 2
 const PLOT_UNLOCK_BASE_COST := 4
+const STARTING_AMOUNT := 3
 ## Relative shop weights (= % when sum is 100): common, uncommon, rare, epic, legendary.
 const SPORE_SHOP_WEIGHTS: Array[float] = [76.0, 20.0, 4.0, 0.0, 0.0]
 
-@export var amount: int = 0
+@export var amount: int = STARTING_AMOUNT
 
 
 static func reward_for_kill(is_imago: bool) -> int:
@@ -43,4 +44,4 @@ func try_spend(cost: int) -> bool:
 
 
 func reset() -> void:
-	amount = 0
+	amount = STARTING_AMOUNT

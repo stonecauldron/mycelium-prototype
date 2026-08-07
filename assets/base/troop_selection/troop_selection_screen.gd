@@ -53,10 +53,10 @@ func on_screen_shown() -> void:
 	ensure_pending_modals()
 
 
-## Starter / seal picks — safe to call from base even when another tab is active.
+## Seal then starter picks — safe to call from base even when another tab is active.
 func ensure_pending_modals() -> void:
-	_ensure_starter_choice()
 	_ensure_seal_choice()
+	_ensure_starter_choice()
 
 
 func _hydrate_from_troop_data() -> void:
@@ -126,7 +126,11 @@ func _build_cocoon_ui() -> void:
 
 
 func _ensure_starter_choice() -> void:
+	if GameState.pending_seal_choice:
+		return
 	if GameState.troop.is_seeded():
+		return
+	if _seal_dialog != null and is_instance_valid(_seal_dialog):
 		return
 	if _starter_dialog != null and is_instance_valid(_starter_dialog):
 		return
@@ -157,6 +161,7 @@ func _on_starter_package_chosen(package_id: StringName) -> void:
 	bench = GameState.troop.bench
 	squad = GameState.troop.squad
 	_sync_all_slots()
+	_notify_start_combat_state()
 
 
 func _on_starter_dialog_closed() -> void:
@@ -164,8 +169,6 @@ func _on_starter_dialog_closed() -> void:
 	if not GameState.troop.is_seeded():
 		# Recreate if closed without a choice (should not happen for blocking dialog).
 		call_deferred("_ensure_starter_choice")
-	else:
-		call_deferred("_ensure_seal_choice")
 
 
 func _ensure_flag_seals_overlay() -> void:
@@ -187,8 +190,6 @@ func _refresh_flag_seals() -> void:
 func _ensure_seal_choice() -> void:
 	if not GameState.pending_seal_choice:
 		return
-	if not GameState.troop.is_seeded():
-		return
 	if _starter_dialog != null and is_instance_valid(_starter_dialog):
 		return
 	if _seal_dialog != null and is_instance_valid(_seal_dialog):
@@ -196,6 +197,7 @@ func _ensure_seal_choice() -> void:
 	var offers := SealCatalog.roll_offers(3, GameState.seals)
 	if offers.is_empty():
 		GameState.clear_pending_seal_choice()
+		call_deferred("_ensure_starter_choice")
 		return
 	var dialog: SealChoiceDialog = _SEAL_CHOICE_SCENE.instantiate()
 	dialog.setup(offers)
@@ -218,12 +220,15 @@ func _on_seal_chosen(seal: SealData) -> void:
 	_sync_all_slots()
 	_notify_start_combat_state()
 	_refresh_base_hud()
+	call_deferred("_ensure_starter_choice")
 
 
 func _on_seal_dialog_closed() -> void:
 	_seal_dialog = null
 	if GameState.pending_seal_choice:
 		call_deferred("_ensure_seal_choice")
+	else:
+		call_deferred("_ensure_starter_choice")
 
 
 func _row(source: String) -> Array:

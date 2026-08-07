@@ -26,6 +26,7 @@ var _scale_tween: Tween
 @onready var _cocoon_image: TextureRect = %CocoonImage
 @onready var _days_chip: StatChip = %DaysChip
 @onready var _hover_punch: HoverPunch = %HoverPunch
+@onready var _drop_arrow: FloatingArrow = %DropArrow
 
 
 func _ready() -> void:
@@ -38,6 +39,7 @@ func _ready() -> void:
 	_refresh_weapon_icon()
 	_refresh_visuals()
 	_prepare_cocoon_pivot()
+	_refresh_arrow()
 
 
 func _prepare_cocoon_pivot() -> void:
@@ -109,9 +111,39 @@ func get_occupant() -> RosterUnitData:
 func sync_from_state() -> void:
 	_refresh_visuals()
 	_set_drag_hover(false)
+	_refresh_arrow()
 	if _hover_punch != null:
 		_hover_punch.reset()
 		_hover_punch.call_deferred("arm_enter_unless_hovered")
+
+
+func _set_drop_arrow_visible(should_show: bool) -> void:
+	if _drop_arrow == null:
+		return
+	if should_show:
+		_drop_arrow.show_arrow()
+	else:
+		_drop_arrow.hide_arrow()
+
+
+func _accepts_drag_data(data: Variant) -> bool:
+	if typeof(data) != TYPE_DICTIONARY:
+		return false
+	var unit := data.get("unit") as RosterUnitData
+	if unit == null:
+		return false
+	var source := str(data.get("source", ""))
+	if source != "squad" and source != "bench":
+		return false
+	return GameState.can_cocoon_for_pupation(unit, school)
+
+
+func _refresh_arrow() -> void:
+	var viewport := get_viewport()
+	if viewport != null and viewport.gui_is_dragging():
+		_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
+		return
+	_set_drop_arrow_visible(false)
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:
@@ -224,18 +256,7 @@ func _tween_cocoon_scale(target: float) -> void:
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	if typeof(data) != TYPE_DICTIONARY:
-		_set_drag_hover(false)
-		return false
-	var unit := data.get("unit") as RosterUnitData
-	if unit == null:
-		_set_drag_hover(false)
-		return false
-	var source := str(data.get("source", ""))
-	if source != "squad" and source != "bench":
-		_set_drag_hover(false)
-		return false
-	if not GameState.can_cocoon_for_pupation(unit, school):
+	if not _accepts_drag_data(data):
 		_set_drag_hover(false)
 		return false
 	_set_drag_hover(true)
@@ -244,11 +265,15 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	_set_drag_hover(false)
-	if typeof(data) != TYPE_DICTIONARY:
+	_refresh_arrow()
+	if not _accepts_drag_data(data):
 		return
 	unit_dropped_on_cocoon.emit(self, data)
 
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_DRAG_END:
+	if what == NOTIFICATION_DRAG_BEGIN:
+		_refresh_arrow()
+	elif what == NOTIFICATION_DRAG_END:
 		_set_drag_hover(false)
+		_refresh_arrow()

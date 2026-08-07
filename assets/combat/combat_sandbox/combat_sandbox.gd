@@ -62,13 +62,11 @@ const _STRAIN_OPTIONS: Array[Dictionary] = [
 	{"name": "Mini", "path": "res://assets/units/mini_cap/mini_cap_strain.tres"},
 	{"name": "Lanky", "path": "res://assets/units/lanky_cap/lanky_cap_strain.tres"},
 	{"name": "Fat", "path": "res://assets/units/fat_cap/fat_cap_strain.tres"},
-	{"name": "Magi", "path": "res://assets/units/magi_cap/magi_cap_strain.tres"},
-	{"name": "Chad", "path": "res://assets/units/chad_cap/chad_cap_strain.tres"},
-	{"name": "Rush", "path": "res://assets/units/rush_cap/rush_cap_strain.tres"},
 	{"name": "Wall", "path": "res://assets/units/wall_cap/wall_cap_strain.tres"},
 	{"name": "Bank", "path": "res://assets/units/bank_cap/bank_cap_strain.tres"},
 	{"name": "Zombie", "path": "res://assets/units/zombie_cap/zombie_cap_strain.tres"},
 	{"name": "Rubber", "path": "res://assets/units/rubber_cap/rubber_cap_strain.tres"},
+	{"name": "Brood Empress", "path": "res://assets/units/brood_empress/brood_empress_strain.tres"},
 ]
 
 const _ENEMY_OPTIONS: Array[Dictionary] = [

@@ -13,9 +13,7 @@ appearance_scene = ExtResource("3_appear")
 [resource]
 script = ExtResource("1_script")
 display_name = "Lanky"
-short_description = "Very tall. Easy to hit, decent dexterity."
+short_description = "Very tall. Easy to hit."
 tint = Color(0.5483871, 0.7277105, 0.9161829, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
 use_power_tier = false
-dex_delta = 1
-con_delta = -1

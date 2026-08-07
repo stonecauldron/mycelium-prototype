@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw2wkwscpuftm"
-path="res://.godot/imported/chadcap.png-d01680dcacbe13e5c6fddb1957039e40.ctex"
+uid="uid://h1rx88ad7pdc"
+path="res://.godot/imported/magicap.png-4f51dfdf06d1c401dab62f544f230bbd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/units/chad_cap/chadcap.png"
-dest_files=["res://.godot/imported/chadcap.png-d01680dcacbe13e5c6fddb1957039e40.ctex"]
+source_file="res://assets/units/brood_empress/magicap.png"
+dest_files=["res://.godot/imported/magicap.png-4f51dfdf06d1c401dab62f544f230bbd.ctex"]
 
 [params]
 

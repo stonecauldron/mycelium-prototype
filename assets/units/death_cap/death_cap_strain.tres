@@ -17,12 +17,8 @@ appearance_scene = ExtResource("3_appear")
 [resource]
 script = ExtResource("1_script")
 display_name = "Death"
-short_description = "Grows stronger with every unit it kills. Starts weaker."
+short_description = "Kills two adjacent units upon battle start. Gains +2 on all STATS for each of those kills."
 tint = Color(0.424, 0.53, 0.43106663, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
 effect = SubResource("Effect")
 use_power_tier = false
-strength_delta = -3
-dex_delta = -3
-con_delta = -3
-spd_delta = -3

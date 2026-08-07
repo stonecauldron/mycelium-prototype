@@ -19,7 +19,7 @@ func on_imago(_roster: Resource) -> void:
 	pass
 
 
-func on_battle_start(_unit: Node) -> void:
+func on_battle_start(_unit: Node, _context: BattleStartContext = null) -> void:
 	pass
 
 

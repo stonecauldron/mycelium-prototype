@@ -17,7 +17,7 @@ appearance_scene = ExtResource("3_appear")
 [resource]
 script = ExtResource("1_script")
 display_name = "Bank"
-short_description = "Absorbs biomass from combat deaths, cashes out upon death with 20% bonus."
+short_description = "+10 biomass upon battle start. Cashes out upon death."
 tint = Color(0.84978473, 0.4587953, 0.6893629, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
 effect = SubResource("Effect")

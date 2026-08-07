@@ -493,9 +493,9 @@ func _all_living_allies_hold_line() -> bool:
 	return true
 
 
-func notify_battle_start() -> void:
+func notify_battle_start(context: BattleStartContext = null) -> void:
 	if roster_data != null:
-		roster_data.call_combat_effect(&"on_battle_start", [self])
+		roster_data.call_combat_effect(&"on_battle_start", [self, context])
 
 
 func notify_battle_end() -> void:

@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="UnitStrain" format=3 uid="uid://bcsdbv8ik5a3e"]
+[gd_resource type="Resource" script_class="UnitStrain" format=3 uid="uid://eddvol2i03v5"]
 
 [ext_resource type="Script" uid="uid://bftxo0b154lgi" path="res://assets/units/unit_strain.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://bssgi56hlkrc7" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
-[ext_resource type="PackedScene" uid="uid://dwesaonxtmlfq" path="res://assets/units/chad_cap/chad_cap_appearance.tscn" id="3_appear"]
-[ext_resource type="Script" uid="uid://qiutwlx5r5c4" path="res://assets/units/chad_cap/chad_cap_effect.gd" id="4_effect"]
+[ext_resource type="PackedScene" uid="uid://broodempressappear01" path="res://assets/units/brood_empress/brood_empress_appearance.tscn" id="3_appear"]
+[ext_resource type="Script" uid="uid://gmvy1xch2usg" path="res://assets/units/brood_empress/brood_empress_effect.gd" id="4_effect"]
 
 [sub_resource type="Resource" id="Effect"]
 script = ExtResource("4_effect")
@@ -11,19 +11,14 @@ script = ExtResource("4_effect")
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")
 id = &"imago"
-display_name = "Chad"
+display_name = "Brood Empress"
 appearance_scene = ExtResource("3_appear")
 
 [resource]
 script = ExtResource("1_script")
-display_name = "Chad"
-short_description = "Strong early. Declines after every battle."
-tint = Color(0.95, 0.75, 0.25, 1)
-days_to_imago = 1
+display_name = "Brood Empress"
+short_description = "+1 stats for each child unit in the troop"
+tint = Color(0.72, 0.42, 0.78, 1)
 life_stages = Array[ExtResource("2_stage")]([SubResource("Stage_imago")])
 effect = SubResource("Effect")
 use_power_tier = false
-strength_delta = 3
-dex_delta = 3
-con_delta = 3
-spd_delta = 3

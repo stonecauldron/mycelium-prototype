@@ -279,10 +279,12 @@ func _run_battle(
 
 
 func _notify_battle_start() -> void:
+	var context := BattleStartContext.new()
 	for unit in player_troop.get_living_units():
-		unit.notify_battle_start()
+		unit.notify_battle_start(context)
 	for unit in enemy_troop.get_living_units():
-		unit.notify_battle_start()
+		unit.notify_battle_start(context)
+	context.flush()
 
 
 func _notify_battle_end() -> void:

@@ -29,13 +29,11 @@ const _STRAIN_SPORE_PATHS: Array[String] = [
 	"res://assets/base/nursery/spores/mini_cap_spore.tres",
 	"res://assets/base/nursery/spores/lanky_cap_spore.tres",
 	"res://assets/base/nursery/spores/fat_cap_spore.tres",
-	"res://assets/base/nursery/spores/magi_cap_spore.tres",
-	"res://assets/base/nursery/spores/chad_cap_spore.tres",
-	"res://assets/base/nursery/spores/rush_cap_spore.tres",
 	"res://assets/base/nursery/spores/wall_cap_spore.tres",
 	"res://assets/base/nursery/spores/bank_cap_spore.tres",
 	"res://assets/base/nursery/spores/zombie_cap_spore.tres",
 	"res://assets/base/nursery/spores/rubber_cap_spore.tres",
+	"res://assets/base/nursery/spores/brood_empress_spore.tres",
 ]
 const _STRAIN_SPORE_OFFER_CHANCE := 0.5
 const _FERTILIZER_PATHS: Array[String] = [

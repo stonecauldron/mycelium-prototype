@@ -6,7 +6,7 @@ const SLOW_DURATION := 10.0
 const SLOW_MULT := 0.5
 
 
-func on_battle_start(unit: Node) -> void:
+func on_battle_start(unit: Node, _context: BattleStartContext = null) -> void:
 	var u: Unit = unit as Unit
 	if u == null:
 		return

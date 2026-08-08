@@ -50,8 +50,18 @@ func _run() -> void:
 		errs.append("replace did not consume prior cap")
 
 	# Empty plot rejects mutations.
-	if nursery.apply_mutation_to_plot(1, boom):
+	if NurseryPlotData.new().apply_mutation(boom):
 		errs.append("empty plot should reject mutation")
+
+	# force_ready (Triploid) must not block mutation apply on READY plots.
+	var ready_plot := NurseryPlotData.new()
+	ready_plot.planted_spore = nursery.make_fresh_common_spore()
+	var triploid_gate := load("res://assets/base/nursery/fertilizers/triploid_cells.tres") as FertilizerData
+	ready_plot.apply_fertilizer(triploid_gate)
+	if ready_plot.get_state() != NurseryPlotData.State.READY:
+		errs.append("triploid should force READY")
+	elif not ready_plot.apply_mutation(boom):
+		errs.append("READY plot should still accept mutation")
 
 	plot.days_grown = plot.days_to_mature_effective()
 	var units := nursery.harvest(0)

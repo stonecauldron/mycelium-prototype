@@ -3,12 +3,12 @@ extends Resource
 
 enum Slot { BODY, CAP }
 
-const BIOMASS_COST := 3
+const BIOMASS_COST := BiomassData.MUTATION_COST
 
 @export var display_name: String = "Mutation"
 @export_multiline var short_description: String = ""
 @export var slot: Slot = Slot.BODY
-@export var biomass_cost: int = BIOMASS_COST
+@export var biomass_cost: int = BiomassData.MUTATION_COST
 @export var tint: Color = Color.WHITE
 @export var effect: StrainEffect
 @export var strength_delta: int = 0

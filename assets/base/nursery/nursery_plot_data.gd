@@ -31,9 +31,10 @@ func can_apply_fertilizer() -> bool:
 	return applied_fertilizers.size() < SealModifiers.max_fertilizer_stacks()
 
 
-## Mutations apply only while a grow is in progress (not empty / ready).
+## Mutations apply while a spore is planted (GROWING or READY). Empty rejected.
+## READY is included so force_ready fertilizers (Triploid, etc.) do not block identity.
 func can_apply_mutation() -> bool:
-	return get_state() == State.GROWING
+	return not is_empty()
 
 
 ## Overgrowth removed: harvest always yields Child units.

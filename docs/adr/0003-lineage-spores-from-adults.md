@@ -1,0 +1,3 @@
+# Adult compost or battle death yields a lineage spore
+
+When an Adult is Composted or dies in battle, it can leave a Lineage spore in Stock — a plantable heir carrying that line. Children do not. Only Children can go through Training (pupation), so a lineage spore is how a bloodline keeps training across generations instead of locking forever into one Adult’s schools. That also keeps loss productive for the Nursery loop instead of permanent wipe or shop-only replacement. The cost is stock pressure and lineage bookkeeping; the alternative (dead means gone) made every death feel like pure attrition with no regrowth or re-Training hook.

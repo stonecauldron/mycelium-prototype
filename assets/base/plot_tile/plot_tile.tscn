@@ -21,7 +21,7 @@ variation_opentype = {
 }
 
 [node name="PlotTile" type="PanelContainer" unique_id=1149444614]
-custom_minimum_size = Vector2(220, 336)
+custom_minimum_size = Vector2(220, 260)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_tile")
@@ -120,66 +120,15 @@ visible = false
 layout_mode = 2
 icon = ExtResource("7_hourglass")
 
-[node name="PlantButton" type="Button" parent="Content/Margin/Stack" unique_id=216391880]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(0, 68)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"PrimaryButton"
-
-[node name="PlantMargin" type="MarginContainer" parent="Content/Margin/Stack/PlantButton" unique_id=216391879]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 12
-
-[node name="PlantContent" type="HBoxContainer" parent="Content/Margin/Stack/PlantButton/PlantMargin" unique_id=216391881]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 6
-alignment = 1
-
-[node name="PlantLabel" type="Label" parent="Content/Margin/Stack/PlantButton/PlantMargin/PlantContent" unique_id=216391882]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
-theme_override_fonts/font = SubResource("Font_figtree_button")
-theme_override_font_sizes/font_size = 28
-text = "Plant:"
-
-[node name="PlantCostLabel" type="Label" parent="Content/Margin/Stack/PlantButton/PlantMargin/PlantContent" unique_id=216391883]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
-theme_override_fonts/font = SubResource("Font_figtree_button")
-theme_override_font_sizes/font_size = 28
-text = "4"
-
-[node name="PlantBiomassIcon" type="TextureRect" parent="Content/Margin/Stack/PlantButton/PlantMargin/PlantContent" unique_id=216391884]
-custom_minimum_size = Vector2(34, 34)
-layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-texture = ExtResource("4_biomass")
-expand_mode = 1
-stretch_mode = 5
-
 [node name="UnlockButton" type="Button" parent="Content/Margin/Stack" unique_id=216391873]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"PrimaryButton"
 
-[node name="UnlockMargin" type="MarginContainer" parent="Content/Margin/Stack/UnlockButton" unique_id=216391878]
+[node name="UnlockContent" type="HBoxContainer" parent="Content/Margin/Stack/UnlockButton" unique_id=216391874]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -187,34 +136,26 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 12
-
-[node name="UnlockContent" type="HBoxContainer" parent="Content/Margin/Stack/UnlockButton/UnlockMargin" unique_id=216391874]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 alignment = 1
 
-[node name="UnlockLabel" type="Label" parent="Content/Margin/Stack/UnlockButton/UnlockMargin/UnlockContent" unique_id=216391875]
+[node name="UnlockLabel" type="Label" parent="Content/Margin/Stack/UnlockButton/UnlockContent" unique_id=216391875]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 26
 text = "Unlock:"
 
-[node name="UnlockCostLabel" type="Label" parent="Content/Margin/Stack/UnlockButton/UnlockMargin/UnlockContent" unique_id=216391876]
+[node name="UnlockCostLabel" type="Label" parent="Content/Margin/Stack/UnlockButton/UnlockContent" unique_id=216391876]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 26
 text = "4"
 
-[node name="UnlockBiomassIcon" type="TextureRect" parent="Content/Margin/Stack/UnlockButton/UnlockMargin/UnlockContent" unique_id=216391877]
-custom_minimum_size = Vector2(34, 34)
+[node name="UnlockBiomassIcon" type="TextureRect" parent="Content/Margin/Stack/UnlockButton/UnlockContent" unique_id=216391877]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2

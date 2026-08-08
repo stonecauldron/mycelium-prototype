@@ -118,6 +118,7 @@ func _build_plot_tiles() -> void:
 		var tile: PlotTile = _PLOT_TILE_SCENE.instantiate()
 		_plot_row.add_child(tile)
 		tile.plot_pressed.connect(_on_plot_pressed)
+		tile.plant_pressed.connect(_on_plant_pressed)
 		tile.spore_dropped.connect(_on_plot_item_dropped)
 		_tiles.append(tile)
 
@@ -344,6 +345,17 @@ func _replace_bought_shop_slot(slot_index: int) -> void:
 	GameState.nursery.replace_shop_slot(slot_index)
 
 
+func _on_plant_pressed(tile: PlotTile) -> void:
+	if tile.is_unlockable:
+		return
+	if not GameState.nursery.is_plot_unlocked(tile.plot_index):
+		return
+	if GameState.try_plant_fresh_common(tile.plot_index):
+		GameState.show_plot_plant_hint = false
+		_refresh()
+		_refresh_base_hud()
+
+
 func _on_plot_pressed(tile: PlotTile) -> void:
 	if tile.is_unlockable:
 		_try_unlock_plot()
@@ -359,10 +371,7 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 
 	match plot.get_state():
 		NurseryPlotData.State.EMPTY:
-			if GameState.try_plant_fresh_common(tile.plot_index):
-				GameState.show_plot_plant_hint = false
-				_refresh()
-				_refresh_base_hud()
+			pass
 		NurseryPlotData.State.GROWING:
 			pass
 		NurseryPlotData.State.READY:

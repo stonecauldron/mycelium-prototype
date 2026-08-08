@@ -2,9 +2,10 @@ class_name PlotTile
 extends PanelContainer
 
 signal plot_pressed(tile: PlotTile)
+signal plant_pressed(tile: PlotTile)
 signal spore_dropped(tile: PlotTile, data: Dictionary)
 
-const TILE_SIZE := Vector2(220, 260)
+const TILE_SIZE := Vector2(220, 336)
 const _LOCKED_MODULATE := Color(0.55, 0.55, 0.55, 1.0)
 const _DROP_HIGHLIGHT := Color(0.7, 1.0, 0.75, 1.0)
 
@@ -58,6 +59,9 @@ var _egg_shake_rot: float = 0.0:
 @onready var _days_chip: StatChip = %DaysChip
 @onready var _stats_row: HBoxContainer = %StatsRow
 @onready var _lock_spacer: Control = %LockSpacer
+@onready var _action_slot: Control = %ActionSlot
+@onready var _plant_button: Button = %PlantButton
+@onready var _plant_cost_label: Label = %PlantCostLabel
 @onready var _unlock_button: Button = %UnlockButton
 @onready var _unlock_cost_label: Label = %UnlockCostLabel
 @onready var _lock_icon: TextureRect = %LockIcon
@@ -72,6 +76,8 @@ func _ready() -> void:
 	custom_minimum_size = TILE_SIZE
 	_base_modulate = modulate
 	_set_children_mouse_filter_ignore(self)
+	_plant_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	_plant_button.pressed.connect(_on_plant_pressed)
 	_unlock_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	_unlock_button.pressed.connect(_on_unlock_pressed)
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -173,12 +179,17 @@ func _set_children_mouse_filter_ignore(node: Node) -> void:
 
 func _refresh() -> void:
 	if is_unlockable:
+		# Same stack as empty plots (plot + stats + action) so Unlock lines up with Plant.
 		_days_chip.visible = false
 		_clear_fertilizer_chips()
-		_plot_visual_area.visible = false
+		_lock_spacer.visible = false
+		_plot_visual_area.visible = true
 		_hide_egg_layers()
-		_lock_spacer.visible = true
+		_plot_visual.texture = _TEX_EMPTY
+		_plot_visual.modulate = Color.WHITE
 		_lock_icon.visible = true
+		_action_slot.visible = true
+		_plant_button.visible = false
 		_unlock_button.visible = true
 		_unlock_cost_label.text = "%d" % unlock_cost
 		var can_unlock := GameState.biomass.can_afford(unlock_cost)
@@ -199,10 +210,12 @@ func _refresh() -> void:
 	_unlock_button.visible = false
 	_unlock_button.modulate = Color.WHITE
 	_lock_icon.modulate = Color.WHITE
+	_action_slot.visible = true
 	_plot_visual_area.visible = true
 	if _plot == null:
 		_days_chip.visible = false
 		_clear_fertilizer_chips()
+		_plant_button.visible = false
 		tooltip_text = ""
 		_apply_visual_state()
 		_refresh_arrow()
@@ -213,7 +226,9 @@ func _refresh() -> void:
 			_days_chip.visible = false
 			modulate = Color.WHITE
 			_base_modulate = modulate
+			_refresh_plant_button(true)
 		NurseryPlotData.State.GROWING:
+			_refresh_plant_button(false)
 			var left := 0
 			if _plot.planted_spore != null:
 				left = _plot.days_to_mature_effective() - _plot.days_grown
@@ -226,6 +241,7 @@ func _refresh() -> void:
 			modulate = Color.WHITE
 			_base_modulate = modulate
 		NurseryPlotData.State.READY:
+			_refresh_plant_button(false)
 			_days_chip.visible = true
 			_days_chip.chip_size = _HARVEST_CHIP_SIZE
 			_days_chip.icon = _HARVEST_ICON
@@ -240,6 +256,22 @@ func _refresh() -> void:
 		tooltip_text = ""
 	_apply_visual_state()
 	_refresh_arrow()
+
+
+func _refresh_plant_button(should_show: bool) -> void:
+	if _plant_button == null:
+		return
+	if not should_show:
+		_plant_button.visible = false
+		_plant_button.modulate = Color.WHITE
+		return
+	var cost := SealModifiers.fresh_plant_cost()
+	_plant_cost_label.text = "%d" % cost
+	var can_plant := GameState.biomass.can_afford(cost)
+	_plant_button.visible = true
+	_plant_button.disabled = not can_plant
+	_plant_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	_plant_button.modulate = Color.WHITE if can_plant else Color(1, 1, 1, 0.45)
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:
@@ -418,6 +450,14 @@ func _update_egg_pivot() -> void:
 	_egg_visual.pivot_offset = _egg_visual.size * 0.5
 
 
+func _on_plant_pressed() -> void:
+	if is_unlockable or _plot == null:
+		return
+	if _plot.get_state() != NurseryPlotData.State.EMPTY:
+		return
+	plant_pressed.emit(self)
+
+
 func _on_unlock_pressed() -> void:
 	if not is_unlockable:
 		return
@@ -426,6 +466,9 @@ func _on_unlock_pressed() -> void:
 
 func _gui_input(event: InputEvent) -> void:
 	if is_unlockable:
+		return
+	# Empty plots plant only via PlantButton.
+	if _plot == null or _plot.get_state() == NurseryPlotData.State.EMPTY:
 		return
 	if event is InputEventMouseButton:
 		var mouse := event as InputEventMouseButton

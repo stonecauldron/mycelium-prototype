@@ -106,9 +106,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 offset_left = 16.0
-offset_top = 567.0
+offset_top = 623.0
 offset_right = -16.0
-offset_bottom = 889.0
+offset_bottom = 945.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="PlotsMargin" type="MarginContainer" parent="PlotsPanel" unique_id=1251518974]

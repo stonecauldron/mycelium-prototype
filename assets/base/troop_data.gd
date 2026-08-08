@@ -125,18 +125,16 @@ func advance_unit_ages() -> Array[RosterUnitData]:
 			unit.stats.dex = clampi(unit.stats.dex - decay, 1, 99)
 			unit.stats.con = clampi(unit.stats.con - decay, 1, 99)
 			unit.stats.spd = clampi(unit.stats.spd - decay, 1, 99)
-		if unit.strain != null:
-			unit.strain.call_effect(&"on_day", [unit])
+		unit.call_lifecycle_effect(&"on_day", [unit])
 		if unit.can_promote_to_imago() and unit.promote_to_imago():
 			matured.append(unit)
 		if unit.has_exceeded_life_expectancy():
 			aged_out.append(unit)
 	for unit in aged_out:
-		if unit.strain != null:
-			unit.strain.call_effect(
-				&"on_death",
-				[unit, StrainEffect.DeathContext.AGED_OUT, null]
-			)
+		unit.call_lifecycle_effect(
+			&"on_death",
+			[unit, StrainEffect.DeathContext.AGED_OUT, null]
+		)
 		if unit.is_adult_stage():
 			GameState.nursery.add_death_spore(unit)
 		if unit.emitted_death_spore or unit.last_death_biomass_yield > 0:

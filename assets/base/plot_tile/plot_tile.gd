@@ -143,6 +143,8 @@ func _accepts_drag_data(data: Variant) -> bool:
 		if not _plot.can_apply_fertilizer():
 			return false
 		return state == NurseryPlotData.State.EMPTY or state == NurseryPlotData.State.GROWING
+	if drop_type == "shop_mutation" or drop_type == "mutation":
+		return _plot.can_apply_mutation()
 	return false
 
 
@@ -296,6 +298,8 @@ func _refresh_fertilizer_chips() -> void:
 	_clear_fertilizer_chips()
 	if _plot == null or _stats_row == null:
 		return
+	_add_mutation_chip(_plot.body_mutation)
+	_add_mutation_chip(_plot.cap_mutation)
 	if _plot.applied_fertilizers.is_empty():
 		return
 	var counts: Dictionary = {}
@@ -323,6 +327,25 @@ func _refresh_fertilizer_chips() -> void:
 		chip.mouse_filter = Control.MOUSE_FILTER_STOP
 		chip.tooltip_text = _fertilizer_chip_tooltip(fert, count)
 		_fertilizer_chips.append(chip)
+
+
+func _add_mutation_chip(mutation: MutationData) -> void:
+	if mutation == null or _stats_row == null:
+		return
+	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
+	chip.icon = _fertilizer_icon_atlas
+	_stats_row.add_child(chip)
+	chip.set_value(mutation.slot_label().substr(0, 1))
+	var icon := chip.get_node_or_null("%Icon") as TextureRect
+	if icon != null:
+		icon.self_modulate = mutation.tint
+	chip.mouse_filter = Control.MOUSE_FILTER_STOP
+	chip.tooltip_text = "%s: %s\n%s" % [
+		mutation.slot_label(),
+		mutation.display_name,
+		mutation.subtitle_text(),
+	]
+	_fertilizer_chips.append(chip)
 
 
 func _fertilizer_chip_tooltip(fert: FertilizerData, count: int) -> String:

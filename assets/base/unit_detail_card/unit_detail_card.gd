@@ -170,9 +170,9 @@ func _refresh_strain_chip() -> void:
 		if is_instance_valid(_strain_chip):
 			_strain_chip.queue_free()
 		_strain_chip = null
-	if unit_data == null or unit_data.strain == null or _atk_chip == null:
+	if unit_data == null or _atk_chip == null:
 		return
-	var info := unit_data.strain.get_stat_chip(unit_data)
+	var info := unit_data.get_identity_stat_chip()
 	if info.is_empty():
 		return
 	var row := _atk_chip.get_parent() as Control
@@ -188,15 +188,20 @@ func _refresh_strain_chip() -> void:
 
 
 func _refresh_strain_meta() -> void:
-	var strain := unit_data.strain
-	if strain != null:
-		_type_label.text = "%s Strain" % strain.display_name
-		_desc_label.text = strain.short_description
-		_desc_label.visible = not strain.short_description.is_empty()
+	if unit_data.enemy_unit_data != null:
+		var strain := unit_data.strain
+		if strain != null:
+			_type_label.text = "%s Strain" % strain.display_name
+			_desc_label.text = strain.short_description
+			_desc_label.visible = not strain.short_description.is_empty()
+		else:
+			_type_label.text = unit_data.enemy_unit_data.display_name
+			_desc_label.text = ""
+			_desc_label.visible = false
 	else:
-		_type_label.text = "—"
-		_desc_label.text = ""
-		_desc_label.visible = false
+		_type_label.text = "Mutations"
+		_desc_label.text = "\n".join(unit_data.mutation_summary_lines())
+		_desc_label.visible = true
 	_age_label.text = _age_text(unit_data.days_alive)
 
 

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="MutationData" format=3]
+
+[ext_resource type="Script" path="res://assets/base/nursery/mutation_data.gd" id="1_mut"]
+[ext_resource type="Script" path="res://assets/units/boom_cap/boom_cap_effect.gd" id="2_effect"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2_effect")
+
+[resource]
+script = ExtResource("1_mut")
+display_name = "Boom"
+short_description = "Explodes upon death for STR x 3 AoE damage."
+slot = 1
+biomass_cost = 3
+tint = Color(0.21242, 0.38, 0.1748, 1)
+effect = SubResource("Effect")
+dex_delta = -2
+con_delta = -2
+spd_delta = -2

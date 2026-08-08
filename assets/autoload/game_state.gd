@@ -6,7 +6,6 @@ signal debug_cheats_applied
 const WIN_DAYS := 10
 const NURSERY_UNLOCK_DAY := 1
 const RIBOFORGE_UNLOCK_DAY := 2
-const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
 
 var troop: TroopData = TroopData.new()
 var nursery: NurseryData = NurseryData.new()
@@ -29,10 +28,8 @@ var combat_fast_forward: int = 1
 var show_start_combat_hint: bool = true
 ## Session: hovering arrow on READY plots until the player harvests once.
 var show_plot_harvest_hint: bool = true
-## Session: hovering arrow on empty plots after buying a spore until first plant.
+## Session: hovering arrow on empty plots until the player plants once.
 var show_plot_plant_hint: bool = true
-## Session: arrow on the Common Generalist shop offer until it is bought.
-var show_common_spore_shop_hint: bool = true
 ## Debug (~): cheats active — force base screens unlocked and show debug HUD.
 var debug_mode_active: bool = false
 ## Mandatory seal pick waiting when returning to base (after days 2 / 5 / 8).
@@ -215,7 +212,6 @@ func try_add_seal(seal: SealData) -> bool:
 		if mould > 0:
 			biomass.add(mould)
 	ensure_nursery_seeded()
-	nursery.refresh_spore_offer_costs()
 	return true
 
 
@@ -284,22 +280,7 @@ func refresh_shops_for_new_day() -> void:
 	nursery.reset_shop_reroll_cost()
 	riboforge.reset_shop_reroll_cost()
 	nursery.reroll_unlocked_shop_offers()
-	nursery.apply_day_start_shop_rules()
 	riboforge.reroll_unlocked_shop_offers()
-
-
-func try_buy_spore(spore: SporeData, cost: int) -> bool:
-	if spore == null or cost < 0:
-		return false
-	ensure_nursery_seeded()
-	if not nursery.can_add_stock_item():
-		return false
-	if not biomass.try_spend(cost):
-		return false
-	if not nursery.add_spore(spore):
-		biomass.add(cost)
-		return false
-	return true
 
 
 func try_buy_fertilizer(fertilizer: FertilizerData, cost: int) -> bool:
@@ -316,11 +297,21 @@ func try_buy_fertilizer(fertilizer: FertilizerData, cost: int) -> bool:
 	return true
 
 
-func try_buy_common_spore() -> bool:
-	var spore := load(_COMMON_SPORE_PATH) as SporeData
+## Pay biomass on an empty plot to start a fresh Common grow (Rotten Thumb applies).
+func try_plant_fresh_common(plot_index: int) -> bool:
+	ensure_nursery_seeded()
+	if not nursery.can_plant_on_plot(plot_index):
+		return false
+	var spore := nursery.make_fresh_common_spore()
 	if spore == null:
 		return false
-	return try_buy_spore(spore, SealModifiers.spore_shop_cost(BiomassData.COMMON_SPORE_COST))
+	var cost := SealModifiers.fresh_plant_cost()
+	if not biomass.try_spend(cost):
+		return false
+	if not nursery.plant_spore(plot_index, spore):
+		biomass.add(cost)
+		return false
+	return true
 
 
 ## Buys into weapon stock. Returns the stock slot index, or -1 on failure.
@@ -464,7 +455,6 @@ func reset_run() -> void:
 	prefer_riboforge_tab = false
 	show_plot_harvest_hint = true
 	show_plot_plant_hint = true
-	show_common_spore_shop_hint = true
 	debug_mode_active = false
 	favourite_child_used_today = false
 	clear_upcoming_enemy_formation()

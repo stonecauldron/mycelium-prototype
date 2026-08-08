@@ -4,7 +4,7 @@ extends BaseScreen
 const STOCK_SLOT_COUNT := NurseryData.STOCK_SLOT_COUNT
 const SHOP_SLOT_COUNT := NurseryData.SHOP_SLOT_COUNT
 var _stock_drag_types := PackedStringArray(["spore", "fertilizer"])
-var _intake_drag_types := PackedStringArray(["shop_spore", "shop_fertilizer"])
+var _intake_drag_types := PackedStringArray(["shop_fertilizer"])
 const _HATCH_TOAST_FADE_SEC := 0.18
 const _HATCH_TOAST_GAP := 10.0
 ## Above day counter / tabs inside HudRoot (same CanvasLayer).
@@ -15,7 +15,6 @@ const _FERTILIZER_CARD_SCENE := preload("res://assets/base/nursery/fertilizer_ca
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
-const _SPORE_ICON := preload("res://assets/base/nursery/spores.png")
 const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
 
 @onready var _stock_row: HBoxContainer = %StockRow
@@ -31,7 +30,6 @@ const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertili
 var _tiles: Array[PlotTile] = []
 var _stock_slots: Array[DropSlot] = []
 var _shop_cards: Array[ShopOfferCard] = []
-var _spore_icon_atlas: AtlasTexture
 var _fertilizer_icon_atlas: AtlasTexture
 var _hatch_toasts: Array[UnitDetailCard] = []
 var _hatch_toast_host: Control = null
@@ -40,9 +38,6 @@ var _hatch_toast_tween: Tween = null
 
 
 func _ready() -> void:
-	_spore_icon_atlas = AtlasTexture.new()
-	_spore_icon_atlas.atlas = _SPORE_ICON
-	_spore_icon_atlas.region = Rect2(171, 166, 171, 179)
 	_fertilizer_icon_atlas = AtlasTexture.new()
 	_fertilizer_icon_atlas.atlas = _FERTILIZER_ICON
 	# Crop padded 512x512 art to the bag (same idea as spore atlas).
@@ -146,47 +141,26 @@ func _rebuild_shop_cards() -> void:
 		var offer := shop.offers[i]
 		if offer == null or offer.is_empty():
 			continue
-		var card: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
-		if offer.item is FertilizerData:
-			var fert := offer.item as FertilizerData
-			card.setup(
-				"Fertilizer",
-				fert.display_name,
-				offer.cost,
-				{
-					"type": "shop_fertilizer",
-					"fertilizer": fert,
-					"cost": offer.cost,
-					"slot_index": i,
-				},
-				_fertilizer_icon_atlas,
-				i,
-				offer.locked,
-				fert.tint,
-				fert.short_description.strip_edges()
-			)
-		elif offer.item is SporeData:
-			var spore := offer.item as SporeData
-			var strain_name := _spore_shop_strain_name(spore)
-			var description := _spore_shop_description(spore)
-			card.setup(
-				"Spore",
-				strain_name,
-				offer.cost,
-				{
-					"type": "shop_spore",
-					"spore": spore,
-					"cost": offer.cost,
-					"slot_index": i,
-				},
-				_spore_icon_atlas,
-				i,
-				offer.locked,
-				spore.tint,
-				description
-			)
-		else:
+		if not (offer.item is FertilizerData):
 			continue
+		var fert := offer.item as FertilizerData
+		var card: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
+		card.setup(
+			"Fertilizer",
+			fert.display_name,
+			offer.cost,
+			{
+				"type": "shop_fertilizer",
+				"fertilizer": fert,
+				"cost": offer.cost,
+				"slot_index": i,
+			},
+			_fertilizer_icon_atlas,
+			i,
+			offer.locked,
+			fert.tint,
+			fert.short_description.strip_edges()
+		)
 		card.offer_clicked.connect(_on_shop_offer_clicked)
 		card.lock_toggled.connect(_on_shop_lock_toggled)
 		built[i] = card
@@ -205,17 +179,6 @@ func _rebuild_shop_cards() -> void:
 			continue
 		_shop_row.add_child(next_card)
 		next_card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	_refresh_common_spore_shop_hint()
-
-
-func _refresh_common_spore_shop_hint() -> void:
-	if not GameState.show_common_spore_shop_hint:
-		return
-	for card in _shop_cards:
-		var spore := card.payload.get("spore") as SporeData
-		if GameState.nursery.is_common_generalist_spore(spore):
-			card.set_buy_hint_visible(true)
-			return
 
 
 func _make_shop_card_spacer() -> Control:
@@ -224,20 +187,6 @@ func _make_shop_card_spacer() -> Control:
 	spacer.size = ShopOfferCard.CARD_SIZE
 	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return spacer
-
-
-func _spore_shop_strain_name(spore: SporeData) -> String:
-	var strain := spore.resolved_strain() if spore != null else null
-	if strain == null:
-		return spore.display_name if spore != null else ""
-	return "%s Strain" % strain.display_name
-
-
-func _spore_shop_description(spore: SporeData) -> String:
-	var strain := spore.resolved_strain() if spore != null else null
-	if strain == null:
-		return ""
-	return strain.short_description.strip_edges()
 
 
 func _sync_stock_slots() -> void:
@@ -274,14 +223,14 @@ func _refresh() -> void:
 		expected_visible += 1
 	if _tiles.size() != expected_visible:
 		_build_plot_tiles()
-	var can_plant := nursery.has_spore_in_stock()
+	var can_afford_fresh := GameState.biomass.can_afford(SealModifiers.fresh_plant_cost())
 	_sync_stock_slots()
 	_refresh_shop_affordability()
 	for i in nursery.unlocked_plot_count:
 		if i >= _tiles.size():
 			break
 		var plot := nursery.plots[i] as NurseryPlotData if i < nursery.plots.size() else null
-		_tiles[i].setup(i, plot, can_plant)
+		_tiles[i].setup(i, plot, can_afford_fresh)
 	if nursery.can_unlock_plot() and _tiles.size() > nursery.unlocked_plot_count:
 		var unlock_index := nursery.unlocked_plot_count
 		_tiles[unlock_index].setup_unlockable(unlock_index, nursery.next_unlock_cost())
@@ -377,25 +326,12 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 	var drop_type := str(data.get("type", ""))
 	if not GameState.nursery.can_add_stock_item():
 		return
-	var bought := false
-	var bought_spore: SporeData = null
-	if drop_type == "shop_spore":
-		var spore := data.get("spore") as SporeData
-		if spore == null:
-			return
-		bought = GameState.try_buy_spore(spore, cost)
-		if bought:
-			bought_spore = spore
-	elif drop_type == "shop_fertilizer":
-		var fertilizer := data.get("fertilizer") as FertilizerData
-		if fertilizer == null:
-			return
-		bought = GameState.try_buy_fertilizer(fertilizer, cost)
-	else:
+	if drop_type != "shop_fertilizer":
 		return
-	if bought:
-		if GameState.nursery.is_common_generalist_spore(bought_spore):
-			GameState.show_common_spore_shop_hint = false
+	var fertilizer := data.get("fertilizer") as FertilizerData
+	if fertilizer == null:
+		return
+	if GameState.try_buy_fertilizer(fertilizer, cost):
 		_replace_bought_shop_slot(slot_index)
 		_rebuild_shop_cards()
 		_refresh()
@@ -423,11 +359,10 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 
 	match plot.get_state():
 		NurseryPlotData.State.EMPTY:
-			if not nursery.has_spore_in_stock():
-				return
-			if nursery.plant(tile.plot_index):
+			if GameState.try_plant_fresh_common(tile.plot_index):
 				GameState.show_plot_plant_hint = false
 				_refresh()
+				_refresh_base_hud()
 		NurseryPlotData.State.GROWING:
 			pass
 		NurseryPlotData.State.READY:
@@ -596,8 +531,6 @@ func _on_plot_item_dropped(tile: PlotTile, data: Dictionary) -> void:
 		return
 	var drop_type := str(data.get("type", ""))
 	match drop_type:
-		"shop_spore":
-			_plant_from_shop(tile.plot_index, data)
 		"spore":
 			var stock_index := int(data.get("stock_index", 0))
 			if GameState.nursery.plant(tile.plot_index, stock_index):
@@ -616,27 +549,6 @@ func _try_unlock_plot() -> void:
 		_build_plot_tiles()
 		_refresh()
 		_refresh_base_hud()
-
-
-func _plant_from_shop(plot_index: int, data: Dictionary) -> void:
-	var spore := data.get("spore") as SporeData
-	var cost := int(data.get("cost", 0))
-	var slot_index := int(data.get("slot_index", -1))
-	if spore == null:
-		return
-	GameState.ensure_nursery_seeded()
-	if not GameState.biomass.try_spend(cost):
-		return
-	if not GameState.nursery.plant_spore(plot_index, spore):
-		GameState.biomass.add(cost)
-		return
-	GameState.show_plot_plant_hint = false
-	if GameState.nursery.is_common_generalist_spore(spore):
-		GameState.show_common_spore_shop_hint = false
-	_replace_bought_shop_slot(slot_index)
-	_rebuild_shop_cards()
-	_refresh()
-	_refresh_base_hud()
 
 
 func _apply_fertilizer_from_shop(plot_index: int, data: Dictionary) -> void:

@@ -26,11 +26,11 @@ The run's spendable resource, shown in kg.
 *Avoid*: gold, money, currency (unless speaking generically)
 
 **Seal**:
-A lasting run modifier chosen from offered picks.
+A lasting run modifier chosen from offered picks. Rotten Thumb discounts the biomass cost of planting a fresh grow on a plot (not Mutation shop prices).
 *Avoid*: relic, blessing, perk (when you mean a Seal)
 
 **Starter package**:
-The run-start offer of an initial Adult (and a hidden Child) the player chooses.
+The run-start offer of an initial Adult (and a hidden Child) the player chooses. Starters do not begin with Mutations.
 
 ### Base
 
@@ -44,24 +44,37 @@ The Base zone for the troop, scouting the enemy army, and starting a battle.
 The Base zone where spores are grown on plots into Child units.
 
 **Spore**:
-A plantable Nursery item that grows into Child units.
+A plantable Nursery item that grows into Child units. Shop offers are not spores; a lineage spore is still a spore.
 *Avoid*: seed, egg
 
 **Lineage spore**:
-A spore produced when an Adult is composted or dies in battle, carrying that unit's lineage and weapon-school Trainings.
+A spore produced when an Adult is composted or dies in battle, carrying that unit's lineage, weapon-school Trainings, and Mutations (not Fertilizers). Mutations on a lineage spore can be prepared or replaced in Stock before planting.
 *Avoid*: death spore (code name)
 
 **Plot**:
 A Nursery slot where a spore grows.
 
 **Fertilizer**:
-A modifier applied to a plot.
+A plot modifier that changes that grow's growth, hatch stats, or unit-life flags — not identity. Fertilizer items do not carry onto lineage spores (baked stats may still ride mean stats).
+*Avoid*: using Fertilizer for Boom/Death/Mini-style identity
+
+**Mutation**:
+An identity modifier applied in the Nursery. A unit has two slots — Body and Cap — each holding at most one Mutation (or empty). Assigned on a growing plot or prepared on a lineage spore in Stock; a new Mutation of that slot's kind replaces the previous one.
+*Avoid*: Fertilizer (when you mean identity), trait, strain effect (as the item type)
+
+**Body mutation**:
+The Mutation slot that sets body-led identity, scale, and hurtbox — not the physics body collider — and tints the shared body layer. Singular. (Includes forms such as Mini, Lanky, Fat, Rubber, Zombie.)
+
+**Cap mutation**:
+The Mutation slot that sets specialty combat or lifecycle identity and tints the shared cap layer. Singular. (Includes identities such as Death, Inky, Boom, Wall, Bank, Brood Empress.)
+
+Player unit art is layered Generalist body + cap sprites (child pair while Child, imago pair while Adult). Mutations tint those layers; empty slots use fixed default layer colors; Tier multiplies both layers. The body layer owns weapon mount and animation; the cap follows.
 
 **Shop**:
-Rerollable biomass offers in the Nursery.
+Rerollable biomass offers in the Nursery (Fertilizers and Mutations — not spores). Offer rows stay split — Fertilizer slots and Mutation slots — so both show every reroll. Each Mutation slot rolls independently (body or cap).
 
 **Stock**:
-The player's held spores and similar items ready to plant or use.
+The player's held lineage spores, Fertilizers, Mutations, and similar items ready to plant or use.
 
 ### Units
 
@@ -88,11 +101,12 @@ A unit at adult life stage.
 *Avoid*: imago, fully_evolved (code ids)
 
 **Strain**:
-A unit or spore's species/archetype.
+Legacy species/archetype package on units (art + optional effect). Player-facing identity is moving to Body mutation + Cap mutation; do not use Strain for new Nursery identity design.
+*Avoid*: using Strain when you mean Mutation
 
 **Tier**:
-A rarity/power band on player spores and units (e.g. Common through Legendary).
-*Avoid*: applying Tier to enemies
+A rarity/power band on player units (e.g. Common through Legendary). Fresh Nursery grows are Common for now; higher tier rides lineage from the parent when present.
+*Avoid*: applying Tier to enemies; tiered shop spores (removed direction)
 
 **Compost**:
 Voluntarily removing a unit for biomass.

@@ -35,7 +35,8 @@ var plot_index: int = 0
 var is_unlockable: bool = false
 var unlock_cost: int = 0
 var _plot: NurseryPlotData
-var _can_plant: bool = false
+## True when the player can afford pay-on-plot fresh planting (hint arrow).
+var _can_afford_fresh_plant: bool = false
 var _base_modulate: Color = Color.WHITE
 var _fertilizer_chips: Array[StatChip] = []
 var _fertilizer_icon_atlas: AtlasTexture
@@ -81,10 +82,10 @@ func _ready() -> void:
 		_refresh()
 
 
-func setup(index: int, plot: NurseryPlotData, can_plant: bool = false) -> void:
+func setup(index: int, plot: NurseryPlotData, can_afford_fresh_plant: bool = false) -> void:
 	plot_index = index
 	_plot = plot
-	_can_plant = can_plant
+	_can_afford_fresh_plant = can_afford_fresh_plant
 	is_unlockable = false
 	unlock_cost = 0
 	if is_node_ready():
@@ -96,7 +97,7 @@ func setup(index: int, plot: NurseryPlotData, can_plant: bool = false) -> void:
 func setup_unlockable(index: int, cost: int) -> void:
 	plot_index = index
 	_plot = null
-	_can_plant = false
+	_can_afford_fresh_plant = false
 	is_unlockable = true
 	unlock_cost = cost
 	if is_node_ready():
@@ -127,12 +128,8 @@ func _accepts_drag_data(data: Variant) -> bool:
 		return false
 	var drop_type := str(data.get("type", ""))
 	var state := _plot.get_state()
-	if drop_type == "shop_spore" or drop_type == "spore":
-		if state != NurseryPlotData.State.EMPTY:
-			return false
-		if drop_type == "spore" and not _can_plant:
-			return false
-		return true
+	if drop_type == "spore":
+		return state == NurseryPlotData.State.EMPTY
 	if drop_type == "shop_fertilizer" or drop_type == "fertilizer":
 		var fert := data.get("fertilizer") as FertilizerData
 		if fert != null and fert.behavior == FertilizerData.Behavior.FUNGICIDE:
@@ -154,7 +151,7 @@ func _should_show_harvest_hint() -> bool:
 func _should_show_plant_hint() -> bool:
 	if not GameState.show_plot_plant_hint:
 		return false
-	if is_unlockable or _plot == null or not _can_plant:
+	if is_unlockable or _plot == null or not _can_afford_fresh_plant:
 		return false
 	return _plot.get_state() == NurseryPlotData.State.EMPTY
 

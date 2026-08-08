@@ -6,37 +6,9 @@ const STARTING_UNLOCKED_PLOTS := 1
 const SHOP_SLOT_COUNT := 4
 const STOCK_SLOT_COUNT := 5
 const STARTER_SPORE_COUNT := 0
-## Slots 0..(SPORE_SHOP_SLOT_COUNT-1) are spores; the rest are fertilizers.
-const SPORE_SHOP_SLOT_COUNT := 2
+## Fresh empty-plot grows use the Common Spore baseline (cost / days).
 const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
-const _UNCOMMON_SPORE_PATH := "res://assets/base/nursery/uncommon_spore.tres"
-const _RARE_SPORE_PATH := "res://assets/base/nursery/rare_spore.tres"
-const _EPIC_SPORE_PATH := "res://assets/base/nursery/epic_spore.tres"
-const _LEGENDARY_SPORE_PATH := "res://assets/base/nursery/legendary_spore.tres"
-## Rarity-tier spores are all Generalist at different power tiers.
-const _SPORE_SHOP_PATHS: Array[String] = [
-	_COMMON_SPORE_PATH,
-	_UNCOMMON_SPORE_PATH,
-	_RARE_SPORE_PATH,
-	_EPIC_SPORE_PATH,
-	_LEGENDARY_SPORE_PATH,
-]
-## Named specialty strains (not Generalist — that comes from rarity rolls above).
-const _STRAIN_SPORE_PATHS: Array[String] = [
-	"res://assets/base/nursery/spores/death_cap_spore.tres",
-	"res://assets/base/nursery/spores/inky_cap_spore.tres",
-	"res://assets/base/nursery/spores/boom_cap_spore.tres",
-	"res://assets/base/nursery/spores/mini_cap_spore.tres",
-	"res://assets/base/nursery/spores/lanky_cap_spore.tres",
-	"res://assets/base/nursery/spores/fat_cap_spore.tres",
-	"res://assets/base/nursery/spores/wall_cap_spore.tres",
-	"res://assets/base/nursery/spores/bank_cap_spore.tres",
-	"res://assets/base/nursery/spores/zombie_cap_spore.tres",
-	"res://assets/base/nursery/spores/rubber_cap_spore.tres",
-	"res://assets/base/nursery/spores/brood_empress_spore.tres",
-]
-## Chance a spore slot rolls a named specialty instead of a Generalist rarity tier.
-const _STRAIN_SPORE_OFFER_CHANCE := 0.8
+## Shop is Fertilizer-only until Mutation offers land (ticket 02).
 const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/reinforced_chitin.tres",
 	"res://assets/base/nursery/fertilizers/brute_force.tres",
@@ -94,6 +66,7 @@ func seed_if_empty() -> void:
 		for i in mini(STARTER_SPORE_COUNT, STOCK_SLOT_COUNT):
 			stock.set_at(i, common_spore)
 	spore_shop.ensure_filled(generate_offer_for_slot)
+	_purge_spore_shop_offers()
 	_seeded = true
 
 
@@ -151,29 +124,26 @@ func unlock_next_plot() -> bool:
 func ensure_shop_offers() -> void:
 	_ensure_spore_shop()
 	spore_shop.ensure_filled(generate_offer_for_slot)
+	_purge_spore_shop_offers()
 
 
 func reroll_unlocked_shop_offers() -> void:
 	_ensure_spore_shop()
 	spore_shop.reroll_unlocked(generate_offer_for_slot)
+	_purge_spore_shop_offers()
 
 
-## Day-start only: guarantee a Common Generalist among spore slots on day 2.
-func apply_day_start_shop_rules() -> void:
-	_ensure_day_two_common_generalist()
-	refresh_spore_offer_costs()
-
-
-## Recompute shop spore costs from current seals (e.g. Rotten Thumb).
-func refresh_spore_offer_costs() -> void:
+## Drop legacy Spore shop SKUs (locked or not) so the shelf stays Fertilizer-only.
+func _purge_spore_shop_offers() -> void:
 	_ensure_spore_shop()
-	for offer in spore_shop.offers:
-		if offer == null or offer.item == null:
+	while spore_shop.offers.size() < SHOP_SLOT_COUNT:
+		spore_shop.offers.append(null)
+	for i in spore_shop.offers.size():
+		var offer := spore_shop.offers[i]
+		if offer == null or offer.is_empty():
 			continue
-		var spore := offer.item as SporeData
-		if spore == null:
-			continue
-		offer.cost = SealModifiers.spore_shop_cost(spore.biomass_cost)
+		if offer.item is SporeData:
+			spore_shop.offers[i] = generate_fertilizer_offer()
 
 
 func replace_shop_slot(slot_index: int) -> void:
@@ -277,99 +247,8 @@ func first_empty_plot_index() -> int:
 	return -1
 
 
-func generate_offer_for_slot(slot_index: int = 0) -> ShopOffer:
-	if is_fertilizer_shop_slot(slot_index):
-		return generate_fertilizer_offer()
-	return generate_spore_offer()
-
-
-func is_fertilizer_shop_slot(slot_index: int) -> bool:
-	return slot_index >= SPORE_SHOP_SLOT_COUNT
-
-
-func generate_spore_offer(_slot_index: int = 0) -> ShopOffer:
-	var path := _pick_spore_shop_path()
-	return _make_spore_offer_from_path(path)
-
-
-## Day 2 (upcoming day == 2): keep at least one Common Generalist among spore slots.
-func _ensure_day_two_common_generalist() -> void:
-	if GameState.get_upcoming_day() != 2:
-		return
-	_ensure_spore_shop()
-	if _shop_has_common_generalist():
-		return
-	var target := _first_replaceable_spore_slot()
-	if target < 0:
-		target = 0
-	while spore_shop.offers.size() <= target:
-		spore_shop.offers.append(null)
-	spore_shop.offers[target] = _make_spore_offer_from_path(_COMMON_SPORE_PATH)
-
-
-func is_common_generalist_spore(spore: SporeData) -> bool:
-	if spore == null:
-		return false
-	if not spore.resource_path.is_empty():
-		return spore.resource_path == _COMMON_SPORE_PATH
-	if spore.power_tier != UnitStatsData.PowerTier.COMMON:
-		return false
-	var strain := spore.resolved_strain()
-	return strain != null and strain.resource_path == "res://assets/units/generalist/generalist_strain.tres"
-
-
-func _shop_has_common_generalist() -> bool:
-	for i in SPORE_SHOP_SLOT_COUNT:
-		if i >= spore_shop.offers.size():
-			break
-		var offer := spore_shop.offers[i]
-		if offer == null or offer.is_empty():
-			continue
-		if is_common_generalist_spore(offer.item as SporeData):
-			return true
-	return false
-
-
-func _first_replaceable_spore_slot() -> int:
-	for i in SPORE_SHOP_SLOT_COUNT:
-		if i >= spore_shop.offers.size():
-			return i
-		var offer := spore_shop.offers[i]
-		if offer == null or offer.is_empty() or not offer.locked:
-			return i
-	return -1
-
-
-func _make_spore_offer_from_path(path: String) -> ShopOffer:
-	var spore := load(path) as SporeData
-	var offer := ShopOffer.new()
-	offer.item = spore
-	var base_cost := spore.biomass_cost if spore != null else BiomassData.COMMON_SPORE_COST
-	offer.cost = SealModifiers.spore_shop_cost(base_cost)
-	offer.locked = false
-	return offer
-
-
-func _pick_spore_shop_path() -> String:
-	if not _STRAIN_SPORE_PATHS.is_empty() and randf() < _STRAIN_SPORE_OFFER_CHANCE:
-		return _STRAIN_SPORE_PATHS[randi() % _STRAIN_SPORE_PATHS.size()]
-	return _pick_weighted_spore_path()
-
-
-func _pick_weighted_spore_path() -> String:
-	var weights := BiomassData.SPORE_SHOP_WEIGHTS
-	var total := 0.0
-	for i in mini(weights.size(), _SPORE_SHOP_PATHS.size()):
-		total += maxf(weights[i], 0.0)
-	if total <= 0.0:
-		return _COMMON_SPORE_PATH
-	var roll := randf() * total
-	var cumulative := 0.0
-	for i in mini(weights.size(), _SPORE_SHOP_PATHS.size()):
-		cumulative += maxf(weights[i], 0.0)
-		if roll < cumulative:
-			return _SPORE_SHOP_PATHS[i]
-	return _SPORE_SHOP_PATHS[0]
+func generate_offer_for_slot(_slot_index: int = 0) -> ShopOffer:
+	return generate_fertilizer_offer()
 
 
 func generate_fertilizer_offer() -> ShopOffer:
@@ -403,16 +282,29 @@ func plant(plot_index: int, stock_index: int = -1) -> bool:
 	return true
 
 
-func plant_spore(plot_index: int, spore: SporeData) -> bool:
+## Common Spore template for pay-on-plot planting (duplicated so plots don't share .tres).
+func make_fresh_common_spore() -> SporeData:
+	var template := load(_COMMON_SPORE_PATH) as SporeData
+	if template == null:
+		return null
+	return template.duplicate(true) as SporeData
+
+
+func can_plant_on_plot(plot_index: int) -> bool:
 	if not is_plot_unlocked(plot_index):
 		return false
 	if plot_index >= plots.size():
 		return false
+	var plot := plots[plot_index] as NurseryPlotData
+	return plot != null and plot.is_empty()
+
+
+func plant_spore(plot_index: int, spore: SporeData) -> bool:
 	if spore == null:
 		return false
-	var plot := plots[plot_index] as NurseryPlotData
-	if plot == null or not plot.is_empty():
+	if not can_plant_on_plot(plot_index):
 		return false
+	var plot := plots[plot_index] as NurseryPlotData
 	plot.planted_spore = spore
 	plot.days_grown = plot.total_growth_bonus()
 	plot.snap_after_plant()

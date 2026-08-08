@@ -15,7 +15,8 @@ static func count(seal_id: StringName) -> int:
 	return collection.count(seal_id)
 
 
-static func spore_shop_cost(base_cost: int) -> int:
+## Biomass cost to plant a fresh Common grow on an empty plot (Rotten Thumb).
+static func fresh_plant_cost(base_cost: int = BiomassData.COMMON_SPORE_COST) -> int:
 	var n := count(SealCatalog.ID_ROTTEN_THUMB)
 	if n <= 0:
 		return base_cost

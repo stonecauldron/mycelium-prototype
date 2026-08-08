@@ -66,7 +66,12 @@ static func _build_all() -> Array[SealData]:
 	var icon := _shared_icon()
 	var seals: Array[SealData] = [
 		_make(ID_GOLDEN_MOULD, "Golden Mould", "At the start of each day, gain 6 biomass", icon),
-		_make(ID_ROTTEN_THUMB, "Rotten Thumb", "Spores cost 2 biomass less (capped at 1)", icon),
+		_make(
+			ID_ROTTEN_THUMB,
+			"Rotten Thumb",
+			"Planting a fresh grow costs 2 biomass less (capped at 1)",
+			icon
+		),
 		_make(ID_WOODEN_SWORD, "Wooden Sword", "Your units deal +2 melee dmg", icon),
 		_make(ID_WOODEN_BOW, "Wooden Bow", "Your units deal +2 ranged dmg", icon),
 		_make(ID_WOODEN_HEART, "Wooden Heart", "Your units have +8 HP", icon),

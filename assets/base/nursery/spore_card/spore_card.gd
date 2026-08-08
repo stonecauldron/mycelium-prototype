@@ -87,25 +87,8 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 		return null
 	var tip: SporeDetailCard = _SPORE_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(spore, false)
-	var tip_size := tip.card_size()
-	tip.custom_minimum_size = tip_size
-	tip.size = tip_size
-	tip.tree_entered.connect(_configure_detail_tooltip_popup.bind(tip), CONNECT_ONE_SHOT)
+	DetailTooltipPopup.configure(tip)
 	return tip
-
-
-func _configure_detail_tooltip_popup(tip: SporeDetailCard) -> void:
-	var node: Node = tip.get_parent()
-	while node != null:
-		if node is PopupPanel:
-			var popup := node as PopupPanel
-			popup.transparent = true
-			popup.transparent_bg = true
-			popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-			var tip_size := tip.card_size()
-			popup.size = Vector2i(ceili(tip_size.x), ceili(tip_size.y))
-			return
-		node = node.get_parent()
 
 
 func _apply_hover_y() -> void:

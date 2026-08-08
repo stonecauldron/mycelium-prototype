@@ -1,13 +1,14 @@
 class_name WeaponDetailCard
 extends Control
 
-const CARD_SIZE := Vector2(320, 390)
+const CARD_WIDTH := 320.0
 
 var weapon_data: WeaponData
 var interactive: bool = true
 ## When true, footer shows buy cost instead of sell value (shop tooltips).
 var show_buy_price: bool = false
 
+@onready var _card_panel: PanelContainer = $CardPanel
 @onready var _name_label: Label = %NameLabel
 @onready var _desc_label: Label = %DescLabel
 @onready var _dmg_label: Label = %DmgLabel
@@ -18,6 +19,7 @@ var show_buy_price: bool = false
 @onready var _aoe_tag: TagChip = %AoeTag
 @onready var _sell_row: HBoxContainer = %SellRow
 @onready var _sell_label: Label = %SellLabel
+@onready var _footer_spacer: Control = $CardPanel/Margin/VBox/FooterSpacer
 
 
 func setup(
@@ -30,45 +32,48 @@ func setup(
 	show_buy_price = p_show_buy_price
 	if is_node_ready():
 		_apply_interaction_mode()
-		reset_compact_layout()
 		_refresh()
+		fit_to_content()
 	else:
 		ready.connect(_on_setup_ready, CONNECT_ONE_SHOT)
 
 
 func _on_setup_ready() -> void:
 	_apply_interaction_mode()
-	reset_compact_layout()
 	_refresh()
+	fit_to_content()
 
 
 func card_size() -> Vector2:
-	return CARD_SIZE
+	if custom_minimum_size.x > 0.0 and custom_minimum_size.y > 0.0:
+		return custom_minimum_size
+	if size.x > 0.0 and size.y > 0.0:
+		return size
+	return Vector2(CARD_WIDTH, 1.0)
 
 
 func reset_compact_layout() -> void:
-	var size_for_mode := card_size()
-	set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	anchor_right = anchor_left
-	anchor_bottom = anchor_top
-	offset_left = 0.0
-	offset_top = 0.0
-	offset_right = size_for_mode.x
-	offset_bottom = size_for_mode.y
-	custom_minimum_size = size_for_mode
-	size = size_for_mode
-	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	fit_to_content()
+
+
+func fit_to_content() -> void:
+	if not is_node_ready() or _card_panel == null:
+		return
+	if _footer_spacer != null:
+		# Spacer was for fixed-height cards; content-fit tips should hug rows.
+		_footer_spacer.visible = false
+		_footer_spacer.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	DetailCardFit.apply(self, _card_panel, CARD_WIDTH)
 
 
 func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	_apply_interaction_mode()
-	reset_compact_layout()
 	if weapon_data == null and get_tree().current_scene == self:
 		weapon_data = load(RiboforgeData.SWORD_WEAPON_PATH) as WeaponData
 	if weapon_data != null:
 		_refresh()
+	fit_to_content()
 
 
 func _refresh() -> void:

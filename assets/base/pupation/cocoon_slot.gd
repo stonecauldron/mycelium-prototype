@@ -207,24 +207,14 @@ func _make_compost_tooltip() -> Object:
 	body.add_theme_font_size_override("font_size", 16)
 	body.add_theme_color_override("font_color", Color(0.03, 0.035, 0.027, 1))
 	box.add_child(body)
-	var tip_size := Vector2(248, 140)
-	tip.custom_minimum_size = tip_size
-	tip.size = tip_size
-	tip.tree_entered.connect(
-		_configure_detail_tooltip_popup.bind(tip, tip_size), CONNECT_ONE_SHOT
-	)
+	DetailTooltipPopup.configure(tip)
 	return tip
 
 
 func _make_empty_training_tooltip() -> Object:
 	var tip: SchoolTrainingDetailCard = _SCHOOL_TRAINING_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(school)
-	var tip_size := tip.card_size()
-	tip.custom_minimum_size = tip_size
-	tip.size = tip_size
-	tip.tree_entered.connect(
-		_configure_detail_tooltip_popup.bind(tip, tip_size), CONNECT_ONE_SHOT
-	)
+	DetailTooltipPopup.configure(tip)
 	return tip
 
 
@@ -236,50 +226,21 @@ func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
 	# Portrait included — cocoon art does not show the emerged unit.
 	# Non-interactive so hover stays stable while the tooltip is open.
 	unit_tip.setup(preview, true, false)
-	var unit_size := unit_tip.card_size()
-	unit_tip.custom_minimum_size = unit_size
-	unit_tip.size = unit_size
 
 	if preview.weapon == null:
-		unit_tip.tree_entered.connect(
-			_configure_detail_tooltip_popup.bind(unit_tip, unit_size), CONNECT_ONE_SHOT
-		)
+		DetailTooltipPopup.configure(unit_tip)
 		return unit_tip
 
 	var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
 	weapon_tip.setup(preview.weapon, false)
-	var weapon_size := weapon_tip.card_size()
-	weapon_tip.custom_minimum_size = weapon_size
-	weapon_tip.size = weapon_size
 
 	var host := HBoxContainer.new()
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	host.add_theme_constant_override("separation", int(_DETAIL_TOOLTIP_SEPARATION))
 	host.add_child(unit_tip)
 	host.add_child(weapon_tip)
-	var combined := Vector2(
-		unit_size.x + weapon_size.x + _DETAIL_TOOLTIP_SEPARATION,
-		maxf(unit_size.y, weapon_size.y)
-	)
-	host.custom_minimum_size = combined
-	host.size = combined
-	host.tree_entered.connect(
-		_configure_detail_tooltip_popup.bind(host, combined), CONNECT_ONE_SHOT
-	)
+	DetailTooltipPopup.configure(host)
 	return host
-
-
-func _configure_detail_tooltip_popup(tip: Control, tip_size: Vector2) -> void:
-	var node: Node = tip.get_parent()
-	while node != null:
-		if node is PopupPanel:
-			var popup := node as PopupPanel
-			popup.transparent = true
-			popup.transparent_bg = true
-			popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-			popup.size = Vector2i(ceili(tip_size.x), ceili(tip_size.y))
-			return
-		node = node.get_parent()
 
 
 func _on_mouse_exited() -> void:

@@ -33,12 +33,9 @@ script = ExtResource("1_card")
 
 [node name="CardPanel" type="PanelContainer" parent="."]
 clip_contents = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 560.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_detail_card")
 
@@ -113,7 +110,7 @@ theme_override_constants/separation = 6
 [node name="PortraitHost" type="Control" parent="CardPanel/Margin/VBox/LineageSection"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 140)
-clip_contents = true
+clip_contents = false
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2

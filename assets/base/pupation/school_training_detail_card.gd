@@ -1,12 +1,13 @@
 class_name SchoolTrainingDetailCard
 extends Control
 
-const CARD_SIZE := Vector2(280, 280)
+const CARD_WIDTH := 280.0
 const _COLOR_UP := Color(0.12, 0.45, 0.18, 1)
 const _COLOR_DOWN := Color(0.7, 0.15, 0.12, 1)
 
 var school: int = 0
 
+@onready var _card_panel: PanelContainer = $CardPanel
 @onready var _school_icon: TextureRect = %SchoolIcon
 @onready var _title_label: Label = %TitleLabel
 @onready var _stats_box: VBoxContainer = %StatsBox
@@ -15,41 +16,40 @@ var school: int = 0
 func setup(p_school: int) -> void:
 	school = p_school
 	if is_node_ready():
-		reset_compact_layout()
 		_refresh()
+		fit_to_content()
 	else:
 		ready.connect(_on_setup_ready, CONNECT_ONE_SHOT)
 
 
 func _on_setup_ready() -> void:
-	reset_compact_layout()
 	_refresh()
+	fit_to_content()
 
 
 func card_size() -> Vector2:
-	return CARD_SIZE
+	if custom_minimum_size.x > 0.0 and custom_minimum_size.y > 0.0:
+		return custom_minimum_size
+	if size.x > 0.0 and size.y > 0.0:
+		return size
+	return Vector2(CARD_WIDTH, 1.0)
 
 
 func reset_compact_layout() -> void:
-	var size_for_mode := card_size()
-	set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	anchor_right = anchor_left
-	anchor_bottom = anchor_top
-	offset_left = 0.0
-	offset_top = 0.0
-	offset_right = size_for_mode.x
-	offset_bottom = size_for_mode.y
-	custom_minimum_size = size_for_mode
-	size = size_for_mode
-	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	fit_to_content()
+
+
+func fit_to_content() -> void:
+	if not is_node_ready() or _card_panel == null:
+		return
+	DetailCardFit.apply(self, _card_panel, CARD_WIDTH)
 
 
 func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	reset_compact_layout()
 	_refresh()
+	fit_to_content()
 
 
 func _refresh() -> void:

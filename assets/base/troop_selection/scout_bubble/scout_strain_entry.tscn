@@ -25,7 +25,7 @@ vertical_alignment = 1
 
 [node name="PortraitHost" type="Control" parent="."]
 unique_name_in_owner = true
-clip_contents = true
+clip_contents = false
 custom_minimum_size = Vector2(84, 84)
 layout_mode = 2
 size_flags_vertical = 4

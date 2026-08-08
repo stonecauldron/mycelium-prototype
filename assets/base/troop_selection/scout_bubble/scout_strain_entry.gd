@@ -42,7 +42,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	if _strain == null:
 		return null
 	var tip := _build_strain_tooltip(_strain)
-	tip.tree_entered.connect(_configure_tooltip_popup.bind(tip), CONNECT_ONE_SHOT)
+	DetailTooltipPopup.configure(tip)
 	return tip
 
 
@@ -88,16 +88,3 @@ func _build_strain_tooltip(strain: UnitStrain) -> Control:
 	panel.reset_size()
 	return panel
 
-
-func _configure_tooltip_popup(tip: Control) -> void:
-	var node: Node = tip.get_parent()
-	while node != null:
-		if node is PopupPanel:
-			var popup := node as PopupPanel
-			popup.transparent = true
-			popup.transparent_bg = true
-			popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-			var tip_size := tip.get_combined_minimum_size()
-			popup.size = Vector2i(ceili(tip_size.x), ceili(tip_size.y))
-			return
-		node = node.get_parent()

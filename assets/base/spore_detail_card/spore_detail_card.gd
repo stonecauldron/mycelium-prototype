@@ -1,8 +1,9 @@
 class_name SporeDetailCard
 extends Control
 
-const CARD_SIZE := Vector2(320, 560)
-const CARD_SIZE_WITH_PLOT := Vector2(430, 640)
+const CARD_WIDTH := 320.0
+const CARD_WIDTH_WITH_PLOT := 430.0
+const PORTRAIT_HOST_HEIGHT := 140.0
 const PORTRAIT_SCALE := 0.7
 const PORTRAIT_SHADOW_CLEARANCE := 16.0
 const _TRAINING_ICON_SIZE := Vector2(48, 48)
@@ -16,6 +17,7 @@ var show_buy_price: bool = false
 var _portrait_instance: Node2D = null
 var _preview_unit: RosterUnitData = null
 
+@onready var _card_panel: PanelContainer = $CardPanel
 @onready var _name_label: Label = %NameLabel
 @onready var _desc_label: Label = %DescLabel
 @onready var _grow_label: Label = %GrowLabel
@@ -53,45 +55,55 @@ func setup(
 	show_buy_price = p_show_buy_price
 	if is_node_ready():
 		_apply_interaction_mode()
-		reset_compact_layout()
 		_refresh()
+		fit_to_content()
 	else:
 		ready.connect(_on_setup_ready, CONNECT_ONE_SHOT)
 
 
 func _on_setup_ready() -> void:
 	_apply_interaction_mode()
-	reset_compact_layout()
 	_refresh()
+	fit_to_content()
+
+
+func card_width() -> float:
+	return CARD_WIDTH_WITH_PLOT if plot_data != null else CARD_WIDTH
 
 
 func card_size() -> Vector2:
-	return CARD_SIZE_WITH_PLOT if plot_data != null else CARD_SIZE
+	if custom_minimum_size.x > 0.0 and custom_minimum_size.y > 0.0:
+		return custom_minimum_size
+	if size.x > 0.0 and size.y > 0.0:
+		return size
+	return Vector2(card_width(), PORTRAIT_HOST_HEIGHT)
 
 
 func reset_compact_layout() -> void:
-	var size_for_mode := card_size()
-	set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	anchor_right = anchor_left
-	anchor_bottom = anchor_top
-	offset_left = 0.0
-	offset_top = 0.0
-	offset_right = size_for_mode.x
-	offset_bottom = size_for_mode.y
-	custom_minimum_size = size_for_mode
-	size = size_for_mode
-	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	fit_to_content()
+
+
+func fit_to_content() -> void:
+	if not is_node_ready() or _card_panel == null:
+		return
+	if _portrait_host != null:
+		_portrait_host.clip_contents = false
+		_portrait_host.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		_portrait_host.custom_minimum_size = Vector2(0.0, PORTRAIT_HOST_HEIGHT)
+	if _footer_spacer != null:
+		_footer_spacer.visible = false
+		_footer_spacer.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	DetailCardFit.apply(self, _card_panel, card_width())
 
 
 func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	_apply_interaction_mode()
-	reset_compact_layout()
 	if spore_data == null and get_tree().current_scene == self:
 		spore_data = load(_MOCK_SPORE_PATH) as SporeData
 	if spore_data != null:
 		_refresh()
+	fit_to_content()
 
 
 func _refresh() -> void:
@@ -109,7 +121,6 @@ func _refresh() -> void:
 	_refresh_tags(strain)
 	_refresh_plot_section()
 	_refresh_lineage_section()
-	reset_compact_layout()
 
 
 func _refresh_growth_row() -> void:

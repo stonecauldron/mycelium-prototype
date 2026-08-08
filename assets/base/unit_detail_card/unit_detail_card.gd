@@ -1,8 +1,8 @@
 class_name UnitDetailCard
 extends Control
 
-const CARD_SIZE := Vector2(390, 600)
-const CARD_SIZE_NO_PORTRAIT := Vector2(390, 480)
+const CARD_WIDTH := 390.0
+const PORTRAIT_HOST_HEIGHT := 200.0
 const PORTRAIT_SCALE := 0.9
 ## Extra room under feet so the ground shadow is not clipped (UnitCard keeps default).
 const PORTRAIT_SHADOW_CLEARANCE := 24.0
@@ -14,6 +14,7 @@ var interactive: bool = true
 var _portrait_instance: Node2D = null
 var _strain_chip: StatChip = null
 
+@onready var _card_panel: PanelContainer = $CardPanel
 @onready var _name_label: Label = %NameLabel
 @onready var _type_label: Label = %TypeLabel
 @onready var _desc_label: Label = %DescLabel
@@ -41,8 +42,8 @@ func setup(
 	if is_node_ready():
 		_apply_interaction_mode()
 		_apply_portrait_visibility()
-		reset_compact_layout()
 		_refresh()
+		fit_to_content()
 	else:
 		ready.connect(_on_setup_ready, CONNECT_ONE_SHOT)
 
@@ -50,38 +51,44 @@ func setup(
 func _on_setup_ready() -> void:
 	_apply_interaction_mode()
 	_apply_portrait_visibility()
-	reset_compact_layout()
 	_refresh()
+	fit_to_content()
 
 
 func card_size() -> Vector2:
-	return CARD_SIZE if show_portrait else CARD_SIZE_NO_PORTRAIT
+	if custom_minimum_size.x > 0.0 and custom_minimum_size.y > 0.0:
+		return custom_minimum_size
+	if size.x > 0.0 and size.y > 0.0:
+		return size
+	return Vector2(CARD_WIDTH, PORTRAIT_HOST_HEIGHT)
 
 
 func reset_compact_layout() -> void:
-	var size_for_mode := card_size()
-	set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	anchor_right = anchor_left
-	anchor_bottom = anchor_top
-	offset_left = 0.0
-	offset_top = 0.0
-	offset_right = size_for_mode.x
-	offset_bottom = size_for_mode.y
-	custom_minimum_size = size_for_mode
-	size = size_for_mode
-	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	fit_to_content()
+
+
+func fit_to_content() -> void:
+	if not is_node_ready() or _card_panel == null:
+		return
+	if _portrait_host != null:
+		_portrait_host.clip_contents = false
+		_portrait_host.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		_portrait_host.custom_minimum_size = Vector2(
+			0.0,
+			PORTRAIT_HOST_HEIGHT if show_portrait else 0.0
+		)
+	DetailCardFit.apply(self, _card_panel, CARD_WIDTH)
 
 
 func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	_apply_interaction_mode()
 	_apply_portrait_visibility()
-	reset_compact_layout()
 	if unit_data == null and get_tree().current_scene == self:
 		unit_data = _make_mock_unit()
 	if unit_data != null:
 		_refresh()
+	fit_to_content()
 
 
 func _make_mock_unit() -> RosterUnitData:

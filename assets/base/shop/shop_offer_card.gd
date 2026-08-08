@@ -225,41 +225,15 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	if weapon != null:
 		var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
 		weapon_tip.setup(weapon, false, true)
-		var weapon_tip_size := weapon_tip.card_size()
-		weapon_tip.custom_minimum_size = weapon_tip_size
-		weapon_tip.size = weapon_tip_size
-		weapon_tip.tree_entered.connect(
-			_configure_detail_tooltip_popup.bind(weapon_tip), CONNECT_ONE_SHOT
-		)
+		DetailTooltipPopup.configure(weapon_tip)
 		return weapon_tip
 	var spore := payload.get("spore") as SporeData
 	if spore == null:
 		return null
 	var tip: SporeDetailCard = _SPORE_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(spore, false, null, true)
-	var tip_size := tip.card_size()
-	tip.custom_minimum_size = tip_size
-	tip.size = tip_size
-	tip.tree_entered.connect(_configure_detail_tooltip_popup.bind(tip), CONNECT_ONE_SHOT)
+	DetailTooltipPopup.configure(tip)
 	return tip
-
-
-func _configure_detail_tooltip_popup(tip: Control) -> void:
-	var tip_size := Vector2.ZERO
-	if tip.has_method("card_size"):
-		tip_size = tip.call("card_size") as Vector2
-	else:
-		tip_size = tip.size
-	var node: Node = tip.get_parent()
-	while node != null:
-		if node is PopupPanel:
-			var popup := node as PopupPanel
-			popup.transparent = true
-			popup.transparent_bg = true
-			popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-			popup.size = Vector2i(ceili(tip_size.x), ceili(tip_size.y))
-			return
-		node = node.get_parent()
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

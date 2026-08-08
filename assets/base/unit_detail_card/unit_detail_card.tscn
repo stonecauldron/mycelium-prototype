@@ -31,12 +31,10 @@ theme = ExtResource("2_theme")
 script = ExtResource("1_card")
 
 [node name="CardPanel" type="PanelContainer" parent="." unique_id=689454913]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+clip_contents = false
+anchors_preset = 0
+offset_right = 390.0
+offset_bottom = 600.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_detail_card")
 
@@ -65,10 +63,9 @@ autowrap_mode = 3
 [node name="PortraitHost" type="Control" parent="CardPanel/Margin/VBox" unique_id=1373002961]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 200)
-clip_contents = true
+clip_contents = false
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="CombatRow" type="HBoxContainer" parent="CardPanel/Margin/VBox" unique_id=930044425]
@@ -159,11 +156,13 @@ text = "Child"
 
 [node name="TypeLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=575043690]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
 theme_override_font_sizes/font_size = 30
 text = "Generalist Strain"
+autowrap_mode = 3
 
 [node name="DescLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=563188910]
 unique_name_in_owner = true

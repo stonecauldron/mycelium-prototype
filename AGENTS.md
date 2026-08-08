@@ -54,3 +54,17 @@ Web build: `make build` exports the `Web` preset to `build/web/` (templates are 
 Tests/lint: none exist — there is no test framework (no GUT/gdUnit) and no configured linter/formatter.
 
 Git assets quirk: `*.png`/`*.svg`/etc. are declared LFS in `.gitattributes` but are actually stored as normal git blobs (`git lfs ls-files` is empty). This makes those binary files show as perpetually "modified" in `git status`. Do **not** stage/commit them — leave them untouched.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live as local markdown under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: root `CONTEXT.md` + `docs/adr/`. See `docs/agents/domain.md`.

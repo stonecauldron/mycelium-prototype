@@ -113,11 +113,10 @@ func try_compost_unit(unit: RosterUnitData) -> bool:
 	if not can_compost_unit(unit):
 		return false
 	unit.last_death_biomass_yield = 0
-	if unit.strain != null:
-		unit.strain.call_effect(
-			&"on_death",
-			[unit, StrainEffect.DeathContext.COMPOSTED, null]
-		)
+	unit.call_lifecycle_effect(
+		&"on_death",
+		[unit, StrainEffect.DeathContext.COMPOSTED, null]
+	)
 	var compost_reward := BiomassData.reward_for_compost(unit.is_adult_stage())
 	if compost_reward > 0:
 		unit.last_death_biomass_yield += compost_reward
@@ -297,6 +296,20 @@ func try_buy_fertilizer(fertilizer: FertilizerData, cost: int) -> bool:
 	return true
 
 
+func try_buy_mutation(mutation: MutationData, cost: int) -> bool:
+	if mutation == null or cost < 0:
+		return false
+	ensure_nursery_seeded()
+	if not nursery.can_add_stock_item():
+		return false
+	if not biomass.try_spend(cost):
+		return false
+	if not nursery.add_mutation(mutation):
+		biomass.add(cost)
+		return false
+	return true
+
+
 ## Pay biomass on an empty plot to start a fresh Common grow (Rotten Thumb applies).
 func try_plant_fresh_common(plot_index: int) -> bool:
 	ensure_nursery_seeded()
@@ -401,6 +414,8 @@ func try_sell_nursery_stock_item(stock_index: int) -> bool:
 		buy_cost = (item as SporeData).biomass_cost
 	elif item is FertilizerData:
 		buy_cost = (item as FertilizerData).biomass_cost
+	elif item is MutationData:
+		buy_cost = (item as MutationData).biomass_cost
 	else:
 		return false
 	nursery.stock.clear_slot(stock_index)

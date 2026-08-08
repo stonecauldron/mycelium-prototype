@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="MutationData" format=3]
+
+[ext_resource type="Script" path="res://assets/base/nursery/mutation_data.gd" id="1_mut"]
+[ext_resource type="Script" path="res://assets/units/wall_cap/wall_cap_effect.gd" id="2_effect"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2_effect")
+
+[resource]
+script = ExtResource("1_mut")
+display_name = "Wall"
+short_description = "Death leaves a destructible wall."
+slot = 1
+biomass_cost = 3
+tint = Color(0.83336693, 0.30143315, 0.18721086, 1)
+effect = SubResource("Effect")
+strength_delta = -2
+dex_delta = -2
+con_delta = -2
+spd_delta = -2

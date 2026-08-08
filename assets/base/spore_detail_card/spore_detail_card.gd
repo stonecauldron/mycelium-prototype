@@ -340,10 +340,14 @@ func _plot_status_text() -> String:
 
 
 func _plot_info_text() -> String:
-	var lines: PackedStringArray = []
+	var sections: PackedStringArray = []
+	var mut_lines := plot_data.mutation_tooltip_lines()
+	if not mut_lines.is_empty():
+		sections.append("Mutations\n" + "\n".join(mut_lines))
 	var residue := plot_data.fungicide_residue_text()
+	var fert_lines: PackedStringArray = []
 	if not residue.is_empty():
-		lines.append(residue)
+		fert_lines.append(residue)
 	var counts: Dictionary = {}
 	var order: Array[FertilizerData] = []
 	for fert in plot_data.applied_fertilizers:
@@ -360,12 +364,12 @@ func _plot_info_text() -> String:
 		var count := int(counts.get(fert.display_name, 0))
 		var desc := "%s (%s)" % [fert.display_name, fert.subtitle_text()]
 		if count > 1:
-			lines.append("%d X %s" % [count, desc])
+			fert_lines.append("%d X %s" % [count, desc])
 		else:
-			lines.append(desc)
-	if lines.is_empty():
-		return ""
-	return "Fertilizers\n" + "\n".join(lines)
+			fert_lines.append(desc)
+	if not fert_lines.is_empty():
+		sections.append("Fertilizers\n" + "\n".join(fert_lines))
+	return "\n\n".join(sections)
 
 
 func _apply_interaction_mode() -> void:

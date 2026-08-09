@@ -116,11 +116,17 @@ static func from_fallen_unit(unit: RosterUnitData) -> SporeData:
 	spore.strain = unit.strain
 	if unit.stats != null:
 		spore.mean_stats = unit.stats.duplicate(true) as UnitStatsData
+		# Strip identity hatch deltas from mean stats so harvest (and Stock remix)
+		# can apply the spore's current Body/Cap once — not stack every generation.
+		if unit.body_mutation != null:
+			unit.body_mutation.strip_hatch_stats(spore.mean_stats)
+		if unit.cap_mutation != null:
+			unit.cap_mutation.strip_hatch_stats(spore.mean_stats)
 	spore.weapon_trainings = []
 	for training in unit.weapon_trainings:
 		spore.weapon_trainings.append(int(training))
 	# Snapshot Body/Cap Mutations only — Fertilizer items never ride lineage spores
-	# (baked stat effects may still be present via mean_stats).
+	# (other baked growth effects may still be present via mean_stats).
 	spore.body_mutation = (
 		unit.body_mutation.duplicate(true) as MutationData if unit.body_mutation != null else null
 	)

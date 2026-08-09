@@ -286,13 +286,20 @@ func _refresh_mutations_label() -> void:
 	if plot_data != null or not spore_data.is_lineage_spore():
 		_mutations_label.visible = false
 		return
-	var mut_lines := spore_data.mutation_tooltip_lines()
-	if mut_lines.is_empty():
-		_mutations_label.visible = true
-		_mutations_label.text = "Mutations\nBody: —\nCap: —"
-		return
+	var body_line := "Body: —"
+	if spore_data.body_mutation != null:
+		body_line = "Body: %s — %s" % [
+			spore_data.body_mutation.display_name,
+			spore_data.body_mutation.subtitle_text(),
+		]
+	var cap_line := "Cap: —"
+	if spore_data.cap_mutation != null:
+		cap_line = "Cap: %s — %s" % [
+			spore_data.cap_mutation.display_name,
+			spore_data.cap_mutation.subtitle_text(),
+		]
 	_mutations_label.visible = true
-	_mutations_label.text = "Mutations\n" + "\n".join(mut_lines)
+	_mutations_label.text = "Mutations\n%s\n%s" % [body_line, cap_line]
 
 
 func _make_preview_unit() -> RosterUnitData:

@@ -177,7 +177,14 @@ func _check_lineage_mutations(errs: Array[String]) -> void:
 	adult.cap_mutation = boom.duplicate(true) as MutationData
 	adult.weapon_trainings = [WeaponSchool.Id.SWORD as int]
 	adult.applied_fertilizers = [meiosis]
-	adult.stats.strength = 7
+	# Live adult stats already include Mutation hatch deltas (as after a real hatch).
+	adult.stats.strength = 10
+	adult.stats.dex = 10
+	adult.stats.con = 10
+	adult.stats.spd = 10
+	fat.apply_hatch_stats(adult.stats)
+	boom.apply_hatch_stats(adult.stats)
+	var live_str := adult.stats.strength
 
 	var nursery := NurseryData.new()
 	nursery.seed_if_empty()
@@ -190,8 +197,13 @@ func _check_lineage_mutations(errs: Array[String]) -> void:
 		errs.append("emitted spore not lineage")
 	if spore.power_tier != UnitStatsData.PowerTier.UNCOMMON:
 		errs.append("lineage lost tier")
-	if spore.mean_stats == null or spore.mean_stats.strength != 7:
+	if spore.mean_stats == null:
 		errs.append("lineage lost mean stats")
+	elif spore.mean_stats.strength != 10:
+		errs.append(
+			"mean_stats should strip mutation hatch deltas (got STR %d, live was %d)"
+			% [spore.mean_stats.strength, live_str]
+		)
 	if spore.weapon_trainings.size() != 1:
 		errs.append("lineage lost trainings")
 	if spore.body_mutation == null or spore.body_mutation.display_name != "Fat":

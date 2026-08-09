@@ -353,6 +353,13 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 		return false
 	var plot := plots[plot_index] as NurseryPlotData
 	plot.planted_spore = spore
+	# Seed plot mutation slots from prepared lineage (or empty fresh) spores.
+	plot.body_mutation = (
+		spore.body_mutation.duplicate(true) as MutationData if spore.body_mutation != null else null
+	)
+	plot.cap_mutation = (
+		spore.cap_mutation.duplicate(true) as MutationData if spore.cap_mutation != null else null
+	)
 	plot.days_grown = plot.total_growth_bonus()
 	plot.snap_after_plant()
 	return true
@@ -404,6 +411,33 @@ func apply_mutation_to_plot(plot_index: int, mutation: MutationData) -> bool:
 	if plot == null:
 		return false
 	return plot.apply_mutation(mutation)
+
+
+## Apply a stock Mutation onto a lineage spore in another stock slot (replace consumes).
+func apply_mutation_from_stock_to_lineage_spore(
+	spore_stock_index: int,
+	mutation_stock_index: int
+) -> bool:
+	_ensure_stock()
+	if spore_stock_index == mutation_stock_index:
+		return false
+	var mutation := stock.get_at(mutation_stock_index) as MutationData
+	if mutation == null:
+		return false
+	if not apply_mutation_to_lineage_spore(spore_stock_index, mutation):
+		return false
+	stock.clear_slot(mutation_stock_index)
+	return true
+
+
+func apply_mutation_to_lineage_spore(stock_index: int, mutation: MutationData) -> bool:
+	_ensure_stock()
+	if mutation == null:
+		return false
+	var spore := stock.get_at(stock_index) as SporeData
+	if spore == null:
+		return false
+	return spore.apply_mutation(mutation)
 
 
 func advance_day() -> Array[Dictionary]:

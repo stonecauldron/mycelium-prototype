@@ -1,12 +1,12 @@
-class_name FertilizerCard
+class_name MutationCard
 extends PanelContainer
 
 const CARD_SIZE := Vector2(120, 100)
-const _FERTILIZER_CARD_SCENE := preload("res://assets/base/nursery/fertilizer_card/fertilizer_card.tscn")
+const _MUTATION_CARD_SCENE := preload("res://assets/base/nursery/mutation_card/mutation_card.tscn")
 const _HOVER_AMPLITUDE_PX := 5.0
 const _HOVER_HALF_DURATION_SEC := 1.35
 
-var fertilizer: FertilizerData
+var mutation: MutationData
 var stock_index: int = 0
 
 @onready var _icon: TextureRect = %Icon
@@ -21,8 +21,8 @@ var _hover_y: float = 0.0:
 		_apply_hover_y()
 
 
-func setup(fertilizer_data: FertilizerData, index: int) -> void:
-	fertilizer = fertilizer_data
+func setup(mutation_data: MutationData, index: int) -> void:
+	mutation = mutation_data
 	stock_index = index
 	if is_node_ready():
 		_refresh()
@@ -51,7 +51,7 @@ func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	reset_compact_layout()
-	if fertilizer != null:
+	if mutation != null:
 		_refresh()
 	_restart_hover()
 
@@ -68,16 +68,15 @@ func _set_children_mouse_filter_ignore(node: Node) -> void:
 
 
 func _refresh() -> void:
-	if fertilizer == null:
+	if mutation == null:
 		return
-	_name_label.text = fertilizer.display_name
-	# Compact stock card: name + icon only; full effect text lives on tooltip.
+	_name_label.text = mutation.display_name
 	if _subtitle_label != null:
 		_subtitle_label.visible = false
 		_subtitle_label.text = ""
-	tooltip_text = fertilizer.subtitle_text()
+	tooltip_text = "%s — %s" % [mutation.slot_label(), mutation.subtitle_text()]
 	if _icon != null:
-		_icon.modulate = fertilizer.tint
+		_icon.modulate = mutation.tint
 
 
 func _apply_hover_y() -> void:
@@ -124,19 +123,19 @@ func _stop_hover() -> void:
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
-	if fertilizer == null:
+	if mutation == null:
 		return null
 	if _hover_punch != null:
 		_hover_punch.reset()
 	visible = false
-	var preview: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
-	preview.setup(fertilizer, stock_index)
+	var preview: MutationCard = _MUTATION_CARD_SCENE.instantiate()
+	preview.setup(mutation, stock_index)
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_drag_preview(_centered_drag_preview(preview, CARD_SIZE))
 	return {
-		"type": "fertilizer",
+		"type": "mutation",
 		"stock_index": stock_index,
-		"fertilizer": fertilizer,
+		"mutation": mutation,
 	}
 
 

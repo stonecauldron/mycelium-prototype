@@ -49,11 +49,11 @@ static func count_troop_juveniles(self_roster: RosterUnitData) -> int:
 
 
 static func is_brood_empress(roster: RosterUnitData) -> bool:
-	return (
-		roster != null
-		and roster.strain != null
-		and roster.strain.effect is BroodEmpressEffect
-	)
+	if roster == null:
+		return false
+	if roster.cap_mutation != null and roster.cap_mutation.effect is BroodEmpressEffect:
+		return true
+	return roster.strain != null and roster.strain.effect is BroodEmpressEffect
 
 
 ## Hub preview stats with child bonus applied (does not mutate roster permanently).

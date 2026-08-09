@@ -4,11 +4,12 @@ extends Resource
 const MAX_PLOT_COUNT := 9
 const STARTING_UNLOCKED_PLOTS := 1
 const SHOP_SLOT_COUNT := 4
+const SHOP_FERTILIZER_SLOT_COUNT := 2
+const SHOP_MUTATION_SLOT_COUNT := 2
 const STOCK_SLOT_COUNT := 5
 const STARTER_SPORE_COUNT := 0
 ## Fresh empty-plot grows use the Common Spore baseline (cost / days).
 const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"
-## Shop is Fertilizer-only until Mutation offers land (ticket 02).
 const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/reinforced_chitin.tres",
 	"res://assets/base/nursery/fertilizers/brute_force.tres",
@@ -27,9 +28,24 @@ const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/stimulants.tres",
 	"res://assets/base/nursery/fertilizers/late_bloomer.tres",
 ]
+const _BODY_MUTATION_PATHS: Array[String] = [
+	"res://assets/base/nursery/mutations/mini.tres",
+	"res://assets/base/nursery/mutations/lanky.tres",
+	"res://assets/base/nursery/mutations/fat.tres",
+	"res://assets/base/nursery/mutations/rubber.tres",
+	"res://assets/base/nursery/mutations/zombie.tres",
+]
+const _CAP_MUTATION_PATHS: Array[String] = [
+	"res://assets/base/nursery/mutations/death.tres",
+	"res://assets/base/nursery/mutations/inky.tres",
+	"res://assets/base/nursery/mutations/boom.tres",
+	"res://assets/base/nursery/mutations/wall.tres",
+	"res://assets/base/nursery/mutations/bank.tres",
+	"res://assets/base/nursery/mutations/brood_empress.tres",
+]
 
 @export var plots: Array = []
-## Shared nursery inventory: SporeData and FertilizerData entries.
+## Shared nursery inventory: SporeData, FertilizerData, and MutationData entries.
 @export var stock: StockInventory
 ## Nursery shop state (offers + locks). Shared ShopInventory used by any shop screen.
 @export var spore_shop: ShopInventory
@@ -66,7 +82,7 @@ func seed_if_empty() -> void:
 		for i in mini(STARTER_SPORE_COUNT, STOCK_SLOT_COUNT):
 			stock.set_at(i, common_spore)
 	spore_shop.ensure_filled(generate_offer_for_slot)
-	_purge_spore_shop_offers()
+	_normalize_shop_offers()
 	_seeded = true
 
 
@@ -124,17 +140,17 @@ func unlock_next_plot() -> bool:
 func ensure_shop_offers() -> void:
 	_ensure_spore_shop()
 	spore_shop.ensure_filled(generate_offer_for_slot)
-	_purge_spore_shop_offers()
+	_normalize_shop_offers()
 
 
 func reroll_unlocked_shop_offers() -> void:
 	_ensure_spore_shop()
 	spore_shop.reroll_unlocked(generate_offer_for_slot)
-	_purge_spore_shop_offers()
+	_normalize_shop_offers()
 
 
-## Drop legacy Spore shop SKUs (locked or not) so the shelf stays Fertilizer-only.
-func _purge_spore_shop_offers() -> void:
+## Drop legacy Spore SKUs and keep slot kinds: 0–1 Fertilizer, 2–3 Mutation.
+func _normalize_shop_offers() -> void:
 	_ensure_spore_shop()
 	while spore_shop.offers.size() < SHOP_SLOT_COUNT:
 		spore_shop.offers.append(null)
@@ -143,12 +159,22 @@ func _purge_spore_shop_offers() -> void:
 		if offer == null or offer.is_empty():
 			continue
 		if offer.item is SporeData:
+			spore_shop.offers[i] = generate_offer_for_slot(i)
+			continue
+		if is_mutation_shop_slot(i):
+			if not (offer.item is MutationData):
+				spore_shop.offers[i] = generate_mutation_offer()
+		elif not (offer.item is FertilizerData):
 			spore_shop.offers[i] = generate_fertilizer_offer()
 
 
 func replace_shop_slot(slot_index: int) -> void:
 	_ensure_spore_shop()
 	spore_shop.replace_slot(slot_index)
+
+
+static func is_mutation_shop_slot(slot_index: int) -> bool:
+	return slot_index >= SHOP_FERTILIZER_SLOT_COUNT
 
 
 func can_add_stock_item() -> bool:
@@ -163,7 +189,7 @@ func add_stock_item(item: Resource) -> bool:
 ## Places item in first empty slot (or `slot_index` if >= 0). Returns slot index, or -1.
 func add_stock_item_at(item: Resource, slot_index: int = -1) -> int:
 	_ensure_stock()
-	if item == null or not (item is SporeData or item is FertilizerData):
+	if item == null or not (item is SporeData or item is FertilizerData or item is MutationData):
 		return -1
 	var dest := stock.add(item, slot_index)
 	if dest >= 0:
@@ -224,6 +250,10 @@ func add_fertilizer(fertilizer: FertilizerData) -> bool:
 	return add_stock_item(fertilizer)
 
 
+func add_mutation(mutation: MutationData) -> bool:
+	return add_stock_item(mutation)
+
+
 func has_spore_in_stock() -> bool:
 	return first_spore_stock_index() >= 0
 
@@ -247,7 +277,9 @@ func first_empty_plot_index() -> int:
 	return -1
 
 
-func generate_offer_for_slot(_slot_index: int = 0) -> ShopOffer:
+func generate_offer_for_slot(slot_index: int = 0) -> ShopOffer:
+	if is_mutation_shop_slot(slot_index):
+		return generate_mutation_offer()
 	return generate_fertilizer_offer()
 
 
@@ -257,6 +289,21 @@ func generate_fertilizer_offer() -> ShopOffer:
 	var offer := ShopOffer.new()
 	offer.item = fertilizer
 	offer.cost = fertilizer.biomass_cost if fertilizer != null else 2
+	offer.locked = false
+	return offer
+
+
+## Each Mutation slot rolls body or cap independently, then picks from that pool.
+func generate_mutation_offer() -> ShopOffer:
+	var use_body := randf() < 0.5
+	var paths := _BODY_MUTATION_PATHS if use_body else _CAP_MUTATION_PATHS
+	var path := paths[randi() % paths.size()]
+	var mutation := load(path) as MutationData
+	var offer := ShopOffer.new()
+	offer.item = mutation
+	offer.cost = MutationData.BIOMASS_COST
+	if mutation != null:
+		offer.cost = mutation.biomass_cost
 	offer.locked = false
 	return offer
 
@@ -335,6 +382,30 @@ func apply_fertilizer_to_plot(plot_index: int, fertilizer: FertilizerData) -> bo
 	return plot.apply_fertilizer(fertilizer)
 
 
+func apply_mutation_from_stock(plot_index: int, stock_index: int) -> bool:
+	_ensure_stock()
+	var mutation := stock.get_at(stock_index) as MutationData
+	if mutation == null:
+		return false
+	if not apply_mutation_to_plot(plot_index, mutation):
+		return false
+	stock.clear_slot(stock_index)
+	return true
+
+
+func apply_mutation_to_plot(plot_index: int, mutation: MutationData) -> bool:
+	if not is_plot_unlocked(plot_index):
+		return false
+	if plot_index >= plots.size():
+		return false
+	if mutation == null:
+		return false
+	var plot := plots[plot_index] as NurseryPlotData
+	if plot == null:
+		return false
+	return plot.apply_mutation(mutation)
+
+
 func advance_day() -> Array[Dictionary]:
 	var matured: Array[Dictionary] = []
 	for i in unlocked_plot_count:
@@ -366,7 +437,13 @@ func harvest(plot_index: int) -> Array[RosterUnitData]:
 	if plot == null or not plot.can_harvest():
 		return result
 	var pending := plot.consume_pending_stat_bonus()
-	result = _make_harvest_units(plot.planted_spore, plot.applied_fertilizers, pending)
+	result = _make_harvest_units(
+		plot.planted_spore,
+		plot.applied_fertilizers,
+		pending,
+		plot.body_mutation,
+		plot.cap_mutation
+	)
 	_apply_favourite_child_if_first_hatch(result)
 	plot.clear()
 	return result
@@ -388,7 +465,9 @@ func _apply_favourite_child_if_first_hatch(units: Array[RosterUnitData]) -> void
 func _make_harvest_units(
 	spore: SporeData,
 	fertilizers: Array[FertilizerData],
-	pending_stat_bonus: int
+	pending_stat_bonus: int,
+	body_mutation: MutationData = null,
+	cap_mutation: MutationData = null
 ) -> Array[RosterUnitData]:
 	var units: Array[RosterUnitData] = []
 	var weapon := WeaponSchool.sickle()
@@ -412,6 +491,10 @@ func _make_harvest_units(
 		stats.spd = clampi(stats.spd + pending_stat_bonus, 1, 99)
 	if unit_strain != null:
 		unit_strain.apply_hatch_stats(stats)
+	if body_mutation != null:
+		body_mutation.apply_hatch_stats(stats)
+	if cap_mutation != null:
+		cap_mutation.apply_hatch_stats(stats)
 
 	var yield_count := 1
 	if unit_strain != null:
@@ -481,6 +564,12 @@ func _make_harvest_units(
 		unit.lineage_name = hatch_lineage
 		unit.generation = hatch_generation
 		unit.display_name = hatch_name
+		unit.body_mutation = (
+			body_mutation.duplicate(true) as MutationData if body_mutation != null else null
+		)
+		unit.cap_mutation = (
+			cap_mutation.duplicate(true) as MutationData if cap_mutation != null else null
+		)
 		if lineage and not training_amnesia:
 			unit.weapon_trainings = []
 			for training in spore.weapon_trainings:
@@ -503,8 +592,7 @@ func _make_harvest_units(
 				unit.max_days_alive = int(unit.max_days_alive / 2.0)
 			if slow_metabolism:
 				unit.max_days_alive = unit.max_days_alive * 2
-		if unit_strain != null:
-			unit_strain.call_effect(&"on_hatch", [unit])
+		unit.call_lifecycle_effect(&"on_hatch", [unit])
 		units.append(unit)
 	return units
 

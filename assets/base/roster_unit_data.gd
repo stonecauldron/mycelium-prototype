@@ -16,6 +16,10 @@ const NO_LIFE_EXPECTANCY := -1
 @export var combat: CombatProfile
 @export var enemy_unit_data: EnemyUnitData
 @export var strain: UnitStrain
+## Body mutation slot (empty allowed). Starters begin with none.
+@export var body_mutation: MutationData
+## Cap mutation slot (empty allowed). Starters begin with none.
+@export var cap_mutation: MutationData
 @export var power_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.COMMON
 @export var days_alive: int = 0
 @export var life_stage_id: StringName = &"juvenile"
@@ -82,12 +86,58 @@ func get_engagement_stance() -> WeaponData.EngagementStance:
 	return ensure_combat_profile().engagement_stance
 
 
+func call_mutation_effects(method_name: StringName, args: Array = []) -> void:
+	if body_mutation != null:
+		body_mutation.call_effect(method_name, args)
+	if cap_mutation != null:
+		cap_mutation.call_effect(method_name, args)
+
+
+## Hatch / day / imago / death hooks for Mutations + legacy Strain.
+func call_lifecycle_effect(method_name: StringName, args: Array = []) -> void:
+	call_mutation_effects(method_name, args)
+	if strain != null:
+		strain.call_effect(method_name, args)
+
+
 func call_combat_effect(method_name: StringName, args: Array = []) -> void:
+	call_mutation_effects(method_name, args)
 	if strain != null:
 		strain.call_effect(method_name, args)
 		return
 	if enemy_unit_data != null:
 		enemy_unit_data.call_effect(method_name, args)
+
+
+func get_identity_stat_chip() -> Dictionary:
+	if cap_mutation != null:
+		var cap_info := cap_mutation.get_stat_chip(self)
+		if not cap_info.is_empty():
+			return cap_info
+	if body_mutation != null:
+		var body_info := body_mutation.get_stat_chip(self)
+		if not body_info.is_empty():
+			return body_info
+	if strain != null:
+		return strain.get_stat_chip(self)
+	return {}
+
+
+func mutation_summary_lines() -> PackedStringArray:
+	var lines: PackedStringArray = []
+	if body_mutation != null:
+		lines.append(
+			"Body: %s — %s" % [body_mutation.display_name, body_mutation.subtitle_text()]
+		)
+	else:
+		lines.append("Body: —")
+	if cap_mutation != null:
+		lines.append(
+			"Cap: %s — %s" % [cap_mutation.display_name, cap_mutation.subtitle_text()]
+		)
+	else:
+		lines.append("Cap: —")
+	return lines
 
 
 func is_fully_evolved() -> bool:
@@ -129,8 +179,7 @@ func promote_to_imago(apply_maturity_stats: bool = true) -> bool:
 	life_stage_id = UnitStrain.STAGE_IMAGO
 	is_imago = true
 	sync_weapon_from_trainings()
-	if strain != null:
-		strain.call_effect(&"on_imago", [self])
+	call_lifecycle_effect(&"on_imago", [self])
 	return true
 
 

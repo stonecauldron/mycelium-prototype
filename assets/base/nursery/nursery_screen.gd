@@ -3,8 +3,8 @@ extends BaseScreen
 
 const STOCK_SLOT_COUNT := NurseryData.STOCK_SLOT_COUNT
 const SHOP_SLOT_COUNT := NurseryData.SHOP_SLOT_COUNT
-var _stock_drag_types := PackedStringArray(["spore", "fertilizer"])
-var _intake_drag_types := PackedStringArray(["shop_fertilizer"])
+var _stock_drag_types := PackedStringArray(["spore", "fertilizer", "mutation"])
+var _intake_drag_types := PackedStringArray(["shop_fertilizer", "shop_mutation"])
 const _HATCH_TOAST_FADE_SEC := 0.18
 const _HATCH_TOAST_GAP := 10.0
 ## Above day counter / tabs inside HudRoot (same CanvasLayer).
@@ -12,6 +12,7 @@ const _HATCH_TOAST_Z_INDEX := 100
 const _PLOT_TILE_SCENE := preload("res://assets/base/plot_tile/plot_tile.tscn")
 const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
 const _FERTILIZER_CARD_SCENE := preload("res://assets/base/nursery/fertilizer_card/fertilizer_card.tscn")
+const _MUTATION_CARD_SCENE := preload("res://assets/base/nursery/mutation_card/mutation_card.tscn")
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
@@ -45,7 +46,7 @@ func _ready() -> void:
 	_reroll_button.pressed.connect(_on_reroll_pressed)
 	_reroll_button.mouse_entered.connect(_on_reroll_hover_entered)
 	_reroll_button.mouse_exited.connect(_on_reroll_hover_exited)
-	_shop_drop_zone.accepted_drag_types = PackedStringArray(["spore", "fertilizer"])
+	_shop_drop_zone.accepted_drag_types = PackedStringArray(["spore", "fertilizer", "mutation"])
 	_shop_drop_zone.item_dropped.connect(_on_shop_sell_dropped)
 	_build_stock_slots()
 	_build_plot_tiles()
@@ -142,26 +143,47 @@ func _rebuild_shop_cards() -> void:
 		var offer := shop.offers[i]
 		if offer == null or offer.is_empty():
 			continue
-		if not (offer.item is FertilizerData):
+		var card: ShopOfferCard = null
+		if offer.item is FertilizerData:
+			var fert := offer.item as FertilizerData
+			card = _SHOP_OFFER_CARD_SCENE.instantiate()
+			card.setup(
+				"Fertilizer",
+				fert.display_name,
+				offer.cost,
+				{
+					"type": "shop_fertilizer",
+					"fertilizer": fert,
+					"cost": offer.cost,
+					"slot_index": i,
+				},
+				_fertilizer_icon_atlas,
+				i,
+				offer.locked,
+				fert.tint,
+				fert.short_description.strip_edges()
+			)
+		elif offer.item is MutationData:
+			var mut := offer.item as MutationData
+			card = _SHOP_OFFER_CARD_SCENE.instantiate()
+			card.setup(
+				"Mutation",
+				mut.display_name,
+				offer.cost,
+				{
+					"type": "shop_mutation",
+					"mutation": mut,
+					"cost": offer.cost,
+					"slot_index": i,
+				},
+				_fertilizer_icon_atlas,
+				i,
+				offer.locked,
+				mut.tint,
+				"%s — %s" % [mut.slot_label(), mut.short_description.strip_edges()]
+			)
+		else:
 			continue
-		var fert := offer.item as FertilizerData
-		var card: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
-		card.setup(
-			"Fertilizer",
-			fert.display_name,
-			offer.cost,
-			{
-				"type": "shop_fertilizer",
-				"fertilizer": fert,
-				"cost": offer.cost,
-				"slot_index": i,
-			},
-			_fertilizer_icon_atlas,
-			i,
-			offer.locked,
-			fert.tint,
-			fert.short_description.strip_edges()
-		)
 		card.offer_clicked.connect(_on_shop_offer_clicked)
 		card.lock_toggled.connect(_on_shop_lock_toggled)
 		built[i] = card
@@ -206,6 +228,10 @@ func _sync_stock_slots() -> void:
 			var fert_card: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
 			fert_card.setup(item as FertilizerData, i)
 			slot.set_card(fert_card)
+		elif item is MutationData:
+			var mut_card: MutationCard = _MUTATION_CARD_SCENE.instantiate()
+			mut_card.setup(item as MutationData, i)
+			slot.set_card(mut_card)
 
 
 func _update_stock_slot_accepts() -> void:
@@ -313,7 +339,7 @@ func _on_stock_spore_clicked(card: SporeCard) -> void:
 
 func _on_shop_sell_dropped(_zone: ShopDropZone, data: Dictionary) -> void:
 	var drop_type := str(data.get("type", ""))
-	if drop_type != "spore" and drop_type != "fertilizer":
+	if drop_type != "spore" and drop_type != "fertilizer" and drop_type != "mutation":
 		return
 	var stock_index := int(data.get("stock_index", -1))
 	if GameState.try_sell_nursery_stock_item(stock_index):
@@ -327,16 +353,25 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 	var drop_type := str(data.get("type", ""))
 	if not GameState.nursery.can_add_stock_item():
 		return
-	if drop_type != "shop_fertilizer":
+	if drop_type == "shop_fertilizer":
+		var fertilizer := data.get("fertilizer") as FertilizerData
+		if fertilizer == null:
+			return
+		if GameState.try_buy_fertilizer(fertilizer, cost):
+			_replace_bought_shop_slot(slot_index)
+			_rebuild_shop_cards()
+			_refresh()
+			_refresh_base_hud()
 		return
-	var fertilizer := data.get("fertilizer") as FertilizerData
-	if fertilizer == null:
-		return
-	if GameState.try_buy_fertilizer(fertilizer, cost):
-		_replace_bought_shop_slot(slot_index)
-		_rebuild_shop_cards()
-		_refresh()
-		_refresh_base_hud()
+	if drop_type == "shop_mutation":
+		var mutation := data.get("mutation") as MutationData
+		if mutation == null:
+			return
+		if GameState.try_buy_mutation(mutation, cost):
+			_replace_bought_shop_slot(slot_index)
+			_rebuild_shop_cards()
+			_refresh()
+			_refresh_base_hud()
 
 
 func _replace_bought_shop_slot(slot_index: int) -> void:
@@ -551,6 +586,12 @@ func _on_plot_item_dropped(tile: PlotTile, data: Dictionary) -> void:
 			var fert_index := int(data.get("stock_index", 0))
 			if GameState.nursery.apply_fertilizer_from_stock(tile.plot_index, fert_index):
 				_refresh()
+		"shop_mutation":
+			_apply_mutation_from_shop(tile.plot_index, data)
+		"mutation":
+			var mut_index := int(data.get("stock_index", 0))
+			if GameState.nursery.apply_mutation_from_stock(tile.plot_index, mut_index):
+				_refresh()
 
 
 func _try_unlock_plot() -> void:
@@ -570,6 +611,24 @@ func _apply_fertilizer_from_shop(plot_index: int, data: Dictionary) -> void:
 	if not GameState.biomass.try_spend(cost):
 		return
 	if not GameState.nursery.apply_fertilizer_to_plot(plot_index, fertilizer):
+		GameState.biomass.add(cost)
+		return
+	_replace_bought_shop_slot(slot_index)
+	_rebuild_shop_cards()
+	_refresh()
+	_refresh_base_hud()
+
+
+func _apply_mutation_from_shop(plot_index: int, data: Dictionary) -> void:
+	var mutation := data.get("mutation") as MutationData
+	var cost := int(data.get("cost", 0))
+	var slot_index := int(data.get("slot_index", -1))
+	if mutation == null:
+		return
+	GameState.ensure_nursery_seeded()
+	if not GameState.biomass.try_spend(cost):
+		return
+	if not GameState.nursery.apply_mutation_to_plot(plot_index, mutation):
 		GameState.biomass.add(cost)
 		return
 	_replace_bought_shop_slot(slot_index)

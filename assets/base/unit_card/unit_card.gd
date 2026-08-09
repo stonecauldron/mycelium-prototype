@@ -115,9 +115,9 @@ func _refresh_strain_chip(data: RosterUnitData) -> void:
 		if is_instance_valid(_strain_chip):
 			_strain_chip.queue_free()
 		_strain_chip = null
-	if data == null or data.strain == null or _atk_chip == null:
+	if data == null or _atk_chip == null:
 		return
-	var info := data.strain.get_stat_chip(data)
+	var info := data.get_identity_stat_chip()
 	if info.is_empty():
 		return
 	var row := _atk_chip.get_parent() as Control

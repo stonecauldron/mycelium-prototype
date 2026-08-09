@@ -8,6 +8,10 @@ const FUNGICIDE_NEXT_SPORE_BONUS := 2
 @export var planted_spore: SporeData
 @export var days_grown: int = 0
 @export var applied_fertilizers: Array[FertilizerData] = []
+## Body mutation awaiting harvest (empty allowed).
+@export var body_mutation: MutationData
+## Cap mutation awaiting harvest (empty allowed).
+@export var cap_mutation: MutationData
 ## Flat +all-stats carried from Fungicide kills; consumed on next harvest.
 @export var pending_stat_bonus: int = 0
 
@@ -25,6 +29,12 @@ func can_apply_fertilizer() -> bool:
 	if state != State.EMPTY and state != State.GROWING:
 		return false
 	return applied_fertilizers.size() < SealModifiers.max_fertilizer_stacks()
+
+
+## Mutations apply while a spore is planted (GROWING or READY). Empty rejected.
+## READY is included so force_ready fertilizers (Triploid, etc.) do not block identity.
+func can_apply_mutation() -> bool:
+	return not is_empty()
 
 
 ## Overgrowth removed: harvest always yields Child units.
@@ -93,6 +103,19 @@ func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 	return true
 
 
+## Assigns mutation to its Body/Cap slot. Same-kind replace consumes the previous.
+func apply_mutation(mutation: MutationData) -> bool:
+	if mutation == null or not can_apply_mutation():
+		return false
+	if mutation.is_body():
+		body_mutation = mutation
+		return true
+	if mutation.is_cap():
+		cap_mutation = mutation
+		return true
+	return false
+
+
 func _apply_fungicide(fertilizer: FertilizerData) -> bool:
 	# Growing or READY spores. Empty plots rejected.
 	var state := get_state()
@@ -101,6 +124,8 @@ func _apply_fungicide(fertilizer: FertilizerData) -> bool:
 	pending_stat_bonus += FUNGICIDE_NEXT_SPORE_BONUS
 	planted_spore = null
 	days_grown = 0
+	body_mutation = null
+	cap_mutation = null
 	# Drop fertilizers that died with the plant; keep prior Fungicide markers for chips.
 	var kept: Array[FertilizerData] = []
 	for fert in applied_fertilizers:
@@ -144,6 +169,7 @@ func fertilizer_tooltip() -> String:
 			if not desc.is_empty():
 				strain_line = "%s — %s" % [strain.display_name, desc]
 			lines.append(strain_line)
+	lines.append_array(mutation_tooltip_lines())
 	var residue := fungicide_residue_text()
 	if not residue.is_empty():
 		lines.append(residue)
@@ -157,10 +183,25 @@ func fertilizer_tooltip() -> String:
 	return "\n".join(lines)
 
 
+func mutation_tooltip_lines() -> PackedStringArray:
+	var lines: PackedStringArray = []
+	if body_mutation != null:
+		lines.append(
+			"Body: %s — %s" % [body_mutation.display_name, body_mutation.subtitle_text()]
+		)
+	if cap_mutation != null:
+		lines.append(
+			"Cap: %s — %s" % [cap_mutation.display_name, cap_mutation.subtitle_text()]
+		)
+	return lines
+
+
 func clear() -> void:
 	planted_spore = null
 	days_grown = 0
 	applied_fertilizers.clear()
+	body_mutation = null
+	cap_mutation = null
 	# pending_stat_bonus is consumed explicitly at harvest, not here.
 
 

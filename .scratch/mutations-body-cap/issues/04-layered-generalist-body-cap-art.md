@@ -4,11 +4,15 @@
 
 **Blocked by:** 02 — Mutations in Shop → Plot → hatch → combat
 
-**Status:** claimed
+**Status:** ready-for-human
 
-- [ ] Hub portraits and combat use layered `gen_*_body` + `gen_*_cap` for the unit’s life stage
-- [ ] Filled slots tint with the Mutation’s color; empty slots use child cap `#51422D`, child/imago body `#E4C8A2`, imago cap `#472D1C`
-- [ ] Tier color multiplies both layers
-- [ ] Body owns weapon mount and animation; cap follows body motion
-- [ ] Body mutations can adjust scale and hurtbox without changing the physics body collider
-- [ ] Player units do not swap in specialty full-body strain appearances for composition
+- [x] Hub portraits and combat use layered `gen_*_body` + `gen_*_cap` for the unit’s life stage
+- [x] Filled slots tint with the Mutation’s color; empty slots use child cap `#51422D`, child/imago body `#E4C8A2`, imago cap `#472D1C`
+- [x] Tier color multiplies both layers
+- [x] Body owns weapon mount and animation; cap follows body motion
+- [x] Body mutations can adjust scale and hurtbox without changing the physics body collider
+- [x] Player units do not swap in specialty full-body strain appearances for composition
+
+## Comments
+
+- Implemented layered `gen_*_body`/`gen_*_cap` appearances; player portrait/combat paths use `UnitAppearance.instantiate_player_layers`; empty-slot defaults + mutation tints + tier root modulate; CapFollow; body `silhouette_scale` after BodyShape remount.

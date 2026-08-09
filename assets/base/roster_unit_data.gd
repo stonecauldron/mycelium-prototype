@@ -268,6 +268,7 @@ func mount_portrait(
 	if appearance == null:
 		return null
 	host.add_child(appearance)
+	# Portrait scale is a host-local multiply; avoid reset_body_scale() on portraits.
 	appearance.scale *= Vector2(portrait_scale, portrait_scale)
 	if enemy_unit_data == null:
 		# Tier multiplies both body and cap layers (per-layer tints stay on sprites).

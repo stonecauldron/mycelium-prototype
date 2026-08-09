@@ -89,6 +89,7 @@ update_scale = false
 [node name="CapFollow" type="RemoteTransform2D" parent="Sprite"]
 remote_path = NodePath("../../Cap")
 update_rotation = false
+update_scale = true
 
 [node name="Cap" type="Sprite2D" parent="."]
 position = Vector2(0, 5.941082)

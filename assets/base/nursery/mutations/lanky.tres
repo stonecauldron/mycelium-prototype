@@ -9,3 +9,4 @@ short_description = "Very tall. Easy to hit."
 slot = 0
 biomass_cost = 3
 tint = Color(0.5483871, 0.7277105, 0.9161829, 1)
+silhouette_scale = Vector2(0.95, 2.4)

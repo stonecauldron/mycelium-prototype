@@ -10,6 +10,9 @@ const BIOMASS_COST := BiomassData.MUTATION_COST
 @export var slot: Slot = Slot.BODY
 @export var biomass_cost: int = BiomassData.MUTATION_COST
 @export var tint: Color = Color.WHITE
+## Body mutations only: scales layered visual + hurtbox. Physics BodyShape stays base-sized
+## when applied after combat remounts the collider off the appearance root.
+@export var silhouette_scale: Vector2 = Vector2.ONE
 @export var effect: StrainEffect
 @export var strength_delta: int = 0
 @export var dex_delta: int = 0

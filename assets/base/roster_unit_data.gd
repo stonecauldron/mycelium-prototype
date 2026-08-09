@@ -256,13 +256,21 @@ func mount_portrait(
 	var appearance: UnitAppearance = null
 	if enemy_unit_data != null:
 		appearance = enemy_unit_data.instantiate_appearance()
-	elif strain != null:
-		appearance = strain.instantiate_appearance(life_stage_id)
+	else:
+		# Layered Generalist body+cap — not specialty full-body strain art.
+		appearance = UnitAppearance.instantiate_player_layers(
+			is_adult_stage(),
+			body_mutation,
+			cap_mutation
+		)
+		if appearance != null:
+			appearance.apply_body_mutation_silhouette(body_mutation)
 	if appearance == null:
 		return null
 	host.add_child(appearance)
 	appearance.scale *= Vector2(portrait_scale, portrait_scale)
 	if enemy_unit_data == null:
+		# Tier multiplies both body and cap layers (per-layer tints stay on sprites).
 		appearance.modulate = UnitStatsData.tint_for_tier(power_tier)
 	host.set_meta("_portrait_shadow_clearance", shadow_clearance)
 	_ensure_portrait_host_sync(host)

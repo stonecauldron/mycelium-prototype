@@ -4,7 +4,7 @@
 
 **Blocked by:** 02 — Mutations in Shop → Plot → hatch → combat
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Hub portraits and combat use layered `gen_*_body` + `gen_*_cap` for the unit’s life stage
 - [ ] Filled slots tint with the Mutation’s color; empty slots use child cap `#51422D`, child/imago body `#E4C8A2`, imago cap `#472D1C`

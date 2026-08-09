@@ -227,6 +227,14 @@ func _mount_appearance() -> void:
 		body.global_transform = global_xform
 		_body_shape = body
 
+	# Silhouette after BodyShape remount: visual + hurtbox scale, collider stays base-sized.
+	if (
+		roster_data != null
+		and roster_data.enemy_unit_data == null
+		and roster_data.body_mutation != null
+	):
+		_appearance.apply_body_mutation_silhouette(roster_data.body_mutation)
+
 	var held := _held_weapon_for_appearance()
 	if held != null:
 		_appearance.mount_weapon_appearance(held)
@@ -247,16 +255,14 @@ func _held_weapon_for_appearance() -> WeaponData:
 func _instantiate_body_appearance() -> UnitAppearance:
 	if roster_data != null and roster_data.enemy_unit_data != null:
 		return roster_data.enemy_unit_data.instantiate_appearance()
-	var strain: UnitStrain = roster_data.strain if roster_data != null else null
-	if strain == null:
-		# load() (not preload): breaks Unit↔strain appearance compile cycle on export.
-		strain = load("res://assets/units/generalist/generalist_strain.tres") as UnitStrain
-	if strain == null:
-		return null
-	var stage_id := UnitStrain.STAGE_JUVENILE
 	if roster_data != null:
-		stage_id = roster_data.life_stage_id
-	return strain.instantiate_appearance(stage_id)
+		return UnitAppearance.instantiate_player_layers(
+			roster_data.is_adult_stage(),
+			roster_data.body_mutation,
+			roster_data.cap_mutation
+		)
+	# Fallback when spawned without roster (tools / stray scenes).
+	return UnitAppearance.instantiate_player_layers(false, null, null)
 
 
 func _clear_visual_children() -> void:

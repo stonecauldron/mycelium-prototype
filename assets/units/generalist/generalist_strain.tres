@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" uid="uid://bftxo0b154lgi" path="res://assets/units/unit_strain.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://bssgi56hlkrc7" path="res://assets/units/strain_life_stage.gd" id="2_stage"]
-[ext_resource type="PackedScene" uid="uid://dq1q1a7s2xhy3" path="res://assets/units/capling/capling_appearance.tscn" id="3_capling"]
-[ext_resource type="PackedScene" uid="uid://ciowtprn6kf4k" path="res://assets/units/imago_generalist/imago_generalist_appearance.tscn" id="4_imago"]
+[ext_resource type="PackedScene" uid="uid://bgenchildappear01" path="res://assets/units/generalist/gen_child_appearance.tscn" id="3_child"]
+[ext_resource type="PackedScene" uid="uid://bgenimagoappear01" path="res://assets/units/generalist/gen_imago_appearance.tscn" id="4_imago"]
 
 [sub_resource type="Resource" id="Stage_juvenile"]
 script = ExtResource("2_stage")
 display_name = "Capling"
-appearance_scene = ExtResource("3_capling")
+appearance_scene = ExtResource("3_child")
 
 [sub_resource type="Resource" id="Stage_imago"]
 script = ExtResource("2_stage")

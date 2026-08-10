@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://dqwo514d7ery6" path="res://assets/base/unit_card/hp_icon.png" id="4_hp"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="6_tag"]
+[ext_resource type="Texture2D" uid="uid://bmafi7fsp42s8" path="res://assets/base/nursery/mutations/cap_mutation_icon.png" id="7_cap"]
+[ext_resource type="Texture2D" uid="uid://dqj2wxtjs1xc5" path="res://assets/base/nursery/mutations/body_mutation_icon.png" id="8_body"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
 content_margin_left = 16.0
@@ -164,14 +166,58 @@ theme_override_font_sizes/font_size = 30
 text = "Generalist Strain"
 autowrap_mode = 3
 
-[node name="DescLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=563188910]
+[node name="MutationsList" type="VBoxContainer" parent="CardPanel/Margin/VBox" unique_id=563188910]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="CapRow" type="HBoxContainer" parent="CardPanel/Margin/VBox/MutationsList" unique_id=563188911]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="CapIcon" type="TextureRect" parent="CardPanel/Margin/VBox/MutationsList/CapRow" unique_id=563188912]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("7_cap")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CapLabel" type="Label" parent="CardPanel/Margin/VBox/MutationsList/CapRow" unique_id=563188913]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
 theme_override_font_sizes/font_size = 26
-text = "A basic all-rounder."
+text = "—"
+autowrap_mode = 3
+
+[node name="BodyRow" type="HBoxContainer" parent="CardPanel/Margin/VBox/MutationsList" unique_id=563188914]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="BodyIcon" type="TextureRect" parent="CardPanel/Margin/VBox/MutationsList/BodyRow" unique_id=563188915]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("8_body")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BodyLabel" type="Label" parent="CardPanel/Margin/VBox/MutationsList/BodyRow" unique_id=563188916]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/font_size = 26
+text = "—"
 autowrap_mode = 3
 
 [node name="AgeLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=1211487046]

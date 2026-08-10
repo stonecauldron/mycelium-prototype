@@ -324,12 +324,16 @@ func _refresh_fertilizer_chips() -> void:
 	_clear_fertilizer_chips()
 	if _plot == null or _stats_row == null:
 		return
-	_add_mutation_slot_chip()
-	_add_fertilizer_slot_chips()
+	# Ghost capacity chips only while a spore is planted; empty dirt shows filled only.
+	var show_ghosts := not _plot.is_empty()
+	_add_mutation_slot_chip(show_ghosts)
+	_add_fertilizer_slot_chips(show_ghosts)
 
 
-func _add_mutation_slot_chip() -> void:
+func _add_mutation_slot_chip(show_ghost: bool) -> void:
 	var mutation := _plot.filled_mutation()
+	if mutation == null and not show_ghost:
+		return
 	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
 	chip.icon = _MUTATION_ICON
 	_stats_row.add_child(chip)
@@ -352,11 +356,14 @@ func _add_mutation_slot_chip() -> void:
 	_fertilizer_chips.append(chip)
 
 
-func _add_fertilizer_slot_chips() -> void:
+func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:
 	var max_stacks := SealModifiers.max_fertilizer_stacks()
 	var applied := _plot.applied_fertilizers
-	for i in max_stacks:
+	var slot_count := max_stacks if show_ghosts else mini(applied.size(), max_stacks)
+	for i in slot_count:
 		var fert: FertilizerData = applied[i] if i < applied.size() else null
+		if fert == null and not show_ghosts:
+			continue
 		var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
 		chip.icon = _fertilizer_icon_atlas
 		_stats_row.add_child(chip)

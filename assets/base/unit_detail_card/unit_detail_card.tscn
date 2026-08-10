@@ -193,7 +193,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
 theme_override_font_sizes/font_size = 26
-text = "—"
+text = "None"
 autowrap_mode = 3
 
 [node name="BodyRow" type="HBoxContainer" parent="CardPanel/Margin/VBox/MutationsList" unique_id=563188914]
@@ -217,7 +217,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
 theme_override_font_sizes/font_size = 26
-text = "—"
+text = "None"
 autowrap_mode = 3
 
 [node name="AgeLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=1211487046]

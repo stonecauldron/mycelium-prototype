@@ -145,6 +145,8 @@ func _run() -> void:
 	var stacks := SealModifiers.max_fertilizer_stacks()
 	print("fert stacks=", stacks, " (spreader only affects ferts)")
 
+	_check_lineage_mutations(errs)
+
 	if errs.is_empty():
 		print("ALL CHECKS PASSED")
 		get_tree().quit(0)
@@ -153,3 +155,125 @@ func _run() -> void:
 		for e in errs:
 			print(" - ", e)
 		get_tree().quit(1)
+
+
+func _check_lineage_mutations(errs: Array[String]) -> void:
+	var boom := load("res://assets/base/nursery/mutations/cap/boom.tres") as MutationData
+	var fat := load("res://assets/base/nursery/mutations/body/fat.tres") as MutationData
+	var wall := load("res://assets/base/nursery/mutations/cap/wall.tres") as MutationData
+	var meiosis := load("res://assets/base/nursery/fertilizers/meiosis.tres") as FertilizerData
+
+	var adult := RosterUnitData.create(
+		"Darwin",
+		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.UNCOMMON),
+		WeaponSchool.sickle(),
+		UnitStatsData.PowerTier.UNCOMMON
+	)
+	adult.lineage_name = "Darwin"
+	adult.generation = 1
+	adult.is_imago = true
+	adult.body_mutation = fat.duplicate(true) as MutationData
+	adult.cap_mutation = boom.duplicate(true) as MutationData
+	adult.weapon_trainings = [WeaponSchool.Id.SWORD as int]
+	adult.applied_fertilizers = [meiosis]
+	# Live adult stats already include Mutation hatch deltas (as after a real hatch).
+	adult.stats.strength = 10
+	adult.stats.dex = 10
+	adult.stats.con = 10
+	adult.stats.spd = 10
+	fat.apply_hatch_stats(adult.stats)
+	boom.apply_hatch_stats(adult.stats)
+	var live_str := adult.stats.strength
+
+	var nursery := NurseryData.new()
+	nursery.seed_if_empty()
+	var spore := nursery.add_death_spore(adult)
+	if spore == null:
+		errs.append("lineage spore emit failed")
+		return
+	print("lineage spore=", spore.display_name)
+	if not spore.is_lineage_spore():
+		errs.append("emitted spore not lineage")
+	if spore.power_tier != UnitStatsData.PowerTier.UNCOMMON:
+		errs.append("lineage lost tier")
+	if spore.mean_stats == null:
+		errs.append("lineage lost mean stats")
+	elif spore.mean_stats.strength != 10:
+		errs.append(
+			"mean_stats should strip mutation hatch deltas (got STR %d, live was %d)"
+			% [spore.mean_stats.strength, live_str]
+		)
+	if spore.weapon_trainings.size() != 1:
+		errs.append("lineage lost trainings")
+	if spore.body_mutation == null or spore.body_mutation.display_name != "Fat":
+		errs.append("lineage missing body mutation snapshot")
+	if spore.cap_mutation == null or spore.cap_mutation.display_name != "Boom":
+		errs.append("lineage missing cap mutation snapshot")
+	if spore.body_mutation == adult.body_mutation:
+		errs.append("body mutation not duplicated on emit")
+	# Fertilizers must not ride the spore as items.
+	if spore.get("applied_fertilizers") != null:
+		errs.append("spore should not expose fertilizer items")
+
+	# Children do not emit lineage spores.
+	var child := adult.duplicate(true) as RosterUnitData
+	child.is_imago = false
+	child.life_stage_id = &"juvenile"
+	if nursery.add_death_spore(child) != null:
+		errs.append("child should not emit lineage spore")
+
+	# Stock prep / replace on lineage spore.
+	if not nursery.add_mutation(wall.duplicate(true) as MutationData):
+		errs.append("add wall mutation to stock failed")
+	var spore_idx := -1
+	var mut_idx := -1
+	for i in nursery.stock.slots.size():
+		var item: Resource = nursery.stock.slots[i]
+		if item == spore:
+			spore_idx = i
+		elif item is MutationData and (item as MutationData).display_name == "Wall":
+			mut_idx = i
+	if spore_idx < 0 or mut_idx < 0:
+		errs.append("stock indices missing for lineage prep")
+	elif not nursery.apply_mutation_from_stock_to_lineage_spore(spore_idx, mut_idx):
+		errs.append("stock lineage mutation apply failed")
+	elif spore.cap_mutation == null or spore.cap_mutation.display_name != "Wall":
+		errs.append("lineage replace did not consume prior cap")
+	elif nursery.stock.get_at(mut_idx) != null:
+		errs.append("mutation stock slot not consumed after lineage prep")
+
+	# Non-lineage spores reject prep.
+	var fresh := nursery.make_fresh_common_spore()
+	if fresh.apply_mutation(boom):
+		errs.append("fresh spore should reject mutation prep")
+
+	# Plant + harvest yields Children with prepared Mutations.
+	if not nursery.plant_spore(0, spore):
+		errs.append("plant lineage spore failed")
+	var plot := nursery.plots[0] as NurseryPlotData
+	if plot.body_mutation == null or plot.body_mutation.display_name != "Fat":
+		errs.append("plant did not seed body onto plot")
+	if plot.cap_mutation == null or plot.cap_mutation.display_name != "Wall":
+		errs.append("plant did not seed cap onto plot")
+	plot.days_grown = plot.days_to_mature_effective()
+	var units := nursery.harvest(0)
+	print("lineage hatch=", units.size())
+	if units.is_empty():
+		errs.append("lineage harvest empty")
+	for u in units:
+		if u.body_mutation == null or u.body_mutation.display_name != "Fat":
+			errs.append("lineage child missing body")
+		if u.cap_mutation == null or u.cap_mutation.display_name != "Wall":
+			errs.append("lineage child missing cap")
+		if u.is_adult_stage():
+			errs.append("lineage harvest should yield Children")
+		if u.power_tier != UnitStatsData.PowerTier.UNCOMMON:
+			errs.append("lineage child lost tier")
+		if u.weapon_trainings.size() != 1:
+			errs.append("lineage child lost trainings")
+
+	# Detail lines for prepared mutations.
+	var detail_spore := SporeData.from_fallen_unit(adult)
+	var tip := detail_spore.mutation_tooltip_lines()
+	if tip.size() < 2:
+		errs.append("spore detail mutation lines missing")

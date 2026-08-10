@@ -19,8 +19,9 @@ const _TIER_SPORE_PATHS := {
 @export var parent_generation: int = 1
 @export var mean_stats: UnitStatsData
 @export var weapon_trainings: Array[int] = []
-## Copied from fallen unit; seeded onto the plot when planted.
+## Prepared Body mutation (lineage only; Fertilizers never ride spores).
 @export var body_mutation: MutationData
+## Prepared Cap mutation (lineage only; Fertilizers never ride spores).
 @export var cap_mutation: MutationData
 
 var tint: Color:
@@ -39,6 +40,37 @@ func is_lineage_spore() -> bool:
 ## Authored growth days after Greenhouse seal reduction (fertilizers applied on the plot).
 func days_to_mature_effective() -> int:
 	return maxi(days_to_mature - SealModifiers.greenhouse_day_reduction(), 0)
+
+
+## Mutations can be prepped on lineage spores in Stock; replace consumes the previous.
+func can_apply_mutation() -> bool:
+	return is_lineage_spore()
+
+
+## Assigns mutation to its Body/Cap slot. Same-kind replace consumes the previous.
+func apply_mutation(mutation: MutationData) -> bool:
+	if mutation == null or not can_apply_mutation():
+		return false
+	if mutation.is_body():
+		body_mutation = mutation
+		return true
+	if mutation.is_cap():
+		cap_mutation = mutation
+		return true
+	return false
+
+
+func mutation_tooltip_lines() -> PackedStringArray:
+	var lines: PackedStringArray = []
+	if body_mutation != null:
+		lines.append(
+			"Body: %s — %s" % [body_mutation.display_name, body_mutation.subtitle_text()]
+		)
+	if cap_mutation != null:
+		lines.append(
+			"Cap: %s — %s" % [cap_mutation.display_name, cap_mutation.subtitle_text()]
+		)
+	return lines
 
 
 static func from_fallen_unit(unit: RosterUnitData) -> SporeData:
@@ -61,15 +93,25 @@ static func from_fallen_unit(unit: RosterUnitData) -> SporeData:
 	spore.lineage_name = lineage
 	spore.parent_generation = maxi(unit.generation, 1)
 	spore.power_tier = unit.power_tier
-	if unit.body_mutation != null:
-		spore.body_mutation = unit.body_mutation.duplicate(true) as MutationData
-	if unit.cap_mutation != null:
-		spore.cap_mutation = unit.cap_mutation.duplicate(true) as MutationData
 	if unit.stats != null:
 		spore.mean_stats = unit.stats.duplicate(true) as UnitStatsData
+		# Strip identity hatch deltas from mean stats so harvest (and Stock remix)
+		# can apply the spore's current Body/Cap once — not stack every generation.
+		if unit.body_mutation != null:
+			unit.body_mutation.strip_hatch_stats(spore.mean_stats)
+		if unit.cap_mutation != null:
+			unit.cap_mutation.strip_hatch_stats(spore.mean_stats)
 	spore.weapon_trainings = []
 	for training in unit.weapon_trainings:
 		spore.weapon_trainings.append(int(training))
+	# Snapshot Body/Cap Mutations only — Fertilizer items never ride lineage spores
+	# (other baked growth effects may still be present via mean_stats).
+	spore.body_mutation = (
+		unit.body_mutation.duplicate(true) as MutationData if unit.body_mutation != null else null
+	)
+	spore.cap_mutation = (
+		unit.cap_mutation.duplicate(true) as MutationData if unit.cap_mutation != null else null
+	)
 	return spore
 
 

@@ -40,6 +40,7 @@ var _preview_unit: RosterUnitData = null
 @onready var _spd_label: Label = %SpdLabel
 @onready var _trainings_label: Label = %TrainingsLabel
 @onready var _trainings_row: HBoxContainer = %TrainingsRow
+@onready var _mutations_label: Label = %MutationsLabel
 @onready var _footer_spacer: Control = $CardPanel/Margin/VBox/FooterSpacer
 
 
@@ -186,6 +187,7 @@ func _refresh_lineage_section() -> void:
 		_trainings_label.visible = false
 		_trainings_row.visible = false
 		_clear_trainings_row()
+	_refresh_mutations_label()
 	_refresh_mean_stats()
 	_refresh_portrait()
 
@@ -269,6 +271,29 @@ func _clear_trainings_row() -> void:
 		child.queue_free()
 
 
+func _refresh_mutations_label() -> void:
+	if _mutations_label == null or spore_data == null:
+		return
+	# Plot tooltips already list plot Mutations; stock lineage shows prepared slots.
+	if plot_data != null or not spore_data.is_lineage_spore():
+		_mutations_label.visible = false
+		return
+	var body_line := "Body: —"
+	if spore_data.body_mutation != null:
+		body_line = "Body: %s — %s" % [
+			spore_data.body_mutation.display_name,
+			spore_data.body_mutation.subtitle_text(),
+		]
+	var cap_line := "Cap: —"
+	if spore_data.cap_mutation != null:
+		cap_line = "Cap: %s — %s" % [
+			spore_data.cap_mutation.display_name,
+			spore_data.cap_mutation.subtitle_text(),
+		]
+	_mutations_label.visible = true
+	_mutations_label.text = "Mutations\n%s\n%s" % [body_line, cap_line]
+
+
 func _make_preview_unit() -> RosterUnitData:
 	if spore_data == null:
 		return null
@@ -297,6 +322,16 @@ func _make_preview_unit() -> RosterUnitData:
 		unit.weapon_trainings = []
 		for training in spore_data.weapon_trainings:
 			unit.weapon_trainings.append(int(training))
+	unit.body_mutation = (
+		spore_data.body_mutation.duplicate(true) as MutationData
+		if spore_data.body_mutation != null
+		else null
+	)
+	unit.cap_mutation = (
+		spore_data.cap_mutation.duplicate(true) as MutationData
+		if spore_data.cap_mutation != null
+		else null
+	)
 	unit.sync_weapon_from_trainings()
 	_apply_preview_mutations(unit)
 	return unit

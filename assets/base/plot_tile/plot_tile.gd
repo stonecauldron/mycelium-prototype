@@ -17,6 +17,7 @@ const _TEX_EGG1 := preload("res://assets/base/plot_tile/egg1.png")
 const _TEX_EGG0_SHADOW := preload("res://assets/base/plot_tile/egg0_shadow.png")
 const _TEX_EGG1_SHADOW := preload("res://assets/base/plot_tile/egg1_shadow.png")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
+const _HOVER_PUNCH_SCENE := preload("res://assets/ui/hover_punch/hover_punch.tscn")
 const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
 const _MUTATION_ICON := preload("res://assets/base/nursery/mutations/mutation_icon.png")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
@@ -336,12 +337,7 @@ func _add_mutation_slot_chip(show_ghost: bool) -> void:
 	var mutation := _plot.filled_mutation()
 	if mutation == null and not show_ghost:
 		return
-	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
-	chip.icon = _MUTATION_ICON
-	chip.chip_size = _PLOT_SLOT_CHIP_SIZE
-	chip.value_font_size = _PLOT_SLOT_CHIP_FONT_SIZE
-	_stats_row.add_child(chip)
-	chip.mouse_filter = Control.MOUSE_FILTER_STOP
+	var chip := _make_slot_chip(_MUTATION_ICON)
 	var icon := chip.get_node_or_null("%Icon") as TextureRect
 	if mutation == null:
 		chip.set_value()
@@ -368,12 +364,7 @@ func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:
 		var fert: FertilizerData = applied[i] if i < applied.size() else null
 		if fert == null and not show_ghosts:
 			continue
-		var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
-		chip.icon = _fertilizer_icon_atlas
-		chip.chip_size = _PLOT_SLOT_CHIP_SIZE
-		chip.value_font_size = _PLOT_SLOT_CHIP_FONT_SIZE
-		_stats_row.add_child(chip)
-		chip.mouse_filter = Control.MOUSE_FILTER_STOP
+		var chip := _make_slot_chip(_fertilizer_icon_atlas)
 		var icon := chip.get_node_or_null("%Icon") as TextureRect
 		if fert == null:
 			chip.set_value()
@@ -386,6 +377,18 @@ func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:
 				icon.self_modulate = fert.tint
 			chip.tooltip_text = _fertilizer_chip_tooltip(fert, 1)
 		_fertilizer_chips.append(chip)
+
+
+func _make_slot_chip(icon_tex: Texture2D) -> StatChip:
+	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
+	chip.icon = icon_tex
+	chip.chip_size = _PLOT_SLOT_CHIP_SIZE
+	chip.value_font_size = _PLOT_SLOT_CHIP_FONT_SIZE
+	chip.add_child(_HOVER_PUNCH_SCENE.instantiate())
+	_stats_row.add_child(chip)
+	# StatChip._ready defaults to IGNORE; re-enable for hover punch + tooltips.
+	chip.mouse_filter = Control.MOUSE_FILTER_STOP
+	return chip
 
 
 func _fertilizer_chip_tooltip(fert: FertilizerData, count: int) -> String:

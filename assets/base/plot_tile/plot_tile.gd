@@ -18,6 +18,7 @@ const _TEX_EGG0_SHADOW := preload("res://assets/base/plot_tile/egg0_shadow.png")
 const _TEX_EGG1_SHADOW := preload("res://assets/base/plot_tile/egg1_shadow.png")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
 const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
+const _MUTATION_ICON := preload("res://assets/base/nursery/mutations/mutation_icon.png")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 const _HOURGLASS_ICON := preload("res://assets/base/nursery/spore_card/hourglass_icon.png")
 const _HARVEST_ICON := preload("res://assets/combat/boom_cap_explosion/harvest_icon.png")
@@ -330,7 +331,7 @@ func _refresh_fertilizer_chips() -> void:
 func _add_mutation_slot_chip() -> void:
 	var mutation := _plot.filled_mutation()
 	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
-	chip.icon = _fertilizer_icon_atlas
+	chip.icon = _MUTATION_ICON
 	_stats_row.add_child(chip)
 	chip.mouse_filter = Control.MOUSE_FILTER_STOP
 	var icon := chip.get_node_or_null("%Icon") as TextureRect

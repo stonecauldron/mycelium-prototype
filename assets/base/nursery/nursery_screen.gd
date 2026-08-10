@@ -17,6 +17,7 @@ const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
 const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
+const _MUTATION_ICON := preload("res://assets/base/nursery/mutations/mutation_icon.png")
 
 @onready var _stock_row: HBoxContainer = %StockRow
 @onready var _shop_drop_zone: ShopDropZone = %ShopDropZone
@@ -176,7 +177,7 @@ func _rebuild_shop_cards() -> void:
 					"cost": offer.cost,
 					"slot_index": i,
 				},
-				_fertilizer_icon_atlas,
+				_MUTATION_ICON,
 				i,
 				offer.locked,
 				mut.tint,

@@ -162,13 +162,7 @@ func _snap_force_ready_if_needed() -> void:
 func fertilizer_tooltip() -> String:
 	var lines: PackedStringArray = []
 	if planted_spore != null:
-		var strain := planted_spore.resolved_strain()
-		if strain != null:
-			var strain_line := strain.display_name
-			var desc := strain.short_description.strip_edges()
-			if not desc.is_empty():
-				strain_line = "%s — %s" % [strain.display_name, desc]
-			lines.append(strain_line)
+		lines.append(planted_spore.display_name)
 	lines.append_array(mutation_tooltip_lines())
 	var residue := fungicide_residue_text()
 	if not residue.is_empty():

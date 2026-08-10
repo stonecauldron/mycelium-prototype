@@ -34,9 +34,9 @@ func _run() -> void:
 
 	if not nursery.plant_spore(0, nursery.make_fresh_common_spore()):
 		errs.append("plant failed")
-	var boom := load("res://assets/base/nursery/mutations/boom.tres") as MutationData
-	var fat := load("res://assets/base/nursery/mutations/fat.tres") as MutationData
-	var wall := load("res://assets/base/nursery/mutations/wall.tres") as MutationData
+	var boom := load("res://assets/base/nursery/mutations/cap/boom.tres") as MutationData
+	var fat := load("res://assets/base/nursery/mutations/body/fat.tres") as MutationData
+	var wall := load("res://assets/base/nursery/mutations/cap/wall.tres") as MutationData
 	if not nursery.apply_mutation_to_plot(0, boom):
 		errs.append("apply boom failed")
 	if not nursery.apply_mutation_to_plot(0, fat):
@@ -158,16 +158,15 @@ func _run() -> void:
 
 
 func _check_lineage_mutations(errs: Array[String]) -> void:
-	var boom := load("res://assets/base/nursery/mutations/boom.tres") as MutationData
-	var fat := load("res://assets/base/nursery/mutations/fat.tres") as MutationData
-	var wall := load("res://assets/base/nursery/mutations/wall.tres") as MutationData
+	var boom := load("res://assets/base/nursery/mutations/cap/boom.tres") as MutationData
+	var fat := load("res://assets/base/nursery/mutations/body/fat.tres") as MutationData
+	var wall := load("res://assets/base/nursery/mutations/cap/wall.tres") as MutationData
 	var meiosis := load("res://assets/base/nursery/fertilizers/meiosis.tres") as FertilizerData
 
 	var adult := RosterUnitData.create(
 		"Darwin",
 		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.UNCOMMON),
 		WeaponSchool.sickle(),
-		load("res://assets/units/generalist/generalist_strain.tres") as UnitStrain,
 		UnitStatsData.PowerTier.UNCOMMON
 	)
 	adult.lineage_name = "Darwin"

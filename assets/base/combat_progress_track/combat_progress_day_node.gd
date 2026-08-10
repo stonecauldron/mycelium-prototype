@@ -2,7 +2,7 @@ class_name CombatProgressDayNode
 extends Control
 
 ## Day node on the combat progress track. Theme blanks native TooltipPanel,
-## so tooltips must be custom (same style as scout / strain tips).
+## so tooltips must be custom (same style as scout tips).
 
 const _TOOLTIP_WIDTH := 160.0
 const _PANEL_BG := Color(0.92156863, 0.9098039, 0.87058824, 1)

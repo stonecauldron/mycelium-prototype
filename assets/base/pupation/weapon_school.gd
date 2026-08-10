@@ -133,7 +133,7 @@ static func scale_stat_delta(delta: int, generation: int) -> int:
 static func is_retrain(unit: RosterUnitData) -> bool:
 	return (
 		unit != null
-		and unit.life_stage_id == UnitStrain.STAGE_JUVENILE
+		and unit.life_stage_id == RosterUnitData.STAGE_JUVENILE
 		and unit.weapon_trainings.size() >= 2
 	)
 
@@ -241,7 +241,7 @@ static func resulting_training_count(unit: RosterUnitData) -> int:
 
 
 static func next_stage_after_training(_unit: RosterUnitData) -> StringName:
-	return UnitStrain.STAGE_IMAGO
+	return RosterUnitData.STAGE_IMAGO
 
 
 ## Non-mutating preview of the unit after finishing this school's pupation.
@@ -261,7 +261,7 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 	if (
 		preview_stats != null
 		and unit.pending_adult_stat_bonus != 0
-		and unit.life_stage_id == UnitStrain.STAGE_JUVENILE
+		and unit.life_stage_id == RosterUnitData.STAGE_JUVENILE
 	):
 		var adult_bonus := unit.pending_adult_stat_bonus
 		preview_stats.strength = clampi(preview_stats.strength + adult_bonus, 1, 99)
@@ -274,10 +274,11 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 	data.generation = unit.generation
 	data.stats = preview_stats
 	data.weapon = next_weapon
-	data.strain = unit.strain
+	data.body_mutation = unit.body_mutation
+	data.cap_mutation = unit.cap_mutation
 	data.power_tier = unit.power_tier
 	data.life_stage_id = next_stage
-	data.is_imago = next_stage != UnitStrain.STAGE_JUVENILE
+	data.is_imago = next_stage != RosterUnitData.STAGE_JUVENILE
 	data.days_alive = unit.days_alive
 	data.max_days_alive = unit.max_days_alive
 	data.weapon_trainings = next_trainings
@@ -292,8 +293,8 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 
 static func stage_display_name(stage_id: StringName) -> String:
 	if (
-		stage_id == UnitStrain.STAGE_IMAGO
-		or stage_id == UnitStrain.STAGE_FULLY_EVOLVED
+		stage_id == RosterUnitData.STAGE_IMAGO
+		or stage_id == RosterUnitData.STAGE_FULLY_EVOLVED
 	):
 		return "Adult"
 	return "Child"

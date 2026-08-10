@@ -111,15 +111,11 @@ func _refresh() -> void:
 	if spore_data == null:
 		return
 	_name_label.text = spore_data.display_name
-	var strain := spore_data.resolved_strain()
-	var desc := ""
-	if strain != null:
-		desc = strain.short_description.strip_edges()
-	_desc_label.text = desc
-	_desc_label.visible = not desc.is_empty()
+	_desc_label.text = ""
+	_desc_label.visible = false
 	_refresh_growth_row()
 	_refresh_price_row()
-	_refresh_tags(strain)
+	_refresh_tags()
 	_refresh_plot_section()
 	_refresh_lineage_section()
 
@@ -148,15 +144,11 @@ func _refresh_price_row() -> void:
 		_sell_label.text = "Sell: %d" % BiomassData.sell_value(spore_data.biomass_cost)
 
 
-func _refresh_tags(strain: UnitStrain) -> void:
+func _refresh_tags() -> void:
 	_tier_tag.visible = true
 	_tier_tag.set_text(UnitStatsData.label_for_tier(spore_data.power_tier))
 	_tier_tag.set_fill_color(UnitStatsData.tint_for_tier(spore_data.power_tier))
-
-	var hatch_count := 1 if strain == null else strain.hatch_count
-	_hatch_tag.visible = hatch_count > 1
-	if _hatch_tag.visible:
-		_hatch_tag.set_text("x%d" % hatch_count)
+	_hatch_tag.visible = false
 
 
 func _refresh_plot_section() -> void:
@@ -219,13 +211,13 @@ func _preview_average_stats() -> UnitStatsData:
 		return null
 	if spore_data.is_lineage_spore() and spore_data.mean_stats != null:
 		return spore_data.mean_stats
-	var strain := spore_data.resolved_strain()
-	var tier := UnitStatsData.PowerTier.COMMON
-	if strain == null or strain.use_power_tier:
-		tier = spore_data.power_tier
-	var stats := UnitStatsData.average_for_tier(tier)
-	if strain != null:
-		strain.apply_hatch_stats(stats)
+	var stats := UnitStatsData.average_for_tier(spore_data.power_tier)
+	var body := _preview_body_mutation()
+	var cap := _preview_cap_mutation()
+	if body != null:
+		body.apply_hatch_stats(stats)
+	if cap != null:
+		cap.apply_hatch_stats(stats)
 	return stats
 
 
@@ -321,7 +313,6 @@ func _make_preview_unit() -> RosterUnitData:
 		child_name,
 		stats,
 		WeaponSchool.sickle(),
-		spore_data.resolved_strain(),
 		tier
 	)
 	if lineage:
@@ -342,7 +333,36 @@ func _make_preview_unit() -> RosterUnitData:
 		else null
 	)
 	unit.sync_weapon_from_trainings()
+	_apply_preview_mutations(unit)
 	return unit
+
+
+## Growing-plot / lineage tooltips show Body/Cap assigned on the plot or spore.
+func _apply_preview_mutations(unit: RosterUnitData) -> void:
+	if unit == null:
+		return
+	var body := _preview_body_mutation()
+	var cap := _preview_cap_mutation()
+	if body != null:
+		unit.body_mutation = body.duplicate(true) as MutationData
+	if cap != null:
+		unit.cap_mutation = cap.duplicate(true) as MutationData
+
+
+func _preview_body_mutation() -> MutationData:
+	if plot_data != null and plot_data.body_mutation != null:
+		return plot_data.body_mutation
+	if spore_data != null:
+		return spore_data.body_mutation
+	return null
+
+
+func _preview_cap_mutation() -> MutationData:
+	if plot_data != null and plot_data.cap_mutation != null:
+		return plot_data.cap_mutation
+	if spore_data != null:
+		return spore_data.cap_mutation
+	return null
 
 
 func _refresh_portrait() -> void:

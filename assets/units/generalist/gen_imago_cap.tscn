@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cie1i7ewc2i21"]
+
+[ext_resource type="Texture2D" uid="uid://du7iyt3gctlph" path="res://assets/units/generalist/gen_imago_cap.png" id="1_cap"]
+
+[node name="GenImagoCap" type="Sprite2D" unique_id=665208380]
+texture = ExtResource("1_cap")
+offset = Vector2(-2, -39)
+region_enabled = true
+region_rect = Rect2(125, 177, 269, 158)

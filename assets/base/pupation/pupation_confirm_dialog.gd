@@ -145,7 +145,7 @@ func _fill_result_side() -> void:
 		mult = maxi(_unit.pupation_stat_multiplier, 1)
 	var deltas := WeaponSchool.scaled_school_deltas(_school, generation)
 	var adult_bonus := 0
-	if _unit != null and _unit.life_stage_id == UnitStrain.STAGE_JUVENILE:
+	if _unit != null and _unit.life_stage_id == RosterUnitData.STAGE_JUVENILE:
 		adult_bonus = _unit.pending_adult_stat_bonus
 	var next_stage := (
 		_preview_unit.life_stage_id if _preview_unit != null

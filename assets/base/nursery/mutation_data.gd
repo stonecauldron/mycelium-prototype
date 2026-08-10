@@ -10,7 +10,14 @@ const BIOMASS_COST := BiomassData.MUTATION_COST
 @export var slot: Slot = Slot.BODY
 @export var biomass_cost: int = BiomassData.MUTATION_COST
 @export var tint: Color = Color.WHITE
-@export var effect: StrainEffect
+## Optional custom body/cap appearance for juvenile stage. Null → Generalist default.
+@export var juvenile_appearance: PackedScene
+## Optional custom body/cap appearance for imago stage. Null → Generalist default.
+@export var imago_appearance: PackedScene
+## Legacy: body silhouette scale. Player compose no longer applies this; prefer custom
+## body appearance hurtboxes instead.
+@export var silhouette_scale: Vector2 = Vector2.ONE
+@export var effect: MutationEffect
 @export var strength_delta: int = 0
 @export var dex_delta: int = 0
 @export var con_delta: int = 0
@@ -34,6 +41,12 @@ func subtitle_text() -> String:
 	if not authored.is_empty():
 		return authored
 	return "no effect"
+
+
+func appearance_for(is_adult: bool) -> PackedScene:
+	if is_adult:
+		return imago_appearance
+	return juvenile_appearance
 
 
 func apply_hatch_stats(stats: UnitStatsData) -> void:

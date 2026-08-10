@@ -9,25 +9,11 @@ const _TIER_SPORE_PATHS := {
 	UnitStatsData.PowerTier.EPIC: "res://assets/base/nursery/epic_spore.tres",
 	UnitStatsData.PowerTier.LEGENDARY: "res://assets/base/nursery/legendary_spore.tres",
 }
-const _STRAIN_SPORE_PATHS: Array[String] = [
-	"res://assets/base/nursery/spores/death_cap_spore.tres",
-	"res://assets/base/nursery/spores/inky_cap_spore.tres",
-	"res://assets/base/nursery/spores/boom_cap_spore.tres",
-	"res://assets/base/nursery/spores/mini_cap_spore.tres",
-	"res://assets/base/nursery/spores/lanky_cap_spore.tres",
-	"res://assets/base/nursery/spores/fat_cap_spore.tres",
-	"res://assets/base/nursery/spores/wall_cap_spore.tres",
-	"res://assets/base/nursery/spores/bank_cap_spore.tres",
-	"res://assets/base/nursery/spores/zombie_cap_spore.tres",
-	"res://assets/base/nursery/spores/rubber_cap_spore.tres",
-	"res://assets/base/nursery/spores/brood_empress_spore.tres",
-]
 
 @export var display_name: String = "Spore"
 @export_range(0, 99, 1) var days_to_mature: int = 2
 @export var biomass_cost: int = 4
 @export var power_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.COMMON
-@export var strain: UnitStrain
 ## Lineage death-spore fields (empty / null for shop spores).
 @export var lineage_name: String = ""
 @export var parent_generation: int = 1
@@ -40,10 +26,10 @@ const _STRAIN_SPORE_PATHS: Array[String] = [
 
 var tint: Color:
 	get:
-		var resolved := resolved_strain()
-		# Specialty strains use their own color; white means untinted → rarity.
-		if resolved != null and resolved.tint != Color.WHITE:
-			return resolved.tint
+		if cap_mutation != null and cap_mutation.tint != Color.WHITE:
+			return cap_mutation.tint
+		if body_mutation != null and body_mutation.tint != Color.WHITE:
+			return body_mutation.tint
 		return UnitStatsData.tint_for_tier(power_tier)
 
 
@@ -54,12 +40,6 @@ func is_lineage_spore() -> bool:
 ## Authored growth days after Greenhouse seal reduction (fertilizers applied on the plot).
 func days_to_mature_effective() -> int:
 	return maxi(days_to_mature - SealModifiers.greenhouse_day_reduction(), 0)
-
-
-func resolved_strain() -> UnitStrain:
-	if strain != null:
-		return strain
-	return load("res://assets/units/generalist/generalist_strain.tres") as UnitStrain
 
 
 ## Mutations can be prepped on lineage spores in Stock; replace consumes the previous.
@@ -113,7 +93,6 @@ static func from_fallen_unit(unit: RosterUnitData) -> SporeData:
 	spore.lineage_name = lineage
 	spore.parent_generation = maxi(unit.generation, 1)
 	spore.power_tier = unit.power_tier
-	spore.strain = unit.strain
 	if unit.stats != null:
 		spore.mean_stats = unit.stats.duplicate(true) as UnitStatsData
 		# Strip identity hatch deltas from mean stats so harvest (and Stock remix)
@@ -137,15 +116,6 @@ static func from_fallen_unit(unit: RosterUnitData) -> SporeData:
 
 
 static func _template_for_unit(unit: RosterUnitData) -> SporeData:
-	if unit != null and unit.strain != null:
-		var strain_path := unit.strain.resource_path
-		if not strain_path.is_empty():
-			for path in _STRAIN_SPORE_PATHS:
-				var candidate := load(path) as SporeData
-				if candidate == null or candidate.strain == null:
-					continue
-				if candidate.strain.resource_path == strain_path:
-					return candidate
 	var tier := UnitStatsData.PowerTier.COMMON
 	if unit != null:
 		tier = unit.power_tier

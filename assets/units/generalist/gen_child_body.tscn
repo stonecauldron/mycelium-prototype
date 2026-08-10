@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://ccaanveby1i21"]
+
+[ext_resource type="Texture2D" uid="uid://bkatom6lbw4t3" path="res://assets/units/generalist/gen_child_body.png" id="1_body"]
+[ext_resource type="Script" uid="uid://dk024gkwu740b" path="res://assets/components/hurtbox_component.gd" id="2_hurtbox"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(61, 103)
+
+[node name="GenChildBody" type="Node2D" unique_id=1884576510]
+scale = Vector2(0.8, 0.8)
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=2112797740]
+position = Vector2(7.1054274e-15, 0.99999976)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_body")
+offset = Vector2(4.9999995, -92.5)
+region_enabled = true
+region_rect = Rect2(160, 215, 181, 181)
+
+[node name="WeaponFollow" type="RemoteTransform2D" parent="Sprite" unique_id=1946944141]
+position = Vector2(85, -77.5)
+remote_path = NodePath("../../WeaponMount")
+update_rotation = false
+update_scale = false
+
+[node name="CapMountFollow" type="RemoteTransform2D" parent="Sprite" unique_id=1548098226]
+position = Vector2(10, -175)
+remote_path = NodePath("../../CapMount")
+update_rotation = false
+
+[node name="CapMount" type="Node2D" parent="." unique_id=743226308]
+position = Vector2(4, -69)
+scale = Vector2(0.39999998, 0.39999998)
+
+[node name="WeaponMount" type="Node2D" parent="." unique_id=630812409]
+position = Vector2(34, -30)
+scale = Vector2(0.9999997, 0.9999997)
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=143079218]
+position = Vector2(0, 1.2499999)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=969411467]
+position = Vector2(2.5, -53.5)
+shape = SubResource("RectangleShape2D_hurtbox")

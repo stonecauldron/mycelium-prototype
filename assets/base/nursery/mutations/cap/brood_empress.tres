@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MutationData" format=3]
+
+[ext_resource type="Script" path="res://assets/base/nursery/mutation_data.gd" id="1_mut"]
+[ext_resource type="Script" path="res://assets/base/nursery/mutations/cap/brood_empress_effect.gd" id="2_effect"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2_effect")
+
+[resource]
+script = ExtResource("1_mut")
+display_name = "Brood Empress"
+short_description = "+1 stats for each child unit in the troop"
+slot = 1
+biomass_cost = 3
+tint = Color(0.72, 0.42, 0.78, 1)
+effect = SubResource("Effect")

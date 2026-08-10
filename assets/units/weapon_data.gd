@@ -21,7 +21,7 @@ const DAMAGE_STAT_LABELS := {
 	DamageStat.FINESSE: "STR or DEX",
 }
 
-## Shared melee overlap box thickness (facing +X). Independent of strain WeaponMount art.
+## Shared melee overlap box thickness (facing +X). Independent of WeaponMount art.
 const MELEE_HITBOX_WIDTH := 28.0
 const MELEE_HITBOX_HEIGHT := 100.0
 const MELEE_HITBOX_Y := -20.0

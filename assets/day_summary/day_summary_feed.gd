@@ -47,7 +47,7 @@ static func add_base_unlock(feature_name: String) -> void:
 
 static func add_fallen_unit(
 	unit: RosterUnitData,
-	context: StrainEffect.DeathContext = StrainEffect.DeathContext.COMBAT
+	context: MutationEffect.DeathContext = MutationEffect.DeathContext.COMBAT
 ) -> void:
 	if unit == null:
 		return
@@ -59,7 +59,7 @@ static func add_fallen_unit(
 			unit.last_death_biomass_yield,
 		]
 	elif emitted:
-		if context == StrainEffect.DeathContext.AGED_OUT:
+		if context == MutationEffect.DeathContext.AGED_OUT:
 			text = "%s has died of old age and emitted spores" % unit.display_name
 		else:
 			text = "%s has died and emitted spores" % unit.display_name
@@ -73,8 +73,10 @@ static func add_fallen_unit(
 	}
 	if emitted:
 		entry["spore_tint"] = UnitStatsData.tint_for_tier(unit.power_tier)
-		if unit.strain != null and unit.strain.tint != Color.WHITE:
-			entry["spore_tint"] = unit.strain.tint
+		if unit.cap_mutation != null and unit.cap_mutation.tint != Color.WHITE:
+			entry["spore_tint"] = unit.cap_mutation.tint
+		elif unit.body_mutation != null and unit.body_mutation.tint != Color.WHITE:
+			entry["spore_tint"] = unit.body_mutation.tint
 	entries.append(entry)
 
 

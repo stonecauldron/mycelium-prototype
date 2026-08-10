@@ -36,12 +36,7 @@ text = "Custom Matchup"
 
 [node name="PlayerLabel" type="Label" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=682412139]
 layout_mode = 2
-text = "Player"
-
-[node name="PlayerStrain" type="OptionButton" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=1776006658]
-unique_name_in_owner = true
-layout_mode = 2
-fit_to_longest_item = false
+text = "Player weapon"
 
 [node name="PlayerWeapon" type="OptionButton" parent="SandboxHUD/CustomMatchupPanel/Margin/CustomMatchup" unique_id=1500246175]
 unique_name_in_owner = true

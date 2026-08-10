@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="MutationData" format=3 uid="uid://mxiks444bm8h"]
+
+[ext_resource type="Script" uid="uid://cklsnp1fms06u" path="res://assets/base/nursery/mutation_data.gd" id="1_mut"]
+[ext_resource type="Script" uid="uid://ctv5ecepl1hw8" path="res://assets/base/nursery/mutations/body/rubber_effect.gd" id="2_effect"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2_effect")
+
+[resource]
+script = ExtResource("1_mut")
+display_name = "Rubber"
+short_description = "Resists blunt hits. Gets knocked around hard."
+tint = Color(0.930263, 0.60786146, 0.34815294, 1)
+silhouette_scale = Vector2(1, 1.15)
+effect = SubResource("Effect")
+strength_delta = -1
+dex_delta = -1
+con_delta = -1
+spd_delta = -1

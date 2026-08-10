@@ -7,7 +7,6 @@ const _SCOUT_ENTRY_SCENE := preload(
 
 @onready var _scout_title: Label = %ScoutTitle
 @onready var _scout_row: HBoxContainer = %ScoutRow
-@onready var _scout_strain_row: HBoxContainer = %ScoutStrainRow
 @onready var _scout_reward_label: Label = %ScoutRewardLabel
 @onready var _scout_reroll_button: Button = %ScoutRerollButton
 @onready var _scout_reroll_cost_label: Label = %ScoutRerollCostLabel
@@ -18,8 +17,6 @@ var _previewing: bool = false
 func _ready() -> void:
 	if _scout_reroll_button != null:
 		_scout_reroll_button.pressed.connect(_on_scout_reroll_pressed)
-	if _scout_strain_row != null:
-		_scout_strain_row.visible = false
 	refresh()
 
 
@@ -54,9 +51,6 @@ func show_specs(specs: Array[EnemyUnitSpec], title: String) -> void:
 		return
 	for child in _scout_row.get_children():
 		child.queue_free()
-	if _scout_strain_row != null:
-		for child in _scout_strain_row.get_children():
-			child.queue_free()
 	if _scout_title != null:
 		_scout_title.text = title
 	var type_counts: Dictionary = {}

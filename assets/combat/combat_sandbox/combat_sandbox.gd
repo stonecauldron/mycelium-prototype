@@ -54,21 +54,6 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Giant Horn", "weapon": _GIANT_HORN_WEAPON},
 ]
 
-const _STRAIN_OPTIONS: Array[Dictionary] = [
-	{"name": "Generalist", "path": "res://assets/units/generalist/generalist_strain.tres"},
-	{"name": "Death", "path": "res://assets/units/death_cap/death_cap_strain.tres"},
-	{"name": "Inky", "path": "res://assets/units/inky_cap/inky_cap_strain.tres"},
-	{"name": "Boom", "path": "res://assets/units/boom_cap/boom_cap_strain.tres"},
-	{"name": "Mini", "path": "res://assets/units/mini_cap/mini_cap_strain.tres"},
-	{"name": "Lanky", "path": "res://assets/units/lanky_cap/lanky_cap_strain.tres"},
-	{"name": "Fat", "path": "res://assets/units/fat_cap/fat_cap_strain.tres"},
-	{"name": "Wall", "path": "res://assets/units/wall_cap/wall_cap_strain.tres"},
-	{"name": "Bank", "path": "res://assets/units/bank_cap/bank_cap_strain.tres"},
-	{"name": "Zombie", "path": "res://assets/units/zombie_cap/zombie_cap_strain.tres"},
-	{"name": "Rubber", "path": "res://assets/units/rubber_cap/rubber_cap_strain.tres"},
-	{"name": "Brood Empress", "path": "res://assets/units/brood_empress/brood_empress_strain.tres"},
-]
-
 const _ENEMY_OPTIONS: Array[Dictionary] = [
 	{"name": "Solar Sword", "unit": _SOLAR_SWORD_ENEMY},
 	{"name": "Rose Thorn", "unit": _ROSE_THORN_ENEMY},
@@ -84,7 +69,6 @@ const _ENEMY_OPTIONS: Array[Dictionary] = [
 
 @onready var _stage: Node2D = $CombatStage
 @onready var _buttons: VBoxContainer = %MatchupButtons
-@onready var _player_strain: OptionButton = %PlayerStrain
 @onready var _player_weapon: OptionButton = %PlayerWeapon
 @onready var _enemy_type: OptionButton = %EnemyType
 @onready var _unit_count: SpinBox = %UnitCount
@@ -93,7 +77,6 @@ const _ENEMY_OPTIONS: Array[Dictionary] = [
 var _rebuild_matchup: Callable = Callable()
 var _restart_token: int = 0
 var _imago_checkbox: CheckBox
-var _strain_cache: Dictionary = {}
 
 
 func _ready() -> void:
@@ -104,17 +87,9 @@ func _ready() -> void:
 
 
 func _populate_custom_controls() -> void:
-	_fill_strain_options(_player_strain)
 	_fill_weapon_options(_player_weapon)
 	_fill_enemy_options(_enemy_type)
 	_run_custom.pressed.connect(_on_run_custom_pressed)
-
-
-func _fill_strain_options(button: OptionButton) -> void:
-	button.clear()
-	for i in _STRAIN_OPTIONS.size():
-		button.add_item(str(_STRAIN_OPTIONS[i]["name"]), i)
-	button.select(0)
 
 
 func _fill_weapon_options(button: OptionButton) -> void:
@@ -228,7 +203,7 @@ func _on_run_custom_pressed() -> void:
 func _build_custom_matchup() -> Array:
 	var count := clampi(int(_unit_count.value), 1, 24)
 	return [
-		_make_units(_selected_weapon(_player_weapon), count, _selected_strain(_player_strain)),
+		_make_units(_selected_weapon(_player_weapon), count),
 		_make_enemies(_selected_enemy(_enemy_type), count),
 	]
 
@@ -240,18 +215,6 @@ func _selected_weapon(button: OptionButton) -> WeaponData:
 	if index < 0 or index >= _WEAPON_OPTIONS.size():
 		return _SWORD_WEAPON
 	return _WEAPON_OPTIONS[index]["weapon"] as WeaponData
-
-
-func _selected_strain(button: OptionButton) -> UnitStrain:
-	var index := button.get_selected_id()
-	if index < 0 or index >= _STRAIN_OPTIONS.size():
-		index = button.selected
-	if index < 0 or index >= _STRAIN_OPTIONS.size():
-		return null
-	var path := str(_STRAIN_OPTIONS[index]["path"])
-	if not _strain_cache.has(path):
-		_strain_cache[path] = load(path)
-	return _strain_cache[path] as UnitStrain
 
 
 func _selected_enemy(button: OptionButton) -> EnemyUnitData:
@@ -310,14 +273,10 @@ func _make_enemy_line(enemies: Array) -> Array[RosterUnitData]:
 	return roster
 
 
-func _make_units(
-	weapon: WeaponData,
-	count: int,
-	strain: UnitStrain = null
-) -> Array[RosterUnitData]:
+func _make_units(weapon: WeaponData, count: int) -> Array[RosterUnitData]:
 	var roster: Array[RosterUnitData] = []
 	for _i in count:
-		roster.append(_make_unit(weapon, strain))
+		roster.append(_make_unit(weapon))
 	return roster
 
 
@@ -328,15 +287,12 @@ func _make_enemies(unit_data: EnemyUnitData, count: int) -> Array[RosterUnitData
 	return roster
 
 
-func _make_unit(weapon: WeaponData, strain: UnitStrain = null) -> RosterUnitData:
+func _make_unit(weapon: WeaponData) -> RosterUnitData:
 	var stats := UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON)
-	if strain != null:
-		strain.apply_hatch_stats(stats)
 	var unit := RosterUnitData.create(
 		UnitNames.pick(),
 		stats,
 		weapon,
-		strain,
 		UnitStatsData.PowerTier.COMMON
 	)
 	if _imago_checkbox != null and _imago_checkbox.button_pressed:

@@ -203,8 +203,9 @@ func _refresh_tags() -> void:
 		_stage_tag.set_text("Adult")
 	else:
 		_stage_tag.set_text("Child")
-	_tier_tag.set_text(UnitStatsData.label_for_tier(unit_data.power_tier))
-	_tier_tag.set_fill_color(UnitStatsData.tint_for_tier(unit_data.power_tier))
+	var generation := maxi(unit_data.generation, 1)
+	_tier_tag.set_text(UnitNames.format_generation_label(generation))
+	_tier_tag.set_fill_color(UnitStatsData.tint_for_generation(generation))
 
 
 func _age_text(days: int) -> String:

@@ -52,6 +52,25 @@ static func label_for_tier(tier: PowerTier) -> String:
 	return TIER_LABELS.get(tier, TIER_LABELS[PowerTier.COMMON])
 
 
+## Prestige ladder for generation chips — not the unit's actual power_tier.
+static func tier_for_generation(generation: int) -> PowerTier:
+	match clampi(generation, 1, 5):
+		1:
+			return PowerTier.COMMON
+		2:
+			return PowerTier.UNCOMMON
+		3:
+			return PowerTier.RARE
+		4:
+			return PowerTier.EPIC
+		_:
+			return PowerTier.LEGENDARY
+
+
+static func tint_for_generation(generation: int) -> Color:
+	return tint_for_tier(tier_for_generation(generation))
+
+
 static func create_random(rng: RandomNumberGenerator = null) -> UnitStatsData:
 	return create_for_tier(PowerTier.COMMON, rng)
 

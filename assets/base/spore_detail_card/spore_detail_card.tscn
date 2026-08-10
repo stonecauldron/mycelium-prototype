@@ -126,16 +126,6 @@ text = "Darwin II"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="GenerationLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
-theme_override_font_sizes/font_size = 22
-text = "Generation II"
-horizontal_alignment = 1
-
 [node name="AttrGrid" type="GridContainer" parent="CardPanel/Margin/VBox/LineageSection"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -245,7 +235,7 @@ theme_override_constants/separation = 4
 
 [node name="TierTag" parent="CardPanel/Margin/VBox/FooterRow" instance=ExtResource("5_tag")]
 unique_name_in_owner = true
-text = "Common"
+text = "Gen I"
 
 [node name="HatchTag" parent="CardPanel/Margin/VBox/FooterRow" instance=ExtResource("5_tag")]
 unique_name_in_owner = true

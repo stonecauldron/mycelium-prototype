@@ -33,7 +33,6 @@ var _preview_unit: RosterUnitData = null
 @onready var _lineage_section: VBoxContainer = %LineageSection
 @onready var _portrait_host: Control = %PortraitHost
 @onready var _child_name_label: Label = %ChildNameLabel
-@onready var _generation_label: Label = %GenerationLabel
 @onready var _str_label: Label = %StrLabel
 @onready var _dex_label: Label = %DexLabel
 @onready var _con_label: Label = %ConLabel
@@ -145,9 +144,10 @@ func _refresh_price_row() -> void:
 
 
 func _refresh_tags() -> void:
+	var generation := _preview_generation()
 	_tier_tag.visible = true
-	_tier_tag.set_text(UnitStatsData.label_for_tier(spore_data.power_tier))
-	_tier_tag.set_fill_color(UnitStatsData.tint_for_tier(spore_data.power_tier))
+	_tier_tag.set_text(UnitNames.format_generation_label(generation))
+	_tier_tag.set_fill_color(UnitStatsData.tint_for_generation(generation))
 	_hatch_tag.visible = false
 
 
@@ -171,25 +171,25 @@ func _refresh_lineage_section() -> void:
 	_preview_unit = _make_preview_unit()
 	if lineage:
 		_child_name_label.visible = true
-		_generation_label.visible = true
 		_trainings_label.visible = true
 		_trainings_row.visible = true
 		_child_name_label.text = _preview_unit.display_name if _preview_unit != null else ""
-		var child_gen := maxi(spore_data.parent_generation, 1) + 1
-		var roman := UnitNames.roman_numeral(child_gen)
-		_generation_label.text = (
-			"Generation %s" % roman if not roman.is_empty() else "Generation 1"
-		)
 		_refresh_trainings_row()
 	else:
 		_child_name_label.visible = false
-		_generation_label.visible = false
 		_trainings_label.visible = false
 		_trainings_row.visible = false
 		_clear_trainings_row()
 	_refresh_mutations_label()
 	_refresh_mean_stats()
 	_refresh_portrait()
+
+
+## Generation of the Child that would hatch from this spore.
+func _preview_generation() -> int:
+	if spore_data != null and spore_data.is_lineage_spore():
+		return maxi(spore_data.parent_generation, 1) + 1
+	return 1
 
 
 func _refresh_mean_stats() -> void:
@@ -298,10 +298,9 @@ func _make_preview_unit() -> RosterUnitData:
 	if spore_data == null:
 		return null
 	var lineage := spore_data.is_lineage_spore()
-	var child_gen := 1
+	var child_gen := _preview_generation()
 	var child_name := "Child"
 	if lineage:
-		child_gen = maxi(spore_data.parent_generation, 1) + 1
 		child_name = UnitNames.format_unit_name(spore_data.lineage_name, child_gen)
 	var stats := _preview_average_stats()
 	if stats != null:

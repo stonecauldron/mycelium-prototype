@@ -114,6 +114,9 @@ static func _make_evolved(unit_name: String, schools: Array) -> RosterUnitData:
 		unit.weapon_trainings.append(int(school))
 	unit.promote_to_imago()
 	unit.sync_weapon_from_trainings()
+	# Starter Adult begins mid-bloodline (gen II); companion Child stays gen I.
+	unit.generation = 2
+	unit.display_name = UnitNames.format_unit_name(unit.lineage_name, unit.generation)
 	return unit
 
 

@@ -188,4 +188,4 @@ size_flags_horizontal = 3
 
 [node name="TierTag" parent="CardPanel/Margin/VBox/FooterRow" unique_id=448265387 instance=ExtResource("6_tag")]
 unique_name_in_owner = true
-text = "Common"
+text = "Gen I"

@@ -76,6 +76,14 @@ static func format_unit_name(lineage_name: String, generation: int) -> String:
 	return "%s %s" % [base, roman_numeral(generation)]
 
 
+## Short unit-detail chip label, e.g. "Gen II".
+static func format_generation_label(generation: int) -> String:
+	var roman := roman_numeral(maxi(generation, 1))
+	if roman.is_empty():
+		return "Gen I"
+	return "Gen %s" % roman
+
+
 static func roman_numeral(value: int) -> String:
 	if value <= 0:
 		return ""

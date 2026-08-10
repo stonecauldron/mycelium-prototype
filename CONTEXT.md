@@ -30,7 +30,7 @@ A lasting run modifier chosen from offered picks. Rotten Thumb discounts the bio
 *Avoid*: relic, blessing, perk (when you mean a Seal)
 
 **Starter package**:
-The run-start offer of an initial Adult (and a hidden Child) the player chooses. Starters do not begin with Mutations.
+The run-start offer of an initial Adult (and a hidden Child) the player chooses. The Adult begins at generation II; the Child at generation I. Starters do not begin with Mutations.
 
 ### Base
 
@@ -103,6 +103,10 @@ A unit at adult life stage — reached by Training emerge, or granted by a start
 **Strain**:
 Legacy species/archetype package on units (art + optional effect). Player-facing identity is moving to Body mutation + Cap mutation; do not use Strain for new Nursery identity design.
 *Avoid*: using Strain when you mean Mutation
+
+**Generation**:
+How deep a unit sits in its bloodline (I, II, III, …). Generation I has a bare name; later generations append a Roman suffix. The starter Adult begins at II; fresh non-lineage grows and the starter Child begin at I.
+*Avoid*: treating Generation as Tier
 
 **Tier**:
 A rarity/power band on player units (e.g. Common through Legendary). Fresh Nursery grows are Common for now; higher tier rides lineage from the parent when present.

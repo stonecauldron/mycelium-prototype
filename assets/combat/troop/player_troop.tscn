@@ -1,19 +1,5 @@
 [gd_scene format=3 uid="uid://cfpo0kyhrqm3y"]
 
 [ext_resource type="PackedScene" uid="uid://carmy001" path="res://assets/combat/troop/troop.tscn" id="1_troop"]
-[ext_resource type="PackedScene" uid="uid://cmeleeunit001" path="res://assets/units/melee_unit/melee_unit.tscn" id="2_melee"]
 
-[node name="PlayerTroop" unique_id=489447478 instance=ExtResource("1_troop")]
-
-[node name="MeleeUnit" parent="Units" instance=ExtResource("2_melee")]
-body_color = Color(1, 1, 1, 1)
-squad_index = 0
-
-[node name="MeleeUnit2" parent="Units" instance=ExtResource("2_melee")]
-body_color = Color(1, 1, 1, 1)
-
-[node name="MeleeUnit3" parent="Units" instance=ExtResource("2_melee")]
-body_color = Color(1, 1, 1, 1)
-
-[node name="MeleeUnit4" parent="Units" instance=ExtResource("2_melee")]
-body_color = Color(1, 1, 1, 1)
+[node name="PlayerTroop" instance=ExtResource("1_troop")]

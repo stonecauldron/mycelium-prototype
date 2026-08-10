@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="MutationData" format=3 uid="uid://cn8g2lr45o88j"]
+
+[ext_resource type="Script" uid="uid://cklsnp1fms06u" path="res://assets/base/nursery/mutation_data.gd" id="1_mut"]
+[ext_resource type="Script" uid="uid://brgpmx3xv82sf" path="res://assets/base/nursery/mutations/cap/boom_effect.gd" id="2_effect"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2_effect")
+
+[resource]
+script = ExtResource("1_mut")
+display_name = "Boom"
+short_description = "Explodes upon death for STR x 3 AoE damage."
+slot = 1
+tint = Color(0.21242, 0.38, 0.1748, 1)
+effect = SubResource("Effect")
+dex_delta = -2
+con_delta = -2
+spd_delta = -2

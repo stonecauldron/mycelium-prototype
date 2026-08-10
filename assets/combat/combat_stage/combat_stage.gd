@@ -3,8 +3,7 @@ extends Node2D
 signal battle_ended(player_won: bool)
 
 const FLOOR_SURFACE_Y := 786.0
-const _MELEE_UNIT_SCENE := preload("res://assets/units/melee_unit/melee_unit.tscn")
-const _SPEAR_UNIT_SCENE := preload("res://assets/units/spear_unit/spear_unit.tscn")
+const _UNIT_SCENE := preload("res://assets/units/unit.tscn")
 const _GAME_OVER_SCENE_PATH := "res://assets/game_over/game_over.tscn"
 const _VICTORY_SCENE_PATH := "res://assets/victory/victory.tscn"
 const _DAY_SUMMARY_SCENE_PATH := "res://assets/day_summary/day_summary.tscn"
@@ -529,15 +528,13 @@ func _reset_troop_from_roster(
 			var data := squad[slot_index] as RosterUnitData
 			if data == null:
 				continue
-			var scene := _scene_for_attack_style(data.get_attack_style())
-			_spawn_unit(scene, units_root, data, body_color, slot_index, is_player)
+			_spawn_unit(units_root, data, body_color, slot_index, is_player)
 	else:
 		var index := 0
 		for data in roster:
 			if data == null:
 				continue
-			var scene := _scene_for_attack_style(data.get_attack_style())
-			_spawn_unit(scene, units_root, data, body_color, index, is_player)
+			_spawn_unit(units_root, data, body_color, index, is_player)
 			index += 1
 
 
@@ -547,16 +544,7 @@ func _clear_units(units_root: Node2D) -> void:
 		child.free()
 
 
-func _scene_for_attack_style(attack_style: WeaponData.AttackStyle) -> PackedScene:
-	match attack_style:
-		WeaponData.AttackStyle.PROJECTILE_THROW:
-			return _SPEAR_UNIT_SCENE
-		_:
-			return _MELEE_UNIT_SCENE
-
-
 func _spawn_unit(
-	scene: PackedScene,
 	units_root: Node2D,
 	roster_data: RosterUnitData,
 	body_color: Color,
@@ -564,12 +552,11 @@ func _spawn_unit(
 	is_player: bool,
 	spawn_global: Vector2 = Vector2.INF
 ) -> Unit:
-	var unit: Unit = scene.instantiate()
+	var unit: Unit = _UNIT_SCENE.instantiate()
 	unit.roll_random_stats = false
 	unit.roster_data = roster_data
 	if roster_data.stats != null:
 		unit.stats = roster_data.stats.duplicate(true)
-	# Always assign (including null) so melee/spear scene defaults don't stick on enemies.
 	unit.weapon = roster_data.weapon
 	unit.combat = roster_data.ensure_combat_profile()
 	if roster_data.enemy_unit_data != null:
@@ -691,9 +678,8 @@ func _respawn_zombie_cap(
 	var troop := player_troop if is_player else enemy_troop
 	var units_root: Node2D = troop.get_node("Units")
 	var color := Color.WHITE
-	var scene := _scene_for_attack_style(clone.get_attack_style())
 	var spawn_pos := _zombie_respawn_global_position(troop)
-	var spawned := _spawn_unit(scene, units_root, clone, color, squad_index, is_player, spawn_pos)
+	var spawned := _spawn_unit(units_root, clone, color, squad_index, is_player, spawn_pos)
 	if spawned != null:
 		if spawned.stats != null:
 			var respawn_max := spawned.stats.get_max_hp()

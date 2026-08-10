@@ -115,7 +115,7 @@ func try_compost_unit(unit: RosterUnitData) -> bool:
 	unit.last_death_biomass_yield = 0
 	unit.call_lifecycle_effect(
 		&"on_death",
-		[unit, StrainEffect.DeathContext.COMPOSTED, null]
+		[unit, MutationEffect.DeathContext.COMPOSTED, null]
 	)
 	var compost_reward := BiomassData.reward_for_compost(unit.is_adult_stage())
 	if compost_reward > 0:

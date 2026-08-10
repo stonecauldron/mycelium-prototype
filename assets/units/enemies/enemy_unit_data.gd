@@ -22,7 +22,7 @@ const STAT_VARIANCE := 1
 ## Relative weight when picking types for army mix.
 @export_range(0.0, 100.0, 0.1) var composition_weight: float = 1.0
 ## Optional combat hooks (on_death, on_hit_taken, …). Null for plain enemies.
-@export var effect: StrainEffect
+@export var effect: MutationEffect
 
 
 func instantiate_appearance() -> UnitAppearance:

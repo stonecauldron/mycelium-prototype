@@ -3,8 +3,11 @@ extends Resource
 
 ## Natural (untrained) imago maturity bonus per stat.
 const IMAGO_STAT_BONUS := 1
-const _DEFAULT_STRAIN_PATH := "res://assets/units/generalist/generalist_strain.tres"
+const DAYS_TO_IMAGO := 2
 const NO_LIFE_EXPECTANCY := -1
+const STAGE_JUVENILE := &"juvenile"
+const STAGE_IMAGO := &"imago"
+const STAGE_FULLY_EVOLVED := &"fully_evolved"
 
 @export var display_name: String = "Unit"
 ## Base name without generation suffix (e.g. "Darwin"). Used for death-spore naming.
@@ -15,22 +18,21 @@ const NO_LIFE_EXPECTANCY := -1
 @export var weapon: WeaponData
 @export var combat: CombatProfile
 @export var enemy_unit_data: EnemyUnitData
-@export var strain: UnitStrain
 ## Body mutation slot (empty allowed). Starters begin with none.
 @export var body_mutation: MutationData
 ## Cap mutation slot (empty allowed). Starters begin with none.
 @export var cap_mutation: MutationData
 @export var power_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.COMMON
 @export var days_alive: int = 0
-@export var life_stage_id: StringName = &"juvenile"
+@export var life_stage_id: StringName = STAGE_JUVENILE
 @export var is_imago: bool = false
 ## Ordered weapon-school trainings (0–2). Lookup treats as unordered multiset.
 @export var weapon_trainings: Array[int] = []
 ## -1 = no age-out death.
 @export var max_days_alive: int = NO_LIFE_EXPECTANCY
-## Banked biomass for Piñata-style strains.
+## Banked biomass for Piñata-style mutations (Bank Cap).
 @export var biomass_bank: int = 0
-## Biomass paid out on the most recent strain death (Bank Cap); used by UI / day summary.
+## Biomass paid out on the most recent Bank Cap death; used by UI / day summary.
 var last_death_biomass_yield: int = 0
 ## Set when this unit's true death emitted a lineage spore (day summary).
 var emitted_death_spore: bool = false
@@ -93,18 +95,13 @@ func call_mutation_effects(method_name: StringName, args: Array = []) -> void:
 		cap_mutation.call_effect(method_name, args)
 
 
-## Hatch / day / imago / death hooks for Mutations + legacy Strain.
+## Hatch / day / imago / death hooks for Body/Cap mutations.
 func call_lifecycle_effect(method_name: StringName, args: Array = []) -> void:
 	call_mutation_effects(method_name, args)
-	if strain != null:
-		strain.call_effect(method_name, args)
 
 
 func call_combat_effect(method_name: StringName, args: Array = []) -> void:
 	call_mutation_effects(method_name, args)
-	if strain != null:
-		strain.call_effect(method_name, args)
-		return
 	if enemy_unit_data != null:
 		enemy_unit_data.call_effect(method_name, args)
 
@@ -118,8 +115,6 @@ func get_identity_stat_chip() -> Dictionary:
 		var body_info := body_mutation.get_stat_chip(self)
 		if not body_info.is_empty():
 			return body_info
-	if strain != null:
-		return strain.get_stat_chip(self)
 	return {}
 
 
@@ -141,7 +136,7 @@ func mutation_summary_lines() -> PackedStringArray:
 
 
 func is_fully_evolved() -> bool:
-	return life_stage_id == UnitStrain.STAGE_FULLY_EVOLVED
+	return life_stage_id == STAGE_FULLY_EVOLVED
 
 
 func is_adult_stage() -> bool:
@@ -149,16 +144,16 @@ func is_adult_stage() -> bool:
 
 
 func can_promote_to_imago() -> bool:
-	if is_imago or is_fully_evolved() or strain == null:
+	if is_imago or is_fully_evolved():
 		return false
-	return days_alive >= strain.days_to_imago
+	return days_alive >= DAYS_TO_IMAGO
 
 
 func has_exceeded_life_expectancy() -> bool:
 	return max_days_alive >= 0 and days_alive > max_days_alive
 
 
-## Natural age / pupation promotion. Applies +1-all (+ strain delta) and Scythe if untrained.
+## Natural age / pupation promotion. Applies +1-all and Scythe if untrained.
 ## Maturity bonuses scale with generation (same falloff as pupation training gains).
 func promote_to_imago(apply_maturity_stats: bool = true) -> bool:
 	if is_imago or is_fully_evolved():
@@ -169,14 +164,8 @@ func promote_to_imago(apply_maturity_stats: bool = true) -> bool:
 		stats.dex = clampi(stats.dex + bonus, 1, 99)
 		stats.con = clampi(stats.con + bonus, 1, 99)
 		stats.spd = clampi(stats.spd + bonus, 1, 99)
-		if strain != null and strain.imago_stat_delta != 0:
-			var d := WeaponSchool.scale_stat_delta(strain.imago_stat_delta, generation)
-			stats.strength = clampi(stats.strength + d, 1, 99)
-			stats.dex = clampi(stats.dex + d, 1, 99)
-			stats.con = clampi(stats.con + d, 1, 99)
-			stats.spd = clampi(stats.spd + d, 1, 99)
 	_apply_pending_adult_stat_bonus()
-	life_stage_id = UnitStrain.STAGE_IMAGO
+	life_stage_id = STAGE_IMAGO
 	is_imago = true
 	sync_weapon_from_trainings()
 	call_lifecycle_effect(&"on_imago", [self])
@@ -209,7 +198,7 @@ func maturity_stat_bonus() -> int:
 ## Legacy alias — Adult/Evolved collapsed; dual training no longer uses a separate stage.
 func promote_to_fully_evolved() -> bool:
 	if is_fully_evolved():
-		life_stage_id = UnitStrain.STAGE_IMAGO
+		life_stage_id = STAGE_IMAGO
 		is_imago = true
 		return true
 	return promote_to_imago(false)
@@ -218,7 +207,7 @@ func promote_to_fully_evolved() -> bool:
 func can_pupate() -> bool:
 	if enemy_unit_data != null:
 		return false
-	return life_stage_id == UnitStrain.STAGE_JUVENILE
+	return life_stage_id == STAGE_JUVENILE
 
 
 func sync_weapon_from_trainings() -> void:
@@ -257,21 +246,19 @@ func mount_portrait(
 	if enemy_unit_data != null:
 		appearance = enemy_unit_data.instantiate_appearance()
 	else:
-		# Layered Generalist body+cap — not specialty full-body strain art.
-		appearance = UnitAppearance.instantiate_player_layers(
+		# Composed base + body + cap appearance.
+		appearance = UnitAppearance.compose_player(
 			is_adult_stage(),
 			body_mutation,
 			cap_mutation
 		)
-		if appearance != null:
-			appearance.apply_body_mutation_silhouette(body_mutation)
 	if appearance == null:
 		return null
 	host.add_child(appearance)
 	# Portrait scale is a host-local multiply; avoid reset_body_scale() on portraits.
 	appearance.scale *= Vector2(portrait_scale, portrait_scale)
 	if enemy_unit_data == null:
-		# Tier multiplies both body and cap layers (per-layer tints stay on sprites).
+		# Tier multiplies body and cap layers (per-layer tints stay on sprites/cap).
 		appearance.modulate = UnitStatsData.tint_for_tier(power_tier)
 	host.set_meta("_portrait_shadow_clearance", shadow_clearance)
 	_ensure_portrait_host_sync(host)
@@ -322,7 +309,6 @@ static func create(
 	unit_name: String,
 	unit_stats: UnitStatsData,
 	unit_weapon: WeaponData,
-	unit_strain: UnitStrain = null,
 	unit_tier: UnitStatsData.PowerTier = UnitStatsData.PowerTier.COMMON
 ) -> RosterUnitData:
 	var data := RosterUnitData.new()
@@ -333,14 +319,12 @@ static func create(
 	data.weapon = unit_weapon
 	if unit_weapon != null:
 		data.combat = unit_weapon.get_combat_profile()
-	data.strain = unit_strain if unit_strain != null else _default_strain()
 	data.power_tier = unit_tier
 	data.days_alive = 0
-	data.life_stage_id = UnitStrain.STAGE_JUVENILE
+	data.life_stage_id = STAGE_JUVENILE
 	data.is_imago = false
 	data.weapon_trainings = []
-	if data.strain != null:
-		data.max_days_alive = data.strain.roll_max_days_alive()
+	data.max_days_alive = NO_LIFE_EXPECTANCY
 	return data
 
 
@@ -356,7 +340,6 @@ static func create_enemy(
 	data.stats = unit_stats
 	data.enemy_unit_data = unit_data
 	data.weapon = null
-	data.strain = null
 	if unit_data != null:
 		data.combat = unit_data.get_combat_profile()
 	data.power_tier = UnitStatsData.PowerTier.COMMON
@@ -366,8 +349,3 @@ static func create_enemy(
 	data.weapon_trainings = []
 	data.max_days_alive = NO_LIFE_EXPECTANCY
 	return data
-
-
-static func _default_strain() -> UnitStrain:
-	# load() (not preload): strain.tres → appearance → Unit would cycle at compile time.
-	return load(_DEFAULT_STRAIN_PATH) as UnitStrain

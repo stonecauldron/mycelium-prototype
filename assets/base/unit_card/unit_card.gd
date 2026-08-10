@@ -17,7 +17,7 @@ var source: String = "bench"
 var slot: Node
 var _drag_started_flag: bool = false
 var _portrait_instance: Node2D = null
-var _strain_chip: StatChip = null
+var _mutation_chip: StatChip = null
 
 @onready var _name_label: Label = %NameLabel
 @onready var _weapon_label: Label = %WeaponLabel
@@ -71,7 +71,6 @@ func _make_mock_unit() -> RosterUnitData:
 		"Mock Capling",
 		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON),
 		weapon,
-		null,
 		UnitStatsData.PowerTier.COMMON,
 	)
 
@@ -104,17 +103,17 @@ func _refresh() -> void:
 	else:
 		_atk_chip.set_value("—")
 		_hp_chip.set_value("—")
-	_refresh_strain_chip(data)
+	_refresh_mutation_chip(data)
 	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
 	tooltip_text = data.display_name
 	_refresh_portrait(data)
 
 
-func _refresh_strain_chip(data: RosterUnitData) -> void:
-	if _strain_chip != null:
-		if is_instance_valid(_strain_chip):
-			_strain_chip.queue_free()
-		_strain_chip = null
+func _refresh_mutation_chip(data: RosterUnitData) -> void:
+	if _mutation_chip != null:
+		if is_instance_valid(_mutation_chip):
+			_mutation_chip.queue_free()
+		_mutation_chip = null
 	if data == null or _atk_chip == null:
 		return
 	var info := data.get_identity_stat_chip()
@@ -127,7 +126,7 @@ func _refresh_strain_chip(data: RosterUnitData) -> void:
 	chip.icon = info.get("icon") as Texture2D
 	row.add_child(chip)
 	chip.set_value(info.get("value", 0))
-	_strain_chip = chip
+	_mutation_chip = chip
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:

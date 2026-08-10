@@ -12,7 +12,7 @@ var unit_data: RosterUnitData
 var show_portrait: bool = true
 var interactive: bool = true
 var _portrait_instance: Node2D = null
-var _strain_chip: StatChip = null
+var _mutation_chip: StatChip = null
 
 @onready var _card_panel: PanelContainer = $CardPanel
 @onready var _name_label: Label = %NameLabel
@@ -97,7 +97,6 @@ func _make_mock_unit() -> RosterUnitData:
 		"Mock Capling",
 		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON),
 		weapon,
-		null,
 		UnitStatsData.PowerTier.COMMON,
 	)
 
@@ -106,7 +105,7 @@ func _refresh() -> void:
 	if unit_data == null:
 		return
 	_name_label.text = unit_data.display_name
-	_refresh_strain_meta()
+	_refresh_mutation_meta()
 	_refresh_tags()
 	if unit_data.stats != null:
 		var display_stats := BroodEmpressEffect.hub_preview_stats(unit_data)
@@ -125,7 +124,7 @@ func _refresh() -> void:
 		_dex_label.text = "DEX —"
 		_con_label.text = "CON —"
 		_spd_label.text = "SPD —"
-	_refresh_strain_chip()
+	_refresh_mutation_chip()
 	_refresh_fertilizer_info()
 	_refresh_portrait()
 
@@ -165,11 +164,11 @@ func _fertilizer_info_text() -> String:
 	return "Fertilizers\n" + "\n".join(lines)
 
 
-func _refresh_strain_chip() -> void:
-	if _strain_chip != null:
-		if is_instance_valid(_strain_chip):
-			_strain_chip.queue_free()
-		_strain_chip = null
+func _refresh_mutation_chip() -> void:
+	if _mutation_chip != null:
+		if is_instance_valid(_mutation_chip):
+			_mutation_chip.queue_free()
+		_mutation_chip = null
 	if unit_data == null or _atk_chip == null:
 		return
 	var info := unit_data.get_identity_stat_chip()
@@ -184,20 +183,14 @@ func _refresh_strain_chip() -> void:
 	chip.icon = info.get("icon") as Texture2D
 	row.add_child(chip)
 	chip.set_value(info.get("value", 0))
-	_strain_chip = chip
+	_mutation_chip = chip
 
 
-func _refresh_strain_meta() -> void:
+func _refresh_mutation_meta() -> void:
 	if unit_data.enemy_unit_data != null:
-		var strain := unit_data.strain
-		if strain != null:
-			_type_label.text = "%s Strain" % strain.display_name
-			_desc_label.text = strain.short_description
-			_desc_label.visible = not strain.short_description.is_empty()
-		else:
-			_type_label.text = unit_data.enemy_unit_data.display_name
-			_desc_label.text = ""
-			_desc_label.visible = false
+		_type_label.text = unit_data.enemy_unit_data.display_name
+		_desc_label.text = ""
+		_desc_label.visible = false
 	else:
 		_type_label.text = "Mutations"
 		_desc_label.text = "\n".join(unit_data.mutation_summary_lines())

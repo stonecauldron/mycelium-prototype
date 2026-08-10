@@ -1,7 +1,6 @@
 [gd_resource type="Resource" script_class="SporeData" format=3]
 
 [ext_resource type="Script" uid="uid://48gu2x5oms10" path="res://assets/base/nursery/spore_data.gd" id="1_spore"]
-[ext_resource type="Resource" path="res://assets/units/generalist/generalist_strain.tres" id="2_strain"]
 
 [resource]
 script = ExtResource("1_spore")
@@ -9,4 +8,3 @@ display_name = "Legendary Spore"
 days_to_mature = 2
 biomass_cost = 64
 power_tier = 5
-strain = ExtResource("2_strain")

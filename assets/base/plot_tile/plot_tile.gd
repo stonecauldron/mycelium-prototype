@@ -41,6 +41,8 @@ var _can_afford_fresh_plant: bool = false
 var _base_modulate: Color = Color.WHITE
 var _fertilizer_chips: Array[StatChip] = []
 var _fertilizer_icon_atlas: AtlasTexture
+## Living SporeDetailCard from `_make_custom_tooltip` (engine keeps it open across drops).
+var _active_detail_tip: SporeDetailCard = null
 var _egg_shake_tween: Tween
 var _egg_shake_imago: bool = false
 var _egg_shake_x: float = 0.0:
@@ -205,6 +207,7 @@ func _refresh() -> void:
 		_lock_icon.modulate = Color.WHITE / _LOCKED_MODULATE
 		tooltip_text = ""
 		_refresh_arrow()
+		_sync_active_detail_tip()
 		return
 
 	_lock_icon.visible = false
@@ -221,6 +224,7 @@ func _refresh() -> void:
 		tooltip_text = ""
 		_apply_visual_state()
 		_refresh_arrow()
+		_sync_active_detail_tip()
 		return
 
 	match _plot.get_state():
@@ -258,6 +262,7 @@ func _refresh() -> void:
 		tooltip_text = ""
 	_apply_visual_state()
 	_refresh_arrow()
+	_sync_active_detail_tip()
 
 
 func _refresh_plant_button(should_show: bool) -> void:
@@ -282,7 +287,25 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	var tip: SporeDetailCard = _SPORE_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(_plot.planted_spore, false, _plot)
 	DetailTooltipPopup.configure(tip)
+	_active_detail_tip = tip
+	tip.tree_exiting.connect(_on_active_detail_tip_exiting.bind(tip), CONNECT_ONE_SHOT)
 	return tip
+
+
+func _on_active_detail_tip_exiting(tip: SporeDetailCard) -> void:
+	if _active_detail_tip == tip:
+		_active_detail_tip = null
+
+
+## Fertilizer/mutation drops refresh the tile while the hover tip is still open.
+func _sync_active_detail_tip() -> void:
+	if _active_detail_tip == null or not is_instance_valid(_active_detail_tip):
+		_active_detail_tip = null
+		return
+	if _plot == null or _plot.planted_spore == null:
+		return
+	_active_detail_tip.setup(_plot.planted_spore, false, _plot)
+	DetailTooltipPopup.configure(_active_detail_tip)
 
 
 func _clear_fertilizer_chips() -> void:

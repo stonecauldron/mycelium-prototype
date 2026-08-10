@@ -58,7 +58,7 @@ static func unit_atk_multiplier(unit: RosterUnitData, troop: TroopData = null) -
 	var mult := 1.0
 	if unit.favourite_child_buff:
 		mult *= 1.5
-	if unit.life_stage_id == UnitStrain.STAGE_JUVENILE:
+	if unit.life_stage_id == RosterUnitData.STAGE_JUVENILE:
 		mult *= _pow_count(1.5, count(SealCatalog.ID_NEOTONIA))
 	if unit.weapon_trainings.is_empty():
 		mult *= _pow_count(2.0, count(SealCatalog.ID_COMMONERS_DELIGHT))
@@ -74,7 +74,7 @@ static func unit_hp_multiplier(unit: RosterUnitData, troop: TroopData = null) ->
 	var mult := 1.0
 	if unit.favourite_child_buff:
 		mult *= 1.5
-	if unit.life_stage_id == UnitStrain.STAGE_JUVENILE:
+	if unit.life_stage_id == RosterUnitData.STAGE_JUVENILE:
 		mult *= _pow_count(1.5, count(SealCatalog.ID_NEOTONIA))
 	if unit.weapon_trainings.is_empty():
 		mult *= _pow_count(2.0, count(SealCatalog.ID_COMMONERS_DELIGHT))

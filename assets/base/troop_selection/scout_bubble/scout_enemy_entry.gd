@@ -1,7 +1,7 @@
 class_name ScoutEnemyEntry
 extends HBoxContainer
 
-## Larger than strain scout portraits — enemy art is shorter above the feet origin.
+## Enemy art is shorter above the feet origin than player portraits.
 const _PORTRAIT_SCALE := 0.7
 ## Raise feet above the host bottom so the body lines up with the count label.
 const _PORTRAIT_Y_FACTOR := 0.82

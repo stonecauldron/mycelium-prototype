@@ -131,6 +131,5 @@ static func _make_blank(unit_name: String) -> RosterUnitData:
 		unit_name,
 		stats,
 		WeaponSchool.sickle(),
-		null,
 		UnitStatsData.PowerTier.COMMON
 	)

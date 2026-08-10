@@ -119,10 +119,10 @@ var _bow_lean_angle: float = 0.0
 var _dying: bool = false
 var _celebrating: bool = false
 var _last_hit_from: Vector2 = Vector2.ZERO
-## Runtime engagement range from weapon data (strain-invariant).
+## Runtime engagement range from weapon data.
 var _attack_range: float = 0.0
 var _statuses: Array[StatusEffect] = []
-## Combat-only modifiers (strains / statuses compose on top).
+## Combat-only modifiers (mutation effects / statuses compose on top).
 var _move_speed_multiplier: float = 1.0
 var _outgoing_damage_multiplier: float = 1.0
 var _blunt_resist: float = 0.0
@@ -220,20 +220,13 @@ func _mount_appearance() -> void:
 	_visual.add_child(_appearance)
 	_visual.move_child(_appearance, 0)
 
+	# BodyShape lives on the shared player base — remount onto Unit; body mutations never touch it.
 	var body := _appearance.get_node_or_null("BodyShape") as CollisionShape2D
 	if body != null:
 		var global_xform := body.global_transform
 		body.reparent(self)
 		body.global_transform = global_xform
 		_body_shape = body
-
-	# Silhouette after BodyShape remount: visual + hurtbox scale, collider stays base-sized.
-	if (
-		roster_data != null
-		and roster_data.enemy_unit_data == null
-		and roster_data.body_mutation != null
-	):
-		_appearance.apply_body_mutation_silhouette(roster_data.body_mutation)
 
 	var held := _held_weapon_for_appearance()
 	if held != null:
@@ -256,13 +249,13 @@ func _instantiate_body_appearance() -> UnitAppearance:
 	if roster_data != null and roster_data.enemy_unit_data != null:
 		return roster_data.enemy_unit_data.instantiate_appearance()
 	if roster_data != null:
-		return UnitAppearance.instantiate_player_layers(
+		return UnitAppearance.compose_player(
 			roster_data.is_adult_stage(),
 			roster_data.body_mutation,
 			roster_data.cap_mutation
 		)
 	# Fallback when spawned without roster (tools / stray scenes).
-	return UnitAppearance.instantiate_player_layers(false, null, null)
+	return UnitAppearance.compose_player(false, null, null)
 
 
 func _clear_visual_children() -> void:
@@ -1538,7 +1531,7 @@ func _die(
 	if roster_data != null:
 		roster_data.call_combat_effect(
 			&"on_death",
-			[roster_data, StrainEffect.DeathContext.COMBAT, self]
+			[roster_data, MutationEffect.DeathContext.COMBAT, self]
 		)
 		if roster_data.last_death_biomass_yield > 0:
 			_spawn_biomass_number(roster_data.last_death_biomass_yield)
@@ -1768,6 +1761,8 @@ func _get_weapon_mount() -> Node2D:
 	var mount := _appearance.weapon_mount
 	if mount == null:
 		mount = _appearance.get_node_or_null("WeaponMount") as Node2D
+	if mount == null:
+		mount = _appearance.get_node_or_null("Body/WeaponMount") as Node2D
 	return mount
 
 

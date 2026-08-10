@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MutationData" format=3 uid="uid://dgvwo06gfy45m"]
+
+[ext_resource type="Script" uid="uid://cklsnp1fms06u" path="res://assets/base/nursery/mutation_data.gd" id="1_mut"]
+[ext_resource type="Script" uid="uid://dxhqdhfrdd1be" path="res://assets/base/nursery/mutations/body/zombie_effect.gd" id="2_effect"]
+
+[sub_resource type="Resource" id="Effect"]
+script = ExtResource("2_effect")
+
+[resource]
+script = ExtResource("1_mut")
+display_name = "Zombie"
+short_description = "Comes back to life once. Frail constitution."
+tint = Color(0.67, 0.63985, 0.60969996, 1)
+effect = SubResource("Effect")
+con_delta = -2

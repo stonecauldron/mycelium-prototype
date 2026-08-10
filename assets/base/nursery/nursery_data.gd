@@ -29,19 +29,19 @@ const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/late_bloomer.tres",
 ]
 const _BODY_MUTATION_PATHS: Array[String] = [
-	"res://assets/base/nursery/mutations/mini.tres",
-	"res://assets/base/nursery/mutations/lanky.tres",
-	"res://assets/base/nursery/mutations/fat.tres",
-	"res://assets/base/nursery/mutations/rubber.tres",
-	"res://assets/base/nursery/mutations/zombie.tres",
+	"res://assets/base/nursery/mutations/body/mini.tres",
+	"res://assets/base/nursery/mutations/body/lanky.tres",
+	"res://assets/base/nursery/mutations/body/fat.tres",
+	"res://assets/base/nursery/mutations/body/rubber.tres",
+	"res://assets/base/nursery/mutations/body/zombie.tres",
 ]
 const _CAP_MUTATION_PATHS: Array[String] = [
-	"res://assets/base/nursery/mutations/death.tres",
-	"res://assets/base/nursery/mutations/inky.tres",
-	"res://assets/base/nursery/mutations/boom.tres",
-	"res://assets/base/nursery/mutations/wall.tres",
-	"res://assets/base/nursery/mutations/bank.tres",
-	"res://assets/base/nursery/mutations/brood_empress.tres",
+	"res://assets/base/nursery/mutations/cap/death.tres",
+	"res://assets/base/nursery/mutations/cap/inky.tres",
+	"res://assets/base/nursery/mutations/cap/boom.tres",
+	"res://assets/base/nursery/mutations/cap/wall.tres",
+	"res://assets/base/nursery/mutations/cap/bank.tres",
+	"res://assets/base/nursery/mutations/cap/brood_empress.tres",
 ]
 
 @export var plots: Array = []
@@ -353,6 +353,11 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 		return false
 	var plot := plots[plot_index] as NurseryPlotData
 	plot.planted_spore = spore
+	# Lineage spores carry Body/Cap mutations from the fallen unit.
+	if spore.body_mutation != null:
+		plot.body_mutation = spore.body_mutation.duplicate(true) as MutationData
+	if spore.cap_mutation != null:
+		plot.cap_mutation = spore.cap_mutation.duplicate(true) as MutationData
 	plot.days_grown = plot.total_growth_bonus()
 	plot.snap_after_plant()
 	return true
@@ -471,13 +476,10 @@ func _make_harvest_units(
 ) -> Array[RosterUnitData]:
 	var units: Array[RosterUnitData] = []
 	var weapon := WeaponSchool.sickle()
-	var unit_strain := spore.resolved_strain() if spore != null else null
 	var tier := UnitStatsData.PowerTier.COMMON
-	if spore != null and (unit_strain == null or unit_strain.use_power_tier):
+	if spore != null:
 		tier = spore.power_tier
 	var lineage := spore != null and spore.is_lineage_spore()
-	if lineage:
-		tier = spore.power_tier
 	var stats: UnitStatsData
 	if lineage:
 		stats = UnitStatsData.create_around(spore.mean_stats)
@@ -489,16 +491,12 @@ func _make_harvest_units(
 		stats.dex = clampi(stats.dex + pending_stat_bonus, 1, 99)
 		stats.con = clampi(stats.con + pending_stat_bonus, 1, 99)
 		stats.spd = clampi(stats.spd + pending_stat_bonus, 1, 99)
-	if unit_strain != null:
-		unit_strain.apply_hatch_stats(stats)
 	if body_mutation != null:
 		body_mutation.apply_hatch_stats(stats)
 	if cap_mutation != null:
 		cap_mutation.apply_hatch_stats(stats)
 
 	var yield_count := 1
-	if unit_strain != null:
-		yield_count = maxi(unit_strain.hatch_count, 1)
 	var meiosis := false
 	var triploid := false
 	var force_amok := false
@@ -558,7 +556,6 @@ func _make_harvest_units(
 			hatch_name,
 			unit_stats,
 			weapon,
-			unit_strain,
 			tier
 		)
 		unit.lineage_name = hatch_lineage

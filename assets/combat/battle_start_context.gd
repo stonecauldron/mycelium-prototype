@@ -1,7 +1,7 @@
 class_name BattleStartContext
 extends RefCounted
 
-## Shared context for strain (and future seal) battle-start effects.
+## Shared context for mutation (and future seal) battle-start effects.
 ## Kill requests are deferred until after every unit's on_battle_start runs.
 
 var _pending_kills: Array[Dictionary] = []

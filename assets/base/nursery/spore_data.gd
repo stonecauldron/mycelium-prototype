@@ -115,8 +115,9 @@ static func from_fallen_unit(unit: RosterUnitData) -> SporeData:
 	spore.power_tier = unit.power_tier
 	spore.strain = unit.strain
 	if unit.stats != null:
-		# Keep hatch deltas baked into mean stats. Stock remix swaps Mutation identity
-		# only — it does not strip or rewrite those bloodline means.
+		# Keep hatch deltas baked into mean stats. Applying/replacing Mutations on
+		# the spore does not strip those means; harvest still applies the current
+		# Mutation hatch deltas on top.
 		spore.mean_stats = unit.stats.duplicate(true) as UnitStatsData
 	spore.weapon_trainings = []
 	for training in unit.weapon_trainings:

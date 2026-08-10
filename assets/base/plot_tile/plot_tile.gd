@@ -23,6 +23,8 @@ const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/s
 const _HOURGLASS_ICON := preload("res://assets/base/nursery/spore_card/hourglass_icon.png")
 const _HARVEST_ICON := preload("res://assets/combat/boom_cap_explosion/harvest_icon.png")
 const _HARVEST_CHIP_SIZE := Vector2(64, 64)
+const _PLOT_SLOT_CHIP_SIZE := Vector2(56, 56)
+const _PLOT_SLOT_CHIP_FONT_SIZE := 30
 const _EMPTY_CHIP_MODULATE := Color(1, 1, 1, 0.4)
 
 const _SHAKE_IDLE_NORMAL_SEC := 1.5
@@ -336,6 +338,8 @@ func _add_mutation_slot_chip(show_ghost: bool) -> void:
 		return
 	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
 	chip.icon = _MUTATION_ICON
+	chip.chip_size = _PLOT_SLOT_CHIP_SIZE
+	chip.value_font_size = _PLOT_SLOT_CHIP_FONT_SIZE
 	_stats_row.add_child(chip)
 	chip.mouse_filter = Control.MOUSE_FILTER_STOP
 	var icon := chip.get_node_or_null("%Icon") as TextureRect
@@ -366,6 +370,8 @@ func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:
 			continue
 		var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
 		chip.icon = _fertilizer_icon_atlas
+		chip.chip_size = _PLOT_SLOT_CHIP_SIZE
+		chip.value_font_size = _PLOT_SLOT_CHIP_FONT_SIZE
 		_stats_row.add_child(chip)
 		chip.mouse_filter = Control.MOUSE_FILTER_STOP
 		var icon := chip.get_node_or_null("%Icon") as TextureRect

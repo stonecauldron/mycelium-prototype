@@ -106,7 +106,7 @@ stretch_mode = 5
 
 [node name="StatsRow" type="HBoxContainer" parent="Content/Margin/Stack" unique_id=61749301]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0

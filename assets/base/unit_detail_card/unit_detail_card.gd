@@ -17,7 +17,9 @@ var _mutation_chip: StatChip = null
 @onready var _card_panel: PanelContainer = $CardPanel
 @onready var _name_label: Label = %NameLabel
 @onready var _type_label: Label = %TypeLabel
-@onready var _desc_label: Label = %DescLabel
+@onready var _mutations_list: Control = %MutationsList
+@onready var _cap_label: Label = %CapLabel
+@onready var _body_label: Label = %BodyLabel
 @onready var _age_label: Label = %AgeLabel
 @onready var _stage_tag: TagChip = %StageTag
 @onready var _tier_tag: TagChip = %TierTag
@@ -189,13 +191,28 @@ func _refresh_mutation_chip() -> void:
 func _refresh_mutation_meta() -> void:
 	if unit_data.enemy_unit_data != null:
 		_type_label.text = unit_data.enemy_unit_data.display_name
-		_desc_label.text = ""
-		_desc_label.visible = false
+		if _mutations_list != null:
+			_mutations_list.visible = false
 	else:
 		_type_label.text = "Mutations"
-		_desc_label.text = "\n".join(unit_data.mutation_summary_lines())
-		_desc_label.visible = true
+		if _mutations_list != null:
+			_mutations_list.visible = true
+		_set_mutation_row_label(_cap_label, unit_data.cap_mutation)
+		_set_mutation_row_label(_body_label, unit_data.body_mutation)
 	_age_label.text = _age_text(unit_data.days_alive)
+
+
+func _set_mutation_row_label(label: Label, mutation: MutationData) -> void:
+	if label == null:
+		return
+	if mutation == null:
+		label.text = "None"
+		return
+	var effect := mutation.subtitle_text()
+	if effect.is_empty():
+		label.text = mutation.display_name
+	else:
+		label.text = "%s — %s" % [mutation.display_name, effect]
 
 
 func _refresh_tags() -> void:

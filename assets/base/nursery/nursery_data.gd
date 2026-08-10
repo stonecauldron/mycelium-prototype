@@ -353,16 +353,35 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 		return false
 	var plot := plots[plot_index] as NurseryPlotData
 	plot.planted_spore = spore
-	# Seed plot mutation slots from prepared lineage (or empty fresh) spores.
-	plot.body_mutation = (
-		spore.body_mutation.duplicate(true) as MutationData if spore.body_mutation != null else null
-	)
-	plot.cap_mutation = (
-		spore.cap_mutation.duplicate(true) as MutationData if spore.cap_mutation != null else null
-	)
+	_merge_mutations_on_plant(plot, spore)
 	plot.days_grown = plot.total_growth_bonus()
 	plot.snap_after_plant()
 	return true
+
+
+## Same slot: spore overwrites plot. Different slots: merge, then clamp to capacity 1
+## by keeping the spore's mutation and dropping the plot-only other slot.
+func _merge_mutations_on_plant(plot: NurseryPlotData, spore: SporeData) -> void:
+	var spore_had_body := spore.body_mutation != null
+	var spore_had_cap := spore.cap_mutation != null
+	var body: MutationData = (
+		spore.body_mutation.duplicate(true) as MutationData if spore_had_body else plot.body_mutation
+	)
+	var cap: MutationData = (
+		spore.cap_mutation.duplicate(true) as MutationData if spore_had_cap else plot.cap_mutation
+	)
+	if body != null and cap != null:
+		# Prefer spore identity when both slots would fill past capacity.
+		if spore_had_body and not spore_had_cap:
+			cap = null
+		elif spore_had_cap and not spore_had_body:
+			body = null
+		elif spore_had_body and spore_had_cap:
+			# Death spores should only carry one under capacity rules; if both exist,
+			# keep body (arbitrary stable pick) so the plot stays at one mutation.
+			cap = null
+	plot.body_mutation = body
+	plot.cap_mutation = cap
 
 
 func apply_fertilizer_from_stock(plot_index: int, stock_index: int) -> bool:
@@ -411,33 +430,6 @@ func apply_mutation_to_plot(plot_index: int, mutation: MutationData) -> bool:
 	if plot == null:
 		return false
 	return plot.apply_mutation(mutation)
-
-
-## Apply a stock Mutation onto a lineage spore in another stock slot (replace consumes).
-func apply_mutation_from_stock_to_lineage_spore(
-	spore_stock_index: int,
-	mutation_stock_index: int
-) -> bool:
-	_ensure_stock()
-	if spore_stock_index == mutation_stock_index:
-		return false
-	var mutation := stock.get_at(mutation_stock_index) as MutationData
-	if mutation == null:
-		return false
-	if not apply_mutation_to_lineage_spore(spore_stock_index, mutation):
-		return false
-	stock.clear_slot(mutation_stock_index)
-	return true
-
-
-func apply_mutation_to_lineage_spore(stock_index: int, mutation: MutationData) -> bool:
-	_ensure_stock()
-	if mutation == null:
-		return false
-	var spore := stock.get_at(stock_index) as SporeData
-	if spore == null:
-		return false
-	return spore.apply_mutation(mutation)
 
 
 func advance_day() -> Array[Dictionary]:

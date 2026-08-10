@@ -32,26 +32,36 @@ func _run() -> void:
 	if fert_count != 2 or mut_count != 2:
 		errs.append("expected 2+2 shop")
 
-	if not nursery.plant_spore(0, nursery.make_fresh_common_spore()):
-		errs.append("plant failed")
 	var boom := load("res://assets/base/nursery/mutations/cap/boom.tres") as MutationData
 	var fat := load("res://assets/base/nursery/mutations/body/fat.tres") as MutationData
 	var wall := load("res://assets/base/nursery/mutations/cap/wall.tres") as MutationData
+
+	# Empty plots accept mutations (capacity 1).
+	var empty_plot := NurseryPlotData.new()
+	if not empty_plot.apply_mutation(boom):
+		errs.append("empty plot should accept mutation")
+	if empty_plot.cap_mutation != boom:
+		errs.append("empty plot did not keep cap")
+	if empty_plot.apply_mutation(fat):
+		errs.append("capacity 1 should reject second slot on empty plot")
+	if not empty_plot.apply_mutation(wall):
+		errs.append("same-slot replace on empty plot failed")
+	if empty_plot.cap_mutation != wall or empty_plot.body_mutation != null:
+		errs.append("same-slot replace left wrong slots")
+
+	if not nursery.plant_spore(0, nursery.make_fresh_common_spore()):
+		errs.append("plant failed")
 	if not nursery.apply_mutation_to_plot(0, boom):
 		errs.append("apply boom failed")
-	if not nursery.apply_mutation_to_plot(0, fat):
-		errs.append("apply fat failed")
+	if nursery.apply_mutation_to_plot(0, fat):
+		errs.append("capacity 1 should reject body while cap filled")
 	var plot := nursery.plots[0] as NurseryPlotData
-	if plot.cap_mutation != boom or plot.body_mutation != fat:
-		errs.append("plot slots wrong")
+	if plot.cap_mutation != boom or plot.body_mutation != null:
+		errs.append("plot slots wrong after capacity reject")
 	if not nursery.apply_mutation_to_plot(0, wall):
 		errs.append("replace failed")
 	if plot.cap_mutation != wall:
 		errs.append("replace did not consume prior cap")
-
-	# Empty plot rejects mutations.
-	if NurseryPlotData.new().apply_mutation(boom):
-		errs.append("empty plot should reject mutation")
 
 	# force_ready (Triploid) must not block mutation apply on READY plots.
 	var ready_plot := NurseryPlotData.new()
@@ -69,13 +79,12 @@ func _run() -> void:
 	if units.is_empty():
 		errs.append("harvest empty")
 	for u in units:
-		if u.body_mutation == null or u.body_mutation.display_name != "Fat":
-			errs.append("body clone missing")
 		if u.cap_mutation == null or u.cap_mutation.display_name != "Wall":
 			errs.append("cap clone missing")
-		if u.body_mutation == fat:
-			errs.append("body not duplicated")
-		# Fat hatch deltas applied
+		if u.body_mutation != null:
+			errs.append("harvest should not clone empty body")
+		if u.cap_mutation == wall:
+			errs.append("cap not duplicated")
 		if u.stats == null:
 			errs.append("missing stats")
 
@@ -96,7 +105,8 @@ func _run() -> void:
 	var triploid := load("res://assets/base/nursery/fertilizers/triploid_cells.tres") as FertilizerData
 	nursery.plant_spore(0, nursery.make_fresh_common_spore())
 	nursery.apply_mutation_to_plot(0, fat)
-	nursery.apply_mutation_to_plot(0, boom)
+	if nursery.apply_mutation_to_plot(0, boom):
+		errs.append("triploid setup should not allow second mutation")
 	nursery.apply_fertilizer_to_plot(0, triploid)
 	plot = nursery.plots[0] as NurseryPlotData
 	plot.days_grown = plot.days_to_mature_effective()
@@ -107,8 +117,8 @@ func _run() -> void:
 	for u in units:
 		if u.body_mutation == null or u.body_mutation.display_name != "Fat":
 			errs.append("triploid body clone")
-		if u.cap_mutation == null or u.cap_mutation.display_name != "Boom":
-			errs.append("triploid cap clone")
+		if u.cap_mutation != null:
+			errs.append("triploid should not have cap")
 
 	var starter := StarterPackages.preview_unit(StarterPackages.all_ids()[0])
 	if starter.body_mutation != null or starter.cap_mutation != null:
@@ -141,11 +151,10 @@ func _run() -> void:
 		elif not GameState.try_sell_nursery_stock_item(stock_idx):
 			errs.append("sell mutation failed")
 
-	# Spreader stays fertilizer-only: mutation apply ignores stack count.
 	var stacks := SealModifiers.max_fertilizer_stacks()
 	print("fert stacks=", stacks, " (spreader only affects ferts)")
 
-	_check_lineage_mutations(errs)
+	_check_lineage_and_plant_merge(errs)
 
 	if errs.is_empty():
 		print("ALL CHECKS PASSED")
@@ -157,7 +166,7 @@ func _run() -> void:
 		get_tree().quit(1)
 
 
-func _check_lineage_mutations(errs: Array[String]) -> void:
+func _check_lineage_and_plant_merge(errs: Array[String]) -> void:
 	var boom := load("res://assets/base/nursery/mutations/cap/boom.tres") as MutationData
 	var fat := load("res://assets/base/nursery/mutations/body/fat.tres") as MutationData
 	var wall := load("res://assets/base/nursery/mutations/cap/wall.tres") as MutationData
@@ -172,16 +181,13 @@ func _check_lineage_mutations(errs: Array[String]) -> void:
 	adult.lineage_name = "Darwin"
 	adult.generation = 1
 	adult.is_imago = true
-	adult.body_mutation = fat.duplicate(true) as MutationData
 	adult.cap_mutation = boom.duplicate(true) as MutationData
 	adult.weapon_trainings = [WeaponSchool.Id.SWORD as int]
 	adult.applied_fertilizers = [meiosis]
-	# Live adult stats already include Mutation hatch deltas (as after a real hatch).
 	adult.stats.strength = 10
 	adult.stats.dex = 10
 	adult.stats.con = 10
 	adult.stats.spd = 10
-	fat.apply_hatch_stats(adult.stats)
 	boom.apply_hatch_stats(adult.stats)
 	var live_str := adult.stats.strength
 
@@ -205,13 +211,12 @@ func _check_lineage_mutations(errs: Array[String]) -> void:
 		)
 	if spore.weapon_trainings.size() != 1:
 		errs.append("lineage lost trainings")
-	if spore.body_mutation == null or spore.body_mutation.display_name != "Fat":
-		errs.append("lineage missing body mutation snapshot")
 	if spore.cap_mutation == null or spore.cap_mutation.display_name != "Boom":
 		errs.append("lineage missing cap mutation snapshot")
-	if spore.body_mutation == adult.body_mutation:
-		errs.append("body mutation not duplicated on emit")
-	# Fertilizers must not ride the spore as items.
+	if spore.body_mutation != null:
+		errs.append("lineage should not snapshot empty body")
+	if spore.cap_mutation == adult.cap_mutation:
+		errs.append("cap mutation not duplicated on emit")
 	if spore.get("applied_fertilizers") != null:
 		errs.append("spore should not expose fertilizer items")
 
@@ -222,49 +227,28 @@ func _check_lineage_mutations(errs: Array[String]) -> void:
 	if nursery.add_death_spore(child) != null:
 		errs.append("child should not emit lineage spore")
 
-	# Stock prep / replace on lineage spore.
-	if not nursery.add_mutation(wall.duplicate(true) as MutationData):
-		errs.append("add wall mutation to stock failed")
-	var spore_idx := -1
-	var mut_idx := -1
-	for i in nursery.stock.slots.size():
-		var item: Resource = nursery.stock.slots[i]
-		if item == spore:
-			spore_idx = i
-		elif item is MutationData and (item as MutationData).display_name == "Wall":
-			mut_idx = i
-	if spore_idx < 0 or mut_idx < 0:
-		errs.append("stock indices missing for lineage prep")
-	elif not nursery.apply_mutation_from_stock_to_lineage_spore(spore_idx, mut_idx):
-		errs.append("stock lineage mutation apply failed")
-	elif spore.cap_mutation == null or spore.cap_mutation.display_name != "Wall":
-		errs.append("lineage replace did not consume prior cap")
-	elif nursery.stock.get_at(mut_idx) != null:
-		errs.append("mutation stock slot not consumed after lineage prep")
+	# Spores no longer expose mutation apply API.
+	if spore.has_method("apply_mutation"):
+		errs.append("SporeData.apply_mutation should be removed")
 
-	# Non-lineage spores reject prep.
-	var fresh := nursery.make_fresh_common_spore()
-	if fresh.apply_mutation(boom):
-		errs.append("fresh spore should reject mutation prep")
-
-	# Plant + harvest yields Children with prepared Mutations.
+	# Plant keeps spore mutation when plot empty.
 	if not nursery.plant_spore(0, spore):
 		errs.append("plant lineage spore failed")
 	var plot := nursery.plots[0] as NurseryPlotData
-	if plot.body_mutation == null or plot.body_mutation.display_name != "Fat":
-		errs.append("plant did not seed body onto plot")
-	if plot.cap_mutation == null or plot.cap_mutation.display_name != "Wall":
+	if plot.cap_mutation == null or plot.cap_mutation.display_name != "Boom":
 		errs.append("plant did not seed cap onto plot")
+	if plot.body_mutation != null:
+		errs.append("plant should not invent body")
 	plot.days_grown = plot.days_to_mature_effective()
 	var units := nursery.harvest(0)
 	print("lineage hatch=", units.size())
 	if units.is_empty():
 		errs.append("lineage harvest empty")
 	for u in units:
-		if u.body_mutation == null or u.body_mutation.display_name != "Fat":
-			errs.append("lineage child missing body")
-		if u.cap_mutation == null or u.cap_mutation.display_name != "Wall":
+		if u.cap_mutation == null or u.cap_mutation.display_name != "Boom":
 			errs.append("lineage child missing cap")
+		if u.body_mutation != null:
+			errs.append("lineage child should not have body")
 		if u.is_adult_stage():
 			errs.append("lineage harvest should yield Children")
 		if u.power_tier != UnitStatsData.PowerTier.UNCOMMON:
@@ -272,8 +256,41 @@ func _check_lineage_mutations(errs: Array[String]) -> void:
 		if u.weapon_trainings.size() != 1:
 			errs.append("lineage child lost trainings")
 
-	# Detail lines for prepared mutations.
+	# Plant merge: plot body + spore cap → clamp prefers spore (cap).
+	nursery.plots[0] = NurseryPlotData.new()
+	nursery.plots[0].apply_mutation(fat)
+	var spore2 := SporeData.from_fallen_unit(adult)
+	if spore2 == null:
+		errs.append("second lineage spore failed")
+		return
+	if not nursery.plant_spore(0, spore2):
+		errs.append("plant merge failed")
+	var merged := nursery.plots[0] as NurseryPlotData
+	if merged.cap_mutation == null or merged.cap_mutation.display_name != "Boom":
+		errs.append("merge clamp should keep spore cap")
+	if merged.body_mutation != null:
+		errs.append("merge clamp should drop plot-only body")
+
+	# Same-slot overwrite: plot Wall + spore Boom → Boom.
+	nursery.plots[0] = NurseryPlotData.new()
+	nursery.plots[0].apply_mutation(wall)
+	var spore3 := SporeData.from_fallen_unit(adult)
+	if not nursery.plant_spore(0, spore3):
+		errs.append("same-slot plant failed")
+	var overwritten := nursery.plots[0] as NurseryPlotData
+	if overwritten.cap_mutation == null or overwritten.cap_mutation.display_name != "Boom":
+		errs.append("same-slot plant should overwrite with spore")
+
+	# Plot-only kept when spore has no mutation.
+	nursery.plots[0] = NurseryPlotData.new()
+	nursery.plots[0].apply_mutation(fat)
+	if not nursery.plant_spore(0, nursery.make_fresh_common_spore()):
+		errs.append("fresh plant onto staged plot failed")
+	var kept := nursery.plots[0] as NurseryPlotData
+	if kept.body_mutation == null or kept.body_mutation.display_name != "Fat":
+		errs.append("fresh plant should keep plot staged mutation")
+
 	var detail_spore := SporeData.from_fallen_unit(adult)
 	var tip := detail_spore.mutation_tooltip_lines()
-	if tip.size() < 2:
+	if tip.is_empty():
 		errs.append("spore detail mutation lines missing")

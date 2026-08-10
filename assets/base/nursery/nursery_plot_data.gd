@@ -4,6 +4,8 @@ extends Resource
 enum State { EMPTY, GROWING, READY }
 
 const FUNGICIDE_NEXT_SPORE_BONUS := 2
+## Plots hold at most one mutation (Body or Cap). Dual-slot remix deferred.
+const MAX_MUTATION_SLOTS := 1
 
 @export var planted_spore: SporeData
 @export var days_grown: int = 0
@@ -31,10 +33,35 @@ func can_apply_fertilizer() -> bool:
 	return applied_fertilizers.size() < SealModifiers.max_fertilizer_stacks()
 
 
-## Mutations apply while a spore is planted (GROWING or READY). Empty rejected.
-## READY is included so force_ready fertilizers (Triploid, etc.) do not block identity.
-func can_apply_mutation() -> bool:
-	return not is_empty()
+func mutation_count() -> int:
+	var count := 0
+	if body_mutation != null:
+		count += 1
+	if cap_mutation != null:
+		count += 1
+	return count
+
+
+## The single filled mutation when capacity is 1, or null when empty.
+func filled_mutation() -> MutationData:
+	if body_mutation != null:
+		return body_mutation
+	return cap_mutation
+
+
+## Mutations apply on empty or planted plots. At capacity, only same-slot replace is allowed.
+func can_apply_mutation(mutation: MutationData = null) -> bool:
+	if mutation == null:
+		return mutation_count() < MAX_MUTATION_SLOTS
+	if mutation.is_body():
+		if body_mutation != null:
+			return true
+		return mutation_count() < MAX_MUTATION_SLOTS
+	if mutation.is_cap():
+		if cap_mutation != null:
+			return true
+		return mutation_count() < MAX_MUTATION_SLOTS
+	return false
 
 
 ## Overgrowth removed: harvest always yields Child units.
@@ -105,7 +132,7 @@ func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 
 ## Assigns mutation to its Body/Cap slot. Same-kind replace consumes the previous.
 func apply_mutation(mutation: MutationData) -> bool:
-	if mutation == null or not can_apply_mutation():
+	if mutation == null or not can_apply_mutation(mutation):
 		return false
 	if mutation.is_body():
 		body_mutation = mutation

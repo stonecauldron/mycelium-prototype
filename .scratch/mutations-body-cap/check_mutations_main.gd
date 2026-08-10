@@ -199,9 +199,9 @@ func _check_lineage_mutations(errs: Array[String]) -> void:
 		errs.append("lineage lost tier")
 	if spore.mean_stats == null:
 		errs.append("lineage lost mean stats")
-	elif spore.mean_stats.strength != live_str:
+	elif spore.mean_stats.strength != 10:
 		errs.append(
-			"mean_stats should keep baked mutation hatch deltas (got STR %d, live was %d)"
+			"mean_stats should strip mutation hatch deltas (got STR %d, live was %d)"
 			% [spore.mean_stats.strength, live_str]
 		)
 	if spore.weapon_trainings.size() != 1:

@@ -1,9 +1,6 @@
 class_name RosterUnitData
 extends Resource
 
-## Natural (untrained) imago maturity bonus per stat.
-const IMAGO_STAT_BONUS := 1
-const DAYS_TO_IMAGO := 2
 const NO_LIFE_EXPECTANCY := -1
 const STAGE_JUVENILE := &"juvenile"
 const STAGE_IMAGO := &"imago"
@@ -143,27 +140,14 @@ func is_adult_stage() -> bool:
 	return is_imago or is_fully_evolved()
 
 
-func can_promote_to_imago() -> bool:
-	if is_imago or is_fully_evolved():
-		return false
-	return days_alive >= DAYS_TO_IMAGO
-
-
 func has_exceeded_life_expectancy() -> bool:
 	return max_days_alive >= 0 and days_alive > max_days_alive
 
 
-## Natural age / pupation promotion. Applies +1-all and Scythe if untrained.
-## Maturity bonuses scale with generation (same falloff as pupation training gains).
-func promote_to_imago(apply_maturity_stats: bool = true) -> bool:
+## Promote to Adult (Training emerge / starters). Applies Late Bloomer if pending.
+func promote_to_imago() -> bool:
 	if is_imago or is_fully_evolved():
 		return false
-	if apply_maturity_stats and stats != null:
-		var bonus := maturity_stat_bonus()
-		stats.strength = clampi(stats.strength + bonus, 1, 99)
-		stats.dex = clampi(stats.dex + bonus, 1, 99)
-		stats.con = clampi(stats.con + bonus, 1, 99)
-		stats.spd = clampi(stats.spd + bonus, 1, 99)
 	_apply_pending_adult_stat_bonus()
 	life_stage_id = STAGE_IMAGO
 	is_imago = true
@@ -190,18 +174,13 @@ func effective_cocoon_days() -> int:
 	return WeaponSchool.COCOON_DURATION_DAYS
 
 
-## Scaled IMAGO_STAT_BONUS for this unit's generation (toward zero).
-func maturity_stat_bonus() -> int:
-	return WeaponSchool.scale_stat_delta(IMAGO_STAT_BONUS, generation)
-
-
 ## Legacy alias — Adult/Evolved collapsed; dual training no longer uses a separate stage.
 func promote_to_fully_evolved() -> bool:
 	if is_fully_evolved():
 		life_stage_id = STAGE_IMAGO
 		is_imago = true
 		return true
-	return promote_to_imago(false)
+	return promote_to_imago()
 
 
 func can_pupate() -> bool:
@@ -228,7 +207,7 @@ func apply_pupation_training(school: int) -> bool:
 		weapon_trainings.pop_front()
 	WeaponSchool.apply_school_stats(stats, school, generation, pupation_stat_multiplier)
 	weapon_trainings.append(school)
-	promote_to_imago(false)
+	promote_to_imago()
 	sync_weapon_from_trainings()
 	return true
 

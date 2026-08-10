@@ -112,7 +112,7 @@ static func _make_evolved(unit_name: String, schools: Array) -> RosterUnitData:
 	for school in schools:
 		WeaponSchool.apply_school_stats(unit.stats, int(school))
 		unit.weapon_trainings.append(int(school))
-	unit.promote_to_imago(false)
+	unit.promote_to_imago()
 	unit.sync_weapon_from_trainings()
 	return unit
 

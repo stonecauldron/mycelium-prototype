@@ -93,11 +93,11 @@ The units in the troop that will fight the next battle.
 The units in the troop held out of the fighting lineup.
 
 **Child**:
-A unit that has not yet reached adult life stage.
+A unit that has not yet become an Adult through Training (or a starter package Adult).
 *Avoid*: juvenile (code id)
 
 **Adult**:
-A unit at adult life stage.
+A unit at adult life stage — reached by Training emerge, or granted by a starter package.
 *Avoid*: imago, fully_evolved (code ids)
 
 **Strain**:

@@ -80,24 +80,6 @@ static func add_fallen_unit(
 	entries.append(entry)
 
 
-static func add_unit_became_imago(unit: RosterUnitData) -> void:
-	if unit == null:
-		return
-	var bonus := unit.maturity_stat_bonus()
-	var text: String
-	if bonus > 0:
-		text = "%s has matured (+%d all STATS)." % [unit.display_name, bonus]
-	elif bonus < 0:
-		text = "%s has matured (%d all STATS)." % [unit.display_name, bonus]
-	else:
-		text = "%s has matured." % unit.display_name
-	entries.append({
-		"text": text,
-		"formation_line": int(unit.get_formation_line()),
-		"unit": unit,
-	})
-
-
 static func add_unit_emerged_from_pupation(unit: RosterUnitData, school: int) -> void:
 	if unit == null:
 		return

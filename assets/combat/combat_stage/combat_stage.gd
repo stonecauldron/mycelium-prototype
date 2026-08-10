@@ -755,9 +755,7 @@ func _check_battle_end() -> void:
 		DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)
 	for unit in _fallen_units:
 		DaySummaryFeed.add_fallen_unit(unit)
-	var grown := GameState.troop.advance_unit_ages()
-	for unit in grown:
-		DaySummaryFeed.add_unit_became_imago(unit)
+	GameState.troop.advance_unit_ages()
 	var emerged := GameState.emerge_pupations()
 	for entry in emerged:
 		DaySummaryFeed.add_unit_emerged_from_pupation(

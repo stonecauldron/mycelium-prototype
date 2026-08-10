@@ -114,8 +114,7 @@ func remove_unit(unit_data: RosterUnitData) -> void:
 			bench[i] = null
 
 
-func advance_unit_ages() -> Array[RosterUnitData]:
-	var matured: Array[RosterUnitData] = []
+func advance_unit_ages() -> void:
 	var aged_out: Array[RosterUnitData] = []
 	for unit in _iter_living_units():
 		unit.days_alive += 1
@@ -126,8 +125,6 @@ func advance_unit_ages() -> Array[RosterUnitData]:
 			unit.stats.con = clampi(unit.stats.con - decay, 1, 99)
 			unit.stats.spd = clampi(unit.stats.spd - decay, 1, 99)
 		unit.call_lifecycle_effect(&"on_day", [unit])
-		if unit.can_promote_to_imago() and unit.promote_to_imago():
-			matured.append(unit)
 		if unit.has_exceeded_life_expectancy():
 			aged_out.append(unit)
 	for unit in aged_out:
@@ -140,7 +137,6 @@ func advance_unit_ages() -> Array[RosterUnitData]:
 		if unit.emitted_death_spore or unit.last_death_biomass_yield > 0:
 			DaySummaryFeed.add_fallen_unit(unit, MutationEffect.DeathContext.AGED_OUT)
 		remove_unit(unit)
-	return matured
 
 
 func _iter_living_units() -> Array[RosterUnitData]:

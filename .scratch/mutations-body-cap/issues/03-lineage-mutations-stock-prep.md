@@ -4,12 +4,16 @@
 
 **Blocked by:** 02 — Mutations in Shop → Plot → hatch → combat
 
-**Status:** ready-for-agent
+**Status:** ready-for-human
 
-- [ ] Adult compost / battle death Lineage spores snapshot Body and Cap Mutations
-- [ ] Lineage spores do not carry Fertilizer items (baked stats may still ride mean stats)
-- [ ] Lineage spores retain parent Tier, trainings, and mean stats as before
-- [ ] Mutations can be applied/replaced on a Lineage spore in Stock (replace consumes)
-- [ ] Lineage spore detail shows prepared Mutations
-- [ ] Planting and harvesting a prepared Lineage spore yields Children with those slots
-- [ ] Children still do not emit Lineage spores
+- [x] Adult compost / battle death Lineage spores snapshot Body and Cap Mutations
+- [x] Lineage spores do not carry Fertilizer items (baked stats may still ride mean stats)
+- [x] Lineage spores retain parent Tier, trainings, and mean stats as before
+- [x] Mutations can be applied/replaced on a Lineage spore in Stock (replace consumes)
+- [x] Lineage spore detail shows prepared Mutations
+- [x] Planting and harvesting a prepared Lineage spore yields Children with those slots
+- [x] Children still do not emit Lineage spores
+
+## Comments
+
+- Implemented: `SporeData` Body/Cap fields + `from_fallen_unit` snapshot; Stock drag prep/replace via `NurseryData.apply_mutation_*_lineage_spore` (shop apply works even when Stock is full); `plant_spore` seeds plot slots; `SporeDetailCard` shows prepared Mutations; Children still gated by `is_adult_stage()`. Check script extended under `.scratch/mutations-body-cap/check_mutations_main.gd`.

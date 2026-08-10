@@ -191,6 +191,18 @@ size_flags_horizontal = 4
 theme_override_constants/separation = 8
 alignment = 1
 
+[node name="MutationsLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/font_size = 20
+text = "Mutations"
+horizontal_alignment = 1
+autowrap_mode = 3
+
 [node name="PlotSection" type="VBoxContainer" parent="CardPanel/Margin/VBox"]
 unique_name_in_owner = true
 visible = false

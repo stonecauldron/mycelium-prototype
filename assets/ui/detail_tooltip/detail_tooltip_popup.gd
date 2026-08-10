@@ -4,10 +4,16 @@ extends RefCounted
 ## Strip engine PopupPanel chrome and size the window from the tip's measured content.
 ## Call from _make_custom_tooltip after building the tip Control.
 
+const _FIT_PENDING_META := "_detail_tip_fit_pending"
+
 
 static func configure(tip: Control) -> void:
-	if tip == null:
+	if tip == null or not is_instance_valid(tip):
 		return
+	# Idempotent while a fit is already queued (e.g. plot tip refresh mid-hover).
+	if tip.get_meta(_FIT_PENDING_META, false):
+		return
+	tip.set_meta(_FIT_PENDING_META, true)
 	if tip.is_inside_tree():
 		_schedule_fit(tip)
 	else:
@@ -19,12 +25,18 @@ static func _schedule_fit(tip: Control) -> void:
 		return
 	var tree := tip.get_tree()
 	if tree == null:
+		tip.set_meta(_FIT_PENDING_META, false)
 		return
 	# Wait one layout frame so labels/containers resolve autowrap height.
-	tree.process_frame.connect(_apply.bind(tip), CONNECT_ONE_SHOT)
+	var cb := _apply.bind(tip)
+	if tree.process_frame.is_connected(cb):
+		return
+	tree.process_frame.connect(cb, CONNECT_ONE_SHOT)
 
 
 static func _apply(tip: Control) -> void:
+	if tip != null and is_instance_valid(tip):
+		tip.set_meta(_FIT_PENDING_META, false)
 	if tip == null or not is_instance_valid(tip) or not tip.is_inside_tree():
 		return
 	_prepare_tip(tip)

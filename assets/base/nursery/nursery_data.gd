@@ -525,10 +525,13 @@ func _make_harvest_units(
 		stats.spd = clampi(stats.spd + pending_stat_bonus, 1, 99)
 	if unit_strain != null:
 		unit_strain.apply_hatch_stats(stats)
-	if body_mutation != null:
-		body_mutation.apply_hatch_stats(stats)
-	if cap_mutation != null:
-		cap_mutation.apply_hatch_stats(stats)
+	# Lineage mean_stats already include the parent's Mutation hatch deltas; Stock
+	# remix must not strip those means or re-apply deltas for the new slots.
+	if not lineage:
+		if body_mutation != null:
+			body_mutation.apply_hatch_stats(stats)
+		if cap_mutation != null:
+			cap_mutation.apply_hatch_stats(stats)
 
 	var yield_count := 1
 	if unit_strain != null:

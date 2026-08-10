@@ -45,16 +45,6 @@ func apply_hatch_stats(stats: UnitStatsData) -> void:
 	stats.spd = clampi(stats.spd + spd_delta, 1, 99)
 
 
-## Undo hatch deltas so lineage mean_stats can re-apply the (possibly remixed) slots once.
-func strip_hatch_stats(stats: UnitStatsData) -> void:
-	if stats == null:
-		return
-	stats.strength = clampi(stats.strength - strength_delta, 1, 99)
-	stats.dex = clampi(stats.dex - dex_delta, 1, 99)
-	stats.con = clampi(stats.con - con_delta, 1, 99)
-	stats.spd = clampi(stats.spd - spd_delta, 1, 99)
-
-
 func call_effect(method: StringName, args: Array = []) -> void:
 	if effect == null or not effect.has_method(method):
 		return

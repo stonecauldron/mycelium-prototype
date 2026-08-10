@@ -241,18 +241,6 @@ func _update_stock_slot_accepts() -> void:
 		_intake_drag_types,
 		GameState.nursery.can_add_stock_item()
 	)
-	# Lineage spores still accept shop Mutations for prep when Stock is full
-	# (apply consumes the offer; it does not need a free stock slot).
-	var stock := GameState.nursery.stock
-	if stock == null:
-		return
-	for slot in _stock_slots:
-		var item := stock.get_at(slot.slot_index)
-		if item is SporeData and (item as SporeData).is_lineage_spore():
-			var types := slot.accepted_drag_types.duplicate()
-			if "shop_mutation" not in types:
-				types.append("shop_mutation")
-			slot.accepted_drag_types = types
 
 
 func _refresh() -> void:
@@ -329,50 +317,12 @@ func _on_shop_offer_clicked(card: ShopOfferCard) -> void:
 
 
 func _on_stock_item_dropped(slot: DropSlot, data: Dictionary) -> void:
-	# Mutation prep onto a lineage spore must win over stock rearrange / shop buy.
-	if _try_apply_mutation_to_lineage_stock(slot.slot_index, data):
-		return
 	if StockInventory.consume_stock_rearrange(
 		GameState.nursery.stock, data, slot.slot_index, _stock_drag_types
 	):
 		_refresh()
 		return
 	_try_buy_shop_payload(data)
-
-
-## Drag Mutation from Stock/Shop onto a lineage spore card to prep/replace slots.
-## Returns true when the drop targeted a lineage spore (consumed even if apply fails),
-## so we never fall through to rearrange/buy on that card.
-func _try_apply_mutation_to_lineage_stock(spore_stock_index: int, data: Dictionary) -> bool:
-	var drop_type := str(data.get("type", ""))
-	if drop_type != "mutation" and drop_type != "shop_mutation":
-		return false
-	var nursery := GameState.nursery
-	var spore := nursery.stock.get_at(spore_stock_index) as SporeData
-	if spore == null or not spore.is_lineage_spore():
-		return false
-	if drop_type == "mutation":
-		var mut_index := int(data.get("stock_index", -1))
-		if nursery.apply_mutation_from_stock_to_lineage_spore(spore_stock_index, mut_index):
-			_refresh()
-		return true
-	# shop_mutation: pay, apply, replace offer (same grammar as plot apply).
-	var mutation := data.get("mutation") as MutationData
-	var cost := int(data.get("cost", 0))
-	var slot_index := int(data.get("slot_index", -1))
-	if mutation == null:
-		return true
-	GameState.ensure_nursery_seeded()
-	if not GameState.biomass.try_spend(cost):
-		return true
-	if not nursery.apply_mutation_to_lineage_spore(spore_stock_index, mutation):
-		GameState.biomass.add(cost)
-		return true
-	_replace_bought_shop_slot(slot_index)
-	_rebuild_shop_cards()
-	_refresh()
-	_refresh_base_hud()
-	return true
 
 
 func _on_stock_spore_clicked(card: SporeCard) -> void:

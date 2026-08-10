@@ -22,6 +22,7 @@ const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/s
 const _HOURGLASS_ICON := preload("res://assets/base/nursery/spore_card/hourglass_icon.png")
 const _HARVEST_ICON := preload("res://assets/combat/boom_cap_explosion/harvest_icon.png")
 const _HARVEST_CHIP_SIZE := Vector2(64, 64)
+const _EMPTY_CHIP_MODULATE := Color(1, 1, 1, 0.4)
 
 const _SHAKE_IDLE_NORMAL_SEC := 1.5
 const _SHAKE_IDLE_IMAGO_SEC := 0.8
@@ -146,7 +147,8 @@ func _accepts_drag_data(data: Variant) -> bool:
 			return false
 		return state == NurseryPlotData.State.EMPTY or state == NurseryPlotData.State.GROWING
 	if drop_type == "shop_mutation" or drop_type == "mutation":
-		return _plot.can_apply_mutation()
+		var mutation := data.get("mutation") as MutationData
+		return _plot.can_apply_mutation(mutation)
 	return false
 
 
@@ -321,54 +323,55 @@ func _refresh_fertilizer_chips() -> void:
 	_clear_fertilizer_chips()
 	if _plot == null or _stats_row == null:
 		return
-	_add_mutation_chip(_plot.body_mutation)
-	_add_mutation_chip(_plot.cap_mutation)
-	if _plot.applied_fertilizers.is_empty():
-		return
-	var counts: Dictionary = {}
-	var order: Array[FertilizerData] = []
-	for fert in _plot.applied_fertilizers:
-		if fert == null:
-			continue
-		var key := fert.display_name
-		if not counts.has(key):
-			counts[key] = 0
-			order.append(fert)
-		counts[key] = int(counts[key]) + 1
-	for fert in order:
-		var count := int(counts.get(fert.display_name, 0))
-		if count <= 0:
-			continue
-		var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
-		chip.icon = _fertilizer_icon_atlas
-		_stats_row.add_child(chip)
-		chip.set_value(count)
-		var icon := chip.get_node_or_null("%Icon") as TextureRect
-		if icon != null:
-			icon.self_modulate = fert.tint
-		# StatChip defaults to IGNORE; re-enable so hover can show effects.
-		chip.mouse_filter = Control.MOUSE_FILTER_STOP
-		chip.tooltip_text = _fertilizer_chip_tooltip(fert, count)
-		_fertilizer_chips.append(chip)
+	_add_mutation_slot_chip()
+	_add_fertilizer_slot_chips()
 
 
-func _add_mutation_chip(mutation: MutationData) -> void:
-	if mutation == null or _stats_row == null:
-		return
+func _add_mutation_slot_chip() -> void:
+	var mutation := _plot.filled_mutation()
 	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
 	chip.icon = _fertilizer_icon_atlas
 	_stats_row.add_child(chip)
-	chip.set_value(mutation.slot_label().substr(0, 1))
-	var icon := chip.get_node_or_null("%Icon") as TextureRect
-	if icon != null:
-		icon.self_modulate = mutation.tint
 	chip.mouse_filter = Control.MOUSE_FILTER_STOP
-	chip.tooltip_text = "%s: %s\n%s" % [
-		mutation.slot_label(),
-		mutation.display_name,
-		mutation.subtitle_text(),
-	]
+	var icon := chip.get_node_or_null("%Icon") as TextureRect
+	if mutation == null:
+		chip.set_value()
+		if icon != null:
+			icon.self_modulate = _EMPTY_CHIP_MODULATE
+		chip.tooltip_text = "Mutation"
+	else:
+		chip.set_value(mutation.slot_label().substr(0, 1))
+		if icon != null:
+			icon.self_modulate = mutation.tint
+		chip.tooltip_text = "%s: %s\n%s" % [
+			mutation.slot_label(),
+			mutation.display_name,
+			mutation.subtitle_text(),
+		]
 	_fertilizer_chips.append(chip)
+
+
+func _add_fertilizer_slot_chips() -> void:
+	var max_stacks := SealModifiers.max_fertilizer_stacks()
+	var applied := _plot.applied_fertilizers
+	for i in max_stacks:
+		var fert: FertilizerData = applied[i] if i < applied.size() else null
+		var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
+		chip.icon = _fertilizer_icon_atlas
+		_stats_row.add_child(chip)
+		chip.mouse_filter = Control.MOUSE_FILTER_STOP
+		var icon := chip.get_node_or_null("%Icon") as TextureRect
+		if fert == null:
+			chip.set_value()
+			if icon != null:
+				icon.self_modulate = _EMPTY_CHIP_MODULATE
+			chip.tooltip_text = "Fertilizer"
+		else:
+			chip.set_value()
+			if icon != null:
+				icon.self_modulate = fert.tint
+			chip.tooltip_text = _fertilizer_chip_tooltip(fert, 1)
+		_fertilizer_chips.append(chip)
 
 
 func _fertilizer_chip_tooltip(fert: FertilizerData, count: int) -> String:

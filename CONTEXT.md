@@ -48,18 +48,18 @@ A plantable Nursery item that grows into Child units. Shop offers are not spores
 *Avoid*: seed, egg
 
 **Lineage spore**:
-A spore produced when an Adult is composted or dies in battle, carrying that unit's lineage, weapon-school Trainings, and Mutations (not Fertilizers). Mutations on a lineage spore can be prepared or replaced in Stock before planting.
+A spore produced when an Adult is composted or dies in battle, carrying that unit's lineage, weapon-school Trainings, and Mutations (not Fertilizers). Mutations are applied on plots only — not prepped onto spores in Stock. Death spores may still snapshot the parent's mutation.
 *Avoid*: death spore (code name)
 
 **Plot**:
-A Nursery slot where a spore grows.
+A Nursery slot where a spore grows. Unlocked plots show blank Mutation and Fertilizer capacity chips that fill when items are applied.
 
 **Fertilizer**:
 A plot modifier that changes that grow's growth, hatch stats, or unit-life flags — not identity. Fertilizer items do not carry onto lineage spores (baked stats may still ride mean stats).
 *Avoid*: using Fertilizer for Boom/Death/Mini-style identity
 
 **Mutation**:
-An identity modifier applied in the Nursery. A unit has two slots — Body and Cap — each holding at most one Mutation (or empty). Assigned on a growing plot or prepared on a lineage spore in Stock; a new Mutation of that slot's kind replaces the previous one.
+An identity modifier applied in the Nursery on a plot (including empty dirt). Plots and harvested units hold at most one Mutation for now — Body **or** Cap (typed fields remain; the other stays empty). Same-slot replace consumes the previous Mutation. Dual Body+Cap remix is deferred.
 *Avoid*: Fertilizer (when you mean identity), trait, strain effect (as the item type)
 
 **Body mutation**:

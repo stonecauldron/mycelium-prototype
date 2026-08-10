@@ -19,9 +19,10 @@ const _TIER_SPORE_PATHS := {
 @export var parent_generation: int = 1
 @export var mean_stats: UnitStatsData
 @export var weapon_trainings: Array[int] = []
-## Prepared Body mutation (lineage only; Fertilizers never ride spores).
+## Body/Cap snapshot from fallen units (Fertilizers never ride spores).
+## Mutations are applied on plots only — not prepped onto spores in Stock.
 @export var body_mutation: MutationData
-## Prepared Cap mutation (lineage only; Fertilizers never ride spores).
+## Cap snapshot from fallen units (see body_mutation).
 @export var cap_mutation: MutationData
 
 var tint: Color:
@@ -40,24 +41,6 @@ func is_lineage_spore() -> bool:
 ## Authored growth days after Greenhouse seal reduction (fertilizers applied on the plot).
 func days_to_mature_effective() -> int:
 	return maxi(days_to_mature - SealModifiers.greenhouse_day_reduction(), 0)
-
-
-## Mutations can be prepped on lineage spores in Stock; replace consumes the previous.
-func can_apply_mutation() -> bool:
-	return is_lineage_spore()
-
-
-## Assigns mutation to its Body/Cap slot. Same-kind replace consumes the previous.
-func apply_mutation(mutation: MutationData) -> bool:
-	if mutation == null or not can_apply_mutation():
-		return false
-	if mutation.is_body():
-		body_mutation = mutation
-		return true
-	if mutation.is_cap():
-		cap_mutation = mutation
-		return true
-	return false
 
 
 func mutation_tooltip_lines() -> PackedStringArray:

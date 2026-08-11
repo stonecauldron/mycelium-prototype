@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="5_tag"]
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="6_biomass"]
+[ext_resource type="PackedScene" path="res://assets/base/unit_detail_card/unit_detail_card_content.tscn" id="7_unit_content"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
 content_margin_left = 16.0
@@ -221,6 +222,11 @@ theme_override_font_sizes/font_size = 22
 text = ""
 horizontal_alignment = 1
 autowrap_mode = 3
+
+[node name="UnitDetailCardContent" parent="CardPanel/Margin/VBox" instance=ExtResource("7_unit_content")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 
 [node name="FooterSpacer" type="Control" parent="CardPanel/Margin/VBox"]
 layout_mode = 2

@@ -30,6 +30,8 @@ var _preview_unit: RosterUnitData = null
 @onready var _plot_section: VBoxContainer = %PlotSection
 @onready var _status_label: Label = %StatusLabel
 @onready var _plot_info_label: Label = %PlotInfoLabel
+## Typed at runtime via unit_detail_card_content.gd (class_name UnitDetailCardContent).
+@onready var _unit_content = %UnitDetailCardContent
 @onready var _lineage_section: VBoxContainer = %LineageSection
 @onready var _portrait_host: Control = %PortraitHost
 @onready var _child_name_label: Label = %ChildNameLabel
@@ -41,6 +43,7 @@ var _preview_unit: RosterUnitData = null
 @onready var _trainings_row: HBoxContainer = %TrainingsRow
 @onready var _mutations_label: Label = %MutationsLabel
 @onready var _footer_spacer: Control = $CardPanel/Margin/VBox/FooterSpacer
+@onready var _footer_row: HBoxContainer = $CardPanel/Margin/VBox/FooterRow
 
 
 func setup(
@@ -90,6 +93,8 @@ func fit_to_content() -> void:
 		_portrait_host.clip_contents = false
 		_portrait_host.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 		_portrait_host.custom_minimum_size = Vector2(0.0, PORTRAIT_HOST_HEIGHT)
+	if _unit_content != null and _unit_content.visible:
+		_unit_content.apply_portrait_layout()
 	if _footer_spacer != null:
 		_footer_spacer.visible = false
 		_footer_spacer.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
@@ -116,7 +121,7 @@ func _refresh() -> void:
 	_refresh_price_row()
 	_refresh_tags()
 	_refresh_plot_section()
-	_refresh_lineage_section()
+	_refresh_hatch_preview()
 
 
 func _refresh_growth_row() -> void:
@@ -144,11 +149,19 @@ func _refresh_price_row() -> void:
 
 
 func _refresh_tags() -> void:
-	var generation := _preview_generation()
+	_hatch_tag.visible = false
+	if plot_data != null:
+		# Generation lives on the embedded unit detail content in plot mode.
+		_tier_tag.visible = false
+		if _footer_row != null:
+			_footer_row.visible = false
+		return
 	_tier_tag.visible = true
+	if _footer_row != null:
+		_footer_row.visible = true
+	var generation := _preview_generation()
 	_tier_tag.set_text(UnitNames.format_generation_label(generation))
 	_tier_tag.set_fill_color(UnitStatsData.tint_for_generation(generation))
-	_hatch_tag.visible = false
 
 
 func _refresh_plot_section() -> void:
@@ -157,18 +170,44 @@ func _refresh_plot_section() -> void:
 		return
 	_plot_section.visible = true
 	_status_label.text = _plot_status_text()
-	_plot_info_label.text = _plot_info_text()
-	_plot_info_label.visible = not _plot_info_label.text.is_empty()
+	var residue := plot_data.fungicide_residue_text()
+	_plot_info_label.text = residue
+	_plot_info_label.visible = not residue.is_empty()
 
 
-func _refresh_lineage_section() -> void:
+func _refresh_hatch_preview() -> void:
+	_preview_unit = _make_preview_unit()
+	if plot_data != null:
+		_refresh_plot_unit_content()
+		return
+	_refresh_stock_lineage_section()
+
+
+func _refresh_plot_unit_content() -> void:
+	if _lineage_section != null:
+		_lineage_section.visible = false
+	_clear_portrait()
+	_clear_trainings_row()
+	if _unit_content == null:
+		return
+	if _preview_unit == null:
+		_unit_content.visible = false
+		return
+	_unit_content.visible = true
+	_unit_content.setup(_preview_unit, true)
+	if _footer_spacer != null:
+		_footer_spacer.visible = false
+
+
+func _refresh_stock_lineage_section() -> void:
+	if _unit_content != null:
+		_unit_content.visible = false
 	if _lineage_section == null or spore_data == null:
 		return
 	var lineage := spore_data.is_lineage_spore()
 	_lineage_section.visible = true
 	if _footer_spacer != null:
 		_footer_spacer.visible = false
-	_preview_unit = _make_preview_unit()
 	if lineage:
 		_child_name_label.visible = true
 		_trainings_label.visible = true
@@ -274,7 +313,7 @@ func _clear_trainings_row() -> void:
 func _refresh_mutations_label() -> void:
 	if _mutations_label == null or spore_data == null:
 		return
-	# Plot tooltips already list plot Mutations; stock lineage shows prepared slots.
+	# Plot tooltips list Mutations on the embedded unit card; stock lineage shows prepared slots.
 	if plot_data != null or not spore_data.is_lineage_spore():
 		_mutations_label.visible = false
 		return
@@ -333,6 +372,7 @@ func _make_preview_unit() -> RosterUnitData:
 	)
 	unit.sync_weapon_from_trainings()
 	_apply_preview_mutations(unit)
+	_apply_preview_fertilizers(unit)
 	return unit
 
 
@@ -346,6 +386,18 @@ func _apply_preview_mutations(unit: RosterUnitData) -> void:
 		unit.body_mutation = body.duplicate(true) as MutationData
 	if cap != null:
 		unit.cap_mutation = cap.duplicate(true) as MutationData
+
+
+func _apply_preview_fertilizers(unit: RosterUnitData) -> void:
+	if unit == null:
+		return
+	unit.applied_fertilizers = []
+	if plot_data == null:
+		return
+	for fert in plot_data.applied_fertilizers:
+		if fert == null or fert.behavior == FertilizerData.Behavior.FUNGICIDE:
+			continue
+		unit.applied_fertilizers.append(fert)
 
 
 func _preview_body_mutation() -> MutationData:
@@ -391,39 +443,6 @@ func _plot_status_text() -> String:
 		NurseryPlotData.State.READY:
 			return "Status: Ready for Harvest"
 	return ""
-
-
-func _plot_info_text() -> String:
-	var sections: PackedStringArray = []
-	var mut_lines := plot_data.mutation_tooltip_lines()
-	if not mut_lines.is_empty():
-		sections.append("Mutations\n" + "\n".join(mut_lines))
-	var residue := plot_data.fungicide_residue_text()
-	var fert_lines: PackedStringArray = []
-	if not residue.is_empty():
-		fert_lines.append(residue)
-	var counts: Dictionary = {}
-	var order: Array[FertilizerData] = []
-	for fert in plot_data.applied_fertilizers:
-		if fert == null:
-			continue
-		if fert.behavior == FertilizerData.Behavior.FUNGICIDE:
-			continue
-		var key := fert.display_name
-		if not counts.has(key):
-			counts[key] = 0
-			order.append(fert)
-		counts[key] = int(counts[key]) + 1
-	for fert in order:
-		var count := int(counts.get(fert.display_name, 0))
-		var desc := "%s (%s)" % [fert.display_name, fert.subtitle_text()]
-		if count > 1:
-			fert_lines.append("%d X %s" % [count, desc])
-		else:
-			fert_lines.append(desc)
-	if not fert_lines.is_empty():
-		sections.append("Fertilizers\n" + "\n".join(fert_lines))
-	return "\n\n".join(sections)
 
 
 func _apply_interaction_mode() -> void:

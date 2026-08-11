@@ -1,0 +1,98 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_detail_card/fertilizer_detail_card.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://c7b88454iaqi0" path="res://assets/base/nursery/fertilizers/fertiliser.png" id="3_fert"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 20.0
+bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 8
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fert"]
+atlas = ExtResource("3_fert")
+region = Rect2(183, 167, 169, 180)
+
+[node name="FertilizerDetailCard" type="Control"]
+custom_minimum_size = Vector2(280, 200)
+clip_contents = false
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="CardPanel" type="PanelContainer" parent="."]
+clip_contents = false
+anchors_preset = 0
+offset_right = 280.0
+offset_bottom = 200.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_detail_card")
+
+[node name="Margin" type="MarginContainer" parent="CardPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="CardPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="CardPanel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = SubResource("AtlasTexture_fert")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="CardPanel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 28
+text = "Fertilizer"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="DescLabel" type="Label" parent="CardPanel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/font_size = 22
+text = "Effect text."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ResidueLabel" type="Label" parent="CardPanel/Margin/VBox"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/font_size = 20
+text = "Extra nutrition."
+horizontal_alignment = 1
+autowrap_mode = 3

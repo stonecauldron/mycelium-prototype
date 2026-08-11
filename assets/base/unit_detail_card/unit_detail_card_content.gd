@@ -135,7 +135,7 @@ func _refresh_fertilizers() -> void:
 	_set_fertilizers_visible(true)
 	for fert in order:
 		var count := int(counts.get(fert.display_name, 0))
-		var desc := "%s (%s)" % [fert.display_name, fert.subtitle_text()]
+		var desc := "%s: %s" % [fert.display_name, fert.subtitle_text()]
 		if count > 1:
 			desc = "%d X %s" % [count, desc]
 		var icon := _fertilizer_row_icon()

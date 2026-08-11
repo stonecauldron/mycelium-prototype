@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bmrp3orp5n31e"]
 
-[ext_resource type="Script" path="res://assets/base/unit_detail_card/unit_detail_card_content.gd" id="1_content"]
+[ext_resource type="Script" uid="uid://b6upwgv3uw2sh" path="res://assets/base/unit_detail_card/unit_detail_card_content.gd" id="1_content"]
 [ext_resource type="Texture2D" uid="uid://sdkqu2q3e1u" path="res://assets/base/unit_card/sword_icon.png" id="2_sword"]
 [ext_resource type="Texture2D" uid="uid://dqwo514d7ery6" path="res://assets/base/unit_card/hp_icon.png" id="3_hp"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="4_chip"]
@@ -8,12 +8,12 @@
 [ext_resource type="Texture2D" uid="uid://bmafi7fsp42s8" path="res://assets/base/nursery/mutations/cap_mutation_icon.png" id="6_cap"]
 [ext_resource type="Texture2D" uid="uid://dqj2wxtjs1xc5" path="res://assets/base/nursery/mutations/body_mutation_icon.png" id="7_body"]
 
-[node name="UnitDetailCardContent" type="VBoxContainer"]
+[node name="UnitDetailCardContent" type="VBoxContainer" unique_id=1295183022]
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 script = ExtResource("1_content")
 
-[node name="NameLabel" type="Label" parent="."]
+[node name="NameLabel" type="Label" parent="." unique_id=1932392948]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
@@ -24,40 +24,39 @@ text = "Unit"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="PortraitHost" type="Control" parent="."]
+[node name="PortraitHost" type="Control" parent="." unique_id=538422957]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 140)
-clip_contents = false
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="CombatRow" type="HBoxContainer" parent="."]
+[node name="CombatRow" type="HBoxContainer" parent="." unique_id=2076768371]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="AtkChip" parent="CombatRow" instance=ExtResource("4_chip")]
+[node name="AtkChip" parent="CombatRow" unique_id=837116753 instance=ExtResource("4_chip")]
 unique_name_in_owner = true
 icon = ExtResource("2_sword")
 chip_size = Vector2(72, 72)
 value_font_size = 30
 
-[node name="HpChip" parent="CombatRow" instance=ExtResource("4_chip")]
+[node name="HpChip" parent="CombatRow" unique_id=973519219 instance=ExtResource("4_chip")]
 unique_name_in_owner = true
 icon = ExtResource("3_hp")
 chip_size = Vector2(72, 72)
 value_font_size = 30
 
-[node name="AttrGrid" type="GridContainer" parent="."]
+[node name="AttrGrid" type="GridContainer" parent="." unique_id=1213435885]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 4
 columns = 2
 
-[node name="StrLabel" type="Label" parent="AttrGrid"]
+[node name="StrLabel" type="Label" parent="AttrGrid" unique_id=1544468774]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
@@ -65,7 +64,7 @@ theme_override_font_sizes/font_size = 26
 text = "STR 0"
 horizontal_alignment = 1
 
-[node name="DexLabel" type="Label" parent="AttrGrid"]
+[node name="DexLabel" type="Label" parent="AttrGrid" unique_id=1102043459]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
@@ -73,7 +72,7 @@ theme_override_font_sizes/font_size = 26
 text = "DEX 0"
 horizontal_alignment = 1
 
-[node name="ConLabel" type="Label" parent="AttrGrid"]
+[node name="ConLabel" type="Label" parent="AttrGrid" unique_id=419154920]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
@@ -81,7 +80,7 @@ theme_override_font_sizes/font_size = 26
 text = "CON 0"
 horizontal_alignment = 1
 
-[node name="SpdLabel" type="Label" parent="AttrGrid"]
+[node name="SpdLabel" type="Label" parent="AttrGrid" unique_id=1404537145]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
@@ -89,24 +88,24 @@ theme_override_font_sizes/font_size = 26
 text = "SPD 0"
 horizontal_alignment = 1
 
-[node name="TagMargin" type="MarginContainer" parent="."]
+[node name="TagMargin" type="MarginContainer" parent="." unique_id=1985380650]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="TagRow" type="HFlowContainer" parent="TagMargin"]
+[node name="TagRow" type="HFlowContainer" parent="TagMargin" unique_id=1823768780]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 4
 
-[node name="StageTag" parent="TagMargin/TagRow" instance=ExtResource("5_tag")]
+[node name="StageTag" parent="TagMargin/TagRow" unique_id=63024871 instance=ExtResource("5_tag")]
 unique_name_in_owner = true
 text = "Child"
 
-[node name="FertilizersLabel" type="Label" parent="."]
+[node name="FertilizersLabel" type="Label" parent="." unique_id=1606604418]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(350, 0)
@@ -117,14 +116,14 @@ theme_override_font_sizes/font_size = 30
 text = "Fertilizers"
 autowrap_mode = 3
 
-[node name="FertilizersList" type="VBoxContainer" parent="."]
+[node name="FertilizersList" type="VBoxContainer" parent="." unique_id=1799798433]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="TypeLabel" type="Label" parent="."]
+[node name="TypeLabel" type="Label" parent="." unique_id=425229254]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
@@ -134,19 +133,19 @@ theme_override_font_sizes/font_size = 30
 text = "Mutations"
 autowrap_mode = 3
 
-[node name="MutationsList" type="VBoxContainer" parent="."]
+[node name="MutationsList" type="VBoxContainer" parent="." unique_id=1123873068]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="CapRow" type="HBoxContainer" parent="MutationsList"]
+[node name="CapRow" type="HBoxContainer" parent="MutationsList" unique_id=25991943]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="CapIcon" type="TextureRect" parent="MutationsList/CapRow"]
+[node name="CapIcon" type="TextureRect" parent="MutationsList/CapRow" unique_id=515733278]
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 mouse_filter = 2
@@ -154,7 +153,7 @@ texture = ExtResource("6_cap")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CapLabel" type="Label" parent="MutationsList/CapRow"]
+[node name="CapLabel" type="Label" parent="MutationsList/CapRow" unique_id=911603786]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
@@ -164,13 +163,13 @@ theme_override_font_sizes/font_size = 26
 text = "None"
 autowrap_mode = 3
 
-[node name="BodyRow" type="HBoxContainer" parent="MutationsList"]
+[node name="BodyRow" type="HBoxContainer" parent="MutationsList" unique_id=110633378]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="BodyIcon" type="TextureRect" parent="MutationsList/BodyRow"]
+[node name="BodyIcon" type="TextureRect" parent="MutationsList/BodyRow" unique_id=1506299563]
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 mouse_filter = 2
@@ -178,7 +177,7 @@ texture = ExtResource("7_body")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BodyLabel" type="Label" parent="MutationsList/BodyRow"]
+[node name="BodyLabel" type="Label" parent="MutationsList/BodyRow" unique_id=503849776]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
@@ -188,7 +187,7 @@ theme_override_font_sizes/font_size = 26
 text = "None"
 autowrap_mode = 3
 
-[node name="TrainingsLabel" type="Label" parent="."]
+[node name="TrainingsLabel" type="Label" parent="." unique_id=768126601]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
@@ -198,16 +197,16 @@ theme_override_font_sizes/font_size = 30
 text = "Trainings"
 autowrap_mode = 3
 
-[node name="TrainingsList" type="VBoxContainer" parent="."]
+[node name="TrainingsList" type="VBoxContainer" parent="." unique_id=1258980922]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="FooterRow" type="HBoxContainer" parent="."]
+[node name="FooterRow" type="HBoxContainer" parent="." unique_id=200356719]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TierTag" parent="FooterRow" instance=ExtResource("5_tag")]
+[node name="TierTag" parent="FooterRow" unique_id=2043101409 instance=ExtResource("5_tag")]
 unique_name_in_owner = true
 text = "Gen I"

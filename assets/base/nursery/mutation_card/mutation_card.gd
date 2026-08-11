@@ -73,14 +73,16 @@ func _set_children_mouse_filter_ignore(node: Node) -> void:
 func _refresh() -> void:
 	if mutation == null:
 		return
-	_name_label.text = mutation.display_name
+	_name_label.text = mutation.title_text()
 	if _subtitle_label != null:
 		_subtitle_label.visible = false
 		_subtitle_label.text = ""
 	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
-	tooltip_text = mutation.display_name
+	tooltip_text = mutation.title_text()
 	if _icon != null:
-		_icon.modulate = mutation.tint
+		# Tint only the mutation art — slot badge children must stay untinted.
+		_icon.self_modulate = mutation.tint
+		MutationData.attach_slot_badge(_icon, mutation, Vector2(48, 48))
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:

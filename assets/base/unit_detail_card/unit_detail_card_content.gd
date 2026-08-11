@@ -180,8 +180,16 @@ func _refresh_trainings() -> void:
 	if trainings.is_empty():
 		_trainings_list.add_child(_make_detail_row(null, "None"))
 		return
-	for school in trainings:
-		var weapon := WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(int(school)))
+	var row := HBoxContainer.new()
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_theme_constant_override("separation", 8)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	var count := mini(trainings.size(), 2)
+	for i in range(count):
+		if i > 0:
+			row.add_child(_make_training_separator())
+		var school := int(trainings[i])
+		var weapon := WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(school))
 		var icon := TextureRect.new()
 		icon.custom_minimum_size = _ROW_ICON_SIZE
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -189,9 +197,21 @@ func _refresh_trainings() -> void:
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		if weapon != null:
 			icon.texture = weapon.icon
-		_trainings_list.add_child(
-			_make_detail_row(icon, WeaponSchool.display_name(int(school)))
-		)
+		row.add_child(icon)
+		var label := Label.new()
+		label.add_theme_font_size_override("font_size", 26)
+		label.add_theme_color_override("font_color", Color(0.2, 0.22, 0.18, 1))
+		label.text = WeaponSchool.display_name(school)
+		row.add_child(label)
+	_trainings_list.add_child(row)
+
+
+func _make_training_separator() -> Label:
+	var plus := Label.new()
+	plus.text = "+"
+	plus.add_theme_font_size_override("font_size", 26)
+	plus.add_theme_color_override("font_color", Color(0.2, 0.22, 0.18, 1))
+	return plus
 
 
 func _make_detail_row(icon: TextureRect, text: String) -> HBoxContainer:

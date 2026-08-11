@@ -17,7 +17,13 @@ static func configure(tip: Control) -> void:
 	if tip.is_inside_tree():
 		_schedule_fit(tip)
 	else:
-		tip.tree_entered.connect(_schedule_fit.bind(tip), CONNECT_ONE_SHOT)
+		# Capture as Variant: typed Control.bind on signals can fail with
+		# "Cannot convert argument 1 from Object to Object".
+		var tip_ref: Variant = tip
+		tip.tree_entered.connect(
+			func () -> void: _schedule_fit(tip_ref as Control),
+			CONNECT_ONE_SHOT
+		)
 
 
 static func _schedule_fit(tip: Control) -> void:
@@ -28,13 +34,15 @@ static func _schedule_fit(tip: Control) -> void:
 		tip.set_meta(_FIT_PENDING_META, false)
 		return
 	# Wait one layout frame so labels/containers resolve autowrap height.
-	var cb := _apply.bind(tip)
-	if tree.process_frame.is_connected(cb):
-		return
-	tree.process_frame.connect(cb, CONNECT_ONE_SHOT)
+	var tip_ref: Variant = tip
+	tree.process_frame.connect(
+		func () -> void: _apply(tip_ref),
+		CONNECT_ONE_SHOT
+	)
 
 
-static func _apply(tip: Control) -> void:
+static func _apply(tip_variant: Variant) -> void:
+	var tip := tip_variant as Control
 	if tip != null and is_instance_valid(tip):
 		tip.set_meta(_FIT_PENDING_META, false)
 	if tip == null or not is_instance_valid(tip) or not tip.is_inside_tree():

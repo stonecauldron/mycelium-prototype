@@ -4,7 +4,6 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="4_hourglass"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
-[ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="5_tag"]
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="6_biomass"]
 [ext_resource type="PackedScene" path="res://assets/base/unit_detail_card/unit_detail_card_content.tscn" id="7_unit_content"]
 
@@ -25,7 +24,7 @@ corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
 
 [node name="SporeDetailCard" type="Control"]
-custom_minimum_size = Vector2(320, 390)
+custom_minimum_size = Vector2(390, 390)
 clip_contents = false
 layout_mode = 3
 anchors_preset = 0
@@ -35,7 +34,7 @@ script = ExtResource("1_card")
 [node name="CardPanel" type="PanelContainer" parent="."]
 clip_contents = false
 anchors_preset = 0
-offset_right = 320.0
+offset_right = 390.0
 offset_bottom = 560.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_detail_card")
@@ -53,23 +52,12 @@ theme_override_constants/separation = 8
 
 [node name="NameLabel" type="Label" parent="CardPanel/Margin/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
 theme_override_font_sizes/font_size = 32
 text = "Spore"
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="DescLabel" type="Label" parent="CardPanel/Margin/VBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
-theme_override_font_sizes/font_size = 24
-text = "Flavor text."
 horizontal_alignment = 1
 autowrap_mode = 3
 
@@ -101,157 +89,16 @@ text = "days"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="LineageSection" type="VBoxContainer" parent="CardPanel/Margin/VBox"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 6
-
-[node name="PortraitHost" type="Control" parent="CardPanel/Margin/VBox/LineageSection"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 140)
-clip_contents = false
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-
-[node name="ChildNameLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 24
-text = "Darwin II"
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="AttrGrid" type="GridContainer" parent="CardPanel/Margin/VBox/LineageSection"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/h_separation = 14
-theme_override_constants/v_separation = 2
-columns = 2
-
-[node name="StrLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection/AttrGrid"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 22
-text = "STR 0"
-horizontal_alignment = 1
-
-[node name="DexLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection/AttrGrid"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 22
-text = "DEX 0"
-horizontal_alignment = 1
-
-[node name="ConLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection/AttrGrid"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 22
-text = "CON 0"
-horizontal_alignment = 1
-
-[node name="SpdLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection/AttrGrid"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 22
-text = "SPD 0"
-horizontal_alignment = 1
-
-[node name="TrainingsLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
-theme_override_font_sizes/font_size = 20
-text = "Trainings"
-horizontal_alignment = 1
-
-[node name="TrainingsRow" type="HBoxContainer" parent="CardPanel/Margin/VBox/LineageSection"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="MutationsLabel" type="Label" parent="CardPanel/Margin/VBox/LineageSection"]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(280, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
-theme_override_font_sizes/font_size = 20
-text = "Mutations"
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="PlotSection" type="VBoxContainer" parent="CardPanel/Margin/VBox"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="StatusLabel" type="Label" parent="CardPanel/Margin/VBox/PlotSection"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 24
-text = "Growing — 2 days left"
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="PlotInfoLabel" type="Label" parent="CardPanel/Margin/VBox/PlotSection"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
-theme_override_font_sizes/font_size = 22
-text = ""
-horizontal_alignment = 1
-autowrap_mode = 3
-
 [node name="UnitDetailCardContent" parent="CardPanel/Margin/VBox" instance=ExtResource("7_unit_content")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
-
-[node name="FooterSpacer" type="Control" parent="CardPanel/Margin/VBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
 
 [node name="FooterRow" type="HBoxContainer" parent="CardPanel/Margin/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
-
-[node name="TierTag" parent="CardPanel/Margin/VBox/FooterRow" instance=ExtResource("5_tag")]
-unique_name_in_owner = true
-text = "Gen I"
-
-[node name="HatchTag" parent="CardPanel/Margin/VBox/FooterRow" instance=ExtResource("5_tag")]
-unique_name_in_owner = true
-visible = false
-text = "x2"
-
-[node name="FooterMidSpacer" type="Control" parent="CardPanel/Margin/VBox/FooterRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
+alignment = 2
 
 [node name="SellRow" type="HBoxContainer" parent="CardPanel/Margin/VBox/FooterRow"]
 unique_name_in_owner = true

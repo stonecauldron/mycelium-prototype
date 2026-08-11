@@ -150,11 +150,11 @@ func _refresh_fertilizers() -> void:
 		_fertilizers_list.add_child(_make_detail_row(row_icon, desc))
 
 
-func _set_fertilizers_visible(visible: bool) -> void:
+func _set_fertilizers_visible(show_section: bool) -> void:
 	if _fertilizers_label != null:
-		_fertilizers_label.visible = visible
+		_fertilizers_label.visible = show_section
 	if _fertilizers_list != null:
-		_fertilizers_list.visible = visible
+		_fertilizers_list.visible = show_section
 
 
 func _fertilizer_row_icon() -> AtlasTexture:

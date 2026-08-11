@@ -21,7 +21,6 @@ var _fertilizer_icon: AtlasTexture = null
 @onready var _mutations_list: Control = %MutationsList
 @onready var _cap_label: Label = %CapLabel
 @onready var _body_label: Label = %BodyLabel
-@onready var _age_label: Label = %AgeLabel
 @onready var _stage_tag: TagChip = %StageTag
 @onready var _tier_tag: TagChip = %TierTag
 @onready var _portrait_host: Control = %PortraitHost

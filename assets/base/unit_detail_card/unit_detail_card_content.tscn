@@ -204,14 +204,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="AgeLabel" type="Label" parent="."]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 26
-text = "Age: 0 days"
-
 [node name="FooterRow" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3

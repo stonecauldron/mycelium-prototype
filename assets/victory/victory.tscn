@@ -54,3 +54,11 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Play Again"
+
+[node name="FeedbackButton" type="Button" parent="Center/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 52)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"PrimaryButton"
+text = "Give Feedback"

@@ -5,11 +5,16 @@ const CARD_WIDTH := 280.0
 const _MUTATION_ICON := preload("res://assets/base/nursery/mutations/mutation_icon.png")
 const _BODY_MUTATION_ICON := preload("res://assets/base/nursery/mutations/body_mutation_icon.png")
 const _CAP_MUTATION_ICON := preload("res://assets/base/nursery/mutations/cap_mutation_icon.png")
+const _EMPTY_ICON_MODULATE := Color(1, 1, 1, 0.4)
+const _EMPTY_TITLE := "Empty Mutation slot"
+const _EMPTY_DESC := "Drag and drop a mutation from the shop"
 
 var mutation: MutationData
+var _empty_slot: bool = false
 
 @onready var _card_panel: PanelContainer = $CardPanel
 @onready var _icon: TextureRect = %Icon
+@onready var _slot_row: Control = %SlotRow
 @onready var _slot_icon: TextureRect = %SlotIcon
 @onready var _slot_label: Label = %SlotLabel
 @onready var _title_label: Label = %TitleLabel
@@ -18,6 +23,17 @@ var mutation: MutationData
 
 func setup(mutation_data: MutationData) -> void:
 	mutation = mutation_data
+	_empty_slot = false
+	if is_node_ready():
+		_refresh()
+		fit_to_content()
+	else:
+		ready.connect(_on_setup_ready, CONNECT_ONE_SHOT)
+
+
+func setup_empty() -> void:
+	mutation = null
+	_empty_slot = true
 	if is_node_ready():
 		_refresh()
 		fit_to_content()
@@ -56,11 +72,16 @@ func _ready() -> void:
 
 
 func _refresh() -> void:
+	if _empty_slot:
+		_refresh_empty()
+		return
 	if mutation == null:
 		return
 	if _icon != null:
 		_icon.texture = _MUTATION_ICON
 		_icon.self_modulate = mutation.tint
+	if _slot_row != null:
+		_slot_row.visible = true
 	if _slot_icon != null:
 		_slot_icon.texture = (
 			_BODY_MUTATION_ICON if mutation.is_body() else _CAP_MUTATION_ICON
@@ -70,6 +91,17 @@ func _refresh() -> void:
 	var desc := mutation.subtitle_text()
 	_desc_label.text = desc
 	_desc_label.visible = not desc.is_empty()
+
+
+func _refresh_empty() -> void:
+	if _icon != null:
+		_icon.texture = _MUTATION_ICON
+		_icon.self_modulate = _EMPTY_ICON_MODULATE
+	if _slot_row != null:
+		_slot_row.visible = false
+	_title_label.text = _EMPTY_TITLE
+	_desc_label.text = _EMPTY_DESC
+	_desc_label.visible = true
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

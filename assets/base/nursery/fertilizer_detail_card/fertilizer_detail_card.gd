@@ -4,9 +4,13 @@ extends Control
 const CARD_WIDTH := 280.0
 const _FERTILIZER_ATLAS := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
 const _FERTILIZER_ICON_REGION := Rect2(183, 167, 169, 180)
+const _EMPTY_ICON_MODULATE := Color(1, 1, 1, 0.4)
+const _EMPTY_TITLE := "Empty Fertilizer slot"
+const _EMPTY_DESC := "Drag and drop a fertilizer from the shop"
 
 var fertilizer: FertilizerData
 var residue_text: String = ""
+var _empty_slot: bool = false
 
 var _fertilizer_icon: AtlasTexture
 
@@ -20,6 +24,18 @@ var _fertilizer_icon: AtlasTexture
 func setup(fert: FertilizerData, p_residue_text: String = "") -> void:
 	fertilizer = fert
 	residue_text = p_residue_text
+	_empty_slot = false
+	if is_node_ready():
+		_refresh()
+		fit_to_content()
+	else:
+		ready.connect(_on_setup_ready, CONNECT_ONE_SHOT)
+
+
+func setup_empty() -> void:
+	fertilizer = null
+	residue_text = ""
+	_empty_slot = true
 	if is_node_ready():
 		_refresh()
 		fit_to_content()
@@ -58,6 +74,9 @@ func _ready() -> void:
 
 
 func _refresh() -> void:
+	if _empty_slot:
+		_refresh_empty()
+		return
 	if fertilizer == null:
 		return
 	if _icon != null:
@@ -70,6 +89,17 @@ func _refresh() -> void:
 	var residue := residue_text.strip_edges()
 	_residue_label.text = residue
 	_residue_label.visible = not residue.is_empty()
+
+
+func _refresh_empty() -> void:
+	if _icon != null:
+		_icon.texture = _icon_texture()
+		_icon.self_modulate = _EMPTY_ICON_MODULATE
+	_title_label.text = _EMPTY_TITLE
+	_desc_label.text = _EMPTY_DESC
+	_desc_label.visible = true
+	_residue_label.text = ""
+	_residue_label.visible = false
 
 
 func _icon_texture() -> AtlasTexture:

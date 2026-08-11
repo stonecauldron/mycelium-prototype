@@ -36,12 +36,6 @@ const _PLOT_SLOT_CHIP_SIZE := Vector2(56, 56)
 const _PLOT_SLOT_CHIP_FONT_SIZE := 30
 const _MUTATION_SLOT_BADGE_SIZE := Vector2(34, 34)
 const _EMPTY_CHIP_MODULATE := Color(1, 1, 1, 0.4)
-const _EMPTY_FERTILIZER_SLOT_TIP := (
-	"Empty Fertilizer slot: drag and drop a fertilizer from the shop"
-)
-const _EMPTY_MUTATION_SLOT_TIP := (
-	"Empty Mutation slot: drag and drop a mutation from the shop"
-)
 
 const _SHAKE_IDLE_NORMAL_SEC := 1.5
 const _SHAKE_IDLE_IMAGO_SEC := 0.8
@@ -358,7 +352,10 @@ func _add_mutation_slot_chip(show_ghost: bool) -> void:
 		chip.set_value()
 		if icon != null:
 			icon.self_modulate = _EMPTY_CHIP_MODULATE
-		chip.tooltip_text = _EMPTY_MUTATION_SLOT_TIP
+		# Non-empty text enables the tooltip popup; content comes from factory.
+		chip.tooltip_text = "Empty Mutation slot"
+		chip.custom_tooltip_factory = func () -> Object:
+			return _make_mutation_detail_tip(null)
 	else:
 		chip.set_value()
 		if icon != null:
@@ -402,7 +399,10 @@ func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:
 			chip.set_value()
 			if icon != null:
 				icon.self_modulate = _EMPTY_CHIP_MODULATE
-			chip.tooltip_text = _EMPTY_FERTILIZER_SLOT_TIP
+			# Non-empty text enables the tooltip popup; content comes from factory.
+			chip.tooltip_text = "Empty Fertilizer slot"
+			chip.custom_tooltip_factory = func () -> Object:
+				return _make_fertilizer_detail_tip(null, "")
 		else:
 			chip.set_value()
 			if icon != null:
@@ -437,21 +437,24 @@ func _make_fertilizer_detail_tip(
 	fert: FertilizerData,
 	residue: String
 ) -> Object:
-	if fert == null:
-		return null
 	var tip: FertilizerDetailCard = _FERTILIZER_DETAIL_CARD_SCENE.instantiate()
-	tip.setup(fert, residue)
+	if fert == null:
+		tip.setup_empty()
+	else:
+		tip.setup(fert, residue)
 	DetailTooltipPopup.configure(tip)
 	return tip
 
 
 func _make_mutation_detail_tip(mutation: MutationData) -> Object:
-	if mutation == null:
-		return null
 	var tip: MutationDetailCard = _MUTATION_DETAIL_CARD_SCENE.instantiate()
-	tip.setup(mutation)
+	if mutation == null:
+		tip.setup_empty()
+	else:
+		tip.setup(mutation)
 	DetailTooltipPopup.configure(tip)
 	return tip
+
 
 
 

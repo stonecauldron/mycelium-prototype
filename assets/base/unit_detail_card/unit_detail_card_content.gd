@@ -177,12 +177,14 @@ func _refresh_trainings() -> void:
 	_trainings_label.text = "Trainings"
 	var trainings := unit_data.weapon_trainings
 	if trainings.is_empty():
-		_trainings_list.add_child(_make_detail_row(null, "None"))
+		var none_row := _make_detail_row(null, "None")
+		none_row.alignment = BoxContainer.ALIGNMENT_BEGIN
+		_trainings_list.add_child(none_row)
 		return
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_theme_constant_override("separation", 8)
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.alignment = BoxContainer.ALIGNMENT_BEGIN
 	var count := mini(trainings.size(), 2)
 	for i in range(count):
 		if i > 0:
@@ -271,7 +273,6 @@ func _refresh_mutation_meta() -> void:
 			_mutations_list.visible = true
 		_set_mutation_row_label(_cap_label, unit_data.cap_mutation)
 		_set_mutation_row_label(_body_label, unit_data.body_mutation)
-	_age_label.text = _age_text(unit_data.days_alive)
 
 
 func _set_mutation_row_label(label: Label, mutation: MutationData) -> void:
@@ -295,12 +296,6 @@ func _refresh_tags() -> void:
 	var generation := maxi(unit_data.generation, 1)
 	_tier_tag.set_text(UnitNames.format_generation_label(generation))
 	_tier_tag.set_fill_color(UnitStatsData.tint_for_generation(generation))
-
-
-func _age_text(days: int) -> String:
-	if days == 1:
-		return "Age: 1 day"
-	return "Age: %d days" % days
 
 
 func _apply_portrait_visibility() -> void:

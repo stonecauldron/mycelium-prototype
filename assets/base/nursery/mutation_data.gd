@@ -71,6 +71,8 @@ static func attach_slot_badge(host: Control, mutation: MutationData, badge_size:
 	var badge := TextureRect.new()
 	badge.set_meta(_SLOT_BADGE_META, true)
 	badge.texture = mutation.slot_icon()
+	badge.modulate = Color.WHITE
+	badge.self_modulate = Color.WHITE
 	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

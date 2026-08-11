@@ -76,7 +76,8 @@ func _refresh() -> void:
 		_subtitle_label.text = ""
 	tooltip_text = mutation.effect_line()
 	if _icon != null:
-		_icon.modulate = mutation.tint
+		# Tint only the mutation art — slot badge children must stay untinted.
+		_icon.self_modulate = mutation.tint
 		MutationData.attach_slot_badge(_icon, mutation, Vector2(48, 48))
 
 

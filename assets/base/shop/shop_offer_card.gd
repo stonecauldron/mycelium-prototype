@@ -197,7 +197,8 @@ func _apply_content(title: String, subtitle: String, description: String, icon: 
 	if icon != null and _icon != null:
 		_icon.texture = icon
 	if _icon != null:
-		_icon.modulate = _item_tint
+		# Tint only the mutation art — slot badge children must stay untinted.
+		_icon.self_modulate = _item_tint
 		var mut := payload.get("mutation") as MutationData
 		MutationData.attach_slot_badge(_icon, mut, Vector2(68, 68))
 	_refresh_rarity_chip()

@@ -3,6 +3,9 @@ extends PanelContainer
 
 const CARD_SIZE := Vector2(120, 100)
 const _FERTILIZER_CARD_SCENE := preload("res://assets/base/nursery/fertilizer_card/fertilizer_card.tscn")
+const _FERTILIZER_DETAIL_CARD_SCENE := preload(
+	"res://assets/base/nursery/fertilizer_detail_card/fertilizer_detail_card.tscn"
+)
 const _HOVER_AMPLITUDE_PX := 5.0
 const _HOVER_HALF_DURATION_SEC := 1.35
 
@@ -75,9 +78,19 @@ func _refresh() -> void:
 	if _subtitle_label != null:
 		_subtitle_label.visible = false
 		_subtitle_label.text = ""
-	tooltip_text = fertilizer.subtitle_text()
+	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
+	tooltip_text = fertilizer.display_name
 	if _icon != null:
 		_icon.modulate = fertilizer.tint
+
+
+func _make_custom_tooltip(_for_text: String) -> Object:
+	if fertilizer == null:
+		return null
+	var tip: FertilizerDetailCard = _FERTILIZER_DETAIL_CARD_SCENE.instantiate()
+	tip.setup(fertilizer)
+	DetailTooltipPopup.configure(tip)
+	return tip
 
 
 func _apply_hover_y() -> void:

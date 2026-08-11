@@ -20,6 +20,9 @@ const DEFAULT_VALUE_FONT_SIZE := 24
 		value_font_size = value
 		_apply_value_font_size()
 
+## Optional factory returning a Control for Godot's custom tooltip popup.
+var custom_tooltip_factory: Callable
+
 @onready var _icon: TextureRect = %Icon
 @onready var _value_label: Label = %Value
 
@@ -31,6 +34,12 @@ func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	if icon != null:
 		_icon.texture = icon
+
+
+func _make_custom_tooltip(_for_text: String) -> Object:
+	if custom_tooltip_factory.is_valid():
+		return custom_tooltip_factory.call()
+	return null
 
 
 func set_value(value: Variant = null) -> void:

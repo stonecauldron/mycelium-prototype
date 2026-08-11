@@ -23,6 +23,12 @@ const _MUTATION_ICON := preload("res://assets/base/nursery/mutations/mutation_ic
 const _BODY_MUTATION_ICON := preload("res://assets/base/nursery/mutations/body_mutation_icon.png")
 const _CAP_MUTATION_ICON := preload("res://assets/base/nursery/mutations/cap_mutation_icon.png")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
+const _FERTILIZER_DETAIL_CARD_SCENE := preload(
+	"res://assets/base/nursery/fertilizer_detail_card/fertilizer_detail_card.tscn"
+)
+const _MUTATION_DETAIL_CARD_SCENE := preload(
+	"res://assets/base/nursery/mutation_detail_card/mutation_detail_card.tscn"
+)
 const _HOURGLASS_ICON := preload("res://assets/base/nursery/spore_card/hourglass_icon.png")
 const _HARVEST_ICON := preload("res://assets/combat/boom_cap_explosion/harvest_icon.png")
 const _HARVEST_CHIP_SIZE := Vector2(64, 64)
@@ -346,17 +352,20 @@ func _add_mutation_slot_chip(show_ghost: bool) -> void:
 		chip.set_value()
 		if icon != null:
 			icon.self_modulate = _EMPTY_CHIP_MODULATE
-		chip.tooltip_text = "Mutation"
+		# Non-empty text enables the tooltip popup; content comes from factory.
+		chip.tooltip_text = "Empty Mutation slot"
+		chip.custom_tooltip_factory = func () -> Object:
+			return _make_mutation_detail_tip(null)
 	else:
 		chip.set_value()
 		if icon != null:
 			icon.self_modulate = mutation.tint
 		_add_mutation_slot_badge(chip, mutation)
-		chip.tooltip_text = "%s: %s\n%s" % [
-			mutation.slot_label(),
-			mutation.display_name,
-			mutation.subtitle_text(),
-		]
+		# Non-empty text enables the tooltip popup; content comes from factory.
+		chip.tooltip_text = mutation.display_name
+		var mut_ref: MutationData = mutation
+		chip.custom_tooltip_factory = func () -> Object:
+			return _make_mutation_detail_tip(mut_ref)
 	_fertilizer_chips.append(chip)
 
 
@@ -390,12 +399,25 @@ func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:
 			chip.set_value()
 			if icon != null:
 				icon.self_modulate = _EMPTY_CHIP_MODULATE
-			chip.tooltip_text = "Fertilizer"
+			# Non-empty text enables the tooltip popup; content comes from factory.
+			chip.tooltip_text = "Empty Fertilizer slot"
+			chip.custom_tooltip_factory = func () -> Object:
+				return _make_fertilizer_detail_tip(null, "")
 		else:
 			chip.set_value()
 			if icon != null:
 				icon.self_modulate = fert.tint
-			chip.tooltip_text = _fertilizer_chip_tooltip(fert, 1)
+			# Non-empty text enables the tooltip popup; content comes from factory.
+			chip.tooltip_text = fert.display_name
+			var fert_ref: FertilizerData = fert
+			var residue := ""
+			if (
+				fert_ref.behavior == FertilizerData.Behavior.FUNGICIDE
+				and _plot != null
+			):
+				residue = _plot.fungicide_residue_text()
+			chip.custom_tooltip_factory = func () -> Object:
+				return _make_fertilizer_detail_tip(fert_ref, residue)
 		_fertilizer_chips.append(chip)
 
 
@@ -411,20 +433,29 @@ func _make_slot_chip(icon_tex: Texture2D) -> StatChip:
 	return chip
 
 
-func _fertilizer_chip_tooltip(fert: FertilizerData, count: int) -> String:
+func _make_fertilizer_detail_tip(
+	fert: FertilizerData,
+	residue: String
+) -> Object:
+	var tip: FertilizerDetailCard = _FERTILIZER_DETAIL_CARD_SCENE.instantiate()
 	if fert == null:
-		return ""
-	if fert.behavior == FertilizerData.Behavior.FUNGICIDE and _plot != null:
-		var residue := _plot.fungicide_residue_text()
-		if not residue.is_empty():
-			return residue
-	var title := fert.display_name
-	if count > 1:
-		title = "%s ×%d" % [title, count]
-	var effect := fert.subtitle_text()
-	if effect.is_empty():
-		return title
-	return "%s\n%s" % [title, effect]
+		tip.setup_empty()
+	else:
+		tip.setup(fert, residue)
+	DetailTooltipPopup.configure(tip)
+	return tip
+
+
+func _make_mutation_detail_tip(mutation: MutationData) -> Object:
+	var tip: MutationDetailCard = _MUTATION_DETAIL_CARD_SCENE.instantiate()
+	if mutation == null:
+		tip.setup_empty()
+	else:
+		tip.setup(mutation)
+	DetailTooltipPopup.configure(tip)
+	return tip
+
+
 
 
 func _apply_visual_state() -> void:

@@ -53,7 +53,7 @@ Web build: `make build` exports the `Web` preset to `build/web/` (templates are 
 
 Tests/lint: none exist — there is no test framework (no GUT/gdUnit) and no configured linter/formatter.
 
-Git assets quirk: `*.png`/`*.svg`/etc. are declared LFS in `.gitattributes` but are actually stored as normal git blobs (`git lfs ls-files` is empty). This makes those binary files show as perpetually "modified" in `git status`. Do **not** stage/commit them — leave them untouched.
+Binary assets (`*.png`/`*.svg`/etc.) are normal git blobs, not Git LFS. `.gitattributes` marks them `-text` only.
 
 ## Agent skills
 

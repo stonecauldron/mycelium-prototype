@@ -87,7 +87,7 @@ func _refresh() -> void:
 			_BODY_MUTATION_ICON if mutation.is_body() else _CAP_MUTATION_ICON
 		)
 	_slot_label.text = mutation.slot_label()
-	_title_label.text = mutation.display_name
+	_title_label.text = mutation.title_text()
 	var desc := mutation.subtitle_text()
 	_desc_label.text = desc
 	_desc_label.visible = not desc.is_empty()

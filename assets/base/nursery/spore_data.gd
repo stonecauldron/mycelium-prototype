@@ -46,13 +46,9 @@ func days_to_mature_effective() -> int:
 func mutation_tooltip_lines() -> PackedStringArray:
 	var lines: PackedStringArray = []
 	if body_mutation != null:
-		lines.append(
-			"Body: %s — %s" % [body_mutation.display_name, body_mutation.subtitle_text()]
-		)
+		lines.append(body_mutation.effect_line())
 	if cap_mutation != null:
-		lines.append(
-			"Cap: %s — %s" % [cap_mutation.display_name, cap_mutation.subtitle_text()]
-		)
+		lines.append(cap_mutation.effect_line())
 	return lines
 
 

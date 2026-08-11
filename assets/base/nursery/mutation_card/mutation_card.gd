@@ -70,13 +70,14 @@ func _set_children_mouse_filter_ignore(node: Node) -> void:
 func _refresh() -> void:
 	if mutation == null:
 		return
-	_name_label.text = mutation.display_name
+	_name_label.text = mutation.title_text()
 	if _subtitle_label != null:
 		_subtitle_label.visible = false
 		_subtitle_label.text = ""
-	tooltip_text = "%s — %s" % [mutation.slot_label(), mutation.subtitle_text()]
+	tooltip_text = mutation.effect_line()
 	if _icon != null:
 		_icon.modulate = mutation.tint
+		MutationData.attach_slot_badge(_icon, mutation, Vector2(48, 48))
 
 
 func _apply_hover_y() -> void:

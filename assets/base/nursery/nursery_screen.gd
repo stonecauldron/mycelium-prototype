@@ -169,7 +169,7 @@ func _rebuild_shop_cards() -> void:
 			card = _SHOP_OFFER_CARD_SCENE.instantiate()
 			card.setup(
 				"Mutation",
-				mut.display_name,
+				mut.title_text(),
 				offer.cost,
 				{
 					"type": "shop_mutation",
@@ -181,7 +181,7 @@ func _rebuild_shop_cards() -> void:
 				i,
 				offer.locked,
 				mut.tint,
-				"%s — %s" % [mut.slot_label(), mut.short_description.strip_edges()]
+				mut.effect_line()
 			)
 		else:
 			continue

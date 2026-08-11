@@ -133,19 +133,67 @@ func _preview_generation() -> int:
 	return 1
 
 
+## Expected hatch averages (tier mid / lineage mean) plus plot modifiers.
+## Mirrors NurseryData hatch order without rolling variance.
 func _preview_average_stats() -> UnitStatsData:
 	if spore_data == null:
 		return null
+	var stats: UnitStatsData
 	if spore_data.is_lineage_spore() and spore_data.mean_stats != null:
-		return spore_data.mean_stats
-	var stats := UnitStatsData.average_for_tier(spore_data.power_tier)
+		stats = spore_data.mean_stats.duplicate(true) as UnitStatsData
+	else:
+		stats = UnitStatsData.average_for_tier(spore_data.power_tier)
+	_apply_preview_plot_stat_modifiers(stats)
 	var body := _preview_body_mutation()
 	var cap := _preview_cap_mutation()
 	if body != null:
 		body.apply_hatch_stats(stats)
 	if cap != null:
 		cap.apply_hatch_stats(stats)
+	_apply_preview_yield_stat_scale(stats)
 	return stats
+
+
+func _apply_preview_plot_stat_modifiers(stats: UnitStatsData) -> void:
+	if stats == null or plot_data == null:
+		return
+	for fert in plot_data.applied_fertilizers:
+		if fert == null:
+			continue
+		if fert.is_stat_source():
+			fert.apply_to(stats)
+	var pending := plot_data.pending_stat_bonus
+	if pending != 0:
+		stats.strength = clampi(stats.strength + pending, 1, 99)
+		stats.dex = clampi(stats.dex + pending, 1, 99)
+		stats.con = clampi(stats.con + pending, 1, 99)
+		stats.spd = clampi(stats.spd + pending, 1, 99)
+
+
+## Meiosis / Triploid scale one expected unit the same way harvest does per yield.
+func _apply_preview_yield_stat_scale(stats: UnitStatsData) -> void:
+	if stats == null or plot_data == null:
+		return
+	var meiosis := false
+	var triploid := false
+	for fert in plot_data.applied_fertilizers:
+		if fert == null:
+			continue
+		match fert.behavior:
+			FertilizerData.Behavior.MEIOSIS:
+				meiosis = true
+			FertilizerData.Behavior.TRIPLOID:
+				triploid = true
+	if meiosis:
+		stats.strength = maxi(1, roundi(float(stats.strength) * 0.5))
+		stats.dex = maxi(1, roundi(float(stats.dex) * 0.5))
+		stats.con = maxi(1, roundi(float(stats.con) * 0.5))
+		stats.spd = maxi(1, roundi(float(stats.spd) * 0.5))
+	if triploid:
+		stats.strength = maxi(1, roundi(float(stats.strength) / 3.0))
+		stats.dex = maxi(1, roundi(float(stats.dex) / 3.0))
+		stats.con = maxi(1, roundi(float(stats.con) / 3.0))
+		stats.spd = maxi(1, roundi(float(stats.spd) / 3.0))
 
 
 func _make_preview_unit() -> RosterUnitData:

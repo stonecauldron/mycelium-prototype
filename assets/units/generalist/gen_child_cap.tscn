@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ccaanvewc2i21"]
 
 [ext_resource type="Texture2D" uid="uid://w7oeqghk8pj6" path="res://assets/units/generalist/gen_child_cap.png" id="1_cap"]
+[ext_resource type="Texture2D" uid="uid://dknp8xvaadomy" path="res://assets/units/generalist/gen_child_eyes.png" id="2_ql3g2"]
 
 [node name="GenChildCap" type="Sprite2D" unique_id=1094973512]
 position = Vector2(9, -17)
@@ -8,3 +9,7 @@ texture = ExtResource("1_cap")
 offset = Vector2(-3.5, -15.5)
 region_enabled = true
 region_rect = Rect2(180, 117, 172, 151)
+
+[node name="Eyes" type="Sprite2D" parent="." unique_id=1403261419]
+position = Vector2(-15, 48)
+texture = ExtResource("2_ql3g2")

@@ -22,8 +22,8 @@ func _run() -> void:
 		else:
 			if body.modulate != UnitAppearance.DEFAULT_CHILD_BODY:
 				errs.append("child body default tint %s" % body.modulate)
-			if cap.modulate != UnitAppearance.DEFAULT_CHILD_CAP:
-				errs.append("child cap default tint %s" % cap.modulate)
+			if cap.self_modulate != UnitAppearance.DEFAULT_CHILD_CAP:
+				errs.append("child cap default tint %s" % cap.self_modulate)
 		if child.get_node_or_null("Body/Sprite/WeaponFollow") == null:
 			errs.append("child missing WeaponFollow on body")
 		if child.get_node_or_null("Body/Sprite/CapMountFollow") == null:
@@ -52,7 +52,7 @@ func _run() -> void:
 		else:
 			if body.modulate != mini.tint:
 				errs.append("mini body tint")
-			if cap.modulate != boom.tint:
+			if cap.self_modulate != boom.tint:
 				errs.append("boom cap tint")
 		var body_shape := adult.get_node_or_null("BodyShape") as CollisionShape2D
 		var hurt := adult.get_node_or_null("Body/Hurtbox/CollisionShape2D") as CollisionShape2D
@@ -99,7 +99,7 @@ func _run() -> void:
 			cap = cap_mount.get_child(0) as CanvasItem
 		if body == null or cap == null:
 			errs.append("portrait missing layers")
-		elif body.modulate != mini.tint or cap.modulate != boom.tint:
+		elif body.modulate != mini.tint or cap.self_modulate != boom.tint:
 			errs.append("portrait layer tints wrong")
 		var tier := UnitStatsData.tint_for_tier(roster.power_tier)
 		if portrait.modulate != tier:

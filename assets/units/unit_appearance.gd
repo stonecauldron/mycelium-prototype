@@ -147,7 +147,7 @@ func apply_mutation_tints(
 	if body_sprite != null:
 		body_sprite.modulate = body_tint
 	if _cap_root is CanvasItem:
-		(_cap_root as CanvasItem).modulate = cap_tint
+		(_cap_root as CanvasItem).self_modulate = cap_tint
 
 
 ## Scales visual + collision volumes (juvenile fallback from imago art / enemies).

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://s6wk76vj7d3b" path="res://assets/base/troop_selection/scout_bubble/scout_bubble.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://cdr3kf2bf6rx8" path="res://assets/base/troop_selection/scout_bubble/speech_bubble_tip.tscn" id="2_tip"]
-[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="3_biomass"]
+[ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="3_biomass"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scout_bubble"]
 content_margin_left = 18.0
@@ -113,7 +113,7 @@ vertical_alignment = 1
 
 [node name="ScoutRerollButton" type="Button" parent="ScoutPanel/ScoutMargin/ScoutVBox" unique_id=1910696750]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 40)
+custom_minimum_size = Vector2(160, 52)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
@@ -123,8 +123,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_right = -8.0
+offset_left = 16.0
+offset_top = 6.0
+offset_right = -16.0
+offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2

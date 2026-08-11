@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://assets/base/weapon_detail_card/weapon_detail_card.gd" id="1_card"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="5_tag"]
-[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="6_biomass"]
+[ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="6_biomass"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
 content_margin_left = 16.0

@@ -13,7 +13,7 @@ const _STAT_CHIP_SCENE: PackedScene = preload("res://assets/ui/stat_chip/stat_ch
 const _TAG_CHIP_SCENE: PackedScene = preload("res://assets/ui/tag_chip/tag_chip.tscn")
 const _SWORD_ICON: Texture2D = preload("res://assets/base/unit_card/sword_icon.png")
 const _HP_ICON: Texture2D = preload("res://assets/base/unit_card/hp_icon.png")
-const _BIOMASS_ICON: Texture2D = preload("res://assets/base/biomass.png")
+const _BIOMASS_ICON: Texture2D = preload("res://assets/base/biomass_small_icon.png")
 
 @onready var _count_label: Label = %CountLabel
 @onready var _portrait_host: Control = %PortraitHost

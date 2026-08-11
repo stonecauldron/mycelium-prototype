@@ -1,7 +1,7 @@
 class_name BankCapEffect
 extends MutationEffect
 
-const _BIOMASS_ICON := preload("res://assets/base/biomass.png")
+const _BIOMASS_ICON := preload("res://assets/base/biomass_small_icon.png")
 const _BATTLE_START_DEPOSIT := 10
 
 

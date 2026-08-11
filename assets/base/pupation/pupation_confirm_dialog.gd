@@ -6,7 +6,7 @@ signal cancelled
 
 const PORTRAIT_SCALE := 0.7
 const PORTRAIT_SHADOW := 20.0
-const _BIOMASS_ICON := preload("res://assets/base/biomass.png")
+const _BIOMASS_ICON := preload("res://assets/base/biomass_small_icon.png")
 const _COLOR_UP := Color(0.12, 0.45, 0.18, 1)
 const _COLOR_DOWN := Color(0.7, 0.15, 0.12, 1)
 const _COLOR_NEUTRAL := Color(0.03, 0.035, 0.027, 1)

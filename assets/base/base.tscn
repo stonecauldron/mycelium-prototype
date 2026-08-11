@@ -74,6 +74,7 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("10_bg_lower_fg")
 expand_mode = 1
+flip_h = true
 
 [node name="RiboforgeZone" type="Node2D" parent="World/Zones" unique_id=3879105]
 unique_name_in_owner = true
@@ -172,6 +173,7 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("10_bg_lower_fg")
 expand_mode = 1
+flip_h = true
 
 [node name="HudLayer" type="CanvasLayer" parent="." unique_id=596109145]
 layer = 10
@@ -211,7 +213,6 @@ theme_type_variation = &"TightHBox"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-mouse_filter = 2
 theme_type_variation = &"PageTitleLabel"
 text = "Day 1 / 10"
 vertical_alignment = 1

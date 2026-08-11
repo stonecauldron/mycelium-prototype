@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="3_chip"]
 [ext_resource type="Texture2D" uid="uid://sdkqu2q3e1u" path="res://assets/base/unit_card/sword_icon.png" id="4_sword"]
 [ext_resource type="Texture2D" uid="uid://dqwo514d7ery6" path="res://assets/base/unit_card/hp_icon.png" id="5_hp"]
-[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="6_biomass"]
+[ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="6_biomass"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="7_punch"]
 [ext_resource type="Script" path="res://assets/base/pupation/pupation_weapon_hover_row.gd" id="8_weapon_row"]
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="9_hourglass"]

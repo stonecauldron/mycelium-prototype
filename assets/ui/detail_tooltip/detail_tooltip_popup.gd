@@ -17,13 +17,17 @@ static func configure(tip: Control) -> void:
 	if tip.is_inside_tree():
 		_schedule_fit(tip)
 	else:
-		# Capture as Variant: typed Control.bind on signals can fail with
+		# Bind as Variant: typed Control.bind on signals can fail with
 		# "Cannot convert argument 1 from Object to Object".
-		var tip_ref: Variant = tip
-		tip.tree_entered.connect(
-			func () -> void: _schedule_fit(tip_ref as Control),
-			CONNECT_ONE_SHOT
-		)
+		# Avoid capturing lambdas on SceneTree signals — if the tip is freed
+		# before the callback runs, Godot errors "Lambda capture ... was freed".
+		tip.tree_entered.connect(_schedule_fit_variant.bind(tip as Variant), CONNECT_ONE_SHOT)
+
+
+static func _schedule_fit_variant(tip_variant: Variant) -> void:
+	if not is_instance_valid(tip_variant):
+		return
+	_schedule_fit(tip_variant as Control)
 
 
 static func _schedule_fit(tip: Control) -> void:
@@ -34,18 +38,25 @@ static func _schedule_fit(tip: Control) -> void:
 		tip.set_meta(_FIT_PENDING_META, false)
 		return
 	# Wait one layout frame so labels/containers resolve autowrap height.
-	var tip_ref: Variant = tip
-	tree.process_frame.connect(
-		func () -> void: _apply(tip_ref),
-		CONNECT_ONE_SHOT
-	)
+	# SceneTree owns this callable; bind (not a capturing lambda) so a tip that
+	# closes before the next frame becomes a stale Object Variant instead of a
+	# "Lambda capture was freed" error. Guard with is_instance_valid before cast.
+	var cb := _apply.bind(tip as Variant)
+	if tree.process_frame.is_connected(cb):
+		return
+	tree.process_frame.connect(cb, CONNECT_ONE_SHOT)
 
 
 static func _apply(tip_variant: Variant) -> void:
+	# Bound Object may already be freed when the tip closed mid-frame.
+	# Cast-before-valid crashes with "Trying to cast a freed object".
+	if not is_instance_valid(tip_variant):
+		return
 	var tip := tip_variant as Control
-	if tip != null and is_instance_valid(tip):
-		tip.set_meta(_FIT_PENDING_META, false)
-	if tip == null or not is_instance_valid(tip) or not tip.is_inside_tree():
+	if tip == null:
+		return
+	tip.set_meta(_FIT_PENDING_META, false)
+	if not tip.is_inside_tree():
 		return
 	_prepare_tip(tip)
 	var tip_size := tip.get_combined_minimum_size()

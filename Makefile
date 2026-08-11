@@ -23,6 +23,7 @@ help:
 build:
 	@mkdir -p "$(BUILD_DIR)"
 	"$(GODOT)" --headless --path . --export-release "$(PRESET)" "$(EXPORT_HTML)"
+	@cp addons/GameAnalytics/web/GameAnalytics.js "$(BUILD_DIR)/GameAnalytics.js"
 	@echo "Exported → $(EXPORT_HTML)"
 
 run: build

@@ -22,6 +22,7 @@ SceneTransition="*res://assets/autoload/scene_transition.gd"
 Screenshot="*res://assets/autoload/screenshot.gd"
 SettingsServer="*res://assets/autoload/settings_server.gd"
 DebugMode="*res://assets/autoload/debug_mode.gd"
+Analytics="*res://assets/autoload/analytics.gd"
 
 [display]
 

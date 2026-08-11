@@ -4,6 +4,6 @@ Player specialty identity used to be sold as distinct shop Spores that each lock
 
 We rejected stackable “strain-effect fertilizers” (unbounded chips, muddy Fertilizer meaning) and keeping specialty spore SKUs alongside mutations (two acquisition channels). Shop offer rows stay split (Fertilizer vs Mutation); mutation cost is fertilizer cost + 1; Rotten Thumb discounts pay-on-plot planting; Fertilizer Spreader stays fertilizers-only.
 
-## Amendment — capacity 1 (plots only)
+## Amendment — plot apply capacity 1 (inheritance stacks at harvest)
 
-Plots (and thus harvested units) currently hold **at most one** Mutation — Body **or** Cap. Mutations apply on empty or planted plots; they are **not** prepared onto spores in Stock. Death spores may still snapshot the parent's mutation; planting merges spore + plot (same slot overwrites, different slots merge) then clamps to one by preferring the spore's mutation. Dual Body+Cap remix and mutation-capacity seals remain deferred. Typed `body_mutation` / `cap_mutation` fields and layered art stay.
+Plots accept **at most one** applied Mutation per grow (the plot chip) — Body **or** Cap. Mutations apply on empty or planted plots; they are **not** prepared onto spores in Stock. Death spores may still snapshot the parent's mutation, but planting does **not** seed those onto plot slots (the apply chip stays empty so another Mutation can still be applied). Harvest merges plot + spore per slot: plot wins on the same slot; different slots **stack**, so a grow can yield Body **and** Cap. Mutation-capacity seals remain deferred. Typed `body_mutation` / `cap_mutation` fields and layered art stay.

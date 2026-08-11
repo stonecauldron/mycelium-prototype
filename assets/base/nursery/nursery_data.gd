@@ -353,35 +353,11 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 		return false
 	var plot := plots[plot_index] as NurseryPlotData
 	plot.planted_spore = spore
-	_merge_mutations_on_plant(plot, spore)
+	# Inherited spore mutations stay on planted_spore — do not seed plot slots, so the
+	# plot apply chip stays empty and the player can still apply one mutation this grow.
 	plot.days_grown = plot.total_growth_bonus()
 	plot.snap_after_plant()
 	return true
-
-
-## Same slot: spore overwrites plot. Different slots: merge, then clamp to capacity 1
-## by keeping the spore's mutation and dropping the plot-only other slot.
-func _merge_mutations_on_plant(plot: NurseryPlotData, spore: SporeData) -> void:
-	var spore_had_body := spore.body_mutation != null
-	var spore_had_cap := spore.cap_mutation != null
-	var body: MutationData = (
-		spore.body_mutation.duplicate(true) as MutationData if spore_had_body else plot.body_mutation
-	)
-	var cap: MutationData = (
-		spore.cap_mutation.duplicate(true) as MutationData if spore_had_cap else plot.cap_mutation
-	)
-	if body != null and cap != null:
-		# Prefer spore identity when both slots would fill past capacity.
-		if spore_had_body and not spore_had_cap:
-			cap = null
-		elif spore_had_cap and not spore_had_body:
-			body = null
-		elif spore_had_body and spore_had_cap:
-			# Death spores should only carry one under capacity rules; if both exist,
-			# keep body (arbitrary stable pick) so the plot stays at one mutation.
-			cap = null
-	plot.body_mutation = body
-	plot.cap_mutation = cap
 
 
 func apply_fertilizer_from_stock(plot_index: int, stock_index: int) -> bool:
@@ -463,12 +439,20 @@ func harvest(plot_index: int) -> Array[RosterUnitData]:
 	if plot == null or not plot.can_harvest():
 		return result
 	var pending := plot.consume_pending_stat_bonus()
+	var body: MutationData = plot.body_mutation
+	var cap: MutationData = plot.cap_mutation
+	var spore := plot.planted_spore
+	if spore != null:
+		if body == null:
+			body = spore.body_mutation
+		if cap == null:
+			cap = spore.cap_mutation
 	result = _make_harvest_units(
-		plot.planted_spore,
+		spore,
 		plot.applied_fertilizers,
 		pending,
-		plot.body_mutation,
-		plot.cap_mutation
+		body,
+		cap
 	)
 	_apply_favourite_child_if_first_hatch(result)
 	plot.clear()

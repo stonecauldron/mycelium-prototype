@@ -231,14 +231,16 @@ func _check_lineage_and_plant_merge(errs: Array[String]) -> void:
 	if spore.has_method("apply_mutation"):
 		errs.append("SporeData.apply_mutation should be removed")
 
-	# Plant keeps spore mutation when plot empty.
+	# Plant leaves plot slots empty so the apply chip stays ghost; harvest inherits spore Cap.
 	if not nursery.plant_spore(0, spore):
 		errs.append("plant lineage spore failed")
 	var plot := nursery.plots[0] as NurseryPlotData
-	if plot.cap_mutation == null or plot.cap_mutation.display_name != "Boom":
-		errs.append("plant did not seed cap onto plot")
+	if plot.cap_mutation != null:
+		errs.append("plant should not seed spore cap onto plot")
 	if plot.body_mutation != null:
 		errs.append("plant should not invent body")
+	if not plot.can_apply_mutation():
+		errs.append("planted lineage with inheritance should still accept a plot mutation")
 	plot.days_grown = plot.days_to_mature_effective()
 	var units := nursery.harvest(0)
 	print("lineage hatch=", units.size())
@@ -256,7 +258,7 @@ func _check_lineage_and_plant_merge(errs: Array[String]) -> void:
 		if u.weapon_trainings.size() != 1:
 			errs.append("lineage child lost trainings")
 
-	# Plant merge: plot body + spore cap → clamp prefers spore (cap).
+	# Plot Body + spore Cap stack at harvest (different slots keep both).
 	nursery.plots[0] = NurseryPlotData.new()
 	nursery.plots[0].apply_mutation(fat)
 	var spore2 := SporeData.from_fallen_unit(adult)
@@ -264,22 +266,42 @@ func _check_lineage_and_plant_merge(errs: Array[String]) -> void:
 		errs.append("second lineage spore failed")
 		return
 	if not nursery.plant_spore(0, spore2):
-		errs.append("plant merge failed")
-	var merged := nursery.plots[0] as NurseryPlotData
-	if merged.cap_mutation == null or merged.cap_mutation.display_name != "Boom":
-		errs.append("merge clamp should keep spore cap")
-	if merged.body_mutation != null:
-		errs.append("merge clamp should drop plot-only body")
+		errs.append("plant stack failed")
+	var stacked_plot := nursery.plots[0] as NurseryPlotData
+	if stacked_plot.body_mutation == null or stacked_plot.body_mutation.display_name != "Fat":
+		errs.append("plant should keep staged plot body")
+	if stacked_plot.cap_mutation != null:
+		errs.append("plant should not seed spore cap onto plot")
+	stacked_plot.days_grown = stacked_plot.days_to_mature_effective()
+	var stacked_units := nursery.harvest(0)
+	if stacked_units.is_empty():
+		errs.append("stack harvest empty")
+	for u in stacked_units:
+		if u.body_mutation == null or u.body_mutation.display_name != "Fat":
+			errs.append("stack harvest missing plot body")
+		if u.cap_mutation == null or u.cap_mutation.display_name != "Boom":
+			errs.append("stack harvest missing spore cap")
 
-	# Same-slot overwrite: plot Wall + spore Boom → Boom.
+	# Same-slot: staged plot Cap wins over spore Cap (no overwrite on plant).
 	nursery.plots[0] = NurseryPlotData.new()
 	nursery.plots[0].apply_mutation(wall)
 	var spore3 := SporeData.from_fallen_unit(adult)
 	if not nursery.plant_spore(0, spore3):
 		errs.append("same-slot plant failed")
 	var overwritten := nursery.plots[0] as NurseryPlotData
-	if overwritten.cap_mutation == null or overwritten.cap_mutation.display_name != "Boom":
-		errs.append("same-slot plant should overwrite with spore")
+	if overwritten.cap_mutation == null or overwritten.cap_mutation.display_name != "Wall":
+		errs.append("same-slot plant should keep staged plot cap")
+	if overwritten.body_mutation != null:
+		errs.append("same-slot plant should not invent body")
+	overwritten.days_grown = overwritten.days_to_mature_effective()
+	var overwrite_units := nursery.harvest(0)
+	if overwrite_units.is_empty():
+		errs.append("same-slot harvest empty")
+	for u in overwrite_units:
+		if u.cap_mutation == null or u.cap_mutation.display_name != "Wall":
+			errs.append("same-slot harvest should prefer plot cap")
+		if u.body_mutation != null:
+			errs.append("same-slot harvest should not invent body")
 
 	# Plot-only kept when spore has no mutation.
 	nursery.plots[0] = NurseryPlotData.new()

@@ -281,11 +281,7 @@ func _set_mutation_row_label(label: Label, mutation: MutationData) -> void:
 	if mutation == null:
 		label.text = "None"
 		return
-	var effect := mutation.subtitle_text()
-	if effect.is_empty():
-		label.text = mutation.display_name
-	else:
-		label.text = "%s — %s" % [mutation.display_name, effect]
+	label.text = mutation.effect_line()
 
 
 func _refresh_tags() -> void:

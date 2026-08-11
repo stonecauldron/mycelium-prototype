@@ -198,6 +198,8 @@ func _apply_content(title: String, subtitle: String, description: String, icon: 
 		_icon.texture = icon
 	if _icon != null:
 		_icon.modulate = _item_tint
+		var mut := payload.get("mutation") as MutationData
+		MutationData.attach_slot_badge(_icon, mut, Vector2(56, 56))
 	_refresh_rarity_chip()
 	# Weapon/spore offers get a rich detail tooltip; other shop items leave this empty.
 	if payload.get("weapon") is WeaponData or payload.get("spore") is SporeData:

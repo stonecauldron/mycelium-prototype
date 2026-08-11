@@ -20,8 +20,6 @@ const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
 const _HOVER_PUNCH_SCENE := preload("res://assets/ui/hover_punch/hover_punch.tscn")
 const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
 const _MUTATION_ICON := preload("res://assets/base/nursery/mutations/mutation_icon.png")
-const _BODY_MUTATION_ICON := preload("res://assets/base/nursery/mutations/body_mutation_icon.png")
-const _CAP_MUTATION_ICON := preload("res://assets/base/nursery/mutations/cap_mutation_icon.png")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 const _FERTILIZER_DETAIL_CARD_SCENE := preload(
 	"res://assets/base/nursery/fertilizer_detail_card/fertilizer_detail_card.tscn"
@@ -362,7 +360,7 @@ func _add_mutation_slot_chip(show_ghost: bool) -> void:
 			icon.self_modulate = mutation.tint
 		_add_mutation_slot_badge(chip, mutation)
 		# Non-empty text enables the tooltip popup; content comes from factory.
-		chip.tooltip_text = mutation.display_name
+		chip.tooltip_text = mutation.title_text()
 		var mut_ref: MutationData = mutation
 		chip.custom_tooltip_factory = func () -> Object:
 			return _make_mutation_detail_tip(mut_ref)
@@ -370,19 +368,7 @@ func _add_mutation_slot_chip(show_ghost: bool) -> void:
 
 
 func _add_mutation_slot_badge(chip: StatChip, mutation: MutationData) -> void:
-	var badge := TextureRect.new()
-	badge.texture = _BODY_MUTATION_ICON if mutation.is_body() else _CAP_MUTATION_ICON
-	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	badge.custom_minimum_size = _MUTATION_SLOT_BADGE_SIZE
-	badge.size = _MUTATION_SLOT_BADGE_SIZE
-	badge.set_anchors_preset(Control.PRESET_CENTER)
-	badge.offset_left = -_MUTATION_SLOT_BADGE_SIZE.x * 0.5
-	badge.offset_top = -_MUTATION_SLOT_BADGE_SIZE.y * 0.5
-	badge.offset_right = _MUTATION_SLOT_BADGE_SIZE.x * 0.5
-	badge.offset_bottom = _MUTATION_SLOT_BADGE_SIZE.y * 0.5
-	chip.add_child(badge)
+	MutationData.attach_slot_badge(chip, mutation, _MUTATION_SLOT_BADGE_SIZE)
 
 
 func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:

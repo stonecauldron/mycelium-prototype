@@ -3,6 +3,9 @@ extends PanelContainer
 
 const CARD_SIZE := Vector2(120, 100)
 const _MUTATION_CARD_SCENE := preload("res://assets/base/nursery/mutation_card/mutation_card.tscn")
+const _MUTATION_DETAIL_CARD_SCENE := preload(
+	"res://assets/base/nursery/mutation_detail_card/mutation_detail_card.tscn"
+)
 const _HOVER_AMPLITUDE_PX := 5.0
 const _HOVER_HALF_DURATION_SEC := 1.35
 
@@ -74,9 +77,19 @@ func _refresh() -> void:
 	if _subtitle_label != null:
 		_subtitle_label.visible = false
 		_subtitle_label.text = ""
-	tooltip_text = "%s — %s" % [mutation.slot_label(), mutation.subtitle_text()]
+	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
+	tooltip_text = mutation.display_name
 	if _icon != null:
 		_icon.modulate = mutation.tint
+
+
+func _make_custom_tooltip(_for_text: String) -> Object:
+	if mutation == null:
+		return null
+	var tip: MutationDetailCard = _MUTATION_DETAIL_CARD_SCENE.instantiate()
+	tip.setup(mutation)
+	DetailTooltipPopup.configure(tip)
+	return tip
 
 
 func _apply_hover_y() -> void:

@@ -2,7 +2,7 @@ class_name UnitDetailCard
 extends Control
 
 const CARD_WIDTH := 390.0
-const PORTRAIT_HOST_HEIGHT := 200.0
+const PORTRAIT_HOST_HEIGHT := 140.0
 
 var unit_data: RosterUnitData
 var show_portrait: bool = true

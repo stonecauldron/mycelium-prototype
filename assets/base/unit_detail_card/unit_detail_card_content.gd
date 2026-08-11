@@ -1,7 +1,7 @@
 class_name UnitDetailCardContent
 extends VBoxContainer
 
-const PORTRAIT_HOST_HEIGHT := 200.0
+const PORTRAIT_HOST_HEIGHT := 140.0
 const PORTRAIT_SCALE := 0.9
 ## Extra room under feet so the ground shadow is not clipped (UnitCard keeps default).
 const PORTRAIT_SHADOW_CLEARANCE := 24.0

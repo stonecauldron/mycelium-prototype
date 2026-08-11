@@ -26,7 +26,7 @@ autowrap_mode = 3
 
 [node name="PortraitHost" type="Control" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(0, 140)
 clip_contents = false
 layout_mode = 2
 size_flags_horizontal = 3

@@ -28,6 +28,7 @@ const _HARVEST_ICON := preload("res://assets/combat/boom_cap_explosion/harvest_i
 const _HARVEST_CHIP_SIZE := Vector2(64, 64)
 const _PLOT_SLOT_CHIP_SIZE := Vector2(56, 56)
 const _PLOT_SLOT_CHIP_FONT_SIZE := 30
+const _MUTATION_SLOT_BADGE_SIZE := Vector2(28, 28)
 const _EMPTY_CHIP_MODULATE := Color(1, 1, 1, 0.4)
 
 const _SHAKE_IDLE_NORMAL_SEC := 1.5
@@ -365,7 +366,13 @@ func _add_mutation_slot_badge(chip: StatChip, mutation: MutationData) -> void:
 	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	badge.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	badge.custom_minimum_size = _MUTATION_SLOT_BADGE_SIZE
+	badge.size = _MUTATION_SLOT_BADGE_SIZE
+	badge.set_anchors_preset(Control.PRESET_CENTER)
+	badge.offset_left = -_MUTATION_SLOT_BADGE_SIZE.x * 0.5
+	badge.offset_top = -_MUTATION_SLOT_BADGE_SIZE.y * 0.5
+	badge.offset_right = _MUTATION_SLOT_BADGE_SIZE.x * 0.5
+	badge.offset_bottom = _MUTATION_SLOT_BADGE_SIZE.y * 0.5
 	chip.add_child(badge)
 
 

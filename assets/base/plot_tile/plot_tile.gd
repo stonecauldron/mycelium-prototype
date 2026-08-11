@@ -32,7 +32,7 @@ const _HARVEST_ICON := preload("res://assets/combat/boom_cap_explosion/harvest_i
 const _HARVEST_CHIP_SIZE := Vector2(64, 64)
 const _PLOT_SLOT_CHIP_SIZE := Vector2(56, 56)
 const _PLOT_SLOT_CHIP_FONT_SIZE := 30
-const _MUTATION_SLOT_BADGE_SIZE := Vector2(34, 34)
+const _MUTATION_SLOT_BADGE_SIZE := Vector2(40, 40)
 const _EMPTY_CHIP_MODULATE := Color(1, 1, 1, 0.4)
 
 const _SHAKE_IDLE_NORMAL_SEC := 1.5

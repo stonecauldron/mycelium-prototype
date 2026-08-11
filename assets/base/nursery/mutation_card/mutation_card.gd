@@ -77,7 +77,7 @@ func _refresh() -> void:
 	tooltip_text = mutation.effect_line()
 	if _icon != null:
 		_icon.modulate = mutation.tint
-		MutationData.attach_slot_badge(_icon, mutation, Vector2(40, 40))
+		MutationData.attach_slot_badge(_icon, mutation, Vector2(48, 48))
 
 
 func _apply_hover_y() -> void:

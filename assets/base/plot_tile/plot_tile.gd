@@ -20,6 +20,8 @@ const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
 const _HOVER_PUNCH_SCENE := preload("res://assets/ui/hover_punch/hover_punch.tscn")
 const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
 const _MUTATION_ICON := preload("res://assets/base/nursery/mutations/mutation_icon.png")
+const _BODY_MUTATION_ICON := preload("res://assets/base/nursery/mutations/body_mutation_icon.png")
+const _CAP_MUTATION_ICON := preload("res://assets/base/nursery/mutations/cap_mutation_icon.png")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 const _HOURGLASS_ICON := preload("res://assets/base/nursery/spore_card/hourglass_icon.png")
 const _HARVEST_ICON := preload("res://assets/combat/boom_cap_explosion/harvest_icon.png")
@@ -345,15 +347,26 @@ func _add_mutation_slot_chip(show_ghost: bool) -> void:
 			icon.self_modulate = _EMPTY_CHIP_MODULATE
 		chip.tooltip_text = "Mutation"
 	else:
-		chip.set_value(mutation.slot_label().substr(0, 1))
+		chip.set_value()
 		if icon != null:
 			icon.self_modulate = mutation.tint
+		_add_mutation_slot_badge(chip, mutation)
 		chip.tooltip_text = "%s: %s\n%s" % [
 			mutation.slot_label(),
 			mutation.display_name,
 			mutation.subtitle_text(),
 		]
 	_fertilizer_chips.append(chip)
+
+
+func _add_mutation_slot_badge(chip: StatChip, mutation: MutationData) -> void:
+	var badge := TextureRect.new()
+	badge.texture = _BODY_MUTATION_ICON if mutation.is_body() else _CAP_MUTATION_ICON
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	badge.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	chip.add_child(badge)
 
 
 func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:

@@ -181,7 +181,7 @@ func _rebuild_shop_cards() -> void:
 				i,
 				offer.locked,
 				mut.tint,
-				mut.effect_line()
+				mut.subtitle_text()
 			)
 		else:
 			continue

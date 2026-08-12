@@ -1,11 +1,10 @@
-[gd_resource type="Resource" script_class="FertilizerData" format=3]
+[gd_resource type="Resource" script_class="FertilizerData" format=3 uid="uid://dsolkoj3438qg"]
 
-[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+[ext_resource type="Script" uid="uid://d0mu0vimtxgur" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
 
 [resource]
 script = ExtResource("1_fert")
 display_name = "Cocooning"
-short_description = "Pupation take 2 days, but stats gains of training are doubled"
-biomass_cost = 2
+short_description = "Pupation stat gains are doubled, pupation takes 2 days"
 tint = Color(0.85, 0.6, 0.75, 1)
 behavior = 9

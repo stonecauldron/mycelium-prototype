@@ -1,13 +1,12 @@
-[gd_resource type="Resource" script_class="FertilizerData" format=3]
+[gd_resource type="Resource" script_class="FertilizerData" format=3 uid="uid://gadloah4y26n"]
 
-[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+[ext_resource type="Script" uid="uid://d0mu0vimtxgur" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
 
 [resource]
 script = ExtResource("1_fert")
 display_name = "Stimulants"
 short_description = "+5 to ALL stats upon hatch
--1 to ALL stats after every day"
-biomass_cost = 2
+-1 to ALL stats after each day"
 tint = Color(0.95, 0.4, 0.55, 1)
 behavior = 10
 strength_delta = 5

@@ -13,8 +13,6 @@ const STAT_VARIANCE := 1
 @export var held_weapon: WeaponData
 ## When false, skip WeaponMount art. Projectiles still use `combat.projectile_scene`.
 @export var show_held_weapon: bool = true
-## Biomass granted to the player when this enemy dies.
-@export_range(0, 99, 1) var biomass_reward: int = 4
 ## Authored average STR/DEX/CON/SPD. Instances roll ±STAT_VARIANCE via `make_stats()`.
 @export var stats: UnitStatsData
 ## First day this type can appear in procedural armies (1-based).

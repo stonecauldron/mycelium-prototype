@@ -21,6 +21,10 @@ A harder day that falls on days 5 and 10 of the run.
 A combat encounter fought during a day. Not every day necessarily has one.
 *Avoid*: using Battle as the name for run progression
 
+**Battle reward**:
+Biomass granted for winning a Battle. The amount is set by the Day and that enemy army's difficulty — not by individual kills.
+*Avoid*: kill bounty, per-kill biomass, currency drop
+
 **Biomass**:
 The run's spendable resource, shown in kg.
 *Avoid*: gold, money, currency (unless speaking generically)

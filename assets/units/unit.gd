@@ -1467,7 +1467,7 @@ func _spawn_biomass_number_at(at_global: Vector2, amount: int) -> void:
 func _find_combat_stage() -> Node:
 	var node: Node = self
 	while node != null:
-		if node.has_method("_award_kill_biomass"):
+		if node.has_method("record_biomass_yield"):
 			return node
 		node = node.get_parent()
 	return null

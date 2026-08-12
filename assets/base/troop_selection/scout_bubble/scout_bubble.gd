@@ -12,6 +12,8 @@ const _SCOUT_ENTRY_SCENE := preload(
 @onready var _scout_reroll_cost_label: Label = %ScoutRerollCostLabel
 
 var _previewing: bool = false
+## Day used for Battle-reward preview (upcoming day, or elite day while previewing).
+var _reward_day: int = 1
 
 
 func _ready() -> void:
@@ -26,7 +28,7 @@ func refresh() -> void:
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	var specs := GameState.upcoming_enemy_formation
 	var title := _title_for_day(day)
-	show_specs(specs, title)
+	show_specs(specs, title, day)
 	_refresh_reroll_affordability()
 
 
@@ -36,7 +38,7 @@ func preview_elite_for_day(day: int) -> void:
 		return
 	_previewing = true
 	var specs := EnemyComposer.specs_for_day(elite_day)
-	show_specs(specs, "Elite Battle: Day %d" % elite_day)
+	show_specs(specs, "Elite Battle: Day %d" % elite_day, elite_day)
 	_refresh_reroll_affordability()
 
 
@@ -46,9 +48,10 @@ func clear_preview() -> void:
 	refresh()
 
 
-func show_specs(specs: Array[EnemyUnitSpec], title: String) -> void:
+func show_specs(specs: Array[EnemyUnitSpec], title: String, day: int = -1) -> void:
 	if _scout_row == null:
 		return
+	_reward_day = day if day > 0 else clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	for child in _scout_row.get_children():
 		child.queue_free()
 	if _scout_title != null:
@@ -63,11 +66,6 @@ func show_specs(specs: Array[EnemyUnitSpec], title: String) -> void:
 		if not type_counts.has(key):
 			type_counts[key] = {"count": 0, "unit_data": spec.unit_data}
 		type_counts[key]["count"] = int(type_counts[key]["count"]) + 1
-	var reward := 0
-	for spec in specs:
-		if spec.unit_data == null:
-			continue
-		reward += spec.unit_data.biomass_reward
 	for key in type_counts.keys():
 		var entry: Dictionary = type_counts[key]
 		var count: int = entry["count"]
@@ -78,7 +76,7 @@ func show_specs(specs: Array[EnemyUnitSpec], title: String) -> void:
 		_scout_row.add_child(entry_card)
 		entry_card.setup(count, unit_data)
 	if _scout_reward_label != null:
-		_scout_reward_label.text = "+%d" % reward
+		_scout_reward_label.text = "+%d" % EnemyComposer.battle_reward_for(_reward_day, specs)
 
 
 func _title_for_day(day: int) -> String:

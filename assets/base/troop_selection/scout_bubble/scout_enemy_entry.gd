@@ -13,7 +13,6 @@ const _STAT_CHIP_SCENE: PackedScene = preload("res://assets/ui/stat_chip/stat_ch
 const _TAG_CHIP_SCENE: PackedScene = preload("res://assets/ui/tag_chip/tag_chip.tscn")
 const _SWORD_ICON: Texture2D = preload("res://assets/base/unit_card/sword_icon.png")
 const _HP_ICON: Texture2D = preload("res://assets/base/unit_card/hp_icon.png")
-const _BIOMASS_ICON: Texture2D = preload("res://assets/base/biomass_small_icon.png")
 
 @onready var _count_label: Label = %CountLabel
 @onready var _portrait_host: Control = %PortraitHost
@@ -134,27 +133,6 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 		desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		desc_label.custom_minimum_size = Vector2(_TOOLTIP_WIDTH, 0)
 		vbox.add_child(desc_label)
-
-	var reward_row := HBoxContainer.new()
-	reward_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	reward_row.add_theme_constant_override("separation", 4)
-	reward_row.alignment = BoxContainer.ALIGNMENT_END
-	vbox.add_child(reward_row)
-
-	var reward_label := Label.new()
-	reward_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	reward_label.text = "+%d" % unit_data.biomass_reward
-	reward_label.add_theme_color_override("font_color", Color(0, 0, 0, 1))
-	reward_label.add_theme_font_size_override("font_size", 24)
-	reward_row.add_child(reward_label)
-
-	var biomass_icon := TextureRect.new()
-	biomass_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	biomass_icon.custom_minimum_size = Vector2(40, 40)
-	biomass_icon.texture = _BIOMASS_ICON
-	biomass_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	biomass_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	reward_row.add_child(biomass_icon)
 
 	panel.reset_size()
 	return panel

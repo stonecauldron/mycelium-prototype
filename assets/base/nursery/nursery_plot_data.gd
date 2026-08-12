@@ -4,8 +4,7 @@ extends Resource
 enum State { EMPTY, GROWING, READY }
 
 const FUNGICIDE_NEXT_SPORE_BONUS := 2
-## Plots hold at most one mutation (Body or Cap). Dual-slot remix deferred.
-const MAX_MUTATION_SLOTS := 1
+## Plots hold Body and/or Cap mutations up to SealModifiers.max_mutation_slots().
 
 @export var planted_spore: SporeData
 @export var days_grown: int = 0
@@ -51,16 +50,17 @@ func filled_mutation() -> MutationData:
 
 ## Mutations apply on empty or planted plots. At capacity, only same-slot replace is allowed.
 func can_apply_mutation(mutation: MutationData = null) -> bool:
+	var max_slots := SealModifiers.max_mutation_slots()
 	if mutation == null:
-		return mutation_count() < MAX_MUTATION_SLOTS
+		return mutation_count() < max_slots
 	if mutation.is_body():
 		if body_mutation != null:
 			return true
-		return mutation_count() < MAX_MUTATION_SLOTS
+		return mutation_count() < max_slots
 	if mutation.is_cap():
 		if cap_mutation != null:
 			return true
-		return mutation_count() < MAX_MUTATION_SLOTS
+		return mutation_count() < max_slots
 	return false
 
 

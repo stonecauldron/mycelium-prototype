@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SealData" format=3 uid="uid://brk2phk3slija"]
+
+[ext_resource type="Script" uid="uid://cjfvanoa1diui" path="res://assets/base/seals/seal_data.gd" id="1_seal"]
+[ext_resource type="Texture2D" uid="uid://dnf8ps5v2sbhi" path="res://assets/base/seals/seal.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_seal")
+id = &"normie_advantage"
+display_name = "Normie Advantage"
+description = "Units with no mutations have 1.5x ATK, 1.5x HP"
+icon = ExtResource("2_icon")
+is_unique = true
+atk_multiplier = 1.5
+hp_multiplier = 1.5
+multiplier_filter = 2

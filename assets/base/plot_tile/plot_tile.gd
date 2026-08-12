@@ -336,8 +336,40 @@ func _refresh_fertilizer_chips() -> void:
 		return
 	# Ghost capacity chips only while a spore is planted; empty dirt shows filled only.
 	var show_ghosts := not _plot.is_empty()
-	_add_mutation_slot_chip(show_ghosts)
+	_add_mutation_slot_chips(show_ghosts)
 	_add_fertilizer_slot_chips(show_ghosts)
+
+
+func _add_mutation_slot_chips(show_ghost: bool) -> void:
+	if SealModifiers.max_mutation_slots() <= 1:
+		_add_mutation_slot_chip(show_ghost)
+		return
+	_add_typed_mutation_slot_chip(_plot.body_mutation, show_ghost, true)
+	_add_typed_mutation_slot_chip(_plot.cap_mutation, show_ghost, false)
+
+
+func _add_typed_mutation_slot_chip(mutation: MutationData, show_ghost: bool, is_body: bool) -> void:
+	if mutation == null and not show_ghost:
+		return
+	var chip := _make_slot_chip(_MUTATION_ICON)
+	var icon := chip.get_node_or_null("%Icon") as TextureRect
+	if mutation == null:
+		chip.set_value()
+		if icon != null:
+			icon.self_modulate = _EMPTY_CHIP_MODULATE
+		chip.tooltip_text = "Empty Body mutation slot" if is_body else "Empty Cap mutation slot"
+		chip.custom_tooltip_factory = func () -> Object:
+			return _make_mutation_detail_tip(null)
+	else:
+		chip.set_value()
+		if icon != null:
+			icon.self_modulate = mutation.tint
+		_add_mutation_slot_badge(chip, mutation)
+		chip.tooltip_text = mutation.title_text()
+		var mut_ref: MutationData = mutation
+		chip.custom_tooltip_factory = func () -> Object:
+			return _make_mutation_detail_tip(mut_ref)
+	_fertilizer_chips.append(chip)
 
 
 func _add_mutation_slot_chip(show_ghost: bool) -> void:

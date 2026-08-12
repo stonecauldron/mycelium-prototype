@@ -123,7 +123,7 @@ func _fill_current_side() -> void:
 		_left_str.text = "STR %d" % stats.strength
 		_left_dex.text = "DEX %d" % stats.dex
 		_left_con.text = "CON %d" % stats.con
-		_left_spd.text = "SPD %d" % stats.spd
+		_left_spd.text = "SPD %d" % SealModifiers.effective_spd(_unit)
 	else:
 		_left_str.text = "STR —"
 		_left_dex.text = "DEX —"

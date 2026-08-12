@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SealData" format=3]
+
+[ext_resource type="Script" uid="uid://cjfvanoa1diui" path="res://assets/base/seals/seal_data.gd" id="1_seal"]
+[ext_resource type="Texture2D" uid="uid://dnf8ps5v2sbhi" path="res://assets/base/seals/seal.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_seal")
+id = &"wooden_heart"
+display_name = "Wooden Heart"
+description = "Your units have +8 HP"
+icon = ExtResource("2_icon")
+max_hp_flat = 8

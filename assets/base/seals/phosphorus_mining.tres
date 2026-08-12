@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SealData" format=3]
+
+[ext_resource type="Script" uid="uid://cjfvanoa1diui" path="res://assets/base/seals/seal_data.gd" id="1_seal"]
+[ext_resource type="Texture2D" uid="uid://dnf8ps5v2sbhi" path="res://assets/base/seals/seal.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_seal")
+id = &"phosphorus_mining"
+display_name = "Phosphorus Mining"
+description = "Halves the cost of fertilizers (capped at 1 biomass)"
+icon = ExtResource("2_icon")
+fertilizer_cost_halve = true

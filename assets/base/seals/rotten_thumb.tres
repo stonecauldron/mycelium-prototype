@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SealData" format=3 uid="uid://rudg4ad14ljf"]
+
+[ext_resource type="Script" uid="uid://cjfvanoa1diui" path="res://assets/base/seals/seal_data.gd" id="1_seal"]
+[ext_resource type="Texture2D" uid="uid://dnf8ps5v2sbhi" path="res://assets/base/seals/seal.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_seal")
+id = &"rotten_thumb"
+display_name = "Rotten Thumb"
+description = "Halves the cost of planting a spore (capped at 1 biomass)"
+icon = ExtResource("2_icon")
+plant_cost_halve = true

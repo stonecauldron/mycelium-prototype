@@ -887,8 +887,14 @@ func _refresh_unit_process_order() -> void:
 	units.append_array(player_troop.get_living_units())
 	units.append_array(enemy_troop.get_living_units())
 	units.sort_custom(func(a: Unit, b: Unit) -> bool:
-		if a.stats.spd != b.stats.spd:
-			return a.stats.spd > b.stats.spd
+		var a_spd := a.stats.spd if a.stats != null else 0
+		var b_spd := b.stats.spd if b.stats != null else 0
+		if a.is_player_controlled() and a.roster_data != null:
+			a_spd = SealModifiers.effective_spd(a.roster_data)
+		if b.is_player_controlled() and b.roster_data != null:
+			b_spd = SealModifiers.effective_spd(b.roster_data)
+		if a_spd != b_spd:
+			return a_spd > b_spd
 		return a.process_tiebreak > b.process_tiebreak
 	)
 	for i in units.size():

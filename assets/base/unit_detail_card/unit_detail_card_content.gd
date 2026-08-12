@@ -96,7 +96,7 @@ func _refresh() -> void:
 		_str_label.text = "STR %d" % display_stats.strength
 		_dex_label.text = "DEX %d" % display_stats.dex
 		_con_label.text = "CON %d" % display_stats.con
-		_spd_label.text = "SPD %d" % display_stats.spd
+		_spd_label.text = "SPD %d" % SealModifiers.effective_spd(unit_data)
 	else:
 		_atk_chip.set_value("—")
 		_hp_chip.set_value("—")

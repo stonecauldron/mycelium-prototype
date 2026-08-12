@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SealData" format=3 uid="uid://civoqlsku6unc"]
+
+[ext_resource type="Script" uid="uid://cjfvanoa1diui" path="res://assets/base/seals/seal_data.gd" id="1_seal"]
+[ext_resource type="Texture2D" uid="uid://dnf8ps5v2sbhi" path="res://assets/base/seals/seal.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_seal")
+id = &"golden_mould"
+display_name = "Golden Mould"
+description = "At the start of each day, gain 8 biomass"
+icon = ExtResource("2_icon")
+biomass_per_day = 8

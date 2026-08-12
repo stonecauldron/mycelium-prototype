@@ -1,28 +1,32 @@
 class_name SealCatalog
 extends RefCounted
 
-const ICON_PATH := "res://assets/base/seals/seal.png"
-
-const ID_GOLDEN_MOULD := &"golden_mould"
-const ID_ROTTEN_THUMB := &"rotten_thumb"
-const ID_WOODEN_SWORD := &"wooden_sword"
-const ID_WOODEN_BOW := &"wooden_bow"
-const ID_WOODEN_HEART := &"wooden_heart"
-const ID_FAVOURITE_CHILD := &"favourite_child"
-const ID_NEOTONIA := &"neotonia"
-const ID_FERTILIZER_SPREADER := &"fertilizer_spreader"
-const ID_BULWARK := &"bulwark"
-const ID_RANGER := &"ranger"
-const ID_GREENHOUSE := &"greenhouse"
-const ID_COMMONERS_DELIGHT := &"commoners_delight"
+const _SEAL_PATHS: Array[String] = [
+	"res://assets/base/seals/golden_mould.tres",
+	"res://assets/base/seals/rotten_thumb.tres",
+	"res://assets/base/seals/phosphorus_mining.tres",
+	"res://assets/base/seals/radioactivity.tres",
+	"res://assets/base/seals/wooden_sword.tres",
+	"res://assets/base/seals/wooden_bow.tres",
+	"res://assets/base/seals/wooden_heart.tres",
+	"res://assets/base/seals/wooden_clock.tres",
+	"res://assets/base/seals/favourite_child.tres",
+	"res://assets/base/seals/neotonia.tres",
+	"res://assets/base/seals/hybrid_vigor.tres",
+	"res://assets/base/seals/fertilizer_spreader.tres",
+	"res://assets/base/seals/mad_scientist.tres",
+	"res://assets/base/seals/bulwark.tres",
+	"res://assets/base/seals/ranger.tres",
+	"res://assets/base/seals/greenhouse.tres",
+	"res://assets/base/seals/commoners_delight.tres",
+]
 
 static var _cache: Array[SealData] = []
-static var _icon: Texture2D
 
 
 static func all_seals() -> Array[SealData]:
 	if _cache.is_empty():
-		_cache = _build_all()
+		_cache = _load_all()
 	return _cache
 
 
@@ -62,65 +66,13 @@ static func eligible_pool(collection: SealsCollection) -> Array[SealData]:
 	return result
 
 
-static func _build_all() -> Array[SealData]:
-	var icon := _shared_icon()
-	var seals: Array[SealData] = [
-		_make(ID_GOLDEN_MOULD, "Golden Mould", "At the start of each day, gain 6 biomass", icon),
-		_make(
-			ID_ROTTEN_THUMB,
-			"Rotten Thumb",
-			"Planting a fresh grow costs 2 biomass less (capped at 1)",
-			icon
-		),
-		_make(ID_WOODEN_SWORD, "Wooden Sword", "Your units deal +2 melee dmg", icon),
-		_make(ID_WOODEN_BOW, "Wooden Bow", "Your units deal +2 ranged dmg", icon),
-		_make(ID_WOODEN_HEART, "Wooden Heart", "Your units have +8 HP", icon),
-		_make(
-			ID_FAVOURITE_CHILD,
-			"Favourite Child",
-			"First hatch of the day has permanent 1.5x ATK, 1.5x HP",
-			icon
-		),
-		_make(ID_NEOTONIA, "Neotonia", "Child units have 1.5x ATK, 1.5x HP", icon),
-		_make(
-			ID_FERTILIZER_SPREADER,
-			"Fertilizer Spreader",
-			"Increase the number of fertilisers you can stack by 1",
-			icon
-		),
-		_make(ID_BULWARK, "Bulwark", "The frontmost unit gains 2x HP", icon),
-		_make(ID_RANGER, "Ranger", "The rearmost unit gains 2x ATK", icon),
-		_make(ID_GREENHOUSE, "Greenhouse", "Spores take 1 day less to hatch", icon, true),
-		_make(
-			ID_COMMONERS_DELIGHT,
-			"Commoners' Delight",
-			"Units with no training have 2x ATK, 2x HP",
-			icon
-		),
-	]
+static func _load_all() -> Array[SealData]:
+	var seals: Array[SealData] = []
+	for path in _SEAL_PATHS:
+		var seal := load(path) as SealData
+		if seal != null:
+			seals.append(seal)
 	return seals
-
-
-static func _make(
-	seal_id: StringName,
-	display_name: String,
-	description: String,
-	icon: Texture2D,
-	is_unique: bool = false
-) -> SealData:
-	var seal := SealData.new()
-	seal.id = seal_id
-	seal.display_name = display_name
-	seal.description = description
-	seal.icon = icon
-	seal.is_unique = is_unique
-	return seal
-
-
-static func _shared_icon() -> Texture2D:
-	if _icon == null:
-		_icon = load(ICON_PATH) as Texture2D
-	return _icon
 
 
 static func _shuffle_with_rng(arr: Array, rng: RandomNumberGenerator) -> void:

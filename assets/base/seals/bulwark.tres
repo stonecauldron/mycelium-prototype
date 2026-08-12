@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SealData" format=3 uid="uid://1n1r1ce4bmie"]
+
+[ext_resource type="Script" uid="uid://cjfvanoa1diui" path="res://assets/base/seals/seal_data.gd" id="1_seal"]
+[ext_resource type="Texture2D" uid="uid://dnf8ps5v2sbhi" path="res://assets/base/seals/seal.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_seal")
+id = &"bulwark"
+display_name = "Bulwark"
+description = "The frontmost unit gains 2x HP"
+icon = ExtResource("2_icon")
+is_unique = true
+hp_multiplier = 2.0
+multiplier_filter = 3

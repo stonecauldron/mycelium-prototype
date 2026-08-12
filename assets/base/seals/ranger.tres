@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SealData" format=3 uid="uid://brnog414q1dm2"]
+
+[ext_resource type="Script" uid="uid://cjfvanoa1diui" path="res://assets/base/seals/seal_data.gd" id="1_seal"]
+[ext_resource type="Texture2D" uid="uid://dnf8ps5v2sbhi" path="res://assets/base/seals/seal.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_seal")
+id = &"ranger"
+display_name = "Ranger"
+description = "The rearmost unit gains 2x ATK"
+icon = ExtResource("2_icon")
+is_unique = true
+atk_multiplier = 2.0
+multiplier_filter = 4

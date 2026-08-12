@@ -147,15 +147,16 @@ func _rebuild_shop_cards() -> void:
 		var card: ShopOfferCard = null
 		if offer.item is FertilizerData:
 			var fert := offer.item as FertilizerData
+			var fert_cost := SealModifiers.fertilizer_cost(offer.cost)
 			card = _SHOP_OFFER_CARD_SCENE.instantiate()
 			card.setup(
 				"Fertilizer",
 				fert.display_name,
-				offer.cost,
+				fert_cost,
 				{
 					"type": "shop_fertilizer",
 					"fertilizer": fert,
-					"cost": offer.cost,
+					"cost": fert_cost,
 					"slot_index": i,
 				},
 				_fertilizer_icon_atlas,
@@ -166,15 +167,16 @@ func _rebuild_shop_cards() -> void:
 			)
 		elif offer.item is MutationData:
 			var mut := offer.item as MutationData
+			var mut_cost := SealModifiers.mutation_cost(offer.cost)
 			card = _SHOP_OFFER_CARD_SCENE.instantiate()
 			card.setup(
 				"Mutation",
 				mut.title_text(),
-				offer.cost,
+				mut_cost,
 				{
 					"type": "shop_mutation",
 					"mutation": mut,
-					"cost": offer.cost,
+					"cost": mut_cost,
 					"slot_index": i,
 				},
 				_MUTATION_ICON,

@@ -222,8 +222,8 @@ func try_add_seal(seal: SealData) -> bool:
 		return false
 	if not seals.add(seal):
 		return false
-	# Opening seal is chosen after day-0 begin_day(); grant missed Golden Mould once.
-	if current_day == 0 and seal.id == SealCatalog.ID_GOLDEN_MOULD:
+	# Opening seal is chosen after day-0 begin_day(); grant missed day-start biomass once.
+	if current_day == 0 and seal.biomass_per_day > 0:
 		var mould := SealModifiers.golden_mould_biomass()
 		if mould > 0:
 			biomass.add(mould)

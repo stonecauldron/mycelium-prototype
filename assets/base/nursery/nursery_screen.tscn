@@ -207,7 +207,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 30
-text = "2"
+text = "3"
 
 [node name="RerollBiomassIcon" type="TextureRect" parent="ShopPanel/ShopMargin/ShopVBox/ShopDropZone/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=1970297507]
 custom_minimum_size = Vector2(32, 32)

@@ -121,6 +121,8 @@ func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 		return false
 	if fertilizer.behavior == FertilizerData.Behavior.FUNGICIDE:
 		return _apply_fungicide(fertilizer)
+	if fertilizer.behavior == FertilizerData.Behavior.NORMIFIER:
+		return _apply_normifier(fertilizer)
 	if not can_apply_fertilizer():
 		return false
 	applied_fertilizers.append(fertilizer)
@@ -141,6 +143,34 @@ func apply_mutation(mutation: MutationData) -> bool:
 		cap_mutation = mutation
 		return true
 	return false
+
+
+func has_any_mutation() -> bool:
+	if body_mutation != null or cap_mutation != null:
+		return true
+	if planted_spore == null:
+		return false
+	return planted_spore.body_mutation != null or planted_spore.cap_mutation != null
+
+
+func can_apply_normifier() -> bool:
+	var state := get_state()
+	if state != State.GROWING and state != State.READY:
+		return false
+	if planted_spore == null or not has_any_mutation():
+		return false
+	return applied_fertilizers.size() < SealModifiers.max_fertilizer_stacks()
+
+
+func _apply_normifier(fertilizer: FertilizerData) -> bool:
+	if not can_apply_normifier():
+		return false
+	body_mutation = null
+	cap_mutation = null
+	planted_spore.body_mutation = null
+	planted_spore.cap_mutation = null
+	applied_fertilizers.append(fertilizer)
+	return true
 
 
 func _apply_fungicide(fertilizer: FertilizerData) -> bool:

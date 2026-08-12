@@ -1,14 +1,11 @@
-[gd_resource type="Resource" script_class="FertilizerData" format=3]
+[gd_resource type="Resource" script_class="FertilizerData" format=3 uid="uid://dn8cx3abgtc4x"]
 
-[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+[ext_resource type="Script" uid="uid://d0mu0vimtxgur" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
 
 [resource]
 script = ExtResource("1_fert")
 display_name = "Triploid Cells"
 short_description = "Hatch amount x3
-Stats are divided by 3
-Immediately hatchable"
-biomass_cost = 2
+Stats are divided by 3."
 tint = Color(0.75, 0.45, 0.85, 1)
 behavior = 7
-force_ready = true

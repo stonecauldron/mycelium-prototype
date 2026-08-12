@@ -27,6 +27,7 @@ const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/cocooning.tres",
 	"res://assets/base/nursery/fertilizers/stimulants.tres",
 	"res://assets/base/nursery/fertilizers/late_bloomer.tres",
+	"res://assets/base/nursery/fertilizers/normifier.tres",
 ]
 const _BODY_MUTATION_PATHS: Array[String] = [
 	"res://assets/base/nursery/mutations/body/fat.tres",

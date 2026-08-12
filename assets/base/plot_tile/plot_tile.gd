@@ -154,6 +154,8 @@ func _accepts_drag_data(data: Variant) -> bool:
 		var fert := data.get("fertilizer") as FertilizerData
 		if fert != null and fert.behavior == FertilizerData.Behavior.FUNGICIDE:
 			return state == NurseryPlotData.State.GROWING or state == NurseryPlotData.State.READY
+		if fert != null and fert.behavior == FertilizerData.Behavior.NORMIFIER:
+			return _plot.can_apply_normifier()
 		if not _plot.can_apply_fertilizer():
 			return false
 		return state == NurseryPlotData.State.EMPTY or state == NurseryPlotData.State.GROWING

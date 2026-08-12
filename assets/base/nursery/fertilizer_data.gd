@@ -14,6 +14,7 @@ enum Behavior {
 	COCOONING,
 	STIMULANTS,
 	LATE_BLOOMER,
+	NORMIFIER,
 }
 
 @export var display_name: String = "Fertilizer"

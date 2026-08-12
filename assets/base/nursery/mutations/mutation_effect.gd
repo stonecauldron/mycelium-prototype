@@ -31,7 +31,13 @@ func on_hit_dealt(_attacker: Node, _target: Node, _damage: int) -> void:
 	pass
 
 
-func on_hit_taken(_unit: Node, _amount: int, _damage_type: int) -> void:
+func on_hit_taken(
+	_unit: Node,
+	_amount: int,
+	_damage_type: int,
+	_attacker: Node = null,
+	_is_melee: bool = false
+) -> void:
 	pass
 
 
@@ -40,6 +46,11 @@ func on_kill(_killer: Node, _victim: Node) -> void:
 
 
 func on_death(_roster: Resource, _context: DeathContext, _combat_unit: Node = null) -> void:
+	pass
+
+
+## Fired on living troop units when another unit is composted (War Chamber).
+func on_ally_composted(_roster: Resource, _composted: Resource) -> void:
 	pass
 
 

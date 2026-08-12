@@ -63,10 +63,10 @@ An identity modifier applied in the Nursery on a plot (including empty dirt). Pl
 *Avoid*: Fertilizer (when you mean identity), trait, strain effect (as the item type)
 
 **Body mutation**:
-The Mutation slot that sets body-led identity, scale, and hurtbox — not the physics body collider — and tints the shared body layer. Singular. (Includes forms such as Mini, Lanky, Fat, Rubber, Zombie.)
+The Mutation slot that sets body-led identity and tints the shared body layer (no silhouette scale). Singular. (Includes forms such as Fat, Rubber, Zombie, Thorny.)
 
 **Cap mutation**:
-The Mutation slot that sets specialty combat or lifecycle identity and tints the shared cap layer. Singular. (Includes identities such as Death, Inky, Boom, Wall, Bank, Brood Empress.)
+The Mutation slot that sets specialty combat or lifecycle identity and tints the shared cap layer. Singular. (Includes identities such as Death, Inky, Boom, Wall, Bank, Brood Empress, Mould.)
 
 Player unit art is layered Generalist body + cap sprites (child pair while Child, imago pair while Adult). Mutations tint those layers; empty slots use fixed default layer colors; Tier multiplies both layers. The body layer owns weapon mount and animation; the cap follows.
 

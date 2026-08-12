@@ -1,15 +1,15 @@
 [gd_resource type="Resource" script_class="MutationData" format=3]
 
 [ext_resource type="Script" path="res://assets/base/nursery/mutation_data.gd" id="1_mut"]
-[ext_resource type="Script" path="res://assets/base/nursery/mutations/cap/death_effect.gd" id="2_effect"]
+[ext_resource type="Script" path="res://assets/base/nursery/mutations/cap/mould_effect.gd" id="2_effect"]
 
 [sub_resource type="Resource" id="Effect"]
 script = ExtResource("2_effect")
 
 [resource]
 script = ExtResource("1_mut")
-display_name = "Death"
-short_description = "Kills two adjacent units upon battle start. Gains +2 on all STATS for each of those kills."
+display_name = "Mould"
+short_description = "+1 to all stats whenever another unit is composted."
 slot = 1
-tint = Color(0.424, 0.53, 0.43106663, 1)
+tint = Color(0.45, 0.55, 0.38, 1)
 effect = SubResource("Effect")

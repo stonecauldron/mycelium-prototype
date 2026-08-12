@@ -16,8 +16,11 @@ func receive_hit(
 	from_global: Vector2 = Vector2.ZERO,
 	knockback_force: float = 0.0,
 	killer: Node = null,
-	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
+	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING,
+	is_melee: bool = false
 ) -> void:
 	var combatant := get_combatant()
 	if combatant != null and combatant.has_method("take_damage"):
-		combatant.take_damage(damage, from_global, knockback_force, killer, damage_type)
+		combatant.take_damage(
+			damage, from_global, knockback_force, killer, damage_type, true, is_melee
+		)

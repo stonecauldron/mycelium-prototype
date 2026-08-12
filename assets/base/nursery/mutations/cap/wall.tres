@@ -11,7 +11,6 @@ script = ExtResource("1_mut")
 display_name = "Wall"
 short_description = "Death leaves a destructible wall."
 slot = 1
-biomass_cost = 3
 tint = Color(0.83336693, 0.30143315, 0.18721086, 1)
 effect = SubResource("Effect")
 strength_delta = -2

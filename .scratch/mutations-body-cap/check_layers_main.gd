@@ -37,8 +37,8 @@ func _run() -> void:
 		child.free()
 
 	var boom := load("res://assets/base/nursery/mutations/cap/boom.tres") as MutationData
-	var mini := load("res://assets/base/nursery/mutations/body/mini.tres") as MutationData
-	var adult := UnitAppearance.compose_player(true, mini, boom)
+	var fat := load("res://assets/base/nursery/mutations/body/fat.tres") as MutationData
+	var adult := UnitAppearance.compose_player(true, fat, boom)
 	if adult == null:
 		errs.append("adult appearance null")
 	else:
@@ -50,8 +50,8 @@ func _run() -> void:
 		if body == null or cap == null:
 			errs.append("adult missing layers")
 		else:
-			if body.modulate != mini.tint:
-				errs.append("mini body tint")
+			if body.modulate != fat.tint:
+				errs.append("fat body tint")
 			if cap.self_modulate != boom.tint:
 				errs.append("boom cap tint")
 		var body_shape := adult.get_node_or_null("BodyShape") as CollisionShape2D
@@ -82,7 +82,7 @@ func _run() -> void:
 	# Portrait funnel composes Body/Cap from mutations.
 	var roster := RosterUnitData.create("Test", UnitStatsData.new(), null)
 	roster.cap_mutation = boom.duplicate(true) as MutationData
-	roster.body_mutation = mini.duplicate(true) as MutationData
+	roster.body_mutation = fat.duplicate(true) as MutationData
 	var host_ctrl := Control.new()
 	host_ctrl.size = Vector2(120, 120)
 	add_child(host_ctrl)

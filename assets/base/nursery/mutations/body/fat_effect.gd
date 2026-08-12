@@ -7,3 +7,4 @@ func on_battle_start(unit: Node, _context: BattleStartContext = null) -> void:
 	if u == null:
 		return
 	u._incoming_knockback_multiplier = 0.5
+	u._move_speed_multiplier = 0.75

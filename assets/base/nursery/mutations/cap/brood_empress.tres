@@ -11,6 +11,5 @@ script = ExtResource("1_mut")
 display_name = "Brood Empress"
 short_description = "+1 stats for each child unit in the troop"
 slot = 1
-biomass_cost = 3
 tint = Color(0.72, 0.42, 0.78, 1)
 effect = SubResource("Effect")

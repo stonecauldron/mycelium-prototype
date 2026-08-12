@@ -1,8 +1,11 @@
 class_name BiomassData
 extends Resource
 
-const PER_KILL := 4
-const PER_IMAGO_KILL := 6
+## Battle reward base for day 1; each later day adds BATTLE_REWARD_PER_DAY.
+const BATTLE_REWARD_DAY_1 := 10
+const BATTLE_REWARD_PER_DAY := 5
+## ± swing applied from easiest→hardest army for that day (0.1 → 0.9…1.1).
+const BATTLE_REWARD_DIFFICULTY_SWING := 0.1
 const COMPOST_CHILD := 2
 const COMPOST_ADULT := 3
 const COMMON_SPORE_COST := 4
@@ -19,8 +22,20 @@ const STARTING_AMOUNT := 3
 @export var amount: int = STARTING_AMOUNT
 
 
-static func reward_for_kill(is_imago: bool) -> int:
-	return PER_IMAGO_KILL if is_imago else PER_KILL
+## Day-scaled Battle reward before difficulty (upcoming battle day, 1-based).
+static func base_battle_reward(day: int) -> int:
+	var d := maxi(day, 1)
+	return BATTLE_REWARD_DAY_1 + BATTLE_REWARD_PER_DAY * (d - 1)
+
+
+## Full Battle reward: base × lerp(0.9, 1.1, difficulty_t), nearest int.
+## `difficulty_t` is 0 (easiest that day) … 1 (hardest that day).
+static func battle_reward(day: int, difficulty_t: float) -> int:
+	var t := clampf(difficulty_t, 0.0, 1.0)
+	var lo := 1.0 - BATTLE_REWARD_DIFFICULTY_SWING
+	var hi := 1.0 + BATTLE_REWARD_DIFFICULTY_SWING
+	var mult := lerpf(lo, hi, t)
+	return maxi(roundi(float(base_battle_reward(day)) * mult), 0)
 
 
 static func reward_for_compost(is_adult: bool) -> int:

@@ -27,6 +27,5 @@ icon = ExtResource("3_icon")
 appearance_scene = ExtResource("4_appear")
 combat = SubResource("Combat_solar_sword")
 held_weapon = ExtResource("5_held")
-biomass_reward = 4
 stats = SubResource("Stats_solar_sword")
 composition_weight = 1.5

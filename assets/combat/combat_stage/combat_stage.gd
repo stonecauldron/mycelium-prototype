@@ -49,6 +49,8 @@ var _enemy_spawn: Vector2
 var _battle_over: bool = false
 var _fallen_units: Array[RosterUnitData] = []
 var _biomass_earned_this_fight: int = 0
+## Precomputed Battle reward for this fight (day × difficulty); granted on victory.
+var _battle_reward: int = 0
 var _fast_forward_scale: int = 1
 var _hitstop_active: bool = false
 var _combat_paused: bool = false
@@ -283,6 +285,9 @@ func _run_battle(
 		_victory_director.stop()
 	_fallen_units.clear()
 	_biomass_earned_this_fight = 0
+	_battle_reward = 0
+	if not sandboxed:
+		_battle_reward = _compute_battle_reward(enemy_roster)
 	_pending_player_zombie_respawns = 0
 	_pending_enemy_zombie_respawns = 0
 	_player_army_max_hp = 0
@@ -401,20 +406,30 @@ func _notify_battle_end() -> void:
 		unit.notify_battle_end()
 
 
-func _award_kill_biomass(victim: Unit) -> int:
-	var reward := 0
-	var roster := victim.roster_data
-	if roster != null and roster.enemy_unit_data != null:
-		reward = roster.enemy_unit_data.biomass_reward
-	else:
-		var is_imago := roster != null and roster.is_imago
-		reward = BiomassData.reward_for_kill(is_imago)
-	GameState.biomass.add(reward)
-	_biomass_earned_this_fight += reward
-	_notify_biomass_from_combat_death(reward, victim)
+func _compute_battle_reward(enemy_roster: Array[RosterUnitData]) -> int:
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var specs: Array[EnemyUnitSpec] = []
+	specs.assign(GameState.upcoming_enemy_formation)
+	if specs.is_empty():
+		specs = _specs_from_enemy_roster(enemy_roster)
+	return EnemyComposer.battle_reward_for(day, specs)
+
+
+static func _specs_from_enemy_roster(enemy_roster: Array[RosterUnitData]) -> Array[EnemyUnitSpec]:
+	var specs: Array[EnemyUnitSpec] = []
+	for roster in enemy_roster:
+		if roster == null or roster.enemy_unit_data == null:
+			continue
+		specs.append(EnemyUnitSpec.make(roster.enemy_unit_data))
+	return specs
+
+
+func _award_battle_reward() -> void:
+	if sandboxed or _battle_reward <= 0:
+		return
+	GameState.biomass.add(_battle_reward)
+	_biomass_earned_this_fight += _battle_reward
 	_refresh_biomass_hud()
-	_spawn_biomass_number(victim.global_position, reward)
-	return reward
 
 
 func record_biomass_yield(amount: int) -> void:
@@ -492,22 +507,6 @@ func _apply_army_hp_bar(
 	if label != null:
 		label.text = "%d / %d" % [current, maximum]
 
-
-func _notify_biomass_from_combat_death(amount: int, victim: Unit) -> void:
-	if amount <= 0:
-		return
-	for unit in player_troop.get_living_units():
-		if unit.roster_data != null:
-			unit.roster_data.call_combat_effect(
-				&"on_combat_biomass_awarded",
-				[unit, amount, victim]
-			)
-	for unit in enemy_troop.get_living_units():
-		if unit.roster_data != null:
-			unit.roster_data.call_combat_effect(
-				&"on_combat_biomass_awarded",
-				[unit, amount, victim]
-			)
 
 func _reset_troop_from_roster(
 	troop: Troop,
@@ -587,8 +586,7 @@ func _on_unit_died(unit: Unit, is_player: bool) -> void:
 			GameState.troop.remove_unit(roster)
 			if not wants_zombie_respawn:
 				_try_emit_death_spore(roster, unit.global_position)
-		elif not is_player:
-			_award_kill_biomass(unit)
+		# Enemy deaths no longer drip biomass; Battle reward is granted on victory.
 	if wants_zombie_respawn:
 		_schedule_zombie_respawn(roster, is_player, unit.squad_index)
 	else:
@@ -739,6 +737,7 @@ func _check_battle_end() -> void:
 	# Keep celebrate-march / weapon tosses running under the scene fade;
 	# _exit_tree stops the director when combat is replaced.
 
+	_award_battle_reward()
 	GameState.ensure_nursery_seeded()
 	GameState.current_day += 1
 	GameState.clear_upcoming_enemy_formation()

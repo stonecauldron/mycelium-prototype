@@ -6,7 +6,8 @@ extends RefCounted
 enum ArmyArchetype { ONE_TRICK_PONY, HYBRID, GENERALIST }
 
 const _REROLL_CANDIDATE_COUNT := 8
-const _MIDPOINT_SAMPLE_COUNT := 8
+## Seeded day-curve samples for midpoint and Battle-reward difficulty bounds.
+const _DIFFICULTY_SAMPLE_COUNT := 8
 
 const _ENEMY_UNIT_PATHS: Array[String] = [
 	"res://assets/units/enemies/solar_sword/solar_sword_unit.tres",
@@ -49,6 +50,21 @@ static func difficulty_score(specs: Array[EnemyUnitSpec]) -> float:
 	return score
 
 
+## 0 = easiest sampled army for the day, 1 = hardest. Flat day → 0.5 (×1.0 reward).
+static func difficulty_t_for_day(day: int, specs: Array[EnemyUnitSpec]) -> float:
+	var score := difficulty_score(specs)
+	var bounds := _difficulty_bounds_for_day(day)
+	var min_s: float = bounds.min
+	var max_s: float = bounds.max
+	if max_s <= min_s:
+		return 0.5
+	return clampf((score - min_s) / (max_s - min_s), 0.0, 1.0)
+
+
+static func battle_reward_for(day: int, specs: Array[EnemyUnitSpec]) -> int:
+	return BiomassData.battle_reward(day, difficulty_t_for_day(day, specs))
+
+
 static func reroll_for_day(day: int, current_specs: Array[EnemyUnitSpec]) -> Array[EnemyUnitSpec]:
 	var clamped := clampi(day, 1, GameState.WIN_DAYS)
 	var rng := RandomNumberGenerator.new()
@@ -79,22 +95,39 @@ static func reroll_for_day(day: int, current_specs: Array[EnemyUnitSpec]) -> Arr
 
 
 static func _midpoint_for_day(day: int) -> float:
-	var scores: Array[float] = []
-	var variants := _skill_check_variants(day)
-	if not variants.is_empty():
-		for variant in variants:
-			scores.append(difficulty_score(variant))
-	else:
-		for i in _MIDPOINT_SAMPLE_COUNT:
-			var sample_rng := RandomNumberGenerator.new()
-			sample_rng.seed = hash([GameState.run_seed, day, &"midpoint", i])
-			scores.append(difficulty_score(_generate_from_curve(day, sample_rng)))
+	var scores := _difficulty_scores_for_day(day)
 	if scores.is_empty():
 		return 0.0
 	var sum := 0.0
 	for score in scores:
 		sum += score
 	return sum / float(scores.size())
+
+
+static func _difficulty_bounds_for_day(day: int) -> Dictionary:
+	var scores := _difficulty_scores_for_day(day)
+	if scores.is_empty():
+		return {"min": 0.0, "max": 0.0}
+	var min_s := scores[0]
+	var max_s := scores[0]
+	for score in scores:
+		min_s = minf(min_s, score)
+		max_s = maxf(max_s, score)
+	return {"min": min_s, "max": max_s}
+
+
+static func _difficulty_scores_for_day(day: int) -> Array[float]:
+	var scores: Array[float] = []
+	var variants := _skill_check_variants(day)
+	if not variants.is_empty():
+		for variant in variants:
+			scores.append(difficulty_score(variant))
+		return scores
+	for i in _DIFFICULTY_SAMPLE_COUNT:
+		var sample_rng := RandomNumberGenerator.new()
+		sample_rng.seed = hash([GameState.run_seed, day, &"midpoint", i])
+		scores.append(difficulty_score(_generate_from_curve(day, sample_rng)))
+	return scores
 
 
 static func _reroll_candidates(

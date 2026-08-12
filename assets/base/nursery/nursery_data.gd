@@ -581,7 +581,7 @@ func _make_harvest_units(
 		if stimulants:
 			unit.daily_stat_decay = 1
 		if late_bloomer:
-			unit.pending_adult_stat_bonus = 6
+			unit.pending_adult_stat_bonus = 7
 		if cocooning:
 			unit.pupation_stat_multiplier = 2
 		unit.applied_fertilizers = _copy_display_fertilizers(fertilizers)

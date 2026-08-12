@@ -6,7 +6,7 @@
 script = ExtResource("1_fert")
 display_name = "Late Bloomer"
 short_description = "-3 to ALL stats as a child
-+9 upon becoming an adult"
++7 upon becoming an adult"
 tint = Color(0.35, 0.7, 0.45, 1)
 behavior = 11
 strength_delta = -3

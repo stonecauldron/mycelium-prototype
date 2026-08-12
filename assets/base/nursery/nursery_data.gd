@@ -50,7 +50,7 @@ const _CAP_MUTATION_PATHS: Array[String] = [
 ## Nursery shop state (offers + locks). Shared ShopInventory used by any shop screen.
 @export var spore_shop: ShopInventory
 @export var unlocked_plot_count: int = STARTING_UNLOCKED_PLOTS
-## Paid shop reroll cost for this day; doubles after each successful paid reroll.
+## Paid shop reroll cost (flat; kept for save/API compatibility with reset/advance).
 @export var shop_reroll_cost: int = BiomassData.SHOP_REROLL_COST
 
 var _seeded: bool = false
@@ -100,15 +100,11 @@ func reset() -> void:
 
 
 func current_shop_reroll_cost() -> int:
-	if GameState.debug_mode_active:
-		return BiomassData.SHOP_REROLL_COST
-	return shop_reroll_cost
+	return BiomassData.SHOP_REROLL_COST
 
 
 func advance_shop_reroll_cost() -> void:
-	if GameState.debug_mode_active:
-		return
-	shop_reroll_cost *= 2
+	pass
 
 
 func reset_shop_reroll_cost() -> void:

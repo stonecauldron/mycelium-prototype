@@ -1385,7 +1385,8 @@ func take_damage(
 	knockback_force: float = 0.0,
 	killer: Unit = null,
 	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING,
-	count_in_recap: bool = true
+	count_in_recap: bool = true,
+	is_melee: bool = false
 ) -> void:
 	if _dying:
 		return
@@ -1409,7 +1410,10 @@ func take_damage(
 		if killer != null and is_instance_valid(killer):
 			killer.damage_dealt += amount
 	if roster_data != null:
-		roster_data.call_combat_effect(&"on_hit_taken", [self, amount, damage_type])
+		roster_data.call_combat_effect(
+			&"on_hit_taken",
+			[self, amount, damage_type, killer, is_melee]
+		)
 	_last_hit_from = knockback_from
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)

@@ -29,6 +29,8 @@ const STAGE_FULLY_EVOLVED := &"fully_evolved"
 @export var max_days_alive: int = NO_LIFE_EXPECTANCY
 ## Banked biomass for Piñata-style mutations (Bank Cap).
 @export var biomass_bank: int = 0
+## Mould Cap: composts credited while this unit held Mould (hub chip). Cleared if Mould is stripped.
+@export var mould_compost_stacks: int = 0
 ## Biomass paid out on the most recent Bank Cap death; used by UI / day summary.
 var last_death_biomass_yield: int = 0
 ## Set when this unit's true death emitted a lineage spore (day summary).
@@ -92,7 +94,7 @@ func call_mutation_effects(method_name: StringName, args: Array = []) -> void:
 		cap_mutation.call_effect(method_name, args)
 
 
-## Hatch / day / imago / death hooks for Body/Cap mutations.
+## Hatch / day / imago / death / ally-compost hooks for Body/Cap mutations.
 func call_lifecycle_effect(method_name: StringName, args: Array = []) -> void:
 	call_mutation_effects(method_name, args)
 

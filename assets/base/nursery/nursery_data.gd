@@ -29,11 +29,10 @@ const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/late_bloomer.tres",
 ]
 const _BODY_MUTATION_PATHS: Array[String] = [
-	"res://assets/base/nursery/mutations/body/mini.tres",
-	"res://assets/base/nursery/mutations/body/lanky.tres",
 	"res://assets/base/nursery/mutations/body/fat.tres",
 	"res://assets/base/nursery/mutations/body/rubber.tres",
 	"res://assets/base/nursery/mutations/body/zombie.tres",
+	"res://assets/base/nursery/mutations/body/thorny.tres",
 ]
 const _CAP_MUTATION_PATHS: Array[String] = [
 	"res://assets/base/nursery/mutations/cap/death.tres",
@@ -42,6 +41,7 @@ const _CAP_MUTATION_PATHS: Array[String] = [
 	"res://assets/base/nursery/mutations/cap/wall.tres",
 	"res://assets/base/nursery/mutations/cap/bank.tres",
 	"res://assets/base/nursery/mutations/cap/brood_empress.tres",
+	"res://assets/base/nursery/mutations/cap/mould.tres",
 ]
 
 @export var plots: Array = []

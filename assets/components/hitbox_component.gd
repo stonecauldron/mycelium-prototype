@@ -97,7 +97,7 @@ func _try_charge_hit(area: Area2D) -> void:
 
 	_hit_combatants[target] = true
 	var from_pos := owner_unit.global_position if owner_unit != null else global_position
-	hurtbox.receive_hit(hit_damage, from_pos, hit_knockback, owner_unit, _damage_type)
+	hurtbox.receive_hit(hit_damage, from_pos, hit_knockback, owner_unit, _damage_type, true)
 	if owner_unit != null:
 		owner_unit.grant_hit_biomass(target as Node2D)
 		if owner_unit.roster_data != null:
@@ -164,7 +164,7 @@ func _apply_hit(hurtbox: HurtboxComponent) -> void:
 		return
 	_hit_combatants[target] = true
 	var from_pos := owner_unit.global_position if owner_unit != null else global_position
-	hurtbox.receive_hit(damage, from_pos, knockback_force, owner_unit, _damage_type)
+	hurtbox.receive_hit(damage, from_pos, knockback_force, owner_unit, _damage_type, true)
 	if owner_unit != null:
 		owner_unit.grant_hit_biomass(target as Node2D)
 		if owner_unit.roster_data != null:

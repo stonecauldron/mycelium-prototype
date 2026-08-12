@@ -121,10 +121,27 @@ func try_compost_unit(unit: RosterUnitData) -> bool:
 	if compost_reward > 0:
 		unit.last_death_biomass_yield += compost_reward
 		biomass.add(compost_reward)
+	# Mould ticks while the composted unit is still in troop (excluded from credit).
+	_notify_ally_composted(unit)
 	if unit.is_adult_stage():
 		nursery.add_death_spore(unit)
 	troop.remove_unit(unit)
 	return true
+
+
+func _notify_ally_composted(composted: RosterUnitData) -> void:
+	if composted == null or troop == null:
+		return
+	for entry in troop.squad:
+		var other := entry as RosterUnitData
+		if other == null or other == composted:
+			continue
+		other.call_lifecycle_effect(&"on_ally_composted", [other, composted])
+	for entry in troop.bench:
+		var other := entry as RosterUnitData
+		if other == null or other == composted:
+			continue
+		other.call_lifecycle_effect(&"on_ally_composted", [other, composted])
 
 
 func _troop_contains(unit: RosterUnitData) -> bool:

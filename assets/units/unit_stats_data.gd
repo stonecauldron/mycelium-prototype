@@ -145,7 +145,8 @@ func get_attack_stat(damage_stat: WeaponData.DamageStat) -> int:
 
 
 func get_speed_multiplier() -> float:
-	return spd / float(NEUTRAL_STAT)
+	# Half weight vs linear spd/5 so attack rate doesn't spike as hard per point.
+	return 1.0 + (spd - NEUTRAL_STAT) / (float(NEUTRAL_STAT) * 2.0)
 
 
 func get_damage_bonus(damage_stat: WeaponData.DamageStat) -> int:

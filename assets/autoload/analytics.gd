@@ -53,6 +53,9 @@ var _map := ""
 
 
 func _ready() -> void:
+	# Play-from-editor still runs the game binary of the editor build; skip GA there.
+	if OS.has_feature("editor"):
+		return
 	if not Engine.has_singleton("GameAnalytics"):
 		push_warning("GameAnalytics plugin is not enabled")
 		return

@@ -4,10 +4,14 @@ extends Resource
 enum State { EMPTY, GROWING, READY }
 
 const FUNGICIDE_NEXT_SPORE_BONUS := 4
+## Remaining Time not yet snapshotted; remaining_days() uses Growth Time − days grown.
+const REMAINING_UNSET := -1
 ## Plots hold Body and/or Cap mutations up to SealModifiers.max_mutation_slots().
 
 @export var planted_spore: SporeData
 @export var days_grown: int = 0
+## Days left until READY. −1 = unset (empty or legacy plots that only set days_grown).
+@export var remaining_time: int = REMAINING_UNSET
 @export var applied_fertilizers: Array[FertilizerData] = []
 ## Body mutation awaiting harvest (empty allowed).
 @export var body_mutation: MutationData
@@ -82,19 +86,29 @@ func will_harvest_as_imago() -> bool:
 	return false
 
 
-func days_to_mature_effective() -> int:
+## Authored wait after Greenhouse — not Plot Fertilizers (those adjust Remaining Time).
+func growth_time() -> int:
 	if planted_spore == null:
-		return 1
-	var base_days := planted_spore.days_to_mature_effective()
-	if has_behavior(FertilizerData.Behavior.SLOW_STEADY):
-		base_days *= 2
-	return maxi(base_days, 0)
+		return 0
+	return planted_spore.days_to_mature_effective()
+
+
+func days_to_mature_effective() -> int:
+	return growth_time()
+
+
+func remaining_days() -> int:
+	if planted_spore == null:
+		return 0
+	if remaining_time >= 0:
+		return remaining_time
+	return maxi(growth_time() - days_grown, 0)
 
 
 func get_state() -> State:
 	if planted_spore == null:
 		return State.EMPTY
-	if days_grown >= days_to_mature_effective():
+	if remaining_days() <= 0:
 		return State.READY
 	return State.GROWING
 
@@ -110,21 +124,6 @@ func has_behavior(behavior: FertilizerData.Behavior) -> bool:
 	return false
 
 
-func has_force_ready() -> bool:
-	for fert in applied_fertilizers:
-		if fert != null and fert.force_ready:
-			return true
-	return false
-
-
-func behavior_count(behavior: FertilizerData.Behavior) -> int:
-	var count := 0
-	for fert in applied_fertilizers:
-		if fert != null and fert.behavior == behavior:
-			count += 1
-	return count
-
-
 func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 	if fertilizer == null:
 		return false
@@ -136,9 +135,8 @@ func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 		return false
 	_discard_fungicide_markers()
 	applied_fertilizers.append(fertilizer)
-	if planted_spore != null and fertilizer.growth_bonus != 0:
-		days_grown += fertilizer.growth_bonus
-	_snap_force_ready_if_needed()
+	if planted_spore != null:
+		_apply_duration_to_remaining(fertilizer)
 	return true
 
 
@@ -192,6 +190,7 @@ func _apply_fungicide(_fertilizer: FertilizerData) -> bool:
 	pending_stat_bonus += FUNGICIDE_NEXT_SPORE_BONUS
 	planted_spore = null
 	days_grown = 0
+	remaining_time = REMAINING_UNSET
 	body_mutation = null
 	cap_mutation = null
 	# Drop fertilizers that died with the plant. Extra nutrition is pending_stat_bonus only.
@@ -207,22 +206,43 @@ func _discard_fungicide_markers() -> void:
 	applied_fertilizers.append_array(stacked)
 
 
-func total_growth_bonus() -> int:
-	var total := 0
+## Snapshot Remaining Time from Growth Time, then replay stacked duration Fertilizers in order.
+func begin_planted_grow() -> void:
+	days_grown = 0
+	remaining_time = growth_time()
 	for fert in applied_fertilizers:
-		if fert != null:
-			total += fert.growth_bonus
-	return total
+		_apply_duration_to_remaining(fert)
 
 
-func snap_after_plant() -> void:
-	_snap_force_ready_if_needed()
-
-
-func _snap_force_ready_if_needed() -> void:
-	if planted_spore == null or not has_force_ready():
+func tick_day() -> void:
+	if planted_spore == null:
 		return
-	days_grown = maxi(days_grown, days_to_mature_effective())
+	if remaining_time < 0:
+		remaining_time = remaining_days()
+	if remaining_time > 0:
+		remaining_time -= 1
+	days_grown += 1
+
+
+func apply_greenhouse_remaining_cut(days: int) -> void:
+	if planted_spore == null or days <= 0:
+		return
+	if remaining_days() <= 0:
+		return
+	remaining_time = maxi(remaining_days() - days, 0)
+
+
+func _apply_duration_to_remaining(fertilizer: FertilizerData) -> void:
+	if planted_spore == null or fertilizer == null:
+		return
+	if fertilizer.force_ready:
+		remaining_time = 0
+		return
+	if fertilizer.behavior == FertilizerData.Behavior.SLOW_STEADY:
+		remaining_time = remaining_days() * 2
+		return
+	if fertilizer.growth_bonus != 0:
+		remaining_time = maxi(remaining_days() - fertilizer.growth_bonus, 0)
 
 
 func fertilizer_tooltip() -> String:
@@ -250,6 +270,7 @@ func mutation_tooltip_lines() -> PackedStringArray:
 func clear() -> void:
 	planted_spore = null
 	days_grown = 0
+	remaining_time = REMAINING_UNSET
 	applied_fertilizers.clear()
 	body_mutation = null
 	cap_mutation = null

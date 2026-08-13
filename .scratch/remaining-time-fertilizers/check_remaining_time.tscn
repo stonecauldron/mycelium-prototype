@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://.scratch/remaining-time-fertilizers/check_remaining_time.gd" id="1"]
+
+[node name="Check" type="Node"]
+script = ExtResource("1")

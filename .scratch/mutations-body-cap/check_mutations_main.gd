@@ -63,17 +63,17 @@ func _run() -> void:
 	if plot.cap_mutation != wall:
 		errs.append("replace did not consume prior cap")
 
-	# force_ready (Triploid) must not block mutation apply on READY plots.
+	# READY plots still accept mutations (duration Fertilizers cannot apply once READY).
 	var ready_plot := NurseryPlotData.new()
 	ready_plot.planted_spore = nursery.make_fresh_common_spore()
-	var triploid_gate := load("res://assets/base/nursery/fertilizers/triploid_cells.tres") as FertilizerData
-	ready_plot.apply_fertilizer(triploid_gate)
+	ready_plot.begin_planted_grow()
+	ready_plot.remaining_time = 0
 	if ready_plot.get_state() != NurseryPlotData.State.READY:
-		errs.append("triploid should force READY")
+		errs.append("remaining 0 should be READY")
 	elif not ready_plot.apply_mutation(boom):
 		errs.append("READY plot should still accept mutation")
 
-	plot.days_grown = plot.days_to_mature_effective()
+	plot.remaining_time = 0
 	var units := nursery.harvest(0)
 	print("hatch=", units.size())
 	if units.is_empty():
@@ -93,7 +93,7 @@ func _run() -> void:
 	var meiosis := load("res://assets/base/nursery/fertilizers/meiosis.tres") as FertilizerData
 	nursery.apply_fertilizer_to_plot(0, meiosis)
 	plot = nursery.plots[0] as NurseryPlotData
-	plot.days_grown = plot.days_to_mature_effective()
+	plot.remaining_time = 0
 	units = nursery.harvest(0)
 	print("meiosis=", units.size())
 	if units.size() != 2:
@@ -109,7 +109,7 @@ func _run() -> void:
 		errs.append("triploid setup should not allow second mutation")
 	nursery.apply_fertilizer_to_plot(0, triploid)
 	plot = nursery.plots[0] as NurseryPlotData
-	plot.days_grown = plot.days_to_mature_effective()
+	plot.remaining_time = 0
 	units = nursery.harvest(0)
 	print("triploid=", units.size())
 	if units.size() != 3:
@@ -241,7 +241,7 @@ func _check_lineage_and_plant_merge(errs: Array[String]) -> void:
 		errs.append("plant should not invent body")
 	if not plot.can_apply_mutation():
 		errs.append("planted lineage with inheritance should still accept a plot mutation")
-	plot.days_grown = plot.days_to_mature_effective()
+	plot.remaining_time = 0
 	var units := nursery.harvest(0)
 	print("lineage hatch=", units.size())
 	if units.is_empty():
@@ -272,7 +272,7 @@ func _check_lineage_and_plant_merge(errs: Array[String]) -> void:
 		errs.append("plant should keep staged plot body")
 	if stacked_plot.cap_mutation != null:
 		errs.append("plant should not seed spore cap onto plot")
-	stacked_plot.days_grown = stacked_plot.days_to_mature_effective()
+	stacked_plot.remaining_time = 0
 	var stacked_units := nursery.harvest(0)
 	if stacked_units.is_empty():
 		errs.append("stack harvest empty")
@@ -293,7 +293,7 @@ func _check_lineage_and_plant_merge(errs: Array[String]) -> void:
 		errs.append("same-slot plant should keep staged plot cap")
 	if overwritten.body_mutation != null:
 		errs.append("same-slot plant should not invent body")
-	overwritten.days_grown = overwritten.days_to_mature_effective()
+	overwritten.remaining_time = 0
 	var overwrite_units := nursery.harvest(0)
 	if overwrite_units.is_empty():
 		errs.append("same-slot harvest empty")

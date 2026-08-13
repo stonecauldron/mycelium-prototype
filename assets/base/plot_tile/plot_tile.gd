@@ -253,7 +253,7 @@ func _refresh() -> void:
 			_refresh_plant_button(false)
 			var left := 0
 			if _plot.planted_spore != null:
-				left = _plot.days_to_mature_effective() - _plot.days_grown
+				left = _plot.remaining_days()
 			left = maxi(0, left)
 			_days_chip.visible = left > 0
 			if left > 0:
@@ -520,10 +520,10 @@ func _texture_for_plot() -> Texture2D:
 		return _TEX_EMPTY
 	if _plot.get_state() == NurseryPlotData.State.READY:
 		return _TEX_EMPTY
-	var needed := 1
-	if _plot.planted_spore != null:
-		needed = maxi(1, _plot.days_to_mature_effective())
-	var progress := float(_plot.days_grown) / float(needed)
+	var left := _plot.remaining_days()
+	var grown := _plot.days_grown
+	var needed := maxi(grown + left, 1)
+	var progress := float(grown) / float(needed)
 	if progress < 0.5:
 		return _TEX_GROWTH0
 	return _TEX_GROWTH1

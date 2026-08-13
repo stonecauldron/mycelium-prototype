@@ -93,7 +93,7 @@ func _refresh() -> void:
 func _refresh_growth_row() -> void:
 	if plot_data != null:
 		_grow_label.text = "Remaining Time:"
-		var left := maxi(plot_data.days_to_mature_effective() - plot_data.days_grown, 0)
+		var left := plot_data.remaining_days()
 		_days_chip.set_value(left)
 	else:
 		_grow_label.text = "Growth Time:"

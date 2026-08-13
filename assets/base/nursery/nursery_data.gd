@@ -352,8 +352,7 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 	plot.planted_spore = spore
 	# Inherited spore mutations stay on planted_spore — do not seed plot slots, so the
 	# plot apply chip stays empty and the player can still apply one mutation this grow.
-	plot.days_grown = plot.total_growth_bonus()
-	plot.snap_after_plant()
+	plot.begin_planted_grow()
 	return true
 
 
@@ -405,6 +404,18 @@ func apply_mutation_to_plot(plot_index: int, mutation: MutationData) -> bool:
 	return plot.apply_mutation(mutation)
 
 
+func apply_greenhouse_remaining_cut(days: int) -> void:
+	if days <= 0:
+		return
+	_ensure_plot_count()
+	for i in unlocked_plot_count:
+		if i >= plots.size():
+			break
+		var plot := plots[i] as NurseryPlotData
+		if plot != null:
+			plot.apply_greenhouse_remaining_cut(days)
+
+
 func advance_day() -> Array[Dictionary]:
 	var matured: Array[Dictionary] = []
 	for i in unlocked_plot_count:
@@ -414,7 +425,7 @@ func advance_day() -> Array[Dictionary]:
 		if plot == null or plot.planted_spore == null:
 			continue
 		var was_ready := plot.get_state() == NurseryPlotData.State.READY
-		plot.days_grown += 1
+		plot.tick_day()
 		if not was_ready and plot.get_state() == NurseryPlotData.State.READY:
 			matured.append({
 				"plot_index": i,

@@ -14,6 +14,8 @@ var _idle_panel_style: StyleBox
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	_set_children_mouse_filter_ignore(self)
+	mouse_filter = Control.MOUSE_FILTER_STOP
 	gui_input.connect(_on_gui_input)
 	_cache_idle_panel_style()
 	_refresh()
@@ -23,6 +25,29 @@ func _cache_idle_panel_style() -> void:
 	if _panel == null:
 		return
 	_idle_panel_style = _panel.get_theme_stylebox("panel")
+
+
+func _set_children_mouse_filter_ignore(node: Node) -> void:
+	for child in node.get_children():
+		if child is Control:
+			(child as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_set_children_mouse_filter_ignore(child)
+
+
+func _has_point(point: Vector2) -> bool:
+	var hit := Rect2(Vector2.ZERO, size)
+	var panel := _panel
+	if panel == null:
+		panel = get_node_or_null("%Panel") as PanelContainer
+	if panel != null:
+		var box := panel.get_theme_stylebox("panel")
+		if box != null:
+			hit.position = Vector2(-box.expand_margin_left, -box.expand_margin_top)
+			hit.size = size + Vector2(
+				box.expand_margin_left + box.expand_margin_right,
+				box.expand_margin_top + box.expand_margin_bottom
+			)
+	return hit.has_point(point)
 
 
 func setup(seal_data: SealData) -> void:

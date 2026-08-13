@@ -67,6 +67,7 @@ autowrap_mode = 3
 [node name="Spacer" type="Control" parent="Panel/Margin/VBox" unique_id=928212593]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="DescriptionLabel" type="Label" parent="Panel/Margin/VBox" unique_id=1318930225]
 unique_name_in_owner = true

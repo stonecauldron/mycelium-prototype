@@ -176,11 +176,13 @@ offset_right = -18.0
 offset_bottom = -267.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBox_paper_hud")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TitlePanel" unique_id=1474523643]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="HeaderTitle" type="Label" parent="TitlePanel/VBoxContainer" unique_id=124406183]
 layout_mode = 2
@@ -195,6 +197,7 @@ offset_left = 984.0
 offset_top = 618.0
 offset_right = 1352.0
 offset_bottom = 681.0
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 24
 text = "Seals grant bonuses for the whole run."

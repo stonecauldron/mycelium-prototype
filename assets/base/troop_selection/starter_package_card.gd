@@ -10,6 +10,7 @@ const _COLOR_DESC := Color(0.2, 0.22, 0.18, 1)
 const _TAG_FONT_SIZE := 18
 
 var package_id: StringName = &""
+var _idle_panel_style: StyleBox
 
 @onready var _panel: PanelContainer = %Panel
 @onready var _title: Label = %TitleLabel
@@ -22,7 +23,14 @@ var package_id: StringName = &""
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	gui_input.connect(_on_gui_input)
+	_cache_idle_panel_style()
 	_refresh()
+
+
+func _cache_idle_panel_style() -> void:
+	if _panel == null:
+		return
+	_idle_panel_style = _panel.get_theme_stylebox("panel")
 
 
 func setup(p_package_id: StringName) -> void:
@@ -34,7 +42,10 @@ func setup(p_package_id: StringName) -> void:
 func set_selected(selected: bool) -> void:
 	if _panel == null:
 		return
-	PaperStyles.apply_card(_panel, selected)
+	if selected:
+		PaperStyles.apply_card(_panel, true)
+	elif _idle_panel_style != null:
+		_panel.add_theme_stylebox_override("panel", _idle_panel_style)
 	var title_color := PaperStyles.CREAM if selected else _COLOR_TEXT
 	var body_color := PaperStyles.CREAM if selected else _COLOR_DESC
 	if _title != null:

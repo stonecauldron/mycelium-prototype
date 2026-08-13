@@ -1,7 +1,7 @@
 [gd_resource type="Theme" format=3 uid="uid://b8rmvb87hj66n"]
 
 [ext_resource type="StyleBox" uid="uid://bpapertitsage" path="res://assets/themes/paper/paper_button_normal.tres" id="1_normal"]
-[ext_resource type="StyleBox" uid="uid://bpapertitcream" path="res://assets/themes/paper/paper_button_hover.tres" id="2_hover"]
+[ext_resource type="StyleBox" uid="uid://cvsxo5hskcu6g" path="res://assets/themes/paper/paper_button_hover.tres" id="2_hover"]
 [ext_resource type="StyleBox" uid="uid://bpapertitteal" path="res://assets/themes/paper/paper_button_pressed.tres" id="3_pressed"]
 [ext_resource type="FontFile" uid="uid://bckw80lf7bsfa" path="res://assets/fonts/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf" id="4_fraunces"]
 [ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="5_figtree"]
@@ -9,14 +9,15 @@
 [ext_resource type="StyleBox" uid="uid://bpaperpanel01" path="res://assets/themes/paper/paper_panel.tres" id="7_panel"]
 [ext_resource type="StyleBox" uid="uid://bpapercard001" path="res://assets/themes/paper/paper_card.tres" id="8_card"]
 [ext_resource type="StyleBox" uid="uid://bpapercardsel" path="res://assets/themes/paper/paper_card_selected.tres" id="9_card_sel"]
-[ext_resource type="StyleBox" uid="uid://bpaperdialog01" path="res://assets/themes/paper/paper_dialog.tres" id="10_dialog"]
+[ext_resource type="StyleBox" uid="uid://cvsxoog8s8xwu" path="res://assets/themes/paper/paper_dialog.tres" id="10_dialog"]
 [ext_resource type="StyleBox" uid="uid://bpaperbarteal" path="res://assets/themes/paper/paper_hud.tres" id="11_hud"]
-[ext_resource type="StyleBox" uid="uid://bpaperbanner01" path="res://assets/themes/paper/paper_banner.tres" id="12_banner"]
+[ext_resource type="StyleBox" uid="uid://cvsxol8muyawu" path="res://assets/themes/paper/paper_banner.tres" id="12_banner"]
 [ext_resource type="StyleBox" uid="uid://bpapersqcream" path="res://assets/themes/paper/paper_chip.tres" id="13_chip"]
 [ext_resource type="StyleBox" uid="uid://bpapersqteal" path="res://assets/themes/paper/paper_chip_hud.tres" id="14_chip_hud"]
+[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="15_ggasa"]
 
 [sub_resource type="FontVariation" id="Font_figtree_button"]
-base_font = ExtResource("5_figtree")
+base_font = ExtResource("15_ggasa")
 variation_opentype = {
 2003265652: 600
 }
@@ -32,6 +33,8 @@ base_font = ExtResource("4_fraunces")
 variation_opentype = {
 2003265652: 500
 }
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tooltip_panel"]
 
 [sub_resource type="FontVariation" id="Font_figtree_body"]
 base_font = ExtResource("5_figtree")
@@ -50,8 +53,6 @@ base_font = ExtResource("4_fraunces")
 variation_opentype = {
 2003265652: 550
 }
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tooltip_panel"]
 
 [resource]
 BaseRootMargin/base_type = &"MarginContainer"
@@ -101,6 +102,8 @@ DamageLabel/colors/font_outline_color = Color(0.1, 0.05, 0.05, 1)
 DamageLabel/constants/outline_size = 6
 DamageLabel/font_sizes/font_size = 31
 DamageLabel/fonts/font = SubResource("Font_figtree_button")
+EmptyPanel/base_type = &"PanelContainer"
+EmptyPanel/styles/panel = SubResource("StyleBoxEmpty_tooltip_panel")
 HBoxContainer/constants/separation = 16
 Label/colors/font_color = Color(0.95, 0.95, 0.95, 1)
 Label/font_sizes/font_size = 36
@@ -142,8 +145,6 @@ PaperChip/base_type = &"PanelContainer"
 PaperChip/styles/panel = ExtResource("13_chip")
 PaperChipHud/base_type = &"PanelContainer"
 PaperChipHud/styles/panel = ExtResource("14_chip_hud")
-EmptyPanel/base_type = &"PanelContainer"
-EmptyPanel/styles/panel = SubResource("StyleBoxEmpty_tooltip_panel")
 PaperDialog/base_type = &"PanelContainer"
 PaperDialog/styles/panel = ExtResource("10_dialog")
 PaperHud/base_type = &"PanelContainer"

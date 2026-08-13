@@ -8,13 +8,19 @@
 custom_minimum_size = Vector2(390, 600)
 layout_mode = 3
 anchors_preset = 0
+offset_left = 100.0
+offset_top = 12.0
+offset_right = 490.0
+offset_bottom = 612.0
 theme = ExtResource("2_theme")
 script = ExtResource("1_card")
 
 [node name="CardPanel" type="PanelContainer" parent="." unique_id=1697250450]
 layout_mode = 0
-offset_right = 390.0
-offset_bottom = 600.0
+offset_left = 24.0
+offset_top = -143.0
+offset_right = 438.0
+offset_bottom = 489.0
 mouse_filter = 2
 theme_type_variation = &"PaperDialog"
 

@@ -38,7 +38,7 @@ func is_lineage_spore() -> bool:
 	return not lineage_name.strip_edges().is_empty()
 
 
-## Authored growth days after Greenhouse seal reduction (fertilizers applied on the plot).
+## Authored Growth Time after Greenhouse. Plot Fertilizers adjust Remaining Time instead.
 func days_to_mature_effective() -> int:
 	return maxi(days_to_mature - SealModifiers.greenhouse_day_reduction(), 0)
 

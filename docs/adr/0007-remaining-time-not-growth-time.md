@@ -1,0 +1,5 @@
+# Wait-changing Fertilizers adjust Remaining Time, not Growth Time
+
+Quick Growth, Slow and Steady, and Stress Induced Growth mutate **Remaining Time** on that grow when applied (or at plant if prepared on empty dirt), in the order the player stacked them. They do not change the spore’s **Growth Time**. Slow and Steady doubles Remaining Time each copy; Quick Growth subtracts one day; a shave past zero makes the Plot READY and wastes the rest. Stress Induced Growth sets Remaining Time to zero and the Plot is READY regardless of other duration Fertilizers. Greenhouse stays a Seal: −1 day to hatch on Growth Time (and −1 Remaining Time on a grow already in progress), not multiplied through Slow and Steady.
+
+**Considered options:** shrink or double the required total (rejected — a half-grown plot would snap READY on a 50% cut, and late Slow and Steady would add more wait than early); a fixed stretch-then-shave formula (rejected — the stack is a sequence of applies); Slow and Steady as a once-only flag (rejected — each apply mutates Remaining Time).

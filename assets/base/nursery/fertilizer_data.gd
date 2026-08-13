@@ -25,9 +25,9 @@ enum Behavior {
 @export var dex_delta: int = 0
 @export var con_delta: int = 0
 @export var spd_delta: int = 0
-## Extra growth days granted when this fertilizer is applied (or when planting onto a prepared plot).
+## Days subtracted from Remaining Time when applied (or when planting onto a prepared plot).
 @export var growth_bonus: int = 0
-## When true, snap the plot to READY after apply / plant.
+## When true, set Remaining Time to 0 after apply / plant.
 @export var force_ready: bool = false
 
 

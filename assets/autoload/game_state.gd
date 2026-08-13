@@ -222,6 +222,9 @@ func try_add_seal(seal: SealData) -> bool:
 		return false
 	if not seals.add(seal):
 		return false
+	if seal.greenhouse_day_reduction > 0:
+		ensure_nursery_seeded()
+		nursery.apply_greenhouse_remaining_cut(seal.greenhouse_day_reduction)
 	# Opening seal is chosen after day-0 begin_day(); grant missed day-start biomass once.
 	if current_day == 0 and seal.biomass_per_day > 0:
 		var mould := SealModifiers.golden_mould_biomass()

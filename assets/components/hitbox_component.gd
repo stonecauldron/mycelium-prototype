@@ -15,6 +15,7 @@ var _hit_combatants: Dictionary = {}
 var _is_charge_strike: bool = false
 var _charge_unit_hits: int = 0
 var _charge_active: bool = false
+var _disabling: bool = false
 
 
 func _ready() -> void:
@@ -45,6 +46,12 @@ func enable_for_attack(
 
 
 func disable() -> void:
+	# Thorns (and other on-hit effects) can kill the attacker mid-_resolve_hits,
+	# which re-enters disable() via _die → _cancel_attack. A nested pass would
+	# clear _hit_combatants and apply remaining targets (e.g. FlagBearer) twice.
+	if _disabling:
+		return
+	_disabling = true
 	if monitoring and not _is_charge_strike:
 		_resolve_hits()
 	# Must defer: disable() can run from area_entered → charge_ended → finish_attack.
@@ -53,6 +60,7 @@ func disable() -> void:
 	_is_charge_strike = false
 	_hit_combatants.clear()
 	_charge_unit_hits = 0
+	_disabling = false
 
 
 func _on_area_entered(area: Area2D) -> void:

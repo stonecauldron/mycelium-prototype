@@ -72,7 +72,9 @@ func take_damage(
 	knockback_from: Vector2 = Vector2.ZERO,
 	_knockback_force: float = 0.0,
 	_killer: Node = null,
-	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
+	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING,
+	_count_in_recap: bool = true,
+	_is_melee: bool = false
 ) -> void:
 	if _dying:
 		return

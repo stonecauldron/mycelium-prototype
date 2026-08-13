@@ -63,7 +63,7 @@ The days a Spore needs on a Plot to become harvestable, counting Greenhouse but 
 *Avoid*: remaining time, total time (when you mean the spore's authored wait)
 
 **Remaining Time**:
-The days left before a planted Plot is harvestable. Fertilizers that change wait adjust Remaining Time when they apply — or at plant if they were prepared on empty dirt — not Growth Time.
+The days left before a planted Plot is harvestable. Wait-changing Fertilizers adjust this in the order they were applied — replayed at plant if prepared on empty dirt — not Growth Time.
 *Avoid*: growth time (once planted), total time
 
 **Fertilizer**:

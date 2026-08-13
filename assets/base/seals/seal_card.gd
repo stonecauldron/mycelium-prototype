@@ -3,7 +3,13 @@ extends Control
 
 signal card_pressed(seal: SealData)
 
+const _TEX_SELECTED: Texture2D = preload(
+	"res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 29.png"
+)
+
 var seal: SealData
+var _idle_panel_style: StyleBox
+var _selected_panel_style: StyleBox
 
 @onready var _panel: PanelContainer = %Panel
 @onready var _icon: TextureRect = %Icon
@@ -16,7 +22,20 @@ func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	gui_input.connect(_on_gui_input)
+	_cache_panel_styles()
 	_refresh()
+
+
+func _cache_panel_styles() -> void:
+	if _panel == null:
+		return
+	_idle_panel_style = _panel.get_theme_stylebox("panel")
+	_selected_panel_style = _idle_panel_style
+	var idle_tex := _idle_panel_style as StyleBoxTexture
+	if idle_tex != null:
+		var selected_tex := idle_tex.duplicate() as StyleBoxTexture
+		selected_tex.texture = _TEX_SELECTED
+		_selected_panel_style = selected_tex
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:
@@ -49,6 +68,10 @@ func setup(seal_data: SealData) -> void:
 
 
 func set_selected(selected: bool) -> void:
+	if _panel != null:
+		var box := _selected_panel_style if selected else _idle_panel_style
+		if box != null:
+			_panel.add_theme_stylebox_override("panel", box)
 	var title_color := PaperStyles.CREAM if selected else PaperStyles.INK
 	var body_color := PaperStyles.CREAM if selected else PaperStyles.INK_MUTED
 	if _title != null:

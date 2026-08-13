@@ -58,9 +58,17 @@ A spore produced when an Adult is composted or dies in battle, carrying that uni
 **Plot**:
 A Nursery slot where a spore grows. Unlocked plots show blank Mutation and Fertilizer capacity chips that fill when Fertilizers are applied — not Fungicide. An empty Plot with Extra nutrition shows a Fungicide chip.
 
+**Growth Time**:
+The days a Spore needs on a Plot to become harvestable, counting Greenhouse but not Plot Fertilizers. Unplanted spores show this.
+*Avoid*: remaining time, total time (when you mean the spore's authored wait)
+
+**Remaining Time**:
+The days left before a planted Plot is harvestable. Fertilizers that change wait adjust Remaining Time when they apply — or at plant if they were prepared on empty dirt — not Growth Time.
+*Avoid*: growth time (once planted), total time
+
 **Fertilizer**:
-A plot modifier that changes that grow's growth, hatch stats, or unit-life flags — not identity. Items do not carry onto lineage spores (baked stats may still ride mean stats) and occupy a limited Plot stack except Fungicide.
-*Avoid*: using Fertilizer for Boom/Death/Mini-style identity
+A plot modifier that changes that grow's Remaining Time, hatch stats, or unit-life flags — not identity. Items do not carry onto lineage spores (baked stats may still ride mean stats) and occupy a limited Plot stack except Fungicide.
+*Avoid*: using Fertilizer for Boom/Death/Mini-style identity; treating wait-changing Fertilizers as cuts to Growth Time
 
 **Fungicide**:
 A Fertilizer that kills the current grow on a Plot and leaves Extra nutrition for the next harvest on that Plot. Applying it does not occupy the Fertilizer stack.

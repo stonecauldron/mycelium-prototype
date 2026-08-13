@@ -3,7 +3,7 @@ extends Resource
 
 enum State { EMPTY, GROWING, READY }
 
-const FUNGICIDE_NEXT_SPORE_BONUS := 2
+const FUNGICIDE_NEXT_SPORE_BONUS := 4
 ## Plots hold Body and/or Cap mutations up to SealModifiers.max_mutation_slots().
 
 @export var planted_spore: SporeData
@@ -29,7 +29,20 @@ func can_apply_fertilizer() -> bool:
 	var state := get_state()
 	if state != State.EMPTY and state != State.GROWING:
 		return false
-	return applied_fertilizers.size() < SealModifiers.max_fertilizer_stacks()
+	return fertilizer_stack_count() < SealModifiers.max_fertilizer_stacks()
+
+
+## Fertilizers that occupy Plot stack slots. Fungicide Extra nutrition does not.
+func stack_fertilizers() -> Array[FertilizerData]:
+	var stacked: Array[FertilizerData] = []
+	for fert in applied_fertilizers:
+		if fert != null and fert.behavior != FertilizerData.Behavior.FUNGICIDE:
+			stacked.append(fert)
+	return stacked
+
+
+func fertilizer_stack_count() -> int:
+	return stack_fertilizers().size()
 
 
 func mutation_count() -> int:
@@ -87,7 +100,7 @@ func get_state() -> State:
 
 
 func has_fertilizers() -> bool:
-	return not applied_fertilizers.is_empty()
+	return fertilizer_stack_count() > 0
 
 
 func has_behavior(behavior: FertilizerData.Behavior) -> bool:
@@ -121,6 +134,7 @@ func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 		return _apply_normifier(fertilizer)
 	if not can_apply_fertilizer():
 		return false
+	_discard_fungicide_markers()
 	applied_fertilizers.append(fertilizer)
 	if planted_spore != null and fertilizer.growth_bonus != 0:
 		days_grown += fertilizer.growth_bonus
@@ -155,7 +169,7 @@ func can_apply_normifier() -> bool:
 		return false
 	if planted_spore == null or not has_any_mutation():
 		return false
-	return applied_fertilizers.size() < SealModifiers.max_fertilizer_stacks()
+	return fertilizer_stack_count() < SealModifiers.max_fertilizer_stacks()
 
 
 func _apply_normifier(fertilizer: FertilizerData) -> bool:
@@ -165,11 +179,12 @@ func _apply_normifier(fertilizer: FertilizerData) -> bool:
 	cap_mutation = null
 	planted_spore.body_mutation = null
 	planted_spore.cap_mutation = null
+	_discard_fungicide_markers()
 	applied_fertilizers.append(fertilizer)
 	return true
 
 
-func _apply_fungicide(fertilizer: FertilizerData) -> bool:
+func _apply_fungicide(_fertilizer: FertilizerData) -> bool:
 	# Growing or READY spores. Empty plots rejected.
 	var state := get_state()
 	if state != State.GROWING and state != State.READY:
@@ -179,19 +194,17 @@ func _apply_fungicide(fertilizer: FertilizerData) -> bool:
 	days_grown = 0
 	body_mutation = null
 	cap_mutation = null
-	# Drop fertilizers that died with the plant; keep prior Fungicide markers for chips.
-	var kept: Array[FertilizerData] = []
-	for fert in applied_fertilizers:
-		if fert != null and fert.behavior == FertilizerData.Behavior.FUNGICIDE:
-			kept.append(fert)
-	# Cap still applies: fungicide markers + new fungicide must fit max stacks.
-	var max_stacks := SealModifiers.max_fertilizer_stacks()
-	while kept.size() >= max_stacks and not kept.is_empty():
-		kept.pop_front()
+	# Drop fertilizers that died with the plant. Extra nutrition is pending_stat_bonus only.
 	applied_fertilizers.clear()
-	applied_fertilizers.append_array(kept)
-	applied_fertilizers.append(fertilizer)
 	return true
+
+
+func _discard_fungicide_markers() -> void:
+	var stacked := stack_fertilizers()
+	if stacked.size() == applied_fertilizers.size():
+		return
+	applied_fertilizers.clear()
+	applied_fertilizers.append_array(stacked)
 
 
 func total_growth_bonus() -> int:
@@ -220,12 +233,7 @@ func fertilizer_tooltip() -> String:
 	var residue := fungicide_residue_text()
 	if not residue.is_empty():
 		lines.append(residue)
-	for fert in applied_fertilizers:
-		if fert == null:
-			continue
-		# Fungicide markers are summarized by the residue line above.
-		if fert.behavior == FertilizerData.Behavior.FUNGICIDE:
-			continue
+	for fert in stack_fertilizers():
 		lines.append("%s (%s)" % [fert.display_name, fert.subtitle_text()])
 	return "\n".join(lines)
 

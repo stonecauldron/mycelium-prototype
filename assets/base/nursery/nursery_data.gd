@@ -446,7 +446,7 @@ func harvest(plot_index: int) -> Array[RosterUnitData]:
 			cap = spore.cap_mutation
 	result = _make_harvest_units(
 		spore,
-		plot.applied_fertilizers,
+		plot.stack_fertilizers(),
 		pending,
 		body,
 		cap

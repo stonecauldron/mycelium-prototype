@@ -56,11 +56,19 @@ A spore produced when an Adult is composted or dies in battle, carrying that uni
 *Avoid*: death spore (code name)
 
 **Plot**:
-A Nursery slot where a spore grows. Unlocked plots show blank Mutation and Fertilizer capacity chips that fill when items are applied.
+A Nursery slot where a spore grows. Unlocked plots show blank Mutation and Fertilizer capacity chips that fill when Fertilizers are applied — not Fungicide. An empty Plot with Extra nutrition shows a Fungicide chip.
 
 **Fertilizer**:
-A plot modifier that changes that grow's growth, hatch stats, or unit-life flags — not identity. Fertilizer items do not carry onto lineage spores (baked stats may still ride mean stats).
+A plot modifier that changes that grow's growth, hatch stats, or unit-life flags — not identity. Items do not carry onto lineage spores (baked stats may still ride mean stats) and occupy a limited Plot stack except Fungicide.
 *Avoid*: using Fertilizer for Boom/Death/Mini-style identity
+
+**Fungicide**:
+A Fertilizer that kills the current grow on a Plot and leaves Extra nutrition for the next harvest on that Plot. Applying it does not occupy the Fertilizer stack.
+*Avoid*: treating Fungicide as a Mutation; treating it as a stack occupant
+
+**Extra nutrition**:
+Flat +all-stats held on a Plot after Fungicide, consumed when the next Child is harvested from that Plot. It is not a Fertilizer stack occupant. While the Plot is empty, a Fungicide chip shows it; once a Spore is planted it shows in tooltips.
+*Avoid*: residue, pending stat bonus, Fungicide stack
 
 **Mutation**:
 An identity modifier applied in the Nursery on a plot (including empty dirt). Plots and harvested units hold at most one Mutation for now — Body **or** Cap (typed fields remain; the other stays empty). Same-slot replace consumes the previous Mutation. Dual Body+Cap remix is deferred.

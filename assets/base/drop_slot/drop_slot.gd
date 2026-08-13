@@ -67,14 +67,11 @@ func set_card(card: Control) -> void:
 		if card.has_method("reset_compact_layout"):
 			card.reset_compact_layout()
 	_card_host.add_child(card)
-	if not card.visibility_changed.is_connected(_refresh_floor_visibility):
-		card.visibility_changed.connect(_refresh_floor_visibility)
 	_update_placeholder()
 
 
 func clear_card() -> void:
 	for child in _card_host.get_children():
-		_disconnect_card_visibility(child)
 		_card_host.remove_child(child)
 		child.queue_free()
 	occupied_unit = null
@@ -85,36 +82,15 @@ func take_card() -> Control:
 	if _card_host.get_child_count() == 0:
 		return null
 	var card := _card_host.get_child(0) as Control
-	_disconnect_card_visibility(card)
 	_card_host.remove_child(card)
 	occupied_unit = null
 	_update_placeholder()
 	return card
 
 
-func _disconnect_card_visibility(card: Node) -> void:
-	if card is Control and card.visibility_changed.is_connected(_refresh_floor_visibility):
-		card.visibility_changed.disconnect(_refresh_floor_visibility)
-
-
 func _update_placeholder() -> void:
 	if _placeholder:
 		_placeholder.visible = false
-	_refresh_floor_visibility()
-
-
-func _refresh_floor_visibility() -> void:
-	if _floor_tile == null:
-		return
-	# Empty pads stay visible as drop targets. Occupied pads hide so units
-	# have no backing; a hidden (dragged) card reveals the pad again.
-	var show_floor := true
-	if _card_host != null:
-		for child in _card_host.get_children():
-			if child is Control and (child as Control).visible:
-				show_floor = false
-				break
-	_floor_tile.visible = show_floor
 
 
 func _is_accepted_drag(data: Dictionary) -> bool:

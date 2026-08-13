@@ -74,7 +74,7 @@ offset_left = 16.0
 offset_top = 218.0
 offset_right = 780.0
 offset_bottom = 518.0
-theme_type_variation = &"PaperPanel"
+theme_type_variation = &"EmptyPanel"
 
 [node name="StockMargin" type="MarginContainer" parent="StockPanel" unique_id=878538865]
 layout_mode = 2
@@ -109,7 +109,7 @@ offset_left = 16.0
 offset_top = 567.0
 offset_right = -16.0
 offset_bottom = 889.0
-theme_type_variation = &"PaperPanel"
+theme_type_variation = &"EmptyPanel"
 
 [node name="SquadMargin" type="MarginContainer" parent="SquadPanel" unique_id=1251518974]
 layout_mode = 2
@@ -142,7 +142,7 @@ offset_left = 800.0
 offset_top = 140.0
 offset_right = 1900.0
 offset_bottom = 660.0
-theme_type_variation = &"PaperPanel"
+theme_type_variation = &"EmptyPanel"
 
 [node name="ShopMargin" type="MarginContainer" parent="ShopPanel" unique_id=878538866]
 layout_mode = 2

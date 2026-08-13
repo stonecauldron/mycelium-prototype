@@ -105,6 +105,7 @@ theme_type_variation = &"TightVBox"
 [node name="TroopHpTitle" type="Label" parent="RootMargin/RootVBox/Body/CombatRecapPanel/CombatRecap/TroopHp"]
 layout_mode = 2
 theme_type_variation = &"SectionTitleLabel"
+theme_override_colors/font_color = Color(0.18, 0.16, 0.14, 1)
 text = "Your Troop"
 
 [node name="TroopHpBar" type="ProgressBar" parent="RootMargin/RootVBox/Body/CombatRecapPanel/CombatRecap/TroopHp"]

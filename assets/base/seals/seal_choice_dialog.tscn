@@ -4,6 +4,8 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="3_biomass"]
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="3_uiabf"]
+[ext_resource type="StyleBox" uid="uid://cvsxoog8s8xwu" path="res://assets/themes/paper/paper_dialog.tres" id="paper_dialog"]
+[ext_resource type="StyleBox" uid="uid://bpaperbarteal" path="res://assets/themes/paper/paper_hud.tres" id="paper_hud"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_kc5ih"]
 font = ExtResource("3_uiabf")
@@ -41,7 +43,7 @@ mouse_filter = 2
 [node name="Panel" type="PanelContainer" parent="Center" unique_id=1856256167]
 custom_minimum_size = Vector2(980, 620)
 layout_mode = 2
-theme_type_variation = &"PaperDialog"
+theme_override_styles/panel = ExtResource("paper_dialog")
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=118363492]
 layout_mode = 2
@@ -149,7 +151,7 @@ offset_top = 130.0
 offset_right = 940.0
 offset_bottom = 269.0
 theme = ExtResource("2_theme")
-theme_type_variation = &"PaperHud"
+theme_override_styles/panel = ExtResource("paper_hud")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TitlePanel" unique_id=1474523643]
 layout_mode = 2

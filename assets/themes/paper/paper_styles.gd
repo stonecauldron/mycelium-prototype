@@ -1,8 +1,9 @@
 class_name PaperStyles
 extends RefCounted
 
-## Shared Paper Style 2 boxes. Scenes should prefer theme type variations;
-## use these preloads when a script must swap styles at runtime.
+## Shared Paper Style 2 boxes for runtime swaps (selected cards, tooltips).
+## Scene panels assign these StyleBoxes on the node so they can be edited
+## in the inspector (Make Unique to diverge).
 
 const PANEL: StyleBoxTexture = preload("res://assets/themes/paper/paper_panel.tres")
 const CARD: StyleBoxTexture = preload("res://assets/themes/paper/paper_card.tres")

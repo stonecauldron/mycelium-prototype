@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://dxyk18fxa87f7" path="res://assets/base/troop_selection/scout_bubble/scout_bubble.tscn" id="6_scout"]
 [ext_resource type="PackedScene" uid="uid://k1npp5blvyao" path="res://assets/base/combat_progress_track/combat_progress_track.tscn" id="7_progress"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
+
 [node name="TroopSelectionScreen" type="Control" unique_id=455999625]
 custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 3
@@ -92,7 +94,7 @@ offset_left = -340.0
 offset_top = 216.0
 offset_right = 340.0
 offset_bottom = 536.0
-theme_type_variation = &"EmptyPanel"
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="CocoonMargin" type="MarginContainer" parent="CocoonPanel" unique_id=309864513]
 layout_mode = 2
@@ -124,7 +126,7 @@ offset_left = 11.0
 offset_top = 200.0
 offset_right = -1285.0
 offset_bottom = 462.0
-theme_type_variation = &"EmptyPanel"
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="BenchMargin" type="MarginContainer" parent="BenchPanel" unique_id=878538865]
 layout_mode = 2
@@ -155,7 +157,7 @@ offset_left = 12.0
 offset_top = 596.0
 offset_right = -20.0
 offset_bottom = 918.0
-theme_type_variation = &"EmptyPanel"
+theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="SquadMargin" type="MarginContainer" parent="SquadPanel" unique_id=1251518974]
 layout_mode = 2

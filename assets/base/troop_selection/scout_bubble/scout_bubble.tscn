@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://s6wk76vj7d3b" path="res://assets/base/troop_selection/scout_bubble/scout_bubble.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://cdr3kf2bf6rx8" path="res://assets/base/troop_selection/scout_bubble/speech_bubble_tip.tscn" id="2_tip"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="3_biomass"]
+[ext_resource type="StyleBox" uid="uid://cvsxoog8s8xwu" path="res://assets/themes/paper/paper_dialog.tres" id="paper_dialog"]
 
 [node name="ScoutBubble" type="Control" unique_id=1943444135]
 layout_mode = 3
@@ -23,7 +24,7 @@ offset_right = -36.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_type_variation = &"PaperDialog"
+theme_override_styles/panel = ExtResource("paper_dialog")
 
 [node name="ScoutMargin" type="MarginContainer" parent="ScoutPanel" unique_id=1342377385]
 layout_mode = 2

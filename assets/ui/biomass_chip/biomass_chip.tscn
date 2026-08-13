@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cbiomasschip01"]
+[gd_scene load_steps=7 format=3 uid="uid://cbiomasschip01"]
 
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="1_biomass"]
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="2_figtree"]
+[ext_resource type="StyleBox" uid="uid://bpapersqteal" path="res://assets/themes/paper/paper_chip_hud.tres" id="paper_chip_hud"]
+[ext_resource type="StyleBox" uid="uid://bpaperbarteal" path="res://assets/themes/paper/paper_hud.tres" id="paper_hud"]
 
 [sub_resource type="FontVariation" id="Font_biomass_amount"]
 base_font = ExtResource("2_figtree")
@@ -19,7 +21,7 @@ theme_override_constants/separation = 0
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 4
-theme_type_variation = &"PaperChipHud"
+theme_override_styles/panel = ExtResource("paper_chip_hud")
 
 [node name="Icon" type="TextureRect" parent="IconFrame"]
 layout_mode = 2
@@ -31,7 +33,7 @@ stretch_mode = 5
 custom_minimum_size = Vector2(176, 96)
 layout_mode = 2
 size_flags_vertical = 4
-theme_type_variation = &"PaperHud"
+theme_override_styles/panel = ExtResource("paper_hud")
 
 [node name="InfoVBox" type="VBoxContainer" parent="InfoFrame"]
 layout_mode = 2

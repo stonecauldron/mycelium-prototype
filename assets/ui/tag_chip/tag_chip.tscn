@@ -1,11 +1,12 @@
 [gd_scene format=3 uid="uid://b8g6iah8v7rc7"]
 
 [ext_resource type="Script" uid="uid://ctagchip000001" path="res://assets/ui/tag_chip/tag_chip.gd" id="1_chip"]
+[ext_resource type="StyleBox" uid="uid://bpapersqcream" path="res://assets/themes/paper/paper_chip.tres" id="paper_chip"]
 
 [node name="TagChip" type="PanelContainer"]
 layout_mode = 2
 mouse_filter = 2
-theme_type_variation = &"PaperChip"
+theme_override_styles/panel = ExtResource("paper_chip")
 script = ExtResource("1_chip")
 
 [node name="Label" type="Label" parent="."]

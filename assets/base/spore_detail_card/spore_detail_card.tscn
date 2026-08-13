@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="6_biomass"]
 [ext_resource type="PackedScene" path="res://assets/base/unit_detail_card/unit_detail_card_content.tscn" id="7_unit_content"]
+[ext_resource type="StyleBox" uid="uid://cvsxoog8s8xwu" path="res://assets/themes/paper/paper_dialog.tres" id="paper_dialog"]
 
 [node name="SporeDetailCard" type="Control"]
 custom_minimum_size = Vector2(390, 390)
@@ -21,7 +22,7 @@ anchors_preset = 0
 offset_right = 390.0
 offset_bottom = 560.0
 mouse_filter = 2
-theme_type_variation = &"PaperDialog"
+theme_override_styles/panel = ExtResource("paper_dialog")
 
 [node name="Margin" type="MarginContainer" parent="CardPanel"]
 layout_mode = 2

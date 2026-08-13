@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://assets/base/pupation/compost_confirm_dialog.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://dixo24oayxgua" path="res://assets/base/combat_progress_track/skull.png" id="3_skull"]
+[ext_resource type="StyleBox" uid="uid://bpapercard001" path="res://assets/themes/paper/paper_card.tres" id="paper_card"]
+[ext_resource type="StyleBox" uid="uid://cvsxoog8s8xwu" path="res://assets/themes/paper/paper_dialog.tres" id="paper_dialog"]
 
 [node name="CompostConfirmDialog" type="Control"]
 layout_mode = 3
@@ -39,7 +41,7 @@ mouse_filter = 2
 custom_minimum_size = Vector2(640, 420)
 layout_mode = 2
 mouse_filter = 0
-theme_type_variation = &"PaperDialog"
+theme_override_styles/panel = ExtResource("paper_dialog")
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel"]
 layout_mode = 2
@@ -97,7 +99,7 @@ horizontal_alignment = 1
 [node name="ComparePanel" type="PanelContainer" parent="Center/Panel/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_type_variation = &"PaperCard"
+theme_override_styles/panel = ExtResource("paper_card")
 
 [node name="CompareRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel"]
 layout_mode = 2

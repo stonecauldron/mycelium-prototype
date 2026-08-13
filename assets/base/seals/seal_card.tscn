@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dgt8pih4mv6mh" path="res://assets/base/seals/seal_card.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="StyleBox" uid="uid://bpapercard001" path="res://assets/themes/paper/paper_card.tres" id="paper_card"]
 
 [node name="SealCard" type="Control" unique_id=1707808502]
 custom_minimum_size = Vector2(260, 420)
@@ -19,7 +20,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_type_variation = &"PaperCard"
+theme_override_styles/panel = ExtResource("paper_card")
 
 [node name="Margin" type="MarginContainer" parent="Panel" unique_id=255551107]
 layout_mode = 2

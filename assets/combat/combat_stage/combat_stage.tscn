@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://3vtn54xo3e3w" path="res://assets/combat/combat_stage/fast_forward.png" id="10_ff"]
 [ext_resource type="PackedScene" uid="uid://cbiomasschip01" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="11_biomass_chip"]
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="13_figtree"]
+[ext_resource type="StyleBox" uid="uid://bpaperbarteal" path="res://assets/themes/paper/paper_hud.tres" id="paper_hud"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
 
@@ -278,7 +279,7 @@ offset_left = 24.0
 offset_top = 128.0
 offset_right = 420.0
 offset_bottom = 210.0
-theme_type_variation = &"PaperHud"
+theme_override_styles/panel = ExtResource("paper_hud")
 
 [node name="VBox" type="VBoxContainer" parent="HUD/PlayerArmyHp"]
 layout_mode = 2
@@ -329,7 +330,7 @@ offset_top = 128.0
 offset_right = -24.0
 offset_bottom = 210.0
 grow_horizontal = 0
-theme_type_variation = &"PaperHud"
+theme_override_styles/panel = ExtResource("paper_hud")
 
 [node name="VBox" type="VBoxContainer" parent="HUD/EnemyArmyHp"]
 layout_mode = 2

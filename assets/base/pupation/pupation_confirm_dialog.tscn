@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://assets/base/pupation/pupation_confirm_dialog.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="7_punch"]
 [ext_resource type="Script" path="res://assets/base/pupation/pupation_weapon_hover_row.gd" id="8_weapon_row"]
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="9_hourglass"]
+[ext_resource type="StyleBox" uid="uid://bpapercard001" path="res://assets/themes/paper/paper_card.tres" id="paper_card"]
+[ext_resource type="StyleBox" uid="uid://cvsxoog8s8xwu" path="res://assets/themes/paper/paper_dialog.tres" id="paper_dialog"]
 
 [node name="PupationConfirmDialog" type="Control"]
 layout_mode = 3
@@ -45,7 +47,7 @@ mouse_filter = 2
 custom_minimum_size = Vector2(860, 580)
 layout_mode = 2
 mouse_filter = 0
-theme_type_variation = &"PaperDialog"
+theme_override_styles/panel = ExtResource("paper_dialog")
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel"]
 layout_mode = 2
@@ -102,7 +104,7 @@ horizontal_alignment = 1
 [node name="ComparePanel" type="PanelContainer" parent="Center/Panel/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_type_variation = &"PaperCard"
+theme_override_styles/panel = ExtResource("paper_card")
 
 [node name="CompareRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel"]
 layout_mode = 2

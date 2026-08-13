@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://assets/base/pupation/school_training_detail_card.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="StyleBox" uid="uid://cvsxoog8s8xwu" path="res://assets/themes/paper/paper_dialog.tres" id="paper_dialog"]
 
 [node name="SchoolTrainingDetailCard" type="Control"]
 custom_minimum_size = Vector2(280, 280)
@@ -18,7 +19,7 @@ anchors_preset = 0
 offset_right = 280.0
 offset_bottom = 280.0
 mouse_filter = 2
-theme_type_variation = &"PaperDialog"
+theme_override_styles/panel = ExtResource("paper_dialog")
 
 [node name="Margin" type="MarginContainer" parent="CardPanel"]
 layout_mode = 2

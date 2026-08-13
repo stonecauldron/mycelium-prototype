@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dq1mgafddv6di" path="res://assets/base/troop_selection/starter_choice_dialog.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="StyleBox" uid="uid://cvsxoog8s8xwu" path="res://assets/themes/paper/paper_dialog.tres" id="paper_dialog"]
 
 [node name="StarterChoiceDialog" type="Control" unique_id=1882016092]
 layout_mode = 3
@@ -35,7 +36,7 @@ mouse_filter = 2
 [node name="Panel" type="PanelContainer" parent="Center" unique_id=1358615843]
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
-theme_type_variation = &"PaperDialog"
+theme_override_styles/panel = ExtResource("paper_dialog")
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=2020699154]
 layout_mode = 2

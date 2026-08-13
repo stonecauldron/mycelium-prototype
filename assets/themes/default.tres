@@ -5,11 +5,6 @@
 [ext_resource type="StyleBox" uid="uid://bpapertitteal" path="res://assets/themes/paper/paper_button_pressed.tres" id="3_pressed"]
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="4_fredoka"]
 [ext_resource type="StyleBox" uid="uid://bpapertitmaro" path="res://assets/themes/paper/paper_button_disabled.tres" id="6_disabled"]
-[ext_resource type="StyleBox" uid="uid://bpaperpanel01" path="res://assets/themes/paper/paper_panel.tres" id="7_panel"]
-[ext_resource type="StyleBox" uid="uid://bpapercard001" path="res://assets/themes/paper/paper_card.tres" id="8_card"]
-[ext_resource type="StyleBox" uid="uid://bpapercardsel" path="res://assets/themes/paper/paper_card_selected.tres" id="9_card_sel"]
-[ext_resource type="StyleBox" uid="uid://cvsxoog8s8xwu" path="res://assets/themes/paper/paper_dialog.tres" id="10_dialog"]
-[ext_resource type="StyleBox" uid="uid://bpaperbarteal" path="res://assets/themes/paper/paper_hud.tres" id="11_hud"]
 [ext_resource type="StyleBox" uid="uid://cvsxol8muyawu" path="res://assets/themes/paper/paper_banner.tres" id="12_banner"]
 [ext_resource type="StyleBox" uid="uid://bpapersqcream" path="res://assets/themes/paper/paper_chip.tres" id="13_chip"]
 [ext_resource type="StyleBox" uid="uid://bpapersqteal" path="res://assets/themes/paper/paper_chip_hud.tres" id="14_chip_hud"]
@@ -100,8 +95,6 @@ DamageLabel/colors/font_outline_color = Color(0.1, 0.05, 0.05, 1)
 DamageLabel/constants/outline_size = 6
 DamageLabel/font_sizes/font_size = 31
 DamageLabel/fonts/font = SubResource("Font_figtree_button")
-EmptyPanel/base_type = &"PanelContainer"
-EmptyPanel/styles/panel = SubResource("StyleBoxEmpty_tooltip_panel")
 HBoxContainer/constants/separation = 16
 Label/colors/font_color = Color(0.95, 0.95, 0.95, 1)
 Label/font_sizes/font_size = 36
@@ -133,20 +126,6 @@ PanelInnerMargin/constants/margin_bottom = 10
 PanelInnerMargin/constants/margin_left = 16
 PanelInnerMargin/constants/margin_right = 16
 PanelInnerMargin/constants/margin_top = 10
-PaperBanner/base_type = &"PanelContainer"
-PaperBanner/styles/panel = ExtResource("12_banner")
-PaperCard/base_type = &"PanelContainer"
-PaperCard/styles/panel = ExtResource("8_card")
-PaperCardSelected/base_type = &"PanelContainer"
-PaperCardSelected/styles/panel = ExtResource("9_card_sel")
-PaperChip/base_type = &"PanelContainer"
-PaperChip/styles/panel = ExtResource("13_chip")
-PaperChipHud/base_type = &"PanelContainer"
-PaperChipHud/styles/panel = ExtResource("14_chip_hud")
-PaperDialog/base_type = &"PanelContainer"
-PaperDialog/styles/panel = ExtResource("10_dialog")
-PaperHud/base_type = &"PanelContainer"
-PaperHud/styles/panel = ExtResource("11_hud")
 PaperIconButton/base_type = &"Button"
 PaperIconButton/colors/font_color = Color(0.18, 0.16, 0.14, 1)
 PaperIconButton/colors/font_hover_color = Color(0.18, 0.16, 0.14, 1)
@@ -156,8 +135,6 @@ PaperIconButton/styles/focus = ExtResource("13_chip")
 PaperIconButton/styles/hover = ExtResource("13_chip")
 PaperIconButton/styles/normal = ExtResource("13_chip")
 PaperIconButton/styles/pressed = ExtResource("14_chip_hud")
-PaperPanel/base_type = &"PanelContainer"
-PaperPanel/styles/panel = ExtResource("7_panel")
 PlaceholderLabel/base_type = &"Label"
 PlaceholderLabel/colors/font_color = Color(0.45, 0.42, 0.36, 1)
 PlaceholderLabel/font_sizes/font_size = 21

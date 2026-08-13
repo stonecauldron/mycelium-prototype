@@ -3,13 +3,8 @@
 [ext_resource type="Script" uid="uid://da6q7r8gr4k77" path="res://assets/base/seals/seal_choice_dialog.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="3_biomass"]
-[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="3_uiabf"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
 [ext_resource type="Texture2D" uid="uid://pmej1l8yxfyh" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 8.png" id="tex_paper_hud"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_kc5ih"]
-font = ExtResource("3_uiabf")
-font_size = 40
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
 content_margin_left = 28.0
@@ -170,10 +165,17 @@ text = "Confirm"
 [node name="TitlePanel" type="PanelContainer" parent="." unique_id=61064739]
 custom_maximum_size = Vector2(400, -1)
 layout_mode = 1
-offset_left = 540.0
-offset_top = 130.0
-offset_right = 940.0
-offset_bottom = 269.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -418.0
+offset_top = -338.0
+offset_right = -18.0
+offset_bottom = -267.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBox_paper_hud")
 
@@ -185,11 +187,14 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
 theme_override_font_sizes/font_size = 40
 text = "Choose a Seal "
-label_settings = SubResource("LabelSettings_kc5ih")
 horizontal_alignment = 1
 
-[node name="Prompt" type="Label" parent="TitlePanel/VBoxContainer" unique_id=2060768101]
-layout_mode = 2
+[node name="Prompt" type="Label" parent="." unique_id=2060768101]
+layout_mode = 0
+offset_left = 984.0
+offset_top = 618.0
+offset_right = 1352.0
+offset_bottom = 681.0
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 24
 text = "Seals grant bonuses for the whole run."

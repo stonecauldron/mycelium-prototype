@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://da6q7r8gr4k77" path="res://assets/base/seals/seal_choice_dialog.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="3_biomass"]
+[ext_resource type="Texture2D" uid="uid://byjxgyx2bn2yd" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 3 8.png" id="4_kc5ih"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
-[ext_resource type="Texture2D" uid="uid://pmej1l8yxfyh" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 8.png" id="tex_paper_hud"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
 content_margin_left = 28.0
@@ -16,19 +16,17 @@ texture_margin_left = 72.49772
 texture_margin_top = 162.69849
 texture_margin_right = 120.829544
 texture_margin_bottom = 154.10434
-expand_margin_top = 29.0
-expand_margin_bottom = 75.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_hud"]
 content_margin_left = 16.0
 content_margin_top = 10.0
 content_margin_right = 16.0
 content_margin_bottom = 12.0
-texture = ExtResource("tex_paper_hud")
-texture_margin_left = 28.976946
+texture = ExtResource("4_kc5ih")
+texture_margin_left = 30.714931
 texture_margin_top = 18.0
-texture_margin_right = 34.71798
-texture_margin_bottom = 18.0
+texture_margin_right = 63.105087
+texture_margin_bottom = 33.062546
 
 [node name="SealChoiceDialog" type="Control" unique_id=1010565807]
 layout_mode = 3
@@ -60,16 +58,16 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="Center" unique_id=1856256167]
-custom_minimum_size = Vector2(980, 620)
+custom_minimum_size = Vector2(1100, 800)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=118363492]
 layout_mode = 2
 theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 12
+theme_override_constants/margin_top = 64
 theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_bottom = 38
 
 [node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin" unique_id=718051620]
 layout_mode = 2
@@ -170,10 +168,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -418.0
-offset_top = -338.0
-offset_right = -18.0
-offset_bottom = -267.0
+offset_left = -469.0
+offset_top = -401.0
+offset_right = -69.0
+offset_bottom = -330.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -197,7 +195,6 @@ offset_left = 984.0
 offset_top = 618.0
 offset_right = 1352.0
 offset_bottom = 681.0
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 24
 text = "Seals grant bonuses for the whole run."

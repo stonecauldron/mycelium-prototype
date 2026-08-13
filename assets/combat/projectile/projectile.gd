@@ -170,22 +170,20 @@ func _explode_aoe() -> void:
 	var origin := global_position
 	_spawn_aoe_spore_cloud(origin)
 	var radius_sq := aoe_radius * aoe_radius
+	var killer: Node = (
+		owner_unit if owner_unit != null and is_instance_valid(owner_unit) else null
+	)
 	for node in get_tree().get_nodes_in_group("units"):
 		if node == null or not is_instance_valid(node) or not (node is Node2D):
 			continue
 		var unit := node as Node2D
 		if unit.global_position.distance_squared_to(origin) > radius_sq:
 			continue
+		if not _is_valid_target(unit):
+			continue
 		if not unit.has_method("take_damage"):
 			continue
-		unit.call(
-			"take_damage",
-			damage,
-			origin,
-			knockback_force,
-			owner_unit if owner_unit != null and is_instance_valid(owner_unit) else null,
-			damage_type
-		)
+		unit.call("take_damage", damage, origin, knockback_force, killer, damage_type)
 	queue_free()
 
 

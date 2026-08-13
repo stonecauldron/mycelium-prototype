@@ -49,6 +49,8 @@ var emitted_death_spore: bool = false
 @export var daily_stat_decay: int = 0
 ## One-shot +all stats granted on promote_to_imago (Late Bloomer).
 @export var pending_adult_stat_bonus: int = 0
+## Volatile fertiliser: 10% chance to die at each battle start.
+@export var volatile: bool = false
 ## Fertilizers applied in the nursery plot that produced this unit (display / lineage).
 @export var applied_fertilizers: Array[FertilizerData] = []
 

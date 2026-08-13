@@ -16,6 +16,7 @@ const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/hollow_chitin.tres",
 	"res://assets/base/nursery/fertilizers/finesse.tres",
 	"res://assets/base/nursery/fertilizers/stress_induced_growth.tres",
+	"res://assets/base/nursery/fertilizers/quick_growth.tres",
 	"res://assets/base/nursery/fertilizers/slow_and_steady.tres",
 	"res://assets/base/nursery/fertilizers/fast_metabolism.tres",
 	"res://assets/base/nursery/fertilizers/slow_metabolism.tres",
@@ -28,6 +29,7 @@ const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/stimulants.tres",
 	"res://assets/base/nursery/fertilizers/late_bloomer.tres",
 	"res://assets/base/nursery/fertilizers/normifier.tres",
+	"res://assets/base/nursery/fertilizers/volatile.tres",
 ]
 const _BODY_MUTATION_PATHS: Array[String] = [
 	"res://assets/base/nursery/mutations/body/fat.tres",
@@ -508,6 +510,7 @@ func _make_harvest_units(
 	var late_bloomer := false
 	var fast_metabolism := false
 	var slow_metabolism := false
+	var volatile := false
 	for fert in fertilizers:
 		if fert == null:
 			continue
@@ -530,6 +533,8 @@ func _make_harvest_units(
 				fast_metabolism = true
 			FertilizerData.Behavior.SLOW_METABOLISM:
 				slow_metabolism = true
+			FertilizerData.Behavior.VOLATILE:
+				volatile = true
 	if meiosis:
 		yield_count *= 2
 	if triploid:
@@ -584,6 +589,8 @@ func _make_harvest_units(
 			unit.pending_adult_stat_bonus = 7
 		if cocooning:
 			unit.pupation_stat_multiplier = 2
+		if volatile:
+			unit.volatile = true
 		unit.applied_fertilizers = _copy_display_fertilizers(fertilizers)
 		unit.cocoon_duration_days = _baked_cocoon_duration(cocooning, fast_metabolism, slow_metabolism)
 		if unit.max_days_alive >= 0:

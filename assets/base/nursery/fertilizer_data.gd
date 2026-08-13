@@ -15,6 +15,7 @@ enum Behavior {
 	STIMULANTS,
 	LATE_BLOOMER,
 	NORMIFIER,
+	VOLATILE,
 }
 
 @export var display_name: String = "Fertilizer"
@@ -39,6 +40,7 @@ func is_stat_source() -> bool:
 		or behavior == Behavior.AMOK
 		or behavior == Behavior.STIMULANTS
 		or behavior == Behavior.LATE_BLOOMER
+		or behavior == Behavior.VOLATILE
 	)
 
 

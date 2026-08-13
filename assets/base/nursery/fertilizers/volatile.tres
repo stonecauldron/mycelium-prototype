@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="FertilizerData" format=3 uid="uid://dae01arn2rmjd"]
+
+[ext_resource type="Script" uid="uid://d0mu0vimtxgur" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+
+[resource]
+script = ExtResource("1_fert")
+display_name = "Volatile"
+short_description = "+6 to ALL stats
+10% chance of dying at start of each battle"
+biomass_cost = 2
+tint = Color(0.95, 0.55, 0.15, 1)
+behavior = 13
+strength_delta = 6
+dex_delta = 6
+con_delta = 6
+spd_delta = 6

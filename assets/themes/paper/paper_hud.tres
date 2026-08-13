@@ -1,0 +1,14 @@
+[gd_resource type="StyleBoxTexture" format=3 uid="uid://bpaperbarteal"]
+
+[ext_resource type="Texture2D" uid="uid://pmej1l8yxfyh" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 8.png" id="1_tex"]
+
+[resource]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+texture = ExtResource("1_tex")
+texture_margin_left = 64.0
+texture_margin_top = 18.0
+texture_margin_right = 64.0
+texture_margin_bottom = 18.0

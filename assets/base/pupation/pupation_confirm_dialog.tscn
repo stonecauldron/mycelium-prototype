@@ -10,38 +10,6 @@
 [ext_resource type="Script" path="res://assets/base/pupation/pupation_weapon_hover_row.gd" id="8_weapon_row"]
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="9_hourglass"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-content_margin_left = 20.0
-content_margin_top = 16.0
-content_margin_right = 20.0
-content_margin_bottom = 16.0
-bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 8
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inner"]
-content_margin_left = 16.0
-content_margin_top = 12.0
-content_margin_right = 16.0
-content_margin_bottom = 12.0
-bg_color = Color(0.86, 0.84, 0.78, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
 [node name="PupationConfirmDialog" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -77,7 +45,7 @@ mouse_filter = 2
 custom_minimum_size = Vector2(860, 580)
 layout_mode = 2
 mouse_filter = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_type_variation = &"PaperDialog"
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel"]
 layout_mode = 2
@@ -117,9 +85,10 @@ text = "Sword Training"
 
 [node name="CloseButton" type="Button" parent="Center/Panel/Margin/VBox/HeaderRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(44, 44)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 focus_mode = 0
+theme_type_variation = &"PaperIconButton"
 text = "X"
 
 [node name="PupateTitle" type="Label" parent="Center/Panel/Margin/VBox"]
@@ -133,7 +102,7 @@ horizontal_alignment = 1
 [node name="ComparePanel" type="PanelContainer" parent="Center/Panel/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_inner")
+theme_type_variation = &"PaperCard"
 
 [node name="CompareRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel"]
 layout_mode = 2

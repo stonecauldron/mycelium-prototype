@@ -7,12 +7,10 @@
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="6_punch"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
-
 [node name="UnitCard" type="PanelContainer" unique_id=2087829966]
 custom_minimum_size = Vector2(140, 200)
 theme = ExtResource("2_theme")
-theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
+theme_type_variation = &"PaperCard"
 script = ExtResource("1_card")
 
 [node name="HoverPunch" parent="." instance=ExtResource("6_punch")]

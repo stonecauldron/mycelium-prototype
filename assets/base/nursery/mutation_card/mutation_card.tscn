@@ -5,13 +5,11 @@
 [ext_resource type="Texture2D" uid="uid://ejkf13yyxwou" path="res://assets/base/nursery/mutations/mutation_icon.png" id="3_mut"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="4_punch"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
-
 [node name="MutationCard" type="PanelContainer"]
-clip_contents = true
+clip_contents = false
 custom_minimum_size = Vector2(120, 100)
 theme = ExtResource("2_theme")
-theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
+theme_type_variation = &"PaperCard"
 script = ExtResource("1_card")
 
 [node name="HoverPunch" parent="." instance=ExtResource("4_punch")]

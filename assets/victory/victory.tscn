@@ -31,23 +31,28 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="Center"]
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(760, 520)
+layout_mode = 2
+theme_type_variation = &"PaperDialog"
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
 layout_mode = 2
 theme_type_variation = &"StackVBox"
 
-[node name="Title" type="Label" parent="Center/VBox"]
+[node name="Title" type="Label" parent="Center/Panel/VBox"]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 text = "Victory"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Center/VBox"]
+[node name="Subtitle" type="Label" parent="Center/Panel/VBox"]
 layout_mode = 2
 theme_type_variation = &"SubtitleLabel"
 text = "Your troop survived 10 days."
 horizontal_alignment = 1
 
-[node name="RestartButton" type="Button" parent="Center/VBox"]
+[node name="RestartButton" type="Button" parent="Center/Panel/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
@@ -55,7 +60,7 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Play Again"
 
-[node name="FeedbackButton" type="Button" parent="Center/VBox"]
+[node name="FeedbackButton" type="Button" parent="Center/Panel/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
@@ -63,7 +68,7 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Give Feedback"
 
-[node name="WishlistButton" type="Button" parent="Center/VBox"]
+[node name="WishlistButton" type="Button" parent="Center/Panel/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2

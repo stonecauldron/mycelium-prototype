@@ -4,22 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://cdr3kf2bf6rx8" path="res://assets/base/troop_selection/scout_bubble/speech_bubble_tip.tscn" id="2_tip"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="3_biomass"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scout_bubble"]
-content_margin_left = 18.0
-content_margin_top = 14.0
-content_margin_right = 18.0
-content_margin_bottom = 16.0
-bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-
 [node name="ScoutBubble" type="Control" unique_id=1943444135]
 layout_mode = 3
 anchors_preset = 15
@@ -39,7 +23,7 @@ offset_right = -36.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_scout_bubble")
+theme_type_variation = &"PaperDialog"
 
 [node name="ScoutMargin" type="MarginContainer" parent="ScoutPanel" unique_id=1342377385]
 layout_mode = 2
@@ -135,7 +119,7 @@ alignment = 1
 
 [node name="ScoutRerollLabel" type="Label" parent="ScoutPanel/ScoutMargin/ScoutVBox/ScoutRerollButton/ScoutRerollContent" unique_id=1477121427]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_font_sizes/font_size = 26
 text = "Reroll"
 vertical_alignment = 1
@@ -143,7 +127,7 @@ vertical_alignment = 1
 [node name="ScoutRerollCostLabel" type="Label" parent="ScoutPanel/ScoutMargin/ScoutVBox/ScoutRerollButton/ScoutRerollContent" unique_id=1896023138]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_font_sizes/font_size = 26
 text = "3"
 vertical_alignment = 1

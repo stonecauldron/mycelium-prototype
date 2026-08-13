@@ -238,7 +238,7 @@ func _build_tab_bar() -> void:
 
 		var underline := ColorRect.new()
 		underline.custom_minimum_size = Vector2(0, 4)
-		underline.color = Color(0.92, 0.92, 0.9, 1.0)
+		underline.color = Color(0.94, 0.94, 0.88, 1.0)
 		underline.visible = false
 		column.add_child(underline)
 

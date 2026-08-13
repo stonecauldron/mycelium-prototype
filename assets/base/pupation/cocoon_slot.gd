@@ -178,16 +178,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 func _make_compost_tooltip() -> Object:
 	var tip := PanelContainer.new()
 	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-	style.border_color = Color(0, 0, 0, 1)
-	style.set_border_width_all(3)
-	style.set_corner_radius_all(12)
-	style.content_margin_left = 14
-	style.content_margin_top = 12
-	style.content_margin_right = 14
-	style.content_margin_bottom = 12
-	tip.add_theme_stylebox_override("panel", style)
+	PaperStyles.apply_tooltip(tip)
 	var box := VBoxContainer.new()
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_theme_constant_override("separation", 6)

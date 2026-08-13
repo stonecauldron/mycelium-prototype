@@ -8,29 +8,13 @@
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="6_punch"]
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="7_tag"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shop_card"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_spore"]
 atlas = ExtResource("3_spores")
 region = Rect2(64, 80, 376, 336)
 
 [node name="ShopOfferCard" type="Control" unique_id=1617112971]
 custom_minimum_size = Vector2(240, 360)
-clip_contents = true
+clip_contents = false
 layout_mode = 3
 anchors_preset = 0
 theme = ExtResource("2_theme")
@@ -47,7 +31,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_shop_card")
+theme_type_variation = &"PaperCard"
 
 [node name="Margin" type="MarginContainer" parent="CardPanel" unique_id=1063352709]
 layout_mode = 2

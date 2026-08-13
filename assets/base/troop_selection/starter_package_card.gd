@@ -7,7 +7,6 @@ const _TAG_CHIP_SCENE := preload("res://assets/ui/tag_chip/tag_chip.tscn")
 const _PORTRAIT_SCALE := 0.7
 const _COLOR_TEXT := Color(0.03137255, 0.03529412, 0.02745098, 1)
 const _COLOR_DESC := Color(0.2, 0.22, 0.18, 1)
-const _COLOR_SELECTED_BORDER := Color(0.12, 0.45, 0.18, 1)
 const _TAG_FONT_SIZE := 18
 
 var package_id: StringName = &""
@@ -35,7 +34,7 @@ func setup(p_package_id: StringName) -> void:
 func set_selected(selected: bool) -> void:
 	if _panel == null:
 		return
-	_panel.add_theme_stylebox_override("panel", _make_card_style(selected))
+	PaperStyles.apply_card(_panel, selected)
 
 
 func _refresh() -> void:
@@ -108,25 +107,6 @@ func _range_label(formation_line: WeaponData.FormationLine) -> String:
 	if formation_line == WeaponData.FormationLine.MID:
 		return "Mid Range"
 	return str(WeaponData.FORMATION_LINE_LABELS.get(formation_line, "?"))
-
-
-func _make_card_style(selected: bool) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.content_margin_left = 8
-	style.content_margin_top = 8
-	style.content_margin_right = 8
-	style.content_margin_bottom = 8
-	style.bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-	style.border_width_left = 5
-	style.border_width_top = 5
-	style.border_width_right = 5
-	style.border_width_bottom = 8 if selected else 5
-	style.border_color = _COLOR_SELECTED_BORDER if selected else Color(0, 0, 0, 1)
-	style.corner_radius_top_left = 16
-	style.corner_radius_top_right = 16
-	style.corner_radius_bottom_right = 16
-	style.corner_radius_bottom_left = 16
-	return style
 
 
 func _on_gui_input(event: InputEvent) -> void:

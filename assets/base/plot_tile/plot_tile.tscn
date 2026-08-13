@@ -175,7 +175,7 @@ alignment = 1
 
 [node name="PlantLabel" type="Label" parent="Content/Margin/Stack/ActionSlot/PlantButton/PlantMargin/PlantContent" unique_id=216391882]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 28
 text = "Plant:"
@@ -183,7 +183,7 @@ text = "Plant:"
 [node name="PlantCostLabel" type="Label" parent="Content/Margin/Stack/ActionSlot/PlantButton/PlantMargin/PlantContent" unique_id=216391883]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 28
 text = "4"
@@ -229,7 +229,7 @@ alignment = 1
 
 [node name="UnlockLabel" type="Label" parent="Content/Margin/Stack/ActionSlot/UnlockButton/UnlockMargin/UnlockContent" unique_id=216391875]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 28
 text = "Unlock:"
@@ -237,7 +237,7 @@ text = "Unlock:"
 [node name="UnlockCostLabel" type="Label" parent="Content/Margin/Stack/ActionSlot/UnlockButton/UnlockMargin/UnlockContent" unique_id=216391876]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 28
 text = "4"

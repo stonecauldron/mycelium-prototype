@@ -12,9 +12,6 @@
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
 [ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bottom_bg"]
-bg_color = Color(0.086, 0.122, 0.118, 0.68)
-
 [node name="Base" type="Node2D" unique_id=65120356]
 script = ExtResource("1_base")
 
@@ -238,7 +235,7 @@ mouse_filter = 2
 [node name="BottomBar" type="PanelContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox" unique_id=1027196615]
 custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_bottom_bg")
+theme_type_variation = &"PaperHud"
 
 [node name="BottomMargin" type="MarginContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar" unique_id=1027746649]
 layout_mode = 2

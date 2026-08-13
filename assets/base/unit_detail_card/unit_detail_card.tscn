@@ -4,22 +4,6 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://bmrp3orp5n31e" path="res://assets/base/unit_detail_card/unit_detail_card_content.tscn" id="3_content"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 8
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-
 [node name="UnitDetailCard" type="Control" unique_id=133047682]
 custom_minimum_size = Vector2(390, 600)
 layout_mode = 3
@@ -32,7 +16,7 @@ layout_mode = 0
 offset_right = 390.0
 offset_bottom = 600.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_detail_card")
+theme_type_variation = &"PaperDialog"
 
 [node name="Margin" type="MarginContainer" parent="CardPanel" unique_id=1370567442]
 layout_mode = 2

@@ -1,0 +1,15 @@
+[gd_resource type="StyleBoxTexture" format=3 uid="uid://bpapertitmaro"]
+
+[ext_resource type="Texture2D" uid="uid://cjf21w5edkkn8" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 2 border 6.png" id="1_tex"]
+
+[resource]
+content_margin_left = 28.0
+content_margin_top = 12.0
+content_margin_right = 28.0
+content_margin_bottom = 16.0
+texture = ExtResource("1_tex")
+texture_margin_left = 48.0
+texture_margin_top = 22.0
+texture_margin_right = 48.0
+texture_margin_bottom = 24.0
+modulate_color = Color(1, 1, 1, 0.55)

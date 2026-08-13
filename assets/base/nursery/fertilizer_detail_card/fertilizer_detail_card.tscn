@@ -4,22 +4,6 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://c7b88454iaqi0" path="res://assets/base/nursery/fertilizers/fertiliser.png" id="3_fert"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 20.0
-bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 8
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_fert"]
 atlas = ExtResource("3_fert")
 region = Rect2(183, 167, 169, 180)
@@ -39,7 +23,7 @@ anchors_preset = 0
 offset_right = 280.0
 offset_bottom = 200.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_detail_card")
+theme_type_variation = &"PaperDialog"
 
 [node name="Margin" type="MarginContainer" parent="CardPanel"]
 layout_mode = 2

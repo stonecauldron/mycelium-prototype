@@ -5,22 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="5_tag"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="6_biomass"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 20.0
-bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 8
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-
 [node name="WeaponDetailCard" type="Control"]
 custom_minimum_size = Vector2(320, 390)
 clip_contents = false
@@ -35,7 +19,7 @@ anchors_preset = 0
 offset_right = 320.0
 offset_bottom = 390.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_detail_card")
+theme_type_variation = &"PaperDialog"
 
 [node name="Margin" type="MarginContainer" parent="CardPanel"]
 layout_mode = 2

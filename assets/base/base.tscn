@@ -233,7 +233,7 @@ size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="BottomBar" type="PanelContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox" unique_id=1027196615]
-custom_minimum_size = Vector2(0, 84)
+custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
 theme_type_variation = &"PaperHud"
 

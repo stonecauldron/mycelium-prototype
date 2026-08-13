@@ -27,6 +27,12 @@ func set_selected(selected: bool) -> void:
 	if _panel == null:
 		return
 	PaperStyles.apply_card(_panel, selected)
+	var title_color := PaperStyles.CREAM if selected else PaperStyles.INK
+	var body_color := PaperStyles.CREAM if selected else PaperStyles.INK_MUTED
+	if _title != null:
+		_title.add_theme_color_override("font_color", title_color)
+	if _description != null:
+		_description.add_theme_color_override("font_color", body_color)
 
 
 func _refresh() -> void:

@@ -18,8 +18,6 @@ const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/stress_induced_growth.tres",
 	"res://assets/base/nursery/fertilizers/quick_growth.tres",
 	"res://assets/base/nursery/fertilizers/slow_and_steady.tres",
-	"res://assets/base/nursery/fertilizers/fast_metabolism.tres",
-	"res://assets/base/nursery/fertilizers/slow_metabolism.tres",
 	"res://assets/base/nursery/fertilizers/meiosis.tres",
 	"res://assets/base/nursery/fertilizers/triploid_cells.tres",
 	"res://assets/base/nursery/fertilizers/fungicide.tres",
@@ -508,8 +506,6 @@ func _make_harvest_units(
 	var cocooning := false
 	var stimulants := false
 	var late_bloomer := false
-	var fast_metabolism := false
-	var slow_metabolism := false
 	var volatile := false
 	for fert in fertilizers:
 		if fert == null:
@@ -529,10 +525,6 @@ func _make_harvest_units(
 				stimulants = true
 			FertilizerData.Behavior.LATE_BLOOMER:
 				late_bloomer = true
-			FertilizerData.Behavior.FAST_METABOLISM:
-				fast_metabolism = true
-			FertilizerData.Behavior.SLOW_METABOLISM:
-				slow_metabolism = true
 			FertilizerData.Behavior.VOLATILE:
 				volatile = true
 	if meiosis:
@@ -592,12 +584,7 @@ func _make_harvest_units(
 		if volatile:
 			unit.volatile = true
 		unit.applied_fertilizers = _copy_display_fertilizers(fertilizers)
-		unit.cocoon_duration_days = _baked_cocoon_duration(cocooning, fast_metabolism, slow_metabolism)
-		if unit.max_days_alive >= 0:
-			if fast_metabolism:
-				unit.max_days_alive = int(unit.max_days_alive / 2.0)
-			if slow_metabolism:
-				unit.max_days_alive = unit.max_days_alive * 2
+		unit.cocoon_duration_days = _baked_cocoon_duration(cocooning)
 		unit.call_lifecycle_effect(&"on_hatch", [unit])
 		units.append(unit)
 	return units
@@ -612,15 +599,10 @@ func _copy_display_fertilizers(fertilizers: Array[FertilizerData]) -> Array[Fert
 	return copied
 
 
-func _baked_cocoon_duration(cocooning: bool, fast_metabolism: bool, slow_metabolism: bool) -> int:
-	var days := WeaponSchool.COCOON_DURATION_DAYS
+func _baked_cocoon_duration(cocooning: bool) -> int:
 	if cocooning:
-		days = 2
-	if slow_metabolism:
-		days *= 2
-	if fast_metabolism:
-		days = int(days / 2.0)
-	return days
+		return 2
+	return WeaponSchool.COCOON_DURATION_DAYS
 
 
 func _apply_fertilizer_stats(stats: UnitStatsData, fertilizers: Array[FertilizerData]) -> void:

@@ -142,7 +142,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 		return unit_tip
 
 	var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
-	weapon_tip.setup(data.weapon, false)
+	weapon_tip.setup(data.weapon, false, false, false)
 
 	var host := HBoxContainer.new()
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE

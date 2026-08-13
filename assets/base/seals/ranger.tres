@@ -7,7 +7,7 @@
 script = ExtResource("1_seal")
 id = &"ranger"
 display_name = "Ranger"
-description = "The rearmost unit gains 2x ATK"
+description = "The rearmost unit gains 2x attack"
 icon = ExtResource("2_icon")
 is_unique = true
 atk_multiplier = 2.0

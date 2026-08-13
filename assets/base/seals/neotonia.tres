@@ -7,7 +7,7 @@
 script = ExtResource("1_seal")
 id = &"neotonia"
 display_name = "Neotonia"
-description = "Child units have 1.5x ATK, 1.5x HP"
+description = "Child units have 1.5x attack, 1.5x health"
 icon = ExtResource("2_icon")
 is_unique = true
 atk_multiplier = 1.5

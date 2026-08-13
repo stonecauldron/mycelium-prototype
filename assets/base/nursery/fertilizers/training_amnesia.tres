@@ -8,4 +8,4 @@ display_name = "Training Amnesia"
 short_description = "Remove trained weapon but not training stat bonuses"
 biomass_cost = 2
 tint = Color(0.65, 0.65, 0.7, 1)
-behavior = 8
+behavior = 6

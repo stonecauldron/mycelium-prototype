@@ -7,7 +7,7 @@
 script = ExtResource("1_seal")
 id = &"bulwark"
 display_name = "Bulwark"
-description = "The frontmost unit gains 2x HP"
+description = "The frontmost unit gains 2x health"
 icon = ExtResource("2_icon")
 is_unique = true
 hp_multiplier = 2.0

@@ -16,7 +16,7 @@ script = ExtResource("2_stats")
 strength = 2
 dex = 2
 con = 2
-spd = 2
+spd = 3
 
 [resource]
 script = ExtResource("1_data")

@@ -8,7 +8,7 @@ display_name = "Stimulants"
 short_description = "+5 to ALL stats upon hatch
 -1 to ALL stats after each day"
 tint = Color(0.95, 0.4, 0.55, 1)
-behavior = 10
+behavior = 8
 strength_delta = 5
 dex_delta = 5
 con_delta = 5

@@ -8,4 +8,4 @@ display_name = "Triploid Cells"
 short_description = "Hatch amount x3
 Stats are divided by 3."
 tint = Color(0.75, 0.45, 0.85, 1)
-behavior = 7
+behavior = 5

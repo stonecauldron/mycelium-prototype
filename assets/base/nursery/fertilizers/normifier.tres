@@ -8,4 +8,4 @@ display_name = "Normifier"
 short_description = "Remove all mutations from the growing spore"
 biomass_cost = 2
 tint = Color(0.82, 0.88, 0.92, 1)
-behavior = 12
+behavior = 10

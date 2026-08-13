@@ -75,10 +75,6 @@ func days_to_mature_effective() -> int:
 	var base_days := planted_spore.days_to_mature_effective()
 	if has_behavior(FertilizerData.Behavior.SLOW_STEADY):
 		base_days *= 2
-	if has_behavior(FertilizerData.Behavior.SLOW_METABOLISM):
-		base_days *= 2
-	if has_behavior(FertilizerData.Behavior.FAST_METABOLISM):
-		base_days = int(base_days / 2.0)
 	return maxi(base_days, 0)
 
 

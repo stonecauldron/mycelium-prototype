@@ -27,8 +27,7 @@ func refresh() -> void:
 	GameState.ensure_upcoming_enemy_formation()
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	var specs := GameState.upcoming_enemy_formation
-	var title := _title_for_day(day)
-	show_specs(specs, title, day)
+	show_specs(specs, _title_for_day(day, false), day)
 	_refresh_reroll_affordability()
 
 
@@ -37,8 +36,9 @@ func preview_elite_for_day(day: int) -> void:
 	if not GameState.is_elite_day(elite_day):
 		return
 	_previewing = true
+	var upcoming := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	var specs := EnemyComposer.specs_for_day(elite_day)
-	show_specs(specs, "Elite Battle: Day %d" % elite_day, elite_day)
+	show_specs(specs, _title_for_day(elite_day, elite_day != upcoming), elite_day)
 	_refresh_reroll_affordability()
 
 
@@ -79,10 +79,11 @@ func show_specs(specs: Array[EnemyUnitSpec], title: String, day: int = -1) -> vo
 		_scout_reward_label.text = "+%d" % EnemyComposer.battle_reward_for(_reward_day, specs)
 
 
-func _title_for_day(day: int) -> String:
-	if GameState.is_elite_day(day):
-		return "Elite Battle: Day %d" % day
-	return "Next Battle: Day %d" % day
+func _title_for_day(day: int, include_day: bool) -> String:
+	var base := "Elite Battle" if GameState.is_elite_day(day) else "Next Battle"
+	if include_day:
+		return "%s: Day %d" % [base, day]
+	return base
 
 
 func _reroll_allowed() -> bool:

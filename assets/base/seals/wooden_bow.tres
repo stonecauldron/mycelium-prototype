@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SealData" format=3]
+[gd_resource type="Resource" script_class="SealData" format=3 uid="uid://bl3i2otcj5r8l"]
 
 [ext_resource type="Script" uid="uid://cjfvanoa1diui" path="res://assets/base/seals/seal_data.gd" id="1_seal"]
 [ext_resource type="Texture2D" uid="uid://dnf8ps5v2sbhi" path="res://assets/base/seals/seal.png" id="2_icon"]
@@ -7,6 +7,6 @@
 script = ExtResource("1_seal")
 id = &"wooden_bow"
 display_name = "Wooden Bow"
-description = "Your units deal +2 ranged dmg"
+description = "Your units deal +2 ranged damage"
 icon = ExtResource("2_icon")
 ranged_damage_flat = 2

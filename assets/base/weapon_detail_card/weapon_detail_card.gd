@@ -7,6 +7,8 @@ var weapon_data: WeaponData
 var interactive: bool = true
 ## When true, footer shows buy cost instead of sell value (shop tooltips).
 var show_buy_price: bool = false
+## When false, hides the buy/sell footer (equipped weapon tooltips).
+var show_price: bool = true
 
 @onready var _card_panel: PanelContainer = $CardPanel
 @onready var _name_label: Label = %NameLabel
@@ -25,11 +27,13 @@ var show_buy_price: bool = false
 func setup(
 	weapon: WeaponData,
 	p_interactive: bool = true,
-	p_show_buy_price: bool = false
+	p_show_buy_price: bool = false,
+	p_show_price: bool = true
 ) -> void:
 	weapon_data = weapon
 	interactive = p_interactive
 	show_buy_price = p_show_buy_price
+	show_price = p_show_price
 	if is_node_ready():
 		_apply_interaction_mode()
 		_refresh()
@@ -101,7 +105,7 @@ func _refresh() -> void:
 func _refresh_price_row() -> void:
 	if _sell_row == null or _sell_label == null:
 		return
-	if RiboforgeData.is_default_weapon(weapon_data):
+	if not show_price or RiboforgeData.is_default_weapon(weapon_data):
 		_sell_row.visible = false
 		return
 	_sell_row.visible = true

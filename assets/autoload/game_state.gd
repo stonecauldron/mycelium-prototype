@@ -185,7 +185,7 @@ func try_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
 		biomass.add(WeaponSchool.COCOON_COST)
 		troop.try_add_unit(unit)
 		return false
-	# Fast metabolism (etc.): duration <= 0 emerges immediately.
+	# Cocoon duration <= 0 emerges immediately.
 	if pupation.get_days_remaining(school) <= 0:
 		var placed := pupation.take_occupant(school)
 		if placed != null:

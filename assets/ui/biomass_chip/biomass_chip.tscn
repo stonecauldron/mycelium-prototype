@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cbiomasschip01"]
 
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="1_biomass"]
-[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="2_figtree"]
+[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="2_figtree"]
 
 [sub_resource type="FontVariation" id="Font_biomass_amount"]
 base_font = ExtResource("2_figtree")

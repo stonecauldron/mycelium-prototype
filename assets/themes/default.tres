@@ -3,8 +3,7 @@
 [ext_resource type="StyleBox" uid="uid://bpapertitsage" path="res://assets/themes/paper/paper_button_normal.tres" id="1_normal"]
 [ext_resource type="StyleBox" uid="uid://cvsxo5hskcu6g" path="res://assets/themes/paper/paper_button_hover.tres" id="2_hover"]
 [ext_resource type="StyleBox" uid="uid://bpapertitteal" path="res://assets/themes/paper/paper_button_pressed.tres" id="3_pressed"]
-[ext_resource type="FontFile" uid="uid://bckw80lf7bsfa" path="res://assets/fonts/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf" id="4_fraunces"]
-[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="5_figtree"]
+[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="4_fredoka"]
 [ext_resource type="StyleBox" uid="uid://bpapertitmaro" path="res://assets/themes/paper/paper_button_disabled.tres" id="6_disabled"]
 [ext_resource type="StyleBox" uid="uid://bpaperpanel01" path="res://assets/themes/paper/paper_panel.tres" id="7_panel"]
 [ext_resource type="StyleBox" uid="uid://bpapercard001" path="res://assets/themes/paper/paper_card.tres" id="8_card"]
@@ -14,22 +13,21 @@
 [ext_resource type="StyleBox" uid="uid://cvsxol8muyawu" path="res://assets/themes/paper/paper_banner.tres" id="12_banner"]
 [ext_resource type="StyleBox" uid="uid://bpapersqcream" path="res://assets/themes/paper/paper_chip.tres" id="13_chip"]
 [ext_resource type="StyleBox" uid="uid://bpapersqteal" path="res://assets/themes/paper/paper_chip_hud.tres" id="14_chip_hud"]
-[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="15_ggasa"]
 
 [sub_resource type="FontVariation" id="Font_figtree_button"]
-base_font = ExtResource("15_ggasa")
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 600
 }
 
 [sub_resource type="FontVariation" id="Font_figtree_meta"]
-base_font = ExtResource("5_figtree")
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 500
 }
 
 [sub_resource type="FontVariation" id="Font_fraunces_name"]
-base_font = ExtResource("4_fraunces")
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 500
 }
@@ -37,19 +35,19 @@ variation_opentype = {
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tooltip_panel"]
 
 [sub_resource type="FontVariation" id="Font_figtree_body"]
-base_font = ExtResource("5_figtree")
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 450
 }
 
 [sub_resource type="FontVariation" id="Font_fraunces_title"]
-base_font = ExtResource("4_fraunces")
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 500
 }
 
 [sub_resource type="FontVariation" id="Font_fraunces_display"]
-base_font = ExtResource("4_fraunces")
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 550
 }

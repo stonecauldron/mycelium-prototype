@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://b3cwr0j80yur4" path="res://assets/base/background/upper_lane_forge.png" id="3_upper_lane"]
 [ext_resource type="Texture2D" uid="uid://xovemgo41tww" path="res://assets/base/background/lower_lane_forge.png" id="4_lower_lane"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="5_biomass"]
-[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="6_figtree"]
+[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="6_figtree"]
 [ext_resource type="PackedScene" path="res://assets/base/shop/shop_drop_zone.tscn" id="7_shop_zone"]
 
 [sub_resource type="FontVariation" id="Font_figtree_button"]

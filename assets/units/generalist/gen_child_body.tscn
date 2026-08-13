@@ -34,7 +34,7 @@ scale = Vector2(0.39999998, 0.39999998)
 
 [node name="WeaponMount" type="Node2D" parent="." unique_id=630812409]
 position = Vector2(34, -30)
-scale = Vector2(0.9999997, 0.9999997)
+scale = Vector2(0.99999964, 0.99999964)
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=143079218]
 position = Vector2(0, 1.2499999)

@@ -60,7 +60,7 @@ _data = {
 size = Vector2(53, 112)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(35, 85)
+size = Vector2(27, 111)
 
 [node name="AcornKnightAppearance" type="Node2D" unique_id=1888771123]
 script = ExtResource("1_root")
@@ -92,5 +92,5 @@ position = Vector2(-0.5, -56)
 shape = SubResource("RectangleShape2D_hurtbox")
 
 [node name="BodyShape" type="CollisionShape2D" parent="." unique_id=123456789]
-position = Vector2(0, -42.5)
+position = Vector2(-0.5, -55.5)
 shape = SubResource("RectangleShape2D_body")

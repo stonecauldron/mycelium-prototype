@@ -55,20 +55,19 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(53, 120)
+size = Vector2(35, 104)
 
-[node name="PlayerImagoBase" type="Node2D"]
+[node name="PlayerImagoBase" type="Node2D" unique_id=1511043158]
 script = ExtResource("1_root")
 
-[node name="GroundShadow" type="Polygon2D" parent="."]
-position = Vector2(-3, 8)
+[node name="GroundShadow" type="Polygon2D" parent="." unique_id=1451174598]
 scale = Vector2(0.8, 0.8)
 color = Color(0, 0, 0, 0.25)
 polygon = PackedVector2Array(47.7, 0, 46.075, 3.841, 41.309, 7.42, 33.729, 10.493, 23.85, 12.852, 12.346, 14.334, 0, 14.84, -12.346, 14.334, -23.85, 12.852, -33.729, 10.493, -41.309, 7.42, -46.075, 3.841, -47.7, 0, -46.075, -3.841, -41.309, -7.42, -33.729, -10.493, -23.85, -12.852, -12.346, -14.334, 0, -14.84, 12.346, -14.334, 23.85, -12.852, 33.729, -10.493, 41.309, -7.42, 46.075, -3.841)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1742462485]
 libraries/ = SubResource("AnimationLibrary_main")
 
-[node name="BodyShape" type="CollisionShape2D" parent="."]
+[node name="BodyShape" type="CollisionShape2D" parent="." unique_id=369607989]
 position = Vector2(-0.5, -54)
 shape = SubResource("RectangleShape2D_body")

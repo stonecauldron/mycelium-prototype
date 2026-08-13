@@ -24,7 +24,7 @@ func on_hit_taken(
 	var strength := 1
 	if self_unit.stats != null:
 		strength = self_unit.stats.strength
-	var thorns := maxi(1, strength / 2)
+	var thorns := maxi(1, floori(strength / 2.0))
 	# Not an attack: ignore bearer's outgoing mods; target resists still apply via take_damage.
 	# is_melee=false so thorns never chain into more thorns.
 	foe.take_damage(

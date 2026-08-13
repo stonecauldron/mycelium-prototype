@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://3vtn54xo3e3w" path="res://assets/combat/combat_stage/fast_forward.png" id="10_ff"]
 [ext_resource type="PackedScene" uid="uid://cbiomasschip01" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="11_biomass_chip"]
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="13_figtree"]
-[ext_resource type="StyleBox" uid="uid://bpaperbarteal" path="res://assets/themes/paper/paper_hud.tres" id="paper_hud"]
+[ext_resource type="Texture2D" uid="uid://pmej1l8yxfyh" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 8.png" id="tex_paper_hud"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
 
@@ -47,6 +47,28 @@ corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_hud"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_paper_hud")
+texture_margin_left = 28.976946
+texture_margin_top = 18.0
+texture_margin_right = 34.71798
+texture_margin_bottom = 18.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_hud_2"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_paper_hud")
+texture_margin_left = 28.976946
+texture_margin_top = 18.0
+texture_margin_right = 34.71798
+texture_margin_bottom = 18.0
 
 [node name="CombatStage" type="Node2D" unique_id=1316519551]
 script = ExtResource("1_combat")
@@ -279,7 +301,7 @@ offset_left = 24.0
 offset_top = 128.0
 offset_right = 420.0
 offset_bottom = 210.0
-theme_override_styles/panel = ExtResource("paper_hud")
+theme_override_styles/panel = SubResource("StyleBox_paper_hud")
 
 [node name="VBox" type="VBoxContainer" parent="HUD/PlayerArmyHp"]
 layout_mode = 2
@@ -330,7 +352,7 @@ offset_top = 128.0
 offset_right = -24.0
 offset_bottom = 210.0
 grow_horizontal = 0
-theme_override_styles/panel = ExtResource("paper_hud")
+theme_override_styles/panel = SubResource("StyleBox_paper_hud_2")
 
 [node name="VBox" type="VBoxContainer" parent="HUD/EnemyArmyHp"]
 layout_mode = 2

@@ -2,7 +2,18 @@
 
 [ext_resource type="Script" uid="uid://dgt8pih4mv6mh" path="res://assets/base/seals/seal_card.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
-[ext_resource type="StyleBox" uid="uid://bpapercard001" path="res://assets/themes/paper/paper_card.tres" id="paper_card"]
+[ext_resource type="Texture2D" uid="uid://c2pffsxsdkf27" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 01.png" id="tex_paper_card"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_card"]
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 20.0
+texture = ExtResource("tex_paper_card")
+texture_margin_left = 40.0
+texture_margin_top = 40.0
+texture_margin_right = 48.0
+texture_margin_bottom = 48.0
 
 [node name="SealCard" type="Control" unique_id=1707808502]
 custom_minimum_size = Vector2(260, 420)
@@ -20,7 +31,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("paper_card")
+theme_override_styles/panel = SubResource("StyleBox_paper_card")
 
 [node name="Margin" type="MarginContainer" parent="Panel" unique_id=255551107]
 layout_mode = 2

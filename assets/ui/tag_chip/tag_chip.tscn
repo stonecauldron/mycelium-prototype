@@ -1,12 +1,23 @@
 [gd_scene format=3 uid="uid://b8g6iah8v7rc7"]
 
 [ext_resource type="Script" uid="uid://ctagchip000001" path="res://assets/ui/tag_chip/tag_chip.gd" id="1_chip"]
-[ext_resource type="StyleBox" uid="uid://bpapersqcream" path="res://assets/themes/paper/paper_chip.tres" id="paper_chip"]
+[ext_resource type="Texture2D" uid="uid://cyk0hronbwfxr" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square border 10.png" id="tex_paper_chip"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+texture = ExtResource("tex_paper_chip")
+texture_margin_left = 28.0
+texture_margin_top = 24.0
+texture_margin_right = 28.0
+texture_margin_bottom = 28.0
 
 [node name="TagChip" type="PanelContainer"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("paper_chip")
+theme_override_styles/panel = SubResource("StyleBox_paper_chip")
 script = ExtResource("1_chip")
 
 [node name="Label" type="Label" parent="."]

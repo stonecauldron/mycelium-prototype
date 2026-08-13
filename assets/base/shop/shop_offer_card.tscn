@@ -7,11 +7,22 @@
 [ext_resource type="Texture2D" uid="uid://bm2sipndchcwt" path="res://assets/base/shop/padlock_locked.png" id="5_padlock"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="6_punch"]
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="7_tag"]
-[ext_resource type="StyleBox" uid="uid://bpapercard001" path="res://assets/themes/paper/paper_card.tres" id="paper_card"]
+[ext_resource type="Texture2D" uid="uid://c2pffsxsdkf27" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 01.png" id="tex_paper_card"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_spore"]
 atlas = ExtResource("3_spores")
 region = Rect2(64, 80, 376, 336)
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_card"]
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 20.0
+texture = ExtResource("tex_paper_card")
+texture_margin_left = 40.0
+texture_margin_top = 40.0
+texture_margin_right = 48.0
+texture_margin_bottom = 48.0
 
 [node name="ShopOfferCard" type="Control" unique_id=1617112971]
 custom_minimum_size = Vector2(240, 360)
@@ -32,7 +43,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("paper_card")
+theme_override_styles/panel = SubResource("StyleBox_paper_card")
 
 [node name="Margin" type="MarginContainer" parent="CardPanel" unique_id=1063352709]
 layout_mode = 2

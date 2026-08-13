@@ -3,7 +3,20 @@
 [ext_resource type="Script" uid="uid://bkgii1op0lxro" path="res://assets/base/unit_detail_card/unit_detail_card.gd" id="1_card"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://bmrp3orp5n31e" path="res://assets/base/unit_detail_card/unit_detail_card_content.tscn" id="3_content"]
-[ext_resource type="StyleBox" uid="uid://cvsxoog8s8xwu" path="res://assets/themes/paper/paper_dialog.tres" id="paper_dialog"]
+[ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 28.0
+texture = ExtResource("tex_paper_dialog")
+texture_margin_left = 72.49772
+texture_margin_top = 162.69849
+texture_margin_right = 120.829544
+texture_margin_bottom = 154.10434
+expand_margin_top = 29.0
+expand_margin_bottom = 75.0
 
 [node name="UnitDetailCard" type="Control" unique_id=133047682]
 custom_minimum_size = Vector2(390, 600)
@@ -23,7 +36,7 @@ offset_top = -143.0
 offset_right = 438.0
 offset_bottom = 489.0
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("paper_dialog")
+theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
 
 [node name="Margin" type="MarginContainer" parent="CardPanel" unique_id=1370567442]
 layout_mode = 2

@@ -6,16 +6,27 @@
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="4_hourglass"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="6_punch"]
-[ext_resource type="StyleBox" uid="uid://bpapercard001" path="res://assets/themes/paper/paper_card.tres" id="paper_card"]
+[ext_resource type="Texture2D" uid="uid://c2pffsxsdkf27" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 01.png" id="tex_paper_card"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_r2fro"]
 atlas = ExtResource("3_spores")
 region = Rect2(157, 174, 211, 167)
 
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_card"]
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 20.0
+texture = ExtResource("tex_paper_card")
+texture_margin_left = 40.0
+texture_margin_top = 40.0
+texture_margin_right = 48.0
+texture_margin_bottom = 48.0
+
 [node name="SporeCard" type="PanelContainer" unique_id=830281552]
 custom_minimum_size = Vector2(120, 100)
 theme = ExtResource("2_theme")
-theme_override_styles/panel = ExtResource("paper_card")
+theme_override_styles/panel = SubResource("StyleBox_paper_card")
 script = ExtResource("1_card")
 
 [node name="HoverPunch" parent="." instance=ExtResource("6_punch")]

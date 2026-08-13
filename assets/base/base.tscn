@@ -11,7 +11,18 @@
 [ext_resource type="PackedScene" uid="uid://ctgmgo4sqa1g7" path="res://assets/base/riboforge/riboforge_screen.tscn" id="12_riboforge"]
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
 [ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
-[ext_resource type="StyleBox" uid="uid://bpaperbarteal" path="res://assets/themes/paper/paper_hud.tres" id="paper_hud"]
+[ext_resource type="Texture2D" uid="uid://pmej1l8yxfyh" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 8.png" id="tex_paper_hud"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_hud"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_paper_hud")
+texture_margin_left = 28.976946
+texture_margin_top = 18.0
+texture_margin_right = 34.71798
+texture_margin_bottom = 18.0
 
 [node name="Base" type="Node2D" unique_id=65120356]
 script = ExtResource("1_base")
@@ -236,7 +247,7 @@ mouse_filter = 2
 [node name="BottomBar" type="PanelContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox" unique_id=1027196615]
 custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
-theme_override_styles/panel = ExtResource("paper_hud")
+theme_override_styles/panel = SubResource("StyleBox_paper_hud")
 
 [node name="BottomMargin" type="MarginContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar" unique_id=1027746649]
 layout_mode = 2

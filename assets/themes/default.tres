@@ -5,9 +5,9 @@
 [ext_resource type="StyleBox" uid="uid://bpapertitteal" path="res://assets/themes/paper/paper_button_pressed.tres" id="3_pressed"]
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="4_fredoka"]
 [ext_resource type="StyleBox" uid="uid://bpapertitmaro" path="res://assets/themes/paper/paper_button_disabled.tres" id="6_disabled"]
-[ext_resource type="StyleBox" uid="uid://cvsxol8muyawu" path="res://assets/themes/paper/paper_banner.tres" id="12_banner"]
-[ext_resource type="StyleBox" uid="uid://bpapersqcream" path="res://assets/themes/paper/paper_chip.tres" id="13_chip"]
-[ext_resource type="StyleBox" uid="uid://bpapersqteal" path="res://assets/themes/paper/paper_chip_hud.tres" id="14_chip_hud"]
+[ext_resource type="Texture2D" uid="uid://c5w1uux00vgfn" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 2 border 10.png" id="tex_paper_banner"]
+[ext_resource type="Texture2D" uid="uid://cyk0hronbwfxr" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square border 10.png" id="tex_paper_chip"]
+[ext_resource type="Texture2D" uid="uid://cyer2nxh2mtfq" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 8.png" id="tex_paper_chip_hud"]
 
 [sub_resource type="FontVariation" id="Font_figtree_button"]
 base_font = ExtResource("4_fredoka")
@@ -46,6 +46,39 @@ base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 550
 }
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_banner"]
+content_margin_left = 36.0
+content_margin_top = 10.0
+content_margin_right = 36.0
+content_margin_bottom = 14.0
+texture = ExtResource("tex_paper_banner")
+texture_margin_left = 52.0
+texture_margin_top = 22.0
+texture_margin_right = 52.0
+texture_margin_bottom = 24.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+texture = ExtResource("tex_paper_chip")
+texture_margin_left = 28.0
+texture_margin_top = 24.0
+texture_margin_right = 28.0
+texture_margin_bottom = 28.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip_hud"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+texture = ExtResource("tex_paper_chip_hud")
+texture_margin_left = 24.0
+texture_margin_top = 24.0
+texture_margin_right = 24.0
+texture_margin_bottom = 24.0
 
 [resource]
 BaseRootMargin/base_type = &"MarginContainer"
@@ -120,7 +153,7 @@ PageTitleLabel/base_type = &"Label"
 PageTitleLabel/colors/font_color = Color(0.18, 0.16, 0.14, 1)
 PageTitleLabel/font_sizes/font_size = 36
 PageTitleLabel/fonts/font = SubResource("Font_fraunces_title")
-PageTitleLabel/styles/normal = ExtResource("12_banner")
+PageTitleLabel/styles/normal = SubResource("StyleBox_paper_banner")
 PanelInnerMargin/base_type = &"MarginContainer"
 PanelInnerMargin/constants/margin_bottom = 10
 PanelInnerMargin/constants/margin_left = 16
@@ -130,11 +163,11 @@ PaperIconButton/base_type = &"Button"
 PaperIconButton/colors/font_color = Color(0.18, 0.16, 0.14, 1)
 PaperIconButton/colors/font_hover_color = Color(0.18, 0.16, 0.14, 1)
 PaperIconButton/colors/font_pressed_color = Color(0.94, 0.94, 0.88, 1)
-PaperIconButton/styles/disabled = ExtResource("13_chip")
-PaperIconButton/styles/focus = ExtResource("13_chip")
-PaperIconButton/styles/hover = ExtResource("13_chip")
-PaperIconButton/styles/normal = ExtResource("13_chip")
-PaperIconButton/styles/pressed = ExtResource("14_chip_hud")
+PaperIconButton/styles/disabled = SubResource("StyleBox_paper_chip")
+PaperIconButton/styles/focus = SubResource("StyleBox_paper_chip")
+PaperIconButton/styles/hover = SubResource("StyleBox_paper_chip")
+PaperIconButton/styles/normal = SubResource("StyleBox_paper_chip")
+PaperIconButton/styles/pressed = SubResource("StyleBox_paper_chip_hud")
 PlaceholderLabel/base_type = &"Label"
 PlaceholderLabel/colors/font_color = Color(0.45, 0.42, 0.36, 1)
 PlaceholderLabel/font_sizes/font_size = 21

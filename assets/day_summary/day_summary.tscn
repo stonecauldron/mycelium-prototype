@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://0jwhnpwuivng" path="res://assets/day_summary/day_summary.gd" id="1_summary"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
-[ext_resource type="StyleBox" uid="uid://bpaperpanel01" path="res://assets/themes/paper/paper_panel.tres" id="paper_panel"]
+[ext_resource type="Texture2D" uid="uid://bv0fanwblaol5" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 05.png" id="tex_paper_panel"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
 bg_color = Color(0.08, 0.1, 0.1, 1)
@@ -17,6 +17,28 @@ corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_panel"]
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 28.0
+texture = ExtResource("tex_paper_panel")
+texture_margin_left = 72.0
+texture_margin_top = 64.0
+texture_margin_right = 80.0
+texture_margin_bottom = 72.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_panel_2"]
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 28.0
+texture = ExtResource("tex_paper_panel")
+texture_margin_left = 72.0
+texture_margin_top = 64.0
+texture_margin_right = 80.0
+texture_margin_bottom = 72.0
 
 [node name="DaySummary" type="Control"]
 layout_mode = 3
@@ -78,7 +100,7 @@ mouse_filter = 2
 
 [node name="EntriesPanel" type="PanelContainer" parent="RootMargin/RootVBox/Body/EntriesHost"]
 layout_mode = 2
-theme_override_styles/panel = ExtResource("paper_panel")
+theme_override_styles/panel = SubResource("StyleBox_paper_panel")
 
 [node name="Entries" type="VBoxContainer" parent="RootMargin/RootVBox/Body/EntriesHost/EntriesPanel"]
 unique_name_in_owner = true
@@ -92,7 +114,7 @@ anchors_preset = 9
 anchor_bottom = 1.0
 offset_right = 420.0
 grow_vertical = 2
-theme_override_styles/panel = ExtResource("paper_panel")
+theme_override_styles/panel = SubResource("StyleBox_paper_panel_2")
 
 [node name="CombatRecap" type="VBoxContainer" parent="RootMargin/RootVBox/Body/CombatRecapPanel"]
 unique_name_in_owner = true

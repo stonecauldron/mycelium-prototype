@@ -18,7 +18,7 @@ var current_day: int = 0
 var run_seed: int = 0
 ## Active enemy formation for the upcoming day (filled by scout; consumed by roster build).
 var upcoming_enemy_formation: Array[EnemyUnitSpec] = []
-## One-shot: open Nursery when returning to base after it unlocks.
+## One-shot: open Nursery when returning to base after a won battle (once unlocked).
 var prefer_nursery_tab: bool = false
 ## One-shot: open Riboforge when returning to base after it unlocks.
 var prefer_riboforge_tab: bool = false

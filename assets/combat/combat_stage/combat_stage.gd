@@ -746,8 +746,9 @@ func _check_battle_end() -> void:
 		return
 	DaySummaryFeed.clear()
 	_push_combat_recap_to_day_summary()
-	if GameState.current_day == GameState.NURSERY_UNLOCK_DAY:
+	if GameState.is_nursery_unlocked():
 		GameState.prefer_nursery_tab = true
+	if GameState.current_day == GameState.NURSERY_UNLOCK_DAY:
 		DaySummaryFeed.add_base_unlock("Nursery")
 	# Riboforge remains in codebase but is hidden from base nav; no unlock toast.
 	if _biomass_earned_this_fight > 0:

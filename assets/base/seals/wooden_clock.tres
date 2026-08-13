@@ -7,6 +7,6 @@
 script = ExtResource("1_seal")
 id = &"wooden_clock"
 display_name = "Wooden Clock"
-description = "All your sporelings have +2 SPD"
+description = "All your units have +2 SPD"
 icon = ExtResource("2_icon")
 spd_flat = 2

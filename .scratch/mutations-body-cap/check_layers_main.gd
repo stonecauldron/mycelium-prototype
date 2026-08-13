@@ -99,7 +99,7 @@ func _run() -> void:
 			cap = cap_mount.get_child(0) as CanvasItem
 		if body == null or cap == null:
 			errs.append("portrait missing layers")
-		elif body.modulate != mini.tint or cap.self_modulate != boom.tint:
+		elif body.modulate != fat.tint or cap.self_modulate != boom.tint:
 			errs.append("portrait layer tints wrong")
 		var tier := UnitStatsData.tint_for_tier(roster.power_tier)
 		if portrait.modulate != tier:

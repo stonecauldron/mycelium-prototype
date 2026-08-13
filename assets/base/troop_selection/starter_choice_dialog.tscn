@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://bi1lv7bg7cx8i"]
 
-[ext_resource type="Script" path="res://assets/base/troop_selection/starter_choice_dialog.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dq1mgafddv6di" path="res://assets/base/troop_selection/starter_choice_dialog.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
@@ -19,18 +19,17 @@ corner_radius_top_right = 18
 corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
 
-[node name="StarterChoiceDialog" type="Control"]
+[node name="StarterChoiceDialog" type="Control" unique_id=1882016092]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="Dim" type="ColorRect" parent="."]
+[node name="Dim" type="ColorRect" parent="." unique_id=2024891423]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -38,10 +37,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
 color = Color(0.06, 0.12, 0.07, 0.62)
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=881411626]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -50,39 +48,30 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Panel" type="PanelContainer" parent="Center"]
+[node name="Panel" type="PanelContainer" parent="Center" unique_id=1358615843]
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
-mouse_filter = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+[node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=2020699154]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 12
 
-[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin" unique_id=1413572695]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="HeaderTitle" type="Label" parent="Center/Panel/Margin/VBox"]
+[node name="HeaderTitle" type="Label" parent="Center/Panel/Margin/VBox" unique_id=927626405]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 40
 text = "Choose Your Starter"
 horizontal_alignment = 1
 
-[node name="Prompt" type="Label" parent="Center/Panel/Margin/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
-theme_override_font_sizes/font_size = 24
-text = "Pick a dual-trained Adult with a combo weapon."
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="CardsRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+[node name="CardsRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox" unique_id=1762811772]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -90,15 +79,15 @@ size_flags_vertical = 3
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="Footer" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+[node name="Footer" type="HBoxContainer" parent="Center/Panel/Margin/VBox" unique_id=1062917511]
 layout_mode = 2
 alignment = 1
 
-[node name="ConfirmButton" type="Button" parent="Center/Panel/Margin/VBox/Footer"]
+[node name="ConfirmButton" type="Button" parent="Center/Panel/Margin/VBox/Footer" unique_id=797977046]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 58)
 layout_mode = 2
 focus_mode = 0
-disabled = true
 theme_override_font_sizes/font_size = 24
+disabled = true
 text = "Confirm"

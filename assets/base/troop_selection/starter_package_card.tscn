@@ -1,0 +1,104 @@
+[gd_scene format=3 uid="uid://2fhgj15xif3e"]
+
+[ext_resource type="Script" path="res://assets/base/troop_selection/starter_package_card.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="StarterPackageCard" type="Control" unique_id=298977122]
+custom_minimum_size = Vector2(280, 380)
+layout_mode = 3
+anchors_preset = 0
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=1826356474]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Margin" type="MarginContainer" parent="Panel" unique_id=342551963]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="Panel/Margin" unique_id=1643309268]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="Panel/Margin/VBox" unique_id=225498014]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 24
+text = "Starter"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="UnitBlock" type="VBoxContainer" parent="Panel/Margin/VBox" unique_id=17807835]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="PortraitHost" type="Control" parent="Panel/Margin/VBox/UnitBlock" unique_id=1279103806]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Spacer" type="Control" parent="Panel/Margin/VBox/UnitBlock" unique_id=324825879]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="WeaponNameLabel" type="Label" parent="Panel/Margin/VBox/UnitBlock" unique_id=860552287]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 20
+text = "Weapon"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionLabel" type="Label" parent="Panel/Margin/VBox/UnitBlock" unique_id=1888083553]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/font_size = 20
+text = "Weapon description"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="TagRow" type="HFlowContainer" parent="Panel/Margin/VBox/UnitBlock" unique_id=416185595]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 10
+mouse_filter = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+alignment = 1

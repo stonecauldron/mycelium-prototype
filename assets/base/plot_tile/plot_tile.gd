@@ -19,6 +19,7 @@ const _TEX_EGG1_SHADOW := preload("res://assets/base/plot_tile/egg1_shadow.png")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
 const _HOVER_PUNCH_SCENE := preload("res://assets/ui/hover_punch/hover_punch.tscn")
 const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
+const _FUNGICIDE := preload("res://assets/base/nursery/fertilizers/fungicide.tres")
 const _MUTATION_ICON := preload("res://assets/base/nursery/mutations/mutation_icon.png")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 const _FERTILIZER_DETAIL_CARD_SCENE := preload(
@@ -339,6 +340,7 @@ func _refresh_fertilizer_chips() -> void:
 	# Ghost capacity chips only while a spore is planted; empty dirt shows filled only.
 	var show_ghosts := not _plot.is_empty()
 	_add_mutation_slot_chips(show_ghosts)
+	_add_extra_nutrition_chip()
 	_add_fertilizer_slot_chips(show_ghosts)
 
 
@@ -403,6 +405,26 @@ func _add_mutation_slot_chip(show_ghost: bool) -> void:
 
 func _add_mutation_slot_badge(chip: StatChip, mutation: MutationData) -> void:
 	MutationData.attach_slot_badge(chip, mutation, _MUTATION_SLOT_BADGE_SIZE)
+
+
+## Fungicide chip on empty dirt with Extra nutrition — not a stack slot.
+func _add_extra_nutrition_chip() -> void:
+	if _plot == null or not _plot.is_empty() or _plot.pending_stat_bonus <= 0:
+		return
+	var fert := _FUNGICIDE as FertilizerData
+	if fert == null:
+		return
+	var chip := _make_slot_chip(_fertilizer_icon_atlas)
+	var icon := chip.get_node_or_null("%Icon") as TextureRect
+	chip.set_value()
+	if icon != null:
+		icon.self_modulate = fert.tint
+	chip.tooltip_text = fert.display_name
+	var fert_ref: FertilizerData = fert
+	var residue := _plot.fungicide_residue_text()
+	chip.custom_tooltip_factory = func () -> Object:
+		return _make_fertilizer_detail_tip(fert_ref, residue)
+	_fertilizer_chips.append(chip)
 
 
 func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:

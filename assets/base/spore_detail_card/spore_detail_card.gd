@@ -123,7 +123,10 @@ func _refresh_unit_content() -> void:
 		_unit_content.visible = false
 		return
 	_unit_content.visible = true
-	_unit_content.setup(_preview_unit, true)
+	var residue := ""
+	if plot_data != null:
+		residue = plot_data.fungicide_residue_text()
+	_unit_content.setup(_preview_unit, true, residue)
 
 
 ## Generation of the Child that would hatch from this spore.

@@ -12,6 +12,7 @@ const _FERTILIZER_ICON_REGION := Rect2(183, 167, 169, 180)
 
 var unit_data: RosterUnitData
 var show_portrait: bool = true
+var extra_nutrition_text: String = ""
 var _portrait_instance: Node2D = null
 var _mutation_chip: StatChip = null
 var _fertilizer_icon: AtlasTexture = null
@@ -36,9 +37,14 @@ var _fertilizer_icon: AtlasTexture = null
 @onready var _trainings_list: VBoxContainer = %TrainingsList
 
 
-func setup(unit: RosterUnitData, with_portrait: bool = true) -> void:
+func setup(
+	unit: RosterUnitData,
+	with_portrait: bool = true,
+	p_extra_nutrition: String = ""
+) -> void:
 	unit_data = unit
 	show_portrait = with_portrait
+	extra_nutrition_text = p_extra_nutrition
 	if is_node_ready():
 		_apply_portrait_visibility()
 		_refresh()
@@ -117,6 +123,7 @@ func _refresh_fertilizers() -> void:
 	if unit_data == null:
 		_set_fertilizers_visible(false)
 		return
+	var residue := extra_nutrition_text.strip_edges()
 	var counts: Dictionary = {}
 	var order: Array[FertilizerData] = []
 	for fert in unit_data.applied_fertilizers:
@@ -129,10 +136,12 @@ func _refresh_fertilizers() -> void:
 			counts[key] = 0
 			order.append(fert)
 		counts[key] = int(counts[key]) + 1
-	if order.is_empty():
+	if order.is_empty() and residue.is_empty():
 		_set_fertilizers_visible(false)
 		return
 	_set_fertilizers_visible(true)
+	if not residue.is_empty():
+		_fertilizers_list.add_child(_make_detail_row(null, residue))
 	for fert in order:
 		var count := int(counts.get(fert.display_name, 0))
 		var desc := "%s: %s" % [fert.display_name, fert.subtitle_text()]

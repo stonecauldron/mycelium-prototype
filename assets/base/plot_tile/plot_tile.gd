@@ -407,7 +407,7 @@ func _add_mutation_slot_badge(chip: StatChip, mutation: MutationData) -> void:
 
 func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:
 	var max_stacks := SealModifiers.max_fertilizer_stacks()
-	var applied := _plot.applied_fertilizers
+	var applied := _plot.stack_fertilizers()
 	var slot_count := max_stacks if show_ghosts else mini(applied.size(), max_stacks)
 	for i in slot_count:
 		var fert: FertilizerData = applied[i] if i < applied.size() else null
@@ -430,14 +430,8 @@ func _add_fertilizer_slot_chips(show_ghosts: bool) -> void:
 			# Non-empty text enables the tooltip popup; content comes from factory.
 			chip.tooltip_text = fert.display_name
 			var fert_ref: FertilizerData = fert
-			var residue := ""
-			if (
-				fert_ref.behavior == FertilizerData.Behavior.FUNGICIDE
-				and _plot != null
-			):
-				residue = _plot.fungicide_residue_text()
 			chip.custom_tooltip_factory = func () -> Object:
-				return _make_fertilizer_detail_tip(fert_ref, residue)
+				return _make_fertilizer_detail_tip(fert_ref, "")
 		_fertilizer_chips.append(chip)
 
 

@@ -190,7 +190,8 @@ static func effective_max_hp(unit: RosterUnitData, troop: TroopData = null) -> i
 	if unit == null or unit.stats == null:
 		return 0
 	var base_hp := unit.stats.get_max_hp() + wooden_heart_flat_hp()
-	return maxi(roundi(float(base_hp) * unit_hp_multiplier(unit, troop)), 1)
+	var hp := maxi(roundi(float(base_hp) * unit_hp_multiplier(unit, troop)), 1)
+	return maxi(roundi(float(hp) * ZombieCapEffect.hp_multiplier(unit)), 1)
 
 
 ## Display / non-combat ATK estimate (weapon style from profile; hybrid uses projectile if any).

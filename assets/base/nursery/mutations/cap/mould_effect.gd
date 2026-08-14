@@ -1,7 +1,7 @@
 class_name MouldCapEffect
 extends MutationEffect
 
-const _CHIP_ICON := preload("res://assets/base/biomass_small_icon.png")
+const _CHIP_ICON := preload("res://assets/base/combat_progress_track/skull.png")
 
 
 func get_stat_chip(roster: Resource) -> Dictionary:

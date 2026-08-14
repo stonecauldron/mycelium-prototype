@@ -208,7 +208,8 @@ func _ensure_seal_choice() -> void:
 		call_deferred("_ensure_starter_choice")
 		return
 	var dialog: SealChoiceDialog = _SEAL_CHOICE_SCENE.instantiate()
-	dialog.setup(offers)
+	# Run-start pick is day 0; mid-run picks (after days 2 / 5 / 8) may reroll.
+	dialog.setup(offers, GameState.current_day > 0)
 	_seal_dialog = dialog
 	dialog.seal_chosen.connect(_on_seal_chosen)
 	dialog.tree_exited.connect(_on_seal_dialog_closed)

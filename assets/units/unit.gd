@@ -35,6 +35,8 @@ const THROW_STRIKE_TIME := 0.1
 const THROW_SETTLE_TIME := 0.2
 const THROW_AIM_JITTER_X := 40.0
 const THROW_AIM_JITTER_Y := 20.0
+const ARROW_AIM_JITTER_X := 20.0
+const ARROW_AIM_JITTER_Y := 10.0
 const THROW_ORIGIN_HEIGHT := -48.0
 const RANGED_RELEASE_DELAY := 0.22
 const RANGED_RECOVERY_TIME := 0.42
@@ -985,8 +987,8 @@ func _pick_ranged_aim_with_jitter() -> Vector2:
 		return _get_forward_aim_fallback()
 	var aim := _pick_ranged_aim_target(opponent)
 	aim += Vector2(
-		randf_range(-THROW_AIM_JITTER_X, THROW_AIM_JITTER_X),
-		randf_range(-THROW_AIM_JITTER_Y, THROW_AIM_JITTER_Y)
+		randf_range(-ARROW_AIM_JITTER_X, ARROW_AIM_JITTER_X),
+		randf_range(-ARROW_AIM_JITTER_Y, ARROW_AIM_JITTER_Y)
 	)
 	return aim
 

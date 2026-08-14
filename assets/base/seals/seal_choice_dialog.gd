@@ -4,18 +4,24 @@ extends Control
 signal seal_chosen(seal: SealData)
 
 const _SEAL_CARD_SCENE := preload("res://assets/base/seals/seal_card.tscn")
+const _OFFER_COUNT := 3
 
 var _offers: Array[SealData] = []
 var _selected: SealData = null
 var _cards: Dictionary = {} # SealData -> SealCard
+## False on the run-start pick (starting biomass cannot cover the cost).
+var _allow_reroll: bool = true
 
 @onready var _dim: ColorRect = %Dim
 @onready var _cards_row: HBoxContainer = %CardsRow
 @onready var _confirm_button: Button = %ConfirmButton
+@onready var _reroll_button: Button = %RerollButton
+@onready var _reroll_cost_label: Label = %RerollCostLabel
 
 
-func setup(offers: Array[SealData]) -> void:
+func setup(offers: Array[SealData], allow_reroll: bool = true) -> void:
 	_offers = offers
+	_allow_reroll = allow_reroll
 
 
 func _ready() -> void:
@@ -25,10 +31,12 @@ func _ready() -> void:
 	_dim.gui_input.connect(_on_dim_gui_input)
 	_confirm_button.pressed.connect(_on_confirm_pressed)
 	_confirm_button.disabled = true
+	_reroll_button.pressed.connect(_on_reroll_pressed)
 	if _offers.is_empty():
-		_offers = SealCatalog.roll_offers(3, GameState.seals)
+		_offers = SealCatalog.roll_offers(_OFFER_COUNT, GameState.seals)
 	_build_cards()
 	_refresh_selection()
+	_refresh_reroll_affordability()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -68,6 +76,41 @@ func _refresh_selection() -> void:
 			continue
 		card.set_selected(seal == _selected)
 	_confirm_button.disabled = _selected == null
+
+
+func _refresh_reroll_affordability() -> void:
+	if _reroll_button == null:
+		return
+	if _reroll_cost_label != null:
+		_reroll_cost_label.text = "%d" % BiomassData.SEAL_REROLL_COST
+	_reroll_button.visible = _allow_reroll
+	if not _allow_reroll:
+		_reroll_button.disabled = true
+		return
+	var can_reroll := GameState.biomass.can_afford(BiomassData.SEAL_REROLL_COST)
+	_reroll_button.disabled = not can_reroll
+	_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
+
+
+func _on_reroll_pressed() -> void:
+	if not _allow_reroll:
+		_refresh_reroll_affordability()
+		return
+	if not GameState.biomass.try_spend(BiomassData.SEAL_REROLL_COST):
+		_refresh_reroll_affordability()
+		return
+	_offers = SealCatalog.roll_offers(_OFFER_COUNT, GameState.seals, null, _offers)
+	_selected = null
+	_build_cards()
+	_refresh_selection()
+	_refresh_reroll_affordability()
+	_refresh_base_hud()
+
+
+func _refresh_base_hud() -> void:
+	var base := get_tree().current_scene
+	if base != null and base.has_method("_refresh_hud"):
+		base._refresh_hud()
 
 
 func _on_confirm_pressed() -> void:

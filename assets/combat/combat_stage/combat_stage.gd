@@ -27,7 +27,7 @@ const _VICTORY_LEAD_IN_SEC := 0.25
 ## Debug click-to-kill: max distance from cursor to a living player unit (world px).
 const _DEBUG_KILL_PICK_RADIUS := 96.0
 ## Acid Rain stalemate breaker (battle time).
-const _ACID_RAIN_GRACE_SEC := 30.0
+const _ACID_RAIN_GRACE_SEC := 20.0
 const _ACID_RAIN_TICK_SEC := 1.0
 const _ACID_RAIN_ESCALATE_SEC := 10.0
 const _ACID_RAIN_BASE_DAMAGE := 1
@@ -392,7 +392,13 @@ func _tick_acid_rain() -> void:
 	for unit in units:
 		if unit == null or not is_instance_valid(unit):
 			continue
-		unit.take_damage(amount, unit.global_position, 0.0, null)
+		unit.take_damage(
+			amount,
+			unit.global_position,
+			0.0,
+			null,
+			WeaponData.DamageType.BLUNT
+		)
 	if _acid_rain_label != null:
 		_acid_rain_label.text = "Acid Rain  %d" % amount
 
@@ -404,6 +410,27 @@ func _notify_battle_end() -> void:
 		unit.notify_battle_end()
 	for unit in enemy_troop.get_living_units():
 		unit.notify_battle_end()
+	_clear_zombie_battle_revives()
+
+
+## Zombie revive is once per battle; survivors keep the body mutation for later fights.
+func _clear_zombie_battle_revives() -> void:
+	for unit in player_troop.get_units():
+		if unit != null and unit.roster_data != null:
+			unit.roster_data.has_revived = false
+	for unit in enemy_troop.get_units():
+		if unit != null and unit.roster_data != null:
+			unit.roster_data.has_revived = false
+	if sandboxed:
+		return
+	for entry in GameState.troop.squad:
+		var roster := entry as RosterUnitData
+		if roster != null:
+			roster.has_revived = false
+	for entry in GameState.troop.bench:
+		var roster := entry as RosterUnitData
+		if roster != null:
+			roster.has_revived = false
 
 
 func _compute_battle_reward(enemy_roster: Array[RosterUnitData]) -> int:
@@ -466,8 +493,7 @@ func _setup_army_hp_hud() -> void:
 func _sum_troop_max_hp(troop: Troop) -> int:
 	var total := 0
 	for unit in troop.get_units():
-		if unit.stats != null:
-			total += unit.stats.get_max_hp()
+		total += unit.get_effective_max_hp()
 	return total
 
 
@@ -679,12 +705,11 @@ func _respawn_zombie_cap(
 	var spawn_pos := _zombie_respawn_global_position(troop)
 	var spawned := _spawn_unit(units_root, clone, color, squad_index, is_player, spawn_pos)
 	if spawned != null:
-		if spawned.stats != null:
-			var respawn_max := spawned.stats.get_max_hp()
-			if is_player:
-				_player_army_max_hp += respawn_max
-			else:
-				_enemy_army_max_hp += respawn_max
+		var respawn_max := spawned.get_effective_max_hp()
+		if is_player:
+			_player_army_max_hp += respawn_max
+		else:
+			_enemy_army_max_hp += respawn_max
 		spawned.notify_battle_start()
 		_refresh_army_hp_hud()
 	_refresh_unit_process_order()
@@ -736,6 +761,7 @@ func _check_battle_end() -> void:
 	_restore_engine_timing()
 	# Keep celebrate-march / weapon tosses running under the scene fade;
 	# _exit_tree stops the director when combat is replaced.
+	_clear_zombie_battle_revives()
 
 	_award_battle_reward()
 	GameState.ensure_nursery_seeded()
@@ -793,10 +819,8 @@ func _push_combat_recap_to_day_summary() -> void:
 		entry["unit"] = unit.roster_data
 		entry["dealt"] = int(entry["dealt"]) + unit.damage_dealt
 		entry["taken"] = int(entry["taken"]) + unit.damage_taken
-		var unit_max_hp := 0
-		if unit.stats != null:
-			unit_max_hp = unit.stats.get_max_hp()
-		# Keep the highest max HP seen (same across Zombie Cap lives).
+		var unit_max_hp := unit.get_effective_max_hp()
+		# Keep the highest max HP seen (same across Zombie lives).
 		entry["max_hp"] = maxi(int(entry["max_hp"]), unit_max_hp)
 	var damage_rows: Array[Dictionary] = []
 	var keys: Array = merged.keys()
@@ -807,8 +831,8 @@ func _push_combat_recap_to_day_summary() -> void:
 		if roster == null:
 			continue
 		var max_hp := int(entry["max_hp"])
-		if max_hp <= 0 and roster.stats != null:
-			max_hp = roster.stats.get_max_hp()
+		if max_hp <= 0:
+			max_hp = SealModifiers.effective_max_hp(roster)
 		damage_rows.append({
 			"unit": roster,
 			"dealt": int(entry["dealt"]),

@@ -104,6 +104,24 @@ texture = ExtResource("11_egg0")
 expand_mode = 1
 stretch_mode = 5
 
+[node name="LineageName" type="Label" parent="Content/Margin/Stack/PlotVisualArea" unique_id=1087985866]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 4.0
+offset_bottom = 40.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_fonts/font = ExtResource("6_figtree")
+theme_override_font_sizes/font_size = 22
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
 [node name="StatsRow" type="HBoxContainer" parent="Content/Margin/Stack" unique_id=61749301]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 56)

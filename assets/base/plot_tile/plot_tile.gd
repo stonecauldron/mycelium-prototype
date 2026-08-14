@@ -44,6 +44,11 @@ const _SHAKE_ROT_NORMAL_DEG := 14.0
 const _SHAKE_ROT_IMAGO_DEG := 26.0
 const _SHAKE_NUDGE_NORMAL_PX := 4.0
 const _SHAKE_NUDGE_IMAGO_PX := 8.0
+const _ARROW_WIDTH := 96.0
+const _ARROW_HEIGHT := 96.0
+const _ARROW_DRAG_TOP := -20.0
+const _ARROW_HARVEST_TOP := -48.0
+const _ARROW_PLANT_TOP := 200.0
 
 var plot_index: int = 0
 var is_unlockable: bool = false
@@ -81,6 +86,7 @@ var _egg_shake_rot: float = 0.0:
 @onready var _unlock_cost_label: Label = %UnlockCostLabel
 @onready var _lock_icon: TextureRect = %LockIcon
 @onready var _drop_arrow: FloatingArrow = %DropArrow
+@onready var _lineage_name: Label = %LineageName
 
 
 func _ready() -> void:
@@ -140,6 +146,15 @@ func _set_drop_arrow_visible(should_show: bool) -> void:
 		_drop_arrow.hide_arrow()
 
 
+func _place_drop_arrow(offset_top: float) -> void:
+	if _drop_arrow == null:
+		return
+	_drop_arrow.offset_left = -_ARROW_WIDTH * 0.5
+	_drop_arrow.offset_right = _ARROW_WIDTH * 0.5
+	_drop_arrow.offset_top = offset_top
+	_drop_arrow.offset_bottom = offset_top + _ARROW_HEIGHT
+
+
 func _accepts_drag_data(data: Variant) -> bool:
 	if is_unlockable:
 		return false
@@ -185,9 +200,19 @@ func _should_show_plant_hint() -> bool:
 func _refresh_arrow() -> void:
 	var viewport := get_viewport()
 	if viewport != null and viewport.gui_is_dragging():
+		_place_drop_arrow(_ARROW_DRAG_TOP)
 		_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
 		return
-	_set_drop_arrow_visible(_should_show_harvest_hint() or _should_show_plant_hint())
+	if _should_show_plant_hint():
+		_place_drop_arrow(_ARROW_PLANT_TOP)
+		_set_drop_arrow_visible(true)
+		return
+	if _should_show_harvest_hint():
+		_place_drop_arrow(_ARROW_HARVEST_TOP)
+		_set_drop_arrow_visible(true)
+		return
+	_place_drop_arrow(_ARROW_DRAG_TOP)
+	_set_drop_arrow_visible(false)
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:
@@ -222,6 +247,7 @@ func _refresh() -> void:
 		_unlock_button.modulate = button_mod if can_unlock else button_mod * Color(1, 1, 1, 0.45)
 		_lock_icon.modulate = Color.WHITE / _LOCKED_MODULATE
 		tooltip_text = ""
+		_refresh_lineage_name()
 		_refresh_arrow()
 		_sync_active_detail_tip()
 		return
@@ -238,6 +264,7 @@ func _refresh() -> void:
 		_clear_fertilizer_chips()
 		_plant_button.visible = false
 		tooltip_text = ""
+		_refresh_lineage_name()
 		_apply_visual_state()
 		_refresh_arrow()
 		_sync_active_detail_tip()
@@ -276,6 +303,7 @@ func _refresh() -> void:
 		tooltip_text = _plot.planted_spore.display_name
 	else:
 		tooltip_text = ""
+	_refresh_lineage_name()
 	_apply_visual_state()
 	_refresh_arrow()
 	_sync_active_detail_tip()
@@ -295,6 +323,23 @@ func _refresh_plant_button(should_show: bool) -> void:
 	_plant_button.disabled = not can_plant
 	_plant_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	_plant_button.modulate = Color.WHITE if can_plant else Color(1, 1, 1, 0.45)
+
+
+func _refresh_lineage_name() -> void:
+	if _lineage_name == null:
+		return
+	if is_unlockable or _plot == null or _plot.planted_spore == null:
+		_lineage_name.visible = false
+		_lineage_name.text = ""
+		return
+	var spore := _plot.planted_spore
+	if not spore.is_lineage_spore():
+		_lineage_name.visible = false
+		_lineage_name.text = ""
+		return
+	var child_gen := maxi(spore.parent_generation, 1) + 1
+	_lineage_name.text = UnitNames.format_unit_name(spore.lineage_name, child_gen)
+	_lineage_name.visible = true
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:
@@ -620,12 +665,13 @@ func _on_unlock_pressed() -> void:
 func _gui_input(event: InputEvent) -> void:
 	if is_unlockable:
 		return
-	# Empty plots plant only via PlantButton.
-	if _plot == null or _plot.get_state() == NurseryPlotData.State.EMPTY:
-		return
 	if event is InputEventMouseButton:
 		var mouse := event as InputEventMouseButton
 		if mouse.button_index == MOUSE_BUTTON_LEFT and mouse.pressed:
+			if _plot != null and _plot.get_state() == NurseryPlotData.State.EMPTY:
+				plant_pressed.emit(self)
+				accept_event()
+				return
 			plot_pressed.emit(self)
 			accept_event()
 

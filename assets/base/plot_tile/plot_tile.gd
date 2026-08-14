@@ -148,13 +148,13 @@ func _set_drop_arrow_visible(should_show: bool) -> void:
 		_drop_arrow.hide_arrow()
 
 
-func _place_drop_arrow(offset_top: float) -> void:
+func _place_drop_arrow(top_px: float) -> void:
 	if _drop_arrow == null:
 		return
 	_drop_arrow.offset_left = -_ARROW_WIDTH * 0.5
 	_drop_arrow.offset_right = _ARROW_WIDTH * 0.5
-	_drop_arrow.offset_top = offset_top
-	_drop_arrow.offset_bottom = offset_top + _ARROW_HEIGHT
+	_drop_arrow.offset_top = top_px
+	_drop_arrow.offset_bottom = top_px + _ARROW_HEIGHT
 
 
 ## Tip sits just above the Plant button (ActionSlot), not on top of it.

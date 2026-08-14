@@ -9,6 +9,6 @@ script = ExtResource("2_effect")
 [resource]
 script = ExtResource("1_mut")
 display_name = "Zombie"
-short_description = "Comes back to life once. Half HP"
+short_description = "Comes back to life once per battle. Half HP"
 tint = Color(0.67, 0.63985, 0.60969996, 1)
 effect = SubResource("Effect")

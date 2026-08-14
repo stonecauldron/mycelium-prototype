@@ -410,6 +410,27 @@ func _notify_battle_end() -> void:
 		unit.notify_battle_end()
 	for unit in enemy_troop.get_living_units():
 		unit.notify_battle_end()
+	_clear_zombie_battle_revives()
+
+
+## Zombie revive is once per battle; survivors keep the body mutation for later fights.
+func _clear_zombie_battle_revives() -> void:
+	for unit in player_troop.get_units():
+		if unit != null and unit.roster_data != null:
+			unit.roster_data.has_revived = false
+	for unit in enemy_troop.get_units():
+		if unit != null and unit.roster_data != null:
+			unit.roster_data.has_revived = false
+	if sandboxed:
+		return
+	for entry in GameState.troop.squad:
+		var roster := entry as RosterUnitData
+		if roster != null:
+			roster.has_revived = false
+	for entry in GameState.troop.bench:
+		var roster := entry as RosterUnitData
+		if roster != null:
+			roster.has_revived = false
 
 
 func _compute_battle_reward(enemy_roster: Array[RosterUnitData]) -> int:
@@ -740,6 +761,7 @@ func _check_battle_end() -> void:
 	_restore_engine_timing()
 	# Keep celebrate-march / weapon tosses running under the scene fade;
 	# _exit_tree stops the director when combat is replaced.
+	_clear_zombie_battle_revives()
 
 	_award_battle_reward()
 	GameState.ensure_nursery_seeded()

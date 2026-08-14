@@ -60,7 +60,7 @@ _data = {
 size = Vector2(99, 163)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(60, 115)
+size = Vector2(60, 160)
 
 [node name="LogAppearance" type="Node2D" unique_id=1644364081]
 script = ExtResource("1_root")
@@ -92,5 +92,5 @@ position = Vector2(2.5, -81.5)
 shape = SubResource("RectangleShape2D_hurtbox")
 
 [node name="BodyShape" type="CollisionShape2D" parent="." unique_id=939587746]
-position = Vector2(0, -57.5)
+position = Vector2(0, -80)
 shape = SubResource("RectangleShape2D_body")

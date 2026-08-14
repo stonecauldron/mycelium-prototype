@@ -57,10 +57,10 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
-size = Vector2(98, 125)
+size = Vector2(98, 109)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(65, 125)
+size = Vector2(51, 109)
 
 [node name="StumpAppearance" type="Node2D" unique_id=367020801]
 script = ExtResource("1_root")
@@ -88,9 +88,9 @@ collision_mask = 0
 script = ExtResource("3_hurtbox")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1887836089]
-position = Vector2(0, -62.5)
+position = Vector2(0, -54.5)
 shape = SubResource("RectangleShape2D_hurtbox")
 
 [node name="BodyShape" type="CollisionShape2D" parent="." unique_id=1354549184]
-position = Vector2(-1.5, -62.5)
+position = Vector2(-4.5, -54.5)
 shape = SubResource("RectangleShape2D_body")

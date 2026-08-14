@@ -38,12 +38,25 @@ static func by_id(seal_id: StringName) -> SealData:
 
 
 ## Distinct offers from the eligible pool (excludes owned unique seals).
-static func roll_offers(count: int, collection: SealsCollection, rng: RandomNumberGenerator = null) -> Array[SealData]:
+## When `exclude` still leaves at least `count` seals, those are skipped so a reroll
+## prefers a different set.
+static func roll_offers(
+	count: int,
+	collection: SealsCollection,
+	rng: RandomNumberGenerator = null,
+	exclude: Array[SealData] = []
+) -> Array[SealData]:
 	var eligible := eligible_pool(collection)
 	if count <= 0 or eligible.is_empty():
 		var empty: Array[SealData] = []
 		return empty
-	var shuffled := eligible.duplicate()
+	var preferred: Array[SealData] = []
+	for seal in eligible:
+		if exclude.has(seal):
+			continue
+		preferred.append(seal)
+	var pool := preferred if preferred.size() >= count else eligible
+	var shuffled := pool.duplicate()
 	if rng != null:
 		_shuffle_with_rng(shuffled, rng)
 	else:

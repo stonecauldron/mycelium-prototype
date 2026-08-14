@@ -49,8 +49,8 @@ const _ARROW_HEIGHT := 96.0
 const _ARROW_DRAG_TOP := -20.0
 const _ARROW_HARVEST_TOP := -48.0
 ## Fallback when ActionSlot isn't ready yet; live plant hints use `_plant_hint_arrow_top()`.
-const _ARROW_PLANT_TOP := 112.0
-const _ARROW_PLANT_GAP_PX := 4.0
+const _ARROW_PLANT_TOP := 96.0
+const _ARROW_PLANT_GAP_PX := 20.0
 
 var plot_index: int = 0
 var is_unlockable: bool = false

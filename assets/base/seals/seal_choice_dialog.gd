@@ -9,6 +9,8 @@ const _OFFER_COUNT := 3
 var _offers: Array[SealData] = []
 var _selected: SealData = null
 var _cards: Dictionary = {} # SealData -> SealCard
+## False on the run-start pick (starting biomass cannot cover the cost).
+var _allow_reroll: bool = true
 
 @onready var _dim: ColorRect = %Dim
 @onready var _cards_row: HBoxContainer = %CardsRow
@@ -17,8 +19,9 @@ var _cards: Dictionary = {} # SealData -> SealCard
 @onready var _reroll_cost_label: Label = %RerollCostLabel
 
 
-func setup(offers: Array[SealData]) -> void:
+func setup(offers: Array[SealData], allow_reroll: bool = true) -> void:
 	_offers = offers
+	_allow_reroll = allow_reroll
 
 
 func _ready() -> void:
@@ -80,12 +83,19 @@ func _refresh_reroll_affordability() -> void:
 		return
 	if _reroll_cost_label != null:
 		_reroll_cost_label.text = "%d" % BiomassData.SEAL_REROLL_COST
+	_reroll_button.visible = _allow_reroll
+	if not _allow_reroll:
+		_reroll_button.disabled = true
+		return
 	var can_reroll := GameState.biomass.can_afford(BiomassData.SEAL_REROLL_COST)
 	_reroll_button.disabled = not can_reroll
 	_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
 
 
 func _on_reroll_pressed() -> void:
+	if not _allow_reroll:
+		_refresh_reroll_affordability()
+		return
 	if not GameState.biomass.try_spend(BiomassData.SEAL_REROLL_COST):
 		_refresh_reroll_affordability()
 		return

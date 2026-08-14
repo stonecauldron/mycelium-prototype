@@ -48,7 +48,9 @@ const _ARROW_WIDTH := 96.0
 const _ARROW_HEIGHT := 96.0
 const _ARROW_DRAG_TOP := -20.0
 const _ARROW_HARVEST_TOP := -48.0
-const _ARROW_PLANT_TOP := 200.0
+## Fallback when ActionSlot isn't ready yet; live plant hints use `_plant_hint_arrow_top()`.
+const _ARROW_PLANT_TOP := 112.0
+const _ARROW_PLANT_GAP_PX := 4.0
 
 var plot_index: int = 0
 var is_unlockable: bool = false
@@ -155,6 +157,17 @@ func _place_drop_arrow(offset_top: float) -> void:
 	_drop_arrow.offset_bottom = offset_top + _ARROW_HEIGHT
 
 
+## Tip sits just above the Plant button (ActionSlot), not on top of it.
+func _plant_hint_arrow_top() -> float:
+	if _action_slot == null or _drop_arrow == null:
+		return _ARROW_PLANT_TOP
+	var arrow_parent := _drop_arrow.get_parent() as Control
+	if arrow_parent == null:
+		return _ARROW_PLANT_TOP
+	var slot_top_y := _action_slot.global_position.y - arrow_parent.global_position.y
+	return slot_top_y - _ARROW_HEIGHT - _ARROW_PLANT_GAP_PX
+
+
 func _accepts_drag_data(data: Variant) -> bool:
 	if is_unlockable:
 		return false
@@ -204,7 +217,7 @@ func _refresh_arrow() -> void:
 		_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
 		return
 	if _should_show_plant_hint():
-		_place_drop_arrow(_ARROW_PLANT_TOP)
+		_place_drop_arrow(_plant_hint_arrow_top())
 		_set_drop_arrow_visible(true)
 		return
 	if _should_show_harvest_hint():

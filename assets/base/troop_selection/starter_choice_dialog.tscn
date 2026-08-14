@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0xewu"]
 content_margin_left = 28.0
 content_margin_top = 24.0
 content_margin_right = 32.0
@@ -14,8 +14,6 @@ texture_margin_left = 72.49772
 texture_margin_top = 162.69849
 texture_margin_right = 120.829544
 texture_margin_bottom = 154.10434
-expand_margin_top = 29.0
-expand_margin_bottom = 75.0
 
 [node name="StarterChoiceDialog" type="Control" unique_id=1882016092]
 layout_mode = 3
@@ -35,7 +33,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.06, 0.12, 0.07, 0.62)
+color = Color(0.24705882, 0.3529412, 0.34901962, 1)
 
 [node name="Center" type="CenterContainer" parent="." unique_id=881411626]
 layout_mode = 1
@@ -47,9 +45,9 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="Center" unique_id=1358615843]
-custom_minimum_size = Vector2(1280, 640)
+custom_minimum_size = Vector2(1600, 800)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
+theme_override_styles/panel = SubResource("StyleBoxTexture_0xewu")
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=2020699154]
 layout_mode = 2

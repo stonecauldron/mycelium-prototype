@@ -1,26 +1,30 @@
 [gd_scene format=3 uid="uid://b8g6iah8v7rc7"]
 
-[ext_resource type="Script" uid="uid://ctagchip000001" path="res://assets/ui/tag_chip/tag_chip.gd" id="1_chip"]
-[ext_resource type="Texture2D" uid="uid://cyk0hronbwfxr" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square border 10.png" id="tex_paper_chip"]
+[ext_resource type="Script" uid="uid://b8g6iaihlkrc7" path="res://assets/ui/tag_chip/tag_chip.gd" id="1_chip"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip"]
-content_margin_left = 10.0
-content_margin_top = 6.0
-content_margin_right = 10.0
-content_margin_bottom = 8.0
-texture = ExtResource("tex_paper_chip")
-texture_margin_left = 28.0
-texture_margin_top = 24.0
-texture_margin_right = 28.0
-texture_margin_bottom = 28.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ey8pd"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 12.0
+bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+border_blend = true
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
-[node name="TagChip" type="PanelContainer"]
-layout_mode = 2
+[node name="TagChip" type="PanelContainer" unique_id=16326361]
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBox_paper_chip")
+theme_override_styles/panel = SubResource("StyleBoxFlat_ey8pd")
 script = ExtResource("1_chip")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1168828154]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)

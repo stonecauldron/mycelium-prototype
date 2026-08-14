@@ -1,14 +1,13 @@
 [gd_resource type="StyleBoxTexture" format=3 uid="uid://bpapertitteal"]
 
-[ext_resource type="Texture2D" uid="uid://d1h273y4u1spc" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 2 border 8.png" id="1_tex"]
+[ext_resource type="Texture2D" uid="uid://cihs6u0lgsqk3" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label border 8.png" id="1_44mof"]
 
 [resource]
 content_margin_left = 28.0
 content_margin_top = 14.0
 content_margin_right = 28.0
 content_margin_bottom = 12.0
-texture = ExtResource("1_tex")
-texture_margin_left = 48.0
-texture_margin_top = 22.0
-texture_margin_right = 48.0
-texture_margin_bottom = 24.0
+texture = ExtResource("1_44mof")
+texture_margin_left = 37.268105
+texture_margin_right = 45.254128
+region_rect = Rect2(0, 0, 1781, 125)

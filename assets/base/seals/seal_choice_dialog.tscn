@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="3_biomass"]
 [ext_resource type="Texture2D" uid="uid://byjxgyx2bn2yd" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 3 8.png" id="4_kc5ih"]
+[ext_resource type="Texture2D" uid="uid://81frowvo5wno" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 2 9.png" id="5_2tm04"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
@@ -28,6 +29,11 @@ texture_margin_top = 18.0
 texture_margin_right = 63.105087
 texture_margin_bottom = 33.062546
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_asca7"]
+texture = ExtResource("5_2tm04")
+texture_margin_top = 38.016632
+texture_margin_bottom = 21.487661
+
 [node name="SealChoiceDialog" type="Control" unique_id=1010565807]
 layout_mode = 3
 anchors_preset = 15
@@ -46,7 +52,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.06, 0.12, 0.07, 0.62)
+color = Color(0.24705882, 0.3529412, 0.34901962, 1)
 
 [node name="Center" type="CenterContainer" parent="." unique_id=846712189]
 layout_mode = 1
@@ -58,7 +64,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="Center" unique_id=1856256167]
-custom_minimum_size = Vector2(1100, 800)
+custom_minimum_size = Vector2(1400, 800)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
 
@@ -168,10 +174,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -469.0
-offset_top = -401.0
-offset_right = -69.0
-offset_bottom = -330.0
+offset_left = -633.0
+offset_top = -403.0
+offset_right = -233.0
+offset_bottom = -332.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -191,12 +197,13 @@ horizontal_alignment = 1
 
 [node name="Prompt" type="Label" parent="." unique_id=2060768101]
 layout_mode = 0
-offset_left = 984.0
-offset_top = 618.0
-offset_right = 1352.0
-offset_bottom = 681.0
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+offset_left = 1274.0
+offset_top = 745.0
+offset_right = 1642.0
+offset_bottom = 867.5043
+theme_override_colors/font_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
 theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxTexture_asca7")
 text = "Seals grant bonuses for the whole run."
 horizontal_alignment = 1
 autowrap_mode = 3

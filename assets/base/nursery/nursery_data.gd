@@ -6,7 +6,7 @@ const STARTING_UNLOCKED_PLOTS := 1
 const SHOP_SLOT_COUNT := 4
 const SHOP_FERTILIZER_SLOT_COUNT := 2
 const SHOP_MUTATION_SLOT_COUNT := 2
-const STOCK_SLOT_COUNT := 5
+const STOCK_SLOT_COUNT := 4
 const STARTER_SPORE_COUNT := 0
 ## Fresh empty-plot grows use the Common Spore baseline (cost / days).
 const _COMMON_SPORE_PATH := "res://assets/base/nursery/common_spore.tres"

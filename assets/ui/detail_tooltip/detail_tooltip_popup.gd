@@ -1,86 +1,135 @@
 class_name DetailTooltipPopup
-extends RefCounted
+extends CanvasLayer
 
-## Strip engine PopupPanel chrome and size the window from the tip's measured content.
-## Call from _make_custom_tooltip after building the tip Control.
+## Rich detail cards are shown on a CanvasLayer overlay, not inside Godot's
+## tooltip PopupPanel. `_make_custom_tooltip` must return a *visible* Control or
+## Viewport memdeletes it and never tracks hover (see viewport.cpp). Call sites
+## return `configure(tip)`: we show the card here and hand the engine a 1px
+## dummy so it still owns delay / hide.
 
-const _FIT_PENDING_META := "_detail_tip_fit_pending"
+const _LAYER := 128
+const _VIEW_MARGIN := 24.0
+const _CURSOR_OFFSET := Vector2(16, 20)
+const _OFFSCREEN := Vector2(-16384, -16384)
+const _FADE_IN_SEC := 0.15
+const _FADE_OUT_SEC := 0.12
+
+static var _instance: DetailTooltipPopup
+
+var _host: Control
+var _tip: Control
+var _laid_out: bool = false
+var _fade_tween: Tween
 
 
-static func configure(tip: Control) -> void:
+static func configure(tip: Control) -> Control:
 	if tip == null or not is_instance_valid(tip):
-		return
-	# Idempotent while a fit is already queued (e.g. plot tip refresh mid-hover).
-	if tip.get_meta(_FIT_PENDING_META, false):
-		return
-	tip.set_meta(_FIT_PENDING_META, true)
-	if tip.is_inside_tree():
-		_schedule_fit(tip)
-	else:
-		# Bind as Variant: typed Control.bind on signals can fail with
-		# "Cannot convert argument 1 from Object to Object".
-		# Avoid capturing lambdas on SceneTree signals — if the tip is freed
-		# before the callback runs, Godot errors "Lambda capture ... was freed".
-		tip.tree_entered.connect(_schedule_fit_variant.bind(tip as Variant), CONNECT_ONE_SHOT)
+		return _make_lease()
+	var overlay := _ensure()
+	overlay._present(tip)
+	var lease := _make_lease()
+	lease.tree_exiting.connect(_on_lease_exiting.bind(tip))
+	return lease
 
 
-static func _schedule_fit_variant(tip_variant: Variant) -> void:
-	if not is_instance_valid(tip_variant):
+## Re-fit a card that is already on the overlay (e.g. plot tip refresh).
+static func relayout(tip: Control) -> void:
+	if _instance == null or not is_instance_valid(_instance):
 		return
-	_schedule_fit(tip_variant as Control)
+	if _instance._tip != tip:
+		return
+	_instance._layout_tip(tip)
+	if not _instance._laid_out:
+		_instance._queue_layout(tip)
 
 
-static func _schedule_fit(tip: Control) -> void:
-	if tip == null or not is_instance_valid(tip):
+static func _make_lease() -> Control:
+	var lease := Control.new()
+	lease.name = "DetailTooltipLease"
+	lease.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Must stay visible: Godot 4.7 skips the engine popup when the custom
+	# tooltip is hidden, which also skips cancel-on-unhover.
+	lease.visible = true
+	lease.modulate.a = 0.0
+	lease.custom_minimum_size = Vector2(1, 1)
+	return lease
+
+
+static func _ensure() -> DetailTooltipPopup:
+	if _instance != null and is_instance_valid(_instance):
+		return _instance
+	var overlay := DetailTooltipPopup.new()
+	overlay.name = "DetailTooltipOverlay"
+	overlay.layer = _LAYER
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree != null:
+		tree.root.add_child(overlay)
+	_instance = overlay
+	return overlay
+
+
+static func _on_lease_exiting(tracked: Control) -> void:
+	if _instance == null or not is_instance_valid(_instance):
 		return
-	var tree := tip.get_tree()
-	if tree == null:
-		tip.set_meta(_FIT_PENDING_META, false)
+	if is_instance_valid(tracked) and _instance._tip == tracked:
+		_instance._dismiss()
+
+
+func _ready() -> void:
+	layer = _LAYER
+	_host = Control.new()
+	_host.name = "Host"
+	_host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_host.clip_contents = false
+	_host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(_host)
+
+
+func _present(tip: Control) -> void:
+	if _host == null:
+		call_deferred("_present", tip)
 		return
-	# Wait one layout frame so labels/containers resolve autowrap height.
-	# SceneTree owns this callable; bind (not a capturing lambda) so a tip that
-	# closes before the next frame becomes a stale Object Variant instead of a
-	# "Lambda capture was freed" error. Guard with is_instance_valid before cast.
-	var cb := _apply.bind(tip as Variant)
+	if _tip == tip:
+		_kill_fade()
+	elif _tip != null and is_instance_valid(_tip):
+		_kill_fade()
+		_tip.queue_free()
+	_laid_out = false
+	_tip = tip
+	if tip.get_parent() != _host:
+		if tip.get_parent() != null:
+			tip.get_parent().remove_child(tip)
+		_host.add_child(tip)
+	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tip.visible = true
+	tip.modulate.a = 0.0
+	tip.position = _OFFSCREEN
+	_disable_clipping(tip)
+	_layout_tip(tip)
+	if not _laid_out:
+		_queue_layout(tip)
+
+
+func _queue_layout(tip: Control) -> void:
+	if not is_inside_tree():
+		return
+	var tree := get_tree()
+	var cb := _on_process_layout.bind(tip)
 	if tree.process_frame.is_connected(cb):
 		return
 	tree.process_frame.connect(cb, CONNECT_ONE_SHOT)
 
 
-static func _apply(tip_variant: Variant) -> void:
-	# Bound Object may already be freed when the tip closed mid-frame.
-	# Cast-before-valid crashes with "Trying to cast a freed object".
-	if not is_instance_valid(tip_variant):
-		return
-	var tip := tip_variant as Control
-	if tip == null:
-		return
-	tip.set_meta(_FIT_PENDING_META, false)
-	if not tip.is_inside_tree():
-		return
-	_prepare_tip(tip)
-	var tip_size := tip.get_combined_minimum_size()
-	tip_size.x = maxf(tip_size.x, tip.size.x)
-	tip_size.y = maxf(tip_size.y, tip.size.y)
-	if tip_size.x <= 0.0 or tip_size.y <= 0.0:
-		return
-	tip.custom_minimum_size = tip_size
-	tip.size = tip_size
-	var node: Node = tip.get_parent()
-	while node != null:
-		if node is PopupPanel:
-			var popup := node as PopupPanel
-			popup.transparent = true
-			popup.transparent_bg = true
-			popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-			popup.size = Vector2i(ceili(tip_size.x), ceili(tip_size.y))
-			return
-		node = node.get_parent()
+func _on_process_layout(tip: Control) -> void:
+	_layout_tip(tip)
+	if is_instance_valid(tip) and tip == _tip and not _laid_out:
+		_queue_layout(tip)
 
 
-static func _prepare_tip(tip: Control) -> void:
-	# Fit content-driven detail cards (including children of a combined HBox host).
-	# Do NOT recurse reset_size into internals — that breaks full-rect / container layout.
+func _layout_tip(tip: Control) -> void:
+	if not is_instance_valid(tip) or tip != _tip or not tip.is_inside_tree():
+		return
+	_disable_clipping(tip)
 	for child in tip.get_children():
 		if child is Control and (child as Control).has_method("fit_to_content"):
 			(child as Control).call("fit_to_content")
@@ -88,7 +137,71 @@ static func _prepare_tip(tip: Control) -> void:
 		tip.call("fit_to_content")
 	else:
 		tip.reset_size()
-		var min_sz := tip.get_combined_minimum_size()
-		if min_sz.x > 0.0 and min_sz.y > 0.0:
-			tip.custom_minimum_size = min_sz
-			tip.size = min_sz
+	var tip_size := tip.get_combined_minimum_size()
+	tip_size.x = maxf(tip_size.x, tip.size.x)
+	tip_size.y = maxf(tip_size.y, tip.size.y)
+	if tip_size.x <= 0.0 or tip_size.y <= 0.0:
+		return
+	tip.custom_minimum_size = tip_size
+	tip.custom_maximum_size = Vector2(-1, -1)
+	tip.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	tip.size = tip_size
+	var vp := get_viewport().get_visible_rect().size
+	var max_w := maxf(64.0, vp.x - _VIEW_MARGIN * 2.0)
+	var max_h := maxf(64.0, vp.y - _VIEW_MARGIN * 2.0)
+	var fit_scale := minf(1.0, minf(max_w / tip_size.x, max_h / tip_size.y))
+	tip.scale = Vector2(fit_scale, fit_scale)
+	var visual := tip_size * fit_scale
+	var pos := get_viewport().get_mouse_position() + _CURSOR_OFFSET
+	pos.x = clampf(pos.x, _VIEW_MARGIN, vp.x - _VIEW_MARGIN - visual.x)
+	pos.y = clampf(pos.y, _VIEW_MARGIN, vp.y - _VIEW_MARGIN - visual.y)
+	tip.position = pos
+	if not _laid_out:
+		_laid_out = true
+		_fade_in(tip)
+
+
+func _fade_in(tip: Control) -> void:
+	if not is_instance_valid(tip):
+		return
+	_kill_fade()
+	tip.modulate.a = 0.0
+	_fade_tween = create_tween()
+	_fade_tween.set_ignore_time_scale(true)
+	_fade_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_fade_tween.tween_property(tip, "modulate:a", 1.0, _FADE_IN_SEC).from(0.0)
+
+
+func _dismiss() -> void:
+	var tip := _tip
+	_tip = null
+	_laid_out = false
+	if tip == null or not is_instance_valid(tip):
+		_kill_fade()
+		return
+	_kill_fade()
+	var from_a := tip.modulate.a
+	if from_a <= 0.01:
+		tip.queue_free()
+		return
+	var tween := tip.create_tween()
+	tween.set_ignore_time_scale(true)
+	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tween.tween_property(tip, "modulate:a", 0.0, _FADE_OUT_SEC * from_a)
+	tween.tween_callback(tip.queue_free)
+
+
+func _kill_fade() -> void:
+	if _fade_tween != null and _fade_tween.is_valid():
+		_fade_tween.kill()
+	_fade_tween = null
+
+
+static func _disable_clipping(node: Node) -> void:
+	if node is Control:
+		var control := node as Control
+		control.clip_contents = false
+		control.custom_maximum_size = Vector2(-1, -1)
+		control.propagate_maximum_size = false
+	for child in node.get_children():
+		_disable_clipping(child)

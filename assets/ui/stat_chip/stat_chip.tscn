@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cstatchip001"]
 
 [ext_resource type="Script" uid="uid://bkwir6bjtgot2" path="res://assets/ui/stat_chip/stat_chip.gd" id="1_chip"]
-[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="2_figtree"]
+[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="2_figtree"]
 
 [sub_resource type="FontVariation" id="Font_chip_value"]
 base_font = ExtResource("2_figtree")

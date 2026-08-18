@@ -3,36 +3,21 @@
 [ext_resource type="Script" uid="uid://bkgii1op0lxro" path="res://assets/base/unit_detail_card/unit_detail_card.gd" id="1_card"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://bmrp3orp5n31e" path="res://assets/base/unit_detail_card/unit_detail_card_content.tscn" id="3_content"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 8
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+[ext_resource type="StyleBox" uid="uid://cvsxo5ho127wu" path="res://assets/themes/paper/paper_tooltip_panel.tres" id="8_tooltip_panel"]
 
 [node name="UnitDetailCard" type="Control" unique_id=133047682]
-custom_minimum_size = Vector2(390, 600)
 layout_mode = 3
 anchors_preset = 0
 theme = ExtResource("2_theme")
 script = ExtResource("1_card")
 
 [node name="CardPanel" type="PanelContainer" parent="." unique_id=1697250450]
-layout_mode = 0
+layout_mode = 1
 offset_right = 390.0
 offset_bottom = 600.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_detail_card")
+theme_type_variation = &"DetailTooltipPanel"
+theme_override_styles/panel = ExtResource("8_tooltip_panel")
 
 [node name="Margin" type="MarginContainer" parent="CardPanel" unique_id=1370567442]
 layout_mode = 2

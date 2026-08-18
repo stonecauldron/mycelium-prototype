@@ -95,6 +95,7 @@ func _make_unit_damage_row(
 	host.custom_minimum_size = _DAMAGE_PORTRAIT_HOST_SIZE
 	host.size = _DAMAGE_PORTRAIT_HOST_SIZE
 	host.clip_contents = true
+	host.set_meta("_portrait_fit", true)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	host.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(host)
@@ -110,7 +111,7 @@ func _make_unit_damage_row(
 	text_col.add_child(name_label)
 
 	text_col.add_child(_make_metric_bar(
-		"DMG Dealt: %d" % dealt,
+		"Damage dealt: %d" % dealt,
 		dealt,
 		max_dealt,
 		_METRIC_BAR_DEALT
@@ -239,6 +240,7 @@ func _make_unit_row(
 	host.custom_minimum_size = _PORTRAIT_HOST_SIZE
 	host.size = _PORTRAIT_HOST_SIZE
 	host.clip_contents = true
+	host.set_meta("_portrait_fit", true)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	host.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(host)

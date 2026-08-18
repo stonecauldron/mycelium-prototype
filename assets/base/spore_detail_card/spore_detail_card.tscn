@@ -6,22 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="6_biomass"]
 [ext_resource type="PackedScene" path="res://assets/base/unit_detail_card/unit_detail_card_content.tscn" id="7_unit_content"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_card"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 20.0
-bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 8
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+[ext_resource type="StyleBox" uid="uid://cvsxo5ho127wu" path="res://assets/themes/paper/paper_tooltip_panel.tres" id="8_tooltip_panel"]
 
 [node name="SporeDetailCard" type="Control"]
 custom_minimum_size = Vector2(390, 390)
@@ -37,7 +22,8 @@ anchors_preset = 0
 offset_right = 390.0
 offset_bottom = 560.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_detail_card")
+theme_type_variation = &"DetailTooltipPanel"
+theme_override_styles/panel = ExtResource("8_tooltip_panel")
 
 [node name="Margin" type="MarginContainer" parent="CardPanel"]
 layout_mode = 2

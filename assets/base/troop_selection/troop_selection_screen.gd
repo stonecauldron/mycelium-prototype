@@ -15,7 +15,7 @@ const _FLAG_SEALS_SCENE := preload("res://assets/base/seals/flag_seals_overlay.t
 var bench: Array = []
 var squad: Array = []
 
-@onready var _squad_rows: VBoxContainer = %SquadRows
+@onready var _squad_slot_row: HBoxContainer = %SquadSlotRow
 @onready var _bench_grid: HBoxContainer = %BenchGrid
 @onready var _bench_panel: PanelContainer = %BenchPanel
 @onready var _cocoon_row: HBoxContainer = %CocoonRow
@@ -77,25 +77,15 @@ func _set_bench_structure_mouse_ignore() -> void:
 
 
 func _build_squad_ui() -> void:
-	for child in _squad_rows.get_children():
+	for child in _squad_slot_row.get_children():
 		child.queue_free()
 	_squad_slots.clear()
-
-	var title := Label.new()
-	title.theme_type_variation = &"SectionTitleLabel"
-	title.text = "Troop"
-	_squad_rows.add_child(title)
-
-	var slots_row := HBoxContainer.new()
-	slots_row.theme_type_variation = &"SlotRow"
-	slots_row.custom_minimum_size = Vector2(0, 200)
-	_squad_rows.add_child(slots_row)
 
 	for i in SQUAD_SLOT_COUNT:
 		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		slot.slot_index = i
 		slot.unit_dropped.connect(_on_unit_dropped.bind("squad"))
-		slots_row.add_child(slot)
+		_squad_slot_row.add_child(slot)
 		_squad_slots.append(slot)
 
 

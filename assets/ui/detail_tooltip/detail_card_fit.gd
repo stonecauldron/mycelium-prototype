@@ -8,6 +8,8 @@ extends RefCounted
 static func apply(root: Control, card_panel: PanelContainer, width: float) -> void:
 	if root == null or card_panel == null or width <= 0.0:
 		return
+	root.clip_contents = false
+	card_panel.clip_contents = false
 	root.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	root.anchor_right = root.anchor_left
 	root.anchor_bottom = root.anchor_top

@@ -8,8 +8,8 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
 [node name="MutationCard" type="PanelContainer"]
-clip_contents = true
-custom_minimum_size = Vector2(120, 100)
+clip_contents = false
+custom_minimum_size = Vector2(200, 100)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_card")
@@ -27,10 +27,11 @@ theme_type_variation = &"CardVBox"
 
 [node name="NameLabel" type="Label" parent="Margin/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(104, 0)
+custom_minimum_size = Vector2(184, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"CardNameLabel"
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
 text = "Mutation"
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -58,7 +59,7 @@ stretch_mode = 5
 
 [node name="SubtitleLabel" type="Label" parent="Margin/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(104, 0)
+custom_minimum_size = Vector2(184, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"CardNameLabel"

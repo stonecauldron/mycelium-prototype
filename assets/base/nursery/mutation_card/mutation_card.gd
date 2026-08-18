@@ -1,7 +1,7 @@
 class_name MutationCard
 extends PanelContainer
 
-const CARD_SIZE := Vector2(120, 100)
+const CARD_SIZE := Vector2(200, 100)
 const _MUTATION_CARD_SCENE := preload("res://assets/base/nursery/mutation_card/mutation_card.tscn")
 const _MUTATION_DETAIL_CARD_SCENE := preload(
 	"res://assets/base/nursery/mutation_detail_card/mutation_detail_card.tscn"
@@ -90,8 +90,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 		return null
 	var tip: MutationDetailCard = _MUTATION_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(mutation)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _apply_hover_y() -> void:

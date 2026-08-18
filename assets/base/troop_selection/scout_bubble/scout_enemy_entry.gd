@@ -2,7 +2,7 @@ class_name ScoutEnemyEntry
 extends HBoxContainer
 
 ## Enemy art is shorter above the feet origin than player portraits.
-const _PORTRAIT_SCALE := 0.7
+const _PORTRAIT_SCALE := 0.6
 ## Raise feet above the host bottom so the body lines up with the count label.
 const _PORTRAIT_Y_FACTOR := 0.82
 const _TOOLTIP_WIDTH := 260.0
@@ -55,23 +55,13 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	if _unit_data == null:
 		return null
 	var tip := _build_enemy_tooltip(_unit_data)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 	var panel := PanelContainer.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-	style.border_color = Color(0, 0, 0, 1)
-	style.set_border_width_all(5)
-	style.set_corner_radius_all(14)
-	style.content_margin_left = 14.0
-	style.content_margin_top = 12.0
-	style.content_margin_right = 14.0
-	style.content_margin_bottom = 14.0
-	panel.add_theme_stylebox_override("panel", style)
+	PaperStyles.apply_tooltip(panel)
 
 	var vbox := VBoxContainer.new()
 	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -81,7 +71,7 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 	var name_label := Label.new()
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	name_label.text = unit_data.display_name
-	name_label.add_theme_color_override("font_color", Color(0.03137255, 0.03529412, 0.02745098, 1))
+	name_label.add_theme_color_override("font_color", PaperStyles.INK)
 	name_label.add_theme_font_size_override("font_size", 30)
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	name_label.custom_minimum_size = Vector2(_TOOLTIP_WIDTH, 0)
@@ -106,7 +96,7 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 	var speed_label := Label.new()
 	speed_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	speed_label.text = "Speed %s secs" % str(combat.attack_interval)
-	speed_label.add_theme_color_override("font_color", Color(0.03137255, 0.03529412, 0.02745098, 1))
+	speed_label.add_theme_color_override("font_color", PaperStyles.INK)
 	speed_label.add_theme_font_size_override("font_size", 24)
 	combat_row.add_child(speed_label)
 
@@ -128,7 +118,7 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 		var desc_label := Label.new()
 		desc_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		desc_label.text = description
-		desc_label.add_theme_color_override("font_color", Color(0.15, 0.18, 0.14, 1))
+		desc_label.add_theme_color_override("font_color", PaperStyles.INK_MUTED)
 		desc_label.add_theme_font_size_override("font_size", 24)
 		desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		desc_label.custom_minimum_size = Vector2(_TOOLTIP_WIDTH, 0)

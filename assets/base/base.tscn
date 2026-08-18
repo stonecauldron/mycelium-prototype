@@ -12,8 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
 [ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bottom_bg"]
-bg_color = Color(0.086, 0.122, 0.118, 0.68)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jfa4i"]
 
 [node name="Base" type="Node2D" unique_id=65120356]
 script = ExtResource("1_base")
@@ -229,6 +228,7 @@ text = "Advance Day"
 
 [node name="BiomassChip" parent="HudLayer/HudRoot/RootMargin/RootVBox/TopBar" unique_id=1142113358 instance=ExtResource("14_biomass_chip")]
 unique_name_in_owner = true
+layout_mode = 2
 
 [node name="Spacer" type="Control" parent="HudLayer/HudRoot/RootMargin/RootVBox" unique_id=171144055]
 layout_mode = 2
@@ -236,9 +236,9 @@ size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="BottomBar" type="PanelContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox" unique_id=1027196615]
-custom_minimum_size = Vector2(0, 84)
+custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_bottom_bg")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_jfa4i")
 
 [node name="BottomMargin" type="MarginContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar" unique_id=1027746649]
 layout_mode = 2

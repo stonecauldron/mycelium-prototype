@@ -1,7 +1,7 @@
 class_name WeaponCard
 extends PanelContainer
 
-const CARD_SIZE := Vector2(120, 140)
+const CARD_SIZE := Vector2(200, 140)
 const _WEAPON_CARD_SCENE := preload("res://assets/base/riboforge/weapon_card.tscn")
 const _WEAPON_DETAIL_CARD_SCENE := preload("res://assets/base/weapon_detail_card/weapon_detail_card.tscn")
 const _HOVER_AMPLITUDE_PX := 5.0
@@ -84,8 +84,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 		return null
 	var tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(weapon, false)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _apply_hover_y() -> void:

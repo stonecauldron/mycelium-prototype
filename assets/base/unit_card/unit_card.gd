@@ -138,8 +138,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	unit_tip.setup(data, false, false)
 
 	if data.weapon == null:
-		DetailTooltipPopup.configure(unit_tip)
-		return unit_tip
+		return DetailTooltipPopup.configure(unit_tip)
 
 	var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
 	weapon_tip.setup(data.weapon, false, false, false)
@@ -149,8 +148,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	host.add_theme_constant_override("separation", int(_DETAIL_TOOLTIP_SEPARATION))
 	host.add_child(unit_tip)
 	host.add_child(weapon_tip)
-	DetailTooltipPopup.configure(host)
-	return host
+	return DetailTooltipPopup.configure(host)
 
 
 func _refresh_portrait(data: RosterUnitData) -> void:

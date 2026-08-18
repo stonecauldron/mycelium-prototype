@@ -3,7 +3,7 @@ extends PanelContainer
 
 signal spore_clicked(card: SporeCard)
 
-const CARD_SIZE := Vector2(120, 100)
+const CARD_SIZE := Vector2(200, 100)
 const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 const _HOVER_AMPLITUDE_PX := 5.0
@@ -87,8 +87,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 		return null
 	var tip: SporeDetailCard = _SPORE_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(spore, false)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _apply_hover_y() -> void:

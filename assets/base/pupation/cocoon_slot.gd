@@ -178,16 +178,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 func _make_compost_tooltip() -> Object:
 	var tip := PanelContainer.new()
 	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-	style.border_color = Color(0, 0, 0, 1)
-	style.set_border_width_all(3)
-	style.set_corner_radius_all(12)
-	style.content_margin_left = 14
-	style.content_margin_top = 12
-	style.content_margin_right = 14
-	style.content_margin_bottom = 12
-	tip.add_theme_stylebox_override("panel", style)
+	PaperStyles.apply_tooltip(tip)
 	var box := VBoxContainer.new()
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_theme_constant_override("separation", 6)
@@ -207,15 +198,13 @@ func _make_compost_tooltip() -> Object:
 	body.add_theme_font_size_override("font_size", 16)
 	body.add_theme_color_override("font_color", Color(0.03, 0.035, 0.027, 1))
 	box.add_child(body)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _make_empty_training_tooltip() -> Object:
 	var tip: SchoolTrainingDetailCard = _SCHOOL_TRAINING_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(school)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
@@ -228,8 +217,7 @@ func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
 	unit_tip.setup(preview, true, false)
 
 	if preview.weapon == null:
-		DetailTooltipPopup.configure(unit_tip)
-		return unit_tip
+		return DetailTooltipPopup.configure(unit_tip)
 
 	var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
 	weapon_tip.setup(preview.weapon, false, false, false)
@@ -239,8 +227,7 @@ func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
 	host.add_theme_constant_override("separation", int(_DETAIL_TOOLTIP_SEPARATION))
 	host.add_child(unit_tip)
 	host.add_child(weapon_tip)
-	DetailTooltipPopup.configure(host)
-	return host
+	return DetailTooltipPopup.configure(host)
 
 
 func _on_mouse_exited() -> void:

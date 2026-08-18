@@ -4,35 +4,30 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://f8n1147me83h" path="res://assets/base/nursery/spores.png" id="3_spores"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="4_biomass"]
+[ext_resource type="Texture2D" uid="uid://5mdohb4kewvt" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 04.png" id="4_t7vn6"]
 [ext_resource type="Texture2D" uid="uid://bm2sipndchcwt" path="res://assets/base/shop/padlock_locked.png" id="5_padlock"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="6_punch"]
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="7_tag"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shop_card"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rm8ap"]
+content_margin_left = 35.0
+content_margin_top = 35.0
+content_margin_right = 35.0
+content_margin_bottom = 35.0
+texture = ExtResource("4_t7vn6")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_spore"]
 atlas = ExtResource("3_spores")
 region = Rect2(64, 80, 376, 336)
 
 [node name="ShopOfferCard" type="Control" unique_id=1617112971]
-custom_minimum_size = Vector2(240, 360)
+custom_minimum_size = Vector2(280, 420)
+custom_maximum_size = Vector2(280, 420)
 clip_contents = true
 layout_mode = 3
 anchors_preset = 0
+offset_right = 280.0
+offset_bottom = 420.0
 theme = ExtResource("2_theme")
 script = ExtResource("1_card")
 
@@ -40,6 +35,7 @@ script = ExtResource("1_card")
 unique_name_in_owner = true
 
 [node name="CardPanel" type="PanelContainer" parent="." unique_id=511557256]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -47,7 +43,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_shop_card")
+theme_override_styles/panel = SubResource("StyleBoxTexture_rm8ap")
 
 [node name="Margin" type="MarginContainer" parent="CardPanel" unique_id=1063352709]
 layout_mode = 2
@@ -70,7 +66,7 @@ theme_override_font_sizes/font_size = 19
 text = "Offer"
 autowrap_mode = 3
 
-[node name="IconSlot" type="MarginContainer" parent="CardPanel/Margin/VBox"]
+[node name="IconSlot" type="MarginContainer" parent="CardPanel/Margin/VBox" unique_id=455907686]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/margin_bottom = 8
@@ -107,7 +103,7 @@ theme_override_font_sizes/font_size = 20
 text = "Description"
 autowrap_mode = 3
 
-[node name="FooterSpacer" type="Control" parent="CardPanel/Margin/VBox"]
+[node name="FooterSpacer" type="Control" parent="CardPanel/Margin/VBox" unique_id=836602815]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -120,14 +116,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_constants/separation = 8
-alignment = 0
 
 [node name="TierTag" parent="CardPanel/Margin/VBox/FooterRow" unique_id=816829022 instance=ExtResource("7_tag")]
 unique_name_in_owner = true
 size_flags_vertical = 4
 text = "Common"
 
-[node name="FooterMidSpacer" type="Control" parent="CardPanel/Margin/VBox/FooterRow"]
+[node name="FooterMidSpacer" type="Control" parent="CardPanel/Margin/VBox/FooterRow" unique_id=96869693]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2

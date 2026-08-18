@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="4_lower_lane"]
 [ext_resource type="PackedScene" uid="uid://iwk60b5u7rf7" path="res://assets/combat/flag_bearer/flag_bearer_visual.tscn" id="5_u66j2"]
 [ext_resource type="PackedScene" uid="uid://dxyk18fxa87f7" path="res://assets/base/troop_selection/scout_bubble/scout_bubble.tscn" id="6_scout"]
+[ext_resource type="FontFile" uid="uid://cwyplmcwdoujh" path="res://assets/fonts/SpicyRice-Regular.ttf" id="7_1a72m"]
 [ext_resource type="PackedScene" uid="uid://k1npp5blvyao" path="res://assets/base/combat_progress_track/combat_progress_track.tscn" id="7_progress"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
@@ -51,15 +52,14 @@ scale = Vector2(-1, 1)
 unique_name_in_owner = true
 z_index = 1
 layout_mode = 1
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 1380.0
-offset_top = 200.0
-offset_right = 1882.0
-offset_bottom = 561.0
-grow_horizontal = 1
-grow_vertical = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -324.0
+offset_top = 294.0
+offset_right = -324.0
+offset_bottom = 294.0
+grow_horizontal = 0
 
 [node name="HeaderBlock" type="VBoxContainer" parent="." unique_id=826697549]
 layout_mode = 1
@@ -67,8 +67,9 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -352.0
+offset_top = 12.0
 offset_right = 352.0
-offset_bottom = 180.0
+offset_bottom = 192.0
 grow_horizontal = 2
 mouse_filter = 0
 theme_type_variation = &"SectionVBox"
@@ -78,6 +79,7 @@ theme_override_constants/separation = 8
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PageTitleLabel"
+theme_override_fonts/font = ExtResource("7_1a72m")
 theme_override_font_sizes/font_size = 52
 text = "War Chamber"
 
@@ -90,10 +92,10 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -340.0
-offset_top = 216.0
-offset_right = 340.0
-offset_bottom = 536.0
+offset_left = -299.0
+offset_top = 168.0
+offset_right = 381.0
+offset_bottom = 521.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="CocoonMargin" type="MarginContainer" parent="CocoonPanel" unique_id=309864513]
@@ -106,6 +108,7 @@ theme_override_constants/separation = 4
 
 [node name="CocoonTitle" type="Label" parent="CocoonPanel/CocoonMargin/CocoonVBox" unique_id=700392347]
 layout_mode = 2
+size_flags_horizontal = 0
 theme_type_variation = &"SectionTitleLabel"
 text = "Cocoons"
 
@@ -122,10 +125,10 @@ unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-offset_left = 11.0
-offset_top = 200.0
-offset_right = -1285.0
-offset_bottom = 462.0
+offset_left = 52.0
+offset_top = 116.0
+offset_right = -1244.0
+offset_bottom = 475.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="BenchMargin" type="MarginContainer" parent="BenchPanel" unique_id=878538865]
@@ -138,6 +141,7 @@ theme_type_variation = &"TightVBox"
 
 [node name="BenchTitle" type="Label" parent="BenchPanel/BenchMargin/BenchVBox" unique_id=1323217261]
 layout_mode = 2
+size_flags_horizontal = 0
 theme_type_variation = &"SectionTitleLabel"
 text = "Bench"
 
@@ -154,9 +158,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 offset_left = 12.0
-offset_top = 596.0
+offset_top = 509.0
 offset_right = -20.0
-offset_bottom = 918.0
+offset_bottom = 881.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="SquadMargin" type="MarginContainer" parent="SquadPanel" unique_id=1251518974]
@@ -167,3 +171,16 @@ theme_type_variation = &"PanelInnerMargin"
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"TightVBox"
+
+[node name="SquadTitle" type="Label" parent="SquadPanel/SquadMargin/SquadRows" unique_id=1407487621]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"SectionTitleLabel"
+text = "Troop"
+
+[node name="SquadSlotRow" type="HBoxContainer" parent="SquadPanel/SquadMargin/SquadRows" unique_id=1407487622]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"SlotRow"

@@ -3,9 +3,13 @@ extends Control
 
 signal card_pressed(seal: SealData)
 
-const _COLOR_SELECTED_BORDER := Color(0.12, 0.45, 0.18, 1)
+const _TEX_SELECTED: Texture2D = preload(
+	"res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 29.png"
+)
 
 var seal: SealData
+var _idle_panel_style: StyleBox
+var _selected_panel_style: StyleBox
 
 @onready var _panel: PanelContainer = %Panel
 @onready var _icon: TextureRect = %Icon
@@ -15,8 +19,46 @@ var seal: SealData
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	_set_children_mouse_filter_ignore(self)
+	mouse_filter = Control.MOUSE_FILTER_STOP
 	gui_input.connect(_on_gui_input)
+	_cache_panel_styles()
 	_refresh()
+
+
+func _cache_panel_styles() -> void:
+	if _panel == null:
+		return
+	_idle_panel_style = _panel.get_theme_stylebox("panel")
+	_selected_panel_style = _idle_panel_style
+	var idle_tex := _idle_panel_style as StyleBoxTexture
+	if idle_tex != null:
+		var selected_tex := idle_tex.duplicate() as StyleBoxTexture
+		selected_tex.texture = _TEX_SELECTED
+		_selected_panel_style = selected_tex
+
+
+func _set_children_mouse_filter_ignore(node: Node) -> void:
+	for child in node.get_children():
+		if child is Control:
+			(child as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_set_children_mouse_filter_ignore(child)
+
+
+func _has_point(point: Vector2) -> bool:
+	var hit := Rect2(Vector2.ZERO, size)
+	var panel := _panel
+	if panel == null:
+		panel = get_node_or_null("%Panel") as PanelContainer
+	if panel != null:
+		var box := panel.get_theme_stylebox("panel")
+		if box != null:
+			hit.position = Vector2(-box.expand_margin_left, -box.expand_margin_top)
+			hit.size = size + Vector2(
+				box.expand_margin_left + box.expand_margin_right,
+				box.expand_margin_top + box.expand_margin_bottom
+			)
+	return hit.has_point(point)
 
 
 func setup(seal_data: SealData) -> void:
@@ -26,9 +68,16 @@ func setup(seal_data: SealData) -> void:
 
 
 func set_selected(selected: bool) -> void:
-	if _panel == null:
-		return
-	_panel.add_theme_stylebox_override("panel", _make_card_style(selected))
+	if _panel != null:
+		var box := _selected_panel_style if selected else _idle_panel_style
+		if box != null:
+			_panel.add_theme_stylebox_override("panel", box)
+	var title_color := PaperStyles.CREAM if selected else PaperStyles.INK
+	var body_color := PaperStyles.CREAM if selected else PaperStyles.INK_MUTED
+	if _title != null:
+		_title.add_theme_color_override("font_color", title_color)
+	if _description != null:
+		_description.add_theme_color_override("font_color", body_color)
 
 
 func _refresh() -> void:
@@ -44,25 +93,6 @@ func _refresh() -> void:
 	_title.text = seal.display_name
 	_description.text = seal.description
 	set_selected(false)
-
-
-func _make_card_style(selected: bool) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.content_margin_left = 8
-	style.content_margin_top = 8
-	style.content_margin_right = 8
-	style.content_margin_bottom = 8
-	style.bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-	style.border_width_left = 5
-	style.border_width_top = 5
-	style.border_width_right = 5
-	style.border_width_bottom = 8 if selected else 5
-	style.border_color = _COLOR_SELECTED_BORDER if selected else Color(0, 0, 0, 1)
-	style.corner_radius_top_left = 16
-	style.corner_radius_top_right = 16
-	style.corner_radius_bottom_right = 16
-	style.corner_radius_bottom_left = 16
-	return style
 
 
 func _on_gui_input(event: InputEvent) -> void:

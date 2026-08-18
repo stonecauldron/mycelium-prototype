@@ -1,45 +1,87 @@
 [gd_resource type="Theme" format=3 uid="uid://b8rmvb87hj66n"]
 
-[ext_resource type="StyleBox" uid="uid://b101vonptpfju" path="res://assets/themes/confirm_button_normal.tres" id="1_normal"]
-[ext_resource type="StyleBox" uid="uid://b4ldnbdgtfqfs" path="res://assets/themes/confirm_button_hover.tres" id="2_hover"]
-[ext_resource type="StyleBox" uid="uid://bdxhplluf3mkb" path="res://assets/themes/confirm_button_pressed.tres" id="3_pressed"]
-[ext_resource type="FontFile" uid="uid://bckw80lf7bsfa" path="res://assets/fonts/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf" id="4_fraunces"]
-[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="5_figtree"]
+[ext_resource type="StyleBox" uid="uid://bpapertitsage" path="res://assets/themes/paper/paper_button_normal.tres" id="1_normal"]
+[ext_resource type="StyleBox" uid="uid://cvsxo5hskcu6g" path="res://assets/themes/paper/paper_button_hover.tres" id="2_hover"]
+[ext_resource type="StyleBox" uid="uid://bpapertitteal" path="res://assets/themes/paper/paper_button_pressed.tres" id="3_pressed"]
+[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="4_fredoka"]
+[ext_resource type="StyleBox" uid="uid://bpapertitmaro" path="res://assets/themes/paper/paper_button_disabled.tres" id="6_disabled"]
+[ext_resource type="FontFile" uid="uid://cwyplmcwdoujh" path="res://assets/fonts/SpicyRice-Regular.ttf" id="6_n83um"]
+[ext_resource type="Texture2D" uid="uid://r2jxi58t3ovw" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 3 6.png" id="7_c8sri"]
+[ext_resource type="StyleBox" uid="uid://cvsxo5ho127wu" path="res://assets/themes/paper/paper_tooltip_panel.tres" id="8_tooltip_panel"]
+[ext_resource type="Texture2D" uid="uid://81frowvo5wno" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 2 9.png" id="10_c8sri"]
+[ext_resource type="Texture2D" uid="uid://cyk0hronbwfxr" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square border 10.png" id="tex_paper_chip"]
+[ext_resource type="Texture2D" uid="uid://cyer2nxh2mtfq" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 8.png" id="tex_paper_chip_hud"]
 
 [sub_resource type="FontVariation" id="Font_figtree_button"]
-base_font = ExtResource("5_figtree")
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 600
 }
 
 [sub_resource type="FontVariation" id="Font_figtree_meta"]
-base_font = ExtResource("5_figtree")
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 500
 }
 
 [sub_resource type="FontVariation" id="Font_fraunces_name"]
-base_font = ExtResource("4_fraunces")
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 500
 }
 
 [sub_resource type="FontVariation" id="Font_figtree_body"]
-base_font = ExtResource("5_figtree")
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
 2003265652: 450
 }
 
 [sub_resource type="FontVariation" id="Font_fraunces_title"]
-base_font = ExtResource("4_fraunces")
+base_font = ExtResource("6_n83um")
 variation_opentype = {
 2003265652: 500
 }
 
-[sub_resource type="FontVariation" id="Font_fraunces_display"]
-base_font = ExtResource("4_fraunces")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1a72m"]
+content_margin_left = 62.0
+texture = ExtResource("7_c8sri")
+texture_margin_left = 33.12203
+texture_margin_right = 64.37803
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+texture = ExtResource("tex_paper_chip")
+texture_margin_left = 28.0
+texture_margin_top = 24.0
+texture_margin_right = 28.0
+texture_margin_bottom = 28.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip_hud"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+texture = ExtResource("tex_paper_chip_hud")
+texture_margin_left = 24.0
+texture_margin_top = 24.0
+texture_margin_right = 24.0
+texture_margin_bottom = 24.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n83um"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+texture = ExtResource("10_c8sri")
+
+[sub_resource type="FontVariation" id="FontVariation_5sra1"]
+base_font = ExtResource("4_fredoka")
 variation_opentype = {
-2003265652: 550
+2003072104: 100,
+2003265652: 500
 }
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tooltip_panel"]
@@ -55,23 +97,33 @@ BottomBarMargin/constants/margin_bottom = 8
 BottomBarMargin/constants/margin_left = 12
 BottomBarMargin/constants/margin_right = 12
 BottomBarMargin/constants/margin_top = 8
+Button/colors/font_color = Color(0.94, 0.94, 0.88, 1)
+Button/colors/font_disabled_color = Color(0.94, 0.94, 0.88, 0.45)
+Button/colors/font_focus_color = Color(0.18, 0.16, 0.14, 1)
+Button/colors/font_hover_color = Color(0.18, 0.16, 0.14, 1)
+Button/colors/font_pressed_color = Color(0.94, 0.94, 0.88, 1)
 Button/font_sizes/font_size = 24
 Button/fonts/font = SubResource("Font_figtree_button")
+Button/styles/disabled = ExtResource("6_disabled")
+Button/styles/focus = ExtResource("2_hover")
+Button/styles/hover = ExtResource("2_hover")
+Button/styles/normal = ExtResource("1_normal")
+Button/styles/pressed = ExtResource("3_pressed")
 CardMargin/base_type = &"MarginContainer"
 CardMargin/constants/margin_bottom = 8
 CardMargin/constants/margin_left = 8
 CardMargin/constants/margin_right = 8
 CardMargin/constants/margin_top = 8
 CardMetaLabel/base_type = &"Label"
-CardMetaLabel/colors/font_color = Color(0.75, 0.78, 0.82, 1)
+CardMetaLabel/colors/font_color = Color(0.32, 0.3, 0.26, 1)
 CardMetaLabel/font_sizes/font_size = 20
 CardMetaLabel/fonts/font = SubResource("Font_figtree_meta")
 CardNameLabel/base_type = &"Label"
-CardNameLabel/colors/font_color = Color(0.95, 0.95, 0.95, 1)
+CardNameLabel/colors/font_color = Color(0.18, 0.16, 0.14, 1)
 CardNameLabel/font_sizes/font_size = 24
 CardNameLabel/fonts/font = SubResource("Font_fraunces_name")
 CardStatsLabel/base_type = &"Label"
-CardStatsLabel/colors/font_color = Color(0.95, 0.95, 0.95, 1)
+CardStatsLabel/colors/font_color = Color(0.18, 0.16, 0.14, 1)
 CardStatsLabel/font_sizes/font_size = 24
 CardStatsLabel/fonts/font = SubResource("Font_figtree_meta")
 CardVBox/base_type = &"VBoxContainer"
@@ -82,39 +134,61 @@ DamageLabel/colors/font_outline_color = Color(0.1, 0.05, 0.05, 1)
 DamageLabel/constants/outline_size = 6
 DamageLabel/font_sizes/font_size = 31
 DamageLabel/fonts/font = SubResource("Font_figtree_button")
+DetailTooltipPanel/base_type = &"PanelContainer"
+DetailTooltipPanel/styles/panel = ExtResource("8_tooltip_panel")
 HBoxContainer/constants/separation = 16
 Label/colors/font_color = Color(0.95, 0.95, 0.95, 1)
 Label/font_sizes/font_size = 36
 Label/fonts/font = SubResource("Font_figtree_body")
 NavButton/base_type = &"Button"
+NavButton/colors/font_color = Color(0.94, 0.94, 0.88, 1)
+NavButton/colors/font_disabled_color = Color(0.94, 0.94, 0.88, 0.45)
+NavButton/colors/font_focus_color = Color(0.18, 0.16, 0.14, 1)
+NavButton/colors/font_hover_color = Color(0.18, 0.16, 0.14, 1)
+NavButton/colors/font_pressed_color = Color(0.94, 0.94, 0.88, 1)
 NavButton/font_sizes/font_size = 24
 NavButton/fonts/font = SubResource("Font_figtree_button")
+NavButton/styles/disabled = ExtResource("6_disabled")
+NavButton/styles/focus = ExtResource("2_hover")
+NavButton/styles/hover = ExtResource("2_hover")
+NavButton/styles/normal = ExtResource("1_normal")
+NavButton/styles/pressed = ExtResource("3_pressed")
 PageSubtitleLabel/base_type = &"Label"
-PageSubtitleLabel/colors/font_color = Color(0.7, 0.74, 0.78, 1)
+PageSubtitleLabel/colors/font_color = Color(0.32, 0.3, 0.26, 1)
 PageSubtitleLabel/font_sizes/font_size = 22
 PageSubtitleLabel/fonts/font = SubResource("Font_figtree_body")
 PageTitleLabel/base_type = &"Label"
-PageTitleLabel/colors/font_color = Color(0.95, 0.95, 0.95, 1)
+PageTitleLabel/colors/font_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
 PageTitleLabel/font_sizes/font_size = 36
 PageTitleLabel/fonts/font = SubResource("Font_fraunces_title")
+PageTitleLabel/styles/normal = SubResource("StyleBoxTexture_1a72m")
 PanelInnerMargin/base_type = &"MarginContainer"
 PanelInnerMargin/constants/margin_bottom = 10
 PanelInnerMargin/constants/margin_left = 16
 PanelInnerMargin/constants/margin_right = 16
 PanelInnerMargin/constants/margin_top = 10
+PaperIconButton/base_type = &"Button"
+PaperIconButton/colors/font_color = Color(0.18, 0.16, 0.14, 1)
+PaperIconButton/colors/font_hover_color = Color(0.18, 0.16, 0.14, 1)
+PaperIconButton/colors/font_pressed_color = Color(0.94, 0.94, 0.88, 1)
+PaperIconButton/styles/disabled = SubResource("StyleBox_paper_chip")
+PaperIconButton/styles/focus = SubResource("StyleBox_paper_chip")
+PaperIconButton/styles/hover = SubResource("StyleBox_paper_chip")
+PaperIconButton/styles/normal = SubResource("StyleBox_paper_chip")
+PaperIconButton/styles/pressed = SubResource("StyleBox_paper_chip_hud")
 PlaceholderLabel/base_type = &"Label"
-PlaceholderLabel/colors/font_color = Color(0.55, 0.58, 0.62, 1)
+PlaceholderLabel/colors/font_color = Color(0.45, 0.42, 0.36, 1)
 PlaceholderLabel/font_sizes/font_size = 21
 PlaceholderLabel/fonts/font = SubResource("Font_figtree_meta")
 PrimaryButton/base_type = &"Button"
-PrimaryButton/colors/font_color = Color(0.15, 0.18, 0.14, 1)
-PrimaryButton/colors/font_disabled_color = Color(0.15, 0.18, 0.14, 0.45)
-PrimaryButton/colors/font_focus_color = Color(0.1, 0.12, 0.08, 1)
-PrimaryButton/colors/font_hover_color = Color(0.1, 0.12, 0.08, 1)
-PrimaryButton/colors/font_pressed_color = Color(0.1, 0.12, 0.08, 1)
+PrimaryButton/colors/font_color = Color(0.94, 0.94, 0.88, 1)
+PrimaryButton/colors/font_disabled_color = Color(0.94, 0.94, 0.88, 0.45)
+PrimaryButton/colors/font_focus_color = Color(0.18, 0.16, 0.14, 1)
+PrimaryButton/colors/font_hover_color = Color(0.18, 0.16, 0.14, 1)
+PrimaryButton/colors/font_pressed_color = Color(0.94, 0.94, 0.88, 1)
 PrimaryButton/font_sizes/font_size = 30
 PrimaryButton/fonts/font = SubResource("Font_figtree_button")
-PrimaryButton/styles/disabled = ExtResource("3_pressed")
+PrimaryButton/styles/disabled = ExtResource("6_disabled")
 PrimaryButton/styles/focus = ExtResource("2_hover")
 PrimaryButton/styles/hover = ExtResource("2_hover")
 PrimaryButton/styles/normal = ExtResource("1_normal")
@@ -128,8 +202,9 @@ ScreenMargin/constants/margin_right = 16
 ScreenMargin/constants/margin_top = 12
 SectionTitleLabel/base_type = &"Label"
 SectionTitleLabel/colors/font_color = Color(0.95, 0.95, 0.95, 1)
-SectionTitleLabel/font_sizes/font_size = 28
+SectionTitleLabel/font_sizes/font_size = 32
 SectionTitleLabel/fonts/font = SubResource("Font_fraunces_title")
+SectionTitleLabel/styles/normal = SubResource("StyleBoxTexture_n83um")
 SectionVBox/base_type = &"VBoxContainer"
 SectionVBox/constants/separation = 16
 SlotMargin/base_type = &"MarginContainer"
@@ -142,11 +217,11 @@ SlotRow/constants/separation = 8
 StackVBox/base_type = &"VBoxContainer"
 StackVBox/constants/separation = 28
 SubtitleLabel/base_type = &"Label"
-SubtitleLabel/colors/font_color = Color(0.75, 0.7, 0.68, 1)
+SubtitleLabel/colors/font_color = Color(0.32, 0.3, 0.26, 1)
 SubtitleLabel/font_sizes/font_size = 30
-SubtitleLabel/fonts/font = SubResource("Font_fraunces_title")
+SubtitleLabel/fonts/font = SubResource("FontVariation_5sra1")
 SummaryEntryLabel/base_type = &"Label"
-SummaryEntryLabel/colors/font_color = Color(0.9, 0.92, 0.94, 1)
+SummaryEntryLabel/colors/font_color = Color(0.18, 0.16, 0.14, 1)
 SummaryEntryLabel/font_sizes/font_size = 40
 SummaryEntryLabel/fonts/font = SubResource("Font_figtree_body")
 TabBarRow/base_type = &"HBoxContainer"
@@ -158,8 +233,8 @@ TightHBox/constants/separation = 12
 TightVBox/base_type = &"VBoxContainer"
 TightVBox/constants/separation = 6
 TitleLabel/base_type = &"Label"
-TitleLabel/colors/font_color = Color(1, 1, 1, 1)
+TitleLabel/colors/font_color = Color(0.18, 0.16, 0.14, 1)
 TitleLabel/font_sizes/font_size = 80
-TitleLabel/fonts/font = SubResource("Font_fraunces_display")
+TitleLabel/fonts/font = ExtResource("6_n83um")
 TooltipPanel/styles/panel = SubResource("StyleBoxEmpty_tooltip_panel")
 VBoxContainer/constants/separation = 8

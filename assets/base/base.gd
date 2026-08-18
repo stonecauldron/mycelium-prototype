@@ -231,14 +231,14 @@ func _build_tab_bar() -> void:
 		var button := Button.new()
 		button.theme_type_variation = &"NavButton"
 		button.text = "%d  %s" % [key_index, str(def["label"])]
-		button.custom_minimum_size = Vector2(144, 64)
+		button.custom_minimum_size = Vector2(180, 72)
 		button.focus_mode = Control.FOCUS_NONE
 		button.pressed.connect(_select_tab.bind(tab_id, false))
 		column.add_child(button)
 
 		var underline := ColorRect.new()
 		underline.custom_minimum_size = Vector2(0, 4)
-		underline.color = Color(0.92, 0.92, 0.9, 1.0)
+		underline.color = Color(0.94, 0.94, 0.88, 1.0)
 		underline.visible = false
 		column.add_child(underline)
 

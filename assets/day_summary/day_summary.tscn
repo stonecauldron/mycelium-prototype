@@ -2,6 +2,20 @@
 
 [ext_resource type="Script" uid="uid://0jwhnpwuivng" path="res://assets/day_summary/day_summary.gd" id="1_summary"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://7lvq36vgc1wb" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 08.png" id="3_1ucyj"]
+[ext_resource type="Texture2D" uid="uid://b8jsadweoa6vd" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 1/paper 13.png" id="4_1ucyj"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ly7t2"]
+texture = ExtResource("3_1ucyj")
+texture_margin_left = 186.01393
+texture_margin_top = 131.09554
+texture_margin_right = 154.12582
+texture_margin_bottom = 154.12582
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6il8m"]
+texture = ExtResource("4_1ucyj")
+texture_margin_left = 30.0
+texture_margin_right = 30.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
 bg_color = Color(0.08, 0.1, 0.1, 1)
@@ -17,7 +31,7 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[node name="DaySummary" type="Control"]
+[node name="DaySummary" type="Control" unique_id=1562285368]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,7 +41,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_summary")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1952685009]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,7 +51,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.24705882, 0.3529412, 0.34901962, 1)
 
-[node name="RootMargin" type="MarginContainer" parent="."]
+[node name="RootMargin" type="MarginContainer" parent="." unique_id=2125429973]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -46,15 +60,16 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"ScreenMargin"
 
-[node name="RootVBox" type="VBoxContainer" parent="RootMargin"]
+[node name="RootVBox" type="VBoxContainer" parent="RootMargin" unique_id=550043553]
 layout_mode = 2
 theme_type_variation = &"StackVBox"
 
-[node name="Header" type="VBoxContainer" parent="RootMargin/RootVBox"]
+[node name="Header" type="VBoxContainer" parent="RootMargin/RootVBox" unique_id=135799625]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_type_variation = &"TightVBox"
 
-[node name="Title" type="Label" parent="RootMargin/RootVBox/Header"]
+[node name="Title" type="Label" parent="RootMargin/RootVBox/Header" unique_id=525728654]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"PageTitleLabel"
@@ -62,44 +77,58 @@ theme_override_font_sizes/font_size = 54
 text = "DAY SUMMARY"
 horizontal_alignment = 1
 
-[node name="Body" type="Control" parent="RootMargin/RootVBox"]
+[node name="Body" type="Control" parent="RootMargin/RootVBox" unique_id=128683874]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="EntriesHost" type="CenterContainer" parent="RootMargin/RootVBox/Body"]
+[node name="EntriesHost" type="CenterContainer" parent="RootMargin/RootVBox/Body" unique_id=1321859347]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = 66.0
+offset_right = 7.0
+offset_bottom = 66.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Entries" type="VBoxContainer" parent="RootMargin/RootVBox/Body/EntriesHost"]
+[node name="EntriesPanel" type="PanelContainer" parent="RootMargin/RootVBox/Body/EntriesHost" unique_id=151119321]
+custom_minimum_size = Vector2(700, 500)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ly7t2")
+
+[node name="Entries" type="VBoxContainer" parent="RootMargin/RootVBox/Body/EntriesHost/EntriesPanel" unique_id=193854218]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"SectionVBox"
 
-[node name="CombatRecap" type="VBoxContainer" parent="RootMargin/RootVBox/Body"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(380, 0)
+[node name="CombatRecapPanel" type="PanelContainer" parent="RootMargin/RootVBox/Body" unique_id=1959810099]
+custom_minimum_size = Vector2(450, 0)
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 380.0
+offset_right = 420.0
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_6il8m")
+
+[node name="CombatRecap" type="VBoxContainer" parent="RootMargin/RootVBox/Body/CombatRecapPanel" unique_id=1666063646]
+unique_name_in_owner = true
+layout_mode = 2
 theme_type_variation = &"StackVBox"
 
-[node name="TroopHp" type="VBoxContainer" parent="RootMargin/RootVBox/Body/CombatRecap"]
+[node name="TroopHp" type="VBoxContainer" parent="RootMargin/RootVBox/Body/CombatRecapPanel/CombatRecap" unique_id=1132653492]
 layout_mode = 2
 theme_type_variation = &"TightVBox"
 
-[node name="TroopHpTitle" type="Label" parent="RootMargin/RootVBox/Body/CombatRecap/TroopHp"]
+[node name="TroopHpTitle" type="Label" parent="RootMargin/RootVBox/Body/CombatRecapPanel/CombatRecap/TroopHp" unique_id=712518605]
 layout_mode = 2
 theme_type_variation = &"SectionTitleLabel"
+theme_override_colors/font_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
 text = "Your Troop"
 
-[node name="TroopHpBar" type="ProgressBar" parent="RootMargin/RootVBox/Body/CombatRecap/TroopHp"]
+[node name="TroopHpBar" type="ProgressBar" parent="RootMargin/RootVBox/Body/CombatRecapPanel/CombatRecap/TroopHp" unique_id=48328950]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
@@ -110,7 +139,7 @@ step = 1.0
 value = 1.0
 show_percentage = false
 
-[node name="TroopHpLabel" type="Label" parent="RootMargin/RootVBox/Body/CombatRecap/TroopHp/TroopHpBar"]
+[node name="TroopHpLabel" type="Label" parent="RootMargin/RootVBox/Body/CombatRecapPanel/CombatRecap/TroopHp/TroopHpBar" unique_id=724789163]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -118,27 +147,26 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.75)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 24
+text = "0 / 0"
 horizontal_alignment = 1
 vertical_alignment = 1
-text = "0 / 0"
 
-[node name="DamageBoardsScroll" type="ScrollContainer" parent="RootMargin/RootVBox/Body/CombatRecap"]
+[node name="DamageBoardsScroll" type="ScrollContainer" parent="RootMargin/RootVBox/Body/CombatRecapPanel/CombatRecap" unique_id=1777626283]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="DamageBoards" type="VBoxContainer" parent="RootMargin/RootVBox/Body/CombatRecap/DamageBoardsScroll"]
+[node name="DamageBoards" type="VBoxContainer" parent="RootMargin/RootVBox/Body/CombatRecapPanel/CombatRecap/DamageBoardsScroll" unique_id=999437996]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"SectionVBox"
 
-[node name="ContinueButton" type="Button" parent="RootMargin/RootVBox"]
+[node name="ContinueButton" type="Button" parent="RootMargin/RootVBox" unique_id=1597407319]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 72)
 layout_mode = 2

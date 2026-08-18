@@ -3,22 +3,36 @@
 [ext_resource type="Script" uid="uid://da6q7r8gr4k77" path="res://assets/base/seals/seal_choice_dialog.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="3_biomass"]
+[ext_resource type="Texture2D" uid="uid://byjxgyx2bn2yd" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 3 8.png" id="4_kc5ih"]
+[ext_resource type="Texture2D" uid="uid://81frowvo5wno" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 2 9.png" id="5_2tm04"]
+[ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-content_margin_left = 20.0
-content_margin_top = 16.0
-content_margin_right = 20.0
-content_margin_bottom = 16.0
-bg_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 8
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 28.0
+texture = ExtResource("tex_paper_dialog")
+texture_margin_left = 72.49772
+texture_margin_top = 162.69849
+texture_margin_right = 120.829544
+texture_margin_bottom = 154.10434
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_hud"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+texture = ExtResource("4_kc5ih")
+texture_margin_left = 30.714931
+texture_margin_top = 18.0
+texture_margin_right = 63.105087
+texture_margin_bottom = 33.062546
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_asca7"]
+texture = ExtResource("5_2tm04")
+texture_margin_top = 38.016632
+texture_margin_bottom = 21.487661
 
 [node name="SealChoiceDialog" type="Control" unique_id=1010565807]
 layout_mode = 3
@@ -38,7 +52,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.06, 0.12, 0.07, 0.62)
+color = Color(0.24705882, 0.3529412, 0.34901962, 1)
 
 [node name="Center" type="CenterContainer" parent="." unique_id=846712189]
 layout_mode = 1
@@ -50,35 +64,20 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Panel" type="PanelContainer" parent="Center" unique_id=1856256167]
-custom_minimum_size = Vector2(980, 620)
+custom_minimum_size = Vector2(1400, 800)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=118363492]
 layout_mode = 2
 theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 12
+theme_override_constants/margin_top = 64
 theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_bottom = 38
 
 [node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin" unique_id=718051620]
 layout_mode = 2
 theme_override_constants/separation = 14
-
-[node name="HeaderTitle" type="Label" parent="Center/Panel/Margin/VBox" unique_id=124406183]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
-theme_override_font_sizes/font_size = 40
-text = "Choose a Seal"
-horizontal_alignment = 1
-
-[node name="Prompt" type="Label" parent="Center/Panel/Margin/VBox" unique_id=2060768101]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
-theme_override_font_sizes/font_size = 24
-text = "Seals grant bonuses for the whole run."
-horizontal_alignment = 1
-autowrap_mode = 3
 
 [node name="CardsRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox" unique_id=521686649]
 unique_name_in_owner = true
@@ -166,3 +165,45 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 24
 disabled = true
 text = "Confirm"
+
+[node name="TitlePanel" type="PanelContainer" parent="." unique_id=61064739]
+custom_maximum_size = Vector2(400, -1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -633.0
+offset_top = -403.0
+offset_right = -233.0
+offset_bottom = -332.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBox_paper_hud")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TitlePanel" unique_id=1474523643]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HeaderTitle" type="Label" parent="TitlePanel/VBoxContainer" unique_id=124406183]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
+theme_override_font_sizes/font_size = 40
+text = "Choose a Seal "
+horizontal_alignment = 1
+
+[node name="Prompt" type="Label" parent="." unique_id=2060768101]
+layout_mode = 0
+offset_left = 1274.0
+offset_top = 745.0
+offset_right = 1642.0
+offset_bottom = 867.5043
+theme_override_colors/font_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxTexture_asca7")
+text = "Seals grant bonuses for the whole run."
+horizontal_alignment = 1
+autowrap_mode = 3

@@ -25,11 +25,11 @@ func set_fill_color(color: Color) -> void:
 	var base := get_theme_stylebox("panel")
 	if base == null:
 		return
-	var flat := base.duplicate() as StyleBoxFlat
-	if flat == null:
+	var tex := base.duplicate() as StyleBoxTexture
+	if tex == null:
 		return
-	flat.bg_color = color
-	add_theme_stylebox_override("panel", flat)
+	tex.modulate_color = color
+	add_theme_stylebox_override("panel", tex)
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

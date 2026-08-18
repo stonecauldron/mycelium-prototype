@@ -10,9 +10,8 @@ const ICON_GAP := 10.0
 ## Local offset on Flag sprite — upper cloth face (Flag space, before War Chamber mirror).
 const CLOTH_ORIGIN := Vector2(55.0, -310.0)
 const TOOLTIP_WIDTH := 280.0
-const PANEL_BG := Color(0.92156863, 0.9098039, 0.87058824, 1)
-const INK := Color(0.03137255, 0.03529412, 0.02745098, 1)
-const DESC := Color(0.2, 0.22, 0.18, 1)
+const INK := PaperStyles.INK
+const DESC := PaperStyles.INK_MUTED
 const _HOVER_PAD := 12.0
 
 var _icons: Array[Sprite2D] = []
@@ -178,16 +177,7 @@ func _rebuild_tooltip_content() -> void:
 
 func _make_tooltip_panel() -> PanelContainer:
 	var panel := PanelContainer.new()
-	var style := StyleBoxFlat.new()
-	style.bg_color = PANEL_BG
-	style.border_color = Color(0, 0, 0, 1)
-	style.set_border_width_all(5)
-	style.set_corner_radius_all(14)
-	style.content_margin_left = 14.0
-	style.content_margin_top = 12.0
-	style.content_margin_right = 14.0
-	style.content_margin_bottom = 14.0
-	panel.add_theme_stylebox_override("panel", style)
+	PaperStyles.apply_tooltip(panel)
 	panel.add_child(_build_tooltip_body())
 	return panel
 

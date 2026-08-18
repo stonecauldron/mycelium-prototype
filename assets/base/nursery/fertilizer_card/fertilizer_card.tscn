@@ -5,15 +5,15 @@
 [ext_resource type="Texture2D" uid="uid://c7b88454iaqi0" path="res://assets/base/nursery/fertilizers/fertiliser.png" id="3_fert"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="4_punch"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_fert"]
 atlas = ExtResource("3_fert")
 region = Rect2(183, 167, 169, 180)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
+
 [node name="FertilizerCard" type="PanelContainer"]
-clip_contents = true
-custom_minimum_size = Vector2(120, 100)
+clip_contents = false
+custom_minimum_size = Vector2(200, 100)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_card")
@@ -31,10 +31,11 @@ theme_type_variation = &"CardVBox"
 
 [node name="NameLabel" type="Label" parent="Margin/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(104, 0)
+custom_minimum_size = Vector2(184, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"CardNameLabel"
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
 text = "Fertilizer"
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -62,7 +63,7 @@ stretch_mode = 5
 
 [node name="SubtitleLabel" type="Label" parent="Margin/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(104, 0)
+custom_minimum_size = Vector2(184, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"CardNameLabel"

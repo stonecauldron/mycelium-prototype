@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cqtuy3neuspkd" path="res://assets/base/plot_tile/plot_empty.png" id="3_empty"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="4_biomass"]
 [ext_resource type="Texture2D" uid="uid://bm2sipndchcwt" path="res://assets/base/shop/padlock_locked.png" id="5_padlock"]
-[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="6_figtree"]
+[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="6_figtree"]
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="7_hourglass"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="8_chip"]
 [ext_resource type="PackedScene" uid="uid://d1cl6878jbaea" path="res://assets/ui/floating_arrow/floating_arrow.tscn" id="9_arrow"]
@@ -175,7 +175,7 @@ alignment = 1
 
 [node name="PlantLabel" type="Label" parent="Content/Margin/Stack/ActionSlot/PlantButton/PlantMargin/PlantContent" unique_id=216391882]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 28
 text = "Plant:"
@@ -183,7 +183,7 @@ text = "Plant:"
 [node name="PlantCostLabel" type="Label" parent="Content/Margin/Stack/ActionSlot/PlantButton/PlantMargin/PlantContent" unique_id=216391883]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 28
 text = "4"
@@ -229,7 +229,7 @@ alignment = 1
 
 [node name="UnlockLabel" type="Label" parent="Content/Margin/Stack/ActionSlot/UnlockButton/UnlockMargin/UnlockContent" unique_id=216391875]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 28
 text = "Unlock:"
@@ -237,7 +237,7 @@ text = "Unlock:"
 [node name="UnlockCostLabel" type="Label" parent="Content/Margin/Stack/ActionSlot/UnlockButton/UnlockMargin/UnlockContent" unique_id=216391876]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.18, 0.14, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_fonts/font = SubResource("Font_figtree_button")
 theme_override_font_sizes/font_size = 28
 text = "4"

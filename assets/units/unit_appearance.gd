@@ -216,6 +216,42 @@ func play_walk(randomize_start: bool = true) -> void:
 	play(&"walk", randomize_start)
 
 
+## Axis-aligned bounds of visible sprites in this appearance's local space.
+## Origin is the feet pivot; y is typically negative (up).
+func visual_rect_local(include_weapon: bool = true) -> Rect2:
+	var merged := Rect2()
+	var has_rect := false
+	var stack: Array = [[self, Transform2D.IDENTITY]]
+	while not stack.is_empty():
+		var pair: Array = stack.pop_back()
+		var node: Node = pair[0]
+		var xf: Transform2D = pair[1]
+		if not include_weapon and node.name == "WeaponMount":
+			continue
+		if node is Sprite2D:
+			var sprite_2d := node as Sprite2D
+			if sprite_2d.visible and sprite_2d.texture != null:
+				var r := sprite_2d.get_rect()
+				var corners: Array[Vector2] = [
+					xf * r.position,
+					xf * Vector2(r.end.x, r.position.y),
+					xf * r.end,
+					xf * Vector2(r.position.x, r.end.y),
+				]
+				for point in corners:
+					if not has_rect:
+						merged = Rect2(point, Vector2.ZERO)
+						has_rect = true
+					else:
+						merged = merged.expand(point)
+		for child in node.get_children():
+			var child_xf := xf
+			if child is Node2D:
+				child_xf = xf * (child as Node2D).transform
+			stack.append([child, child_xf])
+	return merged
+
+
 func _body_sprite() -> Sprite2D:
 	if sprite != null:
 		return sprite

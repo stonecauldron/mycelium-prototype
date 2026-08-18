@@ -1,9 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://cgameover001"]
+[gd_scene format=3 uid="uid://cgameover001"]
 
-[ext_resource type="Script" path="res://assets/game_over/game_over.gd" id="1_gameover"]
-[ext_resource type="Theme" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://b1mhqda2d2awt" path="res://assets/game_over/game_over.gd" id="1_gameover"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
 
-[node name="GameOver" type="Control"]
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 28.0
+texture = ExtResource("tex_paper_dialog")
+texture_margin_left = 72.49772
+texture_margin_top = 162.69849
+texture_margin_right = 120.829544
+texture_margin_bottom = 154.10434
+expand_margin_top = 29.0
+expand_margin_bottom = 75.0
+
+[node name="GameOver" type="Control" unique_id=2019079259]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,7 +27,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_gameover")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1270763364]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,7 +37,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.08, 0.07, 0.07, 1)
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=782256099]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,23 +45,28 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="Center"]
+[node name="Panel" type="PanelContainer" parent="Center" unique_id=300021645]
+custom_minimum_size = Vector2(760, 520)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel" unique_id=1400665665]
 layout_mode = 2
 theme_type_variation = &"StackVBox"
 
-[node name="Title" type="Label" parent="Center/VBox"]
+[node name="Title" type="Label" parent="Center/Panel/VBox" unique_id=1424081131]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 text = "Game Over"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Center/VBox"]
+[node name="Subtitle" type="Label" parent="Center/Panel/VBox" unique_id=358920562]
 layout_mode = 2
 theme_type_variation = &"SubtitleLabel"
 text = "Your troop has been wiped out."
 horizontal_alignment = 1
 
-[node name="RestartButton" type="Button" parent="Center/VBox"]
+[node name="RestartButton" type="Button" parent="Center/Panel/VBox" unique_id=1322818238]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
@@ -55,7 +74,7 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Restart"
 
-[node name="FeedbackButton" type="Button" parent="Center/VBox"]
+[node name="FeedbackButton" type="Button" parent="Center/Panel/VBox" unique_id=141444541]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
@@ -63,7 +82,7 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Give Feedback"
 
-[node name="WishlistButton" type="Button" parent="Center/VBox"]
+[node name="WishlistButton" type="Button" parent="Center/Panel/VBox" unique_id=48048641]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2

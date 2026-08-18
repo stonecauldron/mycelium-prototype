@@ -38,10 +38,8 @@ const _ACID_RAIN_BASE_DAMAGE := 1
 @onready var enemy_troop: Troop = $World/EnemyTroop
 @onready var _fast_forward_button: Button = %FastForwardButton
 @onready var _biomass_amount: Label = %BiomassChip.get_node("%BiomassAmount")
-@onready var _player_army_hp_bar: ProgressBar = %PlayerArmyHpBar
-@onready var _enemy_army_hp_bar: ProgressBar = %EnemyArmyHpBar
-@onready var _player_army_hp_label: Label = %PlayerArmyHpLabel
-@onready var _enemy_army_hp_label: Label = %EnemyArmyHpLabel
+@onready var _player_army_hp: ArmyHpChip = %PlayerArmyHp
+@onready var _enemy_army_hp: ArmyHpChip = %EnemyArmyHp
 @onready var _hud: CanvasLayer = $HUD
 
 var _player_spawn: Vector2
@@ -505,33 +503,10 @@ func _sum_troop_current_hp(troop: Troop) -> int:
 
 
 func _refresh_army_hp_hud(_current: int = 0, _maximum: int = 0) -> void:
-	_apply_army_hp_bar(
-		_player_army_hp_bar,
-		_player_army_hp_label,
-		_sum_troop_current_hp(player_troop),
-		_player_army_max_hp
-	)
-	_apply_army_hp_bar(
-		_enemy_army_hp_bar,
-		_enemy_army_hp_label,
-		_sum_troop_current_hp(enemy_troop),
-		_enemy_army_max_hp
-	)
-
-
-func _apply_army_hp_bar(
-	bar: ProgressBar,
-	label: Label,
-	current: int,
-	maximum: int
-) -> void:
-	if bar == null:
-		return
-	var max_hp := maxi(maximum, 1)
-	bar.max_value = max_hp
-	bar.value = clampi(current, 0, max_hp)
-	if label != null:
-		label.text = "%d / %d" % [current, maximum]
+	if _player_army_hp != null:
+		_player_army_hp.set_hp(_sum_troop_current_hp(player_troop), _player_army_max_hp)
+	if _enemy_army_hp != null:
+		_enemy_army_hp.set_hp(_sum_troop_current_hp(enemy_troop), _enemy_army_max_hp)
 
 
 func _reset_troop_from_roster(

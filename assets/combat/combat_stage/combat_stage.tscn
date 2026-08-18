@@ -8,9 +8,10 @@
 [ext_resource type="Texture2D" uid="uid://brnicc8ghj3md" path="res://assets/base/background/upper_foreground.png" id="6_bg_upper_fg"]
 [ext_resource type="Texture2D" uid="uid://c00gqs4n3sm1c" path="res://assets/base/background/lower_foreground.png" id="7_bg_lower_fg"]
 [ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="9_lower_lane"]
-[ext_resource type="Texture2D" uid="uid://3vtn54xo3e3w" path="res://assets/combat/combat_stage/fast_forward.png" id="10_ff"]
-[ext_resource type="PackedScene" uid="uid://cbiomasschip01" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="11_biomass_chip"]
-[ext_resource type="FontFile" uid="uid://f4byq12wh6ou" path="res://assets/fonts/Figtree-VariableFont_wght.ttf" id="13_figtree"]
+[ext_resource type="Texture2D" uid="uid://ca0qqd3vggbcd" path="res://assets/asset_packs/Cila - Paper UI stylized/icon/Icon 77.png" id="10_gyfts"]
+[ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="11_biomass_chip"]
+[ext_resource type="Texture2D" uid="uid://bxk864iibfnhd" path="res://assets/asset_packs/Cila - Paper UI stylized/icon/Icon 78.png" id="11_ty6ff"]
+[ext_resource type="PackedScene" uid="uid://carmyhpchip02" path="res://assets/ui/army_hp_chip/army_hp_chip.tscn" id="12_army_hp"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
 
@@ -20,43 +21,14 @@ size = Vector2(24, 1080)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_right"]
 size = Vector2(24, 1080)
 
-[sub_resource type="FontVariation" id="Font_biomass_amount"]
-base_font = ExtResource("13_figtree")
-variation_opentype = {
-2003265652: 500
-}
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1a72m"]
+texture = ExtResource("10_gyfts")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_army_panel"]
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-bg_color = Color(0.031798195, 0.17988184, 0.1393677, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3uj6r"]
+texture = ExtResource("10_gyfts")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
-bg_color = Color(0.08, 0.1, 0.1, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_fill_player"]
-bg_color = Color(0.35, 0.72, 0.58, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_fill_enemy"]
-bg_color = Color(0.85, 0.25, 0.3, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ty6ff"]
+texture = ExtResource("11_ty6ff")
 
 [node name="CombatStage" type="Node2D" unique_id=1316519551]
 script = ExtResource("1_combat")
@@ -280,58 +252,20 @@ offset_top = 12.0
 offset_right = 56.0
 offset_bottom = 108.0
 grow_horizontal = 2
-icon = ExtResource("10_ff")
-flat = true
+theme_override_styles/normal = SubResource("StyleBoxTexture_1a72m")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3uj6r")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ty6ff")
 expand_icon = true
 
-[node name="PlayerArmyHp" type="PanelContainer" parent="HUD"]
+[node name="PlayerArmyHp" parent="HUD" unique_id=1941947234 instance=ExtResource("12_army_hp")]
+unique_name_in_owner = true
 offset_left = 24.0
 offset_top = 128.0
 offset_right = 420.0
 offset_bottom = 210.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_army_panel")
 
-[node name="VBox" type="VBoxContainer" parent="HUD/PlayerArmyHp"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="Title" type="Label" parent="HUD/PlayerArmyHp/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
-theme_override_fonts/font = SubResource("Font_biomass_amount")
-theme_override_font_sizes/font_size = 26
-text = "Your Troop"
-
-[node name="PlayerArmyHpBar" type="ProgressBar" parent="HUD/PlayerArmyHp/VBox"]
+[node name="EnemyArmyHp" parent="HUD" unique_id=129052040 instance=ExtResource("12_army_hp")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill_player")
-max_value = 1.0
-step = 1.0
-value = 1.0
-show_percentage = false
-
-[node name="PlayerArmyHpLabel" type="Label" parent="HUD/PlayerArmyHp/VBox/PlayerArmyHpBar"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.75)
-theme_override_constants/outline_size = 4
-theme_override_fonts/font = SubResource("Font_biomass_amount")
-theme_override_font_sizes/font_size = 24
-horizontal_alignment = 1
-vertical_alignment = 1
-text = "0 / 0"
-
-[node name="EnemyArmyHp" type="PanelContainer" parent="HUD"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -340,45 +274,6 @@ offset_top = 128.0
 offset_right = -24.0
 offset_bottom = 210.0
 grow_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_army_panel")
-
-[node name="VBox" type="VBoxContainer" parent="HUD/EnemyArmyHp"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="Title" type="Label" parent="HUD/EnemyArmyHp/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
-theme_override_fonts/font = SubResource("Font_biomass_amount")
-theme_override_font_sizes/font_size = 26
-horizontal_alignment = 2
-text = "Enemies"
-
-[node name="EnemyArmyHpBar" type="ProgressBar" parent="HUD/EnemyArmyHp/VBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill_enemy")
-max_value = 1.0
-step = 1.0
-value = 1.0
-show_percentage = false
-
-[node name="EnemyArmyHpLabel" type="Label" parent="HUD/EnemyArmyHp/VBox/EnemyArmyHpBar"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.75)
-theme_override_constants/outline_size = 4
-theme_override_fonts/font = SubResource("Font_biomass_amount")
-theme_override_font_sizes/font_size = 24
-horizontal_alignment = 1
-vertical_alignment = 1
-text = "0 / 0"
+title = "Enemies"
+fill_color = Color(0.85, 0.25, 0.3, 1)
+title_horizontal_alignment = 2

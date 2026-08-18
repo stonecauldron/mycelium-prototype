@@ -1,15 +1,18 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="Script" path="res://assets/victory/victory.gd" id="1_victory"]
-[ext_resource type="Theme" path="res://assets/themes/default.tres" id="2_theme"]
-[ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
+[ext_resource type="Script" path="res://assets/title/title.gd" id="1_title"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://cnxfhca438svu" path="res://assets/base/background/background.png" id="3_bg_far"]
+[ext_resource type="Texture2D" uid="uid://brnicc8ghj3md" path="res://assets/base/background/upper_foreground.png" id="4_bg_upper"]
+[ext_resource type="Texture2D" uid="uid://c00gqs4n3sm1c" path="res://assets/base/background/lower_foreground.png" id="5_bg_lower"]
+[ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="6_paper"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
 content_margin_left = 28.0
 content_margin_top = 24.0
 content_margin_right = 32.0
 content_margin_bottom = 28.0
-texture = ExtResource("tex_paper_dialog")
+texture = ExtResource("6_paper")
 texture_margin_left = 72.49772
 texture_margin_top = 162.69849
 texture_margin_right = 120.829544
@@ -17,7 +20,7 @@ texture_margin_bottom = 154.10434
 expand_margin_top = 29.0
 expand_margin_bottom = 75.0
 
-[node name="Victory" type="Control"]
+[node name="Title" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,9 +28,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_theme")
-script = ExtResource("1_victory")
+script = ExtResource("1_title")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Backdrop" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,7 +38,40 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.07, 0.09, 0.08, 1)
+
+[node name="FarBackground" type="TextureRect" parent="Backdrop"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_bg_far")
+expand_mode = 1
+
+[node name="UpperForeground" type="TextureRect" parent="Backdrop"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_bg_upper")
+expand_mode = 1
+
+[node name="LowerForeground" type="TextureRect" parent="Backdrop"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_bg_lower")
+expand_mode = 1
+flip_h = true
 
 [node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -46,7 +82,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(760, 600)
+custom_minimum_size = Vector2(760, 440)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
 
@@ -57,13 +93,7 @@ theme_type_variation = &"StackVBox"
 [node name="Title" type="Label" parent="Center/Panel/VBox"]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
-text = "Victory"
-horizontal_alignment = 1
-
-[node name="Subtitle" type="Label" parent="Center/Panel/VBox"]
-layout_mode = 2
-theme_type_variation = &"SubtitleLabel"
-text = "Your troop survived 10 days."
+text = "Auto Shrooms"
 horizontal_alignment = 1
 
 [node name="NewRunButton" type="Button" parent="Center/Panel/VBox"]
@@ -74,14 +104,6 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "New Run"
 
-[node name="FeedbackButton" type="Button" parent="Center/Panel/VBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 52)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_type_variation = &"PrimaryButton"
-text = "Give Feedback"
-
 [node name="WishlistButton" type="Button" parent="Center/Panel/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
@@ -90,10 +112,10 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Wishlist on Steam"
 
-[node name="BackToTitleButton" type="Button" parent="Center/Panel/VBox"]
+[node name="QuitButton" type="Button" parent="Center/Panel/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
-text = "Back to Title"
+text = "Quit"

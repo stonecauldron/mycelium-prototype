@@ -38,6 +38,8 @@ var _progress_tracks: Array[CombatProgressTrack] = []
 
 
 func _ready() -> void:
+	if not GameState.run_started:
+		GameState.reset_run()
 	_camera.make_current()
 	_wire_progress_tracks()
 	_refresh_hud()

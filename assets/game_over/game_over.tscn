@@ -46,7 +46,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Center" unique_id=300021645]
-custom_minimum_size = Vector2(760, 520)
+custom_minimum_size = Vector2(760, 600)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
 
@@ -66,13 +66,13 @@ theme_type_variation = &"SubtitleLabel"
 text = "Your troop has been wiped out."
 horizontal_alignment = 1
 
-[node name="RestartButton" type="Button" parent="Center/Panel/VBox" unique_id=1322818238]
+[node name="NewRunButton" type="Button" parent="Center/Panel/VBox" unique_id=1322818238]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
-text = "Restart"
+text = "New Run"
 
 [node name="FeedbackButton" type="Button" parent="Center/Panel/VBox" unique_id=141444541]
 unique_name_in_owner = true
@@ -89,3 +89,11 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Wishlist on Steam"
+
+[node name="BackToTitleButton" type="Button" parent="Center/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 52)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"PrimaryButton"
+text = "Back to Title"

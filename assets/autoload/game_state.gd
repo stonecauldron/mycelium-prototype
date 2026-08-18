@@ -6,6 +6,7 @@ signal debug_cheats_applied
 const WIN_DAYS := 10
 const NURSERY_UNLOCK_DAY := 1
 const RIBOFORGE_UNLOCK_DAY := 2
+const BASE_SCENE_PATH := "res://assets/base/base.tscn"
 
 var troop: TroopData = TroopData.new()
 var nursery: NurseryData = NurseryData.new()
@@ -36,12 +37,8 @@ var debug_mode_active: bool = false
 var pending_seal_choice: bool = false
 ## Favourite Child: first harvest of the current day already claimed.
 var favourite_child_used_today: bool = false
-
-
-func _ready() -> void:
-	_roll_run_seed()
-	begin_day()
-	pending_seal_choice = true
+## True after reset_run(); false on a cold boot until New Run (or editor play-from-base).
+var run_started: bool = false
 
 
 ## Debug (~): +100 biomass and unlock all base screens.
@@ -478,6 +475,11 @@ func try_unlock_plot() -> bool:
 	return true
 
 
+func start_new_run() -> void:
+	reset_run()
+	SceneTransition.change_scene(BASE_SCENE_PATH)
+
+
 func reset_run() -> void:
 	troop.reset()
 	nursery.reset()
@@ -488,6 +490,7 @@ func reset_run() -> void:
 	current_day = 0
 	prefer_nursery_tab = false
 	prefer_riboforge_tab = false
+	show_start_combat_hint = true
 	show_plot_harvest_hint = true
 	show_plot_plant_hint = true
 	debug_mode_active = false
@@ -496,6 +499,7 @@ func reset_run() -> void:
 	_roll_run_seed()
 	begin_day()
 	pending_seal_choice = true
+	run_started = true
 
 
 func _roll_run_seed() -> void:

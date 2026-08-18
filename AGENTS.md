@@ -52,7 +52,9 @@ Audio: no sound card exists, so ALSA `cannot find card '0'` errors print on laun
 
 Web build: `make build` exports the `Web` preset to `build/web/` (templates are installed); `make run` then serves it at `http://localhost:8060` via `python3 -m http.server`.
 
-Tests/lint: none exist — there is no test framework (no GUT/gdUnit) and no configured linter/formatter.
+Tests/lint: none exist — there is no test framework (no GUT/gdUnit) and no configured linter/formatter. For parse errors, use IDE diagnostics (`ReadLints`). Do **not** use `godot --script some.gd --check-only`: that still loads autoloads/GDExtensions (GameAnalytics inits; `OS.has_feature("editor")` is false) and is not a cheap syntax check.
+
+Local CLI (macOS): `--headless` is `--display-driver headless` + dummy renderer and **does** boot. The SIGSEGV in `SPIRVToMSLConverter` happens when Godot runs **inside the agent sandbox** (also fails to write `user://logs`). Launch Godot with sandbox disabled (`required_permissions: ["all"]`), e.g. `godot --headless --path . --quit-after 1`. If a sandboxed launch crashes, do not retry in a loop — retry unsandboxed once, or stop. Cloud play-with-window remains `DISPLAY=:1 godot --path /workspace --rendering-driver opengl3`.
 
 Binary assets (`*.png`/`*.svg`/etc.) are normal git blobs, not Git LFS. `.gitattributes` marks them `-text` only.
 

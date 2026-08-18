@@ -67,6 +67,7 @@ func begin_day() -> void:
 	var mould := SealModifiers.golden_mould_biomass()
 	if mould > 0:
 		biomass.add(mould)
+		Analytics.biomass_source("Seal", "golden_mould", mould)
 
 
 func maybe_queue_seal_choice() -> void:
@@ -114,10 +115,12 @@ func try_compost_unit(unit: RosterUnitData) -> bool:
 		&"on_death",
 		[unit, MutationEffect.DeathContext.COMPOSTED, null]
 	)
-	var compost_reward := BiomassData.reward_for_compost(unit.is_adult_stage())
+	var is_adult := unit.is_adult_stage()
+	var compost_reward := BiomassData.reward_for_compost(is_adult)
 	if compost_reward > 0:
 		unit.last_death_biomass_yield += compost_reward
 		biomass.add(compost_reward)
+		Analytics.biomass_source("Compost", "Adult" if is_adult else "Child", compost_reward)
 	# Mould ticks while the composted unit is still in troop (excluded from credit).
 	_notify_ally_composted(unit)
 	if unit.is_adult_stage():
@@ -182,6 +185,11 @@ func try_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
 		biomass.add(WeaponSchool.COCOON_COST)
 		troop.try_add_unit(unit)
 		return false
+	Analytics.biomass_sink(
+		"Training",
+		Analytics.slug(WeaponSchool.display_name(school)),
+		WeaponSchool.COCOON_COST
+	)
 	# Cocoon duration <= 0 emerges immediately.
 	if pupation.get_days_remaining(school) <= 0:
 		var placed := pupation.take_occupant(school)
@@ -197,6 +205,11 @@ func try_cancel_pupation(school: int) -> bool:
 	if unit == null:
 		return false
 	biomass.add(WeaponSchool.COCOON_COST)
+	Analytics.biomass_source(
+		"Training",
+		Analytics.slug(WeaponSchool.display_name(school)),
+		WeaponSchool.COCOON_COST
+	)
 	if troop.try_add_unit(unit).is_empty():
 		# Should not happen with normal roster sizes; keep unit in a bench overflow sense.
 		push_warning("Pupation cancel: no troop slot for %s" % unit.display_name)
@@ -227,6 +240,7 @@ func try_add_seal(seal: SealData) -> bool:
 		var mould := SealModifiers.golden_mould_biomass()
 		if mould > 0:
 			biomass.add(mould)
+			Analytics.biomass_source("Seal", "golden_mould", mould)
 	ensure_nursery_seeded()
 	return true
 
@@ -310,6 +324,7 @@ func try_buy_fertilizer(fertilizer: FertilizerData, cost: int) -> bool:
 	if not nursery.add_fertilizer(fertilizer):
 		biomass.add(cost)
 		return false
+	Analytics.biomass_sink("Shop", Analytics.resource_slug(fertilizer), cost)
 	return true
 
 
@@ -324,6 +339,7 @@ func try_buy_mutation(mutation: MutationData, cost: int) -> bool:
 	if not nursery.add_mutation(mutation):
 		biomass.add(cost)
 		return false
+	Analytics.biomass_sink("Shop", Analytics.resource_slug(mutation), cost)
 	return true
 
 
@@ -341,6 +357,7 @@ func try_plant_fresh_common(plot_index: int) -> bool:
 	if not nursery.plant_spore(plot_index, spore):
 		biomass.add(cost)
 		return false
+	Analytics.biomass_sink("Nursery", "Plant", cost)
 	return true
 
 
@@ -435,8 +452,15 @@ func try_sell_nursery_stock_item(stock_index: int) -> bool:
 		buy_cost = (item as MutationData).biomass_cost
 	else:
 		return false
+	var sold := BiomassData.sell_value(buy_cost)
+	var item_id := "Plant"
+	if item is FertilizerData or item is MutationData:
+		var catalog := Analytics.resource_slug(item as Resource)
+		if not catalog.is_empty():
+			item_id = catalog
 	nursery.stock.clear_slot(stock_index)
-	biomass.add(BiomassData.sell_value(buy_cost))
+	biomass.add(sold)
+	Analytics.biomass_source("Stock", item_id, sold)
 	return true
 
 
@@ -472,6 +496,7 @@ func try_unlock_plot() -> bool:
 	if not nursery.unlock_next_plot():
 		biomass.add(cost)
 		return false
+	Analytics.biomass_sink("Nursery", "Unlock", cost)
 	return true
 
 
@@ -500,6 +525,7 @@ func reset_run() -> void:
 	begin_day()
 	pending_seal_choice = true
 	run_started = true
+	Analytics.on_run_started()
 
 
 func _roll_run_seed() -> void:

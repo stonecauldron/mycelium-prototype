@@ -102,6 +102,7 @@ func _on_reroll_pressed() -> void:
 	if not GameState.biomass.try_spend(BiomassData.SEAL_REROLL_COST):
 		_refresh_reroll_affordability()
 		return
+	Analytics.biomass_sink("Seal", "Reroll", BiomassData.SEAL_REROLL_COST)
 	_offers = SealCatalog.roll_offers(_OFFER_COUNT, GameState.seals, null, _offers)
 	_selected = null
 	_build_cards()

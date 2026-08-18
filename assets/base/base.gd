@@ -57,6 +57,7 @@ func _ready() -> void:
 		initial = TabId.NURSERY
 	_select_tab(initial, true)
 	_colony_screen.ensure_pending_modals()
+	Analytics.maybe_start_day()
 
 
 func _on_debug_cheats_applied() -> void:

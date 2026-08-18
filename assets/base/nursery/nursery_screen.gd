@@ -290,8 +290,10 @@ func _on_reroll_hover_exited() -> void:
 
 
 func _on_reroll_pressed() -> void:
-	if not GameState.biomass.try_spend(GameState.nursery.current_shop_reroll_cost()):
+	var cost := GameState.nursery.current_shop_reroll_cost()
+	if not GameState.biomass.try_spend(cost):
 		return
+	Analytics.biomass_sink("Shop", "Reroll", cost)
 	for card in _shop_cards:
 		card.clear_reroll_preview()
 	GameState.nursery.reroll_unlocked_shop_offers()
@@ -616,6 +618,7 @@ func _apply_fertilizer_from_shop(plot_index: int, data: Dictionary) -> void:
 	if not GameState.nursery.apply_fertilizer_to_plot(plot_index, fertilizer):
 		GameState.biomass.add(cost)
 		return
+	Analytics.biomass_sink("Shop", Analytics.resource_slug(fertilizer), cost)
 	_replace_bought_shop_slot(slot_index)
 	_rebuild_shop_cards()
 	_refresh()
@@ -634,6 +637,7 @@ func _apply_mutation_from_shop(plot_index: int, data: Dictionary) -> void:
 	if not GameState.nursery.apply_mutation_to_plot(plot_index, mutation):
 		GameState.biomass.add(cost)
 		return
+	Analytics.biomass_sink("Shop", Analytics.resource_slug(mutation), cost)
 	_replace_bought_shop_slot(slot_index)
 	_rebuild_shop_cards()
 	_refresh()

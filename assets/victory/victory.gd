@@ -21,12 +21,15 @@ func _on_new_run_pressed() -> void:
 
 
 func _on_feedback_pressed() -> void:
+	Analytics.intent("feedback", "victory")
 	ExternalLinks.open(ExternalLinks.FEEDBACK_URL)
 
 
 func _on_wishlist_pressed() -> void:
+	Analytics.intent("wishlist", "victory")
 	ExternalLinks.open(ExternalLinks.STEAM_WISHLIST_URL)
 
 
 func _on_back_to_title_pressed() -> void:
+	Analytics.intent("title", "victory")
 	SceneTransition.change_scene(_TITLE_SCENE_PATH)

@@ -38,3 +38,8 @@ func on_death(roster: Resource, context: DeathContext, _combat_unit: Node = null
 	if payout > 0:
 		data.last_death_biomass_yield = payout
 		GameState.biomass.add(payout)
+		var item_type := "Battle" if context == DeathContext.COMBAT else "Compost"
+		var item_id := Analytics.resource_slug(data.cap_mutation)
+		if item_id.is_empty():
+			item_id = "bank"
+		Analytics.biomass_source(item_type, item_id, payout)

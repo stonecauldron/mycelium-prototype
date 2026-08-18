@@ -18,8 +18,10 @@ func _on_new_run_pressed() -> void:
 
 
 func _on_wishlist_pressed() -> void:
+	Analytics.intent("wishlist", "title")
 	ExternalLinks.open(ExternalLinks.STEAM_WISHLIST_URL)
 
 
 func _on_quit_pressed() -> void:
+	Analytics.intent("quit", "title")
 	get_tree().quit()

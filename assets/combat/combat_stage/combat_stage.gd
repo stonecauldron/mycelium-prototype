@@ -453,6 +453,7 @@ func _award_battle_reward() -> void:
 	if sandboxed or _battle_reward <= 0:
 		return
 	GameState.biomass.add(_battle_reward)
+	Analytics.biomass_source("Battle", "Reward", _battle_reward)
 	_biomass_earned_this_fight += _battle_reward
 	_refresh_biomass_hud()
 
@@ -713,6 +714,9 @@ func _check_battle_end() -> void:
 		if sandboxed:
 			battle_ended.emit(false)
 			return
+		Analytics.flush_hit_biomass()
+		Analytics.day_fail()
+		Analytics.run_fail()
 		SceneTransition.change_scene(_GAME_OVER_SCENE_PATH)
 		return
 
@@ -738,11 +742,14 @@ func _check_battle_end() -> void:
 	# _exit_tree stops the director when combat is replaced.
 	_clear_zombie_battle_revives()
 
+	Analytics.flush_hit_biomass()
 	_award_battle_reward()
+	Analytics.day_complete()
 	GameState.ensure_nursery_seeded()
 	GameState.current_day += 1
 	GameState.clear_upcoming_enemy_formation()
 	if GameState.has_won_run():
+		Analytics.run_complete()
 		SceneTransition.change_scene(_VICTORY_SCENE_PATH)
 		return
 	DaySummaryFeed.clear()

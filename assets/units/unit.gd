@@ -1446,6 +1446,8 @@ func grant_hit_biomass(hit_at: Node2D = null) -> void:
 	GameState.biomass.add(amount)
 	var spawn_at := hit_at.global_position if hit_at != null else global_position
 	var stage := _find_combat_stage()
+	if stage != null and not bool(stage.get("sandboxed")):
+		Analytics.note_hit_biomass(amount)
 	if stage != null:
 		if stage.has_method("record_biomass_yield"):
 			stage.record_biomass_yield(amount)

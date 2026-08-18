@@ -160,6 +160,7 @@ func _on_starter_package_chosen(package_id: StringName) -> void:
 	squad = GameState.troop.squad
 	_sync_all_slots()
 	_notify_start_combat_state()
+	Analytics.maybe_start_day()
 
 
 func _on_starter_dialog_closed() -> void:

@@ -115,6 +115,7 @@ func _on_scout_reroll_pressed() -> void:
 	if not GameState.biomass.try_spend(BiomassData.SCOUT_REROLL_COST):
 		_refresh_reroll_affordability()
 		return
+	Analytics.biomass_sink("Scout", "Reroll", BiomassData.SCOUT_REROLL_COST)
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	GameState.ensure_upcoming_enemy_formation()
 	GameState.upcoming_enemy_formation = EnemyComposer.reroll_for_day(

@@ -198,15 +198,13 @@ func _make_compost_tooltip() -> Object:
 	body.add_theme_font_size_override("font_size", 16)
 	body.add_theme_color_override("font_color", Color(0.03, 0.035, 0.027, 1))
 	box.add_child(body)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _make_empty_training_tooltip() -> Object:
 	var tip: SchoolTrainingDetailCard = _SCHOOL_TRAINING_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(school)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
@@ -219,8 +217,7 @@ func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
 	unit_tip.setup(preview, true, false)
 
 	if preview.weapon == null:
-		DetailTooltipPopup.configure(unit_tip)
-		return unit_tip
+		return DetailTooltipPopup.configure(unit_tip)
 
 	var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
 	weapon_tip.setup(preview.weapon, false, false, false)
@@ -230,8 +227,7 @@ func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
 	host.add_theme_constant_override("separation", int(_DETAIL_TOOLTIP_SEPARATION))
 	host.add_child(unit_tip)
 	host.add_child(weapon_tip)
-	DetailTooltipPopup.configure(host)
-	return host
+	return DetailTooltipPopup.configure(host)
 
 
 func _on_mouse_exited() -> void:

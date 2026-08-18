@@ -20,8 +20,7 @@ func setup(day_number: int) -> void:
 
 func _make_custom_tooltip(_for_text: String) -> Object:
 	var tip := _build_day_tooltip()
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _build_day_tooltip() -> Control:

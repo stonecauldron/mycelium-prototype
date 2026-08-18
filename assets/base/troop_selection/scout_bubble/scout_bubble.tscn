@@ -1,39 +1,36 @@
 [gd_scene format=3 uid="uid://dxyk18fxa87f7"]
 
 [ext_resource type="Script" uid="uid://s6wk76vj7d3b" path="res://assets/base/troop_selection/scout_bubble/scout_bubble.gd" id="1_script"]
-[ext_resource type="PackedScene" uid="uid://cdr3kf2bf6rx8" path="res://assets/base/troop_selection/scout_bubble/speech_bubble_tip.tscn" id="2_tip"]
+[ext_resource type="Texture2D" uid="uid://dln2hju8jjutl" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 1/dialog box 16.png" id="2_723wi"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="3_biomass"]
-[ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
+[ext_resource type="Texture2D" uid="uid://dei6urctle8mi" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 1 8.png" id="4_rm8ap"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
-content_margin_left = 28.0
-content_margin_top = 24.0
-content_margin_right = 32.0
-content_margin_bottom = 28.0
-texture = ExtResource("tex_paper_dialog")
-texture_margin_left = 72.49772
-texture_margin_top = 162.69849
-texture_margin_right = 120.829544
-texture_margin_bottom = 154.10434
-expand_margin_top = 29.0
-expand_margin_bottom = 75.0
+texture = ExtResource("2_723wi")
+expand_margin_right = 63.0
+region_rect = Rect2(0, 0, 430, 331)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_723wi"]
+texture = ExtResource("4_rm8ap")
 
 [node name="ScoutBubble" type="Control" unique_id=1943444135]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 0
 mouse_filter = 2
 script = ExtResource("1_script")
 
 [node name="ScoutPanel" type="PanelContainer" parent="." unique_id=255576392]
+custom_minimum_size = Vector2(400, 400)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -36.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -109.0
+offset_right = 80.0
+offset_bottom = 109.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -42,41 +39,15 @@ theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
 [node name="ScoutMargin" type="MarginContainer" parent="ScoutPanel" unique_id=1342377385]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 98
 theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 2
+theme_override_constants/margin_bottom = 35
 
 [node name="ScoutVBox" type="VBoxContainer" parent="ScoutPanel/ScoutMargin" unique_id=1104124406]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
-
-[node name="ScoutTitle" type="Label" parent="ScoutPanel/ScoutMargin/ScoutVBox" unique_id=486641464]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 36
-text = "Next Battle"
-horizontal_alignment = 1
-
-[node name="ScoutDivider" type="Control" parent="ScoutPanel/ScoutMargin/ScoutVBox" unique_id=1604905395]
-custom_minimum_size = Vector2(0, 28)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="ScoutDividerLine" type="ColorRect" parent="ScoutPanel/ScoutMargin/ScoutVBox/ScoutDivider" unique_id=1848319733]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -1.5
-offset_bottom = 1.5
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
 
 [node name="ScoutRow" type="HBoxContainer" parent="ScoutPanel/ScoutMargin/ScoutVBox" unique_id=448937186]
 unique_name_in_owner = true
@@ -155,17 +126,17 @@ texture = ExtResource("3_biomass")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ScoutTip" parent="." unique_id=794917210 instance=ExtResource("2_tip")]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.0
-anchor_top = 0.72
-anchor_right = 1.0
-anchor_bottom = 0.72
-offset_left = -116.0
-offset_top = 87.39996
-offset_right = -76.0
-offset_bottom = 147.39996
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(0.5, 0.5)
+[node name="ScoutTitle" type="Label" parent="." unique_id=486641464]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -224.0
+offset_top = -214.0
+offset_right = 87.0
+offset_bottom = -126.0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxTexture_723wi")
+text = "Next Battle"
+horizontal_alignment = 1
+vertical_alignment = 1

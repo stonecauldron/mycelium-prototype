@@ -2,7 +2,7 @@ class_name ScoutEnemyEntry
 extends HBoxContainer
 
 ## Enemy art is shorter above the feet origin than player portraits.
-const _PORTRAIT_SCALE := 0.7
+const _PORTRAIT_SCALE := 0.6
 ## Raise feet above the host bottom so the body lines up with the count label.
 const _PORTRAIT_Y_FACTOR := 0.82
 const _TOOLTIP_WIDTH := 260.0
@@ -55,8 +55,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	if _unit_data == null:
 		return null
 	var tip := _build_enemy_tooltip(_unit_data)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:

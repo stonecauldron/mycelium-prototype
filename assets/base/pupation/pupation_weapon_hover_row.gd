@@ -19,5 +19,4 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 		return null
 	var tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(weapon, false)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)

@@ -236,12 +236,13 @@ func mount_portrait(
 	host.add_child(appearance)
 	# Portrait scale is a host-local multiply; avoid reset_body_scale() on portraits.
 	appearance.scale *= Vector2(portrait_scale, portrait_scale)
+	if bool(host.get_meta("_portrait_fit", false)):
+		host.set_meta("_portrait_base_scale", appearance.scale)
 	if enemy_unit_data == null:
 		# Tier multiplies body and cap layers (per-layer tints stay on sprites/cap).
 		appearance.modulate = UnitStatsData.tint_for_tier(power_tier)
 	host.set_meta("_portrait_shadow_clearance", shadow_clearance)
 	_ensure_portrait_host_sync(host)
-	_sync_portrait_in_host(host)
 	var held: WeaponData = null
 	if enemy_unit_data != null:
 		if enemy_unit_data.show_held_weapon:
@@ -251,6 +252,9 @@ func mount_portrait(
 	if held != null:
 		appearance.mount_weapon_appearance(held)
 	appearance.play_idle(true)
+	_sync_portrait_in_host(host)
+	if bool(host.get_meta("_portrait_fit", false)):
+		_sync_portrait_in_host.call_deferred(host)
 	return appearance
 
 
@@ -276,12 +280,52 @@ static func _sync_portrait_in_host(host: Control) -> void:
 	for child in host.get_children():
 		if child is UnitAppearance:
 			var appearance := child as UnitAppearance
+			if host.has_meta("_portrait_base_scale"):
+				appearance.scale = host.get_meta("_portrait_base_scale")
 			var bottom_pad := 4.0
 			if shadow_clearance > 0.0:
 				# Feet-pivoted: origin at soles; shadow extends below +Y.
 				bottom_pad = maxf(shadow_clearance * absf(appearance.scale.y), 16.0)
 			var feet_y := host.size.y * y_factor - bottom_pad
 			appearance.position = Vector2(host.size.x * 0.5, feet_y)
+			if bool(host.get_meta("_portrait_fit", false)):
+				_fit_portrait_to_host(host, appearance)
+
+
+static func _fit_portrait_to_host(host: Control, appearance: UnitAppearance) -> void:
+	const PAD := 6.0
+	const IDLE_SLACK := 1.08
+	var local := appearance.visual_rect_local(true)
+	if local.size.x <= 1.0 or local.size.y <= 1.0:
+		return
+	var max_w := maxf(8.0, host.size.x - PAD * 2.0)
+	var max_h := maxf(8.0, host.size.y - PAD * 2.0)
+	var vis_w := local.size.x * absf(appearance.scale.x)
+	var vis_h := local.size.y * absf(appearance.scale.y) * IDLE_SLACK
+	var fit := minf(1.0, minf(max_w / vis_w, max_h / vis_h))
+	if fit < 1.0:
+		appearance.scale *= fit
+	var x0 := local.position.x * appearance.scale.x
+	var x1 := local.end.x * appearance.scale.x
+	var y0 := local.position.y * appearance.scale.y
+	var y1 := local.end.y * appearance.scale.y
+	var left_off := minf(x0, x1)
+	var right_off := maxf(x0, x1)
+	var top_off := minf(y0, y1)
+	var bot_off := maxf(y0, y1)
+	appearance.position = Vector2(
+		(host.size.x - (left_off + right_off)) * 0.5,
+		host.size.y - PAD - bot_off
+	)
+	var top := appearance.position.y + top_off
+	if top < PAD:
+		appearance.position.y += PAD - top
+	var left := appearance.position.x + left_off
+	if left < PAD:
+		appearance.position.x += PAD - left
+	var right := appearance.position.x + right_off
+	if right > host.size.x - PAD:
+		appearance.position.x -= right - (host.size.x - PAD)
 
 
 static func create(

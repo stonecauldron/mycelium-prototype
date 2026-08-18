@@ -4,7 +4,7 @@ extends Control
 signal offer_clicked(card: ShopOfferCard)
 signal lock_toggled(card: ShopOfferCard)
 
-const CARD_SIZE := Vector2(240, 360)
+const CARD_SIZE := Vector2(280, 420)
 const REROLL_PREVIEW_SCALE := 1.06
 const REROLL_PREVIEW_IN_SEC := 0.14
 const REROLL_PREVIEW_OUT_SEC := 0.1
@@ -173,6 +173,7 @@ func reset_compact_layout() -> void:
 	offset_right = CARD_SIZE.x
 	offset_bottom = CARD_SIZE.y
 	custom_minimum_size = CARD_SIZE
+	custom_maximum_size = CARD_SIZE
 	size = CARD_SIZE
 	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
@@ -182,6 +183,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	clip_contents = true
 	custom_minimum_size = CARD_SIZE
+	custom_maximum_size = CARD_SIZE
 	_set_children_mouse_filter_ignore(_content)
 	_lock_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	_lock_button.pressed.connect(_on_lock_pressed)
@@ -228,15 +230,13 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	if weapon != null:
 		var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
 		weapon_tip.setup(weapon, false, true)
-		DetailTooltipPopup.configure(weapon_tip)
-		return weapon_tip
+		return DetailTooltipPopup.configure(weapon_tip)
 	var spore := payload.get("spore") as SporeData
 	if spore == null:
 		return null
 	var tip: SporeDetailCard = _SPORE_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(spore, false, null, true)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

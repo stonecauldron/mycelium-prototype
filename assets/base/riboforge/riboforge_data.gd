@@ -2,7 +2,7 @@ class_name RiboforgeData
 extends Resource
 
 const SHOP_SLOT_COUNT := 4
-const STOCK_SLOT_COUNT := 5
+const STOCK_SLOT_COUNT := 4
 ## Bare fists: the unremovable fallback weapon for units with nothing equipped.
 const DEFAULT_WEAPON_PATH := "res://assets/weapons/bare_fists.tres"
 const SWORD_WEAPON_PATH := "res://assets/weapons/sword/sword.tres"

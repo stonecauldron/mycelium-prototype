@@ -1,9 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://cbiomasschip01"]
+[gd_scene format=3 uid="uid://dsqs8t51u2t41"]
 
 [ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="1_biomass"]
+[ext_resource type="Texture2D" uid="uid://b3j7ianjwcwe" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 9.png" id="1_wd0rh"]
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="2_figtree"]
-[ext_resource type="Texture2D" uid="uid://cyer2nxh2mtfq" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 8.png" id="tex_paper_chip_hud"]
-[ext_resource type="Texture2D" uid="uid://pmej1l8yxfyh" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 8.png" id="tex_paper_hud"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yrttq"]
+texture = ExtResource("1_wd0rh")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yrttq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wd0rh"]
 
 [sub_resource type="FontVariation" id="Font_biomass_amount"]
 base_font = ExtResource("2_figtree")
@@ -11,64 +17,47 @@ variation_opentype = {
 2003265652: 500
 }
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip_hud"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-texture = ExtResource("tex_paper_chip_hud")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
+[node name="PanelContainer" type="PanelContainer" unique_id=474878614]
+offset_right = 272.0
+offset_bottom = 97.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_yrttq")
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_paper_hud"]
-content_margin_left = 16.0
-content_margin_top = 10.0
-content_margin_right = 16.0
-content_margin_bottom = 12.0
-texture = ExtResource("tex_paper_hud")
-texture_margin_left = 28.976946
-texture_margin_top = 18.0
-texture_margin_right = 34.71798
-texture_margin_bottom = 18.0
-
-[node name="BiomassChip" type="HBoxContainer"]
+[node name="BiomassChip" type="HBoxContainer" parent="." unique_id=782247027]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_constants/separation = 0
 
-[node name="IconFrame" type="PanelContainer" parent="."]
+[node name="IconFrame" type="PanelContainer" parent="BiomassChip" unique_id=1102770493]
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBox_paper_chip_hud")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_yrttq")
 
-[node name="Icon" type="TextureRect" parent="IconFrame"]
+[node name="Icon" type="TextureRect" parent="BiomassChip/IconFrame" unique_id=744914500]
 layout_mode = 2
 texture = ExtResource("1_biomass")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="InfoFrame" type="PanelContainer" parent="."]
+[node name="InfoFrame" type="PanelContainer" parent="BiomassChip" unique_id=1370364344]
 custom_minimum_size = Vector2(176, 96)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBox_paper_hud")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_wd0rh")
 
-[node name="InfoVBox" type="VBoxContainer" parent="InfoFrame"]
+[node name="InfoVBox" type="VBoxContainer" parent="BiomassChip/InfoFrame" unique_id=48081572]
 layout_mode = 2
 theme_override_constants/separation = 2
 alignment = 1
 
-[node name="BiomassTitle" type="Label" parent="InfoFrame/InfoVBox"]
+[node name="BiomassTitle" type="Label" parent="BiomassChip/InfoFrame/InfoVBox" unique_id=1785992182]
 layout_mode = 2
 theme_override_fonts/font = SubResource("Font_biomass_amount")
 theme_override_font_sizes/font_size = 22
 text = "BIOMASS"
 
-[node name="BiomassAmount" type="Label" parent="InfoFrame/InfoVBox"]
+[node name="BiomassAmount" type="Label" parent="BiomassChip/InfoFrame/InfoVBox" unique_id=2042971913]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)

@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://carmyhpchip02"]
+
+[ext_resource type="Script" uid="uid://carmyhpchip01" path="res://assets/ui/army_hp_chip/army_hp_chip.gd" id="1_chip"]
+[ext_resource type="Texture2D" uid="uid://brpbgv5kgkh0x" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 1/paper 11.png" id="2_paper"]
+[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="3_font"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_panel"]
+texture = ExtResource("2_paper")
+
+[sub_resource type="FontVariation" id="Font_title"]
+base_font = ExtResource("3_font")
+variation_opentype = {
+2003265652: 500
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
+bg_color = Color(0.08, 0.1, 0.1, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_fill"]
+bg_color = Color(0.46769798, 0.59962183, 0.46769798, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="ArmyHpChip" type="PanelContainer"]
+offset_right = 396.0
+offset_bottom = 82.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_panel")
+script = ExtResource("1_chip")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="MarginContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_fonts/font = SubResource("Font_title")
+theme_override_font_sizes/font_size = 32
+text = "Your Troop"
+
+[node name="Bar" type="ProgressBar" parent="MarginContainer/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill")
+max_value = 1.0
+step = 1.0
+value = 1.0
+show_percentage = false
+
+[node name="Value" type="Label" parent="MarginContainer/VBox/Bar"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.75)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = SubResource("Font_title")
+theme_override_font_sizes/font_size = 24
+text = "0 / 0"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -33,7 +33,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.18, 0.36),
 "transitions": PackedFloat32Array(-2, -2, -2),
 "update": 0,
-"values": [Vector2(0, 7), Vector2(0, 5), Vector2(0, 7)]
+"values": [Vector2(0, 0), Vector2(0, -2), Vector2(0, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -69,5 +69,5 @@ polygon = PackedVector2Array(47.7, 0, 46.075, 3.841, 41.309, 7.42, 33.729, 10.49
 libraries/ = SubResource("AnimationLibrary_main")
 
 [node name="BodyShape" type="CollisionShape2D" parent="." unique_id=369607989]
-position = Vector2(-0.5, -54)
+position = Vector2(0, -52)
 shape = SubResource("RectangleShape2D_body")

@@ -1,21 +1,8 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://assets/base/pupation/school_training_detail_card.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
-[ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
-content_margin_left = 28.0
-content_margin_top = 24.0
-content_margin_right = 32.0
-content_margin_bottom = 28.0
-texture = ExtResource("tex_paper_dialog")
-texture_margin_left = 72.49772
-texture_margin_top = 162.69849
-texture_margin_right = 120.829544
-texture_margin_bottom = 154.10434
-expand_margin_top = 29.0
-expand_margin_bottom = 75.0
+[ext_resource type="StyleBox" uid="uid://cvsxo5ho127wu" path="res://assets/themes/paper/paper_tooltip_panel.tres" id="8_tooltip_panel"]
 
 [node name="SchoolTrainingDetailCard" type="Control"]
 custom_minimum_size = Vector2(280, 280)
@@ -32,7 +19,8 @@ anchors_preset = 0
 offset_right = 280.0
 offset_bottom = 280.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
+theme_type_variation = &"DetailTooltipPanel"
+theme_override_styles/panel = ExtResource("8_tooltip_panel")
 
 [node name="Margin" type="MarginContainer" parent="CardPanel"]
 layout_mode = 2

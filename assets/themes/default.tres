@@ -5,7 +5,10 @@
 [ext_resource type="StyleBox" uid="uid://bpapertitteal" path="res://assets/themes/paper/paper_button_pressed.tres" id="3_pressed"]
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="4_fredoka"]
 [ext_resource type="StyleBox" uid="uid://bpapertitmaro" path="res://assets/themes/paper/paper_button_disabled.tres" id="6_disabled"]
-[ext_resource type="Texture2D" uid="uid://c5w1uux00vgfn" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 2 border 10.png" id="tex_paper_banner"]
+[ext_resource type="FontFile" uid="uid://cwyplmcwdoujh" path="res://assets/fonts/SpicyRice-Regular.ttf" id="6_n83um"]
+[ext_resource type="Texture2D" uid="uid://r2jxi58t3ovw" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 3 6.png" id="7_c8sri"]
+[ext_resource type="StyleBox" uid="uid://cvsxo5ho127wu" path="res://assets/themes/paper/paper_tooltip_panel.tres" id="8_tooltip_panel"]
+[ext_resource type="Texture2D" uid="uid://81frowvo5wno" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 2 9.png" id="10_c8sri"]
 [ext_resource type="Texture2D" uid="uid://cyk0hronbwfxr" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square border 10.png" id="tex_paper_chip"]
 [ext_resource type="Texture2D" uid="uid://cyer2nxh2mtfq" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 8.png" id="tex_paper_chip_hud"]
 
@@ -34,21 +37,16 @@ variation_opentype = {
 }
 
 [sub_resource type="FontVariation" id="Font_fraunces_title"]
-base_font = ExtResource("4_fredoka")
+base_font = ExtResource("6_n83um")
 variation_opentype = {
 2003265652: 500
 }
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_paper_banner"]
-content_margin_left = 36.0
-content_margin_top = 10.0
-content_margin_right = 36.0
-content_margin_bottom = 14.0
-texture = ExtResource("tex_paper_banner")
-texture_margin_left = 52.0
-texture_margin_top = 22.0
-texture_margin_right = 52.0
-texture_margin_bottom = 24.0
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1a72m"]
+content_margin_left = 62.0
+texture = ExtResource("7_c8sri")
+texture_margin_left = 33.12203
+texture_margin_right = 64.37803
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip"]
 content_margin_left = 10.0
@@ -72,10 +70,18 @@ texture_margin_top = 24.0
 texture_margin_right = 24.0
 texture_margin_bottom = 24.0
 
-[sub_resource type="FontVariation" id="Font_fraunces_display"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n83um"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+texture = ExtResource("10_c8sri")
+
+[sub_resource type="FontVariation" id="FontVariation_5sra1"]
 base_font = ExtResource("4_fredoka")
 variation_opentype = {
-2003265652: 550
+2003072104: 100,
+2003265652: 500
 }
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tooltip_panel"]
@@ -128,6 +134,8 @@ DamageLabel/colors/font_outline_color = Color(0.1, 0.05, 0.05, 1)
 DamageLabel/constants/outline_size = 6
 DamageLabel/font_sizes/font_size = 31
 DamageLabel/fonts/font = SubResource("Font_figtree_button")
+DetailTooltipPanel/base_type = &"PanelContainer"
+DetailTooltipPanel/styles/panel = ExtResource("8_tooltip_panel")
 HBoxContainer/constants/separation = 16
 Label/colors/font_color = Color(0.95, 0.95, 0.95, 1)
 Label/font_sizes/font_size = 36
@@ -150,10 +158,10 @@ PageSubtitleLabel/colors/font_color = Color(0.32, 0.3, 0.26, 1)
 PageSubtitleLabel/font_sizes/font_size = 22
 PageSubtitleLabel/fonts/font = SubResource("Font_figtree_body")
 PageTitleLabel/base_type = &"Label"
-PageTitleLabel/colors/font_color = Color(0.18, 0.16, 0.14, 1)
+PageTitleLabel/colors/font_color = Color(0.92156863, 0.9098039, 0.87058824, 1)
 PageTitleLabel/font_sizes/font_size = 36
 PageTitleLabel/fonts/font = SubResource("Font_fraunces_title")
-PageTitleLabel/styles/normal = SubResource("StyleBox_paper_banner")
+PageTitleLabel/styles/normal = SubResource("StyleBoxTexture_1a72m")
 PanelInnerMargin/base_type = &"MarginContainer"
 PanelInnerMargin/constants/margin_bottom = 10
 PanelInnerMargin/constants/margin_left = 16
@@ -194,8 +202,9 @@ ScreenMargin/constants/margin_right = 16
 ScreenMargin/constants/margin_top = 12
 SectionTitleLabel/base_type = &"Label"
 SectionTitleLabel/colors/font_color = Color(0.95, 0.95, 0.95, 1)
-SectionTitleLabel/font_sizes/font_size = 28
+SectionTitleLabel/font_sizes/font_size = 32
 SectionTitleLabel/fonts/font = SubResource("Font_fraunces_title")
+SectionTitleLabel/styles/normal = SubResource("StyleBoxTexture_n83um")
 SectionVBox/base_type = &"VBoxContainer"
 SectionVBox/constants/separation = 16
 SlotMargin/base_type = &"MarginContainer"
@@ -210,7 +219,7 @@ StackVBox/constants/separation = 28
 SubtitleLabel/base_type = &"Label"
 SubtitleLabel/colors/font_color = Color(0.32, 0.3, 0.26, 1)
 SubtitleLabel/font_sizes/font_size = 30
-SubtitleLabel/fonts/font = SubResource("Font_fraunces_title")
+SubtitleLabel/fonts/font = SubResource("FontVariation_5sra1")
 SummaryEntryLabel/base_type = &"Label"
 SummaryEntryLabel/colors/font_color = Color(0.18, 0.16, 0.14, 1)
 SummaryEntryLabel/font_sizes/font_size = 40
@@ -226,6 +235,6 @@ TightVBox/constants/separation = 6
 TitleLabel/base_type = &"Label"
 TitleLabel/colors/font_color = Color(0.18, 0.16, 0.14, 1)
 TitleLabel/font_sizes/font_size = 80
-TitleLabel/fonts/font = SubResource("Font_fraunces_display")
+TitleLabel/fonts/font = ExtResource("6_n83um")
 TooltipPanel/styles/panel = SubResource("StyleBoxEmpty_tooltip_panel")
 VBoxContainer/constants/separation = 8

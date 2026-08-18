@@ -143,7 +143,7 @@ anchors_preset = 0
 offset_left = 800.0
 offset_top = 140.0
 offset_right = 1900.0
-offset_bottom = 660.0
+offset_bottom = 720.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="ShopMargin" type="MarginContainer" parent="ShopPanel" unique_id=878538866]

@@ -5,6 +5,8 @@ signal seal_chosen(seal: SealData)
 
 const _SEAL_CARD_SCENE := preload("res://assets/base/seals/seal_card.tscn")
 const _OFFER_COUNT := 3
+const _DIM_COLOR_RUN_START := Color(0.24705882, 0.3529412, 0.34901962, 1.0)
+const _DIM_COLOR_MID_RUN := Color(0.06, 0.12, 0.07, 0.62)
 
 var _offers: Array[SealData] = []
 var _selected: SealData = null
@@ -29,6 +31,7 @@ func _ready() -> void:
 	z_index = 100
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_dim.gui_input.connect(_on_dim_gui_input)
+	_dim.color = _DIM_COLOR_MID_RUN if _allow_reroll else _DIM_COLOR_RUN_START
 	_confirm_button.pressed.connect(_on_confirm_pressed)
 	_confirm_button.disabled = true
 	_reroll_button.pressed.connect(_on_reroll_pressed)

@@ -1,7 +1,7 @@
 class_name FertilizerCard
 extends PanelContainer
 
-const CARD_SIZE := Vector2(120, 100)
+const CARD_SIZE := Vector2(200, 100)
 const _FERTILIZER_CARD_SCENE := preload("res://assets/base/nursery/fertilizer_card/fertilizer_card.tscn")
 const _FERTILIZER_DETAIL_CARD_SCENE := preload(
 	"res://assets/base/nursery/fertilizer_detail_card/fertilizer_detail_card.tscn"
@@ -89,8 +89,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 		return null
 	var tip: FertilizerDetailCard = _FERTILIZER_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(fertilizer)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _apply_hover_y() -> void:

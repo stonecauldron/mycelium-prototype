@@ -61,7 +61,7 @@ var _can_afford_fresh_plant: bool = false
 var _base_modulate: Color = Color.WHITE
 var _fertilizer_chips: Array[StatChip] = []
 var _fertilizer_icon_atlas: AtlasTexture
-## Living SporeDetailCard from `_make_custom_tooltip` (engine keeps it open across drops).
+## Living SporeDetailCard on the overlay (kept open across fertilizer drops).
 var _active_detail_tip: SporeDetailCard = null
 var _egg_shake_tween: Tween
 var _egg_shake_imago: bool = false
@@ -360,10 +360,9 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 		return null
 	var tip: SporeDetailCard = _SPORE_DETAIL_CARD_SCENE.instantiate()
 	tip.setup(_plot.planted_spore, false, _plot)
-	DetailTooltipPopup.configure(tip)
 	_active_detail_tip = tip
 	tip.tree_exiting.connect(_on_active_detail_tip_exiting.bind(tip), CONNECT_ONE_SHOT)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _on_active_detail_tip_exiting(tip: SporeDetailCard) -> void:
@@ -379,7 +378,7 @@ func _sync_active_detail_tip() -> void:
 	if _plot == null or _plot.planted_spore == null:
 		return
 	_active_detail_tip.setup(_plot.planted_spore, false, _plot)
-	DetailTooltipPopup.configure(_active_detail_tip)
+	DetailTooltipPopup.relayout(_active_detail_tip)
 
 
 func _clear_fertilizer_chips() -> void:
@@ -536,8 +535,7 @@ func _make_fertilizer_detail_tip(
 		tip.setup_empty()
 	else:
 		tip.setup(fert, residue)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 func _make_mutation_detail_tip(mutation: MutationData) -> Object:
@@ -546,8 +544,7 @@ func _make_mutation_detail_tip(mutation: MutationData) -> Object:
 		tip.setup_empty()
 	else:
 		tip.setup(mutation)
-	DetailTooltipPopup.configure(tip)
-	return tip
+	return DetailTooltipPopup.configure(tip)
 
 
 

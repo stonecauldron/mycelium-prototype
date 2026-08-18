@@ -34,12 +34,24 @@ theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
 text = "Unit"
 horizontal_alignment = 1
 
-[node name="PortraitHost" type="Control" parent="Margin/VBox" unique_id=1183866462]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 130)
+[node name="Body" type="Control" parent="Margin/VBox" unique_id=1183866463]
+clip_contents = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="PortraitHost" type="Control" parent="Margin/VBox/Body" unique_id=1183866462]
+unique_name_in_owner = true
+clip_contents = false
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="WeaponLabel" type="Label" parent="Margin/VBox" unique_id=1536132161]
 unique_name_in_owner = true
@@ -50,16 +62,28 @@ theme_override_colors/font_color = Color(0.75, 0.78, 0.82, 1)
 text = "Weapon"
 horizontal_alignment = 1
 
-[node name="StatsRow" type="HBoxContainer" parent="Margin/VBox" unique_id=299043056]
-layout_mode = 2
-size_flags_horizontal = 4
+[node name="StatsRow" type="HBoxContainer" parent="Margin/VBox/Body" unique_id=299043056]
+z_index = 1
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -70.0
+offset_top = 0.0
+offset_right = 70.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="AtkChip" parent="Margin/VBox/StatsRow" unique_id=1355714170 instance=ExtResource("5_chip")]
+[node name="AtkChip" parent="Margin/VBox/Body/StatsRow" unique_id=1355714170 instance=ExtResource("5_chip")]
 unique_name_in_owner = true
 icon = ExtResource("3_sword")
 
-[node name="HpChip" parent="Margin/VBox/StatsRow" unique_id=1988214518 instance=ExtResource("5_chip")]
+[node name="HpChip" parent="Margin/VBox/Body/StatsRow" unique_id=1988214518 instance=ExtResource("5_chip")]
 unique_name_in_owner = true
 icon = ExtResource("4_hp")

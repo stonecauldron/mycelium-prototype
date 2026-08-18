@@ -1,8 +1,8 @@
 class_name PaperStyles
 extends RefCounted
 
-## Runtime paper boxes for selected cards and tooltips. Scene panels own
-## their StyleBoxTexture on the node so they can be edited in the inspector.
+## Runtime paper boxes for selected cards and tooltips. Detail-card and
+## tooltip panels use the `DetailTooltipPanel` theme type variation.
 
 const _TEX_CARD: Texture2D = preload(
 	"res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 01.png"
@@ -10,6 +10,7 @@ const _TEX_CARD: Texture2D = preload(
 const _TEX_CARD_SELECTED: Texture2D = preload(
 	"res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 32.png"
 )
+const _TOOLTIP_PANEL: StyleBox = preload("res://assets/themes/paper/paper_tooltip_panel.tres")
 
 const INK := Color(0.18, 0.16, 0.14, 1)
 const INK_MUTED := Color(0.32, 0.3, 0.26, 1)
@@ -24,7 +25,9 @@ static func apply_card(panel: PanelContainer, selected: bool = false) -> void:
 
 
 static func apply_tooltip(panel: PanelContainer) -> void:
-	panel.add_theme_stylebox_override("panel", _card_box())
+	panel.clip_contents = false
+	panel.theme_type_variation = &"DetailTooltipPanel"
+	panel.add_theme_stylebox_override("panel", _TOOLTIP_PANEL)
 
 
 static func _card_box() -> StyleBoxTexture:

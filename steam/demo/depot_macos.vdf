@@ -1,0 +1,13 @@
+"DepotBuild"
+{
+	"DepotID" "5112862"
+	"ContentRoot" "__CONTENT_ROOT__"
+	"FileMapping"
+	{
+		"LocalPath" "*"
+		"DepotPath" "."
+		"Recursive" "1"
+	}
+	"FileExclusion" "*.pdb"
+	"FileExclusion" ".DS_Store"
+}

@@ -1,0 +1,13 @@
+"AppBuild"
+{
+	"AppID" "5112860"
+	"Desc" "__DESC__"
+	"Preview" "0"
+	"SetLive" ""
+	"BuildOutput" "__BUILD_OUTPUT__"
+	"Depots"
+	{
+		"5112861" "depot_windows.vdf"
+		"5112862" "depot_macos.vdf"
+	}
+}

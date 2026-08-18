@@ -50,7 +50,7 @@ This uses Mesa `llvmpipe` software rendering — it works but is low-framerate, 
 
 Audio: no sound card exists, so ALSA `cannot find card '0'` errors print on launch and Godot falls back to the dummy audio driver. This is expected and harmless.
 
-Web build: `make build` exports the `Web` preset to `build/web/` (templates are installed); `make run` then serves it at `http://localhost:8060` via `python3 -m http.server`.
+Export: `make help` lists targets (`build-web`, `run-web`, `build-macos`, `run-macos`, `build-windows`, `upload-web`, `upload-steam`). Templates are installed. `upload-steam` publishes to Steam Demo 5112860 only.
 
 Tests/lint: none exist — there is no test framework (no GUT/gdUnit) and no configured linter/formatter. For parse errors, use IDE diagnostics (`ReadLints`). Do **not** use `godot --script some.gd --check-only`: that still loads autoloads/GDExtensions (GameAnalytics inits; `OS.has_feature("editor")` is false) and is not a cheap syntax check.
 

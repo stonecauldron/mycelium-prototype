@@ -166,3 +166,13 @@ The player's unkillable banner in battle (player-only; not a Unit).
 **Range class**:
 A unit's Melee, Mid, or Ranged role in battle.
 *Avoid*: formation, FormationLine (code)
+
+### Distribution
+
+**Steam App**:
+Auto Shrooms as the full Steam product (4963670).
+*Avoid*: using Steam App for the Demo SKU
+
+**Steam Demo**:
+The Steam Demo SKU of Auto Shrooms (5112860). A store listing, not a runtime/export flavor.
+*Avoid*: demo (as a build flavor — that distinction does not exist yet), treating 5112860 as the Steam App

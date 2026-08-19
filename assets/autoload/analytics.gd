@@ -19,6 +19,7 @@ const _ITEM_TYPES: Array[String] = [
 	"Training",
 	"Compost",
 	"Stock",
+	"Troop",
 ]
 
 var ga: Object = null

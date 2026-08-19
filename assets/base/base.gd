@@ -146,6 +146,8 @@ func _refresh_hud() -> void:
 	_biomass_amount.text = "%0*d kg" % [_BIOMASS_DIGITS, GameState.biomass.amount]
 	for track in _progress_tracks:
 		track.refresh()
+	if _colony_screen != null:
+		_colony_screen.refresh_unlock_affordability()
 
 
 func _wire_progress_tracks() -> void:

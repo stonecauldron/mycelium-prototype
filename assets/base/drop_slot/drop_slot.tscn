@@ -3,10 +3,20 @@
 [ext_resource type="Script" uid="uid://j7uul7mnjgul" path="res://assets/base/drop_slot/drop_slot.gd" id="1_slot"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://bcso3mrvnge4k" path="res://assets/base/background/floor_tile.png" id="3_floor"]
+[ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="4_biomass"]
+[ext_resource type="Texture2D" uid="uid://bm2sipndchcwt" path="res://assets/base/shop/padlock_locked.png" id="5_padlock"]
+[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="6_figtree"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
+[sub_resource type="FontVariation" id="Font_figtree_button"]
+base_font = ExtResource("6_figtree")
+variation_opentype = {
+2003265652: 600
+}
+
 [node name="DropSlot" type="PanelContainer" unique_id=539502589]
+clip_contents = false
 custom_minimum_size = Vector2(140, 200)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
@@ -18,6 +28,7 @@ mouse_filter = 2
 theme_type_variation = &"SlotMargin"
 
 [node name="Stack" type="Control" parent="Margin" unique_id=1422353067]
+clip_contents = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -65,3 +76,96 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="LockIcon" type="TextureRect" parent="Margin/Stack" unique_id=890000010]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -48.0
+offset_top = -128.0
+offset_right = 48.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+texture = ExtResource("5_padlock")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ActionSlot" type="Control" parent="Margin/Stack" unique_id=890000003]
+unique_name_in_owner = true
+visible = false
+clip_contents = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = 20.0
+offset_right = 24.0
+offset_bottom = 88.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="UnlockButton" type="Button" parent="Margin/Stack/ActionSlot" unique_id=890000011]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"PrimaryButton"
+
+[node name="UnlockMargin" type="MarginContainer" parent="Margin/Stack/ActionSlot/UnlockButton" unique_id=890000012]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
+
+[node name="UnlockContent" type="HBoxContainer" parent="Margin/Stack/ActionSlot/UnlockButton/UnlockMargin" unique_id=890000013]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="UnlockLabel" type="Label" parent="Margin/Stack/ActionSlot/UnlockButton/UnlockMargin/UnlockContent" unique_id=890000016]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
+theme_override_fonts/font = SubResource("Font_figtree_button")
+theme_override_font_sizes/font_size = 28
+text = "Unlock: "
+
+[node name="UnlockCostLabel" type="Label" parent="Margin/Stack/ActionSlot/UnlockButton/UnlockMargin/UnlockContent" unique_id=890000014]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
+theme_override_fonts/font = SubResource("Font_figtree_button")
+theme_override_font_sizes/font_size = 28
+text = "8"
+
+[node name="UnlockBiomassIcon" type="TextureRect" parent="Margin/Stack/ActionSlot/UnlockButton/UnlockMargin/UnlockContent" unique_id=890000015]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("4_biomass")
+expand_mode = 1
+stretch_mode = 5

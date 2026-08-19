@@ -160,7 +160,7 @@ anchor_right = 1.0
 offset_left = 12.0
 offset_top = 509.0
 offset_right = -20.0
-offset_bottom = 881.0
+offset_bottom = 849.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="SquadMargin" type="MarginContainer" parent="SquadPanel" unique_id=1251518974]

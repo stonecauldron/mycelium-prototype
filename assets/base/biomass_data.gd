@@ -18,6 +18,7 @@ const SHOP_REROLL_COST := 3
 const SCOUT_REROLL_COST := 3
 const SEAL_REROLL_COST := 15
 const PLOT_UNLOCK_BASE_COST := 4
+const SQUAD_SLOT_UNLOCK_COST := 8
 const STARTING_AMOUNT := 3
 
 @export var amount: int = STARTING_AMOUNT

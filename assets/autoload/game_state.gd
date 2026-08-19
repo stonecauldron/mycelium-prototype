@@ -44,6 +44,7 @@ var run_started: bool = false
 ## Debug (~): +100 biomass and unlock all base screens.
 func activate_debug_cheats() -> void:
 	biomass.add(100)
+	troop.unlock_all_squad_slots()
 	debug_mode_active = true
 	debug_cheats_applied.emit()
 
@@ -497,6 +498,19 @@ func try_unlock_plot() -> bool:
 		biomass.add(cost)
 		return false
 	Analytics.biomass_sink("Nursery", "Unlock", cost)
+	return true
+
+
+func try_unlock_squad_slot() -> bool:
+	if not troop.can_unlock_squad_slot():
+		return false
+	var cost := troop.next_squad_unlock_cost()
+	if cost < 0 or not biomass.try_spend(cost):
+		return false
+	if not troop.unlock_next_squad_slot():
+		biomass.add(cost)
+		return false
+	Analytics.biomass_sink("Troop", "Unlock", cost)
 	return true
 
 

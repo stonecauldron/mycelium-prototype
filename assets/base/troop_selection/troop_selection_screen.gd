@@ -1,7 +1,6 @@
 class_name TroopSelectionScreen
 extends BaseScreen
 
-const SQUAD_SLOT_COUNT := TroopData.SQUAD_SLOT_COUNT
 const BENCH_SLOT_COUNT := TroopData.BENCH_SLOT_COUNT
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
@@ -22,6 +21,7 @@ var squad: Array = []
 @onready var _scout_bubble: ScoutBubble = %ScoutBubble
 
 var _squad_slots: Array[DropSlot] = []
+var _squad_unlock_slot: DropSlot = null
 var _bench_slots: Array[DropSlot] = []
 var _cocoon_slots: Array = []
 var _pupation_dialog: PupationConfirmDialog = null
@@ -47,6 +47,7 @@ func _ready() -> void:
 
 
 func on_screen_shown() -> void:
+	_ensure_squad_ui()
 	_sync_all_slots()
 	if _scout_bubble != null:
 		_scout_bubble.refresh()
@@ -76,17 +77,55 @@ func _set_bench_structure_mouse_ignore() -> void:
 	_bench_grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
+func _squad_visible_count() -> int:
+	var troop := GameState.troop
+	var count := troop.unlocked_squad_count
+	if troop.can_unlock_squad_slot():
+		count += 1
+	return count
+
+
+func _ensure_squad_ui() -> void:
+	var current := _squad_slots.size()
+	if _squad_unlock_slot != null and is_instance_valid(_squad_unlock_slot):
+		current += 1
+	if current != _squad_visible_count():
+		_build_squad_ui()
+		return
+	refresh_unlock_affordability()
+
+
+func refresh_unlock_affordability() -> void:
+	if _squad_unlock_slot == null or not is_instance_valid(_squad_unlock_slot):
+		return
+	if not _squad_unlock_slot.is_unlockable:
+		return
+	var cost := GameState.troop.next_squad_unlock_cost()
+	if cost < 0:
+		return
+	_squad_unlock_slot.setup_unlockable(cost)
+
+
 func _build_squad_ui() -> void:
 	for child in _squad_slot_row.get_children():
 		child.queue_free()
 	_squad_slots.clear()
+	_squad_unlock_slot = null
 
-	for i in SQUAD_SLOT_COUNT:
+	var troop := GameState.troop
+	for i in troop.unlocked_squad_count:
 		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		slot.slot_index = i
 		slot.unit_dropped.connect(_on_unit_dropped.bind("squad"))
 		_squad_slot_row.add_child(slot)
 		_squad_slots.append(slot)
+	if troop.can_unlock_squad_slot():
+		var unlock_slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
+		unlock_slot.slot_index = troop.unlocked_squad_count
+		unlock_slot.unlock_pressed.connect(_on_squad_unlock_pressed)
+		_squad_slot_row.add_child(unlock_slot)
+		unlock_slot.setup_unlockable(troop.next_squad_unlock_cost())
+		_squad_unlock_slot = unlock_slot
 
 
 func _build_bench_ui() -> void:
@@ -248,7 +287,7 @@ func _on_unit_card_clicked(card: UnitCard) -> void:
 		return
 
 	if card.source == "bench":
-		var dest := _first_empty(squad)
+		var dest := GameState.troop.first_empty_unlocked_squad()
 		if dest < 0:
 			return
 		_move_unit(unit, "bench", card.slot.slot_index if card.slot else -1, "squad", dest)
@@ -262,6 +301,8 @@ func _on_unit_card_clicked(card: UnitCard) -> void:
 
 
 func _on_unit_dropped(slot: DropSlot, drag_data: Dictionary, dest_source: String) -> void:
+	if slot == null or slot.is_unlockable:
+		return
 	var unit: RosterUnitData = drag_data.get("unit") as RosterUnitData
 	if unit == null:
 		return
@@ -283,6 +324,8 @@ func _move_unit(
 ) -> void:
 	var from_row := _row(from_source)
 	var to_row := _row(to_source)
+	if to_source == "squad" and not GameState.troop.is_squad_slot_unlocked(to_index):
+		return
 	if from_index < 0 or from_index >= from_row.size():
 		return
 	if to_index < 0 or to_index >= to_row.size():
@@ -313,6 +356,13 @@ func _bench_drop(_at_position: Vector2, data: Variant) -> void:
 	if unit == null or source_slot == null or dest < 0:
 		return
 	_move_unit(unit, "squad", source_slot.slot_index, "bench", dest)
+
+
+func _on_squad_unlock_pressed(_slot: DropSlot) -> void:
+	if GameState.try_unlock_squad_slot():
+		_build_squad_ui()
+		_sync_all_slots()
+		_refresh_base_hud()
 
 
 func _sync_all_slots() -> void:

@@ -107,10 +107,14 @@ The player's War Chamber roster as a whole (units on the squad and bench).
 *Avoid*: army (for the player side), formation (for the roster)
 
 **Squad**:
-The units in the troop that will fight the next battle.
+The units in the troop that will fight the next battle, occupying Squad slots.
+
+**Squad slot**:
+A fighting position in the Squad. Slots unlock in order from the flag. A locked slot cannot hold a Unit; unlocking one spends biomass. When every unlocked Squad slot is full, a new Unit goes to the Bench.
+*Avoid*: troop slot (when you mean a Squad position)
 
 **Bench**:
-The units in the troop held out of the fighting lineup.
+The units in the troop held out of the fighting lineup. Bench positions are available for the whole run — they are not Squad slots.
 
 **Child**:
 A unit that has not yet become an Adult through Training (or a starter package Adult).

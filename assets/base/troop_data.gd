@@ -3,14 +3,17 @@ extends Resource
 
 const SQUAD_SLOT_COUNT := 10
 const BENCH_SLOT_COUNT := 4
+const STARTING_UNLOCKED_SQUAD_SLOTS := 4
 
 @export var bench: Array = []
 @export var squad: Array = []
+@export var unlocked_squad_count: int = STARTING_UNLOCKED_SQUAD_SLOTS
 
 var _seeded: bool = false
 
 
 func _init() -> void:
+	unlocked_squad_count = STARTING_UNLOCKED_SQUAD_SLOTS
 	_ensure_squad_size()
 	_ensure_bench_size()
 
@@ -29,7 +32,7 @@ func seed_if_empty(starter_units: Array[RosterUnitData]) -> void:
 	for unit in starter_units:
 		if unit == null:
 			continue
-		if slot < squad.size():
+		if slot < unlocked_squad_count:
 			squad[slot] = unit
 			slot += 1
 		else:
@@ -39,16 +42,47 @@ func seed_if_empty(starter_units: Array[RosterUnitData]) -> void:
 	_seeded = true
 
 
+func is_squad_slot_unlocked(slot_index: int) -> bool:
+	return slot_index >= 0 and slot_index < unlocked_squad_count
+
+
+func can_unlock_squad_slot() -> bool:
+	return unlocked_squad_count < SQUAD_SLOT_COUNT
+
+
+func next_squad_unlock_cost() -> int:
+	if not can_unlock_squad_slot():
+		return -1
+	return BiomassData.SQUAD_SLOT_UNLOCK_COST
+
+
+func unlock_next_squad_slot() -> bool:
+	if not can_unlock_squad_slot():
+		return false
+	unlocked_squad_count += 1
+	_ensure_squad_size()
+	return true
+
+
+func unlock_all_squad_slots() -> void:
+	unlocked_squad_count = SQUAD_SLOT_COUNT
+	_ensure_squad_size()
+
+
+func first_empty_unlocked_squad() -> int:
+	return _first_empty_unlocked_squad()
+
+
 func has_free_slot() -> bool:
-	return _first_empty(squad) >= 0 or _first_empty(bench) >= 0
+	return _first_empty_unlocked_squad() >= 0 or _first_empty(bench) >= 0
 
 
-## Places unit in the first empty squad slot, or the bench if squad is full.
+## Places unit in the first empty unlocked squad slot, or the bench if those are full.
 ## Returns "squad", "bench", or "" if there is no free slot.
 func try_add_unit(unit: RosterUnitData) -> String:
 	if unit == null:
 		return ""
-	var squad_slot := _first_empty(squad)
+	var squad_slot := _first_empty_unlocked_squad()
 	if squad_slot >= 0:
 		squad[squad_slot] = unit
 		return "squad"
@@ -155,9 +189,18 @@ func _iter_living_units() -> Array[RosterUnitData]:
 func reset() -> void:
 	bench.clear()
 	squad.clear()
+	unlocked_squad_count = STARTING_UNLOCKED_SQUAD_SLOTS
 	_seeded = false
 	_ensure_squad_size()
 	_ensure_bench_size()
+
+
+func _first_empty_unlocked_squad() -> int:
+	_ensure_squad_size()
+	for i in unlocked_squad_count:
+		if i < squad.size() and squad[i] == null:
+			return i
+	return -1
 
 
 func _first_empty(row: Array) -> int:
@@ -168,6 +211,7 @@ func _first_empty(row: Array) -> int:
 
 
 func _ensure_squad_size() -> void:
+	unlocked_squad_count = clampi(unlocked_squad_count, 0, SQUAD_SLOT_COUNT)
 	_ensure_size(squad, SQUAD_SLOT_COUNT)
 
 

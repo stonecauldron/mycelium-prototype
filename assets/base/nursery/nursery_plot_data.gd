@@ -65,8 +65,11 @@ func filled_mutation() -> MutationData:
 	return cap_mutation
 
 
-## Mutations apply on empty or planted plots. At capacity, only same-slot replace is allowed.
+## Mutations apply on empty or growing plots. At capacity, only same-slot replace is allowed.
 func can_apply_mutation(mutation: MutationData = null) -> bool:
+	var state := get_state()
+	if state != State.EMPTY and state != State.GROWING:
+		return false
 	var max_slots := SealModifiers.max_mutation_slots()
 	if mutation == null:
 		return mutation_count() < max_slots

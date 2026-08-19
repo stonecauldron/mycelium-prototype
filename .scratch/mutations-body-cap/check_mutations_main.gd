@@ -63,15 +63,15 @@ func _run() -> void:
 	if plot.cap_mutation != wall:
 		errs.append("replace did not consume prior cap")
 
-	# READY plots still accept mutations (duration Fertilizers cannot apply once READY).
+	# READY plots reject mutations (same as duration Fertilizers).
 	var ready_plot := NurseryPlotData.new()
 	ready_plot.planted_spore = nursery.make_fresh_common_spore()
 	ready_plot.begin_planted_grow()
 	ready_plot.remaining_time = 0
 	if ready_plot.get_state() != NurseryPlotData.State.READY:
 		errs.append("remaining 0 should be READY")
-	elif not ready_plot.apply_mutation(boom):
-		errs.append("READY plot should still accept mutation")
+	elif ready_plot.can_apply_mutation(boom) or ready_plot.apply_mutation(boom):
+		errs.append("READY plot should reject mutation")
 
 	plot.remaining_time = 0
 	var units := nursery.harvest(0)

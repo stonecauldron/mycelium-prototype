@@ -1,6 +1,6 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://d03ytslse8ani"]
 
-[ext_resource type="Script" path="res://assets/title/title.gd" id="1_title"]
+[ext_resource type="Script" uid="uid://ct4bgro45wopc" path="res://assets/title/title.gd" id="1_title"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://cnxfhca438svu" path="res://assets/base/background/background.png" id="3_bg_far"]
 [ext_resource type="Texture2D" uid="uid://brnicc8ghj3md" path="res://assets/base/background/upper_foreground.png" id="4_bg_upper"]
@@ -20,7 +20,7 @@ texture_margin_bottom = 154.10434
 expand_margin_top = 29.0
 expand_margin_bottom = 75.0
 
-[node name="Title" type="Control"]
+[node name="Title" type="Control" unique_id=1668404851]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,7 +30,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_title")
 
-[node name="Backdrop" type="Control" parent="."]
+[node name="Backdrop" type="Control" parent="." unique_id=1138216180]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,7 +39,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="FarBackground" type="TextureRect" parent="Backdrop"]
+[node name="FarBackground" type="TextureRect" parent="Backdrop" unique_id=630990895]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -50,7 +50,7 @@ mouse_filter = 2
 texture = ExtResource("3_bg_far")
 expand_mode = 1
 
-[node name="UpperForeground" type="TextureRect" parent="Backdrop"]
+[node name="UpperForeground" type="TextureRect" parent="Backdrop" unique_id=339173299]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -61,7 +61,7 @@ mouse_filter = 2
 texture = ExtResource("4_bg_upper")
 expand_mode = 1
 
-[node name="LowerForeground" type="TextureRect" parent="Backdrop"]
+[node name="LowerForeground" type="TextureRect" parent="Backdrop" unique_id=1635380922]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -73,7 +73,7 @@ texture = ExtResource("5_bg_lower")
 expand_mode = 1
 flip_h = true
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=1012023005]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -81,22 +81,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Center"]
+[node name="Panel" type="PanelContainer" parent="Center" unique_id=814831916]
 custom_minimum_size = Vector2(760, 440)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
 
-[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
+[node name="VBox" type="VBoxContainer" parent="Center/Panel" unique_id=1259010697]
 layout_mode = 2
 theme_type_variation = &"StackVBox"
 
-[node name="Title" type="Label" parent="Center/Panel/VBox"]
+[node name="Title" type="Label" parent="Center/Panel/VBox" unique_id=1613745369]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 text = "Auto Shrooms"
 horizontal_alignment = 1
 
-[node name="NewRunButton" type="Button" parent="Center/Panel/VBox"]
+[node name="NewRunButton" type="Button" parent="Center/Panel/VBox" unique_id=1851191668]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
@@ -104,7 +104,7 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "New Run"
 
-[node name="WishlistButton" type="Button" parent="Center/Panel/VBox"]
+[node name="WishlistButton" type="Button" parent="Center/Panel/VBox" unique_id=573247743]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
@@ -112,7 +112,7 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Wishlist on Steam"
 
-[node name="QuitButton" type="Button" parent="Center/Panel/VBox"]
+[node name="QuitButton" type="Button" parent="Center/Panel/VBox" unique_id=685982543]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2

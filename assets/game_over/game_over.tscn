@@ -90,7 +90,7 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Wishlist on Steam"
 
-[node name="BackToTitleButton" type="Button" parent="Center/Panel/VBox"]
+[node name="BackToTitleButton" type="Button" parent="Center/Panel/VBox" unique_id=1303348089]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2

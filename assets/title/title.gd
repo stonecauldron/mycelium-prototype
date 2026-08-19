@@ -23,5 +23,4 @@ func _on_wishlist_pressed() -> void:
 
 
 func _on_quit_pressed() -> void:
-	Analytics.intent("quit", "title")
-	get_tree().quit()
+	Analytics.request_quit("title")

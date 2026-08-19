@@ -1,8 +1,10 @@
 extends Node
 
 ## GameAnalytics wrapper. Event names are the ADR-0009 dashboard contract.
-## Sessions (app open/close, retention) are automatic after init. Editor builds
-## never init. Manual events are dropped while debug cheats are active.
+## Sessions (app open/close, retention) are automatic after init. Editor and
+## desktop (macOS / Windows) never init — GA 3.1 OnQuit SIGTRAPs in the native
+## GDExtension on Godot 4.7. Web still inits. Manual events are dropped while
+## debug cheats are active.
 
 const GAME_KEY := "dfd8028a3c14a8354ddc1bc19f09bdc9"
 const SECRET_KEY := "62e546a11c4f887ded9f5ee69e3441c0531d7b19"
@@ -23,10 +25,11 @@ var ga: Object = null
 
 var _day_started: int = -1
 var _hit_biomass: int = 0
+var _shutting_down: bool = false
 
 
 func _ready() -> void:
-	if OS.has_feature("editor"):
+	if OS.has_feature("editor") or not OS.has_feature("web"):
 		return
 	if not Engine.has_singleton("GameAnalytics"):
 		push_warning("GameAnalytics plugin is not enabled")
@@ -161,7 +164,18 @@ func slug(text: String) -> String:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		intent("quit", intent_scene())
+		request_quit()
+
+
+func request_quit(scene: String = "") -> void:
+	if _shutting_down:
+		return
+	_shutting_down = true
+	var where := scene if not scene.is_empty() else intent_scene()
+	intent("quit", where)
+	var tree := get_tree()
+	if tree != null:
+		tree.quit()
 
 
 func _can_send() -> bool:

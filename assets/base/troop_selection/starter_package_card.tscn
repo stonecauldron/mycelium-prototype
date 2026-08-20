@@ -67,6 +67,7 @@ mouse_filter = 2
 [node name="Spacer" type="Control" parent="Panel/Margin/VBox/UnitBlock" unique_id=324825879]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="WeaponNameLabel" type="Label" parent="Panel/Margin/VBox/UnitBlock" unique_id=860552287]
 unique_name_in_owner = true

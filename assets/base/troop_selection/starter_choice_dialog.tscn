@@ -71,6 +71,7 @@ theme_override_constants/separation = 14
 [node name="spacer" type="Control" parent="Center/Panel/Margin/VBox" unique_id=1419272588]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="HeaderTitle" type="Label" parent="Center/Panel/Margin/VBox/spacer" unique_id=927626405]
 layout_mode = 1

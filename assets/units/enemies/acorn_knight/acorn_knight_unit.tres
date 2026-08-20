@@ -11,7 +11,7 @@
 script = ExtResource("2_combat")
 engagement_stance = 5
 base_damage = 6
-attack_interval = 2.0
+attack_interval = 1.75
 knockback_force = 400.0
 melee_range = 120.0
 
@@ -20,7 +20,6 @@ script = ExtResource("2_stats")
 strength = 8
 dex = 6
 con = 7
-spd = 6
 
 [resource]
 script = ExtResource("1_data")

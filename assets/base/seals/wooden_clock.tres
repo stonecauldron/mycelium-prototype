@@ -7,6 +7,6 @@
 script = ExtResource("1_seal")
 id = &"wooden_clock"
 display_name = "Wooden Clock"
-description = "All your units have +2 SPD"
+description = "All your units attack 20% faster"
 icon = ExtResource("2_icon")
-spd_flat = 2
+attack_rate_multiplier = 1.2

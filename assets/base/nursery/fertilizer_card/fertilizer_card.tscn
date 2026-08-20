@@ -67,6 +67,6 @@ custom_minimum_size = Vector2(184, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"CardNameLabel"
-text = "+2 CON / -2 SPD"
+text = "+2 CON / -2 DEX"
 horizontal_alignment = 1
 autowrap_mode = 3

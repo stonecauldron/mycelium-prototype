@@ -17,12 +17,6 @@ func _grant_sacrifice_bonus(unit: Unit) -> void:
 		return
 	var roster_stats := unit.roster_data.stats
 	if roster_stats != null:
-		roster_stats.strength = clampi(roster_stats.strength + 2, 1, 99)
-		roster_stats.dex = clampi(roster_stats.dex + 2, 1, 99)
-		roster_stats.con = clampi(roster_stats.con + 2, 1, 99)
-		roster_stats.spd = clampi(roster_stats.spd + 2, 1, 99)
+		roster_stats.add_all(2)
 	if unit.stats != null:
-		unit.stats.strength = clampi(unit.stats.strength + 2, 1, 99)
-		unit.stats.dex = clampi(unit.stats.dex + 2, 1, 99)
-		unit.stats.con = clampi(unit.stats.con + 2, 1, 99)
-		unit.stats.spd = clampi(unit.stats.spd + 2, 1, 99)
+		unit.stats.add_all(2)

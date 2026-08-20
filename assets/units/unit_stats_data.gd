@@ -41,7 +41,6 @@ const TIER_LABELS := {
 @export_range(1, 99, 1) var strength: int = NEUTRAL_STAT
 @export_range(1, 99, 1) var dex: int = NEUTRAL_STAT
 @export_range(1, 99, 1) var con: int = NEUTRAL_STAT
-@export_range(1, 99, 1) var spd: int = NEUTRAL_STAT
 
 
 static func tint_for_tier(tier: PowerTier) -> Color:
@@ -85,7 +84,6 @@ static func create_for_tier(tier: PowerTier, rng: RandomNumberGenerator = null) 
 	stats.strength = generator.randi_range(stat_range.x, stat_range.y)
 	stats.dex = generator.randi_range(stat_range.x, stat_range.y)
 	stats.con = generator.randi_range(stat_range.x, stat_range.y)
-	stats.spd = generator.randi_range(stat_range.x, stat_range.y)
 	return stats
 
 
@@ -97,7 +95,6 @@ static func average_for_tier(tier: PowerTier) -> UnitStatsData:
 	stats.strength = mid
 	stats.dex = mid
 	stats.con = mid
-	stats.spd = mid
 	return stats
 
 
@@ -114,18 +111,27 @@ static func create_around(
 	var base_str := NEUTRAL_STAT
 	var base_dex := NEUTRAL_STAT
 	var base_con := NEUTRAL_STAT
-	var base_spd := NEUTRAL_STAT
 	if mean != null:
 		base_str = mean.strength
 		base_dex = mean.dex
 		base_con = mean.con
-		base_spd = mean.spd
 	var v := maxi(variance, 0)
 	stats.strength = clampi(base_str + generator.randi_range(-v, v), 1, 99)
 	stats.dex = clampi(base_dex + generator.randi_range(-v, v), 1, 99)
 	stats.con = clampi(base_con + generator.randi_range(-v, v), 1, 99)
-	stats.spd = clampi(base_spd + generator.randi_range(-v, v), 1, 99)
 	return stats
+
+
+func add_all(delta: int) -> void:
+	strength = clampi(strength + delta, 1, 99)
+	dex = clampi(dex + delta, 1, 99)
+	con = clampi(con + delta, 1, 99)
+
+
+func scale_all(factor: float) -> void:
+	strength = maxi(1, roundi(float(strength) * factor))
+	dex = maxi(1, roundi(float(dex) * factor))
+	con = maxi(1, roundi(float(con) * factor))
 
 
 func get_max_hp() -> int:
@@ -142,11 +148,6 @@ func get_attack_stat(damage_stat: WeaponData.DamageStat) -> int:
 			return maxi(strength, dex)
 		_:
 			return NEUTRAL_STAT
-
-
-func get_speed_multiplier() -> float:
-	# Half weight vs linear spd/5 so attack rate doesn't spike as hard per point.
-	return 1.0 + (spd - NEUTRAL_STAT) / (float(NEUTRAL_STAT) * 2.0)
 
 
 func get_damage_bonus(damage_stat: WeaponData.DamageStat) -> int:

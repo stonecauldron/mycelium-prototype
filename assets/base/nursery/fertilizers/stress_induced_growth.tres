@@ -11,5 +11,4 @@ tint = Color(0.72, 0.55, 0.28, 1)
 strength_delta = -2
 dex_delta = -2
 con_delta = -2
-spd_delta = -2
 force_ready = true

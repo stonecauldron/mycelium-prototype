@@ -157,7 +157,6 @@ func advance_unit_ages() -> void:
 			unit.stats.strength = clampi(unit.stats.strength - decay, 1, 99)
 			unit.stats.dex = clampi(unit.stats.dex - decay, 1, 99)
 			unit.stats.con = clampi(unit.stats.con - decay, 1, 99)
-			unit.stats.spd = clampi(unit.stats.spd - decay, 1, 99)
 		unit.call_lifecycle_effect(&"on_day", [unit])
 		if unit.has_exceeded_life_expectancy():
 			aged_out.append(unit)

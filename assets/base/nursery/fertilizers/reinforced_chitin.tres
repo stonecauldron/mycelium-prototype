@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_fert")
 display_name = "Reinforced Chitin"
-short_description = "+4 CON / -2 SPD"
+short_description = "+4 CON / -2 DEX"
 biomass_cost = 2
 tint = Color(0.78, 0.62, 0.42, 1)
 con_delta = 4
-spd_delta = -2
+dex_delta = -2

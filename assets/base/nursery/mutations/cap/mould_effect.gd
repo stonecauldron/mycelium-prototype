@@ -28,10 +28,7 @@ func on_ally_composted(roster: Resource, composted: Resource) -> void:
 static func _grant_stack_bonus(unit: RosterUnitData) -> void:
 	if unit == null or unit.stats == null:
 		return
-	unit.stats.strength = clampi(unit.stats.strength + 1, 1, 99)
-	unit.stats.dex = clampi(unit.stats.dex + 1, 1, 99)
-	unit.stats.con = clampi(unit.stats.con + 1, 1, 99)
-	unit.stats.spd = clampi(unit.stats.spd + 1, 1, 99)
+	unit.stats.add_all(1)
 
 
 static func is_mould(roster: RosterUnitData) -> bool:

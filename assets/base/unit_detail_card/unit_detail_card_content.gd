@@ -30,7 +30,6 @@ var _fertilizer_icon: AtlasTexture = null
 @onready var _str_label: Label = %StrLabel
 @onready var _dex_label: Label = %DexLabel
 @onready var _con_label: Label = %ConLabel
-@onready var _spd_label: Label = %SpdLabel
 @onready var _fertilizers_label: Label = %FertilizersLabel
 @onready var _fertilizers_list: VBoxContainer = %FertilizersList
 @onready var _trainings_label: Label = %TrainingsLabel
@@ -102,14 +101,12 @@ func _refresh() -> void:
 		_str_label.text = "STR %d" % display_stats.strength
 		_dex_label.text = "DEX %d" % display_stats.dex
 		_con_label.text = "CON %d" % display_stats.con
-		_spd_label.text = "SPD %d" % SealModifiers.effective_spd(unit_data)
 	else:
 		_atk_chip.set_value("—")
 		_hp_chip.set_value("—")
 		_str_label.text = "STR —"
 		_dex_label.text = "DEX —"
 		_con_label.text = "CON —"
-		_spd_label.text = "SPD —"
 	_refresh_mutation_chip()
 	_refresh_fertilizers()
 	_refresh_trainings()

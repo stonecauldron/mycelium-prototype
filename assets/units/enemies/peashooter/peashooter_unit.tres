@@ -15,7 +15,7 @@ engagement_stance = 3
 attack_style = 2
 damage_stat = 1
 projectile_range = 1300.0
-attack_interval = 1.15
+attack_interval = 2.0
 skirmish_distance = 320.0
 knockback_force = 0.0
 projectile_scene = ExtResource("5_proj")
@@ -25,7 +25,6 @@ script = ExtResource("2_stats")
 strength = 2
 dex = 4
 con = 3
-spd = 3
 
 [resource]
 script = ExtResource("1_data")

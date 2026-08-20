@@ -16,7 +16,7 @@ attack_style = 1
 damage_stat = 2
 base_damage = 6
 projectile_range = 650.0
-attack_interval = 1.0
+attack_interval = 1.5
 skirmish_distance = 280.0
 knockback_force = 0.0
 melee_range = 200.0
@@ -27,7 +27,6 @@ script = ExtResource("2_stats")
 strength = 3
 dex = 3
 con = 3
-spd = 3
 
 [resource]
 script = ExtResource("1_data")

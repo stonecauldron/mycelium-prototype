@@ -15,4 +15,3 @@ tint = Color(0.21242, 0.38, 0.1748, 1)
 effect = SubResource("Effect")
 dex_delta = -2
 con_delta = -2
-spd_delta = -2

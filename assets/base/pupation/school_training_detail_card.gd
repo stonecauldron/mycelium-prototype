@@ -66,7 +66,7 @@ func _refresh_stat_lines() -> void:
 		_stats_box.remove_child(child)
 		child.queue_free()
 	var deltas := WeaponSchool.school_stat_deltas(school)
-	var keys: Array[String] = ["strength", "dex", "con", "spd"]
+	var keys: Array[String] = ["strength", "dex", "con"]
 	for key in keys:
 		var v := int(deltas.get(key, 0))
 		if v == 0:
@@ -79,8 +79,6 @@ func _refresh_stat_lines() -> void:
 				label_name = "DEX"
 			"con":
 				label_name = "CON"
-			"spd":
-				label_name = "SPD"
 		var line := Label.new()
 		line.text = "%+d %s" % [v, label_name]
 		line.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

@@ -49,14 +49,13 @@ icon = ExtResource("3_hp")
 chip_size = Vector2(72, 72)
 value_font_size = 30
 
-[node name="AttrGrid" type="GridContainer" parent="." unique_id=1213435885]
+[node name="AttrRow" type="HBoxContainer" parent="." unique_id=1213435885]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/h_separation = 14
-theme_override_constants/v_separation = 4
-columns = 2
+theme_override_constants/separation = 14
+alignment = 1
 
-[node name="StrLabel" type="Label" parent="AttrGrid" unique_id=1544468774]
+[node name="StrLabel" type="Label" parent="AttrRow" unique_id=1544468774]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
@@ -64,7 +63,7 @@ theme_override_font_sizes/font_size = 26
 text = "STR 0"
 horizontal_alignment = 1
 
-[node name="DexLabel" type="Label" parent="AttrGrid" unique_id=1102043459]
+[node name="DexLabel" type="Label" parent="AttrRow" unique_id=1102043459]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
@@ -72,20 +71,12 @@ theme_override_font_sizes/font_size = 26
 text = "DEX 0"
 horizontal_alignment = 1
 
-[node name="ConLabel" type="Label" parent="AttrGrid" unique_id=419154920]
+[node name="ConLabel" type="Label" parent="AttrRow" unique_id=419154920]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
 theme_override_font_sizes/font_size = 26
 text = "CON 0"
-horizontal_alignment = 1
-
-[node name="SpdLabel" type="Label" parent="AttrGrid" unique_id=1404537145]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 26
-text = "SPD 0"
 horizontal_alignment = 1
 
 [node name="TagMargin" type="MarginContainer" parent="." unique_id=1985380650]

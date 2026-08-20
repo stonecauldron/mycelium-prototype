@@ -75,7 +75,7 @@ A Fertilizer that kills the current grow on a Plot and leaves Extra nutrition fo
 *Avoid*: treating Fungicide as a Mutation; treating it as a stack occupant
 
 **Extra nutrition**:
-Flat +all-stats held on a Plot after Fungicide, consumed when the next Child is harvested from that Plot. It is not a Fertilizer stack occupant. While the Plot is empty, a Fungicide chip shows it; once a Spore is planted it shows in tooltips.
+A flat bonus to all three Stats (Strength, Dexterity, and Constitution) held on a Plot after Fungicide, consumed when the next Child is harvested from that Plot. It is not a Fertilizer stack occupant. While the Plot is empty, a Fungicide chip shows it; once a Spore is planted it shows in tooltips.
 *Avoid*: residue, pending stat bonus, Fungicide stack
 
 **Mutation**:
@@ -101,6 +101,19 @@ The player's held lineage spores, Fertilizers, Mutations, and similar items read
 **Unit**:
 One creature on the player's side — in the roster or in a battle.
 *Avoid*: fighter, mushroom (as a type name), troop (for a single creature)
+
+**Stat**:
+Strength, Dexterity, or Constitution on a Unit.
+*Avoid*: SPD; Speed (as a Stat); cadence; treating Attack interval as a Stat
+
+**Strength**:
+The Stat abbreviated STR.
+
+**Dexterity**:
+The Stat abbreviated DEX.
+
+**Constitution**:
+The Stat abbreviated CON.
 
 **Troop**:
 The player's War Chamber roster as a whole (units on the squad and bench).
@@ -151,6 +164,10 @@ Sword, Shield, Spear, or Bow — the fighting identity Training grants.
 
 **Weapon**:
 The equipped fighting tool that drives a unit's combat behavior.
+
+**Attack interval**:
+Seconds between attacks, authored on the Weapon for player Units and on each enemy type's combat profile. Shown as "Attacks every X secs". Seals and some Fertilizers can scale it; it is not a Stat.
+*Avoid*: cadence; SPD; Speed (as this label); treating Attack interval as a Stat
 
 **Combo weapon**:
 A weapon that comes from two weapon-school trainings on one Adult.

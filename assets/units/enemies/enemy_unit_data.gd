@@ -13,7 +13,7 @@ const STAT_VARIANCE := 1
 @export var held_weapon: WeaponData
 ## When false, skip WeaponMount art. Projectiles still use `combat.projectile_scene`.
 @export var show_held_weapon: bool = true
-## Authored average STR/DEX/CON/SPD. Instances roll ±STAT_VARIANCE via `make_stats()`.
+## Authored average STR/DEX/CON. Instances roll ±STAT_VARIANCE via `make_stats()`.
 @export var stats: UnitStatsData
 ## First day this type can appear in procedural armies (1-based).
 @export_range(1, 99, 1) var min_day: int = 1
@@ -46,19 +46,17 @@ func make_stats(rng: RandomNumberGenerator = null) -> UnitStatsData:
 		rolled.strength = _roll_stat(UnitStatsData.NEUTRAL_STAT, generator)
 		rolled.dex = _roll_stat(UnitStatsData.NEUTRAL_STAT, generator)
 		rolled.con = _roll_stat(UnitStatsData.NEUTRAL_STAT, generator)
-		rolled.spd = _roll_stat(UnitStatsData.NEUTRAL_STAT, generator)
 		return rolled
 	rolled.strength = _roll_stat(base.strength, generator)
 	rolled.dex = _roll_stat(base.dex, generator)
 	rolled.con = _roll_stat(base.con, generator)
-	rolled.spd = _roll_stat(base.spd, generator)
 	return rolled
 
 
 func average_stat_sum() -> int:
 	if stats == null:
-		return UnitStatsData.NEUTRAL_STAT * 4
-	return stats.strength + stats.dex + stats.con + stats.spd
+		return UnitStatsData.NEUTRAL_STAT * 3
+	return stats.strength + stats.dex + stats.con
 
 
 func call_effect(method_name: StringName, args: Array = []) -> void:

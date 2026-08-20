@@ -500,10 +500,7 @@ func _make_harvest_units(
 		stats = UnitStatsData.create_for_tier(tier)
 	_apply_fertilizer_stats(stats, fertilizers)
 	if pending_stat_bonus != 0:
-		stats.strength = clampi(stats.strength + pending_stat_bonus, 1, 99)
-		stats.dex = clampi(stats.dex + pending_stat_bonus, 1, 99)
-		stats.con = clampi(stats.con + pending_stat_bonus, 1, 99)
-		stats.spd = clampi(stats.spd + pending_stat_bonus, 1, 99)
+		stats.add_all(pending_stat_bonus)
 	if body_mutation != null:
 		body_mutation.apply_hatch_stats(stats)
 	if cap_mutation != null:
@@ -546,15 +543,9 @@ func _make_harvest_units(
 	for i in yield_count:
 		var unit_stats := stats.duplicate(true) as UnitStatsData
 		if meiosis:
-			unit_stats.strength = maxi(1, roundi(float(unit_stats.strength) * 0.5))
-			unit_stats.dex = maxi(1, roundi(float(unit_stats.dex) * 0.5))
-			unit_stats.con = maxi(1, roundi(float(unit_stats.con) * 0.5))
-			unit_stats.spd = maxi(1, roundi(float(unit_stats.spd) * 0.5))
+			unit_stats.scale_all(0.5)
 		if triploid:
-			unit_stats.strength = maxi(1, roundi(float(unit_stats.strength) / 3.0))
-			unit_stats.dex = maxi(1, roundi(float(unit_stats.dex) / 3.0))
-			unit_stats.con = maxi(1, roundi(float(unit_stats.con) / 3.0))
-			unit_stats.spd = maxi(1, roundi(float(unit_stats.spd) / 3.0))
+			unit_stats.scale_all(1.0 / 3.0)
 		var hatch_name := UnitNames.pick()
 		var hatch_generation := 1
 		var hatch_lineage := hatch_name
@@ -586,6 +577,7 @@ func _make_harvest_units(
 		unit.sync_weapon_from_trainings()
 		if force_amok:
 			unit.forced_engagement_stance = WeaponData.EngagementStance.PRESS_FORWARD
+			unit.attack_rate_multiplier = FertilizerData.AMOK_ATTACK_RATE
 		if stimulants:
 			unit.daily_stat_decay = 1
 		if late_bloomer:

@@ -16,6 +16,8 @@ enum Behavior {
 	VOLATILE,
 }
 
+const AMOK_ATTACK_RATE := 2.0
+
 @export var display_name: String = "Fertilizer"
 @export_multiline var short_description: String = ""
 @export var biomass_cost: int = 2
@@ -24,7 +26,6 @@ enum Behavior {
 @export var strength_delta: int = 0
 @export var dex_delta: int = 0
 @export var con_delta: int = 0
-@export var spd_delta: int = 0
 ## Days subtracted from Remaining Time when applied (or when planting onto a prepared plot).
 @export var growth_bonus: int = 0
 ## When true, set Remaining Time to 0 after apply / plant.
@@ -49,7 +50,6 @@ func apply_to(stats: UnitStatsData, scale_factor: int = 1) -> void:
 	stats.strength = clampi(stats.strength + strength_delta * factor, 1, 99)
 	stats.dex = clampi(stats.dex + dex_delta * factor, 1, 99)
 	stats.con = clampi(stats.con + con_delta * factor, 1, 99)
-	stats.spd = clampi(stats.spd + spd_delta * factor, 1, 99)
 
 
 func subtitle_text() -> String:

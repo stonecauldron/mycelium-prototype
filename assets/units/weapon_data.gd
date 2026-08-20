@@ -38,7 +38,7 @@ const MELEE_HITBOX_Y := -20.0
 @export var base_damage: int = 5
 ## Max throw/shot distance for PROJECTILE_THROW / BOW_SHOT (and HYBRID throw band).
 @export var projectile_range: float = 48.0
-## Seconds between attacks before SPD scaling. Lower = faster attacks.
+## Seconds between attacks. Lower = faster attacks.
 @export var attack_interval: float = 0.75
 ## SKIRMISH: kite when an enemy is this close.
 ## HYBRID: switch from throw to melee at this distance.

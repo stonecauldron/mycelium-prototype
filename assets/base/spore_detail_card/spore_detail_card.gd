@@ -167,10 +167,7 @@ func _apply_preview_plot_stat_modifiers(stats: UnitStatsData) -> void:
 			fert.apply_to(stats)
 	var pending := plot_data.pending_stat_bonus
 	if pending != 0:
-		stats.strength = clampi(stats.strength + pending, 1, 99)
-		stats.dex = clampi(stats.dex + pending, 1, 99)
-		stats.con = clampi(stats.con + pending, 1, 99)
-		stats.spd = clampi(stats.spd + pending, 1, 99)
+		stats.add_all(pending)
 
 
 ## Meiosis / Triploid scale one expected unit the same way harvest does per yield.
@@ -188,15 +185,9 @@ func _apply_preview_yield_stat_scale(stats: UnitStatsData) -> void:
 			FertilizerData.Behavior.TRIPLOID:
 				triploid = true
 	if meiosis:
-		stats.strength = maxi(1, roundi(float(stats.strength) * 0.5))
-		stats.dex = maxi(1, roundi(float(stats.dex) * 0.5))
-		stats.con = maxi(1, roundi(float(stats.con) * 0.5))
-		stats.spd = maxi(1, roundi(float(stats.spd) * 0.5))
+		stats.scale_all(0.5)
 	if triploid:
-		stats.strength = maxi(1, roundi(float(stats.strength) / 3.0))
-		stats.dex = maxi(1, roundi(float(stats.dex) / 3.0))
-		stats.con = maxi(1, roundi(float(stats.con) / 3.0))
-		stats.spd = maxi(1, roundi(float(stats.spd) / 3.0))
+		stats.scale_all(1.0 / 3.0)
 
 
 func _make_preview_unit() -> RosterUnitData:

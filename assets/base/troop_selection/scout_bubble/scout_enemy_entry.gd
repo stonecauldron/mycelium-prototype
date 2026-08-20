@@ -95,7 +95,7 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 
 	var speed_label := Label.new()
 	speed_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	speed_label.text = "Speed %s secs" % str(combat.attack_interval)
+	speed_label.text = "Attacks every %s secs" % str(combat.attack_interval)
 	speed_label.add_theme_color_override("font_color", PaperStyles.INK)
 	speed_label.add_theme_font_size_override("font_size", 24)
 	combat_row.add_child(speed_label)

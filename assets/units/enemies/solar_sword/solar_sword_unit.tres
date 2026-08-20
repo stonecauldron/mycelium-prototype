@@ -10,13 +10,13 @@
 [sub_resource type="Resource" id="Combat_solar_sword"]
 script = ExtResource("2_combat")
 engagement_stance = 1
+attack_interval = 1.5
 
 [sub_resource type="Resource" id="Stats_solar_sword"]
 script = ExtResource("2_stats")
 strength = 2
 dex = 2
 con = 2
-spd = 3
 
 [resource]
 script = ExtResource("1_data")

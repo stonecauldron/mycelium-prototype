@@ -14,12 +14,12 @@ outgoing_damage_multiplier = 0.5
 incoming_damage_multiplier = 0.25
 incoming_knockback_multiplier = 0.25
 blocks_charges = true
+attack_interval = 2.0
 
 [sub_resource type="Resource" id="Stats_stump"]
 script = ExtResource("2_stats")
 strength = 3
 dex = 2
-spd = 2
 
 [resource]
 script = ExtResource("1_data")

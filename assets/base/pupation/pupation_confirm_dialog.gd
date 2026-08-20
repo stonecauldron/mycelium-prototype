@@ -30,13 +30,11 @@ var _preview_unit: RosterUnitData
 @onready var _left_str: Label = %LeftStr
 @onready var _left_dex: Label = %LeftDex
 @onready var _left_con: Label = %LeftCon
-@onready var _left_spd: Label = %LeftSpd
 @onready var _duration_chip: StatChip = %DurationChip
 @onready var _duration_suffix: Label = %DurationSuffix
 @onready var _mid_str: Label = %MidStr
 @onready var _mid_dex: Label = %MidDex
 @onready var _mid_con: Label = %MidCon
-@onready var _mid_spd: Label = %MidSpd
 @onready var _right_portrait: Control = %RightPortrait
 @onready var _right_atk_chip: StatChip = %RightAtkChip
 @onready var _right_hp_chip: StatChip = %RightHpChip
@@ -47,7 +45,6 @@ var _preview_unit: RosterUnitData
 @onready var _right_str: Label = %RightStr
 @onready var _right_dex: Label = %RightDex
 @onready var _right_con: Label = %RightCon
-@onready var _right_spd: Label = %RightSpd
 @onready var _confirm_button: Button = %ConfirmButton
 
 
@@ -123,16 +120,13 @@ func _fill_current_side() -> void:
 		_left_str.text = "STR %d" % stats.strength
 		_left_dex.text = "DEX %d" % stats.dex
 		_left_con.text = "CON %d" % stats.con
-		_left_spd.text = "SPD %d" % SealModifiers.effective_spd(_unit)
 	else:
 		_left_str.text = "STR —"
 		_left_dex.text = "DEX —"
 		_left_con.text = "CON —"
-		_left_spd.text = "SPD —"
 	_left_str.add_theme_color_override("font_color", _COLOR_NEUTRAL)
 	_left_dex.add_theme_color_override("font_color", _COLOR_NEUTRAL)
 	_left_con.add_theme_color_override("font_color", _COLOR_NEUTRAL)
-	_left_spd.add_theme_color_override("font_color", _COLOR_NEUTRAL)
 
 
 func _fill_result_side() -> void:
@@ -177,19 +171,13 @@ func _fill_result_side() -> void:
 			_right_con, _mid_con, "CON", preview_stats.con,
 			int(deltas.get("con", 0)) * mult + adult_bonus
 		)
-		_apply_result_stat(
-			_right_spd, _mid_spd, "SPD", preview_stats.spd,
-			int(deltas.get("spd", 0)) * mult + adult_bonus
-		)
 	else:
 		_right_str.text = "STR —"
 		_right_dex.text = "DEX —"
 		_right_con.text = "CON —"
-		_right_spd.text = "SPD —"
 		_mid_str.text = ""
 		_mid_dex.text = ""
 		_mid_con.text = ""
-		_mid_spd.text = ""
 
 
 func _apply_result_stat(

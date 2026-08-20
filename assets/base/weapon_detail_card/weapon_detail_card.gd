@@ -87,7 +87,7 @@ func _refresh() -> void:
 	_desc_label.text = weapon_data.short_description
 	_desc_label.visible = not weapon_data.short_description.is_empty()
 	_dmg_label.text = "DMG %d" % weapon_data.base_damage
-	_speed_label.text = "Speed %s secs" % str(weapon_data.attack_interval)
+	_speed_label.text = "Attacks every %s secs" % str(weapon_data.attack_interval)
 	_range_tag.set_text(_range_label(weapon_data.formation_line))
 
 	_scaling_tag.set_text(

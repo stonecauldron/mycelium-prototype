@@ -11,10 +11,7 @@ func on_battle_start(unit: Node, _context: BattleStartContext = null) -> void:
 	var juveniles := count_troop_juveniles(u.roster_data)
 	if juveniles <= 0:
 		return
-	u.stats.strength = clampi(u.stats.strength + juveniles, 1, 99)
-	u.stats.dex = clampi(u.stats.dex + juveniles, 1, 99)
-	u.stats.con = clampi(u.stats.con + juveniles, 1, 99)
-	u.stats.spd = clampi(u.stats.spd + juveniles, 1, 99)
+	u.stats.add_all(juveniles)
 
 
 func get_stat_chip(roster: Resource) -> Dictionary:
@@ -62,10 +59,7 @@ static func hub_preview_stats(roster: RosterUnitData) -> UnitStatsData:
 	if bonus <= 0:
 		return roster.stats
 	var preview := roster.stats.duplicate(true) as UnitStatsData
-	preview.strength = clampi(preview.strength + bonus, 1, 99)
-	preview.dex = clampi(preview.dex + bonus, 1, 99)
-	preview.con = clampi(preview.con + bonus, 1, 99)
-	preview.spd = clampi(preview.spd + bonus, 1, 99)
+	preview.add_all(bonus)
 	return preview
 
 

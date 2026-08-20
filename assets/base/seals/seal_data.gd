@@ -36,7 +36,8 @@ enum UnitFilter {
 @export var melee_damage_flat: int = 0
 @export var ranged_damage_flat: int = 0
 @export var max_hp_flat: int = 0
-@export var spd_flat: int = 0
+## Multiplier on Attack interval rate per owned copy (1.0 = unused). Wooden Clock is 1.2.
+@export var attack_rate_multiplier: float = 1.0
 
 ## When true, first hatch of the day stamps favourite_child_buff on those units.
 @export var stamps_favourite_child: bool = false

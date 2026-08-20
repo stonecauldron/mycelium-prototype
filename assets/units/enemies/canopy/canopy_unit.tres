@@ -11,7 +11,7 @@
 script = ExtResource("2_combat")
 engagement_stance = 2
 base_damage = 2
-attack_interval = 1.0
+attack_interval = 1.5
 blocks_charges = true
 
 [sub_resource type="Resource" id="Stats_canopy"]

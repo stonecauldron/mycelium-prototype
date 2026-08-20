@@ -37,6 +37,8 @@ var last_death_biomass_yield: int = 0
 var emitted_death_spore: bool = false
 ## When set, overrides weapon engagement stance in combat (Amok fertiliser).
 @export var forced_engagement_stance: int = -1
+## Baked Attack interval rate (Amok fertiliser). 1.0 = authored interval.
+@export var attack_rate_multiplier: float = 1.0
 ## Zombie: true after this battle's one revive; cleared when the battle ends.
 @export var has_revived: bool = false
 ## Favourite Child seal: permanent 1.5x ATK/HP from first hatch of a day.
@@ -161,10 +163,7 @@ func _apply_pending_adult_stat_bonus() -> void:
 		return
 	var bonus := pending_adult_stat_bonus
 	pending_adult_stat_bonus = 0
-	stats.strength = clampi(stats.strength + bonus, 1, 99)
-	stats.dex = clampi(stats.dex + bonus, 1, 99)
-	stats.con = clampi(stats.con + bonus, 1, 99)
-	stats.spd = clampi(stats.spd + bonus, 1, 99)
+	stats.add_all(bonus)
 
 
 ## Cocoon wait in days. 0 or less means instant emerge on place.

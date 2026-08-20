@@ -26,12 +26,12 @@ const _HALBERD_PATH := "res://assets/weapons/halberd/halberd.tres"
 const _MORTAR_PATH := "res://assets/weapons/mortar/mortar.tres"
 const _SNIPER_PATH := "res://assets/weapons/sniper/sniper.tres"
 
-## school -> { strength, dex, con, spd }
+## school -> { strength, dex, con }
 const SCHOOL_STAT_DELTAS := {
-	0: {"strength": 3, "dex": -1, "con": 2, "spd": 0},
-	1: {"strength": 1, "dex": 0, "con": 4, "spd": -1},
-	2: {"strength": 1, "dex": 1, "con": 1, "spd": 2},
-	3: {"strength": 0, "dex": 3, "con": -1, "spd": 2},
+	0: {"strength": 3, "dex": -1, "con": 2},
+	1: {"strength": 1, "dex": -1, "con": 4},
+	2: {"strength": 2, "dex": 2, "con": 1},
+	3: {"strength": 0, "dex": 5, "con": -1},
 }
 
 const DISPLAY_NAMES := {
@@ -171,12 +171,11 @@ static func apply_school_stats(
 	stats.strength = clampi(stats.strength + int(deltas.get("strength", 0)) * m, 1, 99)
 	stats.dex = clampi(stats.dex + int(deltas.get("dex", 0)) * m, 1, 99)
 	stats.con = clampi(stats.con + int(deltas.get("con", 0)) * m, 1, 99)
-	stats.spd = clampi(stats.spd + int(deltas.get("spd", 0)) * m, 1, 99)
 
 
 static func school_stat_deltas(school: int) -> Dictionary:
 	return SCHOOL_STAT_DELTAS.get(school, {
-		"strength": 0, "dex": 0, "con": 0, "spd": 0
+		"strength": 0, "dex": 0, "con": 0
 	}) as Dictionary
 
 
@@ -186,7 +185,6 @@ static func scaled_school_deltas(school: int, generation: int = 1) -> Dictionary
 		"strength": scale_stat_delta(int(raw.get("strength", 0)), generation),
 		"dex": scale_stat_delta(int(raw.get("dex", 0)), generation),
 		"con": scale_stat_delta(int(raw.get("con", 0)), generation),
-		"spd": scale_stat_delta(int(raw.get("spd", 0)), generation),
 	}
 
 
@@ -213,7 +211,7 @@ static func school_stat_delta_text(
 	for key in deltas.keys():
 		deltas[key] = int(deltas[key]) * m
 	var parts: PackedStringArray = []
-	var keys: Array[String] = ["strength", "dex", "con", "spd"]
+	var keys: Array[String] = ["strength", "dex", "con"]
 	for key in keys:
 		var v := int(deltas.get(key, 0))
 		if v == 0:
@@ -226,8 +224,6 @@ static func school_stat_delta_text(
 				label = "DEX"
 			"con":
 				label = "CON"
-			"spd":
-				label = "SPD"
 		parts.append("%+d %s" % [v, label])
 	return "  ".join(parts)
 
@@ -267,7 +263,6 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 		preview_stats.strength = clampi(preview_stats.strength + adult_bonus, 1, 99)
 		preview_stats.dex = clampi(preview_stats.dex + adult_bonus, 1, 99)
 		preview_stats.con = clampi(preview_stats.con + adult_bonus, 1, 99)
-		preview_stats.spd = clampi(preview_stats.spd + adult_bonus, 1, 99)
 	var data := RosterUnitData.new()
 	data.display_name = unit.display_name
 	data.lineage_name = unit.lineage_name
@@ -286,6 +281,8 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 	data.pupation_stat_multiplier = unit.pupation_stat_multiplier
 	data.daily_stat_decay = unit.daily_stat_decay
 	data.pending_adult_stat_bonus = 0
+	data.forced_engagement_stance = unit.forced_engagement_stance
+	data.attack_rate_multiplier = unit.attack_rate_multiplier
 	if next_weapon != null:
 		data.combat = next_weapon.get_combat_profile()
 	return data

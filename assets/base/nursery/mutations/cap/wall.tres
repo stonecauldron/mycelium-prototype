@@ -16,4 +16,3 @@ effect = SubResource("Effect")
 strength_delta = -2
 dex_delta = -2
 con_delta = -2
-spd_delta = -2

@@ -84,14 +84,23 @@ static func wooden_heart_flat_hp() -> int:
 	return _sum_field(&"max_hp_flat")
 
 
-static func spd_flat() -> int:
-	return _sum_field(&"spd_flat")
-
-
-static func effective_spd(unit: RosterUnitData) -> int:
-	if unit == null or unit.stats == null:
-		return UnitStatsData.NEUTRAL_STAT
-	return clampi(unit.stats.spd + spd_flat(), 1, 99)
+static func attack_rate_multiplier() -> float:
+	var collection := _seals()
+	if collection == null:
+		return 1.0
+	var mult := 1.0
+	var seen: Dictionary = {}
+	for seal in collection.all_owned():
+		if seal == null or seal.id == &"":
+			continue
+		if seen.has(seal.id):
+			continue
+		seen[seal.id] = true
+		var factor := float(seal.attack_rate_multiplier)
+		if is_equal_approx(factor, 1.0):
+			continue
+		mult *= _pow_count(factor, collection.count(seal.id))
+	return mult
 
 
 static func wooden_melee_flat_damage() -> int:

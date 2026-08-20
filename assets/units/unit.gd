@@ -656,12 +656,11 @@ func _process_combat(delta: float) -> void:
 
 func _effective_attack_interval() -> float:
 	var interval := combat.attack_interval if combat != null else 0.75
-	var rate := 1.0
-	if stats != null:
-		var spd := stats.spd
-		if is_player_controlled() and roster_data != null:
-			spd = SealModifiers.effective_spd(roster_data)
-		rate = (spd / float(UnitStatsData.NEUTRAL_STAT)) * _attack_rate_multiplier * _status_attack_rate_mult()
+	var rate := _attack_rate_multiplier * _status_attack_rate_mult()
+	if roster_data != null:
+		rate *= roster_data.attack_rate_multiplier
+	if is_player_controlled():
+		rate *= SealModifiers.attack_rate_multiplier()
 	return interval / maxf(rate, 0.01)
 
 

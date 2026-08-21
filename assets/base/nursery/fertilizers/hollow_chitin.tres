@@ -1,12 +1,12 @@
-[gd_resource type="Resource" script_class="FertilizerData" format=3]
+[gd_resource type="Resource" script_class="FertilizerData" format=3 uid="uid://ds7wufpg3ebml"]
 
-[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+[ext_resource type="Script" uid="uid://d0mu0vimtxgur" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
 
 [resource]
 script = ExtResource("1_fert")
 display_name = "Hollow Chitin"
-short_description = "+4 DEX / -2 CON"
-biomass_cost = 2
+short_description = "+4 DEX
+-2 CON"
 tint = Color(0.55, 0.78, 0.95, 1)
-con_delta = -2
 dex_delta = 4
+con_delta = -2

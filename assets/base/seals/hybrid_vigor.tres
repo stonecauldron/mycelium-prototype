@@ -7,9 +7,9 @@
 script = ExtResource("1_seal")
 id = &"hybrid_vigor"
 display_name = "Hybrid Vigor"
-description = "Units with at least one mutation have 1.5x attack, 1.5x health"
+description = "Units with at least one mutation have 1.25x attack, 1.25x health"
 icon = ExtResource("2_icon")
 is_unique = true
-atk_multiplier = 1.5
-hp_multiplier = 1.5
+atk_multiplier = 1.25
+hp_multiplier = 1.25
 multiplier_filter = 6

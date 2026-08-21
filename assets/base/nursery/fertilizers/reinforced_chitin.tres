@@ -1,12 +1,12 @@
-[gd_resource type="Resource" script_class="FertilizerData" format=3]
+[gd_resource type="Resource" script_class="FertilizerData" format=3 uid="uid://dwcnygg5tcxev"]
 
-[ext_resource type="Script" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
+[ext_resource type="Script" uid="uid://d0mu0vimtxgur" path="res://assets/base/nursery/fertilizer_data.gd" id="1_fert"]
 
 [resource]
 script = ExtResource("1_fert")
 display_name = "Reinforced Chitin"
-short_description = "+4 CON / -2 DEX"
-biomass_cost = 2
+short_description = "+4 CON
+-2 DEX"
 tint = Color(0.78, 0.62, 0.42, 1)
-con_delta = 4
 dex_delta = -2
+con_delta = 4

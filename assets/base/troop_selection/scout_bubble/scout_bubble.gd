@@ -57,7 +57,9 @@ func show_specs(specs: Array[EnemyUnitSpec], title: String, day: int = -1) -> vo
 	if _scout_title != null:
 		_scout_title.text = title
 	var type_counts: Dictionary = {}
-	for spec in specs:
+	# Type rows face the player: Melee → Mid → Ranged (reverse of Home order).
+	for i in range(specs.size() - 1, -1, -1):
+		var spec: EnemyUnitSpec = specs[i]
 		if spec.unit_data == null:
 			continue
 		var key := spec.unit_data.resource_path

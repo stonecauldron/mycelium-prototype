@@ -175,11 +175,12 @@ A weapon that comes from two weapon-school trainings on one Adult.
 ### Battle sides
 
 **Enemy army**:
-The set of enemies for a battle, as previewed and optionally rerolled by Scout. Members are ordered by Range class, not by numeric attack reach.
+The set of enemies for a battle, as previewed and optionally rerolled by Scout. Ordered by Range class from rear to front: Ranged, then Mid, then Melee toward the player. Same Range class is shuffled. Not ordered by numeric attack reach.
 *Avoid*: formation (for the enemy side), troop (for enemies)
 
 **Scout**:
-The Base preview of the upcoming enemy army (with optional biomass-priced reroll when allowed).
+The Base preview of the upcoming enemy army (with optional biomass-priced reroll when allowed). Type order is the reverse of Enemy army Home order — Melee, then Mid, then Ranged — so it matches what the player faces.
+*Avoid*: treating Scout order as Home order
 
 **Flag bearer**:
 The player's unkillable banner in battle, and the origin of player Homes (player-only; not a Unit).

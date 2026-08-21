@@ -37,7 +37,8 @@ static func specs_for_day(day: int) -> Array[EnemyUnitSpec]:
 	var variants := _skill_check_variants(clamped)
 	if not variants.is_empty():
 		var pick := rng.randi() % variants.size()
-		return variants[pick]
+		var chosen: Array[EnemyUnitSpec] = variants[pick]
+		return _ordered_copy(chosen)
 	return _generate_from_curve(clamped, rng)
 
 
@@ -141,10 +142,11 @@ static func _reroll_candidates(
 		for variant in variants:
 			var specs: Array[EnemyUnitSpec] = variant
 			if not _specs_equal(specs, current_specs):
-				candidates.append(specs)
+				candidates.append(_ordered_copy(specs))
 		if candidates.is_empty():
 			for variant in variants:
-				candidates.append(variant)
+				var fallback: Array[EnemyUnitSpec] = variant
+				candidates.append(_ordered_copy(fallback))
 		return candidates
 	for _i in _REROLL_CANDIDATE_COUNT:
 		var sample_rng := RandomNumberGenerator.new()
@@ -190,7 +192,7 @@ static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[
 	for i in total:
 		var unit_data: EnemyUnitData = unit_slots[i]
 		specs.append(EnemyUnitSpec.make(unit_data))
-	return specs
+	return _order_by_range_class(specs)
 
 
 static func _enemy_pool() -> Array:
@@ -306,6 +308,43 @@ static func _shares_to_counts(shares: Array, total: int) -> Array[int]:
 	for i in remainder:
 		counts[order[i % order.size()]] += 1
 	return counts
+
+
+## Home order: Ranged (rear), Mid, Melee (toward the player). Shuffle within a Range class is kept.
+static func _ordered_copy(specs: Array[EnemyUnitSpec]) -> Array[EnemyUnitSpec]:
+	var copy: Array[EnemyUnitSpec] = []
+	copy.assign(specs)
+	return _order_by_range_class(copy)
+
+
+static func _order_by_range_class(specs: Array[EnemyUnitSpec]) -> Array[EnemyUnitSpec]:
+	var keyed: Array[Dictionary] = []
+	for i in specs.size():
+		keyed.append({"i": i, "spec": specs[i]})
+	keyed.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var key_a := _spec_range_sort_key(a["spec"])
+		var key_b := _spec_range_sort_key(b["spec"])
+		if key_a != key_b:
+			return key_a < key_b
+		return int(a["i"]) < int(b["i"])
+	)
+	for i in keyed.size():
+		specs[i] = keyed[i]["spec"]
+	return specs
+
+
+static func _spec_range_sort_key(spec: EnemyUnitSpec) -> int:
+	if spec == null or spec.unit_data == null:
+		return 99
+	match spec.unit_data.get_combat_profile().formation_line:
+		WeaponData.FormationLine.BACK:
+			return 0
+		WeaponData.FormationLine.MID:
+			return 1
+		WeaponData.FormationLine.FRONT:
+			return 2
+		_:
+			return 99
 
 
 static func _shuffle_array(values: Array, rng: RandomNumberGenerator) -> void:

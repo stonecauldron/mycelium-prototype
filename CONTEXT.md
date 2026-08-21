@@ -182,7 +182,11 @@ The set of enemies for a battle, as previewed and optionally rerolled by Scout.
 The Base preview of the upcoming enemy army (with optional biomass-priced reroll when allowed).
 
 **Flag bearer**:
-The player's unkillable banner in battle (player-only; not a Unit).
+The player's unkillable banner in battle, and the origin of player Homes (player-only; not a Unit).
+
+**Home**:
+A unit's rest position in battle, measured from the Flag bearer (player) or the enemy army's matching anchor, by Squad slot.
+*Avoid*: formation home, rally point
 
 **Range class**:
 A unit's Melee, Mid, or Ranged role in battle.

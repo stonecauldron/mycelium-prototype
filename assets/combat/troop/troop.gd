@@ -10,6 +10,8 @@ const FLAG_REAR_CLEARANCE := 100.0
 const HOME_SLOT_SPACING := 64.0
 ## Tighter packing for larger enemy armies.
 const ENEMY_HOME_SLOT_SPACING := 44.0
+## Distance from closest enemy center to the highest occupied slot's Home.
+const FRONT_HOME_CONTACT_PADDING := 48.0
 ## Tint for enemy-owned props (e.g. walls). Enemy units use authored colors.
 const ENEMY_TINT := Color(0.85, 0.25, 0.3, 1.0)
 
@@ -120,6 +122,15 @@ func get_frontmost_living_unit() -> Unit:
 	return frontmost
 
 
+## Highest Squad slot among living units (empty slots in between still count).
+func get_max_living_squad_index() -> int:
+	var max_index := 0
+	for unit in get_living_units():
+		if unit.squad_index > max_index:
+			max_index = unit.squad_index
+	return max_index
+
+
 func _anchor_formation_behind_rearmost(delta: float) -> void:
 	var rearmost := get_rearmost_living_unit()
 	if rearmost == null:
@@ -133,10 +144,36 @@ func _anchor_formation_behind_rearmost(delta: float) -> void:
 		+ rearmost.velocity.x * delta
 		- facing * FLAG_REAR_CLEARANCE
 	)
+	target_x = _cap_anchor_x_behind_enemy_front(target_x, delta)
 	if has_flag_bearer():
 		flag_bearer.follow_anchor_x(target_x, Unit.BASE_MOVE_SPEED, delta)
 	elif spawn_anchor != null:
 		spawn_anchor.global_position.x = target_x
+
+
+## One-sided forward cap: trail the rear, but do not advance past the X that
+## puts the front Home FRONT_HOME_CONTACT_PADDING from the closest enemy.
+## A passer behind the army does not yank the anchor backward.
+func _cap_anchor_x_behind_enemy_front(target_x: float, delta: float) -> float:
+	if _opponent == null:
+		return target_x
+	var closest := _opponent.get_frontmost_living_unit()
+	if closest == null:
+		return target_x
+	var facing := get_facing()
+	var standoff := (
+		FLAG_REAR_CLEARANCE
+		+ get_home_slot_spacing() * float(get_max_living_squad_index())
+		+ FRONT_HOME_CONTACT_PADDING
+	)
+	var cap_x := (
+		closest.global_position.x
+		+ closest.velocity.x * delta
+		- facing * standoff
+	)
+	if facing * (target_x - cap_x) > 0.0:
+		return cap_x
+	return target_x
 
 
 func _acquire_opponent() -> void:

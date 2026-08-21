@@ -10,11 +10,6 @@ static func apply(root: Control, card_panel: PanelContainer, width: float) -> vo
 		return
 	root.clip_contents = false
 	card_panel.clip_contents = false
-	root.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	root.anchor_right = root.anchor_left
-	root.anchor_bottom = root.anchor_top
-	root.offset_left = 0.0
-	root.offset_top = 0.0
 
 	card_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	card_panel.anchor_right = card_panel.anchor_left
@@ -35,7 +30,16 @@ static func apply(root: Control, card_panel: PanelContainer, width: float) -> vo
 
 	root.custom_minimum_size = fitted
 	root.size = fitted
-	root.offset_right = fitted.x
-	root.offset_bottom = fitted.y
 	root.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	root.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	# HBox/VBox dual tips own the root rect. Pinning top-left anchors here
+	# takes the card out of container flow and stacks both cards at (0, 0).
+	if root.get_parent() is Container:
+		return
+	root.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	root.anchor_right = root.anchor_left
+	root.anchor_bottom = root.anchor_top
+	root.offset_left = 0.0
+	root.offset_top = 0.0
+	root.offset_right = fitted.x
+	root.offset_bottom = fitted.y

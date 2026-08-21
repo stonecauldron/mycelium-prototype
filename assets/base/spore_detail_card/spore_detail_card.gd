@@ -147,12 +147,6 @@ func _preview_average_stats() -> UnitStatsData:
 	else:
 		stats = UnitStatsData.average_for_tier(spore_data.power_tier)
 	_apply_preview_plot_stat_modifiers(stats)
-	var body := _preview_body_mutation()
-	var cap := _preview_cap_mutation()
-	if body != null:
-		body.apply_hatch_stats(stats)
-	if cap != null:
-		cap.apply_hatch_stats(stats)
 	_apply_preview_yield_stat_scale(stats)
 	return stats
 

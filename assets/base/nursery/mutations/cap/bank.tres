@@ -13,6 +13,3 @@ short_description = "+10 biomass upon battle start. Cashes out upon death."
 slot = 1
 tint = Color(0.84978473, 0.4587953, 0.6893629, 1)
 effect = SubResource("Effect")
-strength_delta = -1
-dex_delta = -1
-con_delta = -1

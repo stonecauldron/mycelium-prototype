@@ -79,8 +79,8 @@ A flat bonus to all three Stats (Strength, Dexterity, and Constitution) held on 
 *Avoid*: residue, pending stat bonus, Fungicide stack
 
 **Mutation**:
-An identity modifier applied in the Nursery on a plot (including empty dirt). Plots and harvested units hold at most one Mutation for now — Body **or** Cap (typed fields remain; the other stays empty). Same-slot replace consumes the previous Mutation. Dual Body+Cap remix is deferred.
-*Avoid*: Fertilizer (when you mean identity), trait, strain effect (as the item type)
+An identity modifier applied in the Nursery on a plot (including empty dirt). It does not change hatch Stats. Plots and harvested units hold at most one Mutation for now — Body **or** Cap (typed fields remain; the other stays empty). Same-slot replace consumes the previous Mutation. Dual Body+Cap remix is deferred.
+*Avoid*: Fertilizer (when you mean identity), treating Mutation as a Stat source, trait, strain effect (as the item type)
 
 **Body mutation**:
 The Mutation slot that sets body-led identity and tints the shared body layer (no silhouette scale). Singular. (Includes forms such as Fat, Rubber, Zombie, Thorny.)
@@ -175,7 +175,7 @@ A weapon that comes from two weapon-school trainings on one Adult.
 ### Battle sides
 
 **Enemy army**:
-The set of enemies for a battle, as previewed and optionally rerolled by Scout.
+The set of enemies for a battle, as previewed and optionally rerolled by Scout. Members are ordered by Range class, not by numeric attack reach.
 *Avoid*: formation (for the enemy side), troop (for enemies)
 
 **Scout**:

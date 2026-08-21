@@ -501,10 +501,6 @@ func _make_harvest_units(
 	_apply_fertilizer_stats(stats, fertilizers)
 	if pending_stat_bonus != 0:
 		stats.add_all(pending_stat_bonus)
-	if body_mutation != null:
-		body_mutation.apply_hatch_stats(stats)
-	if cap_mutation != null:
-		cap_mutation.apply_hatch_stats(stats)
 
 	var yield_count := 1
 	var meiosis := false

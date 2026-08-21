@@ -188,8 +188,6 @@ func _check_lineage_and_plant_merge(errs: Array[String]) -> void:
 	adult.stats.dex = 10
 	adult.stats.con = 10
 	adult.stats.spd = 10
-	boom.apply_hatch_stats(adult.stats)
-	var live_str := adult.stats.strength
 
 	var nursery := NurseryData.new()
 	nursery.seed_if_empty()
@@ -206,8 +204,7 @@ func _check_lineage_and_plant_merge(errs: Array[String]) -> void:
 		errs.append("lineage lost mean stats")
 	elif spore.mean_stats.strength != 10:
 		errs.append(
-			"mean_stats should strip mutation hatch deltas (got STR %d, live was %d)"
-			% [spore.mean_stats.strength, live_str]
+			"mean_stats should copy live stats (got STR %d)" % spore.mean_stats.strength
 		)
 	if spore.weapon_trainings.size() != 1:
 		errs.append("lineage lost trainings")

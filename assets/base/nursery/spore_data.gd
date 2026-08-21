@@ -74,12 +74,6 @@ static func from_fallen_unit(unit: RosterUnitData) -> SporeData:
 	spore.power_tier = unit.power_tier
 	if unit.stats != null:
 		spore.mean_stats = unit.stats.duplicate(true) as UnitStatsData
-		# Strip identity hatch deltas from mean stats so harvest (and Stock remix)
-		# can apply the spore's current Body/Cap once — not stack every generation.
-		if unit.body_mutation != null:
-			unit.body_mutation.strip_hatch_stats(spore.mean_stats)
-		if unit.cap_mutation != null:
-			unit.cap_mutation.strip_hatch_stats(spore.mean_stats)
 	spore.weapon_trainings = []
 	for training in unit.weapon_trainings:
 		spore.weapon_trainings.append(int(training))

@@ -21,9 +21,6 @@ const _SLOT_BADGE_META := &"_mutation_slot_badge"
 ## body appearance hurtboxes instead.
 @export var silhouette_scale: Vector2 = Vector2.ONE
 @export var effect: MutationEffect
-@export var strength_delta: int = 0
-@export var dex_delta: int = 0
-@export var con_delta: int = 0
 
 
 func is_body() -> bool:
@@ -89,23 +86,6 @@ func appearance_for(is_adult: bool) -> PackedScene:
 	if is_adult:
 		return imago_appearance
 	return juvenile_appearance
-
-
-func apply_hatch_stats(stats: UnitStatsData) -> void:
-	if stats == null:
-		return
-	stats.strength = clampi(stats.strength + strength_delta, 1, 99)
-	stats.dex = clampi(stats.dex + dex_delta, 1, 99)
-	stats.con = clampi(stats.con + con_delta, 1, 99)
-
-
-## Undo hatch deltas so lineage mean_stats can re-apply the (possibly remixed) slots once.
-func strip_hatch_stats(stats: UnitStatsData) -> void:
-	if stats == null:
-		return
-	stats.strength = clampi(stats.strength - strength_delta, 1, 99)
-	stats.dex = clampi(stats.dex - dex_delta, 1, 99)
-	stats.con = clampi(stats.con - con_delta, 1, 99)
 
 
 func call_effect(method: StringName, args: Array = []) -> void:

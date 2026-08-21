@@ -12,6 +12,3 @@ display_name = "Rubber"
 short_description = "Resists blunt hits. Gets knocked around hard."
 tint = Color(0.930263, 0.60786146, 0.34815294, 1)
 effect = SubResource("Effect")
-strength_delta = -1
-dex_delta = -1
-con_delta = -1

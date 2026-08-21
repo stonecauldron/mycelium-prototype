@@ -2,6 +2,7 @@ class_name SchoolTrainingDetailCard
 extends Control
 
 const CARD_WIDTH := 280.0
+const _STAT_ROW_SCENE := preload("res://assets/ui/stat_value_row/stat_value_row.tscn")
 const _COLOR_UP := Color(0.12, 0.45, 0.18, 1)
 const _COLOR_DOWN := Color(0.7, 0.15, 0.12, 1)
 
@@ -79,16 +80,17 @@ func _refresh_stat_lines() -> void:
 				label_name = "DEX"
 			"con":
 				label_name = "CON"
-		var line := Label.new()
-		line.text = "%+d %s" % [v, label_name]
-		line.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		line.add_theme_font_size_override("font_size", 22)
-		line.add_theme_color_override(
-			"font_color",
-			_COLOR_UP if v > 0 else _COLOR_DOWN
+		var row: StatValueRow = _STAT_ROW_SCENE.instantiate()
+		_stats_box.add_child(row)
+		row.configure(
+			label_name,
+			"%+d" % v,
+			22,
+			_COLOR_UP if v > 0 else _COLOR_DOWN,
+			false,
+			StatValueRow.Layout.ICON_LAST,
+			StatDisplay.INK
 		)
-		line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_stats_box.add_child(line)
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

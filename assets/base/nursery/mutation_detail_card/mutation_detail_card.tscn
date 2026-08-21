@@ -83,13 +83,16 @@ text = "Mutation"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="DescLabel" type="Label" parent="CardPanel/Margin/VBox"]
+[node name="DescLabel" type="RichTextLabel" parent="CardPanel/Margin/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_colors/default_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/normal_font_size = 22
+bbcode_enabled = false
+fit_content = true
+scroll_active = false
 text = "Effect text."
 horizontal_alignment = 1
 autowrap_mode = 3

@@ -18,7 +18,7 @@ var _empty_slot: bool = false
 @onready var _slot_icon: TextureRect = %SlotIcon
 @onready var _slot_label: Label = %SlotLabel
 @onready var _title_label: Label = %TitleLabel
-@onready var _desc_label: Label = %DescLabel
+@onready var _desc_label: RichTextLabel = %DescLabel
 
 
 func setup(mutation_data: MutationData) -> void:
@@ -89,7 +89,7 @@ func _refresh() -> void:
 	_slot_label.text = mutation.slot_label()
 	_title_label.text = mutation.title_text()
 	var desc := mutation.subtitle_text()
-	_desc_label.text = desc
+	StatDisplay.apply_to(_desc_label, desc, 22, StatDisplay.INK_MUTED)
 	_desc_label.visible = not desc.is_empty()
 
 
@@ -100,7 +100,7 @@ func _refresh_empty() -> void:
 	if _slot_row != null:
 		_slot_row.visible = false
 	_title_label.text = _EMPTY_TITLE
-	_desc_label.text = _EMPTY_DESC
+	StatDisplay.apply_to(_desc_label, _EMPTY_DESC, 22, StatDisplay.INK_MUTED)
 	_desc_label.visible = true
 
 

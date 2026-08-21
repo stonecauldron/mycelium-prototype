@@ -17,7 +17,7 @@ var _fertilizer_icon: AtlasTexture
 @onready var _card_panel: PanelContainer = $CardPanel
 @onready var _icon: TextureRect = %Icon
 @onready var _title_label: Label = %TitleLabel
-@onready var _desc_label: Label = %DescLabel
+@onready var _desc_label: RichTextLabel = %DescLabel
 @onready var _residue_label: Label = %ResidueLabel
 
 
@@ -84,7 +84,7 @@ func _refresh() -> void:
 		_icon.self_modulate = fertilizer.tint
 	_title_label.text = fertilizer.display_name
 	var desc := fertilizer.subtitle_text()
-	_desc_label.text = desc
+	StatDisplay.apply_to(_desc_label, desc, 22, StatDisplay.INK_MUTED)
 	_desc_label.visible = not desc.is_empty()
 	var residue := residue_text.strip_edges()
 	_residue_label.text = residue
@@ -96,7 +96,7 @@ func _refresh_empty() -> void:
 		_icon.texture = _icon_texture()
 		_icon.self_modulate = _EMPTY_ICON_MODULATE
 	_title_label.text = _EMPTY_TITLE
-	_desc_label.text = _EMPTY_DESC
+	StatDisplay.apply_to(_desc_label, _EMPTY_DESC, 22, StatDisplay.INK_MUTED)
 	_desc_label.visible = true
 	_residue_label.text = ""
 	_residue_label.visible = false

@@ -12,7 +12,7 @@ var show_price: bool = true
 
 @onready var _card_panel: PanelContainer = $CardPanel
 @onready var _name_label: Label = %NameLabel
-@onready var _desc_label: Label = %DescLabel
+@onready var _desc_label: RichTextLabel = %DescLabel
 @onready var _dmg_label: Label = %DmgLabel
 @onready var _speed_label: Label = %SpeedLabel
 @onready var _range_tag: TagChip = %RangeTag
@@ -84,14 +84,21 @@ func _refresh() -> void:
 	if weapon_data == null:
 		return
 	_name_label.text = weapon_data.display_name
-	_desc_label.text = weapon_data.short_description
+	StatDisplay.apply_to(
+		_desc_label,
+		weapon_data.short_description,
+		24,
+		StatDisplay.INK_MUTED
+	)
 	_desc_label.visible = not weapon_data.short_description.is_empty()
 	_dmg_label.text = "DMG %d" % weapon_data.base_damage
 	_speed_label.text = "Attacks every %s secs" % str(weapon_data.attack_interval)
 	_range_tag.set_text(_range_label(weapon_data.formation_line))
-
-	_scaling_tag.set_text(
-		str(WeaponData.DAMAGE_STAT_LABELS.get(weapon_data.damage_stat, "?"))
+	_scaling_tag.show_icons(
+		StatDisplay.textures_for_damage_stat(weapon_data.damage_stat),
+		"or",
+		22,
+		"Scaling"
 	)
 	_blunt_tag.visible = weapon_data.damage_type == WeaponData.DamageType.BLUNT
 	if _blunt_tag.visible:

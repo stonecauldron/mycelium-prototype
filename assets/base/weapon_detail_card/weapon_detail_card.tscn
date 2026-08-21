@@ -45,13 +45,16 @@ text = "Weapon"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="DescLabel" type="Label" parent="CardPanel/Margin/VBox"]
+[node name="DescLabel" type="RichTextLabel" parent="CardPanel/Margin/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_colors/default_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = false
+fit_content = true
+scroll_active = false
 text = "Flavor text."
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -97,7 +100,7 @@ text = "Melee"
 
 [node name="ScalingTag" parent="CardPanel/Margin/VBox/TagMargin/TagRow" instance=ExtResource("5_tag")]
 unique_name_in_owner = true
-text = "STR"
+text = "Scaling"
 
 [node name="BluntTag" parent="CardPanel/Margin/VBox/TagMargin/TagRow" instance=ExtResource("5_tag")]
 unique_name_in_owner = true

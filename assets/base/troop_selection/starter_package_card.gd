@@ -11,12 +11,13 @@ const _TAG_FONT_SIZE := 18
 
 var package_id: StringName = &""
 var _idle_panel_style: StyleBox
+var _description_source: String = ""
 
 @onready var _panel: PanelContainer = %Panel
 @onready var _title: Label = %TitleLabel
 @onready var _portrait_host: Control = %PortraitHost
 @onready var _weapon_name: Label = %WeaponNameLabel
-@onready var _description: Label = %DescriptionLabel
+@onready var _description: RichTextLabel = %DescriptionLabel
 @onready var _tag_row: HFlowContainer = %TagRow
 
 
@@ -77,8 +78,7 @@ func set_selected(selected: bool) -> void:
 		_title.add_theme_color_override("font_color", title_color)
 	if _weapon_name != null:
 		_weapon_name.add_theme_color_override("font_color", title_color)
-	if _description != null:
-		_description.add_theme_color_override("font_color", body_color)
+	_apply_description(body_color)
 
 
 func _refresh() -> void:
@@ -87,7 +87,8 @@ func _refresh() -> void:
 	if package_id == &"":
 		_title.text = "Starter"
 		_weapon_name.text = "Weapon"
-		_description.text = "Weapon description"
+		_description_source = "Weapon description"
+		_apply_description(_COLOR_DESC)
 		_description.visible = true
 		_clear_tags()
 		return
@@ -109,16 +110,16 @@ func _populate_unit(unit: RosterUnitData) -> void:
 
 	_weapon_name.text = weapon.display_name if weapon != null else "?"
 	if weapon != null and not weapon.short_description.is_empty():
-		_description.text = weapon.short_description
+		_description_source = weapon.short_description
+		_apply_description(_COLOR_DESC)
 		_description.visible = true
 	else:
+		_description_source = ""
 		_description.visible = false
 
 	if weapon != null:
 		_tag_row.add_child(_make_tag(_range_label(weapon.formation_line)))
-		_tag_row.add_child(
-			_make_tag(str(WeaponData.DAMAGE_STAT_LABELS.get(weapon.damage_stat, "?")))
-		)
+		_tag_row.add_child(_make_stat_tag(weapon.damage_stat))
 		if weapon.damage_type == WeaponData.DamageType.BLUNT:
 			_tag_row.add_child(_make_tag("Blunt"))
 		if weapon.targeting_mode == WeaponData.TargetingMode.AOE:
@@ -135,16 +136,35 @@ func _make_tag(text: String) -> TagChip:
 	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	chip.set_text(text)
 	if chip.is_node_ready():
-		_shrink_tag_font(chip)
+		chip.set_content_font_size(_TAG_FONT_SIZE)
 	else:
-		chip.ready.connect(_shrink_tag_font.bind(chip), CONNECT_ONE_SHOT)
+		chip.ready.connect(chip.set_content_font_size.bind(_TAG_FONT_SIZE), CONNECT_ONE_SHOT)
 	return chip
 
 
-func _shrink_tag_font(chip: TagChip) -> void:
-	var label := chip.get_node_or_null("%Label") as Label
-	if label != null:
-		label.add_theme_font_size_override("font_size", _TAG_FONT_SIZE)
+func _make_stat_tag(damage_stat: int) -> TagChip:
+	var chip: TagChip = _TAG_CHIP_SCENE.instantiate()
+	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.show_icons(
+		StatDisplay.textures_for_damage_stat(damage_stat),
+		"or",
+		_TAG_FONT_SIZE,
+		"Scaling"
+	)
+	if chip.is_node_ready():
+		chip.set_content_font_size(_TAG_FONT_SIZE)
+	else:
+		chip.ready.connect(chip.set_content_font_size.bind(_TAG_FONT_SIZE), CONNECT_ONE_SHOT)
+	return chip
+
+
+func _apply_description(color: Color) -> void:
+	if _description == null:
+		return
+	var icon_color := (
+		PaperStyles.CREAM if color.is_equal_approx(PaperStyles.CREAM) else StatDisplay.INK
+	)
+	StatDisplay.apply_to(_description, _description_source, 20, color, icon_color)
 
 
 func _range_label(formation_line: WeaponData.FormationLine) -> String:

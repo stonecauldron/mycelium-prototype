@@ -9,7 +9,7 @@ const PORTRAIT_SHADOW := 20.0
 const _BIOMASS_ICON := preload("res://assets/base/biomass_small_icon.png")
 const _COLOR_UP := Color(0.12, 0.45, 0.18, 1)
 const _COLOR_DOWN := Color(0.7, 0.15, 0.12, 1)
-const _COLOR_NEUTRAL := Color(0.03, 0.035, 0.027, 1)
+const _STAT_FONT_SIZE := 18
 
 var _unit: RosterUnitData
 var _school: int = 0
@@ -27,14 +27,14 @@ var _preview_unit: RosterUnitData
 @onready var _left_weapon_row: PupationWeaponHoverRow = %LeftWeaponRow
 @onready var _left_weapon_icon: TextureRect = %LeftWeaponIcon
 @onready var _left_weapon_name: Label = %LeftWeaponName
-@onready var _left_str: Label = %LeftStr
-@onready var _left_dex: Label = %LeftDex
-@onready var _left_con: Label = %LeftCon
+@onready var _left_str: StatValueRow = %LeftStr
+@onready var _left_dex: StatValueRow = %LeftDex
+@onready var _left_con: StatValueRow = %LeftCon
 @onready var _duration_chip: StatChip = %DurationChip
 @onready var _duration_suffix: Label = %DurationSuffix
-@onready var _mid_str: Label = %MidStr
-@onready var _mid_dex: Label = %MidDex
-@onready var _mid_con: Label = %MidCon
+@onready var _mid_str: StatValueRow = %MidStr
+@onready var _mid_dex: StatValueRow = %MidDex
+@onready var _mid_con: StatValueRow = %MidCon
 @onready var _right_portrait: Control = %RightPortrait
 @onready var _right_atk_chip: StatChip = %RightAtkChip
 @onready var _right_hp_chip: StatChip = %RightHpChip
@@ -42,9 +42,9 @@ var _preview_unit: RosterUnitData
 @onready var _right_weapon_row: PupationWeaponHoverRow = %RightWeaponRow
 @onready var _right_weapon_icon: TextureRect = %RightWeaponIcon
 @onready var _right_weapon_name: Label = %RightWeaponName
-@onready var _right_str: Label = %RightStr
-@onready var _right_dex: Label = %RightDex
-@onready var _right_con: Label = %RightCon
+@onready var _right_str: StatValueRow = %RightStr
+@onready var _right_dex: StatValueRow = %RightDex
+@onready var _right_con: StatValueRow = %RightCon
 @onready var _confirm_button: Button = %ConfirmButton
 
 
@@ -117,16 +117,13 @@ func _fill_current_side() -> void:
 	_set_combat_chips(_unit, _left_atk_chip, _left_hp_chip)
 	var stats := _unit.stats
 	if stats != null:
-		_left_str.text = "STR %d" % stats.strength
-		_left_dex.text = "DEX %d" % stats.dex
-		_left_con.text = "CON %d" % stats.con
+		_configure_current_stat(_left_str, "STR", str(stats.strength))
+		_configure_current_stat(_left_dex, "DEX", str(stats.dex))
+		_configure_current_stat(_left_con, "CON", str(stats.con))
 	else:
-		_left_str.text = "STR —"
-		_left_dex.text = "DEX —"
-		_left_con.text = "CON —"
-	_left_str.add_theme_color_override("font_color", _COLOR_NEUTRAL)
-	_left_dex.add_theme_color_override("font_color", _COLOR_NEUTRAL)
-	_left_con.add_theme_color_override("font_color", _COLOR_NEUTRAL)
+		_configure_current_stat(_left_str, "STR", "—")
+		_configure_current_stat(_left_dex, "DEX", "—")
+		_configure_current_stat(_left_con, "CON", "—")
 
 
 func _fill_result_side() -> void:
@@ -172,35 +169,73 @@ func _fill_result_side() -> void:
 			int(deltas.get("con", 0)) * mult + adult_bonus
 		)
 	else:
-		_right_str.text = "STR —"
-		_right_dex.text = "DEX —"
-		_right_con.text = "CON —"
-		_mid_str.text = ""
-		_mid_dex.text = ""
-		_mid_con.text = ""
+		_configure_current_stat(_right_str, "STR", "—")
+		_configure_current_stat(_right_dex, "DEX", "—")
+		_configure_current_stat(_right_con, "CON", "—")
+		_configure_mid_delta(_mid_str, "STR", 0)
+		_configure_mid_delta(_mid_dex, "DEX", 0)
+		_configure_mid_delta(_mid_con, "CON", 0)
+
+
+func _configure_current_stat(row: StatValueRow, abbrev: String, value_text: String) -> void:
+	if row == null:
+		return
+	row.configure(
+		abbrev,
+		value_text,
+		_STAT_FONT_SIZE,
+		StatDisplay.INK,
+		false,
+		StatValueRow.Layout.ICON_FIRST,
+		StatDisplay.INK
+	)
+
+
+func _configure_mid_delta(row: StatValueRow, abbrev: String, delta: int) -> void:
+	if row == null:
+		return
+	var color := StatDisplay.INK
+	if delta > 0:
+		color = _COLOR_UP
+	elif delta < 0:
+		color = _COLOR_DOWN
+	row.configure(
+		abbrev,
+		"%+d" % delta if delta != 0 else "",
+		_STAT_FONT_SIZE,
+		color,
+		false,
+		StatValueRow.Layout.ICON_LAST,
+		StatDisplay.INK
+	)
 
 
 func _apply_result_stat(
-	right_label: Label,
-	mid_label: Label,
-	label: String,
+	right_row: StatValueRow,
+	mid_row: StatValueRow,
+	abbrev: String,
 	value: int,
 	delta: int
 ) -> void:
+	var color := StatDisplay.INK
+	var right_text := str(value)
 	if delta > 0:
-		right_label.text = "%s %d (%+d)" % [label, value, delta]
-		right_label.add_theme_color_override("font_color", _COLOR_UP)
-		mid_label.text = "%+d %s" % [delta, label]
-		mid_label.add_theme_color_override("font_color", _COLOR_UP)
+		color = _COLOR_UP
+		right_text = "%d (%+d)" % [value, delta]
 	elif delta < 0:
-		right_label.text = "%s %d (%+d)" % [label, value, delta]
-		right_label.add_theme_color_override("font_color", _COLOR_DOWN)
-		mid_label.text = "%+d %s" % [delta, label]
-		mid_label.add_theme_color_override("font_color", _COLOR_DOWN)
-	else:
-		right_label.text = "%s %d" % [label, value]
-		right_label.add_theme_color_override("font_color", _COLOR_NEUTRAL)
-		mid_label.text = ""
+		color = _COLOR_DOWN
+		right_text = "%d (%+d)" % [value, delta]
+	if right_row != null:
+		right_row.configure(
+			abbrev,
+			right_text,
+			_STAT_FONT_SIZE,
+			color,
+			false,
+			StatValueRow.Layout.ICON_FIRST,
+			StatDisplay.INK
+		)
+	_configure_mid_delta(mid_row, abbrev, delta)
 
 
 func _set_combat_chips(roster: RosterUnitData, atk_chip: StatChip, hp_chip: StatChip) -> void:

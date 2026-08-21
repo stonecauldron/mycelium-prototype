@@ -34,7 +34,7 @@ var _buy_hint_arrow: FloatingArrow = null
 @onready var _icon: TextureRect = %Icon
 @onready var _title_label: Label = %TitleLabel
 @onready var _subtitle_label: Label = %SubtitleLabel
-@onready var _description_label: Label = %DescriptionLabel
+@onready var _description_label: VBoxContainer = %DescriptionLabel
 @onready var _price_label: Label = %PriceLabel
 @onready var _tier_tag: TagChip = %TierTag
 @onready var _footer_row: HBoxContainer = %FooterRow
@@ -193,7 +193,13 @@ func _ready() -> void:
 func _apply_content(title: String, subtitle: String, description: String, icon: Texture2D) -> void:
 	_title_label.text = title
 	_subtitle_label.text = subtitle
-	_description_label.text = description
+	StatDisplay.fill_inline(
+		_description_label,
+		description,
+		20,
+		Color(0.25, 0.27, 0.22, 1),
+		StatDisplay.INK
+	)
 	_description_label.visible = not description.is_empty()
 	_price_label.text = "%d" % cost
 	if icon != null and _icon != null:

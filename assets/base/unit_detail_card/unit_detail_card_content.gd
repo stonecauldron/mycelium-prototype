@@ -7,6 +7,9 @@ const PORTRAIT_SCALE := 0.9
 const PORTRAIT_SHADOW_CLEARANCE := 24.0
 const _ROW_ICON_SIZE := Vector2(36, 36)
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
+const _ATTR_FONT_SIZE := 26
+const _ATTR_COLOR := Color(0.03137255, 0.03529412, 0.02745098, 1)
+const _ROW_TEXT_COLOR := Color(0.2, 0.22, 0.18, 1)
 const _FERTILIZER_ATLAS := preload("res://assets/base/nursery/fertilizers/fertiliser.png")
 const _FERTILIZER_ICON_REGION := Rect2(183, 167, 169, 180)
 
@@ -20,16 +23,16 @@ var _fertilizer_icon: AtlasTexture = null
 @onready var _name_label: Label = %NameLabel
 @onready var _type_label: Label = %TypeLabel
 @onready var _mutations_list: Control = %MutationsList
-@onready var _cap_label: Label = %CapLabel
-@onready var _body_label: Label = %BodyLabel
+@onready var _cap_label: RichTextLabel = %CapLabel
+@onready var _body_label: RichTextLabel = %BodyLabel
 @onready var _stage_tag: TagChip = %StageTag
 @onready var _tier_tag: TagChip = %TierTag
 @onready var _portrait_host: Control = %PortraitHost
 @onready var _atk_chip: StatChip = %AtkChip
 @onready var _hp_chip: StatChip = %HpChip
-@onready var _str_label: Label = %StrLabel
-@onready var _dex_label: Label = %DexLabel
-@onready var _con_label: Label = %ConLabel
+@onready var _str_row: StatValueRow = %StrRow
+@onready var _dex_row: StatValueRow = %DexRow
+@onready var _con_row: StatValueRow = %ConRow
 @onready var _fertilizers_label: Label = %FertilizersLabel
 @onready var _fertilizers_list: VBoxContainer = %FertilizersList
 @onready var _trainings_label: Label = %TrainingsLabel
@@ -98,15 +101,15 @@ func _refresh() -> void:
 			display_stats = unit_data.stats
 		_atk_chip.set_value(BroodEmpressEffect.hub_effective_attack(unit_data))
 		_hp_chip.set_value(BroodEmpressEffect.hub_effective_max_hp(unit_data))
-		_str_label.text = "STR %d" % display_stats.strength
-		_dex_label.text = "DEX %d" % display_stats.dex
-		_con_label.text = "CON %d" % display_stats.con
+		_configure_attr_row(_str_row, "STR", str(display_stats.strength))
+		_configure_attr_row(_dex_row, "DEX", str(display_stats.dex))
+		_configure_attr_row(_con_row, "CON", str(display_stats.con))
 	else:
 		_atk_chip.set_value("—")
 		_hp_chip.set_value("—")
-		_str_label.text = "STR —"
-		_dex_label.text = "DEX —"
-		_con_label.text = "CON —"
+		_configure_attr_row(_str_row, "STR", "—")
+		_configure_attr_row(_dex_row, "DEX", "—")
+		_configure_attr_row(_con_row, "CON", "—")
 	_refresh_mutation_chip()
 	_refresh_fertilizers()
 	_refresh_trainings()
@@ -221,6 +224,20 @@ func _make_training_separator() -> Label:
 	return plus
 
 
+func _configure_attr_row(row: StatValueRow, abbrev: String, value_text: String) -> void:
+	if row == null:
+		return
+	row.configure(
+		abbrev,
+		value_text,
+		_ATTR_FONT_SIZE,
+		_ATTR_COLOR,
+		false,
+		StatValueRow.Layout.ICON_FIRST,
+		_ATTR_COLOR
+	)
+
+
 func _make_detail_row(icon: TextureRect, text: String) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -228,14 +245,7 @@ func _make_detail_row(icon: TextureRect, text: String) -> HBoxContainer:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	if icon != null:
 		row.add_child(icon)
-	var label := Label.new()
-	label.custom_minimum_size = Vector2(280, 0)
-	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.add_theme_font_size_override("font_size", 26)
-	label.add_theme_color_override("font_color", Color(0.2, 0.22, 0.18, 1))
-	label.text = text
-	row.add_child(label)
+	row.add_child(StatDisplay.make_rich_label(text, 26, _ROW_TEXT_COLOR, 280.0))
 	return row
 
 
@@ -281,13 +291,13 @@ func _refresh_mutation_meta() -> void:
 		_set_mutation_row_label(_body_label, unit_data.body_mutation)
 
 
-func _set_mutation_row_label(label: Label, mutation: MutationData) -> void:
+func _set_mutation_row_label(label: RichTextLabel, mutation: MutationData) -> void:
 	if label == null:
 		return
 	if mutation == null:
-		label.text = "None"
+		StatDisplay.apply_to(label, "None", 26, _ROW_TEXT_COLOR)
 		return
-	label.text = mutation.effect_line()
+	StatDisplay.apply_to(label, mutation.effect_line(), 26, _ROW_TEXT_COLOR)
 
 
 func _refresh_tags() -> void:

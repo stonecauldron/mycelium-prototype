@@ -35,7 +35,7 @@ script = ExtResource("1_card")
 unique_name_in_owner = true
 
 [node name="CardPanel" type="PanelContainer" parent="." unique_id=511557256]
-clip_contents = true
+clip_contents = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -93,15 +93,13 @@ text = "Name"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="DescriptionLabel" type="Label" parent="CardPanel/Margin/VBox" unique_id=639148191]
+[node name="DescriptionLabel" type="VBoxContainer" parent="CardPanel/Margin/VBox" unique_id=639148191]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.25, 0.27, 0.22, 1)
-theme_override_font_sizes/font_size = 20
-text = "Description"
-autowrap_mode = 3
+mouse_filter = 2
+theme_override_constants/separation = 2
 
 [node name="FooterSpacer" type="Control" parent="CardPanel/Margin/VBox" unique_id=836602815]
 layout_mode = 2

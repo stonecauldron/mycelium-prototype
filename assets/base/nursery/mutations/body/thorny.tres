@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="MutationData" format=3]
+[gd_resource type="Resource" script_class="MutationData" format=3 uid="uid://bdp4ks84nxxsh"]
 
-[ext_resource type="Script" path="res://assets/base/nursery/mutation_data.gd" id="1_mut"]
-[ext_resource type="Script" path="res://assets/base/nursery/mutations/body/thorny_effect.gd" id="2_effect"]
+[ext_resource type="Script" uid="uid://cklsnp1fms06u" path="res://assets/base/nursery/mutation_data.gd" id="1_mut"]
+[ext_resource type="Script" uid="uid://rqkt47cfeo6j" path="res://assets/base/nursery/mutations/body/thorny_effect.gd" id="2_effect"]
 
 [sub_resource type="Resource" id="Effect"]
 script = ExtResource("2_effect")
@@ -9,7 +9,6 @@ script = ExtResource("2_effect")
 [resource]
 script = ExtResource("1_mut")
 display_name = "Thorny"
-short_description = "Melee attackers take damage equal to your STR / 2."
-slot = 0
+short_description = "Melee attackers take damage equal to half your STR"
 tint = Color(0.35, 0.72, 0.28, 1)
 effect = SubResource("Effect")

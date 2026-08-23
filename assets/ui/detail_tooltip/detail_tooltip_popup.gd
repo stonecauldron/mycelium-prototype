@@ -120,16 +120,21 @@ func _present(tip: Control) -> void:
 
 
 func _queue_layout(tip: Control) -> void:
-	if not is_inside_tree():
+	if not is_inside_tree() or tip != _tip:
 		return
 	var tree := get_tree()
-	var cb := _on_process_layout.bind(tip)
-	if tree.process_frame.is_connected(cb):
+	# Do not bind `tip`: process_frame is 0-arg, and a bound Control that is
+	# queue_freed before the one-shot fires fails with
+	# "Cannot convert argument 1 from Object to Object".
+	if tree.process_frame.is_connected(_on_process_layout):
 		return
-	tree.process_frame.connect(cb, CONNECT_ONE_SHOT)
+	tree.process_frame.connect(_on_process_layout, CONNECT_ONE_SHOT)
 
 
-func _on_process_layout(tip: Control) -> void:
+func _on_process_layout() -> void:
+	var tip := _tip
+	if not is_instance_valid(tip):
+		return
 	_layout_tip(tip)
 	if is_instance_valid(tip) and tip == _tip and not _laid_out:
 		_queue_layout(tip)

@@ -51,14 +51,14 @@ static func sell_value(buy_cost: int) -> int:
 ## Rounddown(0.40 × upcoming Day), minimum 1. Integer 2/5 is exact for whole Days.
 static func reroll_increase(day: int) -> int:
 	var d := maxi(day, 1)
-	return maxi(1, (d * 2) / 5)
+	return maxi(1, floori(float(d * 2) / 5.0))
 
 
 ## nth Shop/Scout reroll this Day: Rounddown(Day × 0.75) + n × Reroll Increase.
 static func reroll_price(day: int, reroll_number: int) -> int:
 	var d := maxi(day, 1)
 	var n := maxi(reroll_number, 1)
-	return (d * 3) / 4 + n * reroll_increase(d)
+	return floori(float(d * 3) / 4.0) + n * reroll_increase(d)
 
 
 ## Mid-run Seal reroll: Shop/Scout price + SEAL_REROLL_EXTRA. Increase is still Reroll Increase.

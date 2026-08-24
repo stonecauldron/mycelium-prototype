@@ -43,14 +43,15 @@ The run-start offer of an initial Adult (and a hidden Child) the player chooses.
 ### Base
 
 **Base**:
-The between-battles hub where the player manages the run between days. Its zones are the War Chamber and the Nursery.
+The between-battles hub where the player manages the run between days. Its zones are the War Chamber, which is always available, and the Nursery.
 *Avoid*: Riboforge, forge (as a Base zone)
 
 **War Chamber**:
 The Base zone for the troop, scouting the enemy army, and starting a battle.
 
 **Nursery**:
-The Base zone where spores are grown on plots into Child units.
+The Base zone where spores are grown on plots into Child units. It is not available at the start of a Run; it unlocks after the first Battle.
+*Avoid*: treating the Nursery as present for the whole Run
 
 **Spore**:
 A plantable Nursery item that grows into Child units. Shop offers are not spores; a lineage spore is still a spore.

@@ -97,6 +97,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			index = 1
 		_:
 			return
+	if _tab_key_order.size() < 2:
+		return
 	if index < 0 or index >= _tab_key_order.size():
 		return
 	_select_tab(_tab_key_order[index], false)
@@ -239,6 +241,8 @@ func _build_tab_bar() -> void:
 		_tab_underlines[tab_id] = underline
 		_tab_key_order.append(tab_id)
 		key_index += 1
+
+	_tab_bar.visible = _tab_key_order.size() >= 2
 
 
 func _select_tab(tab_id: TabId, instant: bool = false) -> void:

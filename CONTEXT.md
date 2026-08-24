@@ -29,8 +29,12 @@ Biomass granted for winning a Battle. The amount is set by the Day and that enem
 The run's spendable resource, shown in kg.
 *Avoid*: gold, money, currency (unless speaking generically)
 
+**Reroll Increase**:
+The extra biomass added to each additional reroll's price this Day, derived from the upcoming Day. Minimum of 1.
+*Avoid*: wave, materials (other games); treating it as a separate spend
+
 **Seal**:
-A lasting run modifier chosen from offered picks. Rotten Thumb discounts the biomass cost of planting a fresh grow on a plot (not Mutation shop prices).
+A lasting run modifier chosen from offered picks. Rotten Thumb discounts the biomass cost of planting a fresh grow on a plot (not Mutation shop prices). Mid-run picks may be rerolled for biomass at a higher base than Shop or Scout; the run-start pick cannot.
 *Avoid*: relic, blessing, perk (when you mean a Seal)
 
 **Starter package**:
@@ -91,7 +95,7 @@ The Mutation slot that sets specialty combat or lifecycle identity and tints the
 Player unit art is layered Generalist body + cap sprites (child pair while Child, imago pair while Adult). Mutations tint those layers; empty slots use fixed default layer colors; Tier multiplies both layers. The body layer owns weapon mount and animation; the cap follows.
 
 **Shop**:
-Rerollable biomass offers in the Nursery (Fertilizers and Mutations — not spores). Offer rows stay split — Fertilizer slots and Mutation slots — so both show every reroll. Each Mutation slot rolls independently (body or cap).
+Rerollable biomass offers in the Nursery (Fertilizers and Mutations — not spores). Offer rows stay split — Fertilizer slots and Mutation slots — so both show every reroll. Each Mutation slot rolls independently (body or cap); paid rerolls use Reroll Increase per extra this Day.
 
 **Stock**:
 The player's held lineage spores, Fertilizers, Mutations, and similar items ready to plant or use.
@@ -179,7 +183,7 @@ The set of enemies for a battle, as previewed and optionally rerolled by Scout. 
 *Avoid*: formation (for the enemy side), troop (for enemies)
 
 **Scout**:
-The Base preview of the upcoming enemy army (with optional biomass-priced reroll when allowed). Type order is the reverse of Enemy army Home order — Melee, then Mid, then Ranged — so it matches what the player faces.
+The Base preview of the upcoming enemy army (with optional biomass-priced reroll when allowed). Type order is the reverse of Enemy army Home order — Melee, then Mid, then Ranged — so it matches what the player faces. Reroll price uses Reroll Increase per extra this Day; Elite Days cannot be rerolled.
 *Avoid*: treating Scout order as Home order
 
 **Flag bearer**:

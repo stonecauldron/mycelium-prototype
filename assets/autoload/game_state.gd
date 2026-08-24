@@ -19,6 +19,8 @@ var current_day: int = 0
 var run_seed: int = 0
 ## Active enemy formation for the upcoming day (filled by scout; consumed by roster build).
 var upcoming_enemy_formation: Array[EnemyUnitSpec] = []
+## Paid Scout rerolls already bought this Day (resets on new Day).
+var scout_rerolls_today: int = 0
 ## One-shot: open Nursery when returning to base after it unlocks.
 var prefer_nursery_tab: bool = false
 ## One-shot: open Riboforge when returning to base after it unlocks.
@@ -254,6 +256,18 @@ func get_upcoming_day() -> int:
 	return current_day + 1
 
 
+func current_scout_reroll_cost() -> int:
+	return BiomassData.reroll_price(get_upcoming_day(), scout_rerolls_today + 1)
+
+
+func advance_scout_reroll_cost() -> void:
+	scout_rerolls_today += 1
+
+
+func reset_scout_reroll_cost() -> void:
+	scout_rerolls_today = 0
+
+
 ## Every 5th battle (days 5 and 10 in a 10-day run) is an elite fight.
 func is_elite_day(day: int) -> bool:
 	return day > 0 and day % 5 == 0
@@ -304,12 +318,13 @@ func ensure_riboforge_seeded() -> void:
 	riboforge.seed_if_empty()
 
 
-## Free daily refresh: reroll unlocked shop slots (locks persist).
+## Free daily refresh: reroll unlocked shop slots (locks persist). Reset Nursery and Scout reroll counts.
 func refresh_shops_for_new_day() -> void:
 	ensure_nursery_seeded()
 	ensure_riboforge_seeded()
 	nursery.reset_shop_reroll_cost()
 	riboforge.reset_shop_reroll_cost()
+	reset_scout_reroll_cost()
 	nursery.reroll_unlocked_shop_offers()
 	riboforge.reroll_unlocked_shop_offers()
 
@@ -534,6 +549,7 @@ func reset_run() -> void:
 	show_plot_plant_hint = true
 	debug_mode_active = false
 	favourite_child_used_today = false
+	reset_scout_reroll_cost()
 	clear_upcoming_enemy_formation()
 	_roll_run_seed()
 	begin_day()

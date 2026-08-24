@@ -51,8 +51,8 @@ const _CAP_MUTATION_PATHS: Array[String] = [
 ## Nursery shop state (offers + locks). Shared ShopInventory used by any shop screen.
 @export var spore_shop: ShopInventory
 @export var unlocked_plot_count: int = STARTING_UNLOCKED_PLOTS
-## Paid shop reroll cost (flat; kept for save/API compatibility with reset/advance).
-@export var shop_reroll_cost: int = BiomassData.SHOP_REROLL_COST
+## Paid shop rerolls already bought this Day (resets on new Day).
+@export var shop_rerolls_today: int = 0
 
 var _seeded: bool = false
 ## Monotonic stamp for FIFO eviction when death-spores overflow stock.
@@ -101,15 +101,15 @@ func reset() -> void:
 
 
 func current_shop_reroll_cost() -> int:
-	return BiomassData.SHOP_REROLL_COST
+	return BiomassData.reroll_price(GameState.get_upcoming_day(), shop_rerolls_today + 1)
 
 
 func advance_shop_reroll_cost() -> void:
-	pass
+	shop_rerolls_today += 1
 
 
 func reset_shop_reroll_cost() -> void:
-	shop_reroll_cost = BiomassData.SHOP_REROLL_COST
+	shop_rerolls_today = 0
 
 
 func is_plot_unlocked(plot_index: int) -> bool:

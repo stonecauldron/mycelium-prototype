@@ -13,6 +13,8 @@ var _selected: SealData = null
 var _cards: Dictionary = {} # SealData -> SealCard
 ## False on the run-start pick (starting biomass cannot cover the cost).
 var _allow_reroll: bool = true
+## Paid rerolls already bought during this pick (resets per dialog).
+var _rerolls_this_pick: int = 0
 
 @onready var _dim: ColorRect = %Dim
 @onready var _cards_row: HBoxContainer = %CardsRow
@@ -24,6 +26,7 @@ var _allow_reroll: bool = true
 func setup(offers: Array[SealData], allow_reroll: bool = true) -> void:
 	_offers = offers
 	_allow_reroll = allow_reroll
+	_rerolls_this_pick = 0
 
 
 func _ready() -> void:
@@ -81,16 +84,21 @@ func _refresh_selection() -> void:
 	_confirm_button.disabled = _selected == null
 
 
+func _current_seal_reroll_cost() -> int:
+	return BiomassData.seal_reroll_price(GameState.get_upcoming_day(), _rerolls_this_pick + 1)
+
+
 func _refresh_reroll_affordability() -> void:
 	if _reroll_button == null:
 		return
+	var cost := _current_seal_reroll_cost()
 	if _reroll_cost_label != null:
-		_reroll_cost_label.text = "%d" % BiomassData.SEAL_REROLL_COST
+		_reroll_cost_label.text = "%d" % cost
 	_reroll_button.visible = _allow_reroll
 	if not _allow_reroll:
 		_reroll_button.disabled = true
 		return
-	var can_reroll := GameState.biomass.can_afford(BiomassData.SEAL_REROLL_COST)
+	var can_reroll := GameState.biomass.can_afford(cost)
 	_reroll_button.disabled = not can_reroll
 	_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
 
@@ -99,10 +107,12 @@ func _on_reroll_pressed() -> void:
 	if not _allow_reroll:
 		_refresh_reroll_affordability()
 		return
-	if not GameState.biomass.try_spend(BiomassData.SEAL_REROLL_COST):
+	var cost := _current_seal_reroll_cost()
+	if not GameState.biomass.try_spend(cost):
 		_refresh_reroll_affordability()
 		return
-	Analytics.biomass_sink("Seal", "Reroll", BiomassData.SEAL_REROLL_COST)
+	Analytics.biomass_sink("Seal", "Reroll", cost)
+	_rerolls_this_pick += 1
 	_offers = SealCatalog.roll_offers(_OFFER_COUNT, GameState.seals, null, _offers)
 	_selected = null
 	_build_cards()

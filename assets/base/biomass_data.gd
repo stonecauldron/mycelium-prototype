@@ -15,8 +15,8 @@ const EPIC_SPORE_COST := 32
 const LEGENDARY_SPORE_COST := 64
 const MUTATION_COST := 4
 const SHOP_REROLL_COST := 3
-const SCOUT_REROLL_COST := 3
-const SEAL_REROLL_COST := 15
+## Extra biomass on Seal reroll so a day-1 first would be 15 (opening pick still cannot reroll).
+const SEAL_REROLL_EXTRA := 14
 const PLOT_UNLOCK_BASE_COST := 4
 const SQUAD_SLOT_UNLOCK_COST := 8
 const STARTING_AMOUNT := 3
@@ -46,6 +46,24 @@ static func reward_for_compost(is_adult: bool) -> int:
 
 static func sell_value(buy_cost: int) -> int:
 	return maxi(1, int(buy_cost / 2.0))
+
+
+## Rounddown(0.40 × upcoming Day), minimum 1. Integer 2/5 is exact for whole Days.
+static func reroll_increase(day: int) -> int:
+	var d := maxi(day, 1)
+	return maxi(1, (d * 2) / 5)
+
+
+## nth Shop/Scout reroll this Day: Rounddown(Day × 0.75) + n × Reroll Increase.
+static func reroll_price(day: int, reroll_number: int) -> int:
+	var d := maxi(day, 1)
+	var n := maxi(reroll_number, 1)
+	return (d * 3) / 4 + n * reroll_increase(d)
+
+
+## Mid-run Seal reroll: Shop/Scout price + SEAL_REROLL_EXTRA. Increase is still Reroll Increase.
+static func seal_reroll_price(day: int, reroll_number: int) -> int:
+	return reroll_price(day, reroll_number) + SEAL_REROLL_EXTRA
 
 
 func add(value: int) -> void:

@@ -1,0 +1,3 @@
+# Day-scaled reroll price with a higher Seal base
+
+Scout, Nursery shop, and mid-run Seal rerolls spend biomass from the upcoming Day: Reroll Increase is `max(1, floor(0.40 × day))`, and the nth reroll this Day (or this Seal pick) costs `floor(0.75 × day) + n × Increase`. Seal adds 14 so a day-1 first would be 15 (today’s former flat Seal cost); the opening Seal pick still cannot reroll. Riboforge stays a flat 3. Per-sink counters reset each new Day (Seal: each pick). A single flat cost was rejected (late Days would be too cheap relative to Battle reward). Flooring Seal at 15 for the whole run was rejected (the first price would never rise in 10 Days).

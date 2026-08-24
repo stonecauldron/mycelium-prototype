@@ -98,14 +98,15 @@ func _reroll_allowed() -> bool:
 func _refresh_reroll_affordability() -> void:
 	if _scout_reroll_button == null:
 		return
+	var cost := GameState.current_scout_reroll_cost()
 	if _scout_reroll_cost_label != null:
-		_scout_reroll_cost_label.text = "%d" % BiomassData.SCOUT_REROLL_COST
+		_scout_reroll_cost_label.text = "%d" % cost
 	var allowed := _reroll_allowed()
 	_scout_reroll_button.visible = allowed
 	if not allowed:
 		_scout_reroll_button.disabled = true
 		return
-	var can_reroll := GameState.biomass.can_afford(BiomassData.SCOUT_REROLL_COST)
+	var can_reroll := GameState.biomass.can_afford(cost)
 	_scout_reroll_button.disabled = not can_reroll
 	_scout_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
 
@@ -114,10 +115,12 @@ func _on_scout_reroll_pressed() -> void:
 	if not _reroll_allowed():
 		_refresh_reroll_affordability()
 		return
-	if not GameState.biomass.try_spend(BiomassData.SCOUT_REROLL_COST):
+	var cost := GameState.current_scout_reroll_cost()
+	if not GameState.biomass.try_spend(cost):
 		_refresh_reroll_affordability()
 		return
-	Analytics.biomass_sink("Scout", "Reroll", BiomassData.SCOUT_REROLL_COST)
+	Analytics.biomass_sink("Scout", "Reroll", cost)
+	GameState.advance_scout_reroll_cost()
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	GameState.ensure_upcoming_enemy_formation()
 	GameState.upcoming_enemy_formation = EnemyComposer.reroll_for_day(

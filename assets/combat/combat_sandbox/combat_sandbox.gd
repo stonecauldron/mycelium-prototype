@@ -5,7 +5,6 @@ const _SWORD_WEAPON := preload("res://assets/weapons/sword/sword.tres")
 const _SPEAR_WEAPON := preload("res://assets/weapons/spear/spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/bow/bow.tres")
 const _SHIELD_WEAPON := preload("res://assets/weapons/shield/shield.tres")
-const _FISTS_WEAPON := preload("res://assets/weapons/bare_fists.tres")
 const _SICKLE_WEAPON := preload("res://assets/weapons/sickle/sickle.tres")
 const _RAPIER_WEAPON := preload("res://assets/weapons/rapier/rapier.tres")
 const _GREAT_SWORD_WEAPON := preload("res://assets/weapons/great_sword/great_sword.tres")
@@ -37,7 +36,6 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Spear", "weapon": _SPEAR_WEAPON},
 	{"name": "Bow", "weapon": _BOW_WEAPON},
 	{"name": "Shield", "weapon": _SHIELD_WEAPON},
-	{"name": "Fists", "weapon": _FISTS_WEAPON},
 	{"name": "Sickle", "weapon": _SICKLE_WEAPON},
 	{"name": "Rapier", "weapon": _RAPIER_WEAPON},
 	{"name": "Great Sword", "weapon": _GREAT_SWORD_WEAPON},

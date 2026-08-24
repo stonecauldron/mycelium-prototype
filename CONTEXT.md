@@ -43,7 +43,8 @@ The run-start offer of an initial Adult (and a hidden Child) the player chooses.
 ### Base
 
 **Base**:
-The between-battles hub where the player manages the run between days.
+The between-battles hub where the player manages the run between days. Its zones are the War Chamber and the Nursery.
+*Avoid*: Riboforge, forge (as a Base zone)
 
 **War Chamber**:
 The Base zone for the troop, scouting the enemy army, and starting a battle.
@@ -60,7 +61,7 @@ A spore produced when an Adult is composted or dies in battle, carrying that uni
 *Avoid*: death spore (code name)
 
 **Plot**:
-A Nursery slot where a spore grows. Unlocked plots show blank Mutation and Fertilizer capacity chips that fill when Fertilizers are applied — not Fungicide. An empty Plot with Extra nutrition shows a Fungicide chip.
+A Nursery slot where a spore grows. The Nursery has four Plots; they unlock in order. A locked Plot cannot hold a Spore; unlocking one spends biomass. Unlocked plots show blank Mutation and Fertilizer capacity chips that fill when Fertilizers are applied — not Fungicide. An empty Plot with Extra nutrition shows a Fungicide chip.
 
 **Growth Time**:
 The days a Spore needs on a Plot to become harvestable, counting Greenhouse but not Plot Fertilizers. Unplanted spores show this.
@@ -95,10 +96,10 @@ The Mutation slot that sets specialty combat or lifecycle identity and tints the
 Player unit art is layered Generalist body + cap sprites (child pair while Child, imago pair while Adult). Mutations tint those layers; empty slots use fixed default layer colors; Tier multiplies both layers. The body layer owns weapon mount and animation; the cap follows.
 
 **Shop**:
-Rerollable biomass offers in the Nursery (Fertilizers and Mutations — not spores). Offer rows stay split — Fertilizer slots and Mutation slots — so both show every reroll. Each Mutation slot rolls independently (body or cap); paid rerolls use Reroll Increase per extra this Day.
+Rerollable biomass offers in the Nursery (Fertilizers and Mutations — not spores, not Weapons). Offer rows stay split — Fertilizer slots and Mutation slots — so both show every reroll. Each Mutation slot rolls independently (body or cap); paid rerolls use Reroll Increase per extra this Day.
 
 **Stock**:
-The player's held lineage spores, Fertilizers, Mutations, and similar items ready to plant or use.
+The player's held lineage spores, Fertilizers, and Mutations ready to plant or use.
 
 ### Units
 
@@ -167,7 +168,8 @@ The Base slot where a unit sits while Training, out of the troop until it emerge
 Sword, Shield, Spear, or Bow — the fighting identity Training grants.
 
 **Weapon**:
-The equipped fighting tool that drives a unit's combat behavior.
+The fighting tool a Unit uses in battle, set by its weapon-school Trainings. Not bought from the Shop and not freely swapped. Every player Unit has a Weapon.
+*Avoid*: loadout (when you mean Training identity); treating Weapon as a Shop item; unarmed, Bare fists (as a player-facing empty slot)
 
 **Attack interval**:
 Seconds between attacks, authored on the Weapon for player Units and on each enemy type's combat profile. Shown as "Attacks every X secs". Seals and some Fertilizers can scale it; it is not a Stat.

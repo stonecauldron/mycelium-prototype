@@ -3,12 +3,9 @@
 [ext_resource type="Script" uid="uid://cbt14lxim11pi" path="res://assets/base/base.gd" id="1_base"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://cnxfhca438svu" path="res://assets/base/background/background.png" id="5_bg_far"]
-[ext_resource type="Texture2D" uid="uid://cn2qum7e6bvx3" path="res://assets/base/background/background_forge.png" id="5_bg_far_forge"]
 [ext_resource type="Texture2D" uid="uid://brnicc8ghj3md" path="res://assets/base/background/upper_foreground.png" id="9_bg_upper_fg"]
 [ext_resource type="Texture2D" uid="uid://c00gqs4n3sm1c" path="res://assets/base/background/lower_foreground.png" id="10_bg_lower_fg"]
-[ext_resource type="Texture2D" uid="uid://c6ei56jr3jvom" path="res://assets/base/background/lower_foreground_forge.png" id="10_bg_lower_fg_forge"]
 [ext_resource type="PackedScene" uid="uid://c4swjtkoverfp" path="res://assets/base/nursery/nursery_screen.tscn" id="11_nursery"]
-[ext_resource type="PackedScene" uid="uid://ctgmgo4sqa1g7" path="res://assets/base/riboforge/riboforge_screen.tscn" id="12_riboforge"]
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
 [ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
 
@@ -75,59 +72,9 @@ texture = ExtResource("10_bg_lower_fg")
 expand_mode = 1
 flip_h = true
 
-[node name="RiboforgeZone" type="Node2D" parent="World/Zones" unique_id=3879105]
-unique_name_in_owner = true
-position = Vector2(1920, 0)
-
-[node name="Host" type="Control" parent="World/Zones/RiboforgeZone" unique_id=1763357063]
-custom_minimum_size = Vector2(1920, 1080)
-layout_mode = 3
-anchors_preset = 0
-offset_right = 1920.0
-offset_bottom = 1080.0
-
-[node name="FarBackgroundLayer" type="TextureRect" parent="World/Zones/RiboforgeZone/Host" unique_id=1386009893]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("5_bg_far_forge")
-expand_mode = 1
-
-[node name="UpperForegroundLayer" type="TextureRect" parent="World/Zones/RiboforgeZone/Host" unique_id=1386009894]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("9_bg_upper_fg")
-expand_mode = 1
-
-[node name="RiboforgeScreen" parent="World/Zones/RiboforgeZone/Host" unique_id=1966144431 instance=ExtResource("12_riboforge")]
-unique_name_in_owner = true
-layout_mode = 1
-
-[node name="LowerForegroundLayer" type="TextureRect" parent="World/Zones/RiboforgeZone/Host" unique_id=1093041674]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 89.0
-offset_bottom = 89.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("10_bg_lower_fg_forge")
-expand_mode = 1
-
 [node name="ColonyZone" type="Node2D" parent="World/Zones" unique_id=688036510]
 unique_name_in_owner = true
-position = Vector2(3840, 0)
+position = Vector2(1920, 0)
 
 [node name="Host" type="Control" parent="World/Zones/ColonyZone" unique_id=956056943]
 custom_minimum_size = Vector2(1920, 1080)

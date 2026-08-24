@@ -19,7 +19,7 @@ func setup(count: int, weapon: WeaponData) -> void:
 func _apply(count: int, weapon: WeaponData) -> void:
 	_weapon = weapon
 	_count_label.text = "%d ×" % count
-	_icon.texture = RiboforgeData.icon_for_weapon(weapon)
+	_icon.texture = weapon.icon if weapon != null else null
 	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
 	tooltip_text = weapon.display_name if weapon != null else ""
 

@@ -191,7 +191,7 @@ func can_pupate() -> bool:
 func sync_weapon_from_trainings() -> void:
 	if enemy_unit_data != null:
 		return
-	weapon = WeaponSchool.resolve_weapon(weapon_trainings, is_adult_stage())
+	weapon = WeaponSchool.resolve_weapon(weapon_trainings)
 	ensure_combat_profile()
 
 

@@ -10,7 +10,6 @@ const COCOON_COST := 3
 const COCOON_DURATION_DAYS := 1
 
 const _SICKLE_PATH := "res://assets/weapons/sickle/sickle.tres"
-const _SCYTHE_PATH := "res://assets/weapons/scythe/scythe.tres"
 const _SWORD_PATH := "res://assets/weapons/sword/sword.tres"
 const _SHIELD_PATH := "res://assets/weapons/shield/shield.tres"
 const _SPEAR_PATH := "res://assets/weapons/spear/spear.tres"
@@ -97,21 +96,21 @@ static func sickle() -> WeaponData:
 	return load_weapon(_SICKLE_PATH)
 
 
-static func scythe() -> WeaponData:
-	return load_weapon(_SCYTHE_PATH)
+static func sword() -> WeaponData:
+	return load_weapon(_SWORD_PATH)
 
 
-static func resolve_weapon_path(trainings: Array, is_adult_stage: bool) -> String:
+static func resolve_weapon_path(trainings: Array) -> String:
 	var n := trainings.size()
 	if n <= 0:
-		return _SCYTHE_PATH if is_adult_stage else _SICKLE_PATH
+		return _SICKLE_PATH
 	if n == 1:
 		return base_weapon_path(int(trainings[0]))
 	return combo_weapon_path(int(trainings[0]), int(trainings[1]))
 
 
-static func resolve_weapon(trainings: Array, is_adult_stage: bool) -> WeaponData:
-	return load_weapon(resolve_weapon_path(trainings, is_adult_stage))
+static func resolve_weapon(trainings: Array) -> WeaponData:
+	return load_weapon(resolve_weapon_path(trainings))
 
 
 ## Gen 1–2 full gains; each generation after 2 halves again.
@@ -151,11 +150,10 @@ static func trainings_after_training(trainings: Array, new_school: int) -> Array
 
 static func preview_weapon_after_training(
 	trainings: Array,
-	new_school: int,
-	will_be_adult: bool
+	new_school: int
 ) -> WeaponData:
 	var next := trainings_after_training(trainings, new_school)
-	return resolve_weapon(next, will_be_adult)
+	return resolve_weapon(next)
 
 
 static func apply_school_stats(
@@ -247,7 +245,7 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 	var generation := maxi(unit.generation, 1)
 	var next_trainings := trainings_after_training(unit.weapon_trainings, school)
 	var next_stage := next_stage_after_training(unit)
-	var next_weapon := resolve_weapon(next_trainings, true)
+	var next_weapon := resolve_weapon(next_trainings)
 	var preview_stats := preview_stats_after_training(
 		unit.stats,
 		school,

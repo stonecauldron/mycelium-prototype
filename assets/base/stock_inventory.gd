@@ -1,7 +1,7 @@
 class_name StockInventory
 extends Resource
 
-## Fixed sparse inventory slots (null = empty). Shared by nursery and riboforge stock.
+## Fixed sparse inventory slots (null = empty). Used by Nursery stock.
 
 const DEFAULT_SLOT_COUNT := 5
 

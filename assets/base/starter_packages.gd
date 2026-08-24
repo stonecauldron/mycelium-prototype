@@ -58,7 +58,7 @@ static func evolved_weapon(package_id: StringName) -> WeaponData:
 	if def.is_empty():
 		return null
 	var schools: Array = def["evolved_schools"]
-	return WeaponSchool.resolve_weapon(schools, true)
+	return WeaponSchool.resolve_weapon(schools)
 
 
 ## Dual-trained Adult only — for starter picker preview (no Child).

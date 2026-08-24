@@ -220,7 +220,7 @@ func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
 		return DetailTooltipPopup.configure(unit_tip)
 
 	var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
-	weapon_tip.setup(preview.weapon, false, false, false)
+	weapon_tip.setup(preview.weapon, false)
 
 	var host := HBoxContainer.new()
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE

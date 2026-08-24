@@ -11,7 +11,6 @@ const REROLL_PREVIEW_OUT_SEC := 0.1
 const REROLL_SHAKE_DEG := 5.0
 const REROLL_SHAKE_STEP_SEC := 0.045
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
-const _WEAPON_DETAIL_CARD_SCENE := preload("res://assets/base/weapon_detail_card/weapon_detail_card.tscn")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
 
@@ -210,8 +209,8 @@ func _apply_content(title: String, subtitle: String, description: String, icon: 
 		var mut := payload.get("mutation") as MutationData
 		MutationData.attach_slot_badge(_icon, mut, Vector2(68, 68))
 	_refresh_rarity_chip()
-	# Weapon/spore offers get a rich detail tooltip; other shop items leave this empty.
-	if payload.get("weapon") is WeaponData or payload.get("spore") is SporeData:
+	# Spore offers get a rich detail tooltip; other shop items leave this empty.
+	if payload.get("spore") is SporeData:
 		tooltip_text = title
 	else:
 		tooltip_text = ""
@@ -232,11 +231,6 @@ func _refresh_rarity_chip() -> void:
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:
-	var weapon := payload.get("weapon") as WeaponData
-	if weapon != null:
-		var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
-		weapon_tip.setup(weapon, false, true)
-		return DetailTooltipPopup.configure(weapon_tip)
 	var spore := payload.get("spore") as SporeData
 	if spore == null:
 		return null

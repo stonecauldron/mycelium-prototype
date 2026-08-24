@@ -108,11 +108,6 @@ func _sell_amount_for_current_drag() -> int:
 			if fert == null:
 				return -1
 			return BiomassData.sell_value(fert.biomass_cost)
-		"weapon", "equipped_weapon":
-			var weapon := drag.get("weapon") as WeaponData
-			if weapon == null or RiboforgeData.is_default_weapon(weapon):
-				return -1
-			return BiomassData.sell_value(weapon.biomass_cost)
 	return -1
 
 

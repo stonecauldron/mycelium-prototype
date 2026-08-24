@@ -1,9 +1,8 @@
 extends Node2D
 
-enum TabId { COLONY, NURSERY, RIBOFORGE }
+enum TabId { COLONY, NURSERY }
 
 ## Left-to-right world order; matches zone positions on X.
-## Riboforge is kept in the scene/codebase but hidden from nav (pupation owns loadouts).
 const TAB_DEFS := [
 	{"id": TabId.NURSERY, "label": "Nursery"},
 	{"id": TabId.COLONY, "label": "War Chamber"},
@@ -21,10 +20,8 @@ const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_
 @onready var _debug_advance_day_button: Button = %DebugAdvanceDayButton
 @onready var _start_combat_button: Button = %StartCombatButton
 @onready var _nursery_zone: Node2D = %NurseryZone
-@onready var _riboforge_zone: Node2D = %RiboforgeZone
 @onready var _colony_zone: Node2D = %ColonyZone
 @onready var _nursery_screen: BaseScreen = %NurseryScreen
-@onready var _riboforge_screen: BaseScreen = %RiboforgeScreen
 @onready var _colony_screen: TroopSelectionScreen = %ColonyScreen
 
 var _current_tab: TabId = TabId.COLONY
@@ -51,8 +48,6 @@ func _ready() -> void:
 	set_start_combat_enabled(_colony_screen.can_start_combat())
 	_ensure_start_arrow()
 	var initial := TabId.COLONY
-	# prefer_riboforge_tab ignored while Riboforge tab is hidden.
-	GameState.consume_prefer_riboforge_tab()
 	if GameState.consume_prefer_nursery_tab():
 		initial = TabId.NURSERY
 	_select_tab(initial, true)
@@ -100,8 +95,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			index = 0
 		KEY_2:
 			index = 1
-		KEY_3:
-			index = 2
 		_:
 			return
 	if index < 0 or index >= _tab_key_order.size():
@@ -186,8 +179,6 @@ func _is_tab_visible(tab_id: TabId) -> bool:
 	match tab_id:
 		TabId.NURSERY:
 			return GameState.is_nursery_unlocked()
-		TabId.RIBOFORGE:
-			return false
 		_:
 			return true
 
@@ -196,8 +187,6 @@ func _zone_for_tab(tab_id: TabId) -> Node2D:
 	match tab_id:
 		TabId.NURSERY:
 			return _nursery_zone
-		TabId.RIBOFORGE:
-			return _riboforge_zone
 		_:
 			return _colony_zone
 
@@ -206,8 +195,6 @@ func _screen_for_tab(tab_id: TabId) -> BaseScreen:
 	match tab_id:
 		TabId.NURSERY:
 			return _nursery_screen
-		TabId.RIBOFORGE:
-			return _riboforge_screen
 		_:
 			return _colony_screen
 

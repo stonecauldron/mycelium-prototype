@@ -3,7 +3,6 @@ extends PanelContainer
 
 signal drag_started(card: UnitCard)
 signal clicked(card: UnitCard)
-signal weapon_loadout_changed(card: UnitCard)
 
 const CARD_SIZE := Vector2(140, 200)
 const PORTRAIT_SCALE := 1.0
@@ -66,11 +65,10 @@ func _ready() -> void:
 
 
 func _make_mock_unit() -> RosterUnitData:
-	var weapon := load(RiboforgeData.SWORD_WEAPON_PATH) as WeaponData
 	return RosterUnitData.create(
 		"Mock Capling",
 		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON),
-		weapon,
+		WeaponSchool.sword(),
 		UnitStatsData.PowerTier.COMMON,
 	)
 
@@ -141,7 +139,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 		return DetailTooltipPopup.configure(unit_tip)
 
 	var weapon_tip: WeaponDetailCard = _WEAPON_DETAIL_CARD_SCENE.instantiate()
-	weapon_tip.setup(data.weapon, false, false, false)
+	weapon_tip.setup(data.weapon, false)
 
 	var host := HBoxContainer.new()
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -166,24 +164,6 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	# Cocoon: click to cancel; no drag.
 	if source == "cocoon":
 		return null
-	# Riboforge: drag unequips non-default weapons onto the stock panel.
-	if source == "riboforge_squad":
-		var roster := unit_data as RosterUnitData
-		if roster == null or RiboforgeData.is_default_weapon(roster.weapon):
-			return null
-		_drag_started_flag = true
-		drag_started.emit(self)
-		var weapon_card_scene: PackedScene = load("res://assets/base/riboforge/weapon_card.tscn")
-		var preview := weapon_card_scene.instantiate() as WeaponCard
-		preview.setup(roster.weapon, -1)
-		preview.modulate = Color(1, 1, 1, 0.85)
-		preview.reset_compact_layout()
-		set_drag_preview(_centered_drag_preview(preview, preview.CARD_SIZE))
-		return {
-			"type": "equipped_weapon",
-			"unit": roster,
-			"weapon": roster.weapon,
-		}
 	_drag_started_flag = true
 	drag_started.emit(self)
 	if _hover_punch != null:
@@ -240,17 +220,9 @@ func _notification(what: int) -> void:
 		# Restore if the drag was cancelled; successful drops rebuild the card.
 		if is_inside_tree():
 			visible = true
-		# Keep punch suppressed while still hovering after an equip drop.
-		# play_exit on mouse leave will re-arm enter.
+
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
-	if typeof(data) == TYPE_DICTIONARY and unit_data is RosterUnitData:
-		var drop_type := str(data.get("type", ""))
-		if drop_type == "weapon" or drop_type == "shop_weapon":
-			return true
-		if drop_type == "equipped_weapon":
-			var from_unit := data.get("unit") as RosterUnitData
-			return from_unit != null and from_unit != unit_data
 	# Occupied squad slots: the card covers the DropSlot, so forward drops.
 	if slot != null and slot.has_method("_can_drop_data"):
 		return slot._can_drop_data(at_position, data)
@@ -261,15 +233,6 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
-	if typeof(data) == TYPE_DICTIONARY and unit_data is RosterUnitData:
-		var drop_type := str(data.get("type", ""))
-		if (
-			drop_type == "weapon"
-			or drop_type == "shop_weapon"
-			or drop_type == "equipped_weapon"
-		):
-			_try_receive_weapon(data)
-			return
 	if slot != null and slot.has_method("_drop_data"):
 		slot._drop_data(at_position, data)
 		return
@@ -277,49 +240,6 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 		var base := _find_base()
 		if base != null and base.has_method("_bench_drop"):
 			base._bench_drop(at_position, data)
-
-
-func _try_receive_weapon(data: Dictionary) -> void:
-	var unit := unit_data as RosterUnitData
-	if unit == null:
-		return
-	var drop_type := str(data.get("type", ""))
-	if drop_type == "weapon":
-		var stock_index := int(data.get("stock_index", -1))
-		if GameState.try_equip_weapon_from_stock(unit, stock_index):
-			_refresh()
-			_suppress_punch_after_equip()
-			weapon_loadout_changed.emit(self)
-		return
-	if drop_type == "equipped_weapon":
-		var from_unit := data.get("unit") as RosterUnitData
-		if GameState.try_transfer_equipped_weapon(from_unit, unit):
-			_refresh()
-			_suppress_punch_after_equip()
-			weapon_loadout_changed.emit(self)
-		return
-	if drop_type == "shop_weapon":
-		var weapon := data.get("weapon") as WeaponData
-		var cost := int(data.get("cost", 0))
-		var slot_index := int(data.get("slot_index", -1))
-		if weapon == null:
-			return
-		var new_index := GameState.try_buy_weapon(weapon, cost)
-		if new_index < 0:
-			return
-		if slot_index >= 0:
-			GameState.riboforge.replace_shop_slot(slot_index)
-		if GameState.try_equip_weapon_from_stock(unit, new_index):
-			_refresh()
-			_suppress_punch_after_equip()
-			weapon_loadout_changed.emit(self)
-
-
-func _suppress_punch_after_equip() -> void:
-	if _hover_punch == null:
-		return
-	_hover_punch.reset()
-	_hover_punch.suppress_enter()
 
 
 func _find_base() -> Node:

@@ -65,11 +65,10 @@ func _ready() -> void:
 
 
 func _make_mock_unit() -> RosterUnitData:
-	var weapon := load(RiboforgeData.SWORD_WEAPON_PATH) as WeaponData
 	return RosterUnitData.create(
 		"Mock Capling",
 		UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON),
-		weapon,
+		WeaponSchool.sword(),
 		UnitStatsData.PowerTier.COMMON,
 	)
 

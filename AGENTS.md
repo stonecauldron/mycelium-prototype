@@ -4,7 +4,7 @@ Godot 4.x 2D auto-battler prototype. Prefer minimal focused diffs; match existin
 
 ## Layout
 
-- **Base hub** (`assets/base/`): camera-tab zones — War Chamber (troop selection), Nursery, Riboforge.
+- **Base hub** (`assets/base/`): camera-tab zones — War Chamber (troop selection), Nursery.
 - **Combat** (`assets/combat/combat_stage/`): battlefield stage and HUD.
 - Preserve gameplay node paths and combat floor/spawn logic when changing visuals.
 

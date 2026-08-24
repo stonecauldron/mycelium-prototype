@@ -5,12 +5,10 @@ signal debug_cheats_applied
 
 const WIN_DAYS := 10
 const NURSERY_UNLOCK_DAY := 1
-const RIBOFORGE_UNLOCK_DAY := 2
 const BASE_SCENE_PATH := "res://assets/base/base.tscn"
 
 var troop: TroopData = TroopData.new()
 var nursery: NurseryData = NurseryData.new()
-var riboforge: RiboforgeData = RiboforgeData.new()
 var pupation: PupationData = PupationData.new()
 var biomass: BiomassData = BiomassData.new()
 var seals: SealsCollection = SealsCollection.new()
@@ -23,8 +21,6 @@ var upcoming_enemy_formation: Array[EnemyUnitSpec] = []
 var scout_rerolls_today: int = 0
 ## One-shot: open Nursery when returning to base after it unlocks.
 var prefer_nursery_tab: bool = false
-## One-shot: open Riboforge when returning to base after it unlocks.
-var prefer_riboforge_tab: bool = false
 ## Session preference: combat fast-forward scale (1, 2, or 4; restored on next fight).
 var combat_fast_forward: int = 1
 ## Session: show floating arrow pointing at Start Combat until first launch.
@@ -292,10 +288,6 @@ func is_nursery_unlocked() -> bool:
 	return debug_mode_active or current_day >= NURSERY_UNLOCK_DAY
 
 
-func is_riboforge_unlocked() -> bool:
-	return debug_mode_active or current_day >= RIBOFORGE_UNLOCK_DAY
-
-
 func consume_prefer_nursery_tab() -> bool:
 	if not prefer_nursery_tab:
 		return false
@@ -303,30 +295,16 @@ func consume_prefer_nursery_tab() -> bool:
 	return is_nursery_unlocked()
 
 
-func consume_prefer_riboforge_tab() -> bool:
-	if not prefer_riboforge_tab:
-		return false
-	prefer_riboforge_tab = false
-	return is_riboforge_unlocked()
-
-
 func ensure_nursery_seeded() -> void:
 	nursery.seed_if_empty()
-
-
-func ensure_riboforge_seeded() -> void:
-	riboforge.seed_if_empty()
 
 
 ## Free daily refresh: reroll unlocked shop slots (locks persist). Reset Nursery and Scout reroll counts.
 func refresh_shops_for_new_day() -> void:
 	ensure_nursery_seeded()
-	ensure_riboforge_seeded()
 	nursery.reset_shop_reroll_cost()
-	riboforge.reset_shop_reroll_cost()
 	reset_scout_reroll_cost()
 	nursery.reroll_unlocked_shop_offers()
-	riboforge.reroll_unlocked_shop_offers()
 
 
 func try_buy_fertilizer(fertilizer: FertilizerData, cost: int) -> bool:
@@ -377,77 +355,6 @@ func try_plant_fresh_common(plot_index: int) -> bool:
 	return true
 
 
-## Buys into weapon stock. Returns the stock slot index, or -1 on failure.
-func try_buy_weapon(weapon: WeaponData, cost: int) -> int:
-	if weapon == null or cost < 0:
-		return -1
-	ensure_riboforge_seeded()
-	if not riboforge.can_add_weapon():
-		return -1
-	if not biomass.try_spend(cost):
-		return -1
-	# Duplicate so purchased copies are distinct from the shared default melee.
-	var stock_weapon := weapon.duplicate() as WeaponData
-	var stock_index := riboforge.add_weapon(stock_weapon) if stock_weapon != null else -1
-	if stock_index < 0:
-		biomass.add(cost)
-		return -1
-	return stock_index
-
-
-func try_equip_weapon_from_stock(unit: RosterUnitData, stock_index: int) -> bool:
-	if unit == null:
-		return false
-	ensure_riboforge_seeded()
-	var stock_weapon := riboforge.weapon_stock.get_at(stock_index) as WeaponData
-	if stock_weapon == null:
-		return false
-	# Clear first so a displaced non-default weapon can re-enter without needing
-	# an extra stock slot beyond the cap.
-	riboforge.weapon_stock.clear_slot(stock_index)
-	var previous := unit.weapon
-	unit.weapon = stock_weapon
-	if previous != null and not RiboforgeData.is_default_weapon(previous):
-		if riboforge.add_weapon(previous) < 0:
-			# Should be unreachable after clearing the source slot; restore stock.
-			riboforge.weapon_stock.set_at(stock_index, stock_weapon)
-			unit.weapon = previous
-			return false
-	return true
-
-
-func try_unequip_weapon_to_stock(unit: RosterUnitData) -> bool:
-	if unit == null:
-		return false
-	ensure_riboforge_seeded()
-	if RiboforgeData.is_default_weapon(unit.weapon):
-		return false
-	if not riboforge.can_add_weapon():
-		return false
-	if riboforge.add_weapon(unit.weapon) < 0:
-		return false
-	unit.weapon = RiboforgeData.get_default_weapon()
-	return true
-
-
-## Move an equipped non-default weapon onto another unit (swap if the target has one).
-func try_transfer_equipped_weapon(from_unit: RosterUnitData, to_unit: RosterUnitData) -> bool:
-	if from_unit == null or to_unit == null or from_unit == to_unit:
-		return false
-	ensure_riboforge_seeded()
-	if RiboforgeData.is_default_weapon(from_unit.weapon):
-		return false
-	var moving := from_unit.weapon
-	var displaced := to_unit.weapon
-	to_unit.weapon = moving
-	from_unit.weapon = (
-		RiboforgeData.get_default_weapon()
-		if RiboforgeData.is_default_weapon(displaced)
-		else displaced
-	)
-	return true
-
-
 func try_sell_spore_from_stock(stock_index: int) -> bool:
 	return try_sell_nursery_stock_item(stock_index)
 
@@ -477,28 +384,6 @@ func try_sell_nursery_stock_item(stock_index: int) -> bool:
 	nursery.stock.clear_slot(stock_index)
 	biomass.add(sold)
 	Analytics.biomass_source("Stock", item_id, sold)
-	return true
-
-
-func try_sell_weapon_from_stock(stock_index: int) -> bool:
-	ensure_riboforge_seeded()
-	var weapon := riboforge.weapon_stock.get_at(stock_index) as WeaponData
-	if weapon == null or RiboforgeData.is_default_weapon(weapon):
-		return false
-	riboforge.weapon_stock.clear_slot(stock_index)
-	biomass.add(BiomassData.sell_value(weapon.biomass_cost))
-	return true
-
-
-func try_sell_equipped_weapon(unit: RosterUnitData) -> bool:
-	if unit == null:
-		return false
-	ensure_riboforge_seeded()
-	var weapon := unit.weapon
-	if weapon == null or RiboforgeData.is_default_weapon(weapon):
-		return false
-	unit.weapon = RiboforgeData.get_default_weapon()
-	biomass.add(BiomassData.sell_value(weapon.biomass_cost))
 	return true
 
 
@@ -537,13 +422,11 @@ func start_new_run() -> void:
 func reset_run() -> void:
 	troop.reset()
 	nursery.reset()
-	riboforge.reset()
 	pupation.reset()
 	biomass.reset()
 	seals.reset()
 	current_day = 0
 	prefer_nursery_tab = false
-	prefer_riboforge_tab = false
 	show_start_combat_hint = true
 	show_plot_harvest_hint = true
 	show_plot_plant_hint = true

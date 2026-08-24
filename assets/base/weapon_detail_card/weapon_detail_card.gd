@@ -5,10 +5,6 @@ const CARD_WIDTH := 320.0
 
 var weapon_data: WeaponData
 var interactive: bool = true
-## When true, footer shows buy cost instead of sell value (shop tooltips).
-var show_buy_price: bool = false
-## When false, hides the buy/sell footer (equipped weapon tooltips).
-var show_price: bool = true
 
 @onready var _card_panel: PanelContainer = $CardPanel
 @onready var _name_label: Label = %NameLabel
@@ -20,20 +16,12 @@ var show_price: bool = true
 @onready var _blunt_tag: TagChip = %BluntTag
 @onready var _aoe_tag: TagChip = %AoeTag
 @onready var _sell_row: HBoxContainer = %SellRow
-@onready var _sell_label: Label = %SellLabel
 @onready var _footer_spacer: Control = $CardPanel/Margin/VBox/FooterSpacer
 
 
-func setup(
-	weapon: WeaponData,
-	p_interactive: bool = true,
-	p_show_buy_price: bool = false,
-	p_show_price: bool = true
-) -> void:
+func setup(weapon: WeaponData, p_interactive: bool = true) -> void:
 	weapon_data = weapon
 	interactive = p_interactive
-	show_buy_price = p_show_buy_price
-	show_price = p_show_price
 	if is_node_ready():
 		_apply_interaction_mode()
 		_refresh()
@@ -74,7 +62,7 @@ func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	_apply_interaction_mode()
 	if weapon_data == null and get_tree().current_scene == self:
-		weapon_data = load(RiboforgeData.SWORD_WEAPON_PATH) as WeaponData
+		weapon_data = WeaponSchool.sword()
 	if weapon_data != null:
 		_refresh()
 	fit_to_content()
@@ -106,20 +94,11 @@ func _refresh() -> void:
 	_aoe_tag.visible = weapon_data.targeting_mode == WeaponData.TargetingMode.AOE
 	if _aoe_tag.visible:
 		_aoe_tag.set_text("AOE")
-	_refresh_price_row()
-
-
-func _refresh_price_row() -> void:
-	if _sell_row == null or _sell_label == null:
-		return
-	if not show_price or RiboforgeData.is_default_weapon(weapon_data):
+	if _sell_row != null:
 		_sell_row.visible = false
-		return
-	_sell_row.visible = true
-	if show_buy_price:
-		_sell_label.text = "Buy: %d" % weapon_data.biomass_cost
-	else:
-		_sell_label.text = "Sell: %d" % BiomassData.sell_value(weapon_data.biomass_cost)
+		var footer := _sell_row.get_parent() as Control
+		if footer != null:
+			footer.visible = false
 
 
 func _range_label(formation_line: WeaponData.FormationLine) -> String:

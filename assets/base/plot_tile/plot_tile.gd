@@ -105,8 +105,11 @@ func _ready() -> void:
 	mouse_exited.connect(clear_drop_highlight)
 	if _egg_visual != null:
 		_egg_visual.resized.connect(_update_egg_pivot)
+	# Plant-hint Y is measured from ActionSlot; that rect is (0,0) until the first sort.
+	_action_slot.item_rect_changed.connect(_refresh_arrow)
 	if is_unlockable or _plot != null:
 		_refresh()
+	call_deferred("_refresh_arrow")
 
 
 func setup(index: int, plot: NurseryPlotData, can_afford_fresh_plant: bool = false) -> void:
@@ -211,7 +214,12 @@ func _refresh_arrow() -> void:
 		_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
 		return
 	if _should_show_plant_hint():
-		_place_drop_arrow(_plant_hint_arrow_top())
+		var top_px := _plant_hint_arrow_top()
+		# Same-frame add_child+setup still has ActionSlot at the parent origin.
+		if top_px < 0.0:
+			_set_drop_arrow_visible(false)
+			return
+		_place_drop_arrow(top_px)
 		_set_drop_arrow_visible(true)
 		return
 	if _should_show_harvest_hint():

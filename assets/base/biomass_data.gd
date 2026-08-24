@@ -17,7 +17,7 @@ const MUTATION_COST := 4
 const SHOP_REROLL_COST := 3
 ## Extra biomass on Seal reroll so a day-1 first would be 15 (opening pick still cannot reroll).
 const SEAL_REROLL_EXTRA := 14
-const PLOT_UNLOCK_BASE_COST := 4
+const PLOT_UNLOCK_COST := 8
 const SQUAD_SLOT_UNLOCK_COST := 8
 const STARTING_AMOUNT := 3
 

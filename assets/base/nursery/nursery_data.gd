@@ -1,7 +1,7 @@
 class_name NurseryData
 extends Resource
 
-const MAX_PLOT_COUNT := 9
+const MAX_PLOT_COUNT := 4
 const STARTING_UNLOCKED_PLOTS := 1
 const SHOP_SLOT_COUNT := 4
 const SHOP_FERTILIZER_SLOT_COUNT := 2
@@ -123,7 +123,7 @@ func can_unlock_plot() -> bool:
 func next_unlock_cost() -> int:
 	if not can_unlock_plot():
 		return -1
-	return BiomassData.PLOT_UNLOCK_BASE_COST * unlocked_plot_count * unlocked_plot_count
+	return BiomassData.PLOT_UNLOCK_COST
 
 
 func unlock_next_plot() -> bool:

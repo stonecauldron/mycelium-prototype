@@ -37,7 +37,7 @@ var _buy_hint_arrow: FloatingArrow = null
 @onready var _price_label: Label = %PriceLabel
 @onready var _tier_tag: TagChip = %TierTag
 @onready var _footer_row: HBoxContainer = %FooterRow
-@onready var _lock_button: Button = %LockButton
+@onready var _lock_icon: TextureRect = %LockIcon
 @onready var _hover_punch: HoverPunch = %HoverPunch
 
 
@@ -90,9 +90,9 @@ func set_locked(locked: bool) -> void:
 	is_locked = locked
 	if not is_node_ready():
 		return
-	_lock_button.visible = locked
-	_lock_button.modulate = Color.WHITE
-	_lock_button.tooltip_text = "Unlock" if locked else "Lock"
+	_lock_icon.visible = locked
+	_lock_icon.modulate = Color.WHITE
+	_lock_icon.tooltip_text = "Unlock" if locked else "Lock"
 
 
 ## Tutorial arrow above this offer (e.g. Common Generalist until first buy).
@@ -184,8 +184,8 @@ func _ready() -> void:
 	custom_minimum_size = CARD_SIZE
 	custom_maximum_size = CARD_SIZE
 	_set_children_mouse_filter_ignore(_content)
-	_lock_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	_lock_button.pressed.connect(_on_lock_pressed)
+	_lock_icon.mouse_filter = Control.MOUSE_FILTER_STOP
+	_lock_icon.gui_input.connect(_on_lock_gui_input)
 	reset_compact_layout()
 
 
@@ -248,8 +248,15 @@ func _set_children_mouse_filter_ignore(node: Node) -> void:
 		_set_children_mouse_filter_ignore(child)
 
 
-func _on_lock_pressed() -> void:
-	lock_toggled.emit(self)
+func _on_lock_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse := event as InputEventMouseButton
+		if not mouse.pressed:
+			return
+		if mouse.button_index != MOUSE_BUTTON_LEFT and mouse.button_index != MOUSE_BUTTON_RIGHT:
+			return
+		lock_toggled.emit(self)
+		_lock_icon.accept_event()
 
 
 func _gui_input(event: InputEvent) -> void:

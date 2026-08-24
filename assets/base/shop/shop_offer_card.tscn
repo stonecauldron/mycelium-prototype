@@ -149,8 +149,10 @@ texture = ExtResource("4_biomass")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LockButton" type="Button" parent="." unique_id=1087985862]
+[node name="LockIcon" type="TextureRect" parent="." unique_id=1087985862]
 unique_name_in_owner = true
+visible = false
+z_index = 1
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 1
 anchors_preset = 1
@@ -161,8 +163,7 @@ offset_top = 4.0
 offset_right = -4.0
 offset_bottom = 60.0
 grow_horizontal = 0
-focus_mode = 0
-theme_override_constants/icon_max_width = 44
-icon = ExtResource("5_padlock")
-flat = true
-expand_icon = true
+mouse_filter = 0
+texture = ExtResource("5_padlock")
+expand_mode = 1
+stretch_mode = 5

@@ -99,6 +99,10 @@ Player unit art is layered Generalist body + cap sprites (child pair while Child
 **Shop**:
 Rerollable biomass offers in the Nursery (Fertilizers and Mutations — not spores, not Weapons). Offer rows stay split — Fertilizer slots and Mutation slots — so both show every reroll. Each Mutation slot rolls independently (body or cap); paid rerolls use Reroll Increase per extra this Day.
 
+**Offer lock**:
+A flag on a Shop offer that keeps that offer through Shop reroll (paid and daily).
+*Avoid*: lock (when you mean a Plot or Squad slot that is not yet unlocked); pin; freeze; locking Stock
+
 **Stock**:
 The player's held lineage spores, Fertilizers, and Mutations ready to plant or use.
 

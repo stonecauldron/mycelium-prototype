@@ -6,8 +6,16 @@
 [ext_resource type="Texture2D" uid="uid://dqwo514d7ery6" path="res://assets/base/unit_card/hp_icon.png" id="4_hp"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="6_punch"]
+[ext_resource type="Texture2D" uid="uid://d0l0l1yl5kad2" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 1 6.png" id="7_name_title"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_name_title"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+texture = ExtResource("7_name_title")
 
 [node name="UnitCard" type="PanelContainer" unique_id=2087829966]
 custom_minimum_size = Vector2(140, 200)
@@ -31,6 +39,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CardNameLabel"
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_styles/normal = SubResource("StyleBoxTexture_name_title")
 text = "Unit"
 horizontal_alignment = 1
 

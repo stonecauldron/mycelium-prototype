@@ -10,11 +10,11 @@
 [sub_resource type="Resource" id="Combat_stump"]
 script = ExtResource("2_combat")
 engagement_stance = 2
+attack_interval = 2.0
 outgoing_damage_multiplier = 0.5
 incoming_damage_multiplier = 0.25
 incoming_knockback_multiplier = 0.25
 blocks_charges = true
-attack_interval = 2.0
 
 [sub_resource type="Resource" id="Stats_stump"]
 script = ExtResource("2_stats")

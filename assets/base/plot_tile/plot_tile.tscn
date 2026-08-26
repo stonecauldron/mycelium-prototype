@@ -8,11 +8,17 @@
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="6_figtree"]
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="7_hourglass"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="8_chip"]
+[ext_resource type="Texture2D" uid="uid://pmej1l8yxfyh" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 8.png" id="8_foxer"]
 [ext_resource type="PackedScene" uid="uid://d1cl6878jbaea" path="res://assets/ui/floating_arrow/floating_arrow.tscn" id="9_arrow"]
 [ext_resource type="Texture2D" uid="uid://6smol5kjpvmd" path="res://assets/base/plot_tile/egg0_shadow.png" id="10_egg_shadow"]
 [ext_resource type="Texture2D" uid="uid://cog6qekc0if3t" path="res://assets/base/plot_tile/egg0.png" id="11_egg0"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_asca7"]
+texture = ExtResource("8_foxer")
+texture_margin_left = 29.556562
+texture_margin_right = 34.368095
 
 [sub_resource type="FontVariation" id="Font_figtree_button"]
 base_font = ExtResource("6_figtree")
@@ -46,7 +52,6 @@ theme_type_variation = &"SlotMargin"
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = -12
-alignment = 0
 
 [node name="LockSpacer" type="Control" parent="Content/Margin/Stack" unique_id=1087985864]
 unique_name_in_owner = true
@@ -113,14 +118,17 @@ anchor_right = 1.0
 offset_top = 4.0
 offset_bottom = 40.0
 grow_horizontal = 2
-mouse_filter = 2
 theme_type_variation = &"CardNameLabel"
-text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
 
-[node name="StatsRow" type="HBoxContainer" parent="Content/Margin/Stack" unique_id=61749301]
+[node name="PanelContainer" type="PanelContainer" parent="Content/Margin/Stack" unique_id=1335934954]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_asca7")
+
+[node name="StatsRow" type="HBoxContainer" parent="Content/Margin/Stack/PanelContainer" unique_id=61749301]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
@@ -130,10 +138,9 @@ mouse_filter = 2
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="DaysChip" parent="Content/Margin/Stack/StatsRow" unique_id=61749302 instance=ExtResource("8_chip")]
+[node name="DaysChip" parent="Content/Margin/Stack/PanelContainer/StatsRow" unique_id=61749302 instance=ExtResource("8_chip")]
 unique_name_in_owner = true
 visible = false
-layout_mode = 2
 icon = ExtResource("7_hourglass")
 
 [node name="ActionSlot" type="Control" parent="Content/Margin/Stack" unique_id=216391870]

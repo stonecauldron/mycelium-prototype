@@ -1,37 +1,45 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://clhhq2k6avino"]
 
-[ext_resource type="Script" path="res://assets/base/pupation/cocoon_slot.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bj0bto0wrt31l" path="res://assets/base/pupation/cocoon_slot.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://brpjsoriiinsp" path="res://assets/base/pupation/cocoon_open.png" id="3_cocoon_open"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="4_chip"]
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="5_hourglass"]
+[ext_resource type="Texture2D" uid="uid://bonq4ftkddl3x" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 9.png" id="6_3duik"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="6_punch"]
 [ext_resource type="PackedScene" uid="uid://d1cl6878jbaea" path="res://assets/ui/floating_arrow/floating_arrow.tscn" id="7_arrow"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
 
-[node name="CocoonSlot" type="PanelContainer"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_asca7"]
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("6_3duik")
+texture_margin_left = 13.477167
+texture_margin_right = 11.93692
+
+[node name="CocoonSlot" type="PanelContainer" unique_id=83155884]
 custom_minimum_size = Vector2(132, 260)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 script = ExtResource("1_script")
 
-[node name="HoverPunch" parent="." instance=ExtResource("6_punch")]
+[node name="HoverPunch" parent="." unique_id=1874715260 instance=ExtResource("6_punch")]
 unique_name_in_owner = true
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="." unique_id=1561435992]
 layout_mode = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="VBox" type="VBoxContainer" parent="Margin"]
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=348757500]
 layout_mode = 2
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="CocoonImage" type="TextureRect" parent="Margin/VBox"]
+[node name="CocoonImage" type="TextureRect" parent="Margin/VBox" unique_id=645969387]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
@@ -41,7 +49,7 @@ texture = ExtResource("3_cocoon_open")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="DropArrow" parent="Margin/VBox/CocoonImage" instance=ExtResource("7_arrow")]
+[node name="DropArrow" parent="Margin/VBox/CocoonImage" unique_id=1298118345 instance=ExtResource("7_arrow")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 5
@@ -53,7 +61,13 @@ offset_right = 48.0
 offset_bottom = 40.0
 grow_horizontal = 2
 
-[node name="WeaponIcon" type="TextureRect" parent="Margin/VBox"]
+[node name="PanelContainer" type="PanelContainer" parent="Margin/VBox" unique_id=762209061]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxTexture_asca7")
+
+[node name="WeaponIcon" type="TextureRect" parent="Margin/VBox/PanelContainer" unique_id=578812423]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
@@ -62,9 +76,8 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="DaysChip" parent="Margin/VBox" instance=ExtResource("4_chip")]
+[node name="DaysChip" parent="Margin/VBox" unique_id=400889739 instance=ExtResource("4_chip")]
 unique_name_in_owner = true
 visible = false
-layout_mode = 2
 size_flags_horizontal = 4
 icon = ExtResource("5_hourglass")

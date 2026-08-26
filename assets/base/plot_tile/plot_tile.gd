@@ -78,6 +78,7 @@ var _egg_shake_rot: float = 0.0:
 @onready var _egg_visual: TextureRect = %EggVisual
 @onready var _days_chip: StatChip = %DaysChip
 @onready var _stats_row: HBoxContainer = %StatsRow
+@onready var _stats_panel: PanelContainer = _stats_row.get_parent() as PanelContainer
 @onready var _lock_spacer: Control = %LockSpacer
 @onready var _action_slot: Control = %ActionSlot
 @onready var _plant_button: Button = %PlantButton
@@ -105,6 +106,7 @@ func _ready() -> void:
 	mouse_exited.connect(clear_drop_highlight)
 	if _egg_visual != null:
 		_egg_visual.resized.connect(_update_egg_pivot)
+	_refresh_stats_panel_visibility()
 	# Plant-hint Y is measured from ActionSlot; that rect is (0,0) until the first sort.
 	_action_slot.item_rect_changed.connect(_refresh_arrow)
 	if is_unlockable or _plot != null:
@@ -242,6 +244,7 @@ func _refresh() -> void:
 		# Same stack as empty plots (plot + stats + action) so Unlock lines up with Plant.
 		_days_chip.visible = false
 		_clear_fertilizer_chips()
+		_refresh_stats_panel_visibility()
 		_lock_spacer.visible = false
 		_plot_visual_area.visible = true
 		_hide_egg_layers()
@@ -277,6 +280,7 @@ func _refresh() -> void:
 	if _plot == null:
 		_days_chip.visible = false
 		_clear_fertilizer_chips()
+		_refresh_stats_panel_visibility()
 		_plant_button.visible = false
 		tooltip_text = ""
 		_refresh_lineage_name()
@@ -313,6 +317,7 @@ func _refresh() -> void:
 			modulate = Color.WHITE
 			_base_modulate = modulate
 	_refresh_fertilizer_chips()
+	_refresh_stats_panel_visibility()
 	if _plot.planted_spore != null:
 		# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
 		tooltip_text = _plot.planted_spore.display_name
@@ -390,6 +395,17 @@ func _clear_fertilizer_chips() -> void:
 				chip.get_parent().remove_child(chip)
 			chip.free()
 	_fertilizer_chips.clear()
+
+
+func _refresh_stats_panel_visibility() -> void:
+	if _stats_panel == null or _stats_row == null:
+		return
+	_stats_panel.visible = false
+	for child in _stats_row.get_children():
+		var canvas_item := child as CanvasItem
+		if canvas_item != null and canvas_item.visible:
+			_stats_panel.visible = true
+			return
 
 
 func _refresh_fertilizer_chips() -> void:

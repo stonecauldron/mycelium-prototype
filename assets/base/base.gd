@@ -250,6 +250,7 @@ func _select_tab(tab_id: TabId, instant: bool = false) -> void:
 		return
 	if _current_screen != null and _current_tab == tab_id and not instant:
 		return
+	ActionFeedback.dismiss()
 
 	var previous := _current_screen
 	_current_tab = tab_id

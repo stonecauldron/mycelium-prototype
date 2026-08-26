@@ -42,17 +42,33 @@ func _set_drop_arrow_visible(should_show: bool) -> void:
 
 
 func _accepts_drag_data(data: Variant) -> bool:
-	if typeof(data) != TYPE_DICTIONARY:
-		return false
-	var unit := data.get("unit") as RosterUnitData
+	var unit := _dragged_troop_unit(data)
 	if unit == null:
-		return false
-	var source := str(data.get("source", ""))
-	if source != "squad" and source != "bench":
 		return false
 	if is_compost_slot:
 		return GameState.can_compost_unit(unit)
 	return GameState.can_cocoon_for_pupation(unit, school)
+
+
+func _training_drag_decision(data: Variant) -> ActionDecision:
+	if is_compost_slot:
+		return null
+	var unit := _dragged_troop_unit(data)
+	if unit == null:
+		return null
+	return unit.check_training_eligibility()
+
+
+func _dragged_troop_unit(data: Variant) -> RosterUnitData:
+	if typeof(data) != TYPE_DICTIONARY:
+		return null
+	var unit := data.get("unit") as RosterUnitData
+	if unit == null:
+		return null
+	var source := str(data.get("source", ""))
+	if source != "squad" and source != "bench":
+		return null
+	return unit
 
 
 func _refresh_arrow() -> void:
@@ -232,6 +248,7 @@ func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
 
 func _on_mouse_exited() -> void:
 	_set_drag_hover(false)
+	ActionFeedback.clear_drag_preview()
 
 
 func _set_drag_hover(active: bool) -> void:
@@ -267,6 +284,12 @@ func _tween_cocoon_scale(target: float) -> void:
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+	var decision := _training_drag_decision(data)
+	if decision != null and not decision.allowed:
+		ActionFeedback.preview_rejection(self, decision)
+		_set_drag_hover(false)
+		return false
+	ActionFeedback.clear_drag_preview()
 	if not _accepts_drag_data(data):
 		_set_drag_hover(false)
 		return false

@@ -292,7 +292,11 @@ func _on_reroll_hover_exited() -> void:
 
 func _on_reroll_pressed() -> void:
 	var cost := GameState.nursery.current_shop_reroll_cost()
-	if not GameState.biomass.try_spend(cost):
+	var spend := GameState.biomass.try_spend_decision(cost)
+	if spend == null:
+		return
+	if not spend.allowed:
+		ActionFeedback.show_rejection(_reroll_button, spend)
 		return
 	Analytics.biomass_sink("Shop", "Reroll", cost)
 	for card in _shop_cards:

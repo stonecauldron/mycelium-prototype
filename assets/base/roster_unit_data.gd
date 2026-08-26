@@ -183,9 +183,13 @@ func promote_to_fully_evolved() -> bool:
 
 
 func can_pupate() -> bool:
-	if enemy_unit_data != null:
-		return false
-	return life_stage_id == STAGE_JUVENILE
+	return check_training_eligibility().allowed
+
+
+func check_training_eligibility() -> ActionDecision:
+	if enemy_unit_data != null or life_stage_id != STAGE_JUVENILE:
+		return ActionDecision.reject(ActionReasons.ONLY_CHILD_CAN_TRAIN)
+	return ActionDecision.accept()
 
 
 func sync_weapon_from_trainings() -> void:

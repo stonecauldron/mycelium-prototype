@@ -18,6 +18,7 @@ config/icon="res://icon.png"
 [autoload]
 
 GameState="*res://assets/autoload/game_state.gd"
+ActionFeedback="*res://assets/ui/action_feedback/action_feedback.gd"
 SceneTransition="*res://assets/autoload/scene_transition.gd"
 Screenshot="*res://assets/autoload/screenshot.gd"
 SettingsServer="*res://assets/autoload/settings_server.gd"

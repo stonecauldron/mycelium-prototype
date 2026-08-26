@@ -85,7 +85,7 @@ A flat bonus to all three Stats (Strength, Dexterity, and Constitution) held on 
 *Avoid*: residue, pending stat bonus, Fungicide stack
 
 **Mutation**:
-An identity modifier applied in the Nursery on a plot (including empty dirt). It does not change hatch Stats. Plots and harvested units hold at most one Mutation for now — Body **or** Cap (typed fields remain; the other stays empty). Same-slot replace consumes the previous Mutation. Dual Body+Cap remix is deferred.
+An identity modifier applied in the Nursery on a plot (including empty dirt). It does not change hatch Stats. A Plot holds at most one applied Mutation for now — Body **or** Cap — and an occupied slot cannot be replaced. A harvested unit can carry both when its Plot and lineage supply different slots. Dual Body+Cap plot remix is deferred.
 *Avoid*: Fertilizer (when you mean identity), treating Mutation as a Stat source, trait, strain effect (as the item type)
 
 **Body mutation**:
@@ -163,7 +163,7 @@ A rarity/power band on player units (e.g. Common through Legendary). Fresh Nurse
 Voluntarily removing a unit for biomass.
 
 **Training**:
-Putting a unit through a weapon school so it emerges as an Adult with that school's fighting identity.
+Putting a Child through a weapon school so it emerges as an Adult with that school's fighting identity. Adults cannot enter Training again; later Trainings in the bloodline happen through Child descendants.
 *Avoid*: WeaponSchool (code)
 
 **Cocoon**:

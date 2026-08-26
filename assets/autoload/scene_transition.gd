@@ -22,6 +22,7 @@ func change_scene(path: String) -> void:
 	if _busy:
 		return
 	_busy = true
+	ActionFeedback.dismiss()
 	_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	await _fade_to(1.0)

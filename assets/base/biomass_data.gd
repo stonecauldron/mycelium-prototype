@@ -73,14 +73,30 @@ func add(value: int) -> void:
 
 
 func can_afford(cost: int) -> bool:
-	return cost >= 0 and amount >= cost
+	var decision := check_spend(cost)
+	return decision != null and decision.allowed
+
+
+func check_spend(cost: int) -> ActionDecision:
+	if cost < 0:
+		push_error("Biomass cost cannot be negative: %d" % cost)
+		return null
+	if amount < cost:
+		return ActionDecision.reject(ActionReasons.NOT_ENOUGH_BIOMASS)
+	return ActionDecision.accept()
 
 
 func try_spend(cost: int) -> bool:
-	if not can_afford(cost):
-		return false
+	var decision := try_spend_decision(cost)
+	return decision != null and decision.allowed
+
+
+func try_spend_decision(cost: int) -> ActionDecision:
+	var decision := check_spend(cost)
+	if decision == null or not decision.allowed:
+		return decision
 	amount -= cost
-	return true
+	return decision
 
 
 func reset() -> void:

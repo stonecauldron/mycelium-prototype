@@ -30,10 +30,22 @@ func can_harvest() -> bool:
 
 
 func can_apply_fertilizer() -> bool:
+	return check_fertilizer_application().allowed
+
+
+func check_fertilizer_application(fertilizer: FertilizerData = null) -> ActionDecision:
 	var state := get_state()
+	if fertilizer != null and fertilizer.behavior == FertilizerData.Behavior.FUNGICIDE:
+		if state != State.GROWING and state != State.READY:
+			return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_FERTILIZER)
+		return ActionDecision.accept()
+	if fertilizer != null and fertilizer.behavior == FertilizerData.Behavior.NORMIFIER:
+		return check_normifier_application()
 	if state != State.EMPTY and state != State.GROWING:
-		return false
-	return fertilizer_stack_count() < SealModifiers.max_fertilizer_stacks()
+		return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_FERTILIZER)
+	if fertilizer_stack_count() >= SealModifiers.max_fertilizer_stacks():
+		return ActionDecision.reject(ActionReasons.FERTILIZER_CAPACITY_FULL)
+	return ActionDecision.accept()
 
 
 ## Fertilizers that occupy Plot stack slots. Fungicide Extra nutrition does not.
@@ -65,23 +77,29 @@ func filled_mutation() -> MutationData:
 	return cap_mutation
 
 
-## Mutations apply on empty or growing plots. At capacity, only same-slot replace is allowed.
+## Mutations apply on empty or growing plots when both capacity and its typed slot are free.
 func can_apply_mutation(mutation: MutationData = null) -> bool:
+	return check_mutation_application(mutation).allowed
+
+
+func check_mutation_application(mutation: MutationData = null) -> ActionDecision:
 	var state := get_state()
 	if state != State.EMPTY and state != State.GROWING:
-		return false
+		return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_MUTATION)
 	var max_slots := SealModifiers.max_mutation_slots()
 	if mutation == null:
-		return mutation_count() < max_slots
+		if mutation_count() >= max_slots:
+			return ActionDecision.reject(ActionReasons.MUTATION_CAPACITY_FULL)
+		return ActionDecision.accept()
 	if mutation.is_body():
-		if body_mutation != null:
-			return true
-		return mutation_count() < max_slots
+		if body_mutation != null or mutation_count() >= max_slots:
+			return ActionDecision.reject(ActionReasons.MUTATION_CAPACITY_FULL)
+		return ActionDecision.accept()
 	if mutation.is_cap():
-		if cap_mutation != null:
-			return true
-		return mutation_count() < max_slots
-	return false
+		if cap_mutation != null or mutation_count() >= max_slots:
+			return ActionDecision.reject(ActionReasons.MUTATION_CAPACITY_FULL)
+		return ActionDecision.accept()
+	return ActionDecision.reject(ActionReasons.INVALID_MUTATION)
 
 
 ## Overgrowth removed: harvest always yields Child units.
@@ -143,7 +161,7 @@ func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 	return true
 
 
-## Assigns mutation to its Body/Cap slot. Same-kind replace consumes the previous.
+## Assigns mutation to a free Body/Cap slot without replacing an applied mutation.
 func apply_mutation(mutation: MutationData) -> bool:
 	if mutation == null or not can_apply_mutation(mutation):
 		return false
@@ -165,12 +183,18 @@ func has_any_mutation() -> bool:
 
 
 func can_apply_normifier() -> bool:
+	return check_normifier_application().allowed
+
+
+func check_normifier_application() -> ActionDecision:
 	var state := get_state()
 	if state != State.GROWING and state != State.READY:
-		return false
+		return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_FERTILIZER)
 	if planted_spore == null or not has_any_mutation():
-		return false
-	return fertilizer_stack_count() < SealModifiers.max_fertilizer_stacks()
+		return ActionDecision.reject(ActionReasons.NORMIFIER_REQUIRES_MUTATION)
+	if fertilizer_stack_count() >= SealModifiers.max_fertilizer_stacks():
+		return ActionDecision.reject(ActionReasons.FERTILIZER_CAPACITY_FULL)
+	return ActionDecision.accept()
 
 
 func _apply_normifier(fertilizer: FertilizerData) -> bool:
@@ -185,10 +209,8 @@ func _apply_normifier(fertilizer: FertilizerData) -> bool:
 	return true
 
 
-func _apply_fungicide(_fertilizer: FertilizerData) -> bool:
-	# Growing or READY spores. Empty plots rejected.
-	var state := get_state()
-	if state != State.GROWING and state != State.READY:
+func _apply_fungicide(fertilizer: FertilizerData) -> bool:
+	if not check_fertilizer_application(fertilizer).allowed:
 		return false
 	pending_stat_bonus += FUNGICIDE_NEXT_SPORE_BONUS
 	planted_spore = null

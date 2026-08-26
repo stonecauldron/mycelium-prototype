@@ -103,7 +103,7 @@ func _ready() -> void:
 	_unlock_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	_unlock_button.pressed.connect(_on_unlock_pressed)
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	mouse_exited.connect(clear_drop_highlight)
+	mouse_exited.connect(_on_mouse_exited)
 	if _egg_visual != null:
 		_egg_visual.resized.connect(_update_egg_pivot)
 	_refresh_stats_panel_visibility()
@@ -142,6 +142,11 @@ func clear_drop_highlight() -> void:
 	modulate = _base_modulate
 
 
+func _on_mouse_exited() -> void:
+	clear_drop_highlight()
+	ActionFeedback.clear_drag_preview()
+
+
 func _set_drop_arrow_visible(should_show: bool) -> void:
 	if _drop_arrow == null:
 		return
@@ -168,6 +173,13 @@ func _plant_hint_arrow_top() -> float:
 
 
 func _accepts_drag_data(data: Variant) -> bool:
+	var plot_item_decision := _plot_item_drag_decision(data)
+	if plot_item_decision != null:
+		return plot_item_decision.allowed
+	return _accepts_spore_drag(data)
+
+
+func _accepts_spore_drag(data: Variant) -> bool:
 	if is_unlockable:
 		return false
 	if typeof(data) != TYPE_DICTIONARY:
@@ -178,19 +190,24 @@ func _accepts_drag_data(data: Variant) -> bool:
 	var state := _plot.get_state()
 	if drop_type == "spore":
 		return state == NurseryPlotData.State.EMPTY
-	if drop_type == "shop_fertilizer" or drop_type == "fertilizer":
-		var fert := data.get("fertilizer") as FertilizerData
-		if fert != null and fert.behavior == FertilizerData.Behavior.FUNGICIDE:
-			return state == NurseryPlotData.State.GROWING or state == NurseryPlotData.State.READY
-		if fert != null and fert.behavior == FertilizerData.Behavior.NORMIFIER:
-			return _plot.can_apply_normifier()
-		if not _plot.can_apply_fertilizer():
-			return false
-		return state == NurseryPlotData.State.EMPTY or state == NurseryPlotData.State.GROWING
+	return false
+
+
+func _plot_item_drag_decision(data: Variant) -> ActionDecision:
+	if is_unlockable or _plot == null or typeof(data) != TYPE_DICTIONARY:
+		return null
+	var drop_type := str(data.get("type", ""))
 	if drop_type == "shop_mutation" or drop_type == "mutation":
 		var mutation := data.get("mutation") as MutationData
-		return _plot.can_apply_mutation(mutation)
-	return false
+		if mutation == null:
+			return null
+		return _plot.check_mutation_application(mutation)
+	if drop_type == "shop_fertilizer" or drop_type == "fertilizer":
+		var fertilizer := data.get("fertilizer") as FertilizerData
+		if fertilizer == null:
+			return null
+		return _plot.check_fertilizer_application(fertilizer)
+	return null
 
 
 func _should_show_harvest_hint() -> bool:
@@ -705,7 +722,17 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	if not _accepts_drag_data(data):
+	var decision := _plot_item_drag_decision(data)
+	if decision != null:
+		if not decision.allowed:
+			ActionFeedback.preview_rejection(self, decision)
+			clear_drop_highlight()
+			return false
+		ActionFeedback.clear_drag_preview()
+		modulate = _DROP_HIGHLIGHT
+		return true
+	ActionFeedback.clear_drag_preview()
+	if not _accepts_spore_drag(data):
 		clear_drop_highlight()
 		return false
 	modulate = _DROP_HIGHLIGHT

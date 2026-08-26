@@ -185,7 +185,7 @@ func _make_compost_tooltip() -> Object:
 	tip.add_child(box)
 	var title := Label.new()
 	title.text = "Composting"
-	title.add_theme_font_size_override("font_size", 22)
+	title.add_theme_font_size_override("font_size", 28)
 	title.add_theme_color_override("font_color", Color(0.03, 0.035, 0.027, 1))
 	box.add_child(title)
 	var body := Label.new()
@@ -195,7 +195,7 @@ func _make_compost_tooltip() -> Object:
 	]
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.custom_minimum_size = Vector2(220, 0)
-	body.add_theme_font_size_override("font_size", 16)
+	body.add_theme_font_size_override("font_size", 20)
 	body.add_theme_color_override("font_color", Color(0.03, 0.035, 0.027, 1))
 	box.add_child(body)
 	return DetailTooltipPopup.configure(tip)

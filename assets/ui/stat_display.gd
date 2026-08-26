@@ -1,11 +1,15 @@
 class_name StatDisplay
 extends RefCounted
 
+enum SignedValueColoring { NONE, ALL, STAT_CHANGES }
+
 ## Renders STR/DEX/CON as 1em silhouettes. Source PNGs are black; we convert to
 ## white-alpha once so TextureRect.modulate and RichTextLabel.add_image color work.
 
 const INK := Color(0.03137255, 0.03529412, 0.02745098, 1)
 const INK_MUTED := Color(0.2, 0.22, 0.18, 1)
+const GAIN_COLOR := Color(0.12, 0.45, 0.18, 1)
+const LOSS_COLOR := Color(0.7, 0.15, 0.12, 1)
 ## Silhouettes read small next to type; draw a bit larger than 1em.
 const ICON_EM := 1.5
 
@@ -31,6 +35,8 @@ const _ICON_PATHS := {
 
 static var _white_icons: Dictionary = {}
 static var _abbrev_regex: RegEx
+static var _signed_value_regex: RegEx
+static var _signed_stat_value_regex: RegEx
 
 
 static func white_icon(abbrev: String) -> Texture2D:
@@ -114,7 +120,8 @@ static func apply_to(
 	source: String,
 	font_size: int,
 	color: Color,
-	icon_color: Color = INK
+	icon_color: Color = INK,
+	signed_value_coloring: int = SignedValueColoring.NONE
 ) -> void:
 	if rtl == null:
 		return
@@ -125,7 +132,7 @@ static func apply_to(
 	rtl.add_theme_color_override("default_color", color)
 	rtl.clear()
 	var text := source
-	var regex := _regex()
+	var regex := _regex(signed_value_coloring)
 	if regex == null:
 		rtl.add_text(text)
 		return
@@ -139,7 +146,7 @@ static func apply_to(
 			var px := icon_px(font_size)
 			rtl.add_image(tex, px, px, icon_color, INLINE_ALIGNMENT_CENTER)
 		else:
-			rtl.add_text(matched.get_string())
+			_add_rich_text_token(rtl, matched.get_string(), color)
 		pos = matched.get_end()
 	if pos < text.length():
 		rtl.add_text(text.substr(pos))
@@ -150,7 +157,8 @@ static func fill_inline(
 	source: String,
 	font_size: int,
 	text_color: Color,
-	icon_color: Color = INK
+	icon_color: Color = INK,
+	signed_value_coloring: int = SignedValueColoring.NONE
 ) -> void:
 	if host == null:
 		return
@@ -165,7 +173,14 @@ static func fill_inline(
 		flow.add_theme_constant_override("h_separation", 4)
 		flow.add_theme_constant_override("v_separation", 2)
 		flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		_fill_flow(flow, line, font_size, text_color, icon_color)
+		_fill_flow(
+			flow,
+			line,
+			font_size,
+			text_color,
+			icon_color,
+			signed_value_coloring
+		)
 		host.add_child(flow)
 
 
@@ -174,9 +189,10 @@ static func _fill_flow(
 	line: String,
 	font_size: int,
 	text_color: Color,
-	icon_color: Color
+	icon_color: Color,
+	signed_value_coloring: int
 ) -> void:
-	var regex := _regex()
+	var regex := _regex(signed_value_coloring)
 	if regex == null or regex.search(line) == null:
 		flow.add_child(_make_text_label(line, font_size, text_color, true))
 		return
@@ -185,10 +201,20 @@ static func _fill_flow(
 		var start := matched.get_start()
 		if start > pos:
 			_add_text_run(flow, line.substr(pos, start - pos), font_size, text_color)
-		var icon: StatIcon = _STAT_ICON_SCENE.instantiate()
-		icon.setup(matched.get_string(), icon_px(font_size), icon_color)
-		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		flow.add_child(icon)
+		var token := matched.get_string()
+		var texture := white_icon(token)
+		if texture != null:
+			var icon: StatIcon = _STAT_ICON_SCENE.instantiate()
+			icon.setup(token, icon_px(font_size), icon_color)
+			icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			flow.add_child(icon)
+		else:
+			flow.add_child(_make_text_label(
+				token,
+				font_size,
+				_signed_value_color(token, text_color),
+				false
+			))
 		pos = matched.get_end()
 	if pos < line.length():
 		_add_text_run(flow, line.substr(pos), font_size, text_color)
@@ -229,7 +255,8 @@ static func make_rich_label(
 	source: String,
 	font_size: int,
 	color: Color,
-	min_width: float = 0.0
+	min_width: float = 0.0,
+	signed_value_coloring: int = SignedValueColoring.NONE
 ) -> RichTextLabel:
 	var rtl := RichTextLabel.new()
 	rtl.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -240,12 +267,50 @@ static func make_rich_label(
 	if min_width > 0.0:
 		rtl.custom_minimum_size = Vector2(min_width, 0)
 		rtl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	apply_to(rtl, source, font_size, color)
+	apply_to(rtl, source, font_size, color, INK, signed_value_coloring)
 	return rtl
 
 
-static func _regex() -> RegEx:
-	if _abbrev_regex == null:
-		_abbrev_regex = RegEx.new()
-		_abbrev_regex.compile("\\b(STR|DEX|CON)\\b")
-	return _abbrev_regex
+static func _add_rich_text_token(rtl: RichTextLabel, token: String, fallback: Color) -> void:
+	var token_color := _signed_value_color(token, fallback)
+	if token_color == fallback:
+		rtl.add_text(token)
+		return
+	rtl.push_color(token_color)
+	rtl.add_text(token)
+	rtl.pop()
+
+
+static func _signed_value_color(token: String, fallback: Color) -> Color:
+	if token.length() < 2:
+		return fallback
+	var magnitude := token.substr(1).to_int()
+	if magnitude == 0:
+		return fallback
+	if token.begins_with("+"):
+		return GAIN_COLOR
+	if token.begins_with("-"):
+		return LOSS_COLOR
+	return fallback
+
+
+static func _regex(signed_value_coloring: int) -> RegEx:
+	match signed_value_coloring:
+		SignedValueColoring.ALL:
+			if _signed_value_regex == null:
+				_signed_value_regex = RegEx.new()
+				_signed_value_regex.compile("\\b(STR|DEX|CON)\\b|[+-]\\d+")
+			return _signed_value_regex
+		SignedValueColoring.STAT_CHANGES:
+			if _signed_stat_value_regex == null:
+				_signed_stat_value_regex = RegEx.new()
+				_signed_stat_value_regex.compile(
+					"\\b(STR|DEX|CON)\\b|[+-]\\d+"
+					+ "(?=[^+\\-\\d.!?\\n]*\\b(?i:stats?|str|dex|con)\\b)"
+				)
+			return _signed_stat_value_regex
+		_:
+			if _abbrev_regex == null:
+				_abbrev_regex = RegEx.new()
+				_abbrev_regex.compile("\\b(STR|DEX|CON)\\b")
+			return _abbrev_regex

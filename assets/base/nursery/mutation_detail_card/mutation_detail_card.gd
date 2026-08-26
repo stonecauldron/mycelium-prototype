@@ -89,7 +89,14 @@ func _refresh() -> void:
 	_slot_label.text = mutation.slot_label()
 	_title_label.text = mutation.title_text()
 	var desc := mutation.subtitle_text()
-	StatDisplay.apply_to(_desc_label, desc, 22, StatDisplay.INK_MUTED)
+	StatDisplay.apply_to(
+		_desc_label,
+		desc,
+		22,
+		StatDisplay.INK_MUTED,
+		StatDisplay.INK,
+		StatDisplay.SignedValueColoring.STAT_CHANGES
+	)
 	_desc_label.visible = not desc.is_empty()
 
 

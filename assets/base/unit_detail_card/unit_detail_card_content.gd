@@ -140,7 +140,11 @@ func _refresh_fertilizers() -> void:
 		return
 	_set_fertilizers_visible(true)
 	if not residue.is_empty():
-		_fertilizers_list.add_child(_make_detail_row(null, residue))
+		_fertilizers_list.add_child(_make_detail_row(
+			null,
+			residue,
+			StatDisplay.SignedValueColoring.ALL
+		))
 	for fert in order:
 		var count := int(counts.get(fert.display_name, 0))
 		var desc := "%s: %s" % [fert.display_name, fert.subtitle_text()]
@@ -154,7 +158,11 @@ func _refresh_fertilizers() -> void:
 		row_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row_icon.texture = icon
 		row_icon.modulate = fert.tint
-		_fertilizers_list.add_child(_make_detail_row(row_icon, desc))
+		_fertilizers_list.add_child(_make_detail_row(
+			row_icon,
+			desc,
+			StatDisplay.SignedValueColoring.ALL
+		))
 
 
 func _set_fertilizers_visible(show_section: bool) -> void:
@@ -237,14 +245,24 @@ func _configure_attr_row(row: StatValueRow, abbrev: String, value_text: String) 
 	)
 
 
-func _make_detail_row(icon: TextureRect, text: String) -> HBoxContainer:
+func _make_detail_row(
+	icon: TextureRect,
+	text: String,
+	signed_value_coloring: int = StatDisplay.SignedValueColoring.NONE
+) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_theme_constant_override("separation", 8)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	if icon != null:
 		row.add_child(icon)
-	row.add_child(StatDisplay.make_rich_label(text, 26, _ROW_TEXT_COLOR, 280.0))
+	row.add_child(StatDisplay.make_rich_label(
+		text,
+		26,
+		_ROW_TEXT_COLOR,
+		280.0,
+		signed_value_coloring
+	))
 	return row
 
 
@@ -296,7 +314,15 @@ func _set_mutation_row_label(label: RichTextLabel, mutation: MutationData) -> vo
 	if mutation == null:
 		StatDisplay.apply_to(label, "None", 26, _ROW_TEXT_COLOR)
 		return
-	StatDisplay.apply_to(label, mutation.effect_line(), 26, _ROW_TEXT_COLOR)
+	var effect_line := mutation.effect_line()
+	StatDisplay.apply_to(
+		label,
+		effect_line,
+		26,
+		_ROW_TEXT_COLOR,
+		StatDisplay.INK,
+		StatDisplay.SignedValueColoring.STAT_CHANGES
+	)
 
 
 func _refresh_tags() -> void:

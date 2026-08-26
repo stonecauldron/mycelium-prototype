@@ -7,8 +7,6 @@ signal cancelled
 const PORTRAIT_SCALE := 0.7
 const PORTRAIT_SHADOW := 20.0
 const _BIOMASS_ICON := preload("res://assets/base/biomass_small_icon.png")
-const _COLOR_UP := Color(0.12, 0.45, 0.18, 1)
-const _COLOR_DOWN := Color(0.7, 0.15, 0.12, 1)
 const _STAT_FONT_SIZE := 18
 
 var _unit: RosterUnitData
@@ -196,9 +194,9 @@ func _configure_mid_delta(row: StatValueRow, abbrev: String, delta: int) -> void
 		return
 	var color := StatDisplay.INK
 	if delta > 0:
-		color = _COLOR_UP
+		color = StatDisplay.GAIN_COLOR
 	elif delta < 0:
-		color = _COLOR_DOWN
+		color = StatDisplay.LOSS_COLOR
 	row.configure(
 		abbrev,
 		"%+d" % delta if delta != 0 else "",
@@ -220,10 +218,10 @@ func _apply_result_stat(
 	var color := StatDisplay.INK
 	var right_text := str(value)
 	if delta > 0:
-		color = _COLOR_UP
+		color = StatDisplay.GAIN_COLOR
 		right_text = "%d (%+d)" % [value, delta]
 	elif delta < 0:
-		color = _COLOR_DOWN
+		color = StatDisplay.LOSS_COLOR
 		right_text = "%d (%+d)" % [value, delta]
 	if right_row != null:
 		right_row.configure(

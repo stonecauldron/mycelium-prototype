@@ -192,12 +192,18 @@ func _ready() -> void:
 func _apply_content(title: String, subtitle: String, description: String, icon: Texture2D) -> void:
 	_title_label.text = title
 	_subtitle_label.text = subtitle
+	var signed_value_coloring := StatDisplay.SignedValueColoring.NONE
+	if payload.get("fertilizer") is FertilizerData:
+		signed_value_coloring = StatDisplay.SignedValueColoring.ALL
+	if payload.get("mutation") is MutationData:
+		signed_value_coloring = StatDisplay.SignedValueColoring.STAT_CHANGES
 	StatDisplay.fill_inline(
 		_description_label,
 		description,
 		20,
 		Color(0.25, 0.27, 0.22, 1),
-		StatDisplay.INK
+		StatDisplay.INK,
+		signed_value_coloring
 	)
 	_description_label.visible = not description.is_empty()
 	_price_label.text = "%d" % cost

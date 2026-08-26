@@ -14,6 +14,10 @@ const SLOT_SIZE := Vector2(140, 200)
 ## Empty array = accept nothing (display pad only).
 @export var accepted_drag_types: PackedStringArray = PackedStringArray(["unit"])
 @export var accepts_drops: bool = true
+@export var floor_tint: Color = Color.WHITE:
+	set(value):
+		floor_tint = value
+		_apply_floor_tint()
 
 var occupied_unit: Resource
 var is_unlockable: bool = false
@@ -37,11 +41,18 @@ func set_floor_texture(texture: Texture2D) -> void:
 		_floor_tile.texture = texture
 
 
+func _apply_floor_tint() -> void:
+	if _floor_tile == null:
+		return
+	_floor_tile.self_modulate = floor_tint
+
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	clip_contents = false
 	custom_minimum_size = SLOT_SIZE
 	_base_modulate = modulate
+	_apply_floor_tint()
 	_set_children_mouse_filter_ignore(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	mouse_exited.connect(clear_drop_highlight)

@@ -2,9 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ct4bgro45wopc" path="res://assets/title/title.gd" id="1_title"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
-[ext_resource type="Texture2D" uid="uid://cnxfhca438svu" path="res://assets/base/background/background.png" id="3_bg_far"]
-[ext_resource type="Texture2D" uid="uid://brnicc8ghj3md" path="res://assets/base/background/upper_foreground.png" id="4_bg_upper"]
-[ext_resource type="Texture2D" uid="uid://c00gqs4n3sm1c" path="res://assets/base/background/lower_foreground.png" id="5_bg_lower"]
+[ext_resource type="Texture2D" uid="uid://b6mfiqthp4vam" path="res://assets/base/background/bg_battlegrounds.png" id="3_pajnb"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="6_paper"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
@@ -39,7 +37,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="FarBackground" type="TextureRect" parent="Backdrop" unique_id=630990895]
+[node name="Background" type="TextureRect" parent="Backdrop" unique_id=630990895]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -47,31 +45,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("3_bg_far")
+texture = ExtResource("3_pajnb")
 expand_mode = 1
-
-[node name="UpperForeground" type="TextureRect" parent="Backdrop" unique_id=339173299]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("4_bg_upper")
-expand_mode = 1
-
-[node name="LowerForeground" type="TextureRect" parent="Backdrop" unique_id=1635380922]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("5_bg_lower")
-expand_mode = 1
-flip_h = true
 
 [node name="Center" type="CenterContainer" parent="." unique_id=1012023005]
 layout_mode = 1

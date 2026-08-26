@@ -1,10 +1,9 @@
 [gd_scene format=3 uid="uid://cbase001"]
 
 [ext_resource type="Script" uid="uid://cbt14lxim11pi" path="res://assets/base/base.gd" id="1_base"]
+[ext_resource type="Texture2D" uid="uid://blc068rgynh1j" path="res://assets/base/background/bg_nursery.png" id="2_apgqf"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
-[ext_resource type="Texture2D" uid="uid://cnxfhca438svu" path="res://assets/base/background/background.png" id="5_bg_far"]
-[ext_resource type="Texture2D" uid="uid://brnicc8ghj3md" path="res://assets/base/background/upper_foreground.png" id="9_bg_upper_fg"]
-[ext_resource type="Texture2D" uid="uid://c00gqs4n3sm1c" path="res://assets/base/background/lower_foreground.png" id="10_bg_lower_fg"]
+[ext_resource type="Texture2D" uid="uid://w7fbbb3638si" path="res://assets/base/background/bg_warchamber.png" id="4_j7mcc"]
 [ext_resource type="PackedScene" uid="uid://c4swjtkoverfp" path="res://assets/base/nursery/nursery_screen.tscn" id="11_nursery"]
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
 [ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
@@ -32,7 +31,7 @@ anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 
-[node name="FarBackgroundLayer" type="TextureRect" parent="World/Zones/NurseryZone/Host" unique_id=1090787678]
+[node name="Background" type="TextureRect" parent="World/Zones/NurseryZone/Host" unique_id=1090787678]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -40,37 +39,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("5_bg_far")
-expand_mode = 1
-
-[node name="UpperForegroundLayer" type="TextureRect" parent="World/Zones/NurseryZone/Host" unique_id=1090787679]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("9_bg_upper_fg")
+texture = ExtResource("2_apgqf")
 expand_mode = 1
 
 [node name="NurseryScreen" parent="World/Zones/NurseryZone/Host" unique_id=816589104 instance=ExtResource("11_nursery")]
 unique_name_in_owner = true
 layout_mode = 1
-
-[node name="LowerForegroundLayer" type="TextureRect" parent="World/Zones/NurseryZone/Host" unique_id=2058806578]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 89.0
-offset_bottom = 89.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("10_bg_lower_fg")
-expand_mode = 1
-flip_h = true
 
 [node name="ColonyZone" type="Node2D" parent="World/Zones" unique_id=688036510]
 unique_name_in_owner = true
@@ -83,7 +57,7 @@ anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 
-[node name="FarBackgroundLayer" type="TextureRect" parent="World/Zones/ColonyZone/Host" unique_id=1500394443]
+[node name="Background" type="TextureRect" parent="World/Zones/ColonyZone/Host" unique_id=1500394443]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -91,35 +65,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("5_bg_far")
-expand_mode = 1
-
-[node name="UpperForegroundLayer" type="TextureRect" parent="World/Zones/ColonyZone/Host" unique_id=1500394444]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("9_bg_upper_fg")
+texture = ExtResource("4_j7mcc")
 expand_mode = 1
 
 [node name="ColonyScreen" parent="World/Zones/ColonyZone/Host" unique_id=685627613 instance=ExtResource("13_colony")]
 unique_name_in_owner = true
 layout_mode = 1
-
-[node name="LowerForegroundLayer" type="TextureRect" parent="World/Zones/ColonyZone/Host" unique_id=167410505]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("10_bg_lower_fg")
-expand_mode = 1
-flip_h = true
 
 [node name="HudLayer" type="CanvasLayer" parent="." unique_id=596109145]
 layer = 10

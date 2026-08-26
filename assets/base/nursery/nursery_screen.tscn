@@ -26,8 +26,10 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_xtih6")
 script = ExtResource("2_tn1j7")
+drop_slot_tint = Color(0.20392157, 0.62352943, 0.972549, 1)
 
 [node name="UpperLaneLayer" type="TextureRect" parent="." unique_id=1298238025]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,6 +41,7 @@ texture = ExtResource("3_upper_lane")
 expand_mode = 1
 
 [node name="LowerLaneLayer" type="TextureRect" parent="." unique_id=427991229]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

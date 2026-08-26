@@ -100,6 +100,7 @@ func _build_stock_slots() -> void:
 	for i in STOCK_SLOT_COUNT:
 		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		slot.slot_index = i
+		slot.floor_tint = drop_slot_tint
 		slot.item_dropped.connect(_on_stock_item_dropped)
 		_stock_row.add_child(slot)
 		_stock_slots.append(slot)

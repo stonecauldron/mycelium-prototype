@@ -4,6 +4,8 @@ extends Control
 ## Modular base content screens implement this and are hosted by Base.
 ## Override for enter/exit hooks when tabs switch.
 
+@export var drop_slot_tint: Color = Color.WHITE
+
 
 func on_screen_shown() -> void:
 	pass

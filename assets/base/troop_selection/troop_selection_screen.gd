@@ -19,6 +19,7 @@ var squad: Array = []
 @onready var _bench_panel: PanelContainer = %BenchPanel
 @onready var _cocoon_row: HBoxContainer = %CocoonRow
 @onready var _scout_bubble: ScoutBubble = %ScoutBubble
+@onready var _flag_bearer: Node2D = %FlagBearer
 
 var _squad_slots: Array[DropSlot] = []
 var _squad_unlock_slot: DropSlot = null
@@ -116,12 +117,14 @@ func _build_squad_ui() -> void:
 	for i in troop.unlocked_squad_count:
 		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		slot.slot_index = i
+		slot.floor_tint = drop_slot_tint
 		slot.unit_dropped.connect(_on_unit_dropped.bind("squad"))
 		_squad_slot_row.add_child(slot)
 		_squad_slots.append(slot)
 	if troop.can_unlock_squad_slot():
 		var unlock_slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		unlock_slot.slot_index = troop.unlocked_squad_count
+		unlock_slot.floor_tint = drop_slot_tint
 		unlock_slot.unlock_pressed.connect(_on_squad_unlock_pressed)
 		_squad_slot_row.add_child(unlock_slot)
 		unlock_slot.setup_unlockable(troop.next_squad_unlock_cost())
@@ -135,6 +138,7 @@ func _build_bench_ui() -> void:
 	for i in BENCH_SLOT_COUNT:
 		var slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		slot.slot_index = i
+		slot.floor_tint = drop_slot_tint
 		slot.unit_dropped.connect(_on_unit_dropped.bind("bench"))
 		_bench_grid.add_child(slot)
 		_bench_slots.append(slot)
@@ -212,7 +216,9 @@ func _on_starter_dialog_closed() -> void:
 func _ensure_flag_seals_overlay() -> void:
 	if _flag_seals != null and is_instance_valid(_flag_seals):
 		return
-	var flag := get_node_or_null("LowerLaneLayer/FlagBearer/Shroom/Flag") as Node2D
+	if _flag_bearer == null:
+		return
+	var flag := _flag_bearer.get_node_or_null("Shroom/Flag") as Node2D
 	if flag == null:
 		return
 	_flag_seals = _FLAG_SEALS_SCENE.instantiate() as FlagSealsOverlay

@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://brpjsoriiinsp" path="res://assets/base/pupation/cocoon_open.png" id="3_cocoon_open"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="4_chip"]
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="5_hourglass"]
-[ext_resource type="Texture2D" uid="uid://bonq4ftkddl3x" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 9.png" id="6_3duik"]
+[ext_resource type="Texture2D" uid="uid://tvkubuhhq6x3" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 7.png" id="6_3duik"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="6_punch"]
 [ext_resource type="PackedScene" uid="uid://d1cl6878jbaea" path="res://assets/ui/floating_arrow/floating_arrow.tscn" id="7_arrow"]
 

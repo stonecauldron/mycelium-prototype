@@ -1,16 +1,17 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene format=3 uid="uid://wrm4yhufq2qj"]
 
-[ext_resource type="Script" path="res://assets/base/pupation/pupation_confirm_dialog.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://bvfjq35kpvwa6" path="res://assets/base/pupation/pupation_confirm_dialog.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="3_chip"]
 [ext_resource type="Texture2D" uid="uid://sdkqu2q3e1u" path="res://assets/base/unit_card/sword_icon.png" id="4_sword"]
+[ext_resource type="Texture2D" uid="uid://tvkubuhhq6x3" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 7.png" id="4_wwinx"]
+[ext_resource type="Texture2D" uid="uid://dd4spufbne6hh" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 02.png" id="4_x6f5w"]
 [ext_resource type="Texture2D" uid="uid://dqwo514d7ery6" path="res://assets/base/unit_card/hp_icon.png" id="5_hp"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="6_biomass"]
 [ext_resource type="PackedScene" uid="uid://b84ukneulnemi" path="res://assets/ui/hover_punch/hover_punch.tscn" id="7_punch"]
-[ext_resource type="Script" path="res://assets/base/pupation/pupation_weapon_hover_row.gd" id="8_weapon_row"]
+[ext_resource type="Script" uid="uid://7yois8d2r7vt" path="res://assets/base/pupation/pupation_weapon_hover_row.gd" id="8_weapon_row"]
 [ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="9_hourglass"]
 [ext_resource type="PackedScene" path="res://assets/ui/stat_value_row/stat_value_row.tscn" id="10_stat_row"]
-[ext_resource type="Texture2D" uid="uid://c2pffsxsdkf27" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 01.png" id="tex_paper_card"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
@@ -26,29 +27,35 @@ texture_margin_bottom = 154.10434
 expand_margin_top = 29.0
 expand_margin_bottom = 75.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_paper_card"]
-content_margin_left = 16.0
-content_margin_top = 14.0
-content_margin_right = 18.0
-content_margin_bottom = 20.0
-texture = ExtResource("tex_paper_card")
-texture_margin_left = 40.0
-texture_margin_top = 40.0
-texture_margin_right = 48.0
-texture_margin_bottom = 48.0
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8dimj"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+texture = ExtResource("4_wwinx")
+texture_margin_left = 28.0
+texture_margin_top = 24.0
+texture_margin_right = 28.0
+texture_margin_bottom = 28.0
 
-[node name="PupationConfirmDialog" type="Control"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wwinx"]
+texture = ExtResource("4_x6f5w")
+texture_margin_left = 35.0
+texture_margin_top = 80.0
+texture_margin_right = 32.0
+texture_margin_bottom = 68.0
+
+[node name="PupationConfirmDialog" type="Control" unique_id=1037934654]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="Dim" type="ColorRect" parent="."]
+[node name="Dim" type="ColorRect" parent="." unique_id=1611566049]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -56,10 +63,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
 color = Color(0.06, 0.12, 0.07, 0.62)
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=551076500]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -68,28 +74,27 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Panel" type="PanelContainer" parent="Center"]
+[node name="Panel" type="PanelContainer" parent="Center" unique_id=1411072924]
 custom_minimum_size = Vector2(860, 580)
 layout_mode = 2
-mouse_filter = 0
 theme_override_styles/panel = SubResource("StyleBox_paper_dialog")
 
-[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+[node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=1446000488]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin" unique_id=482374925]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="HeaderRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+[node name="HeaderRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox" unique_id=1275168833]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="SchoolIcon" type="TextureRect" parent="Center/Panel/Margin/VBox/HeaderRow"]
+[node name="SchoolIcon" type="TextureRect" parent="Center/Panel/Margin/VBox/HeaderRow" unique_id=1102600380]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
@@ -98,27 +103,28 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HeaderText" type="VBoxContainer" parent="Center/Panel/Margin/VBox/HeaderRow"]
+[node name="HeaderText" type="VBoxContainer" parent="Center/Panel/Margin/VBox/HeaderRow" unique_id=2031121864]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
-[node name="HeaderTitle" type="Label" parent="Center/Panel/Margin/VBox/HeaderRow/HeaderText"]
+[node name="HeaderTitle" type="Label" parent="Center/Panel/Margin/VBox/HeaderRow/HeaderText" unique_id=525676695]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 32
 text = "Sword Training"
 
-[node name="CloseButton" type="Button" parent="Center/Panel/Margin/VBox/HeaderRow"]
+[node name="CloseButton" type="Button" parent="Center/Panel/Margin/VBox/HeaderRow" unique_id=1133959881]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PaperIconButton"
+theme_override_styles/normal = SubResource("StyleBoxTexture_8dimj")
 text = "X"
 
-[node name="PupateTitle" type="Label" parent="Center/Panel/Margin/VBox"]
+[node name="PupateTitle" type="Label" parent="Center/Panel/Margin/VBox" unique_id=1400949728]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
@@ -126,24 +132,24 @@ theme_override_font_sizes/font_size = 28
 text = "Pupate Unit"
 horizontal_alignment = 1
 
-[node name="ComparePanel" type="PanelContainer" parent="Center/Panel/Margin/VBox"]
+[node name="ComparePanel" type="PanelContainer" parent="Center/Panel/Margin/VBox" unique_id=2105736607]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBox_paper_card")
+theme_override_styles/panel = SubResource("StyleBoxTexture_wwinx")
 
-[node name="CompareRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel"]
+[node name="CompareRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel" unique_id=330587743]
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="LeftColumn" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow"]
+[node name="LeftColumn" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow" unique_id=487917821]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="LeftPortrait" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn"]
+[node name="LeftPortrait" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn" unique_id=254482733]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 140)
 clip_contents = true
@@ -151,22 +157,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="LeftCombatRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn"]
+[node name="LeftCombatRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn" unique_id=456554766]
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="LeftAtkChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow" instance=ExtResource("3_chip")]
+[node name="LeftAtkChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow" unique_id=1375269215 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
-layout_mode = 2
 icon = ExtResource("4_sword")
 
-[node name="LeftHpChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow" instance=ExtResource("3_chip")]
+[node name="LeftHpChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow" unique_id=1532846583 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
-layout_mode = 2
 icon = ExtResource("5_hp")
 
-[node name="LeftStage" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn"]
+[node name="LeftStage" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn" unique_id=1888135918]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
@@ -174,17 +178,17 @@ theme_override_font_sizes/font_size = 20
 text = "Child"
 horizontal_alignment = 1
 
-[node name="LeftWeaponRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn"]
+[node name="LeftWeaponRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn" unique_id=1551902808]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 0
-alignment = 1
 theme_override_constants/separation = 8
+alignment = 1
 script = ExtResource("8_weapon_row")
 
-[node name="HoverPunch" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftWeaponRow" instance=ExtResource("7_punch")]
+[node name="HoverPunch" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftWeaponRow" unique_id=48865956 instance=ExtResource("7_punch")]
 
-[node name="LeftWeaponIcon" type="TextureRect" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftWeaponRow"]
+[node name="LeftWeaponIcon" type="TextureRect" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftWeaponRow" unique_id=692268013]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
@@ -192,62 +196,55 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LeftWeaponName" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftWeaponRow"]
+[node name="LeftWeaponName" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftWeaponRow" unique_id=1986215216]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 18
 text = "Sickle"
 
-[node name="LeftStats" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn"]
+[node name="LeftStats" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn" unique_id=2070839107]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="LeftStr" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftStats" instance=ExtResource("10_stat_row")]
+[node name="LeftStr" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftStats" unique_id=1272789341 instance=ExtResource("10_stat_row")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LeftDex" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftStats" instance=ExtResource("10_stat_row")]
+[node name="LeftDex" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftStats" unique_id=495268567 instance=ExtResource("10_stat_row")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LeftCon" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftStats" instance=ExtResource("10_stat_row")]
+[node name="LeftCon" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftStats" unique_id=750246406 instance=ExtResource("10_stat_row")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MidColumn" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow"]
+[node name="MidColumn" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow" unique_id=1861948558]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="MidTopSpacer" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn"]
+[node name="MidTopSpacer" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn" unique_id=1778268711]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 140)
 layout_mode = 2
 
-[node name="MidCombatSpacer" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-
-[node name="MidDurationRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn"]
+[node name="MidDurationRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn" unique_id=1607217947]
 layout_mode = 2
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="DurationChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn/MidDurationRow" instance=ExtResource("3_chip")]
+[node name="DurationChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn/MidDurationRow" unique_id=1113362324 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
-layout_mode = 2
 icon = ExtResource("9_hourglass")
 
-[node name="DurationSuffix" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn/MidDurationRow"]
+[node name="DurationSuffix" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn/MidDurationRow" unique_id=79352787]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
@@ -255,7 +252,7 @@ theme_override_font_sizes/font_size = 16
 text = "day"
 vertical_alignment = 1
 
-[node name="ArrowLabel" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn"]
+[node name="ArrowLabel" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn" unique_id=1289010125]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
@@ -264,34 +261,39 @@ text = "→"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MidDeltas" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn"]
+[node name="MidWeaponSpacer" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn" unique_id=155252842]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="MidDeltas" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn" unique_id=425359893]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="MidStr" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn/MidDeltas" instance=ExtResource("10_stat_row")]
+[node name="MidStr" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn/MidDeltas" unique_id=1296259659 instance=ExtResource("10_stat_row")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MidDex" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn/MidDeltas" instance=ExtResource("10_stat_row")]
+[node name="MidDex" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn/MidDeltas" unique_id=1693172003 instance=ExtResource("10_stat_row")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MidCon" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn/MidDeltas" instance=ExtResource("10_stat_row")]
+[node name="MidCon" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn/MidDeltas" unique_id=607490633 instance=ExtResource("10_stat_row")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RightColumn" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow"]
+[node name="RightColumn" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow" unique_id=1278153843]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="RightPortrait" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn"]
+[node name="RightPortrait" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn" unique_id=470707545]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 140)
 clip_contents = true
@@ -299,22 +301,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="RightCombatRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn"]
+[node name="RightCombatRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn" unique_id=435594227]
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="RightAtkChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow" instance=ExtResource("3_chip")]
+[node name="RightAtkChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow" unique_id=953783332 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
-layout_mode = 2
 icon = ExtResource("4_sword")
 
-[node name="RightHpChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow" instance=ExtResource("3_chip")]
+[node name="RightHpChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow" unique_id=608338665 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
-layout_mode = 2
 icon = ExtResource("5_hp")
 
-[node name="RightStage" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn"]
+[node name="RightStage" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn" unique_id=1979193676]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
@@ -322,17 +322,17 @@ theme_override_font_sizes/font_size = 20
 text = "Adult"
 horizontal_alignment = 1
 
-[node name="RightWeaponRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn"]
+[node name="RightWeaponRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn" unique_id=935212435]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 0
-alignment = 1
 theme_override_constants/separation = 8
+alignment = 1
 script = ExtResource("8_weapon_row")
 
-[node name="HoverPunch" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightWeaponRow" instance=ExtResource("7_punch")]
+[node name="HoverPunch" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightWeaponRow" unique_id=1256339607 instance=ExtResource("7_punch")]
 
-[node name="RightWeaponIcon" type="TextureRect" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightWeaponRow"]
+[node name="RightWeaponIcon" type="TextureRect" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightWeaponRow" unique_id=832420109]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
@@ -340,40 +340,39 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="RightWeaponName" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightWeaponRow"]
+[node name="RightWeaponName" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightWeaponRow" unique_id=79445283]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 18
 text = "Sword"
 
-[node name="RightStats" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn"]
+[node name="RightStats" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn" unique_id=551715213]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="RightStr" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightStats" instance=ExtResource("10_stat_row")]
+[node name="RightStr" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightStats" unique_id=108823683 instance=ExtResource("10_stat_row")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RightDex" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightStats" instance=ExtResource("10_stat_row")]
+[node name="RightDex" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightStats" unique_id=1821512866 instance=ExtResource("10_stat_row")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RightCon" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightStats" instance=ExtResource("10_stat_row")]
+[node name="RightCon" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightStats" unique_id=621884937 instance=ExtResource("10_stat_row")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FooterRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+[node name="FooterRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox" unique_id=1133550446]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="ConfirmButton" type="Button" parent="Center/Panel/Margin/VBox/FooterRow"]
+[node name="ConfirmButton" type="Button" parent="Center/Panel/Margin/VBox/FooterRow" unique_id=883499507]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 52)
 layout_mode = 2

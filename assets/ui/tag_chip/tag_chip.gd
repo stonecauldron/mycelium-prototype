@@ -63,11 +63,14 @@ func set_fill_color(color: Color) -> void:
 	var base := get_theme_stylebox("panel")
 	if base == null:
 		return
-	var tex := base.duplicate() as StyleBoxTexture
-	if tex == null:
+	var colored := base.duplicate()
+	if colored is StyleBoxFlat:
+		(colored as StyleBoxFlat).bg_color = color
+	elif colored is StyleBoxTexture:
+		(colored as StyleBoxTexture).modulate_color = color
+	else:
 		return
-	tex.modulate_color = color
-	add_theme_stylebox_override("panel", tex)
+	add_theme_stylebox_override("panel", colored)
 
 
 func _apply_mode() -> void:

@@ -57,6 +57,7 @@ theme_override_font_sizes/font_size = 52
 text = "War Chamber"
 
 [node name="CombatProgressTrack" parent="HeaderBlock" unique_id=1173882520 instance=ExtResource("7_progress")]
+layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="CocoonPanel" type="PanelContainer" parent="." unique_id=26021277]
@@ -66,9 +67,9 @@ anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -299.0
-offset_top = 168.0
+offset_top = 193.0
 offset_right = 381.0
-offset_bottom = 521.0
+offset_bottom = 546.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="CocoonMargin" type="MarginContainer" parent="CocoonPanel" unique_id=309864513]

@@ -19,7 +19,6 @@ var run_seed: int = 0
 var upcoming_enemy_formation: Array[EnemyUnitSpec] = []
 ## Paid Scout rerolls already bought this Day (resets on new Day).
 var scout_rerolls_today: int = 0
-## One-shot: open Nursery when returning to base after it unlocks.
 var prefer_nursery_tab: bool = false
 ## Session preference: combat fast-forward scale (1, 2, or 4; restored on next fight).
 var combat_fast_forward: int = 1

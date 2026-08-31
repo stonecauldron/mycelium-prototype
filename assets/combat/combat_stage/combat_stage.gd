@@ -754,8 +754,8 @@ func _check_battle_end() -> void:
 		return
 	DaySummaryFeed.clear()
 	_push_combat_recap_to_day_summary()
+	GameState.prefer_nursery_tab = true
 	if GameState.current_day == GameState.NURSERY_UNLOCK_DAY:
-		GameState.prefer_nursery_tab = true
 		DaySummaryFeed.add_base_unlock("Nursery")
 	if _biomass_earned_this_fight > 0:
 		DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)

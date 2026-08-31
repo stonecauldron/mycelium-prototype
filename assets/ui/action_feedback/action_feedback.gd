@@ -2,7 +2,7 @@ extends CanvasLayer
 
 ## Screen-fixed presentation and drag-session coordination for expected rule rejections.
 
-enum PresentationMode { DRAG_BADGE, DRAG_MESSAGE, ANCHORED_MESSAGE, GLOBAL_MESSAGE }
+enum PresentationMode { DRAG_MESSAGE, ANCHORED_MESSAGE, GLOBAL_MESSAGE }
 
 const _LAYER := 120
 const _HOVER_DELAY_MSEC := 300
@@ -62,6 +62,7 @@ func preview_rejection(anchor: Control, decision: ActionDecision) -> void:
 	if not is_instance_valid(anchor) or not _is_rejection(decision):
 		clear_drag_preview()
 		return
+	DetailTooltipPopup.set_suppressed(true)
 	var now := Time.get_ticks_msec()
 	var changed := _candidate_anchor != anchor or _candidate_decision == null
 	if not changed:
@@ -70,7 +71,7 @@ func preview_rejection(anchor: Control, decision: ActionDecision) -> void:
 	_candidate_decision = decision
 	if changed:
 		_candidate_started_msec = now
-		_present(anchor, decision, PresentationMode.DRAG_BADGE)
+		_hide_until_drag_reason()
 
 
 func clear_drag_preview() -> void:
@@ -93,6 +94,7 @@ func show_global_rejection(decision: ActionDecision) -> void:
 
 func dismiss() -> void:
 	_clear_drag_candidate(false)
+	DetailTooltipPopup.set_suppressed(false)
 	_kill_fade()
 	_kill_nudge()
 	_anchor = null
@@ -163,14 +165,13 @@ func _present(
 	var global := mode == PresentationMode.GLOBAL_MESSAGE
 	if not _is_rejection(decision) or (not global and not is_instance_valid(anchor)):
 		return
-	var drag_preview := mode == PresentationMode.DRAG_BADGE or mode == PresentationMode.DRAG_MESSAGE
-	var show_text := mode != PresentationMode.DRAG_BADGE
+	var drag_preview := mode == PresentationMode.DRAG_MESSAGE
 	var nudge := mode == PresentationMode.ANCHORED_MESSAGE or global
 	_anchor = anchor
 	_previewing_drag = drag_preview
 	_global_positioning = global
 	_message.text = _copy_for(decision.reason)
-	_message.visible = show_text
+	_message.visible = true
 	_tag.visible = true
 	_tag.modulate.a = 1.0
 	_tag.reset_size()
@@ -179,7 +180,7 @@ func _present(
 	_position_tag()
 	if drag_preview:
 		_kill_fade()
-	elif show_text:
+	else:
 		_start_fade_timer()
 	if nudge:
 		_play_nudge()
@@ -277,6 +278,16 @@ func _kill_nudge() -> void:
 	_nudge_tween = null
 
 
+func _hide_until_drag_reason() -> void:
+	_kill_fade()
+	_anchor = null
+	_previewing_drag = true
+	_global_positioning = false
+	if _tag != null:
+		_tag.visible = false
+		_tag.modulate.a = 1.0
+
+
 func _is_rejection(decision: ActionDecision) -> bool:
 	return (
 		decision != null
@@ -297,6 +308,7 @@ func _clear_drag_candidate(hide_preview: bool) -> void:
 	_candidate_anchor = null
 	_candidate_decision = null
 	_candidate_started_msec = 0
+	DetailTooltipPopup.set_suppressed(false)
 	if hide_preview and _previewing_drag:
 		_anchor = null
 		_previewing_drag = false

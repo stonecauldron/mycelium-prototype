@@ -17,6 +17,7 @@ const _MIN_OWNER_EDGE := 8.0
 const _LAYOUT_STABLE_ATTEMPTS := 4
 
 static var _instance: DetailTooltipPopup
+static var _suppressed: bool = false
 
 var _host: Control
 var _tip: Control
@@ -28,6 +29,10 @@ var _fade_tween: Tween
 
 
 static func configure(tip: Control) -> Control:
+	if _suppressed:
+		if tip != null and is_instance_valid(tip):
+			tip.queue_free()
+		return _make_lease()
 	if tip == null or not is_instance_valid(tip):
 		return _make_lease()
 	var overlay := _ensure()
@@ -35,6 +40,20 @@ static func configure(tip: Control) -> Control:
 	var lease := _make_lease()
 	lease.tree_exiting.connect(_on_lease_exiting.bind(tip))
 	return lease
+
+
+static func set_suppressed(suppressed: bool) -> void:
+	if _suppressed == suppressed:
+		return
+	_suppressed = suppressed
+	if suppressed:
+		dismiss_current()
+
+
+static func dismiss_current() -> void:
+	if _instance == null or not is_instance_valid(_instance):
+		return
+	_instance._dismiss()
 
 
 ## Re-fit a card that is already on the overlay (e.g. plot tip refresh).

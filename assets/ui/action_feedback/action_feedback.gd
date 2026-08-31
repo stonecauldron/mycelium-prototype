@@ -224,9 +224,9 @@ func _position_tag() -> void:
 
 
 func _screen_rect(control: Control) -> Rect2:
-	var transform := control.get_global_transform_with_canvas()
-	var top_left := transform * Vector2.ZERO
-	var bottom_right := transform * control.size
+	var canvas_transform := control.get_global_transform_with_canvas()
+	var top_left := canvas_transform * Vector2.ZERO
+	var bottom_right := canvas_transform * control.size
 	var position := Vector2(minf(top_left.x, bottom_right.x), minf(top_left.y, bottom_right.y))
 	return Rect2(position, (bottom_right - top_left).abs())
 

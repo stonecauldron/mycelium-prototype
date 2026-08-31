@@ -108,6 +108,11 @@ func _sell_amount_for_current_drag() -> int:
 			if fert == null:
 				return -1
 			return BiomassData.sell_value(fert.biomass_cost)
+		"mutation":
+			var mutation := drag.get("mutation") as MutationData
+			if mutation == null:
+				return -1
+			return BiomassData.sell_value(mutation.biomass_cost)
 	return -1
 
 

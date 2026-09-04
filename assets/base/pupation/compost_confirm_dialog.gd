@@ -6,7 +6,7 @@ signal cancelled
 
 const PORTRAIT_SCALE := 0.7
 const PORTRAIT_SHADOW := 20.0
-const _SKULL_ICON := preload("res://assets/base/combat_progress_track/skull.png")
+const _COMPOST_ICON := preload("res://assets/base/composting_bin/composting_bin.png")
 const _COLOR_NEUTRAL := Color(0.03, 0.035, 0.027, 1)
 const _COLOR_UP := Color(0.12, 0.45, 0.18, 1)
 
@@ -31,7 +31,7 @@ func _ready() -> void:
 	_dim.gui_input.connect(_on_dim_gui_input)
 	_close_button.pressed.connect(_on_cancel_pressed)
 	_confirm_button.pressed.connect(_on_confirm_pressed)
-	_header_icon.texture = _SKULL_ICON
+	_header_icon.texture = _COMPOST_ICON
 	if _unit != null:
 		_refresh()
 

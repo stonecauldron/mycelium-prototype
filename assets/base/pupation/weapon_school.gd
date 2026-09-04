@@ -2,9 +2,11 @@ class_name WeaponSchool
 extends RefCounted
 
 ## Training schools for pupation. Order is stable for slot indices.
-enum Id { SWORD, SHIELD, SPEAR, BOW }
+enum Id { SWORD, SHIELD, SPEAR, BOW, MACE }
 
-const COUNT := 4
+const COUNT := 5
+## Presentation order is independent of stored school IDs.
+const DISPLAY_ORDER: Array[int] = [Id.SWORD, Id.MACE, Id.SHIELD, Id.SPEAR, Id.BOW]
 const COCOON_COST := 3
 ## Days in a cocoon before emerge (day advances tick this down).
 const COCOON_DURATION_DAYS := 1
@@ -24,6 +26,12 @@ const _UMBRELLA_PATH := "res://assets/weapons/umbrella/umbrella.tres"
 const _HALBERD_PATH := "res://assets/weapons/halberd/halberd.tres"
 const _MORTAR_PATH := "res://assets/weapons/mortar/mortar.tres"
 const _SNIPER_PATH := "res://assets/weapons/sniper/sniper.tres"
+const _SWORD_SHIELD_PATH := "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+const _SPEAR_SHIELD_PATH := "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+const _MACE_SHIELD_PATH := "res://assets/weapons/mace_and_shield/mace_and_shield.tres"
+const _WARHAMMER_PATH := "res://assets/weapons/warhammer/warhammer.tres"
+const _POLEHAMMER_PATH := "res://assets/weapons/polehammer/polehammer.tres"
+const _SLING_PATH := "res://assets/weapons/sling/sling.tres"
 
 ## school -> { strength, dex, con }
 const SCHOOL_STAT_DELTAS := {
@@ -31,6 +39,7 @@ const SCHOOL_STAT_DELTAS := {
 	1: {"strength": 1, "dex": -1, "con": 4},
 	2: {"strength": 2, "dex": 2, "con": 1},
 	3: {"strength": 0, "dex": 5, "con": -1},
+	4: {"strength": 3, "dex": -1, "con": 2},
 }
 
 const DISPLAY_NAMES := {
@@ -38,6 +47,7 @@ const DISPLAY_NAMES := {
 	1: "Shield",
 	2: "Spear",
 	3: "Bow",
+	4: "Mace",
 }
 
 
@@ -55,6 +65,8 @@ static func base_weapon_path(school: int) -> String:
 			return _SPEAR_PATH
 		Id.BOW:
 			return _BOW_PATH
+		Id.MACE:
+			return _MACE_PATH
 		_:
 			return _SICKLE_PATH
 
@@ -72,19 +84,31 @@ static func combo_weapon_path(a: int, b: int) -> String:
 				return _HALBERD_PATH
 			Id.BOW:
 				return _SNIPER_PATH
+			Id.MACE:
+				return _GREAT_HAMMER_PATH
 	# Unique pairs (lo, hi)
 	if lo == Id.SWORD and hi == Id.SHIELD:
-		return _MACE_PATH
+		return _SWORD_SHIELD_PATH
 	if lo == Id.SWORD and hi == Id.SPEAR:
 		return _LANCE_PATH
 	if lo == Id.SWORD and hi == Id.BOW:
 		return _CROSSBOW_PATH
 	if lo == Id.SHIELD and hi == Id.SPEAR:
-		return _GREAT_HAMMER_PATH
+		return _SPEAR_SHIELD_PATH
 	if lo == Id.SHIELD and hi == Id.BOW:
 		return _UMBRELLA_PATH
 	if lo == Id.SPEAR and hi == Id.BOW:
 		return _MORTAR_PATH
+	if hi == Id.MACE:
+		match lo:
+			Id.SWORD:
+				return _WARHAMMER_PATH
+			Id.SHIELD:
+				return _MACE_SHIELD_PATH
+			Id.SPEAR:
+				return _POLEHAMMER_PATH
+			Id.BOW:
+				return _SLING_PATH
 	return _SICKLE_PATH
 
 

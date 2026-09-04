@@ -8,11 +8,10 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Crossbow"
-short_description = "Bolts powered by STR with a flat blunt arc."
+short_description = "Bolts powered by STR with a flat arc."
 formation_line = 2
 engagement_stance = 3
 attack_style = 2
-damage_type = 1
 base_damage = 7
 projectile_range = 1200.0
 attack_interval = 2.5

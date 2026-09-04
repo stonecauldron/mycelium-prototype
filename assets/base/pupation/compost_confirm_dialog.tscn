@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://assets/base/pupation/compost_confirm_dialog.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
-[ext_resource type="Texture2D" uid="uid://dixo24oayxgua" path="res://assets/base/combat_progress_track/skull.png" id="3_skull"]
+[ext_resource type="Texture2D" path="res://assets/base/composting_bin/composting_bin.png" id="3_compost"]
 [ext_resource type="Texture2D" uid="uid://c2pffsxsdkf27" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 01.png" id="tex_paper_card"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
 
@@ -88,7 +88,7 @@ custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
-texture = ExtResource("3_skull")
+texture = ExtResource("3_compost")
 expand_mode = 1
 stretch_mode = 5
 

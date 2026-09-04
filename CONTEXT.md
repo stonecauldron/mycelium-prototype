@@ -162,6 +162,10 @@ A rarity/power band on player units (e.g. Common through Legendary). Fresh Nurse
 **Compost**:
 Voluntarily removing a unit for biomass.
 
+**Composting bin**:
+The War Chamber's dedicated place for Compost, separate from weapon-school Cocoons. It is not a Squad slot.
+*Avoid*: composting cocoon
+
 **Training**:
 Putting a Child or Adult through a weapon school to gain that school's fighting identity. A Child emerges as an Adult; an Adult can train again with its Stats unchanged.
 *Avoid*: WeaponSchool (code)
@@ -170,11 +174,14 @@ Putting a Child or Adult through a weapon school to gain that school's fighting 
 The Base slot where a unit sits while Training, out of the troop until it emerges.
 
 **Weapon school**:
-Sword, Shield, Spear, or Bow — the fighting identity Training grants.
+Sword, Mace, Shield, Spear, or Bow — the fighting identity Training grants.
 
 **Weapon**:
 The fighting tool a Unit uses in battle, set by its weapon-school Trainings. Not bought from the Shop and not freely swapped. Every player Unit has a Weapon.
 *Avoid*: loadout (when you mean Training identity); treating Weapon as a Shop item; unarmed, Bare fists (as a player-facing empty slot)
+
+**Blunt damage**:
+A damage type that bypasses shield-style damage protection. Explicit blunt resistance can still reduce it.
 
 **Attack interval**:
 Seconds between attacks, authored on the Weapon for player Units and on each enemy type's combat profile. Shown as "Attacks every X secs". Seals and some Fertilizers can scale it; it is not a Stat.

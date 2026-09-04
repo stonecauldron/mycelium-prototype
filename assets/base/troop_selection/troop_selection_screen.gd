@@ -5,6 +5,8 @@ const BENCH_SLOT_COUNT := TroopData.BENCH_SLOT_COUNT
 const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _DROP_SLOT_SCENE := preload("res://assets/base/drop_slot/drop_slot.tscn")
 const _COCOON_SLOT_SCENE := preload("res://assets/base/pupation/cocoon_slot.tscn")
+const _COMPOST_BIN_SCENE := preload("res://assets/base/composting_bin/composting_bin.tscn")
+const _COMPOST_BIN_SPACING := 48.0
 const _PUPATION_CONFIRM_SCENE := preload("res://assets/base/pupation/pupation_confirm_dialog.tscn")
 const _COMPOST_CONFIRM_SCENE := preload("res://assets/base/pupation/compost_confirm_dialog.tscn")
 const _STARTER_CHOICE_SCENE := preload("res://assets/base/troop_selection/starter_choice_dialog.tscn")
@@ -23,6 +25,7 @@ var squad: Array = []
 
 var _squad_slots: Array[DropSlot] = []
 var _squad_unlock_slot: DropSlot = null
+var _compost_bin: CompostingBin = null
 var _bench_slots: Array[DropSlot] = []
 var _cocoon_slots: Array = []
 var _pupation_dialog: PupationConfirmDialog = null
@@ -78,19 +81,14 @@ func _set_bench_structure_mouse_ignore() -> void:
 	_bench_grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
-func _squad_visible_count() -> int:
-	var troop := GameState.troop
-	var count := troop.unlocked_squad_count
-	if troop.can_unlock_squad_slot():
-		count += 1
-	return count
-
-
 func _ensure_squad_ui() -> void:
-	var current := _squad_slots.size()
-	if _squad_unlock_slot != null and is_instance_valid(_squad_unlock_slot):
-		current += 1
-	if current != _squad_visible_count():
+	var has_purchase_slot := _squad_unlock_slot != null and is_instance_valid(_squad_unlock_slot)
+	# Nine positions + a purchase control and ten positions have the same count.
+	# Compare their roles, so the final purchase is replaced by a fighting slot.
+	if (
+		_squad_slots.size() != GameState.troop.unlocked_squad_count
+		or has_purchase_slot != GameState.troop.can_unlock_squad_slot()
+	):
 		_build_squad_ui()
 		return
 	refresh_unlock_affordability()
@@ -109,9 +107,11 @@ func refresh_unlock_affordability() -> void:
 
 func _build_squad_ui() -> void:
 	for child in _squad_slot_row.get_children():
+		_squad_slot_row.remove_child(child)
 		child.queue_free()
 	_squad_slots.clear()
 	_squad_unlock_slot = null
+	_compost_bin = null
 
 	var troop := GameState.troop
 	for i in troop.unlocked_squad_count:
@@ -129,6 +129,16 @@ func _build_squad_ui() -> void:
 		_squad_slot_row.add_child(unlock_slot)
 		unlock_slot.setup_unlockable(troop.next_squad_unlock_cost())
 		_squad_unlock_slot = unlock_slot
+	# Leave room for the unlock button, which extends beyond its squad slot.
+	var compost_spacing := Control.new()
+	compost_spacing.name = "CompostSpacing"
+	compost_spacing.custom_minimum_size.x = _COMPOST_BIN_SPACING
+	compost_spacing.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_squad_slot_row.add_child(compost_spacing)
+	# Composting is a separate control, never a fighting or purchase slot.
+	_compost_bin = _COMPOST_BIN_SCENE.instantiate() as CompostingBin
+	_compost_bin.unit_dropped_on_bin.connect(_on_compost_drop)
+	_squad_slot_row.add_child(_compost_bin)
 
 
 func _build_bench_ui() -> void:
@@ -150,13 +160,7 @@ func _build_cocoon_ui() -> void:
 	for child in _cocoon_row.get_children():
 		child.queue_free()
 	_cocoon_slots.clear()
-	var compost_slot := _COCOON_SLOT_SCENE.instantiate() as CocoonSlot
-	if compost_slot != null:
-		compost_slot.is_compost_slot = true
-		compost_slot.unit_dropped_on_cocoon.connect(_on_compost_drop)
-		_cocoon_row.add_child(compost_slot)
-		_cocoon_slots.append(compost_slot)
-	for school in WeaponSchool.COUNT:
+	for school in WeaponSchool.DISPLAY_ORDER:
 		var slot := _COCOON_SLOT_SCENE.instantiate() as CocoonSlot
 		if slot == null:
 			continue
@@ -380,6 +384,8 @@ func _sync_all_slots() -> void:
 		_sync_slot_card(slot, "bench")
 	for slot in _cocoon_slots:
 		slot.sync_from_state()
+	if _compost_bin != null:
+		_compost_bin.sync_from_state()
 	_notify_start_combat_state()
 
 
@@ -402,7 +408,7 @@ func _on_cocoon_drop(slot: CocoonSlot, drag_data: Dictionary) -> void:
 	_open_pupation_confirm(unit, slot.school)
 
 
-func _on_compost_drop(slot: CocoonSlot, drag_data: Dictionary) -> void:
+func _on_compost_drop(slot: CompostingBin, drag_data: Dictionary) -> void:
 	var unit := drag_data.get("unit") as RosterUnitData
 	if unit == null or slot == null:
 		return

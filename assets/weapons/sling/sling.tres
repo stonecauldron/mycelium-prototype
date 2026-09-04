@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+[ext_resource type="PackedScene" path="res://assets/weapons/sling/sling_appearance.tscn" id="2_appear"]
+[ext_resource type="Texture2D" path="res://assets/weapons/sling/sling.png" id="3_icon"]
+[ext_resource type="PackedScene" path="res://assets/weapons/sling/sling_projectile.tscn" id="4_proj"]
+
+[resource]
+script = ExtResource("1_weapon")
+display_name = "Sling"
+short_description = "Launches blunt stones in a low arc. Damage scales with DEX."
+formation_line = 2
+engagement_stance = 3
+attack_style = 2
+damage_stat = 1
+damage_type = 1
+base_damage = 5
+projectile_range = 1000.0
+attack_interval = 2.0
+skirmish_distance = 200.0
+knockback_force = 80.0
+biomass_cost = 4
+projectile_scene = ExtResource("4_proj")
+appearance_scene = ExtResource("2_appear")
+icon = ExtResource("3_icon")

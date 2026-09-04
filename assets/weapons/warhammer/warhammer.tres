@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+[ext_resource type="PackedScene" path="res://assets/weapons/warhammer/warhammer_appearance.tscn" id="2_appear"]
+[ext_resource type="Texture2D" path="res://assets/weapons/warhammer/warhammer.png" id="3_icon"]
+
+[resource]
+script = ExtResource("1_weapon")
+display_name = "Warhammer"
+short_description = "Heavy, single-target blunt strikes with strong knockback."
+damage_type = 1
+base_damage = 8
+attack_interval = 1.75
+knockback_force = 360.0
+melee_range = 120.0
+biomass_cost = 4
+appearance_scene = ExtResource("2_appear")
+icon = ExtResource("3_icon")

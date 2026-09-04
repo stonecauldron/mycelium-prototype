@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+[ext_resource type="PackedScene" path="res://assets/weapons/spear/spear_appearance.tscn" id="2_appear"]
+[ext_resource type="Texture2D" path="res://assets/weapons/spear_and_shield/spear_and_shield.png" id="3_icon"]
+[ext_resource type="PackedScene" path="res://assets/weapons/shield/offhand_shield_appearance.tscn" id="4_offhand"]
+[ext_resource type="PackedScene" path="res://assets/weapons/spear/spear_projectile.tscn" id="5_proj"]
+
+[resource]
+script = ExtResource("1_weapon")
+display_name = "Spear and Shield"
+short_description = "Throw or thrust the spear while keeping the shield raised. Blunt hits bypass the shield."
+formation_line = 1
+engagement_stance = 4
+attack_style = 1
+damage_stat = 2
+base_damage = 6
+projectile_range = 650.0
+attack_interval = 1.0
+skirmish_distance = 280.0
+knockback_force = 0.0
+melee_range = 200.0
+biomass_cost = 4
+incoming_damage_multiplier = 0.5
+incoming_knockback_multiplier = 0.5
+blocks_charges = true
+projectile_scene = ExtResource("5_proj")
+appearance_scene = ExtResource("2_appear")
+offhand_appearance_scene = ExtResource("4_offhand")
+icon = ExtResource("3_icon")

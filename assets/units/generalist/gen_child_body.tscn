@@ -31,6 +31,15 @@ update_rotation = false
 position = Vector2(4, -70)
 scale = Vector2(0.39999998, 0.39999998)
 
+[node name="OffhandFollow" type="RemoteTransform2D" parent="Sprite"]
+position = Vector2(-45, -77.5)
+remote_path = NodePath("../../OffhandMount")
+update_rotation = false
+update_scale = false
+
+[node name="OffhandMount" type="Node2D" parent="."]
+position = Vector2(-18, -31)
+
 [node name="WeaponMount" type="Node2D" parent="." unique_id=630812409]
 position = Vector2(34, -30.999998)
 scale = Vector2(0.9999831, 0.9999831)

@@ -12,7 +12,7 @@ content_margin_bottom = 20.0
 texture = ExtResource("3_x78ih")
 
 [node name="StarterPackageCard" type="Control" unique_id=298977122]
-custom_minimum_size = Vector2(400, 380)
+custom_minimum_size = Vector2(320, 400)
 layout_mode = 3
 anchors_preset = 0
 theme = ExtResource("2_theme")

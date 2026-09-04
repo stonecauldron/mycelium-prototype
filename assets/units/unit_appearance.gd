@@ -20,6 +20,7 @@ const BODY_NODE_NAME := &"Body"
 
 var hurtbox: HurtboxComponent
 var weapon_mount: Node2D
+var offhand_mount: Node2D
 var sprite: Sprite2D
 var _body_root: Node2D
 var _cap_root: Node
@@ -120,6 +121,7 @@ func _resolve_composed_refs() -> void:
 		sprite = _body_root.get_node_or_null("Sprite") as Sprite2D
 		hurtbox = _body_root.get_node_or_null("Hurtbox") as HurtboxComponent
 		weapon_mount = _body_root.get_node_or_null("WeaponMount") as Node2D
+		offhand_mount = _body_root.get_node_or_null("OffhandMount") as Node2D
 		var cap_mount := _body_root.get_node_or_null("CapMount") as Node2D
 		if cap_mount != null and cap_mount.get_child_count() > 0:
 			_cap_root = cap_mount.get_child(0)
@@ -128,6 +130,7 @@ func _resolve_composed_refs() -> void:
 		sprite = get_node_or_null("Sprite") as Sprite2D
 		hurtbox = get_node_or_null("Hurtbox") as HurtboxComponent
 		weapon_mount = get_node_or_null("WeaponMount") as Node2D
+		offhand_mount = get_node_or_null("OffhandMount") as Node2D
 		_cap_root = get_node_or_null("Cap")
 
 
@@ -177,12 +180,19 @@ func mount_weapon_appearance(weapon: WeaponData) -> void:
 		mount = _body_root.get_node_or_null("WeaponMount") as Node2D
 	if mount == null:
 		return
+	_mount_held_scene(mount, weapon.appearance_scene if weapon != null else null)
+	_mount_held_scene(offhand_mount, weapon.offhand_appearance_scene if weapon != null else null)
+
+
+func _mount_held_scene(mount: Node2D, scene: PackedScene) -> void:
+	if mount == null:
+		return
 	for child in mount.get_children():
 		mount.remove_child(child)
 		child.free()
-	if weapon == null:
+	if scene == null:
 		return
-	var held := weapon.instantiate_appearance()
+	var held := scene.instantiate() as Node2D
 	if held == null:
 		return
 	mount.add_child(held)
@@ -226,7 +236,7 @@ func visual_rect_local(include_weapon: bool = true) -> Rect2:
 		var pair: Array = stack.pop_back()
 		var node: Node = pair[0]
 		var xf: Transform2D = pair[1]
-		if not include_weapon and node.name == "WeaponMount":
+		if not include_weapon and node.name in [&"WeaponMount", &"OffhandMount"]:
 			continue
 		if node is Sprite2D:
 			var sprite_2d := node as Sprite2D

@@ -63,6 +63,8 @@ const MELEE_HITBOX_Y := -20.0
 ## Scene spawned for PROJECTILE_THROW / BOW_SHOT. Null = style fallback (spear/bow defaults).
 @export var projectile_scene: PackedScene
 @export var appearance_scene: PackedScene
+## Optional visual only. The pair remains one Weapon and one CombatProfile.
+@export var offhand_appearance_scene: PackedScene
 ## Card icon shown in shop/stock UI. Lives on the resource itself so it
 ## survives duplicate() (unlike matching on resource_path, which is cleared
 ## on duplicated resources).

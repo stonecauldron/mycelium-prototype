@@ -10,6 +10,12 @@ const _RAPIER_WEAPON := preload("res://assets/weapons/rapier/rapier.tres")
 const _GREAT_SWORD_WEAPON := preload("res://assets/weapons/great_sword/great_sword.tres")
 const _GREAT_HAMMER_WEAPON := preload("res://assets/weapons/great_hammer/great_hammer.tres")
 const _MACE_WEAPON := preload("res://assets/weapons/mace/mace.tres")
+const _WARHAMMER_WEAPON := preload("res://assets/weapons/warhammer/warhammer.tres")
+const _POLEHAMMER_WEAPON := preload("res://assets/weapons/polehammer/polehammer.tres")
+const _SLING_WEAPON := preload("res://assets/weapons/sling/sling.tres")
+const _SWORD_SHIELD_WEAPON := preload("res://assets/weapons/sword_and_shield/sword_and_shield.tres")
+const _MACE_SHIELD_WEAPON := preload("res://assets/weapons/mace_and_shield/mace_and_shield.tres")
+const _SPEAR_SHIELD_WEAPON := preload("res://assets/weapons/spear_and_shield/spear_and_shield.tres")
 const _LANCE_WEAPON := preload("res://assets/weapons/lance/lance.tres")
 const _SCYTHE_WEAPON := preload("res://assets/weapons/scythe/scythe.tres")
 const _HALBERD_WEAPON := preload("res://assets/weapons/halberd/halberd.tres")
@@ -41,6 +47,12 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Great Sword", "weapon": _GREAT_SWORD_WEAPON},
 	{"name": "Great Hammer", "weapon": _GREAT_HAMMER_WEAPON},
 	{"name": "Mace", "weapon": _MACE_WEAPON},
+	{"name": "Warhammer", "weapon": _WARHAMMER_WEAPON},
+	{"name": "Polehammer", "weapon": _POLEHAMMER_WEAPON},
+	{"name": "Sling", "weapon": _SLING_WEAPON},
+	{"name": "Sword and Shield", "weapon": _SWORD_SHIELD_WEAPON},
+	{"name": "Mace and Shield", "weapon": _MACE_SHIELD_WEAPON},
+	{"name": "Spear and Shield", "weapon": _SPEAR_SHIELD_WEAPON},
 	{"name": "Lance", "weapon": _LANCE_WEAPON},
 	{"name": "Scythe", "weapon": _SCYTHE_WEAPON},
 	{"name": "Halberd", "weapon": _HALBERD_WEAPON},

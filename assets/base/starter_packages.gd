@@ -6,6 +6,7 @@ extends RefCounted
 
 const PACKAGE_IDS: Array[StringName] = [
 	&"great_sword_spear",
+	&"great_hammer",
 	&"sniper_shield",
 	&"halberd_sword",
 	&"great_shield_bow",
@@ -20,6 +21,8 @@ static func display_name(package_id: StringName) -> String:
 	match package_id:
 		&"great_sword_spear":
 			return "Frontliners"
+		&"great_hammer":
+			return "Breakers"
 		&"sniper_shield":
 			return "Long-range Death"
 		&"halberd_sword":
@@ -36,6 +39,10 @@ static func def_for(package_id: StringName) -> Dictionary:
 		&"great_sword_spear":
 			return {
 				"evolved_schools": [WeaponSchool.Id.SWORD, WeaponSchool.Id.SWORD],
+			}
+		&"great_hammer":
+			return {
+				"evolved_schools": [WeaponSchool.Id.MACE, WeaponSchool.Id.MACE],
 			}
 		&"sniper_shield":
 			return {

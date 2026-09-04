@@ -9,7 +9,6 @@
 
 [sub_resource type="Resource" id="Combat_solar_sword"]
 script = ExtResource("2_combat")
-engagement_stance = 1
 attack_interval = 1.5
 
 [sub_resource type="Resource" id="Stats_solar_sword"]

@@ -109,7 +109,6 @@ var _squash_tween: Tween
 var _swing_tween: Tween
 var _flip_tween: Tween
 var _in_knockback: bool = false
-var _knockback_left_ground: bool = false
 var _throw_released: bool = false
 var _throw_landed: bool = false
 var _throw_left_ground: bool = false
@@ -165,7 +164,6 @@ func apply_power_tier(tier: UnitStatsData.PowerTier) -> void:
 	_target = null
 	_combat_phase = CombatPhase.READY
 	_in_knockback = false
-	_knockback_left_ground = false
 	kill_streak = 0
 	damage_dealt = 0
 	damage_taken = 0
@@ -389,11 +387,8 @@ func _physics_process(delta: float) -> void:
 	if _celebrating:
 		if _in_knockback:
 			move_and_slide()
-			if not is_on_floor():
-				_knockback_left_ground = true
-			elif _knockback_left_ground and velocity.y >= 0.0:
+			if is_on_floor() and velocity.y >= 0.0:
 				_in_knockback = false
-				_knockback_left_ground = false
 				velocity.x = 0.0
 			_update_locomotion_animation()
 			return
@@ -404,11 +399,9 @@ func _physics_process(delta: float) -> void:
 
 	if _in_knockback:
 		move_and_slide()
-		if not is_on_floor():
-			_knockback_left_ground = true
-		elif _knockback_left_ground and velocity.y >= 0.0:
+		# Use fresh floor contact: shield-mitigated impulses may never lift off.
+		if is_on_floor() and velocity.y >= 0.0:
 			_in_knockback = false
-			_knockback_left_ground = false
 			velocity.x = 0.0
 		_update_locomotion_animation()
 		return
@@ -517,7 +510,6 @@ func begin_victory_celebration() -> void:
 	_target = null
 	_charge_phase = ChargePhase.NONE
 	_in_knockback = false
-	_knockback_left_ground = false
 
 
 func is_celebrating() -> bool:
@@ -1636,7 +1628,6 @@ func _apply_knockback(from_global: Vector2, knockback_force: float) -> void:
 	velocity.x = direction * knockback_force
 	velocity.y = -knockback_force * KNOCKBACK_UP_RATIO
 	_in_knockback = true
-	_knockback_left_ground = false
 
 
 func _play_hurt_highlight() -> void:

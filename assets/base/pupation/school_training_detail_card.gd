@@ -2,14 +2,14 @@ class_name SchoolTrainingDetailCard
 extends Control
 
 const CARD_WIDTH := 360.0
+const _STAT_ROW_SCENE := preload("res://assets/ui/stat_value_row/stat_value_row.tscn")
 
 var school: int = 0
 
 @onready var _card_panel: PanelContainer = $CardPanel
 @onready var _school_icon: TextureRect = %SchoolIcon
 @onready var _title_label: Label = %TitleLabel
-@onready var _children_stats: Label = %ChildrenStats
-@onready var _combos_box: VBoxContainer = %CombosBox
+@onready var _stats_row: HBoxContainer = %StatsRow
 
 
 func setup(p_school: int) -> void:
@@ -55,26 +55,27 @@ func _refresh() -> void:
 	var weapon := WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(school))
 	_school_icon.texture = weapon.icon if weapon != null else null
 	_title_label.text = "%s Training" % WeaponSchool.display_name(school)
-	_children_stats.text = "Children: %s" % WeaponSchool.school_stat_delta_text(school).replace("  ", " · ")
-	_refresh_combos()
+	_refresh_stats()
 
 
-func _refresh_combos() -> void:
-	for child in _combos_box.get_children():
-		_combos_box.remove_child(child)
+func _refresh_stats() -> void:
+	for child in _stats_row.get_children():
+		_stats_row.remove_child(child)
 		child.queue_free()
-	for other_school in WeaponSchool.COUNT:
-		var weapon := WeaponSchool.load_weapon(WeaponSchool.combo_weapon_path(school, other_school))
-		var row := Label.new()
-		row.text = "%s + %s → %s" % [
-			WeaponSchool.display_name(school),
-			WeaponSchool.display_name(other_school),
-			weapon.display_name,
-		]
-		row.add_theme_font_size_override("font_size", 18)
-		row.add_theme_color_override("font_color", StatDisplay.INK)
-		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_combos_box.add_child(row)
+	var deltas := WeaponSchool.school_stat_deltas(school)
+	var keys: Array[String] = ["strength", "dex", "con"]
+	var abbreviations: Array[String] = ["STR", "DEX", "CON"]
+	for i in keys.size():
+		var delta := int(deltas.get(keys[i], 0))
+		if delta == 0:
+			continue
+		var row: StatValueRow = _STAT_ROW_SCENE.instantiate()
+		_stats_row.add_child(row)
+		row.configure(
+			abbreviations[i], "%+d" % delta, 18,
+			StatDisplay.GAIN_COLOR if delta > 0 else StatDisplay.LOSS_COLOR,
+			false, StatValueRow.Layout.ICON_FIRST, StatDisplay.INK
+		)
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

@@ -94,14 +94,6 @@ theme_type_variation = &"SlotRow"
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="TrainingHint" type="Label" parent="CocoonPanel/CocoonMargin/CocoonVBox"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 18
-text = "Train an Adult again to combine weapon schools."
-horizontal_alignment = 1
-autowrap_mode = 3
-
 [node name="BenchPanel" type="PanelContainer" parent="." unique_id=710296817]
 unique_name_in_owner = true
 layout_mode = 1

@@ -18,6 +18,13 @@ var _preview_unit: RosterUnitData
 @onready var _header_title: Label = %HeaderTitle
 @onready var _close_button: Button = %CloseButton
 @onready var _pupate_title: Label = %PupateTitle
+@onready var _panel: PanelContainer = $Center/Panel
+@onready var _comparison_width: float = _panel.custom_minimum_size.x
+@onready var _left_column: VBoxContainer = %LeftColumn
+@onready var _mid_column: VBoxContainer = %MidColumn
+@onready var _adult_training_info: HBoxContainer = %AdultTrainingInfo
+@onready var _adult_duration_chip: StatChip = %AdultDurationChip
+@onready var _adult_duration_suffix: Label = %AdultDurationSuffix
 @onready var _left_portrait: Control = %LeftPortrait
 @onready var _left_atk_chip: StatChip = %LeftAtkChip
 @onready var _left_hp_chip: StatChip = %LeftHpChip
@@ -33,8 +40,6 @@ var _preview_unit: RosterUnitData
 @onready var _mid_str: StatValueRow = %MidStr
 @onready var _mid_dex: StatValueRow = %MidDex
 @onready var _mid_con: StatValueRow = %MidCon
-@onready var _mid_deltas: VBoxContainer = %MidDeltas
-@onready var _stats_unchanged: Label = %StatsUnchanged
 @onready var _right_portrait: Control = %RightPortrait
 @onready var _right_atk_chip: StatChip = %RightAtkChip
 @onready var _right_hp_chip: StatChip = %RightHpChip
@@ -82,10 +87,16 @@ func _refresh() -> void:
 	var school_weapon := WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(_school))
 	_school_icon.texture = school_weapon.icon if school_weapon != null else null
 	_header_title.text = "%s Training" % WeaponSchool.display_name(_school)
-	_pupate_title.text = "Pupate %s" % _unit.display_name
+	var is_adult := _unit.is_adult_stage()
+	_pupate_title.text = ("Train %s" if is_adult else "Pupate %s") % _unit.display_name
+	_left_column.visible = not is_adult
+	_mid_column.visible = not is_adult
+	_adult_training_info.visible = is_adult
+	_panel.custom_minimum_size.x = 540.0 if is_adult else _comparison_width
 	_refresh_duration_chip()
 
-	_fill_current_side()
+	if not is_adult:
+		_fill_current_side()
 	_fill_result_side()
 
 	var can_afford := GameState.biomass.can_afford(WeaponSchool.COCOON_COST)
@@ -98,12 +109,11 @@ func _refresh_duration_chip() -> void:
 	var days := 0
 	if _unit != null:
 		days = _unit.effective_cocoon_days()
-	if days <= 0:
-		_duration_chip.set_value(0)
-		_duration_suffix.text = "instant"
-		return
-	_duration_chip.set_value(days)
-	_duration_suffix.text = WeaponSchool.day_word(days)
+	_duration_chip.set_value(maxi(days, 0))
+	_adult_duration_chip.set_value(maxi(days, 0))
+	var suffix := "instant" if days <= 0 else WeaponSchool.day_word(days)
+	_duration_suffix.text = suffix
+	_adult_duration_suffix.text = suffix
 
 
 func _fill_current_side() -> void:
@@ -128,9 +138,6 @@ func _fill_current_side() -> void:
 
 func _fill_result_side() -> void:
 	_preview_unit = WeaponSchool.preview_emerged_unit(_unit, _school)
-	var is_adult := _unit.is_adult_stage()
-	_mid_deltas.visible = not is_adult
-	_stats_unchanged.visible = is_adult
 	var next_stage := (
 		_preview_unit.life_stage_id if _preview_unit != null
 		else WeaponSchool.next_stage_after_training(_unit)

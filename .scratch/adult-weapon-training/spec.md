@@ -11,15 +11,16 @@ Implemented and reviewed following authorization through the implement skill.
 - Adult Training costs 3 biomass and takes 1 Day, including Adults raised with Cocooning. Child Training keeps its existing Fertilizer behavior.
 - Existing Cocoon capacity, cancellation/refund, and minimum-one-fighter rules remain.
 - Cocoons continue suspending aging, Stimulants decay, and daily Mutation effects. Repeat Adult Training may reuse this shelter, including when the Weapon stays unchanged.
-- Add the visible instruction “Train an Adult again to combine weapon schools.” by the Cocoons, and show “Stats unchanged” in the Adult confirmation.
-- Collapse school tooltip Stat changes into one line labeled “Children”, e.g. “Children: +3 STR · −1 DEX · +2 CON” for Sword.
-- Include the four Combo weapon recipes for each school in its tooltip. This is provisional: review the space they occupy after implementation.
-- Keep the confirmation's existing before/after Weapon presentation. Players do not need an explanation of which school is lost; add no school-replacement information.
+- Show “Stats unchanged” in the Adult confirmation. Omit the training hint below the Cocoons.
+- Collapse school tooltip Stat changes into one line labeled “Children”, retaining the existing Stat icons and signed gain/loss colors.
+- School tooltips show the school icon, title, and compact Children Stat row. Omit Combo weapon recipes: visual review found them too cluttered.
+- Adult confirmations show only the final result in a centered card, with duration, “Stats unchanged”, and the confirmation price. Children retain the before/after comparison. Add no school-replacement information.
+- The confirmation title says “Train [unit name]” for Adults and “Pupate [unit name]” for Children.
 
 ## Visual review
 
-- All four school tooltips render at 360 × 383 with the Children Stat changes on one line and all four recipes visible. Local paper padding was reduced to keep the added recipes compact. The normal tooltip overlay and both Child/Adult confirmations were inspected at 1920 × 1080.
-- The combo list remains open to user feedback on visual density.
+- Text recipes and then icon recipes were tried in the tooltips; the user chose to remove the recipe section after reviewing the clutter. The single Children row retains Stat icons and signed gain/loss colors.
+- Adult final-result and Child comparison layouts were inspected at 1920 × 1080, including reusing the dialog Adult → Child → Adult. The Adult panel centers the result and retains duration, unchanged-Stats text, and price; the Child comparison is restored correctly. The tooltip without recipes and removal of the Cocoon hint were also visually checked.
 
 ## Behavior before this change
 
@@ -38,3 +39,5 @@ Implemented and reviewed following authorization through the implement skill.
 - A Lineage spore inherited the Adult's updated Shield + Bow Trainings.
 - A Child with STR/DEX/CON 5, Cocooning, and a pending +1 Adult bonus retained its 2-Day wait and emerged from Sword Training with STR 12 / DEX 4 / CON 10, matching its preview.
 - Standards review: 0 actionable findings. Spec review: 0 actionable findings.
+- Large-weapon clipping was reproduced with Umbrella Shield: the full artwork extended above the 140-pixel portrait host on all 60 sampled frames. The confirmation hosts were not opting into the existing weapon-aware portrait-fit helper; enabling it for both portraits fixes the clipping without changing other portrait views.
+- Regression scene `check_portrait_fit.tscn` exercises the actual confirmation with all 10 combo weapons in Adult and Child layouts, sampling 60 points across the idle animation for each visible portrait. It passes with zero clipped samples. Run from the project root with `godot --path . --rendering-method gl_compatibility --rendering-driver opengl3 --windowed .scratch/adult-weapon-training/check_portrait_fit.tscn` (outside the agent sandbox on macOS).

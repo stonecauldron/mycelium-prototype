@@ -33,6 +33,8 @@ var _preview_unit: RosterUnitData
 @onready var _mid_str: StatValueRow = %MidStr
 @onready var _mid_dex: StatValueRow = %MidDex
 @onready var _mid_con: StatValueRow = %MidCon
+@onready var _mid_deltas: VBoxContainer = %MidDeltas
+@onready var _stats_unchanged: Label = %StatsUnchanged
 @onready var _right_portrait: Control = %RightPortrait
 @onready var _right_atk_chip: StatChip = %RightAtkChip
 @onready var _right_hp_chip: StatChip = %RightHpChip
@@ -126,16 +128,9 @@ func _fill_current_side() -> void:
 
 func _fill_result_side() -> void:
 	_preview_unit = WeaponSchool.preview_emerged_unit(_unit, _school)
-	var generation := 1
-	if _unit != null:
-		generation = maxi(_unit.generation, 1)
-	var mult := 1
-	if _unit != null:
-		mult = maxi(_unit.pupation_stat_multiplier, 1)
-	var deltas := WeaponSchool.scaled_school_deltas(_school, generation)
-	var adult_bonus := 0
-	if _unit != null and _unit.life_stage_id == RosterUnitData.STAGE_JUVENILE:
-		adult_bonus = _unit.pending_adult_stat_bonus
+	var is_adult := _unit.is_adult_stage()
+	_mid_deltas.visible = not is_adult
+	_stats_unchanged.visible = is_adult
 	var next_stage := (
 		_preview_unit.life_stage_id if _preview_unit != null
 		else WeaponSchool.next_stage_after_training(_unit)
@@ -153,18 +148,18 @@ func _fill_result_side() -> void:
 	_right_weapon_row.set_weapon(right_weapon)
 	_set_combat_chips(_preview_unit, _right_atk_chip, _right_hp_chip)
 
-	if preview_stats != null:
+	if preview_stats != null and _unit.stats != null:
 		_apply_result_stat(
 			_right_str, _mid_str, "STR", preview_stats.strength,
-			int(deltas.get("strength", 0)) * mult + adult_bonus
+			preview_stats.strength - _unit.stats.strength
 		)
 		_apply_result_stat(
 			_right_dex, _mid_dex, "DEX", preview_stats.dex,
-			int(deltas.get("dex", 0)) * mult + adult_bonus
+			preview_stats.dex - _unit.stats.dex
 		)
 		_apply_result_stat(
 			_right_con, _mid_con, "CON", preview_stats.con,
-			int(deltas.get("con", 0)) * mult + adult_bonus
+			preview_stats.con - _unit.stats.con
 		)
 	else:
 		_configure_current_stat(_right_str, "STR", "—")

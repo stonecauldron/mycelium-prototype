@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_fert")
 display_name = "Cocooning"
-short_description = "Pupation stat gains are doubled, pupation takes 2 days"
+short_description = "Child Training grants double Stats and takes 2 days"
 tint = Color(0.85, 0.6, 0.75, 1)
 behavior = 7

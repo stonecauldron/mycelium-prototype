@@ -43,7 +43,7 @@ var emitted_death_spore: bool = false
 @export var has_revived: bool = false
 ## Favourite Child seal: permanent 1.5x ATK/HP from first hatch of a day.
 @export var favourite_child_buff: bool = false
-## Baked cocoon duration in days (−1 = use WeaponSchool.COCOON_DURATION_DAYS).
+## Child cocoon duration in days (−1 = default). Adults always use the default.
 @export var cocoon_duration_days: int = -1
 ## Multiplier for pupation school stat gains (Cocooning fertiliser).
 @export var pupation_stat_multiplier: int = 1
@@ -168,6 +168,8 @@ func _apply_pending_adult_stat_bonus() -> void:
 
 ## Cocoon wait in days. 0 or less means instant emerge on place.
 func effective_cocoon_days() -> int:
+	if is_adult_stage():
+		return WeaponSchool.COCOON_DURATION_DAYS
 	if cocoon_duration_days >= 0:
 		return cocoon_duration_days
 	return WeaponSchool.COCOON_DURATION_DAYS
@@ -187,8 +189,8 @@ func can_pupate() -> bool:
 
 
 func check_training_eligibility() -> ActionDecision:
-	if enemy_unit_data != null or life_stage_id != STAGE_JUVENILE:
-		return ActionDecision.reject(ActionReasons.ONLY_CHILD_CAN_TRAIN)
+	if enemy_unit_data != null or (life_stage_id != STAGE_JUVENILE and not is_adult_stage()):
+		return ActionDecision.reject(ActionReasons.UNIT_CANNOT_TRAIN)
 	return ActionDecision.accept()
 
 
@@ -208,7 +210,8 @@ func apply_pupation_training(school: int) -> bool:
 		return false
 	if weapon_trainings.size() >= 2:
 		weapon_trainings.pop_front()
-	WeaponSchool.apply_school_stats(stats, school, generation, pupation_stat_multiplier)
+	if not is_adult_stage():
+		WeaponSchool.apply_school_stats(stats, school, generation, pupation_stat_multiplier)
 	weapon_trainings.append(school)
 	promote_to_imago()
 	sync_weapon_from_trainings()

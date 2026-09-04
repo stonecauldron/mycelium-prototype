@@ -1,15 +1,15 @@
 class_name SchoolTrainingDetailCard
 extends Control
 
-const CARD_WIDTH := 280.0
-const _STAT_ROW_SCENE := preload("res://assets/ui/stat_value_row/stat_value_row.tscn")
+const CARD_WIDTH := 360.0
 
 var school: int = 0
 
 @onready var _card_panel: PanelContainer = $CardPanel
 @onready var _school_icon: TextureRect = %SchoolIcon
 @onready var _title_label: Label = %TitleLabel
-@onready var _stats_box: VBoxContainer = %StatsBox
+@onready var _children_stats: Label = %ChildrenStats
+@onready var _combos_box: VBoxContainer = %CombosBox
 
 
 func setup(p_school: int) -> void:
@@ -55,40 +55,26 @@ func _refresh() -> void:
 	var weapon := WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(school))
 	_school_icon.texture = weapon.icon if weapon != null else null
 	_title_label.text = "%s Training" % WeaponSchool.display_name(school)
-	_refresh_stat_lines()
+	_children_stats.text = "Children: %s" % WeaponSchool.school_stat_delta_text(school).replace("  ", " · ")
+	_refresh_combos()
 
 
-func _refresh_stat_lines() -> void:
-	if _stats_box == null:
-		return
-	for child in _stats_box.get_children():
-		_stats_box.remove_child(child)
+func _refresh_combos() -> void:
+	for child in _combos_box.get_children():
+		_combos_box.remove_child(child)
 		child.queue_free()
-	var deltas := WeaponSchool.school_stat_deltas(school)
-	var keys: Array[String] = ["strength", "dex", "con"]
-	for key in keys:
-		var v := int(deltas.get(key, 0))
-		if v == 0:
-			continue
-		var label_name := "STR"
-		match key:
-			"strength":
-				label_name = "STR"
-			"dex":
-				label_name = "DEX"
-			"con":
-				label_name = "CON"
-		var row: StatValueRow = _STAT_ROW_SCENE.instantiate()
-		_stats_box.add_child(row)
-		row.configure(
-			label_name,
-			"%+d" % v,
-			22,
-			StatDisplay.GAIN_COLOR if v > 0 else StatDisplay.LOSS_COLOR,
-			false,
-			StatValueRow.Layout.ICON_LAST,
-			StatDisplay.INK
-		)
+	for other_school in WeaponSchool.COUNT:
+		var weapon := WeaponSchool.load_weapon(WeaponSchool.combo_weapon_path(school, other_school))
+		var row := Label.new()
+		row.text = "%s + %s → %s" % [
+			WeaponSchool.display_name(school),
+			WeaponSchool.display_name(other_school),
+			weapon.display_name,
+		]
+		row.add_theme_font_size_override("font_size", 18)
+		row.add_theme_color_override("font_color", StatDisplay.INK)
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_combos_box.add_child(row)
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

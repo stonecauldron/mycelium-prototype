@@ -58,7 +58,7 @@ A plantable Nursery item that grows into Child units. Shop offers are not spores
 *Avoid*: seed, egg
 
 **Lineage spore**:
-A spore produced when an Adult is composted or dies in battle, carrying that unit's lineage, weapon-school Trainings, and Mutations (not Fertilizers). Mutations are applied on plots only — not prepped onto spores in Stock. Death spores may still snapshot the parent's mutation.
+A spore produced when an Adult is composted or dies in battle, carrying that unit's lineage, current weapon-school Trainings (including those learned as an Adult), and Mutations (not Fertilizers). Mutations are applied on plots only — not prepped onto spores in Stock. Death spores may still snapshot the parent's mutation.
 *Avoid*: death spore (code name)
 
 **Plot**:
@@ -163,7 +163,7 @@ A rarity/power band on player units (e.g. Common through Legendary). Fresh Nurse
 Voluntarily removing a unit for biomass.
 
 **Training**:
-Putting a Child through a weapon school so it emerges as an Adult with that school's fighting identity. Adults cannot enter Training again; later Trainings in the bloodline happen through Child descendants.
+Putting a Child or Adult through a weapon school to gain that school's fighting identity. A Child emerges as an Adult; an Adult can train again with its Stats unchanged.
 *Avoid*: WeaponSchool (code)
 
 **Cocoon**:

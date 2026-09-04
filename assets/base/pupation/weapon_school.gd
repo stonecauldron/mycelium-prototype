@@ -246,12 +246,17 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 	var next_trainings := trainings_after_training(unit.weapon_trainings, school)
 	var next_stage := next_stage_after_training(unit)
 	var next_weapon := resolve_weapon(next_trainings)
-	var preview_stats := preview_stats_after_training(
-		unit.stats,
-		school,
-		generation,
-		unit.pupation_stat_multiplier
-	)
+	var preview_stats: UnitStatsData = null
+	if unit.is_adult_stage():
+		if unit.stats != null:
+			preview_stats = unit.stats.duplicate(true) as UnitStatsData
+	else:
+		preview_stats = preview_stats_after_training(
+			unit.stats,
+			school,
+			generation,
+			unit.pupation_stat_multiplier
+		)
 	if (
 		preview_stats != null
 		and unit.pending_adult_stat_bonus != 0

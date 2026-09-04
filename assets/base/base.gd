@@ -44,7 +44,7 @@ func _ready() -> void:
 	_start_combat_button.pressed.connect(_on_start_combat_pressed)
 	_debug_advance_day_button.pressed.connect(_on_debug_advance_day_pressed)
 	_debug_advance_day_button.visible = GameState.debug_mode_active
-	GameState.debug_cheats_applied.connect(_on_debug_cheats_applied)
+	GameState.debug_mode_changed.connect(_on_debug_mode_changed)
 	set_start_combat_enabled(_colony_screen.can_start_combat())
 	_ensure_start_arrow()
 	var initial := TabId.COLONY
@@ -55,9 +55,12 @@ func _ready() -> void:
 	Analytics.maybe_start_day()
 
 
-func _on_debug_cheats_applied() -> void:
-	_debug_advance_day_button.visible = true
+func _on_debug_mode_changed(is_active: bool) -> void:
+	_debug_advance_day_button.visible = is_active
 	_build_tab_bar()
+	if not _is_tab_visible(_current_tab):
+		_select_tab(TabId.COLONY)
+		return
 	_update_tab_visuals()
 	if _current_screen != null:
 		_current_screen.on_screen_shown()

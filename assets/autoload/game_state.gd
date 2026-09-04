@@ -1,7 +1,7 @@
 extends Node
 
 ## Session owner for persistent run state.
-signal debug_cheats_applied
+signal debug_mode_changed(is_active: bool)
 
 const WIN_DAYS := 10
 const NURSERY_UNLOCK_DAY := 1
@@ -43,7 +43,15 @@ func activate_debug_cheats() -> void:
 	biomass.add(100)
 	troop.unlock_all_squad_slots()
 	debug_mode_active = true
-	debug_cheats_applied.emit()
+	debug_mode_changed.emit(true)
+
+
+func toggle_debug_mode() -> void:
+	if debug_mode_active:
+		debug_mode_active = false
+		debug_mode_changed.emit(false)
+	else:
+		activate_debug_cheats()
 
 
 ## Debug: skip combat and apply one day of progression.

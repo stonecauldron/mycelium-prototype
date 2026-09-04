@@ -1,6 +1,6 @@
 extends Node
 
-## Global hotkey: press ~ (grave / tilde key) to grant debug cheats.
+## Global hotkey: press ~ (grave / tilde key) to toggle debug cheats.
 
 
 func _ready() -> void:
@@ -15,7 +15,7 @@ func _shortcut_input(event: InputEvent) -> void:
 		return
 	if not _is_debug_hotkey(key):
 		return
-	GameState.activate_debug_cheats()
+	GameState.toggle_debug_mode()
 	get_viewport().set_input_as_handled()
 
 

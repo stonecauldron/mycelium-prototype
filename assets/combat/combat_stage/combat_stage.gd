@@ -85,7 +85,7 @@ func _ready() -> void:
 	_refresh_biomass_hud()
 	_setup_debug_kill_hint()
 	_ensure_acid_rain_label()
-	GameState.debug_cheats_applied.connect(_on_debug_cheats_applied)
+	GameState.debug_mode_changed.connect(_on_debug_mode_changed)
 
 	if sandboxed:
 		return
@@ -164,7 +164,7 @@ func _setup_debug_kill_hint() -> void:
 	hint.visible = GameState.debug_mode_active
 
 
-func _on_debug_cheats_applied() -> void:
+func _on_debug_mode_changed(_is_active: bool) -> void:
 	_setup_debug_kill_hint()
 
 

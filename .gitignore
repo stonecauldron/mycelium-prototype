@@ -12,3 +12,6 @@
 
 # Oversized local Steam source files (keep PNGs in repo)
 steam/**/*.psd
+
+# Oversized local background Photoshop source
+/assets/base/sporelings_bg_design_05.psd

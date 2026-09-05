@@ -2,6 +2,47 @@
 
 [ext_resource type="Texture2D" uid="uid://j665nxw5a8t4" path="res://assets/units/generalist/gen_imago_body.png" id="1_body"]
 [ext_resource type="Script" uid="uid://dk024gkwu740b" path="res://assets/components/hurtbox_component.gd" id="2_hurtbox"]
+[ext_resource type="Texture2D" uid="uid://ct8ph5wah7g3h" path="res://assets/units/generalist/gen_imago_walk.png" id="3_walk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_0"]
+atlas = ExtResource("3_walk")
+region = Rect2(122, 84, 464, 488)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_1"]
+atlas = ExtResource("3_walk")
+region = Rect2(677, 89, 464, 488)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_2"]
+atlas = ExtResource("3_walk")
+region = Rect2(122, 693, 464, 488)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_3"]
+atlas = ExtResource("3_walk")
+region = Rect2(677, 684, 464, 488)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_walk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_3")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.5555553
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
 size = Vector2(88, 120)
@@ -14,6 +55,13 @@ texture = ExtResource("1_body")
 offset = Vector2(2.5203931, -108.15232)
 region_enabled = true
 region_rect = Rect2(148, 291, 222, 218)
+
+[node name="WalkFrames" type="AnimatedSprite2D" parent="Sprite" unique_id=633244985]
+visible = false
+position = Vector2(2.5203931, -108.15232)
+scale = Vector2(0.47844827, 0.44672132)
+sprite_frames = SubResource("SpriteFrames_walk")
+animation = &"walk"
 
 [node name="WeaponFollow" type="RemoteTransform2D" parent="Sprite" unique_id=2090221970]
 position = Vector2(93.25455, -98.550385)

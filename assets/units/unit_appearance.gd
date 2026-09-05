@@ -14,6 +14,9 @@ const DEFAULT_IMAGO_BODY := Color("E4C8A2")
 const DEFAULT_IMAGO_CAP := Color("472D1C")
 
 const BODY_NODE_NAME := &"Body"
+const MELEE_RECOVERY_TIME := 0.36
+const MELEE_ANTICIPATION_TIME := 0.28
+const MELEE_GUARD_BLEND_SPEED := 10.0
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var body_shape: CollisionShape2D = $BodyShape
@@ -30,10 +33,101 @@ var _sprite_rest_scale: Vector2 = Vector2.ONE
 var _sprite_rest_captured: bool = false
 var _body_scale_factor: float = 1.0
 
+var _melee_cooldown_duration: float = 0.0
+var _melee_guard_weight: float = 0.0
+var _melee_pose_time: float = 0.0
+var _melee_body_pose := Transform2D.IDENTITY
+var _melee_weapon_angle: float = 0.0
+var _melee_offhand_angle: float = 0.0
+var _melee_cap_angle: float = 0.0
+
 
 func _ready() -> void:
 	_resolve_composed_refs()
 	_capture_sprite_rest_pose()
+
+
+func _exit_tree() -> void:
+	clear_melee_pose()
+
+
+## This duration only shapes the recovery animation; Unit still owns the cooldown.
+func begin_melee_recovery(cooldown: float) -> void:
+	_melee_cooldown_duration = cooldown
+
+
+func update_melee_pose(
+	delta: float, guarding: bool, cooldown_left: float, phase_offset: float
+) -> void:
+	_melee_pose_time = fmod(_melee_pose_time + delta, TAU * 10.0)
+	_melee_guard_weight = move_toward(
+		_melee_guard_weight, 1.0 if guarding else 0.0, delta * MELEE_GUARD_BLEND_SPEED
+	)
+	if is_zero_approx(_melee_guard_weight):
+		clear_melee_pose()
+		return
+
+	var elapsed := maxf(_melee_cooldown_duration - cooldown_left, 0.0)
+	var recovery := 0.0
+	var anticipation := 0.0
+	if _melee_cooldown_duration > 0.0:
+		var recovery_time := minf(MELEE_RECOVERY_TIME, _melee_cooldown_duration * 0.4)
+		var anticipation_time := minf(MELEE_ANTICIPATION_TIME, _melee_cooldown_duration * 0.3)
+		recovery = 1.0 - smoothstep(0.0, recovery_time, elapsed)
+		anticipation = 1.0 - smoothstep(0.0, anticipation_time, cooldown_left)
+
+	# Two slow, offset motions avoid a synchronized bounce across the front line.
+	var sway := sin(_melee_pose_time * 3.0 + phase_offset)
+	sway = sway * 0.7 + sin(_melee_pose_time * 4.7 + phase_offset * 1.7) * 0.3
+	var weight := _melee_guard_weight
+	var lean := deg_to_rad(3.0 + sway - recovery * 7.0 - anticipation * 8.0) * weight
+	var compression := (recovery * 0.025 + anticipation * 0.04) * weight
+	var shift := Vector2(sway * 0.7 - recovery * 3.0 - anticipation * 2.0, 0.0) * weight
+	_melee_body_pose = Transform2D(
+		lean, Vector2(1.0 + compression, 1.0 - compression), 0.0, shift
+	)
+	_melee_weapon_angle = deg_to_rad(
+		-18.0 + sway * 2.0 + recovery * 24.0 - anticipation * 82.0
+	) * weight
+	_melee_offhand_angle = deg_to_rad(-10.0 - anticipation * 5.0 + sway) * weight
+	_melee_cap_angle = deg_to_rad(sin(elapsed * 22.0) * recovery * 3.0 + sway * 0.5) * weight
+	if not RenderingServer.frame_pre_draw.is_connected(_render_melee_pose):
+		RenderingServer.frame_pre_draw.connect(_render_melee_pose)
+
+
+func clear_melee_pose() -> void:
+	_melee_guard_weight = 0.0
+	if not RenderingServer.frame_pre_draw.is_connected(_render_melee_pose):
+		return
+	RenderingServer.frame_pre_draw.disconnect(_render_melee_pose)
+	for art: Node2D in [sprite, _cap_root as Node2D, weapon_mount, offhand_mount]:
+		if is_instance_valid(art) and art.is_inside_tree():
+			RenderingServer.canvas_item_set_transform(art.get_canvas_item(), art.transform)
+
+
+## Apply after AnimationPlayer/RemoteTransform2D updates. Only the renderer sees
+## these offsets: node transforms, hurtboxes, hitboxes and projectile origins stay
+## exactly as combat authored them. GroundShadow remains planted at the feet.
+func _render_melee_pose() -> void:
+	if not is_inside_tree():
+		return
+	_render_art_pose(sprite, 0.0)
+	_render_art_pose(_cap_root as Node2D, _melee_cap_angle)
+	_render_art_pose(weapon_mount, _melee_weapon_angle)
+	_render_art_pose(offhand_mount, _melee_offhand_angle)
+
+
+func _render_art_pose(art: Node2D, angle: float) -> void:
+	if art == null or not art.is_inside_tree():
+		return
+	var parent := art.get_parent() as Node2D
+	if parent == null:
+		return
+	var parent_to_appearance := global_transform.affine_inverse() * parent.global_transform
+	var pose := parent_to_appearance.affine_inverse() * _melee_body_pose * parent_to_appearance
+	RenderingServer.canvas_item_set_transform(
+		art.get_canvas_item(), pose * art.transform * Transform2D(angle, Vector2.ZERO)
+	)
 
 
 ## Player composition: shared base (collider + anim) + body + cap.

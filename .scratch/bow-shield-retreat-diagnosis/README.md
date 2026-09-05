@@ -1,9 +1,10 @@
 # Bow / shield retreat diagnostic
 
 Current tuning: both sides use 80-pixel Home slot spacing and an 80-pixel
-ranged skirmish default. The existing 48-pixel returning buffer still applies.
+ranged skirmish default. Only active `RETREATING` uses a 24-pixel exit buffer;
+finishing an attack and returning Home do not activate that buffer.
 The shared movement arrival tolerance is now 12 pixels (previously 4).
-The sections below record the earlier 96-pixel tuning and its follow-up.
+The sections below record the earlier tuning and its follow-ups.
 
 Diagnostic scene using the real combat stage, movement, collisions, and attacks.
 Seed: 20260905; STR/DEX 5 and CON 99 on all units
@@ -125,3 +126,31 @@ with no sustained squad retreat in these fixtures.
 Increased `Unit.HOME_ARRIVE_THRESHOLD` from 4 to 12 pixels on both sides.
 This is the shared `_axis_velocity` tolerance, including shield Home-following.
 The original two-bow + Shield regression and all six enemy combat checks pass.
+
+## Dedicated retreat state and 24-pixel hysteresis (September 5, 2026)
+
+`RETREATING` now records kiting away from the current target. `RETURNING` remains
+for Home/holding movement. Finishing or cancelling an attack enters `READY`;
+the next combat decision chooses movement. Target replacement or loss clears
+the old retreat state, so a new target must meet the normal entry threshold.
+
+The retreat exit buffer is now 24 pixels, independently of the unchanged
+48-pixel minimum personal retreat distance and chase margin. For the current
+ranged default, slot 0 enters at <=80 and exits at >=104 pixels; later slots
+enter at <=48 and exit at >=72 pixels. The shared 12-pixel movement arrival
+tolerance still applies.
+
+Run the focused state regression:
+
+```sh
+godot --headless --path . --fixed-fps 60 .scratch/bow-shield-retreat-diagnosis/retreat_state.tscn
+```
+
+This uses real combat-stage units and attack/AI callbacks at controlled target
+distances. It covers player Bows and enemy Peashooters in slots 0 and 1: shot
+completion, cancellation, Home return, retreat entry and the 24-pixel exit,
+re-entry, target replacement, target loss, and reacquisition. Before the fix,
+36 of 68 checks failed; after the fix, all 68 pass. The original two-bow + Shield
+battle regression also passes with no consecutive whole-squad retreat frames.
+All six `--enemy-tuning` battle checks pass, including ranged fire, melee attacks,
+and lance charges. Neither enemy ranged fixture issues a retreat command.

@@ -4,7 +4,7 @@ extends CharacterBody2D
 signal died(unit: Unit)
 signal health_changed(current: int, maximum: int)
 
-enum CombatPhase { READY, APPROACHING, ATTACKING, RETURNING }
+enum CombatPhase { READY, APPROACHING, ATTACKING, RETURNING, RETREATING }
 enum ChargePhase { NONE, WINDUP, RUSHING }
 
 const BASE_MOVE_SPEED := 180.0
@@ -17,8 +17,10 @@ const WALK_SPEED_EPSILON := 8.0
 const FACE_FLIP_DEADZONE := 12.0
 ## Keep the current target unless a new one is closer by at least this much.
 const TARGET_SWITCH_SLACK := 32.0
-## Skirmish chase/retreat hysteresis so units don't oscillate on range edges.
+## Minimum skirmish spacing and chase hysteresis.
 const SKIRMISH_RANGE_DEADZONE := 48.0
+## Extra clearance required to stop an active retreat from the current target.
+const RETREAT_HYSTERESIS := 24.0
 const LUNGE_DISTANCE := 48.0
 const LUNGE_OUT_TIME := 0.08
 const LUNGE_BACK_TIME := 0.12
@@ -377,6 +379,27 @@ func _setup_collision() -> void:
 		collision_mask = COLLISION_WORLD | COLLISION_ENEMY_UNITS | COLLISION_ENEMY_WALLS
 
 
+## Presentation only: observe combat state without changing its timers or transforms.
+func _process(delta: float) -> void:
+	if _appearance == null:
+		return
+	if (
+		_dying or _celebrating or _in_knockback or not is_on_floor()
+		or _combat_phase == CombatPhase.ATTACKING or _charge_phase != ChargePhase.NONE
+	):
+		_appearance.clear_melee_pose()
+		return
+	var guarding := (
+		combat != null and combat.uses_melee_hitbox() and _attack_timer > 0.0
+		and absf(velocity.x) <= WALK_SPEED_EPSILON
+		and is_instance_valid(_target) and not _target.is_queued_for_deletion()
+		and global_position.distance_to(_target.global_position) <= _get_melee_range()
+	)
+	# Reuse an existing value for variation; cosmetic motion must never advance the RNG.
+	var phase_offset := float(process_tiebreak % 997) / 997.0 * TAU
+	_appearance.update_melee_pose(delta, guarding, _attack_timer, phase_offset)
+
+
 func _physics_process(delta: float) -> void:
 	if _dying or stats == null or combat == null or _troop == null:
 		return
@@ -733,15 +756,15 @@ func _should_skirmish_retreat() -> bool:
 	var distance := global_position.distance_to(_target.global_position)
 	var skirmish := _preferred_skirmish_distance()
 	# Hysteresis: once kiting, keep going until clear of the danger zone.
-	if _combat_phase == CombatPhase.RETURNING:
-		return distance < skirmish + SKIRMISH_RANGE_DEADZONE
+	if _combat_phase == CombatPhase.RETREATING:
+		return distance < skirmish + RETREAT_HYSTERESIS
 	return distance <= skirmish
 
 
 ## Kite away from the threat to the personal stand-off band — not formation home
 ## (home is often still inside skirmish range once the fight has closed).
 func _skirmish_kite_away() -> void:
-	_combat_phase = CombatPhase.RETURNING
+	_combat_phase = CombatPhase.RETREATING
 	if _target == null or not is_instance_valid(_target):
 		velocity.x = 0.0
 		return
@@ -1078,6 +1101,7 @@ func _release_bow_aim_lean() -> void:
 
 
 func _finish_attack() -> void:
+	var was_melee := not _projectile_attack_active and _charge_phase == ChargePhase.NONE
 	_disable_hitbox()
 	_visual.position = Vector2.ZERO
 	_reset_throw_flip()
@@ -1091,7 +1115,9 @@ func _finish_attack() -> void:
 	_charge_phase = ChargePhase.NONE
 	_charge_timer = 0.0
 	_attack_timer = _effective_attack_interval()
-	_combat_phase = CombatPhase.RETURNING
+	_combat_phase = CombatPhase.READY
+	if _appearance != null:
+		_appearance.begin_melee_recovery(_attack_timer if was_melee else 0.0)
 
 
 func _cancel_attack() -> void:
@@ -1110,7 +1136,7 @@ func _cancel_attack() -> void:
 	_throw_timer = 0.0
 	_charge_phase = ChargePhase.NONE
 	_charge_timer = 0.0
-	_combat_phase = CombatPhase.RETURNING
+	_combat_phase = CombatPhase.READY
 
 
 func _get_home_global() -> Vector2:
@@ -1196,6 +1222,9 @@ func _refresh_target() -> void:
 		var engage_sq := Troop.ENGAGE_RANGE * Troop.ENGAGE_RANGE
 		if closest_distance > engage_sq:
 			_target = null
+	# A different threat must enter the normal retreat range before we kite again.
+	if _combat_phase == CombatPhase.RETREATING and _target != previous:
+		_combat_phase = CombatPhase.READY
 
 
 func _is_valid_sticky_target(candidate: Node) -> bool:

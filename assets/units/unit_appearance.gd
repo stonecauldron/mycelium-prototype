@@ -308,13 +308,17 @@ func play(animation: StringName, randomize_start: bool = false) -> void:
 
 
 func play_idle(randomize_start: bool = true) -> void:
+	if animation_player != null:
+		animation_player.speed_scale = 1.0
 	if _is_playing(&"idle"):
 		return
 	_reset_sprite_rest_pose()
 	play(&"idle", randomize_start)
 
 
-func play_walk(randomize_start: bool = true) -> void:
+func play_walk(randomize_start: bool = true, animation_speed: float = 1.0) -> void:
+	if animation_player != null:
+		animation_player.speed_scale = animation_speed
 	if _is_playing(&"walk"):
 		return
 	play(&"walk", randomize_start)

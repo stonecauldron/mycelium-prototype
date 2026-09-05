@@ -11,6 +11,10 @@ const BASE_MOVE_SPEED := 180.0
 const RETREAT_SPEED_FACTOR := 0.5
 const LANCE_CHARGE_SPEED_MULT := 3.0
 const LANCE_CHARGE_MAX_DURATION := 2.5
+## Lance art rests 34.9 degrees from upright; lower it to point straight ahead.
+const LANCE_CHARGE_WEAPON_DEG := 55.1
+const LANCE_CHARGE_WEAPON_LOWER_TIME := 0.18
+const LANCE_CHARGE_WEAPON_RETURN_TIME := 0.18
 const HOME_ARRIVE_THRESHOLD := 12.0
 const WALK_SPEED_EPSILON := 8.0
 ## Ignore facing updates when the aim/travel delta is within this many pixels.
@@ -454,16 +458,17 @@ func _physics_process(delta: float) -> void:
 func _update_locomotion_animation() -> void:
 	if _appearance == null:
 		return
+	var rushing := _charge_phase == ChargePhase.RUSHING
 	if (
 		_dying
-		or _combat_phase == CombatPhase.ATTACKING
+		or (_combat_phase == CombatPhase.ATTACKING and not rushing)
 		or _charge_phase == ChargePhase.WINDUP
 		or not is_on_floor()
 		or absf(velocity.x) <= WALK_SPEED_EPSILON
 	):
 		_appearance.play_idle(false)
 		return
-	_appearance.play_walk(false)
+	_appearance.play_walk(false, LANCE_CHARGE_SPEED_MULT if rushing else 1.0)
 
 
 func display_name_for_errors() -> String:
@@ -714,6 +719,18 @@ func _process_lance_charge(delta: float) -> void:
 func _begin_lance_rush() -> void:
 	_charge_phase = ChargePhase.RUSHING
 	_charge_timer = LANCE_CHARGE_MAX_DURATION
+	if _swing_tween:
+		_swing_tween.kill()
+		_swing_tween = null
+	var mount := _get_weapon_mount()
+	if mount != null:
+		_swing_tween = create_tween()
+		_swing_tween.tween_property(
+			mount,
+			"rotation",
+			deg_to_rad(LANCE_CHARGE_WEAPON_DEG),
+			LANCE_CHARGE_WEAPON_LOWER_TIME
+		).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	if _hitbox != null:
 		if not _hitbox.charge_ended.is_connected(_on_lance_charge_ended):
 			_hitbox.charge_ended.connect(_on_lance_charge_ended)
@@ -736,6 +753,7 @@ func _end_lance_charge() -> void:
 		return
 	_charge_phase = ChargePhase.NONE
 	_charge_timer = 0.0
+	_reset_weapon_swing(LANCE_CHARGE_WEAPON_RETURN_TIME if current_hp > 0 else 0.0)
 	if _hitbox != null and _hitbox.charge_ended.is_connected(_on_lance_charge_ended):
 		_hitbox.charge_ended.disconnect(_on_lance_charge_ended)
 	_finish_attack()
@@ -1127,7 +1145,10 @@ func _cancel_attack() -> void:
 		_hitbox.charge_ended.disconnect(_on_lance_charge_ended)
 	_disable_hitbox()
 	_visual.position = Vector2.ZERO
-	_reset_weapon_swing()
+	var return_time := 0.0
+	if _charge_phase != ChargePhase.NONE and not _dying:
+		return_time = LANCE_CHARGE_WEAPON_RETURN_TIME
+	_reset_weapon_swing(return_time)
 	_reset_throw_flip()
 	_projectile_attack_active = false
 	_throw_released = false
@@ -1740,12 +1761,18 @@ func _play_melee_swing() -> void:
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 
-func _reset_weapon_swing() -> void:
+func _reset_weapon_swing(return_time: float = 0.0) -> void:
 	if _swing_tween:
 		_swing_tween.kill()
 		_swing_tween = null
 	var mount := _get_weapon_mount()
-	if mount != null:
+	if mount == null:
+		return
+	if return_time > 0.0:
+		_swing_tween = create_tween()
+		_swing_tween.tween_property(mount, "rotation", 0.0, return_time)\
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	else:
 		mount.rotation = 0.0
 
 

@@ -15,7 +15,6 @@ attack_style = 2
 damage_stat = 1
 projectile_range = 1300.0
 attack_interval = 1.15
-skirmish_distance = 320.0
 knockback_force = 0.0
 projectile_scene = ExtResource("4_proj")
 appearance_scene = ExtResource("2_appear")

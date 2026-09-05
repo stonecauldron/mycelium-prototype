@@ -6,10 +6,8 @@ const ENGAGE_RANGE := 1800.0
 const DEFAULT_MARCH_SPEED := 120.0
 ## Distance from flag/anchor center to squad slot 0 home / gap behind rearmost unit.
 const FLAG_REAR_CLEARANCE := 100.0
-## Horizontal spacing between consecutive home slots (player).
-const HOME_SLOT_SPACING := 64.0
-## Tighter packing for larger enemy armies.
-const ENEMY_HOME_SLOT_SPACING := 44.0
+## Horizontal spacing between consecutive home slots on both sides.
+const HOME_SLOT_SPACING := 80.0
 ## Distance from closest enemy center to the highest occupied slot's Home.
 const FRONT_HOME_CONTACT_PADDING := 48.0
 ## Tint for enemy-owned props (e.g. walls). Enemy units use authored colors.
@@ -93,7 +91,7 @@ func get_facing() -> float:
 
 
 func get_home_slot_spacing() -> float:
-	return ENEMY_HOME_SLOT_SPACING if is_enemy else HOME_SLOT_SPACING
+	return HOME_SLOT_SPACING
 
 
 ## Living unit furthest from the enemy (army rear).

@@ -28,7 +28,7 @@ const MELEE_HITBOX_NEAR := 20.0
 @export var attack_interval: float = 0.75
 ## SKIRMISH: kite when an enemy is this close.
 ## HYBRID: switch from throw to melee at this distance.
-@export var skirmish_distance: float = 160.0
+@export var skirmish_distance: float = 80.0
 @export var knockback_force: float = 280.0
 ## Scales total outgoing attack damage (base + stat bonus). 1.0 = normal.
 @export var outgoing_damage_multiplier: float = 1.0

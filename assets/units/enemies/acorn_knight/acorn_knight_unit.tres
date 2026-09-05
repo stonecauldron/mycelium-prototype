@@ -13,7 +13,7 @@ engagement_stance = 5
 base_damage = 6
 attack_interval = 1.75
 knockback_force = 400.0
-melee_range = 120.0
+melee_range = 192.0
 
 [sub_resource type="Resource" id="Stats_acorn_knight"]
 script = ExtResource("2_stats")

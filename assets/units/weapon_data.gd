@@ -42,7 +42,7 @@ const MELEE_HITBOX_Y := -20.0
 @export var attack_interval: float = 0.75
 ## SKIRMISH: kite when an enemy is this close.
 ## HYBRID: switch from throw to melee at this distance.
-@export var skirmish_distance: float = 160.0
+@export var skirmish_distance: float = 80.0
 @export var knockback_force: float = 280.0
 @export var biomass_cost: int = 3
 ## Biomass granted to the player each time this weapon lands a hit. 0 = none.

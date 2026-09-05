@@ -14,6 +14,6 @@ base_damage = 7
 attack_interval = 2.5
 knockback_force = 450.0
 biomass_cost = 4
-melee_range = 140.0
+melee_range = 144.0
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

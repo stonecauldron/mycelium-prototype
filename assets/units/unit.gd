@@ -11,7 +11,7 @@ const BASE_MOVE_SPEED := 180.0
 const RETREAT_SPEED_FACTOR := 0.5
 const LANCE_CHARGE_SPEED_MULT := 3.0
 const LANCE_CHARGE_MAX_DURATION := 2.5
-const HOME_ARRIVE_THRESHOLD := 4.0
+const HOME_ARRIVE_THRESHOLD := 12.0
 const WALK_SPEED_EPSILON := 8.0
 ## Ignore facing updates when the aim/travel delta is within this many pixels.
 const FACE_FLIP_DEADZONE := 12.0

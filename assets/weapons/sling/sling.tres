@@ -17,7 +17,6 @@ damage_type = 1
 base_damage = 5
 projectile_range = 1000.0
 attack_interval = 2.0
-skirmish_distance = 200.0
 knockback_force = 80.0
 biomass_cost = 4
 projectile_scene = ExtResource("4_proj")

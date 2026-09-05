@@ -19,7 +19,7 @@ projectile_range = 650.0
 attack_interval = 1.5
 skirmish_distance = 280.0
 knockback_force = 0.0
-melee_range = 200.0
+melee_range = 144.0
 projectile_scene = ExtResource("5_proj")
 
 [sub_resource type="Resource" id="Stats_rose_thorn"]

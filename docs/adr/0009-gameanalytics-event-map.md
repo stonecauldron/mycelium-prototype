@@ -6,7 +6,7 @@ We send a small manual set on top of automatic sessions: two Progression trees, 
 
 **Resource.** Currency `Biomass`. item_type is the action kind (`Start`, `Battle`, `Shop`, `Nursery`, `Scout`, `Seal`, `Training`, `Compost`, `Stock`, `Troop`). item_id is an authored slug (Mutation/Fertilizer filename stem, Seal `id`, weapon school) or a fallback (`Grant`, `Reward`, `Hit`, `Reroll`, `Unlock`, `Plant`, `Adult`, `Child`). No Unit display names, no spaces. Hit biomass is one source at Battle end. Squad-slot purchases use `Troop` / `Unlock`.
 
-**Design.** `intent:wishlist:{title|victory|gameover}`, `intent:feedback:{victory|gameover}`, `intent:title:{victory|gameover}`, `intent:quit:{title|base|combat|victory|gameover}`. New Run is Run start, not a Design event.
+**Design.** `intent:wishlist:{title|victory|gameover}`, `intent:feedback:{victory|gameover}`, `intent:title:{base|combat|victory|gameover}`, `intent:quit:{title|base|combat|victory|gameover}`. New Run is Run start, not a Design event. Confirming Return to title from the in-run menu abandons the Run without completing or failing it.
 
 **Out of scope for v1.** Consent prompt (see ADR-0008), Error events, Performance/FPS, choice Design events (Seal/Starter as their own events — catalog still appears on Resource item_id). No manual events while `debug_mode_active` or in the editor. Custom dimension01 = `web` | `desktop`.
 

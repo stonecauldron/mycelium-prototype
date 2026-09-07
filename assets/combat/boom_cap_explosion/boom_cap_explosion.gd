@@ -34,7 +34,7 @@ func trigger(strength: int, radius: float, knockback: float, source: Unit) -> vo
 	_add_camera_shake(_CAMERA_SHAKE)
 	_flash_radius()
 	_play_burst()
-	var timer := get_tree().create_timer(_PARTICLE_LIFETIME + 0.2)
+	var timer := get_tree().create_timer(_PARTICLE_LIFETIME + 0.2, false)
 	await timer.timeout
 	queue_free()
 

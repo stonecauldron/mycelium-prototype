@@ -18,6 +18,10 @@ func _ready() -> void:
 	add_child(_overlay)
 
 
+func is_transitioning() -> bool:
+	return _busy
+
+
 func change_scene(path: String) -> void:
 	if _busy:
 		return

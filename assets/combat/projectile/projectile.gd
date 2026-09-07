@@ -160,7 +160,7 @@ func _arm_fuse() -> void:
 	_velocity = Vector2.ZERO
 	set_deferred("monitoring", false)
 	set_physics_process(false)
-	var timer := get_tree().create_timer(explode_delay)
+	var timer := get_tree().create_timer(explode_delay, false)
 	timer.timeout.connect(_explode_aoe)
 
 

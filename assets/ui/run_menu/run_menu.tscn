@@ -1,0 +1,278 @@
+[gd_scene format=3 uid="uid://di7wsln3p56v0"]
+
+[ext_resource type="Script" uid="uid://b1038n1smotnu" path="res://assets/ui/run_menu/run_menu.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://b5qx3p3alq58b" path="res://assets/asset_packs/Cila - Paper UI stylized/icon/Icon 03.png" id="3_gear"]
+[ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="4_paper"]
+[ext_resource type="Texture2D" uid="uid://c2pffsxsdkf27" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 01.png" id="5_confirmation_paper"]
+[ext_resource type="Texture2D" uid="uid://ddnoqvcffekxj" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 7.png" id="6_exit"]
+[ext_resource type="Texture2D" uid="uid://pmej1l8yxfyh" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 8.png" id="8_cancel"]
+[ext_resource type="FontFile" uid="uid://cwyplmcwdoujh" path="res://assets/fonts/SpicyRice-Regular.ttf" id="10_heading_font"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBox_gear"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_paper"]
+content_margin_left = 48.0
+content_margin_top = 36.0
+content_margin_right = 48.0
+content_margin_bottom = 40.0
+texture = ExtResource("4_paper")
+texture_margin_left = 72.49772
+texture_margin_top = 162.69849
+texture_margin_right = 120.829544
+texture_margin_bottom = 154.10434
+expand_margin_top = 29.0
+expand_margin_bottom = 75.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_exit"]
+content_margin_left = 28.0
+content_margin_top = 12.0
+content_margin_right = 28.0
+content_margin_bottom = 12.0
+texture = ExtResource("6_exit")
+texture_margin_left = 26.0
+texture_margin_right = 32.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_confirmation"]
+content_margin_left = 64.0
+content_margin_top = 42.0
+content_margin_right = 64.0
+content_margin_bottom = 48.0
+texture = ExtResource("5_confirmation_paper")
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_cancel"]
+content_margin_left = 28.0
+content_margin_top = 12.0
+content_margin_right = 28.0
+content_margin_bottom = 12.0
+texture = ExtResource("8_cancel")
+texture_margin_left = 26.0
+texture_margin_right = 32.0
+
+[node name="RunMenu" type="CanvasLayer" unique_id=1939723941]
+process_mode = 3
+layer = 20
+script = ExtResource("1_script")
+
+[node name="Root" type="Control" parent="." unique_id=2134793784]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_theme")
+
+[node name="GearButton" type="Button" parent="Root" unique_id=627918544]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -75.0
+offset_right = -3.0
+offset_bottom = 72.0
+grow_horizontal = 0
+theme_override_colors/icon_focus_color = Color(1.15, 1.15, 1.15, 1)
+theme_override_colors/icon_pressed_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/icon_hover_color = Color(1.15, 1.15, 1.15, 1)
+theme_override_styles/normal = SubResource("StyleBox_gear")
+theme_override_styles/pressed = SubResource("StyleBox_gear")
+theme_override_styles/hover = SubResource("StyleBox_gear")
+theme_override_styles/disabled = SubResource("StyleBox_gear")
+theme_override_styles/focus = SubResource("StyleBox_gear")
+icon = ExtResource("3_gear")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Overlay" type="Control" parent="Root" unique_id=1999425460]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Dim" type="ColorRect" parent="Root/Overlay" unique_id=1663678305]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.12, 0.07, 0.68)
+
+[node name="Center" type="CenterContainer" parent="Root/Overlay" unique_id=1173163433]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="Root/Overlay/Center" unique_id=774926614]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(520, 460)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_paper")
+
+[node name="Content" type="VBoxContainer" parent="Root/Overlay/Center/Panel" unique_id=137393387]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Heading" type="Label" parent="Root/Overlay/Center/Panel/Content" unique_id=746388401]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_font_sizes/font_size = 40
+text = "Paused"
+horizontal_alignment = 1
+
+[node name="MenuPage" type="VBoxContainer" parent="Root/Overlay/Center/Panel/Content" unique_id=192265419]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="SettingsButton" type="Button" parent="Root/Overlay/Center/Panel/Content/MenuPage" unique_id=436485719]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+text = "Settings"
+
+[node name="ResumeButton" type="Button" parent="Root/Overlay/Center/Panel/Content/MenuPage" unique_id=1484753243]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+text = "Resume"
+
+[node name="ExitActionsSpacer" type="Control" parent="Root/Overlay/Center/Panel/Content/MenuPage" unique_id=642929425]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TitleButton" type="Button" parent="Root/Overlay/Center/Panel/Content/MenuPage" unique_id=623824418]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+theme_override_styles/normal = SubResource("StyleBox_exit")
+text = "Return to title"
+
+[node name="QuitButton" type="Button" parent="Root/Overlay/Center/Panel/Content/MenuPage" unique_id=1168288597]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+theme_override_styles/normal = SubResource("StyleBox_exit")
+text = "Quit"
+
+[node name="SettingsPage" type="VBoxContainer" parent="Root/Overlay/Center/Panel/Content" unique_id=805163549]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="FullscreenButton" type="CheckButton" parent="Root/Overlay/Center/Panel/Content/SettingsPage" unique_id=1800752277]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_colors/font_pressed_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_colors/font_hover_color = Color(0.18, 0.16, 0.14, 1)
+theme_override_font_sizes/font_size = 28
+text = "Fullscreen"
+
+[node name="Spacer" type="Control" parent="Root/Overlay/Center/Panel/Content/SettingsPage" unique_id=1696289694]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="BackButton" type="Button" parent="Root/Overlay/Center/Panel/Content/SettingsPage" unique_id=1564360500]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+text = "Back"
+
+[node name="ConfirmationPage" type="Control" parent="Root/Overlay/Center" unique_id=1683261152]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(760, 320)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Paper" type="PanelContainer" parent="Root/Overlay/Center/ConfirmationPage" unique_id=2079598242]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBox_confirmation")
+
+[node name="Content" type="VBoxContainer" parent="Root/Overlay/Center/ConfirmationPage/Paper" unique_id=1794683444]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ConfirmationHeading" type="Label" parent="Root/Overlay/Center/ConfirmationPage/Paper/Content" unique_id=1740642379]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.294, 0.176, 0.204, 1)
+theme_override_fonts/font = ExtResource("10_heading_font")
+theme_override_font_sizes/font_size = 38
+text = "Return to title?"
+horizontal_alignment = 1
+
+[node name="Warning" type="Label" parent="Root/Overlay/Center/ConfirmationPage/Paper/Content" unique_id=583982814]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.294, 0.176, 0.204, 1)
+theme_override_font_sizes/font_size = 26
+text = "Your current run will be lost."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Spacer" type="Control" parent="Root/Overlay/Center/ConfirmationPage/Paper/Content" unique_id=57856150]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="ConfirmationActions" type="HBoxContainer" parent="Root/Overlay/Center/ConfirmationPage/Paper/Content" unique_id=1227174251]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 56
+
+[node name="ConfirmButton" type="Button" parent="Root/Overlay/Center/ConfirmationPage/Paper/Content/ConfirmationActions" unique_id=710202602]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(288, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NavButton"
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBox_exit")
+text = "Return to title"
+
+[node name="CancelButton" type="Button" parent="Root/Overlay/Center/ConfirmationPage/Paper/Content/ConfirmationActions" unique_id=512474418]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(288, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"NavButton"
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBox_cancel")
+text = "Cancel"

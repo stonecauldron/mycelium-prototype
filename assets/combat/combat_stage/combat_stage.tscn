@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="11_biomass_chip"]
 [ext_resource type="Texture2D" uid="uid://bxk864iibfnhd" path="res://assets/asset_packs/Cila - Paper UI stylized/icon/Icon 78.png" id="11_ty6ff"]
 [ext_resource type="PackedScene" uid="uid://carmyhpchip02" path="res://assets/ui/army_hp_chip/army_hp_chip.tscn" id="12_army_hp"]
+[ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="13_run_menu"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
 
@@ -148,7 +149,6 @@ offset_bottom = 112.0
 
 [node name="FastForwardButton" type="Button" parent="HUD" unique_id=428364516]
 unique_name_in_owner = true
-process_mode = 3
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -182,3 +182,6 @@ grow_horizontal = 0
 title = "Enemies"
 fill_color = Color(0.85, 0.25, 0.3, 1)
 title_horizontal_alignment = 2
+
+[node name="RunMenu" parent="." instance=ExtResource("13_run_menu")]
+intent_scene = "combat"

@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c4swjtkoverfp" path="res://assets/base/nursery/nursery_screen.tscn" id="11_nursery"]
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
 [ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
+[ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="15_run_menu"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jfa4i"]
 
@@ -171,3 +172,5 @@ size_flags_vertical = 4
 theme_type_variation = &"PrimaryButton"
 disabled = true
 text = "Start Battle"
+
+[node name="RunMenu" parent="." unique_id=992448351 instance=ExtResource("15_run_menu")]

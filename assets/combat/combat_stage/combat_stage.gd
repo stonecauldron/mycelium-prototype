@@ -42,6 +42,7 @@ const _ACID_RAIN_BASE_DAMAGE := 1
 @onready var _player_army_hp: ArmyHpChip = %PlayerArmyHp
 @onready var _enemy_army_hp: ArmyHpChip = %EnemyArmyHp
 @onready var _hud: CanvasLayer = $HUD
+@onready var _run_menu: RunMenu = $RunMenu
 
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2
@@ -52,7 +53,6 @@ var _biomass_earned_this_fight: int = 0
 var _battle_reward: int = 0
 var _fast_forward_scale: int = 1
 var _hitstop_active: bool = false
-var _combat_paused: bool = false
 var _saved_physics_ticks: int = _BASE_PHYSICS_TICKS
 var _saved_max_physics_steps: int = 8
 var _pending_player_zombie_respawns: int = 0
@@ -79,8 +79,8 @@ func _ready() -> void:
 	_saved_max_physics_steps = Engine.max_physics_steps_per_frame
 	_player_spawn = player_troop.get_formation_anchor_global()
 	_enemy_spawn = enemy_troop.get_formation_anchor_global()
-	process_mode = Node.PROCESS_MODE_ALWAYS
-	_fast_forward_button.process_mode = Node.PROCESS_MODE_ALWAYS
+	process_mode = Node.PROCESS_MODE_PAUSABLE
+	_run_menu.returning_to_title.connect(_restore_engine_timing)
 	_fast_forward_button.pressed.connect(_on_fast_forward_pressed)
 	_set_fast_forward(GameState.combat_fast_forward)
 	_refresh_biomass_hud()
@@ -108,18 +108,13 @@ func _exit_tree() -> void:
 	_victory_celebrating = false
 	if _victory_director != null:
 		_victory_director.stop()
-	_set_combat_paused(false)
+	get_tree().paused = false
 	_restore_engine_timing()
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _battle_over:
 		return
-	if event is InputEventKey and event.pressed and not event.echo:
-		if (event as InputEventKey).keycode == KEY_ESCAPE:
-			_toggle_combat_pause()
-			get_viewport().set_input_as_handled()
-			return
 	if not GameState.debug_mode_active:
 		return
 	# Debug (~): left-click a living player unit to kill it (tests death spores).
@@ -169,20 +164,6 @@ func _on_debug_mode_changed(_is_active: bool) -> void:
 	_setup_debug_kill_hint()
 
 
-func _toggle_combat_pause() -> void:
-	if _battle_over:
-		return
-	_set_combat_paused(not _combat_paused)
-
-
-func _set_combat_paused(paused: bool) -> void:
-	_combat_paused = paused
-	if is_inside_tree():
-		get_tree().paused = paused
-	if not paused:
-		_apply_simulation_rate()
-
-
 func start_battle(
 	player_roster: Array[RosterUnitData],
 	enemy_roster: Array[RosterUnitData]
@@ -191,7 +172,7 @@ func start_battle(
 
 
 func _process(delta: float) -> void:
-	if _battle_over or _combat_paused:
+	if _battle_over:
 		return
 	_battle_elapsed_sec += delta
 	if not _acid_rain_active:
@@ -260,7 +241,7 @@ func request_hitstop() -> void:
 		return
 	_hitstop_active = true
 	Engine.time_scale = _HITSTOP_SCALE
-	var timer := get_tree().create_timer(_HITSTOP_DURATION, true, false, true)
+	var timer := get_tree().create_timer(_HITSTOP_DURATION, false, false, true)
 	await timer.timeout
 	if not is_inside_tree():
 		return
@@ -278,6 +259,7 @@ func _run_battle(
 	enemy_roster: Array[RosterUnitData]
 ) -> void:
 	_battle_over = false
+	_run_menu.set_available(true)
 	_hitstop_active = false
 	_victory_celebrating = false
 	if _victory_director != null:
@@ -629,7 +611,7 @@ func _schedule_zombie_respawn(
 		_pending_player_zombie_respawns += 1
 	else:
 		_pending_enemy_zombie_respawns += 1
-	await get_tree().create_timer(_ZOMBIE_RESPAWN_DELAY).timeout
+	await get_tree().create_timer(_ZOMBIE_RESPAWN_DELAY, false).timeout
 	if not is_inside_tree():
 		return
 	if is_player:
@@ -706,7 +688,7 @@ func _check_battle_end() -> void:
 	_battle_over = true
 	if _acid_rain_label != null:
 		_acid_rain_label.visible = false
-	_set_combat_paused(false)
+	_run_menu.set_available(false)
 
 	if player_wiped:
 		_hitstop_active = false

@@ -72,7 +72,7 @@ func _run_case(mirrored: bool, slot: int) -> void:
 	var threat: Unit = attackers.get_units()[0]
 	var replacement: Unit = attackers.get_units()[1]
 	var facing := defenders.get_facing()
-	var entry := 80.0
+	var entry := 144.0
 	subject.global_position = Vector2(2000.0, 700.0)
 	_place_threat(subject, replacement, 1500.0, facing)
 	_place_threat(subject, threat, entry + 20.0, facing)

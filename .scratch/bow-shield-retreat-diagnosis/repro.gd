@@ -33,6 +33,11 @@ func _run() -> void:
 	stage._set_fast_forward(1)
 	var units: Array[Unit] = stage.player_troop.get_units()
 	var enemy: Unit = stage.enemy_troop.get_units()[0]
+	if "--retreat-192" in args:
+		for unit in units:
+			if unit.weapon == BOW:
+				unit.combat = unit.combat.duplicate(true)
+				unit.combat.skirmish_distance = 192.0
 	if "--no-knockback" in args:
 		for unit: Unit in units + [enemy]:
 			unit.combat = unit.combat.duplicate(true)

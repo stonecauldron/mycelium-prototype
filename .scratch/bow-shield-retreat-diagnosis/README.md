@@ -1,7 +1,8 @@
 # Bow / shield retreat diagnostic
 
-Current tuning: both sides use 80-pixel Home slot spacing and an 80-pixel
-ranged skirmish default in every slot. Retreat and hybrid melee-approach
+Current tuning: both sides use 80-pixel Home slot spacing. Bow, Sniper, Mortar,
+Peashooter, and Seed Lobber enter retreat at 144 pixels in every slot. Crossbow,
+Sling, and Giant Horn retain the 80-pixel skirmish default. Retreat and hybrid melee-approach
 thresholds use the authored combat distance without a slot deduction; ranged
 positioning retains its original stagger. Only active `RETREATING` uses a 24-pixel exit buffer;
 finishing an attack and returning Home do not activate that buffer.
@@ -32,6 +33,7 @@ Append `--` followed by diagnostic options:
 - `--fixed-anchor`: stop the player's flag once the enemy is within 500 pixels
   of the shield, after the initial march. Units remain active.
 - `--short-skirmish`: reduce only bow retreat distance to 48 in runtime profiles.
+- `--retreat-192`: increase only bow retreat distance to 192 in runtime profiles.
 
 Use one probe at a time with `--minimal`. These are causal probes, not proposed
 gameplay changes. Trace vectors are (slot 0, slot 1, shield); in the minimal
@@ -236,3 +238,51 @@ godot --headless --path . --fixed-fps 60 .scratch/bow-shield-retreat-diagnosis/e
 The original two-Bow + Shield battle check also passes. Long-reach melee can
 still attack from outside the authored 80-pixel retreat threshold; this change
 does not redefine retreat distance according to the opposing weapon's reach.
+
+## Earlier Bow / Peashooter retreat (September 7, 2026)
+
+Raised the authored Bow and Peashooter skirmish distances from 80 to 144 pixels.
+Their retreat exit is now 168 pixels, retaining the 24-pixel hysteresis. Other
+ranged profiles retain their existing distances. Shot commitment, melee return
+Home, slot spacing, and the ranged positioning calculations are unchanged.
+
+The 80-pixel trigger left almost no room to react to a Solar Sword's 78-pixel
+commit distance and was below the 126-pixel commit distance of Solar Cleavers
+and Durians. Attack animation and knockback also defer the next combat decision.
+With two exposed Bows versus three Solar Swords at ordinary health (CON 5),
+one Bow never retreated: all 33 observed frames inside its trigger occurred
+during its shot animation. The same fixture at 144 produces 414 and 366 frames
+of voluntary retreat, approximately 615 and 549 pixels of backward movement.
+Both still die in this fixture; this verifies retreat behavior, not survival.
+
+Reproduce the ordinary-health case:
+
+```sh
+godot --headless --path . --fixed-fps 60 .scratch/bow-shield-retreat-diagnosis/exposed_retreat.tscn -- --bow-sword --three-melee --normal-health
+```
+
+All 87 controlled retreat-state checks pass with the new entry and exit values.
+The real-battle cases with one or two exposed Bows versus a Solar Sword,
+Solar Cleaver, or Durian, and mirrored Peashooters versus player Swords, all
+show retreat. Both the one-Bow and two-Bow shield-line checks pass at 144.
+The diagnostic now excludes knockback and stationary retreat states from its
+retreat measurement and retains samples safely when ordinary-health units die.
+
+`exposed_retreat.tscn -- --extra-melee` adds Durian and Acorn Knight cases.
+Charging Acorn Knights remain a limitation: a single Bow and the rear Bow
+in the two-Bow fixture take charge damage without retreating. The charge can
+reach them during a committed shot, and their next available combat decision
+occurs outside the trigger. This optional stress run therefore exits 1.
+
+A runtime-only 192-pixel probe still leaves one Acorn Knight finding and
+reintroduces the original shield problem in `repro.tscn -- --minimal --retreat-192`:
+the Bow and living Shield move backward about 40.5 pixels within a second.
+The production value remains 144; reliably reacting to charges needs a separate
+behavior decision rather than another unconditional distance increase.
+
+## Other ranged weapons (September 7, 2026)
+
+Extended the 144-pixel skirmish distance to Sniper and Mortar, plus the enemy
+Mortar counterpart Seed Lobber. Crossbow, Sling, and Giant Horn retain 80 pixels
+as requested. With the existing 24-pixel hysteresis, these groups stop retreating
+at 168 and 104 pixels respectively. Hybrid melee-switch distances are unchanged.

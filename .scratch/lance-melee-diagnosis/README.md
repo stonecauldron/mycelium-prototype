@@ -1,7 +1,11 @@
-# Lance close-range attack diagnosis
+# Lance close-range attack regression
 
-Investigation only; no production gameplay changes. The fixture uses the real
-combat stage, Unit AI, physics, hitboxes, and damage callbacks. It places one
+Fixed September 7, 2026: Lance and Acorn Knight use ordinary melee when the
+target is close, including when it closes during charge windup. Distant targets
+retain charge behavior.
+
+The original fixture uses the real combat stage, Unit AI, physics, hitboxes,
+and damage callbacks. It places one
 Adult Lance 60 pixels from one Solar Sword, seeds RNG with 20260905, and gives
 both STR/DEX 5 and CON 99 to keep them alive through ten seconds of combat.
 
@@ -11,15 +15,16 @@ Run outside the agent sandbox on macOS:
 godot --headless --path . --fixed-fps 60 .scratch/lance-melee-diagnosis/repro.tscn
 ```
 
-Exit 1 / `FAIL windup_without_damage` reproduces the reported symptom. Two
-baseline runs returned the same result: four charge windups, zero rushing
+Exit 1 / `FAIL windup_without_damage` reproduces the reported symptom. Before
+the fix, repeated baseline runs returned four charge windups, zero rushing
 frames, zero ordinary melee frames, zero damage dealt, and 25 damage taken.
 The diagnostic asserts actual enemy HP loss as well as attacker damage credit.
+After the fix it passes with 48 melee frames, 24 damage dealt, and 10 taken.
 
-## Cause
+## Original cause
 
-`Unit._process_combat()` unconditionally calls `_start_lance_windup()` for
-`LANCE_CHARGE` before checking the target distance. There is no close-range
+`Unit._process_combat()` unconditionally called `_start_lance_windup()` for
+`LANCE_CHARGE` before checking the target distance. There was no close-range
 ordinary melee fallback, despite the Lance's `MELEE_LUNGE` attack style and
 192-pixel melee reach.
 
@@ -30,10 +35,10 @@ full two-second attack cooldown. The damage hitbox is only enabled when
 `_begin_lance_rush()` is reached. Solar Sword's authored interval is 1.5 seconds;
 in this close duel it repeatedly interrupts the windup before any rush begins.
 
-## Causal probes
+## Causal probes before the fix
 
 Append `--` and one option to the command above. Changes apply only to this
-diagnostic's runtime instances.
+diagnostic's runtime instances. The results below record the original diagnosis.
 
 - `--trace`: logs charge state, remaining windup, and hitbox activity at incoming
   hits. The first hit arrived with 1.933 seconds left and the hitbox inactive.
@@ -52,14 +57,29 @@ These probes distinguish the cause; their damage totals are not balance or DPS
 measurements. The passive target's motion differs, so the melee-stance probe is
 the stronger confirmation that melee can connect against an active close foe.
 
-## Proposed correction
+## Fix and regression coverage
 
-Select the existing ordinary melee attack when a lance target is already
-within `_get_melee_engage_range()` (currently 174 pixels), retaining charge
-behavior for targets farther away. Also consider switching a pending windup
-to melee when the enemy closes during that windup, so a newly close target
-does not leave the lance waiting for an interruptible charge.
+Attack selection now falls through to the existing ordinary melee path when a
+lance target is within `_get_melee_engage_range()` (currently 174 pixels).
+Windup also checks this distance: when the target closes, it clears the pending
+charge phase/timer and starts a melee strike while retaining `ATTACKING`.
+The normal attack cooldown begins after the melee strike. It does not incur
+the cancelled-charge cooldown before attacking.
 
-The reproduction is retained as a failing regression candidate for that change.
-Acorn Knight uses the same lance engagement branch, so a shared correction would
-also affect it; this fixture directly tests the player Lance only.
+Run the focused regression:
+
+```sh
+godot --headless --path . --fixed-fps 60 .scratch/lance-melee-diagnosis/fallback.tscn
+```
+
+It uses real stage units with fixed body positions, real AI selection and attack
+callbacks, and live tweens, physics overlaps, and damage. For both player Lance
+and enemy Acorn Knight it covers a close target, a target behind the attacker,
+the exact melee boundary, a target closing during windup, a distant target
+allowing the rush to begin, and a shield stopping the charge with reduced damage.
+It asserts one actual hit and damage credit, the cooldown after melee, and
+hitbox cleanup. Rushing continues after an unshielded hit.
+
+Before the fix, 48 of 96 checks failed. After the fix, all 96 pass. The original
+active duel also passes, as do all 87 checks in
+`.scratch/bow-shield-retreat-diagnosis/retreat_state.tscn`.

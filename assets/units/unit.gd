@@ -640,11 +640,15 @@ func _process_combat(delta: float) -> void:
 		_hold_or_march()
 		return
 
-	if get_engagement_stance() == WeaponData.EngagementStance.LANCE_CHARGE:
+	var distance := global_position.distance_to(_target.global_position)
+	# Close lance targets use the ordinary melee path below.
+	if (
+		get_engagement_stance() == WeaponData.EngagementStance.LANCE_CHARGE
+		and distance > _get_melee_engage_range()
+	):
 		_start_lance_windup()
 		return
 
-	var distance := global_position.distance_to(_target.global_position)
 	if _should_skirmish_retreat():
 		_skirmish_kite_away()
 		return
@@ -707,6 +711,12 @@ func _process_lance_charge(delta: float) -> void:
 			_refresh_target()
 			if _target != null and is_instance_valid(_target):
 				_face_toward(_target.global_position)
+				if global_position.distance_to(_target.global_position) <= _get_melee_engage_range():
+					# Keep ATTACKING while replacing the pending charge with a melee strike.
+					_charge_phase = ChargePhase.NONE
+					_charge_timer = 0.0
+					_start_melee_lunge_attack()
+					return
 			_charge_timer -= delta
 			if _charge_timer <= 0.0:
 				_begin_lance_rush()

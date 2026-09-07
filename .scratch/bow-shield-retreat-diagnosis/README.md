@@ -1,7 +1,9 @@
 # Bow / shield retreat diagnostic
 
 Current tuning: both sides use 80-pixel Home slot spacing and an 80-pixel
-ranged skirmish default. Only active `RETREATING` uses a 24-pixel exit buffer;
+ranged skirmish default in every slot. Retreat and hybrid melee-approach
+thresholds use the authored combat distance without a slot deduction; ranged
+positioning retains its original stagger. Only active `RETREATING` uses a 24-pixel exit buffer;
 finishing an attack and returning Home do not activate that buffer.
 The shared movement arrival tolerance is now 12 pixels (previously 4).
 The sections below record the earlier tuning and its follow-ups.
@@ -154,3 +156,83 @@ re-entry, target replacement, target loss, and reacquisition. Before the fix,
 battle regression also passes with no consecutive whole-squad retreat frames.
 All six `--enemy-tuning` battle checks pass, including ranged fire, melee attacks,
 and lance charges. Neither enemy ranged fixture issues a retreat command.
+
+## Exposed ranged units failing to enter retreat (September 5, 2026)
+
+The dedicated retreat state removed the old post-attack entry buffer, exposing
+an existing mismatch between personal retreat distances and enemy stopping
+distances. A Solar Sword commits at 78 pixels (96 reach minus 18), while a
+ranged unit in slot 1 or later requires a target within 48 pixels to retreat.
+The sword can attack without ever meeting that retreat condition. Previously,
+finishing a shot put the bow in `RETURNING`, permitting retreat below 96 pixels
+in those slots. The new 24-pixel exit buffer does not affect entry.
+
+Run real, unshielded battles, with the same seed/stats as the earlier fixtures:
+
+```sh
+godot --headless --path . --fixed-fps 60 .scratch/bow-shield-retreat-diagnosis/exposed_retreat.tscn -- --bow-sword
+```
+
+The default broader run (omit `--bow-sword`) also includes Solar Cleavers and
+enemy Peashooters versus player Swords, with one or two ranged units per case.
+The diagnostic exits 1 when any ranged unit takes melee damage without entering
+retreat during the 18-second observation; this is a gameplay finding, not a
+parse error. It records actual target distances and phases throughout combat.
+
+- Two Bows versus one Solar Sword: slot 1 takes 15 damage, never enters retreat,
+  and its nearest target distance is 76.33 pixels, above its 48-pixel trigger.
+- One Bow in slot 0 does retreat, for 44 frames of the 18-second run; its entry
+  threshold is 80 pixels. Retreat is therefore reduced, not globally disabled.
+- Add `--no-knockback`: slot 1 still never retreats, takes 30 damage, and the
+  sword stops at exactly 78 pixels. Knockback is not the cause of this failure.
+- The earlier `--uniform-entry` probe gave every ranged slot an effective
+  80-pixel entry threshold using runtime-only profiles. Slot 1 then entered
+  retreat for 20 frames. This probe was removed once the production fix landed.
+- Solar Cleaver can hit from about 123 pixels without activating even slot 0's
+  80-pixel retreat trigger. Enemy Peashooters show the same slot-1 issue against
+  player Swords.
+
+The focused `retreat_state.tscn` still passes all 68 checks. Those controlled
+distance checks verify transitions, but did not verify whether real enemies
+would approach closely enough to activate retreat. No production behavior was
+changed during this follow-up diagnosis; the probe overrides are scene-local.
+
+## Separate combat thresholds from formation spacing (September 5, 2026)
+
+Retreat and hybrid approach-to-melee now use the full `combat.skirmish_distance`
+in every slot. Ranged defaults therefore enter retreat at <=80 pixels and exit
+at >=104 pixels on both sides. Spears and Rose Thorns close for melee at 280
+pixels regardless of their slot; the other hybrids use their own authored
+distances. Ordinary melee return-Home and shield holding behavior are unchanged.
+
+The existing `_preferred_skirmish_distance()` calculation is retained exclusively
+for ranged positioning. `_preferred_attack_distance()` and the ranged chase
+stop calculation are unchanged. A before/after snapshot of all 14 ranged/hybrid
+player and enemy profiles over ten slots matched exactly, including the minimum
+positioning distances in late slots. Generate that snapshot with:
+
+```sh
+godot --headless --path . --fixed-fps 60 .scratch/bow-shield-retreat-diagnosis/retreat_state.tscn -- --positioning
+```
+
+Active retreat must clear its exit distance even when the normal preferred
+position is closer. A slot-9 Giant Horn still prefers 96 pixels, but its escape
+destination includes enough clearance to reach 104 pixels before it resumes
+normal positioning. Without this guard, the shared 12-pixel arrival tolerance
+stopped it at 84.5 pixels and left it stuck in `RETREATING`.
+
+Zombie respawn placement now uses its own `_ZOMBIE_RESPAWN_CLEARANCE` of 80
+pixels; later formation-spacing changes will no longer move that spawn point.
+
+Validation: all 87 focused retreat/hybrid/late-slot checks pass. The new uniform
+threshold and hybrid approach assertions failed on the old slot-dependent code.
+The exposed player Bow and enemy Peashooter cases with one and two ranged units
+all enter retreat when attacked by swords, with no runtime profile overrides:
+
+```sh
+godot --headless --path . --fixed-fps 60 .scratch/bow-shield-retreat-diagnosis/exposed_retreat.tscn -- --sword-only
+```
+
+The original two-Bow + Shield battle check also passes. Long-reach melee can
+still attack from outside the authored 80-pixel retreat threshold; this change
+does not redefine retreat distance according to the opposing weapon's reach.

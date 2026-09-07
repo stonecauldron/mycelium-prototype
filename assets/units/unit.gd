@@ -334,6 +334,13 @@ func _get_melee_range() -> float:
 func _get_melee_engage_range() -> float:
 	return maxf(_get_melee_range() - MELEE_ENGAGE_SLACK, 1.0)
 
+
+## Personal retreat / hybrid approach threshold, independent of formation position.
+func _get_skirmish_distance() -> float:
+	return combat.skirmish_distance if combat != null else 0.0
+
+
+## Slot stagger for ranged positioning only; never use this as a threat threshold.
 func _preferred_skirmish_distance() -> float:
 	if combat == null:
 		return 0.0
@@ -361,7 +368,7 @@ func _wants_close_melee() -> bool:
 	if _target == null or not is_instance_valid(_target):
 		return false
 	var distance := global_position.distance_to(_target.global_position)
-	return distance <= _preferred_skirmish_distance()
+	return distance <= _get_skirmish_distance()
 
 
 func _disable_hitbox() -> void:
@@ -772,7 +779,7 @@ func _should_skirmish_retreat() -> bool:
 	if get_engagement_stance() != WeaponData.EngagementStance.SKIRMISH:
 		return false
 	var distance := global_position.distance_to(_target.global_position)
-	var skirmish := _preferred_skirmish_distance()
+	var skirmish := _get_skirmish_distance()
 	# Hysteresis: once kiting, keep going until clear of the danger zone.
 	if _combat_phase == CombatPhase.RETREATING:
 		return distance < skirmish + RETREAT_HYSTERESIS
@@ -787,8 +794,10 @@ func _skirmish_kite_away() -> void:
 		velocity.x = 0.0
 		return
 	var facing := _troop.get_facing()
-	# Preferred X puts the unit at preferred_attack_distance from the target.
-	var stand_x := _target.global_position.x - facing * _preferred_attack_distance()
+	# Clear the retreat exit even when a late slot prefers a closer firing position.
+	var exit_clearance := _get_skirmish_distance() + RETREAT_HYSTERESIS + HOME_ARRIVE_THRESHOLD
+	var retreat_distance := maxf(_preferred_attack_distance(), exit_clearance)
+	var stand_x := _target.global_position.x - facing * retreat_distance
 	velocity.x = _axis_velocity(global_position.x, stand_x, get_move_speed(true))
 	_face_toward(_target.global_position)
 

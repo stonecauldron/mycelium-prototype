@@ -69,7 +69,7 @@ func _run() -> void:
 			print("[BOW-SHIELD] first_bow_retreat frame=", frame,
 				" enemy_bow_distance=", units[0].global_position.distance_to(enemy.global_position),
 				" enemy_shield_gap=", gap, " shield_damage_taken=", shield.damage_taken,
-				" bow_threshold=", units[0]._preferred_skirmish_distance(),
+				" bow_threshold=", units[0]._get_skirmish_distance(),
 				" bow_phase=", units[0]._combat_phase)
 		if not first_shield_back_seen and shield.velocity.x < -8.0 and not shield._in_knockback:
 			first_shield_back_seen = true

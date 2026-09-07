@@ -13,6 +13,7 @@ const _FAST_FORWARD_COLOR_4X := Color(1.0, 0.25, 0.25, 1.0)
 const _HITSTOP_SCALE := 0.05
 const _HITSTOP_DURATION := 0.05
 const _ZOMBIE_RESPAWN_DELAY := 2.0
+const _ZOMBIE_RESPAWN_CLEARANCE := 80.0
 ## Keep physics step size fixed under time_scale so 2×/4× don't change combat outcomes.
 const _BASE_PHYSICS_TICKS := 60
 const _BIOMASS_NUMBER_SCENE := preload("res://assets/vfx/biomass_number/biomass_number.tscn")
@@ -651,7 +652,7 @@ func _zombie_respawn_global_position(troop: Troop) -> Vector2:
 		return troop.get_flag_global_position()
 	# Place slightly in front of that unit (in the direction they face).
 	return frontmost.global_position + Vector2(
-		opponent.get_facing() * Troop.HOME_SLOT_SPACING,
+		opponent.get_facing() * _ZOMBIE_RESPAWN_CLEARANCE,
 		0.0
 	)
 

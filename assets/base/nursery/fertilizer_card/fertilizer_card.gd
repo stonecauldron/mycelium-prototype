@@ -71,6 +71,7 @@ func _set_children_mouse_filter_ignore(node: Node) -> void:
 
 
 func _refresh() -> void:
+	mouse_default_cursor_shape = Control.CURSOR_DRAG if fertilizer != null else Control.CURSOR_ARROW
 	if fertilizer == null:
 		return
 	_name_label.text = fertilizer.display_name

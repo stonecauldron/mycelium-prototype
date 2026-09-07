@@ -21,6 +21,7 @@ static var _suppressed: bool = false
 
 var _host: Control
 var _tip: Control
+var _anchor_to_cursor: bool = false
 var _laid_out: bool = false
 var _measured_size: Vector2 = Vector2.ZERO
 var _size_stable_frames: int = 0
@@ -28,7 +29,7 @@ var _layout_attempts: int = 0
 var _fade_tween: Tween
 
 
-static func configure(tip: Control) -> Control:
+static func configure(tip: Control, anchor_to_cursor: bool = false) -> Control:
 	if _suppressed:
 		if tip != null and is_instance_valid(tip):
 			tip.queue_free()
@@ -36,7 +37,7 @@ static func configure(tip: Control) -> Control:
 	if tip == null or not is_instance_valid(tip):
 		return _make_lease()
 	var overlay := _ensure()
-	overlay._present(tip)
+	overlay._present(tip, anchor_to_cursor)
 	var lease := _make_lease()
 	lease.tree_exiting.connect(_on_lease_exiting.bind(tip))
 	return lease
@@ -110,9 +111,9 @@ func _ready() -> void:
 	add_child(_host)
 
 
-func _present(tip: Control) -> void:
+func _present(tip: Control, anchor_to_cursor: bool) -> void:
 	if _host == null:
-		call_deferred("_present", tip)
+		call_deferred("_present", tip, anchor_to_cursor)
 		return
 	if _tip == tip:
 		_kill_fade()
@@ -124,6 +125,7 @@ func _present(tip: Control) -> void:
 	_size_stable_frames = 0
 	_layout_attempts = 0
 	_tip = tip
+	_anchor_to_cursor = anchor_to_cursor
 	if tip.get_parent() != _host:
 		if tip.get_parent() != null:
 			tip.get_parent().remove_child(tip)
@@ -266,6 +268,8 @@ static func _placed_position(
 
 
 func _hover_anchor_rect(mouse: Vector2, view: Rect2) -> Rect2:
+	if _anchor_to_cursor:
+		return Rect2(mouse, Vector2.ZERO)
 	var hovered := get_viewport().gui_get_hovered_control()
 	if hovered == null or not is_instance_valid(hovered):
 		return Rect2(mouse, Vector2.ZERO)

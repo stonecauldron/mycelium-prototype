@@ -17,6 +17,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
+MouseCursor="*res://assets/autoload/mouse_cursor.gd"
 GameState="*res://assets/autoload/game_state.gd"
 ActionFeedback="*res://assets/ui/action_feedback/action_feedback.gd"
 SceneTransition="*res://assets/autoload/scene_transition.gd"

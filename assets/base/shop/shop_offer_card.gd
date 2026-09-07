@@ -82,7 +82,7 @@ func set_affordable(affordable: bool) -> void:
 	if _content != null:
 		_content.modulate = Color.WHITE if affordable else Color(1, 1, 1, 0.45)
 	mouse_default_cursor_shape = (
-		Control.CURSOR_POINTING_HAND if affordable else Control.CURSOR_ARROW
+		Control.CURSOR_DRAG if affordable and not payload.is_empty() else Control.CURSOR_ARROW
 	)
 
 

@@ -86,6 +86,9 @@ func _on_mouse_exited() -> void:
 
 
 func _refresh() -> void:
+	mouse_default_cursor_shape = (
+		Control.CURSOR_DRAG if unit_data != null and source != "cocoon" else Control.CURSOR_ARROW
+	)
 	if unit_data == null:
 		return
 	var data := unit_data as RosterUnitData

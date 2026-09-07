@@ -17,6 +17,8 @@ const LANCE_CHARGE_WEAPON_LOWER_TIME := 0.18
 const LANCE_CHARGE_WEAPON_RETURN_TIME := 0.18
 const HOME_ARRIVE_THRESHOLD := 12.0
 const WALK_SPEED_EPSILON := 8.0
+## Keep the walk cycle through brief stops while tracking moving formation homes.
+const WALK_IDLE_DELAY := 0.1
 ## Ignore facing updates when the aim/travel delta is within this many pixels.
 const FACE_FLIP_DEADZONE := 12.0
 ## Keep the current target unless a new one is closer by at least this much.
@@ -105,6 +107,7 @@ var kill_streak: int = 0
 var damage_dealt: int = 0
 var damage_taken: int = 0
 var _attack_timer: float = 0.0
+var _walk_idle_time_left: float = 0.0
 var _target: Node2D
 var _troop: Troop
 var _combat_phase: CombatPhase = CombatPhase.READY
@@ -403,6 +406,7 @@ func _process(delta: float) -> void:
 	var guarding := (
 		combat != null and combat.uses_melee_hitbox() and _attack_timer > 0.0
 		and absf(velocity.x) <= WALK_SPEED_EPSILON
+		and _walk_idle_time_left <= 0.0
 		and is_instance_valid(_target) and not _target.is_queued_for_deletion()
 		and global_position.distance_to(_target.global_position) <= _get_melee_range()
 	)
@@ -424,11 +428,11 @@ func _physics_process(delta: float) -> void:
 			if is_on_floor() and velocity.y >= 0.0:
 				_in_knockback = false
 				velocity.x = 0.0
-			_update_locomotion_animation()
+			_update_locomotion_animation(delta)
 			return
 		_free_march_toward_enemy()
 		move_and_slide()
-		_update_locomotion_animation()
+		_update_locomotion_animation(delta)
 		return
 
 	if _in_knockback:
@@ -437,13 +441,13 @@ func _physics_process(delta: float) -> void:
 		if is_on_floor() and velocity.y >= 0.0:
 			_in_knockback = false
 			velocity.x = 0.0
-		_update_locomotion_animation()
+		_update_locomotion_animation(delta)
 		return
 
 	if _charge_phase != ChargePhase.NONE:
 		_process_lance_charge(delta)
 		move_and_slide()
-		_update_locomotion_animation()
+		_update_locomotion_animation(delta)
 		return
 
 	if _combat_phase == CombatPhase.ATTACKING:
@@ -454,15 +458,15 @@ func _physics_process(delta: float) -> void:
 			elif combat.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 				_process_ranged_attack(delta)
 		move_and_slide()
-		_update_locomotion_animation()
+		_update_locomotion_animation(delta)
 		return
 
 	_process_combat(delta)
 	move_and_slide()
-	_update_locomotion_animation()
+	_update_locomotion_animation(delta)
 
 
-func _update_locomotion_animation() -> void:
+func _update_locomotion_animation(delta: float) -> void:
 	if _appearance == null:
 		return
 	var rushing := _charge_phase == ChargePhase.RUSHING
@@ -471,10 +475,17 @@ func _update_locomotion_animation() -> void:
 		or (_combat_phase == CombatPhase.ATTACKING and not rushing)
 		or _charge_phase == ChargePhase.WINDUP
 		or not is_on_floor()
-		or absf(velocity.x) <= WALK_SPEED_EPSILON
 	):
+		_walk_idle_time_left = 0.0
 		_appearance.play_idle(false)
 		return
+	if absf(velocity.x) > WALK_SPEED_EPSILON:
+		_walk_idle_time_left = WALK_IDLE_DELAY
+	else:
+		_walk_idle_time_left = maxf(_walk_idle_time_left - delta, 0.0)
+		if _walk_idle_time_left <= 0.0:
+			_appearance.play_idle(false)
+			return
 	_appearance.play_walk(false, LANCE_CHARGE_SPEED_MULT if rushing else 1.0)
 
 

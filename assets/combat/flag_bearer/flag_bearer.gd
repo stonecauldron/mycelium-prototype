@@ -14,6 +14,8 @@ const HURT_SQUASH_IN := 0.04
 const HURT_SQUASH_OUT := 0.12
 const SHAKE_ON_FLAG_HIT := 0.32
 const WALK_SPEED_EPSILON := 8.0
+## Keep the walk cycle through brief stops while following the formation anchor.
+const WALK_IDLE_DELAY := 0.1
 
 const COLLISION_WORLD := 1
 
@@ -37,6 +39,7 @@ const PLAYER_SPORE_COLOR := Color("b7b08d")
 @onready var _animation_player: AnimationPlayer = $Visual/AnimationPlayer
 
 var _march_speed_x: float = 0.0
+var _walk_idle_time_left: float = 0.0
 var _in_knockback: bool = false
 var _knockback_left_ground: bool = false
 var _hits_taken: int = 0
@@ -101,22 +104,29 @@ func _physics_process(delta: float) -> void:
 			_in_knockback = false
 			_knockback_left_ground = false
 			velocity.x = 0.0
-		_update_locomotion_animation()
+		_update_locomotion_animation(delta)
 		return
 
 	velocity.x = _march_speed_x
 	move_and_slide()
-	_update_locomotion_animation()
+	_update_locomotion_animation(delta)
 
 
-func _update_locomotion_animation() -> void:
+func _update_locomotion_animation(delta: float) -> void:
 	if (
 		_in_knockback
 		or not is_on_floor()
-		or absf(velocity.x) <= WALK_SPEED_EPSILON
 	):
+		_walk_idle_time_left = 0.0
 		_play_idle_animation(false)
 		return
+	if absf(velocity.x) > WALK_SPEED_EPSILON:
+		_walk_idle_time_left = WALK_IDLE_DELAY
+	else:
+		_walk_idle_time_left = maxf(_walk_idle_time_left - delta, 0.0)
+		if _walk_idle_time_left <= 0.0:
+			_play_idle_animation(false)
+			return
 	_play_walk_animation()
 
 
@@ -173,6 +183,7 @@ func _march_speed_multiplier() -> float:
 	return maxf(1.0 - float(_hits_taken) * HIT_SLOW_PER_HIT, HIT_SLOW_MIN_MULT)
 
 func reset_combat_state() -> void:
+	_walk_idle_time_left = 0.0
 	_in_knockback = false
 	_knockback_left_ground = false
 	_hits_taken = 0
@@ -197,6 +208,7 @@ func play_death(knockback_from: Vector2 = Vector2.ZERO) -> void:
 	if _dying:
 		return
 	_dying = true
+	_walk_idle_time_left = 0.0
 	_in_knockback = false
 	_knockback_left_ground = false
 	velocity = Vector2.ZERO

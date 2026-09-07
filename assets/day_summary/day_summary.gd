@@ -38,7 +38,6 @@ func _ready() -> void:
 	_populate_combat_recap()
 	_populate_entries(DaySummaryFeed.take_entries())
 	_continue_button.pressed.connect(_on_continue_pressed)
-	_continue_button.grab_focus()
 
 
 func _populate_combat_recap() -> void:

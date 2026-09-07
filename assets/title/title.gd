@@ -11,7 +11,6 @@ func _ready() -> void:
 	_quit_button.pressed.connect(_on_quit_pressed)
 	ExternalLinks.arm_web_open(_wishlist_button, ExternalLinks.STEAM_WISHLIST_URL)
 	_quit_button.visible = not OS.has_feature("web")
-	_new_run_button.grab_focus()
 
 
 func _on_new_run_pressed() -> void:

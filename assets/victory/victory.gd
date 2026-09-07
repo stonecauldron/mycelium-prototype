@@ -15,7 +15,6 @@ func _ready() -> void:
 	_back_to_title_button.pressed.connect(_on_back_to_title_pressed)
 	ExternalLinks.arm_web_open(_feedback_button, ExternalLinks.FEEDBACK_URL)
 	ExternalLinks.arm_web_open(_wishlist_button, ExternalLinks.STEAM_WISHLIST_URL)
-	_new_run_button.grab_focus()
 
 
 func _on_new_run_pressed() -> void:

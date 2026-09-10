@@ -2,8 +2,6 @@
 
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="1_xtih6"]
 [ext_resource type="Script" uid="uid://c6clun5d6trkk" path="res://assets/base/nursery/nursery_screen.gd" id="2_tn1j7"]
-[ext_resource type="Texture2D" uid="uid://clt2ubxc7lo1c" path="res://assets/base/background/upper_lane.png" id="3_upper_lane"]
-[ext_resource type="Texture2D" uid="uid://bdla63khxolb3" path="res://assets/base/background/lower_lane.png" id="4_lower_lane"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="5_biomass"]
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="6_figtree"]
 [ext_resource type="PackedScene" path="res://assets/base/shop/shop_drop_zone.tscn" id="7_shop_zone"]
@@ -27,30 +25,6 @@ grow_vertical = 2
 theme = ExtResource("1_xtih6")
 script = ExtResource("2_tn1j7")
 drop_slot_tint = Color(0.20392157, 0.62352943, 0.972549, 1)
-
-[node name="UpperLaneLayer" type="TextureRect" parent="." unique_id=1298238025]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("3_upper_lane")
-expand_mode = 1
-
-[node name="LowerLaneLayer" type="TextureRect" parent="." unique_id=427991229]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("4_lower_lane")
-expand_mode = 1
 
 [node name="HeaderBlock" type="VBoxContainer" parent="." unique_id=826697549]
 layout_mode = 1

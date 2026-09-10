@@ -9,8 +9,8 @@ Status: Implemented and verified with Godot 4.7 on macOS.
 - Do not show it on the main menu, day summary, victory, or game over screens.
 - Use `res://assets/asset_packs/Cila - Paper UI stylized/icon/Icon 03.png` for the gear icon.
 - The gear has no surrounding frame or tooltip; hover, press, and keyboard focus tint the icon itself.
-- The gear opens a menu with Settings, Resume, Return to title, and Quit.
-- Add extra spacing below Resume to separate the red Return to title and Quit buttons. Keep the shared in-game hover, focus, and pressed styles.
+- The gear opens a menu with Resume first, followed by Settings, Return to title, and Quit.
+- Add extra spacing before the red Return to title and Quit buttons to separate the exit actions. Keep the shared in-game hover, focus, and pressed styles.
 - Opening the menu pauses gameplay in both the Base and combat. Resuming preserves the selected combat speed.
 - Settings remain accessible during blocking Seal and Starter package selections, preserving the unfinished choice underneath.
 - Use a centered paper-style panel, opened by the gear or Escape.

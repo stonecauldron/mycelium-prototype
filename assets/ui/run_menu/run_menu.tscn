@@ -145,19 +145,19 @@ size_flags_vertical = 3
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="SettingsButton" type="Button" parent="Root/Overlay/Center/Panel/Content/MenuPage" unique_id=436485719]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-theme_type_variation = &"NavButton"
-text = "Settings"
-
 [node name="ResumeButton" type="Button" parent="Root/Overlay/Center/Panel/Content/MenuPage" unique_id=1484753243]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_type_variation = &"NavButton"
 text = "Resume"
+
+[node name="SettingsButton" type="Button" parent="Root/Overlay/Center/Panel/Content/MenuPage" unique_id=436485719]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+text = "Settings"
 
 [node name="ExitActionsSpacer" type="Control" parent="Root/Overlay/Center/Panel/Content/MenuPage" unique_id=642929425]
 custom_minimum_size = Vector2(0, 16)

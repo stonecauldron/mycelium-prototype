@@ -1,0 +1,8 @@
+
+## hero_final
+
+Use case: precise-object-edit.
+Edit target: supplied Steam Library Hero panorama. Preserve the entire environment, aspect ratio, palette, character identities and seven-fighter left-to-right ordering.
+One required layout correction: MOVE THE WHOLE GROUP OF SEVEN FIGHTERS UP by one full fighter-body height, and make the whole group 25% smaller. The faces must be around the VERTICAL MIDDLE of the image, not in the lower half. The row of feet should be at 55% image height, faces around 47-50%, flag top around 34%. Horizontally the complete group including flag and weapons should span only the central 20% of canvas width, between x=40% and x=60%.
+At 2206x713 output: whole group horizontal x882 to1324, feet near y392, faces centered y340. At 3840x1240: group horizontal x1536 to2304, feet y682, faces y590. It is essential that the faces of ALL SEVEN fighters remain fully visible in the middle 860x380 crop of the 3840x1240 image.
+Keep four mushroom fighters on the left facing three plants on the right, all exactly as drawn in the reference. No extra or missing characters or weapons. Fill the old position with the same forest path. Keep the golden root tunnel centered behind the gap and preserve all existing roots and glowing cyan mushrooms around the wide surroundings. No logo, no text, no borders. This edit prioritizes correct placement; do not leave the group in its existing position.

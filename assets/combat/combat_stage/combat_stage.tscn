@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bxk864iibfnhd" path="res://assets/asset_packs/Cila - Paper UI stylized/icon/Icon 78.png" id="11_ty6ff"]
 [ext_resource type="PackedScene" uid="uid://carmyhpchip02" path="res://assets/ui/army_hp_chip/army_hp_chip.tscn" id="12_army_hp"]
 [ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="13_run_menu"]
+[ext_resource type="PackedScene" path="res://assets/vfx/ambient_motes/ambient_motes.tscn" id="14_ambient_motes"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
 
@@ -100,6 +101,22 @@ position = Vector2(5760, 0)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_3uj6r")
 centered = false
+
+[node name="AmbientMotes" parent="World/Background" instance=ExtResource("14_ambient_motes")]
+z_index = 1
+position = Vector2(3840, 540)
+amount = 128
+emission_rect_extents = Vector2(3840, 540)
+color = Color(1, 0.72, 0.36, 0.65)
+
+[node name="GroundMotes" parent="World/Background" instance=ExtResource("14_ambient_motes")]
+z_index = 1
+position = Vector2(3840, 1000)
+amount = 112
+emission_rect_extents = Vector2(3840, 80)
+initial_velocity_min = 6.0
+initial_velocity_max = 15.0
+color = Color(1, 0.76, 0.42, 0.75)
 
 [node name="WorldBoundary" type="StaticBody2D" parent="World" unique_id=377154070]
 collision_mask = 0

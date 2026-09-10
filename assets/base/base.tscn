@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
 [ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
 [ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="15_run_menu"]
+[ext_resource type="PackedScene" path="res://assets/vfx/ambient_motes/ambient_motes.tscn" id="16_ambient_motes"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jfa4i"]
 
@@ -33,6 +34,7 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 
 [node name="Background" type="TextureRect" parent="World/Zones/NurseryZone/Host" unique_id=1090787678]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -42,6 +44,15 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("2_apgqf")
 expand_mode = 1
+
+[node name="AmbientMotes" parent="World/Zones/NurseryZone/Host/Background" instance=ExtResource("16_ambient_motes")]
+position = Vector2(960, 540)
+amount = 44
+initial_velocity_min = 2.0
+initial_velocity_max = 7.0
+scale_amount_min = 0.24
+scale_amount_max = 0.75
+color = Color(0.38, 0.95, 1, 0.9)
 
 [node name="NurseryScreen" parent="World/Zones/NurseryZone/Host" unique_id=816589104 instance=ExtResource("11_nursery")]
 unique_name_in_owner = true
@@ -59,6 +70,7 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 
 [node name="Background" type="TextureRect" parent="World/Zones/ColonyZone/Host" unique_id=1500394443]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -68,6 +80,9 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("4_j7mcc")
 expand_mode = 1
+
+[node name="AmbientMotes" parent="World/Zones/ColonyZone/Host/Background" instance=ExtResource("16_ambient_motes")]
+position = Vector2(960, 540)
 
 [node name="ColonyScreen" parent="World/Zones/ColonyZone/Host" unique_id=685627613 instance=ExtResource("13_colony")]
 unique_name_in_owner = true

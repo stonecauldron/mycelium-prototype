@@ -12,8 +12,16 @@
 [ext_resource type="PackedScene" uid="uid://d1cl6878jbaea" path="res://assets/ui/floating_arrow/floating_arrow.tscn" id="9_arrow"]
 [ext_resource type="Texture2D" uid="uid://6smol5kjpvmd" path="res://assets/base/plot_tile/egg0_shadow.png" id="10_egg_shadow"]
 [ext_resource type="Texture2D" uid="uid://cog6qekc0if3t" path="res://assets/base/plot_tile/egg0.png" id="11_egg0"]
+[ext_resource type="Texture2D" uid="uid://d0l0l1yl5kad2" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 1 6.png" id="12_name_title"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_panel"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_name_title"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+texture = ExtResource("12_name_title")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_asca7"]
 texture = ExtResource("8_foxer")
@@ -119,6 +127,8 @@ offset_top = 4.0
 offset_bottom = 40.0
 grow_horizontal = 2
 theme_type_variation = &"CardNameLabel"
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_styles/normal = SubResource("StyleBoxTexture_name_title")
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true

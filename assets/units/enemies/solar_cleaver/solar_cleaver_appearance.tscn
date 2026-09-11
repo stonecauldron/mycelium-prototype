@@ -60,7 +60,7 @@ _data = {
 size = Vector2(74, 136)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(50, 110)
+size = Vector2(74, 110)
 
 [node name="SolarCleaverAppearance" type="Node2D" unique_id=1763571517]
 script = ExtResource("1_root")
@@ -92,5 +92,5 @@ position = Vector2(5, -68)
 shape = SubResource("RectangleShape2D_hurtbox")
 
 [node name="BodyShape" type="CollisionShape2D" parent="." unique_id=1579166663]
-position = Vector2(0, -55)
+position = Vector2(5, -55)
 shape = SubResource("RectangleShape2D_body")

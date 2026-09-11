@@ -537,6 +537,7 @@ func _spawn_unit(
 	spawn_global: Vector2 = Vector2.INF
 ) -> Unit:
 	var unit: Unit = _UNIT_SCENE.instantiate()
+	unit.z_index = 1 if is_player else 0
 	unit.roll_random_stats = false
 	unit.roster_data = roster_data
 	if roster_data.stats != null:

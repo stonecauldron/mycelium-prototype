@@ -101,7 +101,7 @@ func reset() -> void:
 
 
 func current_shop_reroll_cost() -> int:
-	return BiomassData.reroll_price(GameState.get_upcoming_day(), shop_rerolls_today + 1)
+	return BiomassData.reroll_price(shop_rerolls_today + 1)
 
 
 func advance_shop_reroll_cost() -> void:

@@ -260,7 +260,7 @@ func get_upcoming_day() -> int:
 
 
 func current_scout_reroll_cost() -> int:
-	return BiomassData.reroll_price(get_upcoming_day(), scout_rerolls_today + 1)
+	return BiomassData.reroll_price(scout_rerolls_today + 1)
 
 
 func advance_scout_reroll_cost() -> void:

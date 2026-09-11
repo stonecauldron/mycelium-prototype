@@ -85,7 +85,7 @@ func _refresh_selection() -> void:
 
 
 func _current_seal_reroll_cost() -> int:
-	return BiomassData.seal_reroll_price(GameState.get_upcoming_day(), _rerolls_this_pick + 1)
+	return BiomassData.seal_reroll_price(_rerolls_this_pick + 1)
 
 
 func _refresh_reroll_affordability() -> void:

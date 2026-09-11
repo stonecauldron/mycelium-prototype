@@ -14,9 +14,8 @@ const RARE_SPORE_COST := 16
 const EPIC_SPORE_COST := 32
 const LEGENDARY_SPORE_COST := 64
 const MUTATION_COST := 4
-const SHOP_REROLL_COST := 3
-## Extra biomass on Seal reroll so a day-1 first would be 15 (opening pick still cannot reroll).
-const SEAL_REROLL_EXTRA := 14
+const REROLL_BASE_COST := 2
+const SEAL_REROLL_BASE_COST := 10
 const PLOT_UNLOCK_COST := 8
 const SQUAD_SLOT_UNLOCK_COST := 8
 const STARTING_AMOUNT := 3
@@ -48,22 +47,16 @@ static func sell_value(buy_cost: int) -> int:
 	return maxi(1, int(buy_cost / 2.0))
 
 
-## Rounddown(0.40 × upcoming Day), minimum 1. Integer 2/5 is exact for whole Days.
-static func reroll_increase(day: int) -> int:
-	var d := maxi(day, 1)
-	return maxi(1, floori(float(d * 2) / 5.0))
-
-
-## nth Shop/Scout reroll this Day: Rounddown(Day × 0.75) + n × Reroll Increase.
-static func reroll_price(day: int, reroll_number: int) -> int:
-	var d := maxi(day, 1)
+## nth Shop/Scout reroll this Day: base cost + 1 per previous paid reroll.
+static func reroll_price(reroll_number: int) -> int:
 	var n := maxi(reroll_number, 1)
-	return floori(float(d * 3) / 4.0) + n * reroll_increase(d)
+	return REROLL_BASE_COST + n - 1
 
 
-## Mid-run Seal reroll: Shop/Scout price + SEAL_REROLL_EXTRA. Increase is still Reroll Increase.
-static func seal_reroll_price(day: int, reroll_number: int) -> int:
-	return reroll_price(day, reroll_number) + SEAL_REROLL_EXTRA
+## nth mid-run Seal reroll this pick: base cost + 1 per previous paid reroll.
+static func seal_reroll_price(reroll_number: int) -> int:
+	var n := maxi(reroll_number, 1)
+	return SEAL_REROLL_BASE_COST + n - 1
 
 
 func add(value: int) -> void:

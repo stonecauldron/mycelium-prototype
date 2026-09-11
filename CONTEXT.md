@@ -30,7 +30,7 @@ The run's spendable resource, shown in kg.
 *Avoid*: gold, money, currency (unless speaking generically)
 
 **Reroll Increase**:
-The extra biomass added to each additional reroll's price this Day, derived from the upcoming Day. Minimum of 1.
+The extra biomass added to each additional paid reroll's price within a Day: always 1 biomass.
 *Avoid*: wave, materials (other games); treating it as a separate spend
 
 **Seal**:

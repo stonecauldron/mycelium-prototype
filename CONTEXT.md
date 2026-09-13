@@ -196,6 +196,10 @@ A weapon that comes from two weapon-school trainings on one Adult.
 
 ### Battle sides
 
+**Bark**:
+A brief, purely expressive line of dialogue spoken by a Unit or the Flag bearer during a Battle.
+*Avoid*: combat log entry, tooltip (when you mean character dialogue)
+
 **Enemy army**:
 The set of enemies for a battle, as previewed and optionally rerolled by Scout. Ordered by Range class from rear to front: Ranged, then Mid, then Melee toward the player. Same Range class is shuffled. Not ordered by numeric attack reach.
 *Avoid*: formation (for the enemy side), troop (for enemies)

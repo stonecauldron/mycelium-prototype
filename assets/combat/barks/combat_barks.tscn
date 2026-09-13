@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://assets/combat/barks/combat_barks.gd" id="1"]
+[ext_resource type="PackedScene" path="res://assets/combat/barks/bark_bubble.tscn" id="2"]
+
+[node name="CombatBarks" type="Node2D"]
+process_priority = 90
+script = ExtResource("1")
+
+[node name="BarkBubble" parent="." instance=ExtResource("2")]
+
+[node name="ReactionCooldown" type="Timer" parent="."]
+one_shot = true
+ignore_time_scale = true

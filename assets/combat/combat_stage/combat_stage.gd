@@ -42,6 +42,7 @@ const _ACID_RAIN_BASE_DAMAGE := 1
 @onready var _enemy_army_hp: ArmyHpChip = %EnemyArmyHp
 @onready var _hud: CanvasLayer = $HUD
 @onready var _run_menu: RunMenu = $RunMenu
+@onready var _barks: CombatBarks = $World/CombatBarks
 
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2
@@ -202,6 +203,7 @@ func _set_fast_forward(ff_scale: int) -> void:
 		ff_scale = 1
 	_fast_forward_scale = ff_scale
 	GameState.combat_fast_forward = ff_scale
+	_barks.set_speed(ff_scale)
 	_apply_simulation_rate()
 	if _fast_forward_button != null:
 		match ff_scale:
@@ -290,6 +292,7 @@ func _run_battle(
 	)
 	_refresh_unit_process_order()
 	_setup_army_hp_hud()
+	_barks.begin_battle(player_troop)
 	_notify_battle_start()
 	_set_fast_forward(_fast_forward_scale)
 
@@ -549,11 +552,18 @@ func _spawn_unit(
 		unit.body_color = body_color * UnitStatsData.tint_for_tier(roster_data.power_tier)
 	unit.squad_index = squad_index
 	unit.died.connect(_on_unit_died.bind(is_player))
+	if is_player:
+		unit.killed.connect(_on_player_killed.bind(unit))
 	unit.health_changed.connect(_refresh_army_hp_hud)
 	units_root.add_child(unit)
 	if spawn_global != Vector2.INF:
 		unit.global_position = spawn_global
 	return unit
+
+
+func _on_player_killed(victim: Unit, killer: Unit) -> void:
+	if is_instance_valid(victim) and enemy_troop.is_ancestor_of(victim):
+		_barks.enemy_killed(killer)
 
 
 func _on_unit_died(unit: Unit, is_player: bool) -> void:
@@ -565,6 +575,8 @@ func _on_unit_died(unit: Unit, is_player: bool) -> void:
 		and roster.has_meta("zombie_cap_wants_respawn")
 		and bool(roster.get_meta("zombie_cap_wants_respawn"))
 	)
+	if is_player and not wants_zombie_respawn:
+		_barks.friendly_died(roster)
 	if not sandboxed:
 		if is_player and roster != null:
 			_fallen_units.append(roster)
@@ -652,6 +664,8 @@ func _respawn_zombie_cap(
 	if clone.stats != null:
 		clone.stats = dead_roster.stats.duplicate(true)
 	clone.has_revived = true
+	if GameState.barks.last_reaction_speaker == dead_roster:
+		GameState.barks.last_reaction_speaker = clone
 	if clone.has_meta("zombie_cap_wants_respawn"):
 		clone.remove_meta("zombie_cap_wants_respawn")
 	if is_player and not sandboxed:
@@ -686,6 +700,7 @@ func _check_battle_end() -> void:
 	if not player_wiped and not enemy_wiped:
 		return
 	_battle_over = true
+	_barks.end_battle()
 	if _acid_rain_label != null:
 		_acid_rain_label.visible = false
 	_run_menu.set_available(false)
@@ -708,6 +723,7 @@ func _check_battle_end() -> void:
 		_hitstop_active = false
 		_restore_engine_timing()
 		_notify_battle_end()
+		_barks.celebrate_victory()
 		battle_ended.emit(true)
 		return
 
@@ -831,6 +847,7 @@ func _play_victory_celebration() -> void:
 	if enemy_troop.has_flag_bearer():
 		enemy_troop.flag_bearer.play_death()
 	_spawn_victory_callout()
+	_barks.celebrate_victory()
 	var celebrants: Array[Unit] = player_troop.get_living_units()
 	for unit in celebrants:
 		unit.begin_victory_celebration()

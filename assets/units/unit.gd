@@ -2,6 +2,7 @@ class_name Unit
 extends CharacterBody2D
 
 signal died(unit: Unit)
+signal killed(victim: Unit)
 signal health_changed(current: int, maximum: int)
 
 enum CombatPhase { READY, APPROACHING, ATTACKING, RETURNING, RETREATING }
@@ -265,6 +266,13 @@ func _instantiate_body_appearance() -> UnitAppearance:
 		)
 	# Fallback when spawned without roster (tools / stray scenes).
 	return UnitAppearance.compose_player(false, null, null)
+
+
+func get_bark_anchor() -> Vector2:
+	if _appearance == null:
+		return global_position + Vector2(0, -120)
+	var bounds := _appearance.global_transform * _appearance.visual_rect_local(false)
+	return Vector2(bounds.get_center().x, bounds.position.y - 16.0)
 
 
 func _clear_visual_children() -> void:
@@ -1559,6 +1567,7 @@ func register_kill(victim: Unit = null) -> void:
 	kill_streak += 1
 	if roster_data != null and victim != null:
 		roster_data.call_combat_effect(&"on_kill", [self, victim])
+	killed.emit(victim)
 	# Enemy streaks never show — player killers only.
 	if _troop == null or _troop.is_enemy:
 		return

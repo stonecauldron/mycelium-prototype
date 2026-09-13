@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://carmyhpchip02" path="res://assets/ui/army_hp_chip/army_hp_chip.tscn" id="12_army_hp"]
 [ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="13_run_menu"]
 [ext_resource type="PackedScene" path="res://assets/vfx/ambient_motes/ambient_motes.tscn" id="14_ambient_motes"]
+[ext_resource type="PackedScene" path="res://assets/combat/barks/combat_barks.tscn" id="15_barks"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
 
@@ -67,6 +68,8 @@ grow_horizontal = 2
 color = Color(0, 0.047058824, 0.02745098, 1)
 
 [node name="World" type="Node2D" parent="." unique_id=1383156285 groups=["combat_world"]]
+
+[node name="CombatBarks" parent="World" instance=ExtResource("15_barks")]
 
 [node name="Background" type="Node2D" parent="World" unique_id=671687693]
 z_index = -20

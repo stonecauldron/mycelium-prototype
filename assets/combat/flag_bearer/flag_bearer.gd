@@ -82,6 +82,11 @@ func _play_walk_animation() -> void:
 	_animation_player.play(&"walk")
 
 
+func get_bark_anchor() -> Vector2:
+	var bounds := _shroom.global_transform * _shroom.get_rect()
+	return Vector2(bounds.get_center().x, bounds.position.y - 16.0)
+
+
 func _reset_shroom_rest_pose() -> void:
 	if _shroom == null:
 		return

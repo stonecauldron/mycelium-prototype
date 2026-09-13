@@ -12,6 +12,7 @@ var nursery: NurseryData = NurseryData.new()
 var pupation: PupationData = PupationData.new()
 var biomass: BiomassData = BiomassData.new()
 var seals: SealsCollection = SealsCollection.new()
+var barks: BarkData = BarkData.new()
 var current_day: int = 0
 ## Seeds deterministic enemy compositions for this run (scout matches combat).
 var run_seed: int = 0
@@ -432,6 +433,7 @@ func reset_run() -> void:
 	pupation.reset()
 	biomass.reset()
 	seals.reset()
+	barks.reset()
 	current_day = 0
 	prefer_nursery_tab = false
 	show_start_combat_hint = true

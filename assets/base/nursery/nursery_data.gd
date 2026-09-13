@@ -82,8 +82,7 @@ func seed_if_empty() -> void:
 	if common_spore != null:
 		for i in mini(STARTER_SPORE_COUNT, STOCK_SLOT_COUNT):
 			stock.set_at(i, common_spore)
-	spore_shop.ensure_filled(generate_offer_for_slot)
-	_normalize_shop_offers()
+	ensure_shop_offers()
 	_seeded = true
 
 
@@ -136,18 +135,20 @@ func unlock_next_plot() -> bool:
 
 func ensure_shop_offers() -> void:
 	_ensure_spore_shop()
-	spore_shop.ensure_filled(generate_offer_for_slot)
-	_normalize_shop_offers()
+	var selected_paths: Array[String] = []
+	spore_shop.ensure_filled(generate_offer_for_slot.bind(selected_paths))
+	_normalize_shop_offers(selected_paths)
 
 
 func reroll_unlocked_shop_offers() -> void:
 	_ensure_spore_shop()
-	spore_shop.reroll_unlocked(generate_offer_for_slot)
-	_normalize_shop_offers()
+	var selected_paths: Array[String] = []
+	spore_shop.reroll_unlocked(generate_offer_for_slot.bind(selected_paths))
+	_normalize_shop_offers(selected_paths)
 
 
 ## Drop legacy Spore SKUs and keep slot kinds: 0–1 Fertilizer, 2–3 Mutation.
-func _normalize_shop_offers() -> void:
+func _normalize_shop_offers(selected_paths: Array[String]) -> void:
 	_ensure_spore_shop()
 	while spore_shop.offers.size() < SHOP_SLOT_COUNT:
 		spore_shop.offers.append(null)
@@ -156,13 +157,13 @@ func _normalize_shop_offers() -> void:
 		if offer == null or offer.is_empty():
 			continue
 		if offer.item is SporeData:
-			spore_shop.offers[i] = generate_offer_for_slot(i)
+			spore_shop.offers[i] = generate_offer_for_slot(i, selected_paths)
 			continue
 		if is_mutation_shop_slot(i):
 			if not (offer.item is MutationData):
-				spore_shop.offers[i] = generate_mutation_offer()
+				spore_shop.offers[i] = generate_mutation_offer(selected_paths)
 		elif not (offer.item is FertilizerData):
-			spore_shop.offers[i] = generate_fertilizer_offer()
+			spore_shop.offers[i] = generate_fertilizer_offer(selected_paths)
 
 
 func replace_shop_slot(slot_index: int) -> void:
@@ -274,14 +275,14 @@ func first_empty_plot_index() -> int:
 	return -1
 
 
-func generate_offer_for_slot(slot_index: int = 0) -> ShopOffer:
+func generate_offer_for_slot(slot_index: int = 0, selected_paths: Array[String] = []) -> ShopOffer:
 	if is_mutation_shop_slot(slot_index):
-		return generate_mutation_offer()
-	return generate_fertilizer_offer()
+		return generate_mutation_offer(selected_paths)
+	return generate_fertilizer_offer(selected_paths)
 
 
-func generate_fertilizer_offer() -> ShopOffer:
-	var path := _FERTILIZER_PATHS[randi() % _FERTILIZER_PATHS.size()]
+func generate_fertilizer_offer(selected_paths: Array[String] = []) -> ShopOffer:
+	var path := _pick_shop_item_path(_FERTILIZER_PATHS, selected_paths)
 	var fertilizer := load(path) as FertilizerData
 	var offer := ShopOffer.new()
 	offer.item = fertilizer
@@ -291,10 +292,10 @@ func generate_fertilizer_offer() -> ShopOffer:
 
 
 ## Each Mutation slot rolls body or cap independently, then picks from that pool.
-func generate_mutation_offer() -> ShopOffer:
+func generate_mutation_offer(selected_paths: Array[String] = []) -> ShopOffer:
 	var use_body := randf() < 0.5
 	var paths := _BODY_MUTATION_PATHS if use_body else _CAP_MUTATION_PATHS
-	var path := paths[randi() % paths.size()]
+	var path := _pick_shop_item_path(paths, selected_paths)
 	var mutation := load(path) as MutationData
 	var offer := ShopOffer.new()
 	offer.item = mutation
@@ -303,6 +304,19 @@ func generate_mutation_offer() -> ShopOffer:
 		offer.cost = mutation.biomass_cost
 	offer.locked = false
 	return offer
+
+
+## Track only this roll's new items; reuse a path when its selected pool is exhausted.
+func _pick_shop_item_path(paths: Array[String], selected_paths: Array[String]) -> String:
+	var available_paths: Array[String] = []
+	for path in paths:
+		if not selected_paths.has(path):
+			available_paths.append(path)
+	if available_paths.is_empty():
+		available_paths = paths
+	var path := available_paths[randi() % available_paths.size()]
+	selected_paths.append(path)
+	return path
 
 
 func _ensure_spore_shop() -> void:

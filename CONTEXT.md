@@ -97,7 +97,11 @@ The Mutation slot that sets specialty combat or lifecycle identity and tints the
 Player unit art is layered Generalist body + cap sprites (child pair while Child, imago pair while Adult). Mutations tint those layers; empty slots use fixed default layer colors; Tier multiplies both layers. The body layer owns weapon mount and animation; the cap follows.
 
 **Shop**:
-Rerollable biomass offers in the Nursery (Fertilizers and Mutations — not spores, not Weapons). Offer rows stay split — Fertilizer slots and Mutation slots — so both show every reroll. Each Mutation slot rolls independently (body or cap); paid rerolls use Reroll Increase per extra this Day.
+Rerollable biomass offers in the Nursery (Fertilizers and Mutations — not spores, not Weapons). Fertilizers and Mutations occupy separate offer rows; paid rerolls use Reroll Increase per extra this Day.
+
+**Shop roll**:
+The group of new Shop offers generated together on initial fill, a paid reroll, or a daily refresh. Retained locked offers belong to earlier rolls and may match a newly rolled item.
+*Avoid*: treating a Shop roll as all currently displayed offers
 
 **Offer lock**:
 A flag on a Shop offer that keeps that offer through Shop reroll (paid and daily).

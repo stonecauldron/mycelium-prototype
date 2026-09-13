@@ -22,11 +22,9 @@ const _FERTILIZER_PATHS: Array[String] = [
 	"res://assets/base/nursery/fertilizers/triploid_cells.tres",
 	"res://assets/base/nursery/fertilizers/fungicide.tres",
 	"res://assets/base/nursery/fertilizers/amok.tres",
-	"res://assets/base/nursery/fertilizers/training_amnesia.tres",
 	"res://assets/base/nursery/fertilizers/cocooning.tres",
 	"res://assets/base/nursery/fertilizers/stimulants.tres",
 	"res://assets/base/nursery/fertilizers/late_bloomer.tres",
-	"res://assets/base/nursery/fertilizers/normifier.tres",
 	"res://assets/base/nursery/fertilizers/volatile.tres",
 ]
 const _BODY_MUTATION_PATHS: Array[String] = [
@@ -520,7 +518,6 @@ func _make_harvest_units(
 	var meiosis := false
 	var triploid := false
 	var force_amok := false
-	var training_amnesia := false
 	var cocooning := false
 	var stimulants := false
 	var late_bloomer := false
@@ -535,8 +532,6 @@ func _make_harvest_units(
 				triploid = true
 			FertilizerData.Behavior.AMOK:
 				force_amok = true
-			FertilizerData.Behavior.TRAINING_AMNESIA:
-				training_amnesia = true
 			FertilizerData.Behavior.COCOONING:
 				cocooning = true
 			FertilizerData.Behavior.STIMULANTS:
@@ -578,7 +573,7 @@ func _make_harvest_units(
 		unit.cap_mutation = (
 			cap_mutation.duplicate(true) as MutationData if cap_mutation != null else null
 		)
-		if lineage and not training_amnesia:
+		if lineage:
 			unit.weapon_trainings = []
 			for training in spore.weapon_trainings:
 				unit.weapon_trainings.append(int(training))

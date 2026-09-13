@@ -39,8 +39,6 @@ func check_fertilizer_application(fertilizer: FertilizerData = null) -> ActionDe
 		if state != State.GROWING and state != State.READY:
 			return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_FERTILIZER)
 		return ActionDecision.accept()
-	if fertilizer != null and fertilizer.behavior == FertilizerData.Behavior.NORMIFIER:
-		return check_normifier_application()
 	if state != State.EMPTY and state != State.GROWING:
 		return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_FERTILIZER)
 	if fertilizer_stack_count() >= SealModifiers.max_fertilizer_stacks():
@@ -150,8 +148,6 @@ func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 		return false
 	if fertilizer.behavior == FertilizerData.Behavior.FUNGICIDE:
 		return _apply_fungicide(fertilizer)
-	if fertilizer.behavior == FertilizerData.Behavior.NORMIFIER:
-		return _apply_normifier(fertilizer)
 	if not can_apply_fertilizer():
 		return false
 	_discard_fungicide_markers()
@@ -172,41 +168,6 @@ func apply_mutation(mutation: MutationData) -> bool:
 		cap_mutation = mutation
 		return true
 	return false
-
-
-func has_any_mutation() -> bool:
-	if body_mutation != null or cap_mutation != null:
-		return true
-	if planted_spore == null:
-		return false
-	return planted_spore.body_mutation != null or planted_spore.cap_mutation != null
-
-
-func can_apply_normifier() -> bool:
-	return check_normifier_application().allowed
-
-
-func check_normifier_application() -> ActionDecision:
-	var state := get_state()
-	if state != State.GROWING and state != State.READY:
-		return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_FERTILIZER)
-	if planted_spore == null or not has_any_mutation():
-		return ActionDecision.reject(ActionReasons.NORMIFIER_REQUIRES_MUTATION)
-	if fertilizer_stack_count() >= SealModifiers.max_fertilizer_stacks():
-		return ActionDecision.reject(ActionReasons.FERTILIZER_CAPACITY_FULL)
-	return ActionDecision.accept()
-
-
-func _apply_normifier(fertilizer: FertilizerData) -> bool:
-	if not can_apply_normifier():
-		return false
-	body_mutation = null
-	cap_mutation = null
-	planted_spore.body_mutation = null
-	planted_spore.cap_mutation = null
-	_discard_fungicide_markers()
-	applied_fertilizers.append(fertilizer)
-	return true
 
 
 func _apply_fungicide(fertilizer: FertilizerData) -> bool:

@@ -8,12 +8,11 @@ enum Behavior {
 	FUNGICIDE,
 	AMOK,
 	TRIPLOID,
-	TRAINING_AMNESIA,
-	COCOONING,
+	# Preserve behavior IDs serialized in fertilizer resources.
+	COCOONING = 7,
 	STIMULANTS,
 	LATE_BLOOMER,
-	NORMIFIER,
-	VOLATILE,
+	VOLATILE = 11,
 }
 
 const AMOK_ATTACK_RATE := 2.0

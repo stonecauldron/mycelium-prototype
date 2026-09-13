@@ -145,7 +145,7 @@ func _check_pool_exhaustion() -> void:
 	seed(6308)
 	var nursery := NurseryData.new()
 	var selected_fertilizers: Array[String] = []
-	for i in 17:
+	for i in 15:
 		var prior := selected_fertilizers.duplicate()
 		var offer := nursery.generate_fertilizer_offer(selected_fertilizers)
 		_expect(not prior.has(offer.item.resource_path), "use each available Fertilizer before repeating")

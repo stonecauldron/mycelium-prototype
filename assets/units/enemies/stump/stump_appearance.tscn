@@ -169,7 +169,7 @@ _data = {
 size = Vector2(98, 109)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(90, 109)
+size = Vector2(76, 109)
 
 [node name="StumpAppearance" type="Node2D" unique_id=367020801]
 script = ExtResource("1_root")
@@ -208,5 +208,5 @@ position = Vector2(0, -54.5)
 shape = SubResource("RectangleShape2D_hurtbox")
 
 [node name="BodyShape" type="CollisionShape2D" parent="." unique_id=1354549184]
-position = Vector2(-4, -54.5)
+position = Vector2(-5, -54.5)
 shape = SubResource("RectangleShape2D_body")

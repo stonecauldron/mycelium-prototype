@@ -1,13 +1,24 @@
 class_name EnemyComposer
 extends RefCounted
 
-## Day-curve procedural enemy specs + optional multi-variant skill-check overrides.
+## Day budget → pattern → eligible enemy types → affordable headcounts.
 
 enum ArmyArchetype { ONE_TRICK_PONY, HYBRID, GENERALIST }
 
 const _REROLL_CANDIDATE_COUNT := 8
-## Seeded day-curve samples for midpoint and Battle-reward difficulty bounds.
-const _DIFFICULTY_SAMPLE_COUNT := 8
+## Initial tuning in Army-budget points, indexed by Day minus one.
+const _DAY_BUDGET_RANGES: Array[Vector2i] = [
+	Vector2i(12, 18),
+	Vector2i(22, 30),
+	Vector2i(28, 40),
+	Vector2i(40, 56),
+	Vector2i(108, 144), # Elite: Strong enemies only.
+	Vector2i(90, 120),
+	Vector2i(108, 144),
+	Vector2i(132, 176),
+	Vector2i(168, 216),
+	Vector2i(240, 312), # Elite: Strong enemies only.
+]
 
 const _ENEMY_UNIT_PATHS: Array[String] = [
 	"res://assets/units/enemies/solar_sword/solar_sword_unit.tres",
@@ -33,30 +44,28 @@ static var _cached_enemy_pool: Array = []
 
 static func specs_for_day(day: int) -> Array[EnemyUnitSpec]:
 	var clamped := clampi(day, 1, GameState.WIN_DAYS)
-	var rng := _rng_for_day(clamped)
-	var variants := _skill_check_variants(clamped)
-	if not variants.is_empty():
-		var pick := rng.randi() % variants.size()
-		var chosen: Array[EnemyUnitSpec] = variants[pick]
-		return _ordered_copy(chosen)
-	return _generate_from_curve(clamped, rng)
+	return _generate_from_curve(clamped, _rng_for_day(clamped))
+
+
+static func budget_range_for_day(day: int) -> Vector2i:
+	return _DAY_BUDGET_RANGES[clampi(day, 1, GameState.WIN_DAYS) - 1]
 
 
 static func difficulty_score(specs: Array[EnemyUnitSpec]) -> float:
 	var score := 0.0
 	for spec in specs:
-		if spec.unit_data == null:
+		if spec == null or spec.unit_data == null:
 			continue
-		score += float(spec.unit_data.average_stat_sum())
+		score += float(spec.unit_data.composition_cost)
 	return score
 
 
-## 0 = easiest sampled army for the day, 1 = hardest. Flat day → 0.5 (×1.0 reward).
+## Actual army cost within the authored Day range; unspent points earn no reward.
 static func difficulty_t_for_day(day: int, specs: Array[EnemyUnitSpec]) -> float:
 	var score := difficulty_score(specs)
-	var bounds := _difficulty_bounds_for_day(day)
-	var min_s: float = bounds.min
-	var max_s: float = bounds.max
+	var bounds := budget_range_for_day(day)
+	var min_s := float(bounds.x)
+	var max_s := float(bounds.y)
 	if max_s <= min_s:
 		return 0.5
 	return clampf((score - min_s) / (max_s - min_s), 0.0, 1.0)
@@ -66,15 +75,23 @@ static func battle_reward_for(day: int, specs: Array[EnemyUnitSpec]) -> int:
 	return BiomassData.battle_reward(day, difficulty_t_for_day(day, specs))
 
 
-static func reroll_for_day(day: int, current_specs: Array[EnemyUnitSpec]) -> Array[EnemyUnitSpec]:
+static func reroll_for_day(
+	day: int,
+	current_specs: Array[EnemyUnitSpec],
+	rng: RandomNumberGenerator = null
+) -> Array[EnemyUnitSpec]:
 	var clamped := clampi(day, 1, GameState.WIN_DAYS)
-	var rng := RandomNumberGenerator.new()
-	rng.randomize()
-	var candidates := _reroll_candidates(clamped, current_specs, rng)
+	if GameState.is_elite_day(clamped):
+		return current_specs
+	var generator := rng if rng != null else RandomNumberGenerator.new()
+	if rng == null:
+		generator.randomize()
+	var candidates := _reroll_candidates(clamped, current_specs, generator)
 	if candidates.is_empty():
 		return current_specs
 	var current_score := difficulty_score(current_specs)
-	var midpoint := _midpoint_for_day(clamped)
+	var bounds := budget_range_for_day(clamped)
+	var midpoint := (float(bounds.x) + float(bounds.y)) * 0.5
 	var total_weight := 0.0
 	var weights: Array[float] = []
 	for candidate in candidates:
@@ -86,7 +103,7 @@ static func reroll_for_day(day: int, current_specs: Array[EnemyUnitSpec]) -> Arr
 			weight = maxf(0.05, score - current_score)
 		weights.append(weight)
 		total_weight += weight
-	var roll := rng.randf() * total_weight
+	var roll := generator.randf() * total_weight
 	var acc := 0.0
 	for i in candidates.size():
 		acc += weights[i]
@@ -95,72 +112,37 @@ static func reroll_for_day(day: int, current_specs: Array[EnemyUnitSpec]) -> Arr
 	return candidates[candidates.size() - 1]
 
 
-static func _midpoint_for_day(day: int) -> float:
-	var scores := _difficulty_scores_for_day(day)
-	if scores.is_empty():
-		return 0.0
-	var sum := 0.0
-	for score in scores:
-		sum += score
-	return sum / float(scores.size())
-
-
-static func _difficulty_bounds_for_day(day: int) -> Dictionary:
-	var scores := _difficulty_scores_for_day(day)
-	if scores.is_empty():
-		return {"min": 0.0, "max": 0.0}
-	var min_s := scores[0]
-	var max_s := scores[0]
-	for score in scores:
-		min_s = minf(min_s, score)
-		max_s = maxf(max_s, score)
-	return {"min": min_s, "max": max_s}
-
-
-static func _difficulty_scores_for_day(day: int) -> Array[float]:
-	var scores: Array[float] = []
-	var variants := _skill_check_variants(day)
-	if not variants.is_empty():
-		for variant in variants:
-			scores.append(difficulty_score(variant))
-		return scores
-	for i in _DIFFICULTY_SAMPLE_COUNT:
-		var sample_rng := RandomNumberGenerator.new()
-		sample_rng.seed = hash([GameState.run_seed, day, &"midpoint", i])
-		scores.append(difficulty_score(_generate_from_curve(day, sample_rng)))
-	return scores
-
-
 static func _reroll_candidates(
 	day: int,
 	current_specs: Array[EnemyUnitSpec],
 	rng: RandomNumberGenerator
 ) -> Array:
 	var candidates: Array = []
-	var variants := _skill_check_variants(day)
-	if not variants.is_empty():
-		for variant in variants:
-			var specs: Array[EnemyUnitSpec] = variant
-			if not _specs_equal(specs, current_specs):
-				candidates.append(_ordered_copy(specs))
-		if candidates.is_empty():
-			for variant in variants:
-				var fallback: Array[EnemyUnitSpec] = variant
-				candidates.append(_ordered_copy(fallback))
-		return candidates
-	for _i in _REROLL_CANDIDATE_COUNT:
-		var sample_rng := RandomNumberGenerator.new()
-		sample_rng.seed = rng.randi()
-		candidates.append(_generate_from_curve(day, sample_rng))
+	var bounds := budget_range_for_day(day)
+	for i in _REROLL_CANDIDATE_COUNT:
+		var budget := rng.randi_range(bounds.x, bounds.y)
+		# Include both ends so Day 1 always offers the other Sword count.
+		if i == 0:
+			budget = bounds.x
+		elif i == 1:
+			budget = bounds.y
+		var specs := _generate_with_budget(day, budget, rng)
+		if not _specs_equal(specs, current_specs):
+			candidates.append(specs)
 	return candidates
 
 
 static func _specs_equal(a: Array[EnemyUnitSpec], b: Array[EnemyUnitSpec]) -> bool:
 	if a.size() != b.size():
 		return false
-	for i in a.size():
-		if a[i].unit_data != b[i].unit_data:
+	var counts: Dictionary = {}
+	for spec in a:
+		counts[spec.unit_data] = int(counts.get(spec.unit_data, 0)) + 1
+	for spec in b:
+		var count := int(counts.get(spec.unit_data, 0))
+		if count == 0:
 			return false
+		counts[spec.unit_data] = count - 1
 	return true
 
 
@@ -170,27 +152,27 @@ static func _rng_for_day(day: int) -> RandomNumberGenerator:
 	return rng
 
 
-static func _skill_check_variants(_day: int) -> Array:
-	## Each entry is Array[EnemyUnitSpec]. Empty → use day curve.
-	## Hook for future authored turn overrides.
-	return []
-
-
 static func _generate_from_curve(day: int, rng: RandomNumberGenerator) -> Array[EnemyUnitSpec]:
-	var band := _band_for_day(day)
-	var total: int = rng.randi_range(band.min_units, band.max_units)
+	var bounds := budget_range_for_day(day)
+	return _generate_with_budget(day, rng.randi_range(bounds.x, bounds.y), rng)
+
+
+static func _generate_with_budget(
+	day: int,
+	budget: int,
+	rng: RandomNumberGenerator
+) -> Array[EnemyUnitSpec]:
 	var unit_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
 	var unit_slots := _distribute_mix(
 		_enemy_pool_for_day(day),
 		unit_archetype,
-		total,
+		budget,
 		rng,
-		_enemy_pick_weight
+		3 if GameState.is_elite_day(day) else 2
 	)
 
 	var specs: Array[EnemyUnitSpec] = []
-	for i in total:
-		var unit_data: EnemyUnitData = unit_slots[i]
+	for unit_data: EnemyUnitData in unit_slots:
 		specs.append(EnemyUnitSpec.make(unit_data))
 	return _order_by_range_class(specs)
 
@@ -209,35 +191,34 @@ static func _enemy_pool() -> Array:
 
 static func _enemy_pool_for_day(day: int) -> Array:
 	var pool: Array = []
+	var elite := GameState.is_elite_day(day)
 	for entry in _enemy_pool():
 		var unit_data := entry as EnemyUnitData
-		if unit_data == null:
+		if unit_data == null or unit_data.composition_cost <= 0:
 			continue
-		if unit_data.min_day <= day:
-			pool.append(unit_data)
+		if unit_data.min_day > day:
+			continue
+		if elite and not unit_data.is_strong:
+			continue
+		if day < 5 and unit_data.is_strong:
+			continue
+		pool.append(unit_data)
 	return pool
-
-
-static func _enemy_pick_weight(entry) -> float:
-	var unit_data := entry as EnemyUnitData
-	if unit_data == null:
-		return 1.0
-	return maxf(unit_data.composition_weight, 0.0)
 
 
 static func _distribute_mix(
 	pool: Array,
 	archetype: ArmyArchetype,
-	total: int,
+	budget: int,
 	rng: RandomNumberGenerator,
-	weight_for_entry: Callable = Callable()
+	max_strong_types: int
 ) -> Array:
 	var shares: Array = _ARCHETYPE_SHARES[archetype]
 	var pick_count: int = mini(shares.size(), pool.size())
-	var picked := _pick_distinct(pool, pick_count, rng, weight_for_entry)
-	var counts := _shares_to_counts(shares.slice(0, picked.size()), total)
+	var picked := _pick_distinct(pool, pick_count, rng, max_strong_types)
+	var counts := _fit_counts_to_budget(picked, shares.slice(0, picked.size()), budget)
 	var slots: Array = []
-	for i in picked.size():
+	for i in counts.size():
 		for _j in counts[i]:
 			slots.append(picked[i])
 	_shuffle_array(slots, rng)
@@ -248,31 +229,38 @@ static func _pick_distinct(
 	pool: Array,
 	count: int,
 	rng: RandomNumberGenerator,
-	weight_for_entry: Callable = Callable()
+	max_strong_types: int
 ) -> Array:
 	var remaining: Array = pool.duplicate()
 	var picked: Array = []
+	var strong_count := 0
 	var n := mini(count, remaining.size())
 	for _i in n:
-		var index := _weighted_index(remaining, rng, weight_for_entry)
-		picked.append(remaining[index])
+		if remaining.is_empty():
+			break
+		var index := _weighted_index(remaining, rng)
+		var unit_data: EnemyUnitData = remaining[index]
+		picked.append(unit_data)
 		remaining.remove_at(index)
+		if unit_data.is_strong:
+			strong_count += 1
+		if strong_count >= max_strong_types:
+			remaining = remaining.filter(func(entry: EnemyUnitData) -> bool:
+				return not entry.is_strong
+			)
 	return picked
 
 
 static func _weighted_index(
 	pool: Array,
-	rng: RandomNumberGenerator,
-	weight_for_entry: Callable
+	rng: RandomNumberGenerator
 ) -> int:
 	if pool.is_empty():
 		return 0
-	if not weight_for_entry.is_valid():
-		return rng.randi() % pool.size()
 	var total_weight := 0.0
 	var weights: Array[float] = []
-	for entry in pool:
-		var weight: float = maxf(float(weight_for_entry.call(entry)), 0.0)
+	for entry: EnemyUnitData in pool:
+		var weight := maxf(entry.composition_weight, 0.0)
 		weights.append(weight)
 		total_weight += weight
 	if total_weight <= 0.0:
@@ -286,14 +274,37 @@ static func _weighted_index(
 	return weights.size() - 1
 
 
+## Largest affordable headcount with the pattern's rounded shares. No filler types.
+static func _fit_counts_to_budget(picked: Array, shares: Array, budget: int) -> Array[int]:
+	if picked.is_empty() or budget <= 0:
+		return []
+	var cheapest: int = picked[0].composition_cost
+	for unit_data: EnemyUnitData in picked:
+		cheapest = mini(cheapest, unit_data.composition_cost)
+	if cheapest <= 0:
+		return []
+	var max_count := floori(float(budget) / float(cheapest))
+	for total in range(max_count, 0, -1):
+		var counts := _shares_to_counts(shares, total)
+		var cost := 0
+		for i in counts.size():
+			cost += counts[i] * int(picked[i].composition_cost)
+		if cost <= budget:
+			return counts
+	return []
+
+
 static func _shares_to_counts(shares: Array, total: int) -> Array[int]:
 	var counts: Array[int] = []
 	if shares.is_empty() or total <= 0:
 		return counts
+	var share_sum := 0.0
+	for share in shares:
+		share_sum += float(share)
 	var raw: Array[float] = []
 	var floored_sum := 0
 	for share in shares:
-		var value := float(share) * float(total)
+		var value := float(share) / share_sum * float(total)
 		raw.append(value)
 		var floored := int(floor(value))
 		counts.append(floored)
@@ -311,12 +322,6 @@ static func _shares_to_counts(shares: Array, total: int) -> Array[int]:
 
 
 ## Home order: Ranged (rear), Mid, Melee (toward the player). Shuffle within a Range class is kept.
-static func _ordered_copy(specs: Array[EnemyUnitSpec]) -> Array[EnemyUnitSpec]:
-	var copy: Array[EnemyUnitSpec] = []
-	copy.assign(specs)
-	return _order_by_range_class(copy)
-
-
 static func _order_by_range_class(specs: Array[EnemyUnitSpec]) -> Array[EnemyUnitSpec]:
 	var keyed: Array[Dictionary] = []
 	for i in specs.size():
@@ -353,39 +358,3 @@ static func _shuffle_array(values: Array, rng: RandomNumberGenerator) -> void:
 		var tmp = values[i]
 		values[i] = values[j]
 		values[j] = tmp
-
-
-static func _band_for_day(day: int) -> Dictionary:
-	if GameState.is_elite_day(day):
-		return _elite_band_for_day(day)
-	match day:
-		1, 2:
-			return {"min_units": 2, "max_units": 3}
-		3:
-			return {"min_units": 3, "max_units": 4}
-		4:
-			return {"min_units": 4, "max_units": 5}
-		5:
-			# Non-elite fallback (elite days use `_elite_band_for_day`).
-			return {"min_units": 5, "max_units": 6}
-		6:
-			return {"min_units": 6, "max_units": 8}
-		7:
-			return {"min_units": 7, "max_units": 10}
-		8:
-			return {"min_units": 9, "max_units": 12}
-		9:
-			return {"min_units": 11, "max_units": 15}
-		_:
-			# Day 10 non-elite fallback.
-			return {"min_units": 14, "max_units": 18}
-
-
-## Harder procedural armies for elite days (more units; typed stats come from EnemyUnitData).
-static func _elite_band_for_day(day: int) -> Dictionary:
-	match day:
-		5:
-			return {"min_units": 7, "max_units": 10}
-		_:
-			# Day 10 (and any other elite day).
-			return {"min_units": 16, "max_units": 22}

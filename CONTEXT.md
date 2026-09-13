@@ -196,6 +196,21 @@ A weapon that comes from two weapon-school trainings on one Adult.
 The set of enemies for a battle, as previewed and optionally rerolled by Scout. Ordered by Range class from rear to front: Ranged, then Mid, then Melee toward the player. Same Range class is shuffled. Not ordered by numeric attack reach.
 *Avoid*: formation (for the enemy side), troop (for enemies)
 
+**Enemy cost**:
+The authored estimate of an enemy type's combat strength, expressed in army-budget points. It is not a biomass price or a Battle reward.
+
+**Army budget**:
+The allowance of enemy-cost points allocated to an enemy army within its Day's difficulty range. More expensive enemies use more of the allowance, leaving room for fewer enemies.
+
+**Army pattern**:
+The intended proportions of enemy types by headcount: One-trick pony, Hybrid, or Generalist. It describes the army's mix, not its Range classes.
+
+**Regular enemy**:
+An enemy type in the introductory enemy pool, distinct from Strong enemies.
+
+**Strong enemy**:
+An enemy type in the advanced enemy pool: Elite enemy armies contain only Strong enemies, and later non-elite armies may mix them with Regular enemies. This is an enemy category, not a player Tier.
+
 **Scout**:
 The Base preview of the upcoming enemy army (with optional biomass-priced reroll when allowed). Type order is the reverse of Enemy army Home order — Melee, then Mid, then Ranged — so it matches what the player faces. Reroll price uses Reroll Increase per extra this Day; Elite Days cannot be rerolled.
 *Avoid*: treating Scout order as Home order

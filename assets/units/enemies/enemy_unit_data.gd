@@ -17,6 +17,10 @@ const STAT_VARIANCE := 1
 @export var stats: UnitStatsData
 ## First day this type can appear in procedural armies (1-based).
 @export_range(1, 99, 1) var min_day: int = 1
+## Authored combat-strength estimate in Army-budget points (not biomass).
+@export_range(1, 999, 1) var composition_cost: int = 6
+## Strong-only on elite days; at most two Strong types on mixed days.
+@export var is_strong: bool = false
 ## Relative weight when picking types for army mix.
 @export_range(0.0, 100.0, 0.1) var composition_weight: float = 1.0
 ## Optional combat hooks (on_death, on_hit_taken, …). Null for plain enemies.
@@ -51,12 +55,6 @@ func make_stats(rng: RandomNumberGenerator = null) -> UnitStatsData:
 	rolled.dex = _roll_stat(base.dex, generator)
 	rolled.con = _roll_stat(base.con, generator)
 	return rolled
-
-
-func average_stat_sum() -> int:
-	if stats == null:
-		return UnitStatsData.NEUTRAL_STAT * 3
-	return stats.strength + stats.dex + stats.con
 
 
 func call_effect(method_name: StringName, args: Array = []) -> void:

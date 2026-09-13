@@ -31,5 +31,6 @@ appearance_scene = ExtResource("4_appear")
 combat = SubResource("Combat_stump")
 held_weapon = ExtResource("5_held")
 stats = SubResource("Stats_stump")
-min_day = 3
+min_day = 4
+composition_cost = 12
 composition_weight = 0.8

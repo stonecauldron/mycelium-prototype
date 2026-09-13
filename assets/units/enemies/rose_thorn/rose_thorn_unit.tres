@@ -38,4 +38,5 @@ appearance_scene = ExtResource("4_appear")
 combat = SubResource("Combat_rose_thorn")
 held_weapon = ExtResource("6_held")
 stats = SubResource("Stats_rose_thorn")
-min_day = 3
+min_day = 2
+composition_cost = 10

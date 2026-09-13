@@ -36,4 +36,5 @@ appearance_scene = ExtResource("4_appear")
 combat = SubResource("Combat_peashooter")
 held_weapon = ExtResource("6_held")
 stats = SubResource("Stats_peashooter")
-min_day = 3
+min_day = 2
+composition_cost = 10

@@ -110,9 +110,9 @@ func _refresh_price_row() -> void:
 	_footer_row.visible = true
 	_sell_row.visible = true
 	if show_buy_price:
-		_sell_label.text = "Buy: %d" % spore_data.biomass_cost
+		_sell_label.text = "Buy: %s" % BiomassDisplay.number(spore_data.biomass_cost)
 	else:
-		_sell_label.text = "Sell: %d" % BiomassData.sell_value(spore_data.biomass_cost)
+		_sell_label.text = "Sell: %s" % BiomassDisplay.number(BiomassData.sell_value(spore_data.biomass_cost), true)
 
 
 func _refresh_unit_content() -> void:

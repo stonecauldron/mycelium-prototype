@@ -191,7 +191,7 @@ theme_override_font_sizes/font_size = 30
 text = "3"
 
 [node name="RerollBiomassIcon" type="TextureRect" parent="ShopPanel/ShopMargin/ShopVBox/ShopDropZone/ShopRow/MiddleShopColumn/RerollButton/RerollContent" unique_id=1970297507]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2

@@ -54,9 +54,9 @@ static func add_fallen_unit(
 	var emitted := unit.emitted_death_spore
 	var text: String
 	if unit.last_death_biomass_yield > 0:
-		text = "%s died and yielded %d kg of biomass" % [
+		text = "%s died and yielded %s" % [
 			unit.display_name,
-			unit.last_death_biomass_yield,
+			BiomassDisplay.text(unit.last_death_biomass_yield),
 		]
 	elif emitted:
 		if context == MutationEffect.DeathContext.AGED_OUT:
@@ -115,7 +115,7 @@ static func add_biomass_earned(amount: int) -> void:
 	if amount <= 0:
 		return
 	entries.append({
-		"text": "+%d kg" % amount,
+		"text": BiomassDisplay.text(amount, true),
 		"biomass": true,
 	})
 

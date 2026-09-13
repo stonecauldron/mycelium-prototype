@@ -162,7 +162,7 @@ theme_override_font_sizes/font_size = 28
 text = "8"
 
 [node name="UnlockBiomassIcon" type="TextureRect" parent="Margin/Stack/ActionSlot/UnlockButton/UnlockMargin/UnlockContent" unique_id=890000015]
-custom_minimum_size = Vector2(26, 26)
+custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2

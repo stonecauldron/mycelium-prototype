@@ -19,7 +19,7 @@ var _unit: RosterUnitData
 @onready var _unit_title: Label = %UnitTitle
 @onready var _left_portrait: Control = %LeftPortrait
 @onready var _left_stage: Label = %LeftStage
-@onready var _outcome_biomass: Label = %OutcomeBiomass
+@onready var _outcome_biomass: RichTextLabel = %OutcomeBiomass
 @onready var _outcome_spore: Label = %OutcomeSpore
 @onready var _confirm_button: Button = %ConfirmButton
 
@@ -61,8 +61,7 @@ func _refresh() -> void:
 	var preview := GameState.preview_compost_outcome(_unit)
 	var biomass := int(preview.get("biomass", 0))
 	var emits_spore := bool(preview.get("emits_spore", false))
-	_outcome_biomass.text = "+%d kg biomass" % biomass
-	_outcome_biomass.add_theme_color_override("font_color", _COLOR_UP)
+	StatDisplay.apply_to(_outcome_biomass, BiomassDisplay.text(biomass, true), 24, _COLOR_UP)
 	if emits_spore:
 		var lineage := _unit.lineage_name.strip_edges()
 		if lineage.is_empty():

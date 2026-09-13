@@ -7,6 +7,6 @@
 script = ExtResource("1_seal")
 id = &"radioactivity"
 display_name = "Radioactivity"
-description = "Halves the cost of mutations (capped at 1 biomass)"
+description = "Halves the cost of mutations (minimum cost: 1 biomass)"
 icon = ExtResource("2_icon")
 mutation_cost_halve = true

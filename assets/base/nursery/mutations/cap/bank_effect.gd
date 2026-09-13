@@ -11,6 +11,7 @@ func get_stat_chip(roster: Resource) -> Dictionary:
 		return {}
 	return {
 		"icon": _BIOMASS_ICON,
+		"biomass": true,
 		"value": data.biomass_bank,
 	}
 

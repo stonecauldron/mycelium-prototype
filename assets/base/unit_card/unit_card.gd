@@ -16,7 +16,7 @@ var source: String = "bench"
 var slot: Node
 var _drag_started_flag: bool = false
 var _portrait_instance: Node2D = null
-var _mutation_chip: StatChip = null
+var _mutation_chip: Control = null
 
 @onready var _name_label: Label = %NameLabel
 @onready var _weapon_label: Label = %WeaponLabel
@@ -122,6 +122,12 @@ func _refresh_mutation_chip(data: RosterUnitData) -> void:
 		return
 	var row := _atk_chip.get_parent() as Control
 	if row == null:
+		return
+	if bool(info.get("biomass", false)):
+		_mutation_chip = BiomassDisplay.make_amount(
+			BiomassDisplay.number(int(info.get("value", 0))), 24, Color.WHITE, true
+		)
+		row.add_child(_mutation_chip)
 		return
 	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
 	chip.icon = info.get("icon") as Texture2D

@@ -9,7 +9,7 @@ script = ExtResource("2_effect")
 [resource]
 script = ExtResource("1_mut")
 display_name = "Bank"
-short_description = "+10 biomass upon battle start. Cashes out upon death."
+short_description = "Stores 10 biomass at battle start. Pays out on death."
 slot = 1
 tint = Color(0.84978473, 0.4587953, 0.6893629, 1)
 effect = SubResource("Effect")

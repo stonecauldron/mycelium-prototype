@@ -10,7 +10,6 @@ const TAB_DEFS := [
 
 const VIEWPORT_SIZE := Vector2(1920, 1080)
 const CAMERA_TWEEN_SECONDS := 0.35
-const _BIOMASS_DIGITS := 4
 const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
 
 @onready var _camera: Camera2D = %BaseCamera
@@ -141,7 +140,7 @@ func set_start_combat_enabled(enabled: bool) -> void:
 func _refresh_hud() -> void:
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	_day_label.text = "Day %d / %d" % [day, GameState.WIN_DAYS]
-	_biomass_amount.text = "%0*d kg" % [_BIOMASS_DIGITS, GameState.biomass.amount]
+	_biomass_amount.text = BiomassDisplay.number(GameState.biomass.amount)
 	for track in _progress_tracks:
 		track.refresh()
 	if _colony_screen != null:

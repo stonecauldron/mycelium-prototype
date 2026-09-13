@@ -21,7 +21,7 @@ func _ready() -> void:
 
 func show_amount(amount: int) -> void:
 	if _amount_label != null:
-		_amount_label.text = str(amount)
+		_amount_label.text = BiomassDisplay.number(amount, true)
 	visible = true
 	call_deferred("_sync_hover_scale")
 

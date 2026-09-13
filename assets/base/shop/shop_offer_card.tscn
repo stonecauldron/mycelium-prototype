@@ -142,7 +142,7 @@ horizontal_alignment = 1
 
 [node name="BiomassIcon" type="TextureRect" parent="CardPanel/Margin/VBox/FooterRow/PriceRow" unique_id=816829021]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(22, 22)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("4_biomass")

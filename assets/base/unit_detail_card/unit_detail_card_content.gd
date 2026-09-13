@@ -17,7 +17,7 @@ var unit_data: RosterUnitData
 var show_portrait: bool = true
 var extra_nutrition_text: String = ""
 var _portrait_instance: Node2D = null
-var _mutation_chip: StatChip = null
+var _mutation_chip: Control = null
 var _fertilizer_icon: AtlasTexture = null
 
 @onready var _name_label: Label = %NameLabel
@@ -285,6 +285,12 @@ func _refresh_mutation_chip() -> void:
 		return
 	var row := _atk_chip.get_parent() as Control
 	if row == null:
+		return
+	if bool(info.get("biomass", false)):
+		_mutation_chip = BiomassDisplay.make_amount(
+			BiomassDisplay.number(int(info.get("value", 0))), 30, Color.WHITE, true
+		)
+		row.add_child(_mutation_chip)
 		return
 	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
 	chip.chip_size = Vector2(72, 72)

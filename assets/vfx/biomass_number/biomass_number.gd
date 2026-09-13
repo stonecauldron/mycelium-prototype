@@ -12,7 +12,7 @@ const COLOR := Color(1.0, 0.88, 0.28, 1.0)
 
 
 func display(amount: int) -> void:
-	_label.text = "+%d" % amount
+	_label.text = BiomassDisplay.number(amount, true)
 	_label.modulate = COLOR
 	_icon.modulate = COLOR
 	position.x += randf_range(-SPAWN_JITTER_X, SPAWN_JITTER_X)

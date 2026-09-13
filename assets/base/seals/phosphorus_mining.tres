@@ -7,6 +7,6 @@
 script = ExtResource("1_seal")
 id = &"phosphorus_mining"
 display_name = "Phosphorus Mining"
-description = "Halves the cost of fertilizers (capped at 1 biomass)"
+description = "Halves the cost of fertilizers (minimum cost: 1 biomass)"
 icon = ExtResource("2_icon")
 fertilizer_cost_halve = true

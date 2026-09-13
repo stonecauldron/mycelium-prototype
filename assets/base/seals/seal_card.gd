@@ -14,7 +14,7 @@ var _selected_panel_style: StyleBox
 @onready var _panel: PanelContainer = %Panel
 @onready var _icon: TextureRect = %Icon
 @onready var _title: Label = %TitleLabel
-@onready var _description: Label = %DescriptionLabel
+@onready var _description: RichTextLabel = %DescriptionLabel
 
 
 func _ready() -> void:
@@ -77,7 +77,7 @@ func set_selected(selected: bool) -> void:
 	if _title != null:
 		_title.add_theme_color_override("font_color", title_color)
 	if _description != null:
-		_description.add_theme_color_override("font_color", body_color)
+		StatDisplay.apply_to(_description, seal.description if seal != null else "Seal description", 20, body_color)
 
 
 func _refresh() -> void:
@@ -91,7 +91,6 @@ func _refresh() -> void:
 
 	_icon.texture = seal.icon
 	_title.text = seal.display_name
-	_description.text = seal.description
 	set_selected(false)
 
 

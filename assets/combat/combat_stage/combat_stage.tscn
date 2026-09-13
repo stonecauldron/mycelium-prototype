@@ -161,7 +161,7 @@ script = ExtResource("2_camera")
 unique_name_in_owner = true
 offset_left = 24.0
 offset_top = 16.0
-offset_right = 296.0
+offset_right = 200.0
 offset_bottom = 112.0
 
 [node name="FastForwardButton" type="Button" parent="HUD" unique_id=428364516]

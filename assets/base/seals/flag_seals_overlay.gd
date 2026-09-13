@@ -225,13 +225,9 @@ func _make_seal_block(seal: SealData) -> Control:
 	name_label.custom_minimum_size = Vector2(TOOLTIP_WIDTH, 0)
 	block.add_child(name_label)
 
-	var desc := Label.new()
-	desc.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	desc.text = seal.description if seal != null else ""
-	desc.add_theme_color_override("font_color", DESC)
-	desc.add_theme_font_size_override("font_size", 18)
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc.custom_minimum_size = Vector2(TOOLTIP_WIDTH, 0)
+	var desc := StatDisplay.make_rich_label(
+		seal.description if seal != null else "", 18, DESC, TOOLTIP_WIDTH
+	)
 	block.add_child(desc)
 	return block
 

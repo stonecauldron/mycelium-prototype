@@ -87,15 +87,13 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	title.add_theme_font_size_override("font_size", 28)
 	title.add_theme_color_override("font_color", Color(0.03, 0.035, 0.027, 1))
 	box.add_child(title)
-	var body := Label.new()
-	body.text = "Kill a unit for biomass.\nAdults also emit spores.\nChild +%d kg · Adult +%d kg" % [
-		BiomassData.COMPOST_CHILD,
-		BiomassData.COMPOST_ADULT,
-	]
-	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.custom_minimum_size = Vector2(220, 0)
-	body.add_theme_font_size_override("font_size", 20)
-	body.add_theme_color_override("font_color", Color(0.03, 0.035, 0.027, 1))
+	var body := StatDisplay.make_rich_label(
+		"Kill a unit for biomass.\nAdults also emit spores.\nChild %s\nAdult %s" % [
+			BiomassDisplay.text(BiomassData.COMPOST_CHILD, true),
+			BiomassDisplay.text(BiomassData.COMPOST_ADULT, true),
+		],
+		20, Color(0.03, 0.035, 0.027, 1), 220
+	)
 	box.add_child(body)
 	# The layout container extends above the sprite; keep the tooltip by the cursor.
 	return DetailTooltipPopup.configure(tip, true)

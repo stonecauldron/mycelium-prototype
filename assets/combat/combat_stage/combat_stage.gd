@@ -19,7 +19,6 @@ const _BASE_PHYSICS_TICKS := 60
 const _BIOMASS_NUMBER_SCENE := preload("res://assets/vfx/biomass_number/biomass_number.tscn")
 const _SPORE_GENERATED_SCENE := preload("res://assets/vfx/spore_generated/spore_generated.tscn")
 const _COMBAT_CALLOUT_SCENE := preload("res://assets/vfx/combat_callout/combat_callout.tscn")
-const _BIOMASS_DIGITS := 4
 const _VICTORY_HITSTOP_SCALE := 0.12
 const _VICTORY_HITSTOP_DURATION := 0.35
 const _VICTORY_CELEBRATE_SEC := 1.9
@@ -463,7 +462,7 @@ func _spawn_biomass_number(at_global: Vector2, amount: int) -> void:
 func _refresh_biomass_hud() -> void:
 	if _biomass_amount == null:
 		return
-	_biomass_amount.text = "%0*d kg" % [_BIOMASS_DIGITS, GameState.biomass.amount]
+	_biomass_amount.text = BiomassDisplay.number(GameState.biomass.amount)
 
 
 func _setup_army_hp_hud() -> void:

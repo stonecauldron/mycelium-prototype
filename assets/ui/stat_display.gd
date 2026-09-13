@@ -141,8 +141,18 @@ static func apply_to(
 		var start := matched.get_start()
 		if start > pos:
 			rtl.add_text(text.substr(pos, start - pos))
-		var tex := white_icon(matched.get_string())
-		if tex != null:
+		var token := matched.get_string()
+		var tex := white_icon(token)
+		if token.ends_with("biomass"):
+			var value := BiomassDisplay.token_number(token)
+			var value_color := color
+			if signed_value_coloring == SignedValueColoring.ALL:
+				value_color = _signed_value_color(value, color)
+			rtl.push_color(value_color)
+			BiomassDisplay.append_amount(rtl, value, font_size)
+			rtl.pop()
+			rtl.add_text(" biomass")
+		elif tex != null:
 			var px := icon_px(font_size)
 			rtl.add_image(tex, px, px, icon_color, INLINE_ALIGNMENT_CENTER)
 		else:
@@ -203,7 +213,14 @@ static func _fill_flow(
 			_add_text_run(flow, line.substr(pos, start - pos), font_size, text_color)
 		var token := matched.get_string()
 		var texture := white_icon(token)
-		if texture != null:
+		if token.ends_with("biomass"):
+			var value := BiomassDisplay.token_number(token)
+			var value_color := text_color
+			if signed_value_coloring == SignedValueColoring.ALL:
+				value_color = _signed_value_color(value, text_color)
+			flow.add_child(BiomassDisplay.make_amount(value, font_size, value_color))
+			flow.add_child(_make_text_label("biomass", font_size, text_color, false))
+		elif texture != null:
 			var icon: StatIcon = _STAT_ICON_SCENE.instantiate()
 			icon.setup(token, icon_px(font_size), icon_color)
 			icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -289,7 +306,7 @@ static func _signed_value_color(token: String, fallback: Color) -> Color:
 		return fallback
 	if token.begins_with("+"):
 		return GAIN_COLOR
-	if token.begins_with("-"):
+	if token.begins_with("-") or token.begins_with("−"):
 		return LOSS_COLOR
 	return fallback
 
@@ -299,18 +316,18 @@ static func _regex(signed_value_coloring: int) -> RegEx:
 		SignedValueColoring.ALL:
 			if _signed_value_regex == null:
 				_signed_value_regex = RegEx.new()
-				_signed_value_regex.compile("\\b(STR|DEX|CON)\\b|[+-]\\d+")
+				_signed_value_regex.compile(BiomassDisplay.TOKEN_PATTERN + "|\\b(STR|DEX|CON)\\b|[+-]\\d+")
 			return _signed_value_regex
 		SignedValueColoring.STAT_CHANGES:
 			if _signed_stat_value_regex == null:
 				_signed_stat_value_regex = RegEx.new()
 				_signed_stat_value_regex.compile(
-					"\\b(STR|DEX|CON)\\b|[+-]\\d+"
+					BiomassDisplay.TOKEN_PATTERN + "|\\b(STR|DEX|CON)\\b|[+-]\\d+"
 					+ "(?=[^+\\-\\d.!?\\n]*\\b(?i:stats?|str|dex|con)\\b)"
 				)
 			return _signed_stat_value_regex
 		_:
 			if _abbrev_regex == null:
 				_abbrev_regex = RegEx.new()
-				_abbrev_regex.compile("\\b(STR|DEX|CON)\\b")
+				_abbrev_regex.compile(BiomassDisplay.TOKEN_PATTERN + "|\\b(STR|DEX|CON)\\b")
 			return _abbrev_regex

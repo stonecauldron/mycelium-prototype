@@ -5,8 +5,6 @@ const _PORTRAIT_HOST_SIZE := Vector2(68, 84)
 const _PORTRAIT_SCALE := 0.54
 const _DAMAGE_PORTRAIT_HOST_SIZE := Vector2(100, 124)
 const _DAMAGE_PORTRAIT_SCALE := 0.78
-const _BIOMASS_ICON := preload("res://assets/base/biomass.png")
-const _BIOMASS_ICON_SIZE := Vector2(96, 96)
 const _SPORE_ICON := preload("res://assets/base/nursery/spores.png")
 const _SPORE_ICON_SIZE := Vector2(160, 160)
 const _PLOT_EMPTY := preload("res://assets/base/plot_tile/plot_empty.png")
@@ -197,7 +195,7 @@ func _populate_entries(entries: Array[Dictionary]) -> void:
 			_entries.add_child(_make_unit_row(text, unit, show_spore, spore_tint))
 			continue
 		if bool(entry.get("biomass", false)):
-			_entries.add_child(_make_biomass_row(text))
+			_entries.add_child(_make_entry_label(text))
 			continue
 		if bool(entry.get("nursery_ready", false)):
 			_entries.add_child(_make_nursery_row(
@@ -217,7 +215,17 @@ func _make_message_row(text: String) -> Control:
 	return _make_entry_label(text)
 
 
-func _make_entry_label(text: String) -> Label:
+func _make_entry_label(text: String) -> Control:
+	if "biomass" in text:
+		var rich := StatDisplay.make_rich_label(
+			text,
+			get_theme_font_size("font_size", "SummaryEntryLabel"),
+			get_theme_color("font_color", "SummaryEntryLabel")
+		)
+		rich.add_theme_font_override("normal_font", get_theme_font("font", "SummaryEntryLabel"))
+		rich.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		rich.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		return rich
 	var label := Label.new()
 	label.theme_type_variation = &"SummaryEntryLabel"
 	label.text = text
@@ -254,22 +262,6 @@ func _make_unit_row(
 		spore_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		spore_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		row.add_child(spore_icon)
-
-	return row
-
-
-func _make_biomass_row(text: String) -> Control:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 12)
-
-	var icon := TextureRect.new()
-	icon.custom_minimum_size = _BIOMASS_ICON_SIZE
-	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	icon.texture = _BIOMASS_ICON
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	row.add_child(icon)
-	row.add_child(_make_entry_label(text))
 
 	return row
 

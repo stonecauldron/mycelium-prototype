@@ -7,6 +7,6 @@
 script = ExtResource("1_seal")
 id = &"rotten_thumb"
 display_name = "Rotten Thumb"
-description = "Halves the cost of planting a spore (capped at 1 biomass)"
+description = "Halves the cost of planting a spore (minimum cost: 1 biomass)"
 icon = ExtResource("2_icon")
 plant_cost_halve = true

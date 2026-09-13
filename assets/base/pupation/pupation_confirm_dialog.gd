@@ -62,7 +62,8 @@ func _ready() -> void:
 	_confirm_button.pressed.connect(_on_confirm_pressed)
 	_confirm_button.icon = _BIOMASS_ICON
 	_confirm_button.expand_icon = true
-	_confirm_button.add_theme_constant_override("icon_max_width", 36)
+	_confirm_button.icon_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_confirm_button.add_theme_constant_override("icon_max_width", 24)
 	if _unit != null:
 		_refresh()
 
@@ -100,7 +101,7 @@ func _refresh() -> void:
 	_fill_result_side()
 
 	var can_afford := GameState.biomass.can_afford(WeaponSchool.COCOON_COST)
-	_confirm_button.text = "%d  Confirm" % WeaponSchool.COCOON_COST
+	_confirm_button.text = "Confirm %s" % BiomassDisplay.number(WeaponSchool.COCOON_COST)
 	_confirm_button.disabled = not can_afford
 	_confirm_button.modulate = Color.WHITE if can_afford else Color(0.55, 0.55, 0.55, 1)
 

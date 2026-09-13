@@ -206,7 +206,7 @@ theme_override_font_sizes/font_size = 28
 text = "4"
 
 [node name="PlantBiomassIcon" type="TextureRect" parent="Content/Margin/Stack/ActionSlot/PlantButton/PlantMargin/PlantContent" unique_id=216391884]
-custom_minimum_size = Vector2(34, 34)
+custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -260,7 +260,7 @@ theme_override_font_sizes/font_size = 28
 text = "4"
 
 [node name="UnlockBiomassIcon" type="TextureRect" parent="Content/Margin/Stack/ActionSlot/UnlockButton/UnlockMargin/UnlockContent" unique_id=216391877]
-custom_minimum_size = Vector2(34, 34)
+custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2

@@ -26,7 +26,7 @@ Biomass granted for winning a Battle. The amount is set by the Day and that enem
 *Avoid*: kill bounty, per-kill biomass, currency drop
 
 **Biomass**:
-The run's spendable resource, shown in kg.
+The Run's spendable resource.
 *Avoid*: gold, money, currency (unless speaking generically)
 
 **Reroll Increase**:

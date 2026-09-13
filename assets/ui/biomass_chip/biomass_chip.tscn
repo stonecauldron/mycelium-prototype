@@ -1,13 +1,11 @@
 [gd_scene format=3 uid="uid://dsqs8t51u2t41"]
 
-[ext_resource type="Texture2D" uid="uid://pspux35b3ad3" path="res://assets/base/biomass.png" id="1_biomass"]
+[ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="1_biomass"]
 [ext_resource type="Texture2D" uid="uid://b3j7ianjwcwe" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 9.png" id="1_wd0rh"]
 [ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="2_figtree"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yrttq"]
 texture = ExtResource("1_wd0rh")
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yrttq"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wd0rh"]
 
@@ -18,7 +16,8 @@ variation_opentype = {
 }
 
 [node name="PanelContainer" type="PanelContainer" unique_id=474878614]
-offset_right = 272.0
+custom_minimum_size = Vector2(176, 96)
+offset_right = 176.0
 offset_bottom = 97.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_yrttq")
 
@@ -27,18 +26,6 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_constants/separation = 0
-
-[node name="IconFrame" type="PanelContainer" parent="BiomassChip" unique_id=1102770493]
-custom_minimum_size = Vector2(96, 96)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxEmpty_yrttq")
-
-[node name="Icon" type="TextureRect" parent="BiomassChip/IconFrame" unique_id=744914500]
-layout_mode = 2
-texture = ExtResource("1_biomass")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="InfoFrame" type="PanelContainer" parent="BiomassChip" unique_id=1370364344]
 custom_minimum_size = Vector2(176, 96)
@@ -56,11 +43,26 @@ layout_mode = 2
 theme_override_fonts/font = SubResource("Font_biomass_amount")
 theme_override_font_sizes/font_size = 22
 text = "BIOMASS"
+horizontal_alignment = 1
 
-[node name="BiomassAmount" type="Label" parent="BiomassChip/InfoFrame/InfoVBox" unique_id=2042971913]
+[node name="AmountRow" type="HBoxContainer" parent="BiomassChip/InfoFrame/InfoVBox"]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="BiomassAmount" type="Label" parent="BiomassChip/InfoFrame/InfoVBox/AmountRow" unique_id=2042971913]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_fonts/font = SubResource("Font_biomass_amount")
 theme_override_font_sizes/font_size = 36
-text = "0000 kg"
+text = "0"
+
+[node name="Icon" type="TextureRect" parent="BiomassChip/InfoFrame/InfoVBox/AmountRow" unique_id=744914500]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("1_biomass")
+expand_mode = 1
+stretch_mode = 5

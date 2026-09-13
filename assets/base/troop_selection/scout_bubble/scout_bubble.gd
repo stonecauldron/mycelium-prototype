@@ -78,7 +78,7 @@ func show_specs(specs: Array[EnemyUnitSpec], title: String, day: int = -1) -> vo
 		_scout_row.add_child(entry_card)
 		entry_card.setup(count, unit_data)
 	if _scout_reward_label != null:
-		_scout_reward_label.text = "+%d" % EnemyComposer.battle_reward_for(_reward_day, specs)
+		_scout_reward_label.text = BiomassDisplay.number(EnemyComposer.battle_reward_for(_reward_day, specs), true)
 
 
 func _title_for_day(day: int, include_day: bool) -> String:

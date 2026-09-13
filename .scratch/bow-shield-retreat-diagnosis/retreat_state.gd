@@ -28,7 +28,7 @@ func _run() -> void:
 
 func _print_positioning() -> void:
 	var profiles: Dictionary = {}
-	for id in ["bow", "crossbow", "sniper", "sling", "mortar", "giant_horn",
+	for id in ["bow", "crossbow", "great_bow", "sling", "mortar", "giant_horn",
 		"spear", "spear_and_shield", "scythe", "great_spear", "polehammer"]:
 		var weapon := load("res://assets/weapons/%s/%s.tres" % [id, id]) as WeaponData
 		profiles[id] = CombatProfile.from_weapon(weapon)

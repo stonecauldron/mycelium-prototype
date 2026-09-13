@@ -1,6 +1,6 @@
 # Bow / shield retreat diagnostic
 
-Current tuning: both sides use 80-pixel Home slot spacing. Bow, Sniper, Mortar,
+Current tuning: both sides use 80-pixel Home slot spacing. Bow, Great Bow, Mortar,
 Peashooter, and Seed Lobber enter retreat at 144 pixels in every slot. Crossbow,
 Sling, and Giant Horn retain the 80-pixel skirmish default. Retreat and hybrid melee-approach
 thresholds use the authored combat distance without a slot deduction; ranged
@@ -60,7 +60,7 @@ bow + Great Shield / Umbrella Shield against three Solar Swords,
 and eight modified melee weapons individually against a Solar Sword.
 
 - All six ranged + Shield cases keep firing without sustained squad retreat.
-  Bow makes 3 pixels of backward adjustment; Sniper makes 1.5; the others zero.
+  Bow makes 3 pixels of backward adjustment; Great Bow makes 1.5; the others zero.
 - Great Shield also avoids sustained retreat; the bow adjusts backward 3 pixels.
 - Every modified melee weapon deals damage and performs a melee attack or,
   for Lance, a charge.
@@ -282,7 +282,7 @@ behavior decision rather than another unconditional distance increase.
 
 ## Other ranged weapons (September 7, 2026)
 
-Extended the 144-pixel skirmish distance to Sniper and Mortar, plus the enemy
+Extended the 144-pixel skirmish distance to Great Bow and Mortar, plus the enemy
 Mortar counterpart Seed Lobber. Crossbow, Sling, and Giant Horn retain 80 pixels
 as requested. With the existing 24-pixel hysteresis, these groups stop retreating
 at 168 and 104 pixels respectively. Hybrid melee-switch distances are unchanged.

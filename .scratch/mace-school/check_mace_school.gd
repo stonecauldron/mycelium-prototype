@@ -6,7 +6,7 @@ const _BASE := preload("res://assets/base/base.tscn")
 const _STARTERS := preload("res://assets/base/troop_selection/starter_choice_dialog.tscn")
 const _RECIPES := [
 	[S.SWORD, S.SWORD, "Great Sword"], [S.SHIELD, S.SHIELD, "Great Shield"],
-	[S.SPEAR, S.SPEAR, "Great Spear"], [S.BOW, S.BOW, "Sniper"],
+	[S.SPEAR, S.SPEAR, "Great Spear"], [S.BOW, S.BOW, "Great Bow"],
 	[S.MACE, S.MACE, "Great Hammer"], [S.SWORD, S.SHIELD, "Sword and Shield"],
 	[S.SWORD, S.SPEAR, "Lance"], [S.SWORD, S.BOW, "Crossbow"],
 	[S.SHIELD, S.SPEAR, "Spear and Shield"], [S.SHIELD, S.BOW, "Umbrella Shield"],

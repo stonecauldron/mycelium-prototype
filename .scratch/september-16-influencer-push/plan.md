@@ -19,7 +19,7 @@ Success: a first-time player gets through the opening choices, first battle, Nur
 - Existing contextual hints cover actions such as starting combat, planting, harvesting, and buying. Watch actual unfamiliar players before deciding how much extra explanation is needed.
 - The stored Steam header capsule is a title over environment art, without the mushroom fighters. This is a clear opportunity to communicate the hook. The live Steam page could not be inspected here; local assets are not proof of what is published.
 - There are 24 weapon resource files, while the current training resolver names 21 player weapon paths. Do not assume every file needs a redraw for this push.
-- The five opening Adult weapons are Great Sword, Great Hammer, Sniper, Great Spear, and Great Shield. These, then the five base school weapons, are the sensible art order.
+- The five opening Adult weapons are Great Sword, Great Hammer, Great Bow, Great Spear, and Great Shield. These, then the five base school weapons, are the sensible art order.
 - Local specs and galleries record recent combat, animation, and menu work. They are historical evidence, not a fresh validation of this build.
 
 ## Priority and bounded deliverables
@@ -58,7 +58,7 @@ Do a cohesion/readability pass, with a deliberately small redraw list. The cap i
 
 Order:
 
-1. Great Sword, Great Hammer, Sniper, Great Spear, Great Shield: all opening packages get coherent, readable silhouettes.
+1. Great Sword, Great Hammer, Great Bow, Great Spear, Great Shield: all opening packages get coherent, readable silhouettes.
 2. Sword, Mace, Shield, Spear, Bow: core schools and training language match the starting weapons.
 3. Essential icons: weapon schools, biomass, train, compost, scout/reroll, plant/harvest, Body/Cap mutation distinction. Improve repeated action/category recognition before committing to unique art for every Seal/Fertilizer.
 4. Remaining combo weapons only within leftover time; shared palette/outline cleanup is cheaper than complete redesign.

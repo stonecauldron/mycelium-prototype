@@ -22,7 +22,7 @@ const _GREAT_SPEAR_WEAPON := preload("res://assets/weapons/great_spear/great_spe
 const _GREAT_SHIELD_WEAPON := preload("res://assets/weapons/great_shield/great_shield.tres")
 const _UMBRELLA_WEAPON := preload("res://assets/weapons/umbrella/umbrella.tres")
 const _CROSSBOW_WEAPON := preload("res://assets/weapons/crossbow/crossbow.tres")
-const _SNIPER_WEAPON := preload("res://assets/weapons/sniper/sniper.tres")
+const _GREAT_BOW_WEAPON := preload("res://assets/weapons/great_bow/great_bow.tres")
 const _MORTAR_WEAPON := preload("res://assets/weapons/mortar/mortar.tres")
 const _GIANT_HORN_WEAPON := preload("res://assets/weapons/giant_horn/giant_horn.tres")
 
@@ -59,7 +59,7 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Great Shield", "weapon": _GREAT_SHIELD_WEAPON},
 	{"name": "Umbrella", "weapon": _UMBRELLA_WEAPON},
 	{"name": "Crossbow", "weapon": _CROSSBOW_WEAPON},
-	{"name": "Sniper", "weapon": _SNIPER_WEAPON},
+	{"name": "Great Bow", "weapon": _GREAT_BOW_WEAPON},
 	{"name": "Mortar", "weapon": _MORTAR_WEAPON},
 	{"name": "Giant Horn", "weapon": _GIANT_HORN_WEAPON},
 ]

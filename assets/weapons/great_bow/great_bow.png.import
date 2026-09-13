@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://gjxgv6j2rmgu"
-path="res://.godot/imported/sniper.png-bae484901c14660c64c7a06a7f0c998b.ctex"
+path="res://.godot/imported/great_bow.png-fcbc52609b5d04ae891a912832af7869.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/weapons/sniper/sniper.png"
-dest_files=["res://.godot/imported/sniper.png-bae484901c14660c64c7a06a7f0c998b.ctex"]
+source_file="res://assets/weapons/great_bow/great_bow.png"
+dest_files=["res://.godot/imported/great_bow.png-fcbc52609b5d04ae891a912832af7869.ctex"]
 
 [params]
 

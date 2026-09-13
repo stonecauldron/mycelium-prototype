@@ -23,7 +23,7 @@ Design confirmed by the user, including paired-shield placement. Implemented and
 - Sword + Sword: Great Sword.
 - Shield + Shield: Great Shield.
 - Spear + Spear: Great Spear.
-- Bow + Bow: Sniper.
+- Bow + Bow: Great Bow.
 - Mace + Mace: Great Hammer.
 - Sword + Shield: Sword and Shield.
 - Sword + Spear: Lance.

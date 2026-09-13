@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bm6kc8hkb8t5c"]
 
-[ext_resource type="Texture2D" uid="uid://gjxgv6j2rmgu" path="res://assets/weapons/sniper/sniper.png" id="1_tex"]
+[ext_resource type="Texture2D" uid="uid://gjxgv6j2rmgu" path="res://assets/weapons/great_bow/great_bow.png" id="1_tex"]
 
-[node name="SniperAppearance" type="Node2D" unique_id=926587832]
+[node name="GreatBowAppearance" type="Node2D" unique_id=926587832]
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=1508257398]
 rotation = 0.2

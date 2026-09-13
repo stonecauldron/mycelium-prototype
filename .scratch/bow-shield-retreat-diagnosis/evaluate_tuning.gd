@@ -1,7 +1,7 @@
 extends Node
 
 const STAGE := preload("res://assets/combat/combat_stage/combat_stage.tscn")
-const RANGED := ["bow", "crossbow", "sniper", "sling", "mortar", "giant_horn"]
+const RANGED := ["bow", "crossbow", "great_bow", "sling", "mortar", "giant_horn"]
 const MELEE := [
 	"great_sword", "great_hammer", "warhammer", "spear", "spear_and_shield",
 	"great_spear", "polehammer", "lance",

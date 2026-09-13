@@ -21,7 +21,7 @@ const _MORTAR_SPORE_COLOR := Color("9dcc6a")
 @export var explode_delay: float = 0.0
 ## Keep flying through units, damaging each once (giant horn). Unrelated to blunt damage type.
 @export var piercing: bool = false
-## After ballistic apex, steer toward a locked target with no gravity (sniper).
+## After ballistic apex, steer toward a locked target with no gravity (great bow).
 @export var homing: bool = false
 
 var damage: int = 0

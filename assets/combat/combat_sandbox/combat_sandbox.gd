@@ -307,6 +307,9 @@ func _make_unit(weapon: WeaponData) -> RosterUnitData:
 	)
 	if _imago_checkbox != null and _imago_checkbox.button_pressed:
 		unit.promote_to_imago()
+		# Sandbox equipment overrides the weapon resolved from training on promotion.
+		unit.weapon = weapon
+		unit.ensure_combat_profile()
 	return unit
 
 

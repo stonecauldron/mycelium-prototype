@@ -8,7 +8,7 @@ const PACKAGE_IDS: Array[StringName] = [
 	&"great_sword_spear",
 	&"great_hammer",
 	&"sniper_shield",
-	&"halberd_sword",
+	&"great_spear_sword",
 	&"great_shield_bow",
 ]
 
@@ -25,7 +25,7 @@ static func display_name(package_id: StringName) -> String:
 			return "Breakers"
 		&"sniper_shield":
 			return "Long-range Death"
-		&"halberd_sword":
+		&"great_spear_sword":
 			return "Pikes"
 		&"great_shield_bow":
 			return "Fortress"
@@ -48,7 +48,7 @@ static func def_for(package_id: StringName) -> Dictionary:
 			return {
 				"evolved_schools": [WeaponSchool.Id.BOW, WeaponSchool.Id.BOW],
 			}
-		&"halberd_sword":
+		&"great_spear_sword":
 			return {
 				"evolved_schools": [WeaponSchool.Id.SPEAR, WeaponSchool.Id.SPEAR],
 			}

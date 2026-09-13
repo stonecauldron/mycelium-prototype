@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://du6sw25k08ld8"
-path="res://.godot/imported/halberd.png-60a7cd341d93a25ca60deee4844cafce.ctex"
+path="res://.godot/imported/great_spear.png-eeb1d1bad12b90b5da901e5355b64af8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/weapons/halberd/halberd.png"
-dest_files=["res://.godot/imported/halberd.png-60a7cd341d93a25ca60deee4844cafce.ctex"]
+source_file="res://assets/weapons/great_spear/great_spear.png"
+dest_files=["res://.godot/imported/great_spear.png-eeb1d1bad12b90b5da901e5355b64af8.ctex"]
 
 [params]
 

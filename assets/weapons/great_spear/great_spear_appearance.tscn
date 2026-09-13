@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bps61y7f06hyf"]
 
-[ext_resource type="Texture2D" uid="uid://du6sw25k08ld8" path="res://assets/weapons/halberd/halberd.png" id="1_tex"]
+[ext_resource type="Texture2D" uid="uid://du6sw25k08ld8" path="res://assets/weapons/great_spear/great_spear.png" id="1_tex"]
 
-[node name="HalberdAppearance" type="Node2D"]
+[node name="GreatSpearAppearance" type="Node2D"]
 
 [node name="Visual" type="Sprite2D" parent="."]
 position = Vector2(4, -18)

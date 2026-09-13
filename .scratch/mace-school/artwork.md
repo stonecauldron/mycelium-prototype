@@ -25,9 +25,9 @@ References: `assets/weapons/great_hammer/greathammer.png`.
 ### polehammer
 
 Use case: stylized-concept. Asset type: production sprite for a hand-drawn 2D game, not a mockup. Match the supplied game's very simple thick near-black hand-drawn outlines, flat muted warm-gray metal and dark desaturated green handles. No gradients, highlights, texture, shadows, text, frame, hands, or character. Genuine transparent background, no checkerboard drawn into image. One centered isolated item, upright, fully visible with modest transparent padding. Keep forms exceptionally simple and readable at 50–100 pixels.
-Using the supplied halberd as a style/length reference and great hammer as metal style reference, create a Polehammer: straight long slender dark green pole ending in a compact horizontal block-headed warm-gray hammer. Small blunt rear peen; NO axe blade, NO spear tip. Long shaft occupies lower 75% of height. Vertical, handle end at bottom center.
+Using the supplied Great Spear as a style/length reference and great hammer as metal style reference, create a Polehammer: straight long slender dark green pole ending in a compact horizontal block-headed warm-gray hammer. Small blunt rear peen; NO axe blade, NO spear tip. Long shaft occupies lower 75% of height. Vertical, handle end at bottom center.
 
-References: `assets/weapons/halberd/halberd.png`, `assets/weapons/great_hammer/greathammer.png`.
+References: `assets/weapons/great_spear/great_spear.png`, `assets/weapons/great_hammer/greathammer.png`.
 
 ### sling — original, superseded by the Y-shaped slingshot below
 

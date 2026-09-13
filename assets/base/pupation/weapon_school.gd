@@ -23,7 +23,7 @@ const _CROSSBOW_PATH := "res://assets/weapons/crossbow/crossbow.tres"
 const _GREAT_SHIELD_PATH := "res://assets/weapons/great_shield/great_shield.tres"
 const _GREAT_HAMMER_PATH := "res://assets/weapons/great_hammer/great_hammer.tres"
 const _UMBRELLA_PATH := "res://assets/weapons/umbrella/umbrella.tres"
-const _HALBERD_PATH := "res://assets/weapons/halberd/halberd.tres"
+const _GREAT_SPEAR_PATH := "res://assets/weapons/great_spear/great_spear.tres"
 const _MORTAR_PATH := "res://assets/weapons/mortar/mortar.tres"
 const _SNIPER_PATH := "res://assets/weapons/sniper/sniper.tres"
 const _SWORD_SHIELD_PATH := "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
@@ -81,7 +81,7 @@ static func combo_weapon_path(a: int, b: int) -> String:
 			Id.SHIELD:
 				return _GREAT_SHIELD_PATH
 			Id.SPEAR:
-				return _HALBERD_PATH
+				return _GREAT_SPEAR_PATH
 			Id.BOW:
 				return _SNIPER_PATH
 			Id.MACE:

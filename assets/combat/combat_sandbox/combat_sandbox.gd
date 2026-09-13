@@ -18,7 +18,7 @@ const _MACE_SHIELD_WEAPON := preload("res://assets/weapons/mace_and_shield/mace_
 const _SPEAR_SHIELD_WEAPON := preload("res://assets/weapons/spear_and_shield/spear_and_shield.tres")
 const _LANCE_WEAPON := preload("res://assets/weapons/lance/lance.tres")
 const _SCYTHE_WEAPON := preload("res://assets/weapons/scythe/scythe.tres")
-const _HALBERD_WEAPON := preload("res://assets/weapons/halberd/halberd.tres")
+const _GREAT_SPEAR_WEAPON := preload("res://assets/weapons/great_spear/great_spear.tres")
 const _GREAT_SHIELD_WEAPON := preload("res://assets/weapons/great_shield/great_shield.tres")
 const _UMBRELLA_WEAPON := preload("res://assets/weapons/umbrella/umbrella.tres")
 const _CROSSBOW_WEAPON := preload("res://assets/weapons/crossbow/crossbow.tres")
@@ -55,7 +55,7 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Spear and Shield", "weapon": _SPEAR_SHIELD_WEAPON},
 	{"name": "Lance", "weapon": _LANCE_WEAPON},
 	{"name": "Scythe", "weapon": _SCYTHE_WEAPON},
-	{"name": "Halberd", "weapon": _HALBERD_WEAPON},
+	{"name": "Great Spear", "weapon": _GREAT_SPEAR_WEAPON},
 	{"name": "Great Shield", "weapon": _GREAT_SHIELD_WEAPON},
 	{"name": "Umbrella", "weapon": _UMBRELLA_WEAPON},
 	{"name": "Crossbow", "weapon": _CROSSBOW_WEAPON},

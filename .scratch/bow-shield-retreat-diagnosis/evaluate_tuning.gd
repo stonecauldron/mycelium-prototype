@@ -4,7 +4,7 @@ const STAGE := preload("res://assets/combat/combat_stage/combat_stage.tscn")
 const RANGED := ["bow", "crossbow", "sniper", "sling", "mortar", "giant_horn"]
 const MELEE := [
 	"great_sword", "great_hammer", "warhammer", "spear", "spear_and_shield",
-	"halberd", "polehammer", "lance",
+	"great_spear", "polehammer", "lance",
 ]
 const FRAMES := 1080
 

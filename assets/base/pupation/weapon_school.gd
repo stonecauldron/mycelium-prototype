@@ -31,7 +31,7 @@ const _SPEAR_SHIELD_PATH := "res://assets/weapons/spear_and_shield/spear_and_shi
 const _MACE_SHIELD_PATH := "res://assets/weapons/mace_and_shield/mace_and_shield.tres"
 const _WARHAMMER_PATH := "res://assets/weapons/warhammer/warhammer.tres"
 const _POLEHAMMER_PATH := "res://assets/weapons/polehammer/polehammer.tres"
-const _SLING_PATH := "res://assets/weapons/sling/sling.tres"
+const _GREAT_HORN_PATH := "res://assets/weapons/giant_horn/giant_horn.tres"
 
 ## school -> { strength, dex, con }
 const SCHOOL_STAT_DELTAS := {
@@ -108,7 +108,7 @@ static func combo_weapon_path(a: int, b: int) -> String:
 			Id.SPEAR:
 				return _POLEHAMMER_PATH
 			Id.BOW:
-				return _SLING_PATH
+				return _GREAT_HORN_PATH
 	return _SICKLE_PATH
 
 

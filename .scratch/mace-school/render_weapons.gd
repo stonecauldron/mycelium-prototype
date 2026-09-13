@@ -1,6 +1,6 @@
 extends Node2D
 
-const _WEAPONS := ["warhammer", "polehammer", "sling", "sword_and_shield", "mace_and_shield", "spear_and_shield"]
+const _WEAPONS := ["warhammer", "polehammer", "giant_horn", "sword_and_shield", "mace_and_shield", "spear_and_shield"]
 const _FONT := preload("res://assets/fonts/SpicyRice-Regular.ttf")
 
 

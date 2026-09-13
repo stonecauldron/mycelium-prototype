@@ -7,7 +7,7 @@
 
 [resource]
 script = ExtResource("1_weapon")
-display_name = "Giant Horn"
+display_name = "Great Horn"
 short_description = "Flat blunt sonic blast that punches through a line of foes."
 formation_line = 1
 engagement_stance = 3

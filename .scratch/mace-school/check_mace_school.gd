@@ -12,7 +12,7 @@ const _RECIPES := [
 	[S.SHIELD, S.SPEAR, "Spear and Shield"], [S.SHIELD, S.BOW, "Umbrella Shield"],
 	[S.SPEAR, S.BOW, "Spore Mortar"], [S.MACE, S.SWORD, "Warhammer"],
 	[S.MACE, S.SHIELD, "Mace and Shield"], [S.MACE, S.SPEAR, "Polehammer"],
-	[S.MACE, S.BOW, "Sling"],
+	[S.MACE, S.BOW, "Great Horn"],
 ]
 var _failures: Array[String] = []
 var _checks := 0
@@ -71,17 +71,18 @@ func _check_recipes() -> void:
 	_check(paths.size() == 15, "15 distinct combo identities")
 	var crossbow := WeaponSchool.resolve_weapon([S.SWORD, S.BOW])
 	_check(crossbow.damage_type == WeaponData.DamageType.SLASHING, "Crossbow non-blunt")
-	var sling := WeaponSchool.resolve_weapon([S.MACE, S.BOW])
-	var sling_projectile := sling.projectile_scene.instantiate() as Projectile
+	var horn := WeaponSchool.resolve_weapon([S.MACE, S.BOW])
+	var horn_projectile := horn.projectile_scene.instantiate() as Projectile
 	var bolt := crossbow.projectile_scene.instantiate() as Projectile
-	_check(sling.damage_type == WeaponData.DamageType.BLUNT, "Sling blunt")
-	_check(sling_projectile.launch_angle_deg == bolt.launch_angle_deg, "Sling launch angle")
-	_check(sling_projectile.fallback_speed == bolt.fallback_speed, "Sling fallback speed")
-	_check(sling_projectile.max_lifetime == bolt.max_lifetime, "Sling projectile lifetime")
+	_check(horn.damage_type == WeaponData.DamageType.BLUNT, "Great Horn blunt")
+	_check(horn_projectile.piercing, "Great Horn pierces enemies")
+	_check(horn_projectile.launch_angle_deg == bolt.launch_angle_deg, "Great Horn launch angle")
+	_check(horn_projectile.fallback_speed == bolt.fallback_speed, "Great Horn fallback speed")
+	_check(horn_projectile.max_lifetime == bolt.max_lifetime, "Great Horn projectile lifetime")
 	var origin := Vector2(0, 500)
 	var target := Vector2(700, 650)
-	_check(sling_projectile._compute_launch_velocity(origin, target).is_equal_approx(bolt._compute_launch_velocity(origin, target)), "Sling trajectory matches Crossbow")
-	sling_projectile.free()
+	_check(horn_projectile._compute_launch_velocity(origin, target).is_equal_approx(bolt._compute_launch_velocity(origin, target)), "Great Horn trajectory matches Crossbow")
+	horn_projectile.free()
 	bolt.free()
 	for recipe in [[S.MACE, S.SPEAR], [S.SPEAR, S.SHIELD]]:
 		var hybrid := WeaponSchool.resolve_weapon(recipe)

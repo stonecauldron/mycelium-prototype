@@ -19,7 +19,7 @@ const _MORTAR_SPORE_COLOR := Color("9dcc6a")
 @export var aoe_radius: float = 0.0
 ## Fuse seconds after landing before AOE (mortar). >0 also ignores unit collisions in flight.
 @export var explode_delay: float = 0.0
-## Keep flying through units, damaging each once (giant horn). Unrelated to blunt damage type.
+## Keep flying through units, damaging each once (great horn). Unrelated to blunt damage type.
 @export var piercing: bool = false
 ## After ballistic apex, steer toward a locked target with no gravity (great bow).
 @export var homing: bool = false

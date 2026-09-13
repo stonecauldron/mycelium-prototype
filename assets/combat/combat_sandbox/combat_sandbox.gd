@@ -12,7 +12,6 @@ const _GREAT_HAMMER_WEAPON := preload("res://assets/weapons/great_hammer/great_h
 const _MACE_WEAPON := preload("res://assets/weapons/mace/mace.tres")
 const _WARHAMMER_WEAPON := preload("res://assets/weapons/warhammer/warhammer.tres")
 const _POLEHAMMER_WEAPON := preload("res://assets/weapons/polehammer/polehammer.tres")
-const _SLING_WEAPON := preload("res://assets/weapons/sling/sling.tres")
 const _SWORD_SHIELD_WEAPON := preload("res://assets/weapons/sword_and_shield/sword_and_shield.tres")
 const _MACE_SHIELD_WEAPON := preload("res://assets/weapons/mace_and_shield/mace_and_shield.tres")
 const _SPEAR_SHIELD_WEAPON := preload("res://assets/weapons/spear_and_shield/spear_and_shield.tres")
@@ -24,7 +23,7 @@ const _UMBRELLA_WEAPON := preload("res://assets/weapons/umbrella/umbrella.tres")
 const _CROSSBOW_WEAPON := preload("res://assets/weapons/crossbow/crossbow.tres")
 const _GREAT_BOW_WEAPON := preload("res://assets/weapons/great_bow/great_bow.tres")
 const _MORTAR_WEAPON := preload("res://assets/weapons/mortar/mortar.tres")
-const _GIANT_HORN_WEAPON := preload("res://assets/weapons/giant_horn/giant_horn.tres")
+const _GREAT_HORN_WEAPON := preload("res://assets/weapons/giant_horn/giant_horn.tres")
 
 const _SOLAR_SWORD_ENEMY := preload("res://assets/units/enemies/solar_sword/solar_sword_unit.tres")
 const _ROSE_THORN_ENEMY := preload("res://assets/units/enemies/rose_thorn/rose_thorn_unit.tres")
@@ -49,7 +48,7 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Mace", "weapon": _MACE_WEAPON},
 	{"name": "Warhammer", "weapon": _WARHAMMER_WEAPON},
 	{"name": "Polehammer", "weapon": _POLEHAMMER_WEAPON},
-	{"name": "Sling", "weapon": _SLING_WEAPON},
+	{"name": "Great Horn", "weapon": _GREAT_HORN_WEAPON},
 	{"name": "Sword and Shield", "weapon": _SWORD_SHIELD_WEAPON},
 	{"name": "Mace and Shield", "weapon": _MACE_SHIELD_WEAPON},
 	{"name": "Spear and Shield", "weapon": _SPEAR_SHIELD_WEAPON},
@@ -61,7 +60,6 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Crossbow", "weapon": _CROSSBOW_WEAPON},
 	{"name": "Great Bow", "weapon": _GREAT_BOW_WEAPON},
 	{"name": "Mortar", "weapon": _MORTAR_WEAPON},
-	{"name": "Giant Horn", "weapon": _GIANT_HORN_WEAPON},
 ]
 
 const _ENEMY_OPTIONS: Array[Dictionary] = [

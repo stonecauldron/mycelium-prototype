@@ -2,7 +2,7 @@ extends Node
 
 const _STAGE := preload("res://assets/combat/combat_stage/combat_stage.tscn")
 const _ENEMY := preload("res://assets/units/enemies/solar_sword/solar_sword_unit.tres")
-const _IDS := ["warhammer", "polehammer", "sling", "sword_and_shield", "mace_and_shield", "spear_and_shield"]
+const _IDS := ["warhammer", "polehammer", "giant_horn", "sword_and_shield", "mace_and_shield", "spear_and_shield"]
 
 
 func _ready() -> void:

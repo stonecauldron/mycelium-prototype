@@ -22,6 +22,8 @@ godot --headless --path . res://.scratch/settings-menu/runtime_check.tscn
 - Existing settings/menu regression: **0 failures**, covering Base choices, menus, paused combat at 1×/2×/4×, projectiles, Zombie respawn, hitstop, and timing restoration on exit.
 - Godot editor loading completed without script parse errors. There is no configured project-wide test framework or linter; these are focused runtime scenes and the existing combat/menu smoke suites.
 
+After the dialogue edits in `5179752`, the Bark checks now derive victory expectations and opening-cycle length from `BarkData.LINES`. The visual fixture selects the longest current personalized mourning line, uses a bounded pool search, and checks the rendered label against the paper body with padding. The updated acceptance scene completed with **0 failures**, and all **5 visual assertions passed**. The longer mourning line remains inside the paper; no dialogue or production layout changes were needed.
+
 ## Visual checks
 
 ```sh

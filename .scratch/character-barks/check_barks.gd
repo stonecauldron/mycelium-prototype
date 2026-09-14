@@ -180,10 +180,7 @@ func _run() -> void:
 	for enemy: Unit in stage.enemy_troop.get_units():
 		enemy.take_damage(99999)
 	await _wait()
-	_check(_line_text(stage) in [
-		"The Mycelium endures!", "The shade is ours!", "Victory, comrades!",
-		"The sun has lost!", "Let the fallen rest.", "A glorious day for decomposition!",
-	], "Victory interrupts mourning with a survivor's victory line")
+	_check(_line_text(stage) in BarkData.LINES[BarkData.Kind.VICTORY], "Victory interrupts mourning with a survivor's victory line")
 	await _wait(2.1)
 	_check(_line_text(stage).is_empty(), "Victory Bark ends after two seconds")
 	stage.queue_free()
@@ -285,7 +282,8 @@ func _opening_pool() -> void:
 	GameState.combat_fast_forward = 1
 	var seen: Array[String] = []
 	var previous := ""
-	for i in 7:
+	var pool: Array = BarkData.LINES[BarkData.Kind.OPENING]
+	for i in pool.size() + 1:
 		var stage := _battle()
 		# Spawning is complete; the next frame displays the opening. Its
 		# cosmetic selection must leave the global combat RNG untouched.
@@ -295,11 +293,11 @@ func _opening_pool() -> void:
 		await _wait(0.15)
 		_check(randi() == expected, "Opening dialogue leaves gameplay randomness unchanged")
 		var line := _line_text(stage)
-		if i < 6:
-			_check(not line.is_empty() and line not in seen, "Opening pool does not repeat across Battles before exhaustion")
+		if i < pool.size():
+			_check(not line.is_empty() and line in pool and line not in seen, "Opening pool does not repeat across Battles before exhaustion")
 			seen.append(line)
 		else:
-			_check(line in seen and line != previous, "Exhausted pool reshuffles without an immediate repeat")
+			_check(line in seen and (pool.size() == 1 or line != previous), "Exhausted pool starts a new cycle without repeating immediately when possible")
 		previous = line
 		stage.queue_free()
 		await _wait(0.02)
@@ -317,12 +315,24 @@ func _visuals() -> void:
 	var fallen: Unit = stage.player_troop.get_units()[0]
 	fallen.roster_data.display_name = "Alexandria XXVIII"
 	stage.player_troop.get_units()[1].roster_data.display_name = "Bartholomew XXXVIII"
-	# Choose the longest approved template for a concrete layout stress case.
-	while not GameState.barks.line_for(BarkData.Kind.MOURNING).begins_with("Fear not"):
+	# Select from the current copy so editing/removing a line cannot leave
+	# this fixture searching forever for an obsolete phrase.
+	var mourning_pool: Array = BarkData.LINES[BarkData.Kind.MOURNING]
+	var longest_template := ""
+	var expected_line := ""
+	for template: String in mourning_pool:
+		var personalized := template.replace("{fallen_name}", fallen.roster_data.display_name)
+		if "{fallen_name}" in template and personalized.length() > expected_line.length():
+			longest_template = template
+			expected_line = personalized
+	_check(not expected_line.is_empty(), "Mourning pool has a personalized line to verify")
+	for _i in mourning_pool.size():
+		if GameState.barks.line_for(BarkData.Kind.MOURNING) == longest_template:
+			break
 		GameState.barks.mark_shown(BarkData.Kind.MOURNING)
 	fallen.take_damage(fallen.current_hp)
 	await _wait(0.8)
-	_check(_line_text(stage) == "Fear not, we will avenge you, comrade Alexandria XXVIII!", "Named mourning substitutes the full fallen name")
+	_check(_line_text(stage) == expected_line, "Named mourning substitutes the full fallen name")
 	_check(_speaker_text(stage) == "Bartholomew XXXVIII", "Full long speaker name is shown in the header")
 	await _capture("mourning-long-names")
 	var camera := stage.get_node("World/MainCamera") as Camera2D
@@ -331,7 +341,12 @@ func _visuals() -> void:
 	await _wait(0.1)
 	await _capture("mourning-zoomed-out")
 	var line := stage.get_node("World/CombatBarks/BarkBubble/Line") as Label
-	_check(line.get_minimum_size().y <= 140.0, "Longest personalized line fits within the paper")
+	var paper := stage.get_node("World/CombatBarks/BarkBubble/Paper") as Sprite2D
+	var paper_body := paper.transform * paper.get_rect()
+	# Exclude the texture's 44 px tail, then require a 16 px paper inset.
+	# Labels can grow beyond their authored height when longer copy wraps.
+	paper_body.size.y -= 44.0
+	_check(paper_body.grow(-16.0).encloses(line.get_rect()), "Longest personalized line fits within the paper")
 	var header := stage.get_node("World/CombatBarks/BarkBubble/SpeakerName") as Label
 	_check(header.get_minimum_size().y <= 52.0, "Long speaker name fits within the teal header")
 	stage.queue_free()

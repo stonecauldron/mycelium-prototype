@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://csk88ry31w6fh"]
+
+[ext_resource type="Texture2D" uid="uid://ckqwn77kfn1fi" path="res://assets/weapons/rapier/rapier.png" id="1_tex"]
+
+[node name="RapierAppearance" type="Node2D" unique_id=228346970]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=675332031]
+rotation = 0.7784169
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_tex")
+offset = Vector2(1.2624092, -187.32217)

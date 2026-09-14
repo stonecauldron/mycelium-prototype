@@ -1,0 +1,29 @@
+{
+  "path": "assets/weapons/bow/arrow.png",
+  "size": [
+    64,
+    24
+  ],
+  "bounds": [
+    1,
+    4,
+    62,
+    20
+  ],
+  "render_scale": 0.8,
+  "visual_offset": [
+    0.25,
+    0.0
+  ],
+  "world_length": 48.8,
+  "world_height": 12.8,
+  "alpha_range": [
+    0,
+    255
+  ],
+  "previous_size": [
+    512,
+    512
+  ],
+  "pixel_count_reduction_percent": 99.4140625
+}

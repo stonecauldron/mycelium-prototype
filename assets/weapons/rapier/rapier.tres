@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" uid="uid://csk88ry31w6fh" path="res://assets/weapons/rapier/rapier_appearance.tscn" id="2_appear"]
-[ext_resource type="Texture2D" uid="uid://ckqwn77kfn1fi" path="res://assets/weapons/rapier/rapier.png" id="3_icon"]
+[ext_resource type="Texture2D" uid="uid://drn25xu01h7j0" path="res://assets/weapons/icons/rapier.png" id="3_icon"]
 
 [resource]
 script = ExtResource("1_weapon")

@@ -1,0 +1,355 @@
+[
+  {
+    "asset": "assets/units/generalist/gen_imago_cap.png",
+    "width": 512,
+    "height": 512,
+    "changedPixels": 5736,
+    "alphaChanged": 0,
+    "inkChanged": 0,
+    "lightened": 0,
+    "outsideChanged": 0,
+    "sourceHash": "20a3bd9a00ba49f8803495b87104236c4cfb4124e838a46d5b6743e3e41bb1c4",
+    "resultHash": "8ca95a0e35df240d3ed24e3881ccd5cf90ec030c802d0067a8b1b30fb6aedd94",
+    "registration": []
+  },
+  {
+    "asset": "assets/units/generalist/gen_imago_body.png",
+    "width": 512,
+    "height": 512,
+    "changedPixels": 2714,
+    "alphaChanged": 0,
+    "inkChanged": 0,
+    "lightened": 0,
+    "outsideChanged": 0,
+    "sourceHash": "662d95cc39a933f76c121d636bed460d057beccaeec4812e9322b219678a117e",
+    "resultHash": "f6e0db601bda2b69fb5b92bba5f00da5dee130175cdb41e588ecce726ba6d63a",
+    "registration": []
+  },
+  {
+    "asset": "assets/units/generalist/gen_child_cap.png",
+    "width": 512,
+    "height": 512,
+    "changedPixels": 3418,
+    "alphaChanged": 0,
+    "inkChanged": 0,
+    "lightened": 0,
+    "outsideChanged": 0,
+    "sourceHash": "8558e63c024fdfadd884a6b6cec4fa56f976176794acb6f013cc71f4e9d14124",
+    "resultHash": "e548e19d67cddaf348c2b4a2db3eda48518b7376e62c423c0028a6d2b290d83a",
+    "registration": [
+      {
+        "sourceBounds": [
+          181,
+          118,
+          170,
+          149
+        ],
+        "generatedBounds": [
+          443,
+          288,
+          418,
+          366
+        ]
+      }
+    ]
+  },
+  {
+    "asset": "assets/units/generalist/gen_child_body.png",
+    "width": 512,
+    "height": 512,
+    "changedPixels": 2543,
+    "alphaChanged": 0,
+    "inkChanged": 0,
+    "lightened": 0,
+    "outsideChanged": 0,
+    "sourceHash": "7755671c1a8818005baec4acca8b1d0a33390623429b16bf4fc8a1e3ffa1c33c",
+    "resultHash": "2bfff8ea9b101331fec400669da3d0c3a470a88594a77744b20af3524209698d",
+    "registration": [
+      {
+        "sourceBounds": [
+          161,
+          216,
+          180,
+          179
+        ],
+        "generatedBounds": [
+          394,
+          530,
+          438,
+          436
+        ]
+      }
+    ]
+  },
+  {
+    "asset": "assets/units/generalist/gen_child_walk.png",
+    "width": 1254,
+    "height": 1254,
+    "changedPixels": 54780,
+    "alphaChanged": 0,
+    "inkChanged": 0,
+    "lightened": 0,
+    "outsideChanged": 0,
+    "sourceHash": "be47acf4ccd893d331e62c14ea40b78453f0accf50d3cd5c21e2bcb8211f848b",
+    "resultHash": "3733328f56a7bbf29c2edaff24adf5c16fdd50cf829dd807620e9af1fbc1cb2c",
+    "registration": [
+      {
+        "sourceBounds": [
+          4,
+          3,
+          387,
+          388
+        ],
+        "generatedBounds": [
+          155,
+          125,
+          378,
+          379
+        ]
+      },
+      {
+        "sourceBounds": [
+          6,
+          4,
+          380,
+          386
+        ],
+        "generatedBounds": [
+          90,
+          125,
+          372,
+          378
+        ]
+      },
+      {
+        "sourceBounds": [
+          8,
+          4,
+          382,
+          386
+        ],
+        "generatedBounds": [
+          159,
+          108,
+          374,
+          379
+        ]
+      },
+      {
+        "sourceBounds": [
+          6,
+          4,
+          380,
+          386
+        ],
+        "generatedBounds": [
+          88,
+          108,
+          374,
+          379
+        ]
+      }
+    ]
+  },
+  {
+    "asset": "assets/units/generalist/gen_imago_walk.png",
+    "width": 1254,
+    "height": 1254,
+    "changedPixels": 41293,
+    "alphaChanged": 0,
+    "inkChanged": 0,
+    "lightened": 0,
+    "outsideChanged": 0,
+    "sourceHash": "ba6914e8975f3d5adda2f3096fa04510d202818fde4bd4bdb308bd33fa91da2a",
+    "resultHash": "e7e6c79cfcafceaf09e2f0bad45d0071a9d51faaf06dd85c9e85fb6ef0870325",
+    "registration": [
+      {
+        "sourceBounds": [
+          6,
+          6,
+          456,
+          476
+        ],
+        "generatedBounds": [
+          129,
+          95,
+          447,
+          460
+        ]
+      },
+      {
+        "sourceBounds": [
+          7,
+          6,
+          454,
+          470
+        ],
+        "generatedBounds": [
+          40,
+          94,
+          447,
+          460
+        ]
+      },
+      {
+        "sourceBounds": [
+          6,
+          5,
+          454,
+          468
+        ],
+        "generatedBounds": [
+          129,
+          72,
+          445,
+          462
+        ]
+      },
+      {
+        "sourceBounds": [
+          6,
+          5,
+          454,
+          481
+        ],
+        "generatedBounds": [
+          40,
+          70,
+          450,
+          468
+        ]
+      }
+    ]
+  },
+  {
+    "asset": "assets/units/spring/spring_unit.png",
+    "width": 512,
+    "height": 512,
+    "changedPixels": 10133,
+    "alphaChanged": 0,
+    "inkChanged": 0,
+    "lightened": 0,
+    "outsideChanged": 0,
+    "sourceHash": "23b88f027ec6d709587fb0100e08e25c8bc93a6ad92b5d66cc37a3a70dd6ce75",
+    "resultHash": "269ab9e451fe864b13ebd21d12385f11ae4e3ded30127026340f3ac037b79796",
+    "registration": [
+      {
+        "sourceBounds": [
+          87,
+          151,
+          338,
+          356
+        ],
+        "generatedBounds": [
+          215,
+          364,
+          826,
+          879
+        ]
+      }
+    ]
+  },
+  {
+    "asset": "assets/combat/flag_bearer/flag.png",
+    "width": 512,
+    "height": 993,
+    "changedPixels": 8317,
+    "alphaChanged": 0,
+    "inkChanged": 0,
+    "lightened": 0,
+    "outsideChanged": 0,
+    "sourceHash": "9a66afb063e9f62656da19d79b54d649121e431949f400b9f0b1e395127135d1",
+    "resultHash": "98533587b4a6323659a5c0fe5a5e790b501ce5c7998e2e56444de7288b627a07",
+    "registration": [
+      {
+        "sourceCapBounds": [
+          14,
+          13,
+          242,
+          133
+        ],
+        "generatedCapBounds": [
+          149,
+          96,
+          368,
+          204
+        ],
+        "shadowSource": "flag_walk.png frame 0"
+      }
+    ]
+  },
+  {
+    "asset": "assets/combat/flag_bearer/flag_bearer_walk.png",
+    "width": 1254,
+    "height": 1254,
+    "changedPixels": 75648,
+    "alphaChanged": 0,
+    "inkChanged": 0,
+    "lightened": 0,
+    "outsideChanged": 0,
+    "sourceHash": "50737a29d2da6030fca03f4889750c62f92cb36a73016b5a49796622a760c2f0",
+    "resultHash": "6c3ddad267e0b207fbf611513fb3a9ba223548980878b8a987024b55a41f5dad",
+    "registration": [
+      {
+        "sourceCapBounds": [
+          25,
+          26,
+          369,
+          204
+        ],
+        "generatedCapBounds": [
+          149,
+          96,
+          368,
+          204
+        ],
+        "shadowSource": "flag_walk.png frame 0"
+      },
+      {
+        "sourceCapBounds": [
+          26,
+          26,
+          368,
+          204
+        ],
+        "generatedCapBounds": [
+          149,
+          96,
+          368,
+          204
+        ],
+        "shadowSource": "flag_walk.png frame 0"
+      },
+      {
+        "sourceCapBounds": [
+          25,
+          26,
+          369,
+          204
+        ],
+        "generatedCapBounds": [
+          149,
+          96,
+          368,
+          204
+        ],
+        "shadowSource": "flag_walk.png frame 0"
+      },
+      {
+        "sourceCapBounds": [
+          26,
+          26,
+          368,
+          204
+        ],
+        "generatedCapBounds": [
+          149,
+          96,
+          368,
+          204
+        ],
+        "shadowSource": "flag_walk.png frame 0"
+      }
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "canopy",
+    "prompt": "Use case: precise-object-edit. Edit ONLY the surface shading of this existing Canopy enemy sprite. Its leaves and braided wooden trunk are currently too glossy. Keep the EXACT existing silhouette, leaf arrangement, leaf veins, braid contours, black outline thickness, two eye positions, pose, proportions, scale and placement. Flatten the color treatment into matte hand-inked game art: each leaf a solid muted olive base with at most one subtle darker olive shadow shape, trunk a solid muted walnut brown with at most one low-contrast darker brown shadow. Remove ALL yellow-green highlight ribbons on leaf edges, all bright tan streaks and highlight facets on the trunk, smooth lighting gradients and tiny eye glints. The eyes remain two solid black ovals. Colors should look subdued and natural, not metallic, varnished, reflective or glossy. Preserve the current readable internal linework. No new features, no extra leaves, no redesign, no texture noise. Return the same single complete character on a transparent background, with no ground shadow and no text. Keep the current 1254x1254 canvas and the exact placement.",
+    "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-ee38e87f-63fe-46b2-862a-89e8422ff741.png",
+    "mode": "built-in image_gen"
+  },
+  {
+    "name": "solar_sword",
+    "prompt": "Use case: precise-object-edit. Edit ONLY the surface shading of this existing Solar Sword sunflower enemy sprite. It is currently too glossy. Keep the EXACT existing silhouette, number and arrangement of rounded petals, face, two ivory eye shapes, overlapping two-leaf torso, thick dark outlines, pose, proportions, scale and placement. Flatten the color treatment into matte hand-inked game art. Each petal should be solid muted golden ochre with at most one subtle darker ochre shadow; round face flat dark chocolate brown; torso flat moss green with at most one subtle darker green shadow per leaf. Completely remove the pale yellow oval shine patches on EVERY petal, the brown oval reflection on the upper-left of the face, and the light green shine streak on the lower-right leaf. Eliminate all smooth gradients. Keep the two ivory eyes intact: they are facial features, not highlights. No shine, rim lights, new decorative details, texture, glossy or 3D effects. Do not redesign or move any shapes. Return the same single complete character on a transparent background, with no ground shadow and no text. Keep the current 1254x1254 canvas and the exact placement.",
+    "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-deb1ad52-0368-498e-b28f-8b14a4229e56.png",
+    "mode": "built-in image_gen"
+  }
+]

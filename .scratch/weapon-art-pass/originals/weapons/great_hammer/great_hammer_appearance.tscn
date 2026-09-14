@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bvbobslh7rtnj"]
+
+[ext_resource type="Texture2D" uid="uid://bn6mua6yu84uw" path="res://assets/weapons/great_hammer/greathammer.png" id="1_tex"]
+
+[node name="GreatHammerAppearance" type="Node2D" unique_id=352288335]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1699568918]
+rotation = 0.7784169
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_tex")
+offset = Vector2(-2.5, -167)

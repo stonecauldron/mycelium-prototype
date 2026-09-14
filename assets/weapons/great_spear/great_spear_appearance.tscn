@@ -5,8 +5,7 @@
 [node name="GreatSpearAppearance" type="Node2D"]
 
 [node name="Visual" type="Sprite2D" parent="."]
-position = Vector2(4, -18)
 rotation = 0.34906584
-scale = Vector2(0.3, 0.3)
+scale = Vector2(0.41379310, 0.41379310)
 texture = ExtResource("1_tex")
-offset = Vector2(1.7182007, -83.69536)
+offset = Vector2(11.2000, -157.7600)

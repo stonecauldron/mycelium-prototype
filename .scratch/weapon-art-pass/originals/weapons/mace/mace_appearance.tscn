@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cx5yhlccyqivn"]
+
+[ext_resource type="Texture2D" uid="uid://448j67losmqg" path="res://assets/weapons/mace/mace.png" id="1_tex"]
+
+[node name="MaceAppearance" type="Node2D"]
+
+[node name="Visual" type="Sprite2D" parent="."]
+rotation = 0.7784169
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("1_tex")
+offset = Vector2(-2.5, -167)

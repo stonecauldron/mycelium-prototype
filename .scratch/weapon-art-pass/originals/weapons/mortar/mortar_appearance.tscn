@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://duqmhqo6qrv7o"]
+
+[ext_resource type="Texture2D" uid="uid://b4djg2vgfirwt" path="res://assets/weapons/mortar/mortar.png" id="1_tex"]
+
+[node name="SporeMortarAppearance" type="Node2D" unique_id=1889573691]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=635712339]
+rotation = 0.2
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("1_tex")
+offset = Vector2(168.38895, -96.70622)

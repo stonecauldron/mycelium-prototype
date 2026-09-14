@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" uid="uid://bmkinu7o7e7aj" path="res://assets/weapons/crossbow/crossbow_appearance.tscn" id="2_appear"]
-[ext_resource type="Texture2D" uid="uid://blicoaesbo4m4" path="res://assets/weapons/crossbow/crossbow.png" id="3_icon"]
+[ext_resource type="Texture2D" uid="uid://dn2dfamx1q6wh" path="res://assets/weapons/icons/crossbow.png" id="3_icon"]
 [ext_resource type="PackedScene" uid="uid://bfu7ko1jmbv6w" path="res://assets/weapons/crossbow/crossbow_projectile.tscn" id="4_proj"]
 
 [resource]

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://5q8jm50vj1pd"]
+
+[ext_resource type="Texture2D" uid="uid://cuwnc024gpdrj" path="res://assets/weapons/giant_horn/horn.png" id="1_tex"]
+
+[node name="GiantHornAppearance" type="Node2D" unique_id=1689929784]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1567862079]
+rotation = -0.05235988
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_tex")
+offset = Vector2(113.84793, -186.47162)

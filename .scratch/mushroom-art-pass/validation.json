@@ -1,0 +1,308 @@
+{
+  "assets": [
+    {
+      "path": "assets/units/generalist/gen_imago_body.png",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "assets/units/generalist/gen_child_cap.png",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "assets/units/generalist/gen_child_body.png",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "assets/units/generalist/gen_child_walk.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "assets/units/generalist/gen_imago_cap.png",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "assets/units/generalist/gen_imago_walk.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "assets/combat/flag_bearer/flag.png",
+      "size": [
+        512,
+        993
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "assets/combat/flag_bearer/flag_bearer_walk.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ],
+  "atlas_frames": [
+    {
+      "path": "assets/units/generalist/gen_child_walk.png",
+      "frame": 0,
+      "region": [
+        154,
+        125,
+        392,
+        392
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/units/generalist/gen_child_walk.png",
+      "frame": 1,
+      "region": [
+        729,
+        125,
+        392,
+        392
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/units/generalist/gen_child_walk.png",
+      "frame": 2,
+      "region": [
+        154,
+        719,
+        392,
+        392
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/units/generalist/gen_child_walk.png",
+      "frame": 3,
+      "region": [
+        729,
+        719,
+        392,
+        392
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/units/generalist/gen_imago_walk.png",
+      "frame": 0,
+      "region": [
+        122,
+        84,
+        464,
+        488
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/units/generalist/gen_imago_walk.png",
+      "frame": 1,
+      "region": [
+        677,
+        89,
+        464,
+        488
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/units/generalist/gen_imago_walk.png",
+      "frame": 2,
+      "region": [
+        122,
+        693,
+        464,
+        488
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/units/generalist/gen_imago_walk.png",
+      "frame": 3,
+      "region": [
+        677,
+        684,
+        464,
+        488
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/combat/flag_bearer/flag_bearer_walk.png",
+      "frame": 0,
+      "region": [
+        124,
+        71,
+        420,
+        495
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/combat/flag_bearer/flag_bearer_walk.png",
+      "frame": 1,
+      "region": [
+        713,
+        71,
+        420,
+        495
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/combat/flag_bearer/flag_bearer_walk.png",
+      "frame": 2,
+      "region": [
+        124,
+        689,
+        420,
+        495
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/combat/flag_bearer/flag_bearer_walk.png",
+      "frame": 3,
+      "region": [
+        713,
+        689,
+        420,
+        495
+      ],
+      "bounds_preserved": true
+    }
+  ],
+  "idle_regions": [
+    {
+      "path": "assets/units/generalist/gen_child_body.png",
+      "region": [
+        160,
+        215,
+        181,
+        181
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/units/generalist/gen_child_cap.png",
+      "region": [
+        180,
+        117,
+        172,
+        151
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/units/generalist/gen_imago_body.png",
+      "region": [
+        148,
+        291,
+        222,
+        218
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/units/generalist/gen_imago_cap.png",
+      "region": [
+        125,
+        177,
+        269,
+        158
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/combat/flag_bearer/flag.png",
+      "region": [
+        122,
+        669,
+        269,
+        323
+      ],
+      "bounds_preserved": true
+    },
+    {
+      "path": "assets/combat/flag_bearer/flag.png",
+      "region": [
+        138,
+        26,
+        220,
+        619
+      ],
+      "bounds_preserved": true
+    }
+  ],
+  "godot": "4.7.stable",
+  "resource_import": "passed",
+  "mushroom_walk_checks": 158,
+  "flag_walk_checks": 158,
+  "failures": 0,
+  "child_eyes_layer": "unchanged",
+  "visual_inspection": [
+    "comparison.png",
+    "preview.png",
+    "flag-preview.png"
+  ],
+  "shutdown_note": "Same three OpenGL texture leaks and RenderingServer shutdown messages reproduced on original-art baseline; all previews exited 0."
+}

@@ -1,0 +1,459 @@
+{
+  "assets": [
+    {
+      "path": "assets/units/enemies/solar_sword/solar_sword.png",
+      "size": [
+        512,
+        512
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "bounds": [
+        167,
+        314,
+        345,
+        512
+      ]
+    },
+    {
+      "path": "assets/units/enemies/rose_thorn/rose_thorn.png",
+      "size": [
+        512,
+        512
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "bounds": [
+        124,
+        219,
+        360,
+        508
+      ]
+    },
+    {
+      "path": "assets/units/enemies/peashooter/peashooter.png",
+      "size": [
+        512,
+        512
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "bounds": [
+        67,
+        199,
+        356,
+        512
+      ]
+    },
+    {
+      "path": "assets/units/enemies/solar_cleaver/solar_cleaver.png",
+      "size": [
+        512,
+        512
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "bounds": [
+        98,
+        102,
+        414,
+        512
+      ]
+    },
+    {
+      "path": "assets/units/enemies/stump/stump.png",
+      "size": [
+        512,
+        512
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "bounds": [
+        149,
+        87,
+        488,
+        488
+      ]
+    },
+    {
+      "path": "assets/units/enemies/stump/stump_walk.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "frames": [
+        {
+          "region": [
+            143,
+            66,
+            426,
+            509
+          ],
+          "bounds": [
+            1,
+            0,
+            424,
+            505
+          ]
+        },
+        {
+          "region": [
+            705,
+            67,
+            426,
+            509
+          ],
+          "bounds": [
+            0,
+            0,
+            426,
+            509
+          ]
+        },
+        {
+          "region": [
+            144,
+            649,
+            426,
+            509
+          ],
+          "bounds": [
+            0,
+            0,
+            424,
+            505
+          ]
+        },
+        {
+          "region": [
+            703,
+            650,
+            426,
+            509
+          ],
+          "bounds": [
+            1,
+            0,
+            426,
+            508
+          ]
+        }
+      ]
+    },
+    {
+      "path": "assets/units/enemies/durian/durian.png",
+      "size": [
+        512,
+        512
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "bounds": [
+        48,
+        4,
+        464,
+        512
+      ]
+    },
+    {
+      "path": "assets/units/enemies/durian/durian_walk.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "frames": [
+        {
+          "region": [
+            82,
+            14,
+            501,
+            611
+          ],
+          "bounds": [
+            1,
+            1,
+            500,
+            610
+          ]
+        },
+        {
+          "region": [
+            661,
+            14,
+            501,
+            611
+          ],
+          "bounds": [
+            5,
+            1,
+            497,
+            608
+          ]
+        },
+        {
+          "region": [
+            80,
+            642,
+            501,
+            611
+          ],
+          "bounds": [
+            5,
+            1,
+            496,
+            606
+          ]
+        },
+        {
+          "region": [
+            661,
+            642,
+            501,
+            611
+          ],
+          "bounds": [
+            5,
+            1,
+            497,
+            609
+          ]
+        }
+      ]
+    },
+    {
+      "path": "assets/units/enemies/log/log.png",
+      "size": [
+        512,
+        512
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "bounds": [
+        119,
+        29,
+        423,
+        512
+      ]
+    },
+    {
+      "path": "assets/units/enemies/log/log_walk.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "frames": [
+        {
+          "region": [
+            145,
+            36,
+            354,
+            572
+          ],
+          "bounds": [
+            0,
+            0,
+            354,
+            572
+          ]
+        },
+        {
+          "region": [
+            709,
+            36,
+            354,
+            572
+          ],
+          "bounds": [
+            0,
+            0,
+            354,
+            572
+          ]
+        },
+        {
+          "region": [
+            145,
+            657,
+            354,
+            572
+          ],
+          "bounds": [
+            0,
+            0,
+            354,
+            572
+          ]
+        },
+        {
+          "region": [
+            709,
+            656,
+            354,
+            572
+          ],
+          "bounds": [
+            0,
+            0,
+            354,
+            572
+          ]
+        }
+      ]
+    },
+    {
+      "path": "assets/units/enemies/canopy/canopy.png",
+      "size": [
+        512,
+        512
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "bounds": [
+        117,
+        19,
+        395,
+        512
+      ]
+    },
+    {
+      "path": "assets/units/enemies/seed_lobber/seed_lobber.png",
+      "size": [
+        512,
+        512
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "bounds": [
+        53,
+        91,
+        459,
+        512
+      ]
+    },
+    {
+      "path": "assets/units/enemies/acorn_knight/acorn_knight.png",
+      "size": [
+        512,
+        512
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "bounds": [
+        126,
+        8,
+        385,
+        504
+      ]
+    },
+    {
+      "path": "assets/units/enemies/acorn_knight/acorn_knight_walk.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "frames": [
+        {
+          "region": [
+            206,
+            32,
+            266,
+            530
+          ],
+          "bounds": [
+            2,
+            0,
+            264,
+            518
+          ]
+        },
+        {
+          "region": [
+            754,
+            32,
+            266,
+            530
+          ],
+          "bounds": [
+            0,
+            0,
+            265,
+            524
+          ]
+        },
+        {
+          "region": [
+            208,
+            663,
+            266,
+            530
+          ],
+          "bounds": [
+            1,
+            1,
+            264,
+            525
+          ]
+        },
+        {
+          "region": [
+            763,
+            662,
+            266,
+            530
+          ],
+          "bounds": [
+            1,
+            1,
+            265,
+            529
+          ]
+        }
+      ]
+    }
+  ],
+  "only_enemy_pngs_changed": true,
+  "godot_import": "passed",
+  "godot_walk_checks": 272,
+  "godot_walk_failures": 0,
+  "visual_review": [
+    "preview.png",
+    "walk-preview.png"
+  ],
+  "shutdown_note": "The same three OpenGL texture-leak warnings occurred on both original-art baseline and updated-art runs."
+}

@@ -1,0 +1,218 @@
+[
+  {
+    "id": "sword",
+    "dark_before": 394,
+    "dark_after": 546,
+    "ratio": 1.386,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "shield",
+    "dark_before": 425,
+    "dark_after": 586,
+    "ratio": 1.379,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "spear",
+    "dark_before": 213,
+    "dark_after": 300,
+    "ratio": 1.408,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "bow",
+    "dark_before": 477,
+    "dark_after": 703,
+    "ratio": 1.474,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "mace",
+    "dark_before": 317,
+    "dark_after": 398,
+    "ratio": 1.256,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "sickle",
+    "dark_before": 287,
+    "dark_after": 428,
+    "ratio": 1.491,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "great_sword",
+    "dark_before": 393,
+    "dark_after": 536,
+    "ratio": 1.364,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "great_shield",
+    "dark_before": 256,
+    "dark_after": 479,
+    "ratio": 1.871,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "great_spear",
+    "dark_before": 255,
+    "dark_after": 306,
+    "ratio": 1.2,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "great_bow",
+    "dark_before": 441,
+    "dark_after": 601,
+    "ratio": 1.363,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "great_hammer",
+    "dark_before": 420,
+    "dark_after": 579,
+    "ratio": 1.379,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "sword_and_shield",
+    "dark_before": 686,
+    "dark_after": 811,
+    "ratio": 1.182,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "spear_and_shield",
+    "dark_before": 468,
+    "dark_after": 593,
+    "ratio": 1.267,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "mace_and_shield",
+    "dark_before": 621,
+    "dark_after": 719,
+    "ratio": 1.158,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "lance",
+    "dark_before": 342,
+    "dark_after": 440,
+    "ratio": 1.287,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "crossbow",
+    "dark_before": 465,
+    "dark_after": 575,
+    "ratio": 1.237,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "umbrella",
+    "dark_before": 260,
+    "dark_after": 410,
+    "ratio": 1.577,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "mortar",
+    "dark_before": 442,
+    "dark_after": 547,
+    "ratio": 1.238,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "warhammer",
+    "dark_before": 278,
+    "dark_after": 404,
+    "ratio": 1.453,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "polehammer",
+    "dark_before": 331,
+    "dark_after": 498,
+    "ratio": 1.505,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "giant_horn",
+    "dark_before": 442,
+    "dark_after": 562,
+    "ratio": 1.271,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "rapier",
+    "dark_before": 245,
+    "dark_after": 381,
+    "ratio": 1.555,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "scythe",
+    "dark_before": 313,
+    "dark_after": 440,
+    "ratio": 1.406,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  },
+  {
+    "id": "sling",
+    "dark_before": 410,
+    "dark_after": 543,
+    "ratio": 1.324,
+    "rgba_64": true,
+    "clear_margins": true,
+    "no_magenta": true
+  }
+]

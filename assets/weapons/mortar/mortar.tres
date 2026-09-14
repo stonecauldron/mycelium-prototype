@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" uid="uid://duqmhqo6qrv7o" path="res://assets/weapons/mortar/mortar_appearance.tscn" id="2_appear"]
-[ext_resource type="Texture2D" uid="uid://b4djg2vgfirwt" path="res://assets/weapons/mortar/mortar.png" id="3_icon"]
+[ext_resource type="Texture2D" uid="uid://3i0b3mbg8nx2" path="res://assets/weapons/icons/mortar.png" id="3_icon"]
 [ext_resource type="PackedScene" uid="uid://demfhncqeiiuq" path="res://assets/weapons/mortar/mortar_projectile.tscn" id="4_proj"]
 
 [resource]

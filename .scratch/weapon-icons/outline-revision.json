@@ -1,0 +1,248 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "background": "Solid magenta #ff00ff, removed programmatically",
+  "processing_script": ".scratch/weapon-icons/key_magenta.py",
+  "icons": [
+    {
+      "id": "sword",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: sword.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-e3bebee2-bfc7-4252-9134-6a558a2e45e6.png"
+      ],
+      "destination": "assets/weapons/icons/sword.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-030777b4-115a-4c19-b1ca-b09873e5c663.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/sword.png"
+    },
+    {
+      "id": "shield",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: shield.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-312a4b37-21b9-4222-836a-3088651dcd6e.png"
+      ],
+      "destination": "assets/weapons/icons/shield.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-2030a5f2-b131-4c9b-824b-33c1cc799ba7.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/shield.png"
+    },
+    {
+      "id": "spear",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: spear.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-a9c16f94-6388-41cb-b1ce-9fc16a57ce0e.png"
+      ],
+      "destination": "assets/weapons/icons/spear.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-33217cb7-4678-4343-a9ab-f69e5851be9c.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/spear.png"
+    },
+    {
+      "id": "bow",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: bow.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-c4a18e6c-73f4-4a44-a69b-3685e524f293.png"
+      ],
+      "destination": "assets/weapons/icons/bow.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-05e8e352-f824-4867-a902-1e755bb1a592.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/bow.png"
+    },
+    {
+      "id": "mace",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: mace.",
+      "referenced_image_paths": [
+        "/Users/cauldron/Git/mycelium-prototype/.scratch/weapon-icons/sixth-revisions/mace.png"
+      ],
+      "destination": "assets/weapons/icons/mace.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-114ff16f-ac03-4c3a-8094-dcb87745522d.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/mace.png"
+    },
+    {
+      "id": "sickle",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: sickle.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-29f03e37-b5da-43cd-9f6f-d2dabf8f8356.png"
+      ],
+      "destination": "assets/weapons/icons/sickle.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-f6d2f982-3a22-42f6-8f22-c7630099fd77.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/sickle.png"
+    },
+    {
+      "id": "great_sword",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: great sword.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-da78da96-0823-4fc9-8b4f-b5af48734b25.png"
+      ],
+      "destination": "assets/weapons/icons/great_sword.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-17fc7b68-2411-4135-8961-cb3c4071fa9f.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/great_sword.png"
+    },
+    {
+      "id": "great_shield",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: great shield.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-06e54eb2-26f7-4a78-9113-e0bbf408e926.png"
+      ],
+      "destination": "assets/weapons/icons/great_shield.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-84da1913-d006-4895-9c6c-645d5077f712.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/great_shield.png"
+    },
+    {
+      "id": "great_spear",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: great spear.",
+      "referenced_image_paths": [
+        "/Users/cauldron/Git/mycelium-prototype/.scratch/weapon-icons/second-revisions/great_spear.png"
+      ],
+      "destination": "assets/weapons/icons/great_spear.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-bcc7101b-1cbc-4a47-b9a1-5a7245e9b32c.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/great_spear.png"
+    },
+    {
+      "id": "great_bow",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: great bow.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-fec9ad3f-2252-4496-80b3-a980b20c2f64.png"
+      ],
+      "destination": "assets/weapons/icons/great_bow.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-8253a79f-ef81-49b5-b464-5500341e137e.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/great_bow.png"
+    },
+    {
+      "id": "great_hammer",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: great hammer.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-5f9f9fa0-3059-4131-907c-c235ff20193f.png"
+      ],
+      "destination": "assets/weapons/icons/great_hammer.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-245448fe-5f14-45d9-9bfa-d722c00cee0d.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/great_hammer.png"
+    },
+    {
+      "id": "sword_and_shield",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: sword and shield.",
+      "referenced_image_paths": [
+        "/Users/cauldron/Git/mycelium-prototype/.scratch/weapon-icons/fifth-revisions/sword_and_shield.png"
+      ],
+      "destination": "assets/weapons/icons/sword_and_shield.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-8c4b3df1-4a05-46cf-89e3-91ff0e016c97.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/sword_and_shield.png"
+    },
+    {
+      "id": "spear_and_shield",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: spear and shield.",
+      "referenced_image_paths": [
+        "/Users/cauldron/Git/mycelium-prototype/.scratch/weapon-icons/fifth-revisions/spear_and_shield.png"
+      ],
+      "destination": "assets/weapons/icons/spear_and_shield.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-bf1a0397-94f1-4592-9ee6-12b43ac57b30.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/spear_and_shield.png"
+    },
+    {
+      "id": "mace_and_shield",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: mace and shield.",
+      "referenced_image_paths": [
+        "/Users/cauldron/Git/mycelium-prototype/.scratch/weapon-icons/sixth-revisions/mace_and_shield.png"
+      ],
+      "destination": "assets/weapons/icons/mace_and_shield.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-9cf3d9b8-c964-43b5-a8c5-c786466859d7.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/mace_and_shield.png"
+    },
+    {
+      "id": "lance",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: lance.",
+      "referenced_image_paths": [
+        "/Users/cauldron/Git/mycelium-prototype/.scratch/weapon-icons/third-revisions/lance.png"
+      ],
+      "destination": "assets/weapons/icons/lance.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-b4977946-6f61-4c97-b71d-b55ecd6a8fa8.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/lance.png"
+    },
+    {
+      "id": "crossbow",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: crossbow.",
+      "referenced_image_paths": [
+        "/Users/cauldron/Git/mycelium-prototype/.scratch/weapon-icons/second-revisions/crossbow.png"
+      ],
+      "destination": "assets/weapons/icons/crossbow.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-815462f0-3c36-49e1-8ca8-7f6e91c179c9.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/crossbow.png"
+    },
+    {
+      "id": "umbrella",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: umbrella.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-63a1c2b9-6fd0-4bd4-b961-10eeba3863ad.png"
+      ],
+      "destination": "assets/weapons/icons/umbrella.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-da5931f7-e734-4307-99f0-50a839b8067e.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/umbrella.png"
+    },
+    {
+      "id": "mortar",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: mortar.",
+      "referenced_image_paths": [
+        "/Users/cauldron/Git/mycelium-prototype/.scratch/weapon-icons/third-revisions/mortar.png"
+      ],
+      "destination": "assets/weapons/icons/mortar.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-0fe45e41-3ada-48b2-b1fb-465b9b7f7440.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/mortar.png"
+    },
+    {
+      "id": "warhammer",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: warhammer.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-7b415229-5cd5-41f3-a6a7-e84f4f4f4f92.png"
+      ],
+      "destination": "assets/weapons/icons/warhammer.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-735b3a6e-cdd4-4487-93cd-c2b608ea0b1a.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/warhammer.png"
+    },
+    {
+      "id": "polehammer",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: polehammer.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-f707a13d-d4c9-486f-ae98-7d3ae40da96b.png"
+      ],
+      "destination": "assets/weapons/icons/polehammer.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-51dbb86e-c58c-4a62-b2dd-f018b2c1afd4.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/polehammer.png"
+    },
+    {
+      "id": "giant_horn",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: giant horn.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-f8765bfe-aadb-4c8a-9bed-7fd1c30a6b2a.png"
+      ],
+      "destination": "assets/weapons/icons/giant_horn.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-f0f56734-1eb7-49bb-bcdb-6af3f9ca4851.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/giant_horn.png"
+    },
+    {
+      "id": "rapier",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: rapier.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-4bf17f1a-758c-4cd4-b782-359a0db58786.png"
+      ],
+      "destination": "assets/weapons/icons/rapier.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-fffaf604-472a-4616-942f-e2d05f6529ff.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/rapier.png"
+    },
+    {
+      "id": "scythe",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: scythe.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-3e1d08ec-03cd-40f6-adc7-55ed7d0f92e4.png"
+      ],
+      "destination": "assets/weapons/icons/scythe.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-16fb915a-8eb9-4269-a9d1-a84774a08395.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/scythe.png"
+    },
+    {
+      "id": "sling",
+      "prompt": "Use case: precise-object-edit. This is an EXISTING finished game UI icon. Make just one subtle, uniform edit: increase the width of EVERY existing near-black outline and dark detail stroke by about 25 percent (roughly half a final pixel at 64x64). Keep the line center paths in the same place. The result should feel a little bolder and easier to read, not redesigned and not massively heavier. Preserve the exact current shape, silhouette proportions, orientation, alignment, composition, size and placement of all objects, colors and flat ivory/forest-green fills. Preserve all existing small elements and their positions: holes, strings, tips, ridges, motion/sound strokes, and overlapping layer order. Keep all currently open holes and gaps visibly open. Do not add any details or remove any. Do not change handle length, blade/head shape, or object scale. If it contains a weapon over a shield, the weapon remains continuously IN FRONT of the shield. Keep generous existing canvas padding. Only slightly heavier existing near-black linework.\nUse an opaque uniform solid PURE MAGENTA #ff00ff backdrop in all empty areas around the icon and in empty holes. We will remove it programmatically, preserving the slightly thicker edges. Do not use magenta inside ivory/green filled areas. No checkerboard or transparency pattern, no texture, gradients, shadow, frame, text or extra symbols. Square canvas.\nIcon being edited: sling.",
+      "referenced_image_paths": [
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-ce3aafc6-3737-478b-8b50-2138cb0cc86c.png"
+      ],
+      "destination": "assets/weapons/icons/sling.png",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-760f5172-fa53-4c7a-b8b0-3d3ed9b89a61.png",
+      "keyed_source": ".scratch/weapon-icons/outline-revision/sling.png"
+    }
+  ]
+}
+

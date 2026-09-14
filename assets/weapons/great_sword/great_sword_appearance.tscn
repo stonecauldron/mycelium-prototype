@@ -5,8 +5,7 @@
 [node name="GreatSwordAppearance" type="Node2D" unique_id=904582388]
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=1058844224]
-position = Vector2(-2.8220212, 2.7235868)
 rotation = 0.7784169
-scale = Vector2(0.3, 0.3)
+scale = Vector2(0.34482759, 0.34482759)
 texture = ExtResource("1_tex")
-offset = Vector2(-0.28252268, -223.14078)
+offset = Vector2(0.0000, -197.2000)

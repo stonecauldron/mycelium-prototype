@@ -6,6 +6,6 @@
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=961525060]
 rotation = 0.2
-scale = Vector2(0.22, 0.22)
+scale = Vector2(0.20258621, 0.20258621)
 texture = ExtResource("1_bow")
-offset = Vector2(40, -80)
+offset = Vector2(-57.4200, -27.8400)

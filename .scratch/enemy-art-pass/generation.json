@@ -1,0 +1,48 @@
+{
+  "mode": "built-in image_gen",
+  "sources": [
+    {
+      "name": "solar_sword",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-8541cade-67d9-46e4-8410-826da0241520.png"
+    },
+    {
+      "name": "rose_thorn",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-99346395-b9f2-4cb5-b614-101fd3e77579.png"
+    },
+    {
+      "name": "peashooter",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-db738787-9b6f-4b35-bf31-6ff5ee632842.png"
+    },
+    {
+      "name": "solar_cleaver",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-2edd7172-9ab1-41c7-828c-aa538e7dbd20.png"
+    },
+    {
+      "name": "stump",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-9fcaa575-63c0-47cd-82a0-a3cccf4dac12.png"
+    },
+    {
+      "name": "durian",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-bc1dbe78-8d99-479c-8450-ee5a49160579.png"
+    },
+    {
+      "name": "log",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-f9629e4d-667c-4a2f-9afe-9220aa3b5174.png"
+    },
+    {
+      "name": "canopy",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-7174b5bc-7672-416d-9cfc-daf1c940db0e.png"
+    },
+    {
+      "name": "seed_lobber",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-95d83b1b-c8f1-42ad-8ce7-70a3a9d024c0.png"
+    },
+    {
+      "name": "acorn_knight",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-90ec0ef5-a20d-45cf-9bbf-1e9571e193c3.png"
+    }
+  ],
+  "discardedExtraction": "Generated images are saved to /Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8 as /Users/cauldron/.codex/generated_images/01a09fa4-5c11-7600-924f-81b54a63f5a8/exec-0a343451-7a10-4214-83f8-53b8a465598d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "baseline_commit": "833ce4614ce8e162bf2d4f64180e33bab5db993b",
+  "background_removal": "User explicitly approved programmatic cleanup in this task."
+}

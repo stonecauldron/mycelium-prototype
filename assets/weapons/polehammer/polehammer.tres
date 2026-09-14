@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="WeaponData" format=3]
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://5la6l00hoxex"]
 
-[ext_resource type="Script" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+[ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" path="res://assets/weapons/polehammer/polehammer_appearance.tscn" id="2_appear"]
-[ext_resource type="Texture2D" path="res://assets/weapons/polehammer/polehammer.png" id="3_icon"]
+[ext_resource type="Texture2D" uid="uid://bnlp06peu5t2r" path="res://assets/weapons/icons/polehammer.png" id="3_icon"]
 [ext_resource type="PackedScene" path="res://assets/weapons/polehammer/polehammer_projectile.tscn" id="4_proj"]
 
 [resource]
@@ -19,8 +19,8 @@ projectile_range = 650.0
 attack_interval = 2.5
 skirmish_distance = 210.0
 knockback_force = 120.0
-melee_range = 192.0
 biomass_cost = 4
+melee_range = 192.0
 projectile_scene = ExtResource("4_proj")
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

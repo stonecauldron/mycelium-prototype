@@ -1,0 +1,20 @@
+{
+  "path": "assets/base/shop/padlock_locked.png",
+  "size": [
+    512,
+    512
+  ],
+  "bounds": [
+    125,
+    67,
+    387,
+    420
+  ],
+  "alpha_range": [
+    0,
+    255
+  ],
+  "arch_aperture_transparent": true,
+  "keyhole_opaque": true,
+  "sha256": "48bc9815451fefb50b5020ccb2beb1264c085e12d02582ec88ef5c1cc9957789"
+}

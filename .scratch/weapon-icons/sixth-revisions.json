@@ -1,0 +1,29 @@
+{
+  "tool": "built-in image_gen",
+  "background": "Solid magenta removed programmatically with key_magenta.py.",
+  "edits": [
+    {
+      "id": "mace",
+      "prompt": "Use case: precise-object-edit. Straighten ONLY THE HEAD of this mace icon. The head currently leans too far upward relative to the grip. ROTATE THE ENTIRE HEAD CLOCKWISE by roughly 10 degrees about the neck/collar so it points EXACTLY along the handle's existing diagonal axis, approximately 45 degrees up-right. The HEAD APEX, CENTER OF THE CENTRAL DIAMOND RIDGE, CENTER OF COLLAR, CENTER OF GRIP and CENTER OF POMMEL must all lie on ONE PERFECTLY STRAIGHT LINE. The outer flanges and inner lozenge must be symmetric to either side of this shared centerline. Treat the head as one rigid straight component; do not bend, curve or skew its central ridge. Move the apex down and right, rather than moving the grip. You may uniformly shrink the head slightly if required to preserve the canvas padding. Preserve the compact polygonal flanged mace head with two kinked internal ridge lines, broad ivory side panels, ivory collar, current green grip and rounded pommel. Preserve thickness: heavy near-black outlines around 2.5–3 final pixels at 64x64, flat ivory and muted forest green fills. Keep the handle and pommel in the same position and orientation. No other changes or new details. One centered icon on square canvas with 10% padding. Use OPAQUE SOLID PURE MAGENTA #ff00ff for every empty background area, to be removed programmatically. No checkerboard or transparency pattern, no shadows, gradients, texture, labels or guides.",
+      "referenced_image_paths": [
+        "/Users/cauldron/Git/mycelium-prototype/.scratch/weapon-icons/fourth-revisions/mace.png"
+      ],
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-ca8a5251-da88-47e0-ad75-18ee583a82a7.png",
+      "keyed_source": ".scratch/weapon-icons/sixth-revisions/mace.png",
+      "destination": "assets/weapons/icons/mace.png"
+    },
+    {
+      "id": "mace_and_shield",
+      "prompt": "Use case: precise-object-edit. Image 1 is the mace-and-shield icon to edit. Image 2 is the CORRECTED STRAIGHT MACE as an alignment reference. Fix ONLY the crooked mace head in Image 1. The current head leans too far upward relative to the handle. Rotate the entire ivory flanged head CLOCKWISE around the collar by approximately 10–12 degrees so its central diamond ridge and pointed apex line up exactly with the EXISTING GREEN HANDLE. Apex, central ridge, collar center, handle center and pommel center must form one STRAIGHT diagonal axis, as demonstrated in Image 2. Make both sides of the head balanced about that axis. Preserve the head's compact polygonal outline and the two kinked ridge lines dividing its three ivory flanges; no new detail or change of weapon type. Preserve Image 1's exact shield shape, green rim and ivory face, keep the weapon fully superposed IN FRONT of the shield, and leave its handle, pommel and collar in place. You may slightly reduce the head's size to retain canvas padding. Keep its very thick black outlines and ivory/forest green colors, flat hand-inked icon style, all other shapes and layer order unchanged. OPAQUE FLAT SOLID PURE MAGENTA #ff00ff background in all empty areas for programmatic removal. No checkerboard, shadows, gradients, texture, text or axis guides. Square canvas, same roomy padding. Make the straight alignment obvious.",
+      "referenced_image_paths": [
+        "/Users/cauldron/Git/mycelium-prototype/.scratch/weapon-icons/fifth-revisions/mace_and_shield.png",
+        "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-ca8a5251-da88-47e0-ad75-18ee583a82a7.png"
+      ],
+      "initial_output": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-93c3c956-1b8e-4592-98a2-59058ae0232a.png",
+      "correction_prompt": "Make one small precise edit to this image: ROTATE ONLY THE IVORY MACE HEAD 5 DEGREES CLOCKWISE around its collar, whose center is about (680,650) in this 1254x1254 image. Do not move the handle or shield. The head's central diamond currently points 50.5 degrees above horizontal while the handle points 45.9 degrees above horizontal. Make the head point 45.9 degrees above horizontal too, so the apex, diamond center, collar, handle and pommel are straight and collinear. This means the head's tip shifts a little RIGHT and DOWN, about 40 pixels right and 35 pixels down. Rotate the entire head rigidly, including BOTH outer flanges and both inner ridge lines, not just its tip. Keep the current shape and size, thick dark lines, ivory/green colors and every other pixel as unchanged as possible. The mace remains in FRONT of the shield. Preserve the opaque flat solid magenta background; no checkerboard, no guides, no text.",
+      "source": "/Users/cauldron/.codex/generated_images/01a09fa3-db80-78a1-bab9-eb8cecb4fc67/exec-013d6440-bd2e-4d3c-be3d-a082093dc65e.png",
+      "keyed_source": ".scratch/weapon-icons/sixth-revisions/mace_and_shield.png",
+      "destination": "assets/weapons/icons/mace_and_shield.png"
+    }
+  ]
+}

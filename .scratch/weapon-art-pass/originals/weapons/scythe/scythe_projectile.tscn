@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bb0oh5h783rc7"]
+
+[ext_resource type="Script" uid="uid://cl38v3h35rm3y" path="res://assets/combat/projectile/projectile.gd" id="1_proj"]
+[ext_resource type="Texture2D" uid="uid://ot2bsisgn1a4" path="res://assets/weapons/scythe/scythe.png" id="2_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_scythe"]
+size = Vector2(147, 8)
+
+[node name="ScytheProjectile" type="Area2D" unique_id=1567112260]
+collision_layer = 8
+collision_mask = 5
+monitorable = false
+script = ExtResource("1_proj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1869493333]
+shape = SubResource("RectangleShape2D_scythe")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=765161543]
+position = Vector2(2, 0)
+rotation = 1.5707964
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_tex")

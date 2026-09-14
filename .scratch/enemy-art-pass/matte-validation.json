@@ -1,0 +1,33 @@
+{
+  "only_two_sprites_changed": true,
+  "assets": [
+    {
+      "path": "assets/units/enemies/solar_sword/solar_sword.png",
+      "size": [
+        512,
+        512
+      ],
+      "bounds": [
+        167,
+        314,
+        345,
+        512
+      ],
+      "transparent": true
+    },
+    {
+      "path": "assets/units/enemies/canopy/canopy.png",
+      "size": [
+        512,
+        512
+      ],
+      "bounds": [
+        117,
+        19,
+        395,
+        512
+      ],
+      "transparent": true
+    }
+  ]
+}

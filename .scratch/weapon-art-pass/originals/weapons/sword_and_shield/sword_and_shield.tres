@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://assets/units/weapon_data.gd" id="1_weapon"]
+[ext_resource type="PackedScene" path="res://assets/weapons/sword/sword_appearance.tscn" id="2_appear"]
+[ext_resource type="Texture2D" path="res://assets/weapons/sword_and_shield/sword_and_shield.png" id="3_icon"]
+[ext_resource type="PackedScene" path="res://assets/weapons/shield/offhand_shield_appearance.tscn" id="4_offhand"]
+
+[resource]
+script = ExtResource("1_weapon")
+display_name = "Sword and Shield"
+short_description = "Sword strikes with shield protection. Blunt hits bypass the shield."
+biomass_cost = 4
+incoming_damage_multiplier = 0.5
+incoming_knockback_multiplier = 0.5
+blocks_charges = true
+appearance_scene = ExtResource("2_appear")
+offhand_appearance_scene = ExtResource("4_offhand")
+icon = ExtResource("3_icon")

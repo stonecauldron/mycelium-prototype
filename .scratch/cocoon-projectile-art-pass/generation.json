@@ -1,0 +1,30 @@
+[
+  {
+    "name": "cocoon",
+    "output_hint": "Generated images are saved to /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508 as /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508/exec-302a9eac-521c-4c0b-bb6a-79048bb25f8f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "name": "cocoon_alpha",
+    "output_hint": "Generated images are saved to /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508 as /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508/exec-ac284e37-6c00-4522-be93-c6c2d83cb024.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "name": "cocoon_open",
+    "output_hint": "Generated images are saved to /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508 as /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508/exec-140aa080-ac22-463d-a43a-8eff46a18c87.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "name": "arrow",
+    "output_hint": "Generated images are saved to /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508 as /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508/exec-c73c7235-c910-4086-b708-cff64fb5dd0f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "name": "spore_bomb_projectile",
+    "output_hint": "Generated images are saved to /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508 as /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508/exec-1f3a4207-a8a1-4adc-a3bf-3f3d406275bb.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "name": "horn_projectile",
+    "output_hint": "Generated images are saved to /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508 as /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508/exec-cec98d02-7352-4175-afc9-7d1b8df5e96e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "name": "horn_projectile_clean",
+    "output_hint": "Generated images are saved to /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508 as /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508/exec-54d4273e-dcc6-4d65-a10c-3e564f7681a9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  }
+]

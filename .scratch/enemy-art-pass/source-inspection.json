@@ -1,0 +1,82 @@
+{
+  "solar_sword": {
+    "mode": "RGB",
+    "size": [
+      1254,
+      1254
+    ],
+    "has_alpha": false
+  },
+  "peashooter": {
+    "mode": "RGBA",
+    "size": [
+      1254,
+      1254
+    ],
+    "has_alpha": true
+  },
+  "stump": {
+    "mode": "RGB",
+    "size": [
+      1254,
+      1254
+    ],
+    "has_alpha": false
+  },
+  "durian": {
+    "mode": "RGB",
+    "size": [
+      1254,
+      1254
+    ],
+    "has_alpha": false
+  },
+  "solar_cleaver": {
+    "mode": "RGB",
+    "size": [
+      1254,
+      1254
+    ],
+    "has_alpha": false
+  },
+  "rose_thorn": {
+    "mode": "RGB",
+    "size": [
+      1254,
+      1254
+    ],
+    "has_alpha": false
+  },
+  "seed_lobber": {
+    "mode": "RGBA",
+    "size": [
+      1254,
+      1254
+    ],
+    "has_alpha": true
+  },
+  "acorn_knight": {
+    "mode": "RGB",
+    "size": [
+      1254,
+      1254
+    ],
+    "has_alpha": false
+  },
+  "canopy": {
+    "mode": "RGB",
+    "size": [
+      1254,
+      1254
+    ],
+    "has_alpha": false
+  },
+  "log": {
+    "mode": "RGB",
+    "size": [
+      1254,
+      1254
+    ],
+    "has_alpha": false
+  }
+}

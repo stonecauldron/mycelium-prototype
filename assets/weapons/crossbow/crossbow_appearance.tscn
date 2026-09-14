@@ -5,8 +5,7 @@
 [node name="CrossbowAppearance" type="Node2D" unique_id=1055473339]
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=336245915]
-position = Vector2(13.379548, -3.97995)
 rotation = -0.21238913
-scale = Vector2(0.22, 0.22)
+scale = Vector2(0.25000000, 0.25000000)
 texture = ExtResource("1_tex")
-offset = Vector2(76.38043, 69.55432)
+offset = Vector2(176.3200, -66.4200)

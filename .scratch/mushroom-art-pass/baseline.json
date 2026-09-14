@@ -1,0 +1,131 @@
+{
+  "commit": "833ce4614ce8e162bf2d4f64180e33bab5db993b",
+  "assets": {
+    "assets/units/generalist/gen_imago_body.png": {
+      "size": [
+        512,
+        512
+      ],
+      "bbox": [
+        147,
+        290,
+        370,
+        510
+      ],
+      "mode": "RGBA",
+      "sha256": "83dcde32150983c7784e462a9af2f33436d52859e7d23e96ed18e637f41140d2"
+    },
+    "assets/units/generalist/gen_child_cap.png": {
+      "size": [
+        512,
+        512
+      ],
+      "bbox": [
+        179,
+        116,
+        353,
+        268
+      ],
+      "mode": "RGBA",
+      "sha256": "8130b02a5ad4193067dbfba9f2ed797f8e7737a0d389423492d8aab5e5dafe05"
+    },
+    "assets/units/generalist/gen_child_body.png": {
+      "size": [
+        512,
+        512
+      ],
+      "bbox": [
+        159,
+        214,
+        342,
+        396
+      ],
+      "mode": "RGBA",
+      "sha256": "7e1f676f51c2f8f3006e24910f6c05f2b2b405b2aaf9def21e35ce45512ba306"
+    },
+    "assets/units/generalist/gen_child_walk.png": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bbox": [
+        154,
+        53,
+        1192,
+        1134
+      ],
+      "mode": "RGBA",
+      "sha256": "fa9809732b8e5d6bb708b6c32f0a5fa381c63bf34be952e27a1c6e76700e405a"
+    },
+    "assets/units/generalist/gen_child_eyes.png": {
+      "size": [
+        512,
+        512
+      ],
+      "bbox": [
+        222,
+        193,
+        330,
+        238
+      ],
+      "mode": "RGBA",
+      "sha256": "2174f1abee9314e82c91853766629de488f5fcf0c7e7fc792785d64dbd20aee2"
+    },
+    "assets/units/generalist/gen_imago_cap.png": {
+      "size": [
+        512,
+        512
+      ],
+      "bbox": [
+        124,
+        176,
+        395,
+        336
+      ],
+      "mode": "RGBA",
+      "sha256": "64922fce5abbf56f2d03f6c1c9047a49bc540ea0c95151c32d9ef0eb47883097"
+    },
+    "assets/units/generalist/gen_imago_walk.png": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bbox": [
+        41,
+        53,
+        1218,
+        1228
+      ],
+      "mode": "RGBA",
+      "sha256": "aaac6ddc27b1fd8e29c47fdc4782470f5389ddb1a39f79280cb5f7889dcfafc3"
+    },
+    "assets/combat/flag_bearer/flag.png": {
+      "size": [
+        512,
+        993
+      ],
+      "bbox": [
+        121,
+        25,
+        392,
+        993
+      ],
+      "mode": "RGBA",
+      "sha256": "3ec0dd70c2cff2c69b99523597de068aa42853e8b01ffec43137f3ee29ca7a27"
+    },
+    "assets/combat/flag_bearer/flag_bearer_walk.png": {
+      "size": [
+        1254,
+        1254
+      ],
+      "bbox": [
+        55,
+        21,
+        1202,
+        1228
+      ],
+      "mode": "RGBA",
+      "sha256": "2a6c057b4dfac4f69660500a32f3b65594215bc2674306cdf353d619894c2b09"
+    }
+  }
+}

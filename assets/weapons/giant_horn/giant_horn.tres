@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" uid="uid://5q8jm50vj1pd" path="res://assets/weapons/giant_horn/giant_horn_appearance.tscn" id="2_appear"]
-[ext_resource type="Texture2D" uid="uid://cuwnc024gpdrj" path="res://assets/weapons/giant_horn/horn.png" id="3_icon"]
+[ext_resource type="Texture2D" uid="uid://dsaiq4nra0mki" path="res://assets/weapons/icons/giant_horn.png" id="3_icon"]
 [ext_resource type="PackedScene" uid="uid://b804io7ra6emi" path="res://assets/weapons/giant_horn/horn_projectile.tscn" id="4_proj"]
 
 [resource]

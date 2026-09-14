@@ -5,8 +5,7 @@
 [node name="ScytheAppearance" type="Node2D"]
 
 [node name="Visual" type="Sprite2D" parent="."]
-position = Vector2(4, -18)
 rotation = 0.34906584
-scale = Vector2(0.3, 0.3)
+scale = Vector2(0.33620690, 0.33620690)
 texture = ExtResource("1_tex")
-offset = Vector2(1.7182007, -83.69536)
+offset = Vector2(115.6200, -139.2000)

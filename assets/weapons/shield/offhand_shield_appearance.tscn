@@ -5,5 +5,5 @@
 [node name="OffhandShieldAppearance" type="Node2D"]
 
 [node name="Visual" type="Sprite2D" parent="."]
-scale = Vector2(0.11, 0.11)
+scale = Vector2(0.14, 0.14)
 texture = ExtResource("1_shield")

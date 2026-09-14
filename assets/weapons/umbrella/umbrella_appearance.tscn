@@ -10,9 +10,9 @@ size = Vector2(120, 28)
 
 [node name="Visual" type="Sprite2D" parent="."]
 rotation = 0.17453292
-scale = Vector2(0.4, 0.4)
+scale = Vector2(0.40948276, 0.40948276)
 texture = ExtResource("1_tex")
-offset = Vector2(0, -200)
+offset = Vector2(0.0000, -176.3200)
 
 [node name="ProjectileBlocker" type="Area2D" parent="."]
 position = Vector2(8, -110)

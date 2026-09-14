@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgbjfqhc5bewm" path="res://assets/units/weapon_data.gd" id="1_weapon"]
 [ext_resource type="PackedScene" uid="uid://dxc85jyaxdr8v" path="res://assets/weapons/lance/lance_appearance.tscn" id="2_appear"]
-[ext_resource type="Texture2D" uid="uid://cvk673prvl8l5" path="res://assets/weapons/lance/lance.png" id="3_icon"]
+[ext_resource type="Texture2D" uid="uid://bwicnkfx128bf" path="res://assets/weapons/icons/lance.png" id="3_icon"]
 
 [resource]
 script = ExtResource("1_weapon")

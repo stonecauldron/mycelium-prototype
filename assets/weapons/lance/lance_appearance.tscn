@@ -6,6 +6,6 @@
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=715634253]
 rotation = 0.6091199
-scale = Vector2(0.3, 0.3)
+scale = Vector2(0.32543103, 0.32543103)
 texture = ExtResource("1_tex")
-offset = Vector2(1.0744288, -183.10794)
+offset = Vector2(0.0000, -167.0400)

@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://cff827oxam8sy"]
+
+[ext_resource type="Texture2D" uid="uid://bj35arlgrvuum" path="res://assets/weapons/spear/spear.png" id="1_spear"]
+
+[node name="SpearAppearance" type="Node2D" unique_id=286774953]
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1270334191]
+position = Vector2(4, -18)
+rotation = 0.34906584
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_spear")
+offset = Vector2(1.7182007, -83.69536)

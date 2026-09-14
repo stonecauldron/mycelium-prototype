@@ -1,0 +1,19 @@
+{
+  "path": "assets/base/combat_progress_track/skull.png",
+  "size": [
+    128,
+    128
+  ],
+  "bounds": [
+    0,
+    3,
+    128,
+    120
+  ],
+  "alpha_range": [
+    0,
+    255
+  ],
+  "cavities_opaque": true,
+  "sha256": "a783456adf2f4fd80aa218a9241b4742e6f193c7936a548e3798cbb88552261f"
+}

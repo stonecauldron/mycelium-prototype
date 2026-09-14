@@ -1,0 +1,30 @@
+[
+  {
+    "name": "child_cap",
+    "path": "/Users/cauldron/.codex/generated_images/01a0a0f8-83fd-74b3-bcad-92936362ecab/exec-b7adfd37-f4e0-48f0-bc61-d8485748eb3c.png"
+  },
+  {
+    "name": "child_body",
+    "path": "/Users/cauldron/.codex/generated_images/01a0a0f8-83fd-74b3-bcad-92936362ecab/exec-68de8ae0-dc93-41e7-a5f2-c692fff0b304.png"
+  },
+  {
+    "name": "child_walk",
+    "path": "/Users/cauldron/.codex/generated_images/01a0a0f8-83fd-74b3-bcad-92936362ecab/exec-ce59e5fa-7286-41b6-a90e-c0237758e2d4.png"
+  },
+  {
+    "name": "imago_walk",
+    "path": "/Users/cauldron/.codex/generated_images/01a0a0f8-83fd-74b3-bcad-92936362ecab/exec-45bd38af-d98a-4984-9294-8cc64cb70b07.png"
+  },
+  {
+    "name": "flag_idle",
+    "path": "/Users/cauldron/.codex/generated_images/01a0a0f8-83fd-74b3-bcad-92936362ecab/exec-2a0bf1dc-f3d9-49fa-b58e-fcd741afaeb0.png"
+  },
+  {
+    "name": "flag_walk",
+    "path": "/Users/cauldron/.codex/generated_images/01a0a0f8-83fd-74b3-bcad-92936362ecab/exec-33fa0cac-b53c-4b60-88df-be5e3b804e3e.png"
+  },
+  {
+    "name": "spring",
+    "path": "/Users/cauldron/.codex/generated_images/01a0a0f8-83fd-74b3-bcad-92936362ecab/exec-d67c6445-d937-4f45-9ae9-3d57aaf5d554.png"
+  }
+]

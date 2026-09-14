@@ -5,9 +5,8 @@
 [node name="WarhammerAppearance" type="Node2D"]
 
 [node name="Visual" type="Sprite2D" parent="."]
-position = Vector2(0, 0)
 rotation = 0.7784169
-scale = Vector2(0.075, 0.075)
+scale = Vector2(0.18965517, 0.18965517)
 texture = ExtResource("1_tex")
-offset = Vector2(0, -410)
+offset = Vector2(0.0000, -125.2800)
 flip_h = true

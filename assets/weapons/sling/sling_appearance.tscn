@@ -5,8 +5,7 @@
 [node name="SlingAppearance" type="Node2D"]
 
 [node name="Visual" type="Sprite2D" parent="."]
-position = Vector2(0, 0)
 rotation = 0.34906584
-scale = Vector2(0.06, 0.06)
+scale = Vector2(0.15086207, 0.15086207)
 texture = ExtResource("1_tex")
-offset = Vector2(0, -510)
+offset = Vector2(0.0000, -148.4800)

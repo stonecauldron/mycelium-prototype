@@ -5,7 +5,7 @@
 [node name="GreatBowAppearance" type="Node2D" unique_id=926587832]
 
 [node name="Visual" type="Sprite2D" parent="." unique_id=1508257398]
-rotation = 0.2
-scale = Vector2(0.22, 0.22)
+rotation = 0.6
+scale = Vector2(0.36206897, 0.36206897)
 texture = ExtResource("1_tex")
-offset = Vector2(42.484528, -170.27493)
+offset = Vector2(-56.3200, 0.0000)

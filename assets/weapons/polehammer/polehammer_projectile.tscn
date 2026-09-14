@@ -20,5 +20,5 @@ shape = SubResource("RectangleShape2D_hammer")
 
 [node name="Visual" type="Sprite2D" parent="."]
 rotation = 1.5707964
-scale = Vector2(0.1, 0.1)
+scale = Vector2(0.31, 0.31)
 texture = ExtResource("2_tex")

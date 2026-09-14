@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://xlbsft2hfn0s"]
+
+[ext_resource type="Texture2D" uid="uid://dfjdnkn50h4rm" path="res://assets/weapons/sickle/sickle.png" id="1_tex"]
+
+[node name="SickleAppearance" type="Node2D"]
+
+[node name="Visual" type="Sprite2D" parent="."]
+rotation = 0.7784169
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("1_tex")
+offset = Vector2(-2.5, -167)

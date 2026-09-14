@@ -1,0 +1,107 @@
+[
+  {
+    "name": "cocoon",
+    "path": "assets/base/pupation/cocoon.png",
+    "size": [
+      512,
+      512
+    ],
+    "bounds": [
+      99,
+      0,
+      427,
+      504
+    ],
+    "source_mode": "RGB",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "visible_components": 1,
+    "sha256": "e43489a90463ad876d17acec17d82a15ef607802d4d63ba798a3c938a42d5dd9"
+  },
+  {
+    "name": "cocoon_open",
+    "path": "assets/base/pupation/cocoon_open.png",
+    "size": [
+      512,
+      512
+    ],
+    "bounds": [
+      99,
+      0,
+      427,
+      504
+    ],
+    "source_mode": "RGB",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "visible_components": 1,
+    "sha256": "b1ac36b4ba73362b27d785f0091c28f5ba7f49d163510c39f2e92674045f8f34"
+  },
+  {
+    "name": "arrow",
+    "path": "assets/weapons/bow/arrow.png",
+    "size": [
+      512,
+      512
+    ],
+    "bounds": [
+      10,
+      216,
+      498,
+      296
+    ],
+    "source_mode": "RGBA",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "visible_components": 1,
+    "sha256": "5783419053545457ec1e7a14c334c75d1db134d7d09ce001ccabb6835f5138ed"
+  },
+  {
+    "name": "spore_bomb_projectile",
+    "path": "assets/weapons/mortar/spore_bomb_projectile.png",
+    "size": [
+      256,
+      256
+    ],
+    "bounds": [
+      52,
+      66,
+      205,
+      190
+    ],
+    "source_mode": "RGB",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "visible_components": 1,
+    "sha256": "4c130f996ad93f37ee07e81b9b0451375e7ccee1d6a5457c3815664dc683fa5f"
+  },
+  {
+    "name": "horn_projectile",
+    "path": "assets/weapons/giant_horn/horn_projectile.png",
+    "size": [
+      512,
+      512
+    ],
+    "bounds": [
+      14,
+      76,
+      512,
+      400
+    ],
+    "source_mode": "RGB",
+    "alpha_range": [
+      0,
+      255
+    ],
+    "visible_components": 2,
+    "sha256": "f9a4b4be9cb82b6686adfb0114ea919506cafa6fff008bb4e7a516c2fb517a97"
+  }
+]

@@ -3,15 +3,16 @@ extends Node2D
 
 signal dismissed
 
-const BOUNDS := Rect2(-210, -245, 420, 245)
-## Existing death/streak callouts rise from 140 px above the feet. Keep the
-## opaque card above them; only its thin pointer crosses that feedback space.
-const CALLOUT_CLEARANCE := 250.0
+## The rotated texture's off-center tail tip sits at the local origin.
+## Bounds include the paper and upright name header to its right.
+const BOUNDS := Rect2(-41, -293, 420, 293)
+## The paper body ends 44 px above the tip. Keep it 250 px above the feet
+## so existing death/streak callouts remain readable below the card.
+const CALLOUT_CLEARANCE := 206.0
 
 @onready var _speaker_label: Label = $SpeakerName
 @onready var _line_label: Label = $Line
 @onready var _timer: Timer = $ReadingTimer
-@onready var _tail: Polygon2D = $Tail
 
 var _speaker: Node2D = null
 
@@ -76,6 +77,3 @@ func _head_for(speaker: Node2D) -> Vector2:
 
 func _update_position() -> void:
 	global_position = _anchor_for(_speaker)
-	_tail.polygon = PackedVector2Array([
-		Vector2(-22, -42), Vector2(17, -42), to_local(_head_for(_speaker)),
-	])

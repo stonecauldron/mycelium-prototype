@@ -30,7 +30,9 @@ godot --path . --rendering-driver opengl3 --resolution 1440x810 res://.scratch/c
 
 Native captures verified the opening, the longest personalized mourning line, long Generation names, and zoom at 0.55. The automated text-fit checks passed. Screenshots are written to `/private/tmp/character-barks-opening.png`, `/private/tmp/character-barks-mourning-long-names.png`, and `/private/tmp/character-barks-mourning-zoomed-out.png`; they are temporary QA artifacts, not project assets.
 
-The final paper position clears the existing fallen/streak callout area. Its downward tail follows the speaker's head and renders beneath those callouts. Typography, wrapping, and padding were checked against the cream paper's irregular edges.
+The paper position clears the existing fallen/streak callout area. Typography, wrapping, and padding were checked against the cream paper's irregular edges.
+
+The September 14 texture revision replaces the generated tail with `Paper style 1/dialog box 10.png`, rotated 180°. The texture's tip at source pixel `(370, 0)` is offset to the bubble's local origin, aligning it horizontally with the speaker. The upright header, labels, and visibility bounds follow the paper's offset. Native opening, long-name mourning, and zoom captures were checked again; all four visual assertions passed. The full Bark acceptance scene was rerun with **0 failures** and no headless errors.
 
 The Compatibility renderer emitted the already-documented texture/RID cleanup errors on native shutdown (also recorded in the settings-menu work). Headless runtime checks did not emit those renderer cleanup messages.
 

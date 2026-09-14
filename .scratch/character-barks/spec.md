@@ -49,7 +49,7 @@ Player Units include Children and Adults. Enemies never speak. The Flag bearer s
 
 - Match the supplied [visual reference](bubble-reference.png): cream paper with irregular cut edges, dark lettering, and a teal header containing the speaker's name.
 - Use each Unit's full display name in the header, including its Generation suffix. The reference's “Info” and trading text are sample artwork content, not dialogue copy.
-- Position the bubble above the speaker, following their movement. Its tail points downward toward that character.
+- Position the bubble above the speaker, following their movement. Use `Paper style 1/dialog box 10.png`, rotated 180° so its built-in tail points downward. Offset the paper and upright text/header to align the off-center tail with the speaker.
 - The bubble scales with the battlefield, including camera zoom.
 - Show the whole line at once. Normal lines last about three seconds; victory lines last two seconds. The in-run menu pauses the reading timer.
 - Only show a bubble that fits above a visible, living speaker. If its speaker dies, leaves the screen, or the bubble can no longer fit, end it immediately. Do not pin offscreen dialogue to a screen edge.
@@ -73,7 +73,7 @@ Player Units include Children and Adults. Enemies never speak. The Flag bearer s
 ## Implementation constraints
 
 - Keep the change focused on dialogue presentation and event observation. Bark selection must not consume gameplay randomness or change combat outcomes, spawning, movement, damage, revival, or physics timing.
-- Reuse the existing paper UI art and typography. The Scout bubble already uses cream paper and a teal heading. Its separate tip has a different curved edge treatment; the new downward tip should match the reference's flat paper style.
+- Reuse the existing paper UI art and typography. The downward tail comes from the requested dialog box texture; do not draw a separate tail.
 - Keep event handling aligned with the actual Battle lifecycle. Unit start hooks also run on revival, and initial hooks can cause immediate deaths.
 - Preserve full character names before death cleanup. Revalidate speaker survival after nested death effects.
 - No new settings control is required for this version; the confirmed display rule follows combat speed.
@@ -94,5 +94,7 @@ The focused runtime scene exercises these behaviors. Commands and results are re
 ## Decision record
 
 Q1–Q17 settled scope, presentation, trigger rules, speaker selection, timing, fast-forward suppression, and repetition. Q18 confirmed this specification and the 24 dialogue lines. The subsequent implement request authorized implementation, review, and a commit on the current branch.
+
+The September 14 follow-up replaces the generated tail with the existing tail in `dialog box 10.png`, rotated downward and offset horizontally to point toward the speaker.
 
 No ADR is needed: these are reversible feature and presentation choices without a costly architectural commitment.

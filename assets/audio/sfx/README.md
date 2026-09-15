@@ -1,8 +1,10 @@
 # Mycelium sound pack
 
 40 effects generated with **ElevenLabs Sound Effects V2** through fal.ai:
-44.1 kHz, mono, 16-bit PCM WAV, 55 ms–1.4 s. All clips have tapered ends and
-at least 3.1 dB of peak headroom before the per-cue gains in `../sfx.gd`.
+44.1 kHz, mono, 16-bit PCM WAV, 55 ms–1.4 s. Source WAVs have tapered ends and
+at least 3.1 dB of peak headroom. Godot additionally normalizes all 40 clips
+during import (`edit/normalize=true`); per-cue gains in `../sfx.gd` shape the
+in-game mix after import.
 
 ## Sources
 
@@ -18,7 +20,7 @@ adjusts level within a peak ceiling. Selection favors complete events with
 quiet tails; it does not assess artistic quality. Use the sequential
 [listening preview](../../../.scratch/elevenlabs-sfx/preview.wav) for subjective
 review. Its cue order and timestamps are in `manifest.json`; the preview omits
-the game's per-cue gains and pitch variation.
+Godot's import normalization and the game's per-cue gains and pitch variation.
 
 From the repository root:
 

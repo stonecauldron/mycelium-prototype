@@ -55,6 +55,18 @@ retrieves missing cached source files using the recorded output URLs.
 
 ## Verification results
 
+Follow-up: the user requested Godot import normalization as well. All 40 WAV
+imports now enable `edit/normalize=true`. The source WAV preparation and hashes
+remain unchanged; source peak limits and the preview describe the files before
+Godot's additional normalization. The runtime results below were recorded before
+this follow-up unless stated otherwise.
+
+Godot normalization follow-up verification: all 40 import flags are enabled and
+their imported caches were rebuilt. The focused SFX/UI check passed 43 assertions
+and real combat passed 7, with no errors or warnings. The normalized combat mix
+has 2.20 dB peak headroom and zero clipped samples. Standards and Spec follow-up
+reviews each have zero findings.
+
 - All 120 source hashes and prepared WAVs pass the format, non-silence, peak,
   duration, and zero-endpoint audit. All 40 installed files match the manifest.
 - Repeating offline preparation produces identical selected WAV hashes.

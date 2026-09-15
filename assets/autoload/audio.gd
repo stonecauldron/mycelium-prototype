@@ -38,8 +38,11 @@ func play_base_music() -> AudioStreamPlayer:
 	return _play_music(_base_player)
 
 
-func play_battle_music() -> AudioStreamPlayer:
+## Restart for a new combat; result screens keep the current playback position.
+func play_battle_music(restart: bool = false) -> AudioStreamPlayer:
 	_battle_music_started = true
+	if restart:
+		_battle_player.stop()
 	return _play_music(_battle_player)
 
 
@@ -169,7 +172,10 @@ func _fade_music() -> void:
 	for player in [_base_player, _battle_player]:
 		var volume := 0.0
 		if _current_music != null and player.playing:
-			volume = 1.0 if player == _current_music else _BACKGROUND_MUSIC_VOLUME
+			if player == _current_music:
+				volume = 1.0
+			elif player == _base_player:
+				volume = _BACKGROUND_MUSIC_VOLUME
 		_music_fade.tween_property(player, "volume_linear", volume, _MUSIC_TRANSITION_SECONDS)
 	if _current_music == null:
 		_music_fade.chain().tween_callback(_finish_music_stop)

@@ -240,7 +240,7 @@ A unit's Melee, Mid, or Ranged role in battle.
 The music featured on the title screen and in the Base, also heard quietly under Battle music.
 
 **Battle music**:
-The music featured during Battles and their result screens, including day summary, victory, and game over. Once introduced, it continues quietly under Base music between Battles.
+The music featured during Battles and their result screens, including day summary, victory, and game over. It is silent in the Base and on the title screen, and restarts from the beginning for each new Battle.
 
 ### Distribution
 

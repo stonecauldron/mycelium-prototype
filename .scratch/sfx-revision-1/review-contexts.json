@@ -103,9 +103,9 @@
   ],
   [
     "harvest",
-    "Harvest / starter received",
+    "Harvest",
     "Nursery & progression",
-    "Harvesting ready mushrooms into the troop, and receiving the confirmed starter package at the beginning of a run."
+    "Harvesting ready mushrooms into the troop from the Nursery. Receiving the confirmed starter package is silent."
   ],
   [
     "train",

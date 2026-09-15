@@ -36,6 +36,8 @@ pitch variation; musical reward/outcome phrases use fixed pitch.
 
 Buttons, toggles, focus/hover feedback, and volume sliders are wired automatically,
 including dynamically created controls. Do not add another generic click handler.
+Set `silent_press_sfx` metadata to `true` on a button to suppress its press cue.
+Starter confirmation uses this option and grants its units without a reward sound.
 Custom cards and successful actions use explicit semantic cues in their owning UI
 controller. Projectiles expose **Launch Cue** in their scenes: throws by default,
 with bow/crossbow and horn overrides. New unit types using the shared combat scripts

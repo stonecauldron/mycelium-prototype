@@ -82,6 +82,8 @@ func _wire_ui_control(node: Node) -> void:
 
 
 func _on_button_pressed(button: BaseButton) -> void:
+	if bool(button.get_meta("silent_press_sfx", false)):
+		return
 	if button.is_visible_in_tree() and button.can_process() and not button.disabled:
 		play_ui_cue(Sfx.Cue.UI_TOGGLE if button.toggle_mode else Sfx.Cue.UI_CLICK)
 

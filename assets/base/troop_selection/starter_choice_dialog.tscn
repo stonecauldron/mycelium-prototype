@@ -112,3 +112,4 @@ focus_mode = 0
 theme_override_font_sizes/font_size = 24
 disabled = true
 text = "Confirm"
+metadata/silent_press_sfx = true

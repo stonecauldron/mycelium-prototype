@@ -299,6 +299,7 @@ func _on_reroll_pressed() -> void:
 		ActionFeedback.show_rejection(_reroll_button, spend)
 		return
 	Analytics.biomass_sink("Shop", "Reroll", cost)
+	Audio.play_ui_cue(Sfx.Cue.REROLL)
 	for card in _shop_cards:
 		card.clear_reroll_preview()
 	GameState.nursery.reroll_unlocked_shop_offers()
@@ -320,6 +321,7 @@ func _on_shop_lock_toggled(card: ShopOfferCard) -> void:
 		return
 	var locked := shop.toggle_locked(card.slot_index)
 	card.set_locked(locked)
+	Audio.play_ui_cue(Sfx.Cue.LOCK if locked else Sfx.Cue.UNLOCK)
 
 
 func _on_shop_offer_clicked(card: ShopOfferCard) -> void:
@@ -327,9 +329,12 @@ func _on_shop_offer_clicked(card: ShopOfferCard) -> void:
 
 
 func _on_stock_item_dropped(slot: DropSlot, data: Dictionary) -> void:
+	var previous_item := GameState.nursery.stock.get_at(slot.slot_index)
 	if StockInventory.consume_stock_rearrange(
 		GameState.nursery.stock, data, slot.slot_index, _stock_drag_types
 	):
+		if GameState.nursery.stock.get_at(slot.slot_index) != previous_item:
+			Audio.play_ui_cue(Sfx.Cue.MOVE)
 		_refresh()
 		return
 	_try_buy_shop_payload(data)
@@ -343,6 +348,7 @@ func _on_stock_spore_clicked(card: SporeCard) -> void:
 	if plot_index < 0:
 		return
 	if nursery.plant(plot_index, card.stock_index):
+		Audio.play_ui_cue(Sfx.Cue.PLANT)
 		GameState.show_plot_plant_hint = false
 		_refresh()
 
@@ -353,6 +359,7 @@ func _on_shop_sell_dropped(_zone: ShopDropZone, data: Dictionary) -> void:
 		return
 	var stock_index := int(data.get("stock_index", -1))
 	if GameState.try_sell_nursery_stock_item(stock_index):
+		Audio.play_ui_cue(Sfx.Cue.SELL)
 		_refresh()
 		_refresh_base_hud()
 
@@ -368,6 +375,7 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 		if fertilizer == null:
 			return
 		if GameState.try_buy_fertilizer(fertilizer, cost):
+			Audio.play_ui_cue(Sfx.Cue.PURCHASE)
 			_replace_bought_shop_slot(slot_index)
 			_rebuild_shop_cards()
 			_refresh()
@@ -378,6 +386,7 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 		if mutation == null:
 			return
 		if GameState.try_buy_mutation(mutation, cost):
+			Audio.play_ui_cue(Sfx.Cue.PURCHASE)
 			_replace_bought_shop_slot(slot_index)
 			_rebuild_shop_cards()
 			_refresh()
@@ -396,6 +405,7 @@ func _on_plant_pressed(tile: PlotTile) -> void:
 	if not GameState.nursery.is_plot_unlocked(tile.plot_index):
 		return
 	if GameState.try_plant_fresh_common(tile.plot_index):
+		Audio.play_ui_cue(Sfx.Cue.PLANT)
 		GameState.show_plot_plant_hint = false
 		_refresh()
 		_refresh_base_hud()
@@ -437,6 +447,7 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 			if kept.is_empty():
 				return
 			GameState.show_plot_harvest_hint = false
+			Audio.play_ui_cue(Sfx.Cue.HARVEST)
 			var toast_anchor := _control_canvas_rect(tile)
 			_refresh()
 			_show_hatch_toasts(kept, toast_anchor)
@@ -588,6 +599,7 @@ func _on_plot_item_dropped(tile: PlotTile, data: Dictionary) -> void:
 		"spore":
 			var stock_index := int(data.get("stock_index", 0))
 			if GameState.nursery.plant(tile.plot_index, stock_index):
+				Audio.play_ui_cue(Sfx.Cue.PLANT)
 				GameState.show_plot_plant_hint = false
 				_refresh()
 		"shop_fertilizer":
@@ -595,17 +607,20 @@ func _on_plot_item_dropped(tile: PlotTile, data: Dictionary) -> void:
 		"fertilizer":
 			var fert_index := int(data.get("stock_index", 0))
 			if GameState.nursery.apply_fertilizer_from_stock(tile.plot_index, fert_index):
+				Audio.play_ui_cue(Sfx.Cue.FERTILIZE)
 				_refresh()
 		"shop_mutation":
 			_apply_mutation_from_shop(tile.plot_index, data)
 		"mutation":
 			var mut_index := int(data.get("stock_index", 0))
 			if GameState.nursery.apply_mutation_from_stock(tile.plot_index, mut_index):
+				Audio.play_ui_cue(Sfx.Cue.MUTATE)
 				_refresh()
 
 
 func _try_unlock_plot() -> void:
 	if GameState.try_unlock_plot():
+		Audio.play_ui_cue(Sfx.Cue.UNLOCK)
 		_build_plot_tiles()
 		_refresh()
 		_refresh_base_hud()
@@ -624,6 +639,7 @@ func _apply_fertilizer_from_shop(plot_index: int, data: Dictionary) -> void:
 		GameState.biomass.add(cost)
 		return
 	Analytics.biomass_sink("Shop", Analytics.resource_slug(fertilizer), cost)
+	Audio.play_ui_cue(Sfx.Cue.FERTILIZE)
 	_replace_bought_shop_slot(slot_index)
 	_rebuild_shop_cards()
 	_refresh()
@@ -643,6 +659,7 @@ func _apply_mutation_from_shop(plot_index: int, data: Dictionary) -> void:
 		GameState.biomass.add(cost)
 		return
 	Analytics.biomass_sink("Shop", Analytics.resource_slug(mutation), cost)
+	Audio.play_ui_cue(Sfx.Cue.MUTATE)
 	_replace_bought_shop_slot(slot_index)
 	_rebuild_shop_cards()
 	_refresh()

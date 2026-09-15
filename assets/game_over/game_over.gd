@@ -10,6 +10,7 @@ const _TITLE_SCENE_PATH := "res://assets/title/title.tscn"
 
 func _ready() -> void:
 	Audio.play_battle_music()
+	Audio.play_ui_cue(Sfx.Cue.RUN_LOSS)
 	_new_run_button.pressed.connect(_on_new_run_pressed)
 	_feedback_button.pressed.connect(_on_feedback_pressed)
 	_wishlist_button.pressed.connect(_on_wishlist_pressed)

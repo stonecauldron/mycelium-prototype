@@ -52,6 +52,7 @@ func _apply_damage() -> void:
 	if _spent:
 		return
 	_spent = true
+	Audio.play_cue(Sfx.Cue.EXPLOSION)
 	var units: Array[Node] = get_tree().get_nodes_in_group("units")
 	for node in units:
 		var unit := node as Unit

@@ -81,6 +81,7 @@ func clear_drag_preview() -> void:
 func show_rejection(anchor: Control, decision: ActionDecision) -> void:
 	if not is_instance_valid(anchor) or not _is_rejection(decision):
 		return
+	Audio.play_ui_cue(Sfx.Cue.UI_ERROR)
 	_clear_drag_candidate(false)
 	_present(anchor, decision, PresentationMode.ANCHORED_MESSAGE)
 
@@ -88,6 +89,7 @@ func show_rejection(anchor: Control, decision: ActionDecision) -> void:
 func show_global_rejection(decision: ActionDecision) -> void:
 	if not _is_rejection(decision):
 		return
+	Audio.play_ui_cue(Sfx.Cue.UI_ERROR)
 	_clear_drag_candidate(false)
 	_present(null, decision, PresentationMode.GLOBAL_MESSAGE)
 

@@ -71,6 +71,7 @@ func _build_cards() -> void:
 
 
 func _on_card_pressed(seal: SealData) -> void:
+	Audio.play_ui_cue(Sfx.Cue.SELECT)
 	_selected = seal
 	_refresh_selection()
 
@@ -112,6 +113,7 @@ func _on_reroll_pressed() -> void:
 		_refresh_reroll_affordability()
 		return
 	Analytics.biomass_sink("Seal", "Reroll", cost)
+	Audio.play_ui_cue(Sfx.Cue.REROLL)
 	_rerolls_this_pick += 1
 	_offers = SealCatalog.roll_offers(_OFFER_COUNT, GameState.seals, null, _offers)
 	_selected = null

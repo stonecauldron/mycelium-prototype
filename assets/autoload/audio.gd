@@ -22,6 +22,8 @@ var _current_music: AudioStreamPlayer
 var _music_sources: Dictionary[AudioStreamPlayer, AudioStream] = {}
 var _battle_music_started: bool = false
 var _music_fade: Tween
+var _last_gameplay_cues: Dictionary[Sfx.Cue, int] = {}
+var _last_ui_cues: Dictionary[Sfx.Cue, int] = {}
 
 
 func _ready() -> void:
@@ -32,6 +34,65 @@ func _ready() -> void:
 	# Native loop points are used where available; other stream types repeat here.
 	_base_player.finished.connect(_base_player.play)
 	_battle_player.finished.connect(_battle_player.play)
+	get_tree().node_added.connect(_wire_ui_control)
+	for control in get_tree().root.find_children("*", "Control", true, false):
+		_wire_ui_control(control)
+
+
+func play_cue(cue: Sfx.Cue) -> AudioStreamPlayer:
+	if get_tree().paused or not _allow_cue(cue, _last_gameplay_cues):
+		return null
+	var sound: Dictionary = Sfx.SOUNDS[cue]
+	return play_sfx(sound.stream, sound.gain_db, sound.pitch_variation)
+
+
+func play_ui_cue(cue: Sfx.Cue) -> AudioStreamPlayer:
+	if not _allow_cue(cue, _last_ui_cues):
+		return null
+	var sound: Dictionary = Sfx.SOUNDS[cue]
+	return play_ui_sfx(sound.stream, sound.gain_db, sound.pitch_variation)
+
+
+func _allow_cue(cue: Sfx.Cue, last_played: Dictionary[Sfx.Cue, int]) -> bool:
+	if not Sfx.SOUNDS.has(cue):
+		return false
+	var now := Time.get_ticks_msec()
+	var spacing: int = Sfx.SOUNDS[cue].cooldown_ms
+	if now - last_played.get(cue, -spacing) < spacing:
+		return false
+	last_played[cue] = now
+	return true
+
+
+func _wire_ui_control(node: Node) -> void:
+	if node is BaseButton:
+		var button := node as BaseButton
+		var on_pressed := _on_button_pressed.bind(button)
+		if button.pressed.is_connected(on_pressed):
+			return
+		button.pressed.connect(on_pressed)
+		button.mouse_entered.connect(_on_button_hovered.bind(button))
+		button.focus_entered.connect(_on_button_hovered.bind(button))
+	elif node is Slider:
+		var slider := node as Slider
+		var on_changed := _on_slider_changed.bind(slider)
+		if not slider.value_changed.is_connected(on_changed):
+			slider.value_changed.connect(on_changed)
+
+
+func _on_button_pressed(button: BaseButton) -> void:
+	if button.is_visible_in_tree() and button.can_process() and not button.disabled:
+		play_ui_cue(Sfx.Cue.UI_TOGGLE if button.toggle_mode else Sfx.Cue.UI_CLICK)
+
+
+func _on_button_hovered(button: BaseButton) -> void:
+	if button.is_visible_in_tree() and button.can_process() and not button.disabled:
+		play_ui_cue(Sfx.Cue.UI_HOVER)
+
+
+func _on_slider_changed(_value: float, slider: Slider) -> void:
+	if slider.is_visible_in_tree() and slider.can_process() and slider.has_focus():
+		play_ui_cue(Sfx.Cue.UI_TICK)
 
 
 func play_base_music() -> AudioStreamPlayer:
@@ -78,6 +139,7 @@ func play_ui_sfx(
 
 
 func stop_gameplay_sfx() -> void:
+	_last_gameplay_cues.clear()
 	for player in _gameplay_players:
 		player.stop()
 		player.stream = null

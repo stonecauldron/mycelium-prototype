@@ -203,6 +203,7 @@ func _on_starter_package_chosen(package_id: StringName) -> void:
 	_starter_dialog = null
 	var units := StarterPackages.build_units(package_id)
 	GameState.troop.seed_if_empty(units)
+	Audio.play_ui_cue(Sfx.Cue.HARVEST)
 	bench = GameState.troop.bench
 	squad = GameState.troop.squad
 	_sync_all_slots()
@@ -263,7 +264,8 @@ func _ensure_seal_choice() -> void:
 
 func _on_seal_chosen(seal: SealData) -> void:
 	_seal_dialog = null
-	GameState.try_add_seal(seal)
+	if GameState.try_add_seal(seal):
+		Audio.play_ui_cue(Sfx.Cue.SEAL)
 	GameState.clear_pending_seal_choice()
 	_refresh_flag_seals()
 	_sync_all_slots()
@@ -348,6 +350,7 @@ func _move_unit(
 	var displaced: RosterUnitData = to_row[to_index]
 	to_row[to_index] = unit
 	from_row[from_index] = displaced
+	Audio.play_ui_cue(Sfx.Cue.MOVE)
 	_sync_all_slots()
 
 
@@ -370,6 +373,7 @@ func _bench_drop(_at_position: Vector2, data: Variant) -> void:
 
 func _on_squad_unlock_pressed(_slot: DropSlot) -> void:
 	if GameState.try_unlock_squad_slot():
+		Audio.play_ui_cue(Sfx.Cue.UNLOCK)
 		_build_squad_ui()
 		_sync_all_slots()
 		_refresh_base_hud()
@@ -426,6 +430,7 @@ func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
 	dialog.tree_exited.connect(_on_pupation_dialog_closed)
 	add_child(dialog)
 	dialog.setup(unit, school)
+	Audio.play_ui_cue(Sfx.Cue.UI_OPEN)
 
 
 func _open_compost_confirm(unit: RosterUnitData) -> void:
@@ -435,11 +440,13 @@ func _open_compost_confirm(unit: RosterUnitData) -> void:
 	dialog.tree_exited.connect(_on_compost_dialog_closed)
 	add_child(dialog)
 	dialog.setup(unit)
+	Audio.play_ui_cue(Sfx.Cue.UI_OPEN)
 
 
 func _on_pupation_confirmed(unit: RosterUnitData, school: int) -> void:
 	_pupation_dialog = null
 	if GameState.try_cocoon_for_pupation(unit, school):
+		Audio.play_ui_cue(Sfx.Cue.TRAIN)
 		_sync_all_slots()
 		_refresh_base_hud()
 
@@ -447,6 +454,7 @@ func _on_pupation_confirmed(unit: RosterUnitData, school: int) -> void:
 func _on_compost_confirmed(unit: RosterUnitData) -> void:
 	_compost_dialog = null
 	if GameState.try_compost_unit(unit):
+		Audio.play_ui_cue(Sfx.Cue.COMPOST)
 		_sync_all_slots()
 		_refresh_base_hud()
 

@@ -120,6 +120,7 @@ func _on_scout_reroll_pressed() -> void:
 		_refresh_reroll_affordability()
 		return
 	Analytics.biomass_sink("Scout", "Reroll", cost)
+	Audio.play_ui_cue(Sfx.Cue.REROLL)
 	GameState.advance_scout_reroll_cost()
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	GameState.ensure_upcoming_enemy_formation()

@@ -12,6 +12,7 @@ collision_mask = 5
 monitorable = false
 script = ExtResource("1_proj")
 launch_angle_deg = 60.0
+launch_cue = 23
 fallback_speed = 900.0
 max_lifetime = 3.5
 homing = true

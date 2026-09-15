@@ -168,8 +168,10 @@ func start_battle(
 	player_roster: Array[RosterUnitData],
 	enemy_roster: Array[RosterUnitData]
 ) -> void:
+	Audio.stop_gameplay_sfx()
 	Audio.play_battle_music(true)
 	_run_battle(player_roster, enemy_roster)
+	Audio.play_cue(Sfx.Cue.BATTLE_START)
 
 
 func _process(delta: float) -> void:
@@ -342,6 +344,7 @@ func _ensure_acid_rain_label() -> void:
 
 
 func _start_acid_rain() -> void:
+	Audio.play_cue(Sfx.Cue.ACID_RAIN)
 	_acid_rain_active = true
 	_acid_rain_tick_accum = 0.0
 	_acid_rain_active_elapsed = 0.0
@@ -598,6 +601,7 @@ func _try_emit_death_spore(roster: RosterUnitData, at_global: Vector2) -> void:
 	if spore == null:
 		return
 	_spawn_spore_generated(at_global, spore.tint)
+	Audio.play_cue(Sfx.Cue.SPORE)
 
 
 func _spawn_spore_generated(at_global: Vector2, tint: Color = Color.WHITE) -> void:
@@ -679,6 +683,7 @@ func _respawn_zombie_cap(
 	var spawn_pos := _zombie_respawn_global_position(troop)
 	var spawned := _spawn_unit(units_root, clone, color, squad_index, is_player, spawn_pos)
 	if spawned != null:
+		Audio.play_cue(Sfx.Cue.REVIVE)
 		var respawn_max := spawned.get_effective_max_hp()
 		if is_player:
 			_player_army_max_hp += respawn_max
@@ -720,6 +725,7 @@ func _check_battle_end() -> void:
 		return
 
 	# Sandbox rematches skip the victory beat so flags/walls stay reset-friendly.
+	Audio.play_ui_cue(Sfx.Cue.BATTLE_WIN)
 	if sandboxed:
 		_hitstop_active = false
 		_restore_engine_timing()

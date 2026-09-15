@@ -23,6 +23,7 @@ const _MORTAR_SPORE_COLOR := Color("9dcc6a")
 @export var piercing: bool = false
 ## After ballistic apex, steer toward a locked target with no gravity (great bow).
 @export var homing: bool = false
+@export var launch_cue: Sfx.Cue = Sfx.Cue.THROW
 
 var damage: int = 0
 var knockback_force: float = 0.0
@@ -52,6 +53,7 @@ func launch(
 	attack_knockback: float,
 	thrower: Node
 ) -> void:
+	Audio.play_cue(launch_cue)
 	global_position = from_global
 	damage = attack_damage
 	knockback_force = attack_knockback
@@ -146,6 +148,8 @@ func _is_homing_target_alive() -> bool:
 
 
 func _on_reached_ground() -> void:
+	if not _spent:
+		Audio.play_cue(Sfx.Cue.GROUND)
 	if explode_delay > 0.0 and aoe_radius > 0.0:
 		_arm_fuse()
 		return
@@ -167,6 +171,7 @@ func _arm_fuse() -> void:
 func _explode_aoe() -> void:
 	if not is_inside_tree():
 		return
+	Audio.play_cue(Sfx.Cue.EXPLOSION)
 	var origin := global_position
 	_spawn_aoe_spore_cloud(origin)
 	var radius_sq := aoe_radius * aoe_radius
@@ -262,6 +267,7 @@ func _resolve_hit() -> void:
 		if area is ProjectileBlocker:
 			var blocker := area as ProjectileBlocker
 			if blocker.blocks_projectile_from(_get_owner_troop()):
+				Audio.play_cue(Sfx.Cue.BLOCK)
 				_stick_and_fade()
 				return
 

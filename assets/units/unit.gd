@@ -753,6 +753,7 @@ func _process_lance_charge(delta: float) -> void:
 
 
 func _begin_lance_rush() -> void:
+	Audio.play_cue(Sfx.Cue.CHARGE)
 	_charge_phase = ChargePhase.RUSHING
 	_charge_timer = LANCE_CHARGE_MAX_DURATION
 	if _swing_tween:
@@ -961,6 +962,7 @@ func _start_attack() -> void:
 
 
 func _start_melee_lunge_attack() -> void:
+	Audio.play_cue(Sfx.Cue.HEAVY_SWING if combat.damage_type == WeaponData.DamageType.BLUNT else Sfx.Cue.SLASH)
 	if _hitbox != null:
 		_hitbox.enable_for_attack(
 			_get_attack_damage(false),
@@ -1491,6 +1493,11 @@ func take_damage(
 		amount = maxi(amount, 1)
 	else:
 		amount = maxi(amount, 0)
+	if amount > 0:
+		if pre_mitigation > amount:
+			Audio.play_cue(Sfx.Cue.BLOCK)
+		else:
+			Audio.play_cue(Sfx.Cue.HIT_BLUNT if damage_type == WeaponData.DamageType.BLUNT else Sfx.Cue.HIT_SLASH)
 	if amount > 0 and count_in_recap:
 		damage_taken += amount
 		if killer != null and is_instance_valid(killer):
@@ -1617,6 +1624,7 @@ func _die(
 	if _dying:
 		return
 	_dying = true
+	Audio.play_cue(Sfx.Cue.DEATH)
 	kill_streak = 0
 	if killer != null and is_instance_valid(killer):
 		killer.register_kill(self)

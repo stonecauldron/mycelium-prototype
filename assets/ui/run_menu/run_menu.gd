@@ -108,6 +108,8 @@ func open_menu() -> void:
 	get_tree().paused = true
 	_gear.focus_mode = Control.FOCUS_NONE
 	_overlay.show()
+	Audio.play_ui_cue(Sfx.Cue.UI_OPEN)
+	_page = Page.MENU
 	_show_page(Page.MENU)
 
 
@@ -116,6 +118,7 @@ func close_menu() -> void:
 		return
 	_open = false
 	_overlay.hide()
+	Audio.play_ui_cue(Sfx.Cue.UI_CLOSE)
 	_gear.focus_mode = Control.FOCUS_ALL
 	get_tree().paused = _was_paused
 
@@ -123,6 +126,8 @@ func close_menu() -> void:
 func _show_page(page: Page) -> void:
 	if _leaving:
 		return
+	if page != _page:
+		Audio.play_ui_cue(Sfx.Cue.UI_CLOSE if page == Page.MENU else Sfx.Cue.UI_OPEN)
 	_page = page
 	_menu_page.visible = page == Page.MENU
 	_settings_page.visible = page == Page.SETTINGS

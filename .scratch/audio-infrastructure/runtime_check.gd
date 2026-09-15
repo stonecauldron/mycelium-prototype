@@ -54,7 +54,9 @@ func _run() -> void:
 	_check(restored.get("sfx_volume") == 0.4 and restored.get("music_volume") == 0.75, "Saved volumes load into a fresh settings instance")
 	restored.free()
 	_check_volume_defaults()
+	_check(Audio.has_method("play_cue") and Audio.has_method("play_ui_cue"), "Named game cues are available through the audio helpers")
 	await _check_sfx()
+	await _check_cues()
 	await _check_music()
 	await _check_scenes_and_menu()
 	await _wait()
@@ -63,6 +65,48 @@ func _run() -> void:
 
 func _wait(seconds: float = 0.1) -> void:
 	await get_tree().create_timer(seconds, true, false, true).timeout
+
+
+func _check_cues() -> void:
+	var valid_pack := true
+	for cue in Sfx.Cue.values():
+		var sound: Dictionary = Sfx.SOUNDS[cue]
+		var stream := sound.stream as AudioStreamWAV
+		valid_pack = valid_pack and stream != null and stream.get_length() > 0.0 and stream.get_length() <= 1.5
+		valid_pack = valid_pack and stream.loop_mode == AudioStreamWAV.LOOP_DISABLED
+	_check(valid_pack, "Every named cue loads a short, non-looping sound")
+	Audio.stop_gameplay_sfx()
+	var hit := Audio.play_cue(Sfx.Cue.HIT_BLUNT)
+	_check(hit != null and hit.bus == &"SFX" and hit.playing, "Combat cues play through the SFX group")
+	_check(Audio.play_cue(Sfx.Cue.HIT_BLUNT) == null, "Repeated simultaneous impacts are limited")
+	_check(Audio.play_cue(Sfx.Cue.BLOCK) != null, "Different combat cues can overlap")
+	Engine.time_scale = 4.0
+	await _wait(0.1)
+	_check(Audio.play_cue(Sfx.Cue.HIT_BLUNT) != null, "Impact spacing expires in real time during fast-forward")
+	Engine.time_scale = 1.0
+	get_tree().paused = true
+	_check(Audio.play_cue(Sfx.Cue.REVIVE) == null, "New gameplay cues are ignored while paused")
+	var ui := Audio.play_ui_cue(Sfx.Cue.SELECT)
+	_check(ui != null and ui.bus == &"SFX" and ui.playing, "UI cues remain available while paused")
+	get_tree().paused = false
+	_check(Audio.play_cue(Sfx.Cue.REVIVE) != null, "An ignored paused request does not consume a cue's cooldown")
+	Audio.stop_gameplay_sfx()
+	_check(Audio.play_cue(Sfx.Cue.REVIVE) != null, "Resetting gameplay effects clears old scene cooldowns")
+	Audio.stop_gameplay_sfx()
+	# Dynamic controls use the same automatic wiring as rebuilt Shop/menu buttons.
+	var button := Button.new()
+	button.text = "Audio check"
+	button.position = Vector2(30, 30)
+	button.size = Vector2(160, 60)
+	add_child(button)
+	await _click(button)
+	var click_played := false
+	for node in Audio.get_children():
+		if node is AudioStreamPlayer and node.stream == Sfx.SOUNDS[Sfx.Cue.UI_CLICK].stream:
+			click_played = true
+	_check(click_played, "A mouse click on a dynamically created button triggers UI audio")
+	button.queue_free()
+	await _wait(0.2)
 
 
 func _check_volume_defaults() -> void:
@@ -365,5 +409,10 @@ func _check_menu(menu: RunMenu) -> void:
 	await _key(KEY_RIGHT)
 	_check(not AudioServer.is_bus_mute(AudioServer.get_bus_index(&"SFX")) and get_viewport().gui_get_focus_owner() == sfx, "Slider 100 unmutes SFX and right at the boundary keeps focus")
 	await _key(KEY_ESCAPE)
+	var back_sound := false
+	for node in Audio.get_children():
+		if node is AudioStreamPlayer and node.playing and node.stream == Sfx.SOUNDS[Sfx.Cue.UI_CLOSE].stream:
+			back_sound = true
+	_check(back_sound, "Escape back from Settings plays navigation feedback")
 	await _key(KEY_ESCAPE)
 	_check(not get_tree().paused, "Escape still resumes gameplay")

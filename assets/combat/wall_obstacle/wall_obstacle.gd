@@ -79,6 +79,8 @@ func take_damage(
 	if _dying:
 		return
 	var applied := maxi(amount, 0)
+	if applied > 0:
+		Audio.play_cue(Sfx.Cue.HIT_BLUNT)
 	if damage_type == WeaponData.DamageType.BLUNT:
 		applied *= 2
 	current_hp = maxi(current_hp - applied, 0)
@@ -97,6 +99,7 @@ func _die(knockback_from: Vector2 = Vector2.ZERO) -> void:
 	if _dying:
 		return
 	_dying = true
+	Audio.play_cue(Sfx.Cue.EXPLOSION)
 	destroyed.emit()
 	collision_layer = 0
 	collision_mask = 0

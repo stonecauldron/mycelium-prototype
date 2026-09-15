@@ -18,6 +18,29 @@ Music and its volume transitions continue while paused and use real time during 
 
 ## Sound effects
 
+The game ships a [40-effect playful organic pack](sfx/README.md). Its streams,
+individual gains, pitch variation, and minimum spacing are authored in `sfx.gd`.
+Use the named cue helpers for gameplay and UI events:
+
+```gdscript
+Audio.play_cue(Sfx.Cue.HIT_BLUNT)
+Audio.play_ui_cue(Sfx.Cue.HARVEST)
+```
+
+Each cue has a real-time cooldown, so simultaneous hits and fast-forwarded
+battles do not flood the mix. Different cues can overlap. These helpers return
+`null` when a cue is rate-limited or gameplay is paused. Most cues use ±10%
+pitch variation; musical reward/outcome phrases use fixed pitch.
+
+Buttons, toggles, focus/hover feedback, and volume sliders are wired automatically,
+including dynamically created controls. Do not add another generic click handler.
+Custom cards and successful actions use explicit semantic cues in their owning UI
+controller. Projectiles expose **Launch Cue** in their scenes: throws by default,
+with bow/crossbow and horn overrides. New unit types using the shared combat scripts
+inherit attack, hit, block, and death feedback.
+
+### Custom streams
+
 Load or export an `AudioStream` on the scene that owns the action, then trigger it where the action occurs:
 
 ```gdscript

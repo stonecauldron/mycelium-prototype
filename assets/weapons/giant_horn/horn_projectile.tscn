@@ -17,6 +17,7 @@ max_lifetime = 3.0
 stick_hold_time = 0.12
 stick_fade_time = 0.25
 piercing = true
+launch_cue = 25
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_horn")

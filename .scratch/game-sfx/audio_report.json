@@ -1,0 +1,282 @@
+[
+  {
+    "cue": "ui_hover",
+    "duration_seconds": 0.06,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -14.85,
+    "preview_start_seconds": 0.0
+  },
+  {
+    "cue": "ui_click",
+    "duration_seconds": 0.1,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -17.91,
+    "preview_start_seconds": 0.51
+  },
+  {
+    "cue": "ui_toggle",
+    "duration_seconds": 0.15,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -18.15,
+    "preview_start_seconds": 1.06
+  },
+  {
+    "cue": "ui_tick",
+    "duration_seconds": 0.055,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -14.36,
+    "preview_start_seconds": 1.66
+  },
+  {
+    "cue": "ui_open",
+    "duration_seconds": 0.2,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -15.09,
+    "preview_start_seconds": 2.165
+  },
+  {
+    "cue": "ui_close",
+    "duration_seconds": 0.16,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -17.8,
+    "preview_start_seconds": 2.815
+  },
+  {
+    "cue": "ui_error",
+    "duration_seconds": 0.24,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -18.35,
+    "preview_start_seconds": 3.425
+  },
+  {
+    "cue": "select",
+    "duration_seconds": 0.13,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -14.6,
+    "preview_start_seconds": 4.115
+  },
+  {
+    "cue": "move",
+    "duration_seconds": 0.17,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -17.15,
+    "preview_start_seconds": 4.695
+  },
+  {
+    "cue": "purchase",
+    "duration_seconds": 0.38,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -16.34,
+    "preview_start_seconds": 5.315
+  },
+  {
+    "cue": "sell",
+    "duration_seconds": 0.35,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -16.63,
+    "preview_start_seconds": 6.145
+  },
+  {
+    "cue": "reroll",
+    "duration_seconds": 0.4,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -16.92,
+    "preview_start_seconds": 6.945
+  },
+  {
+    "cue": "lock",
+    "duration_seconds": 0.17,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -18.2,
+    "preview_start_seconds": 7.795
+  },
+  {
+    "cue": "unlock",
+    "duration_seconds": 0.28,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -18.79,
+    "preview_start_seconds": 8.415
+  },
+  {
+    "cue": "plant",
+    "duration_seconds": 0.32,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -17.95,
+    "preview_start_seconds": 9.145
+  },
+  {
+    "cue": "fertilize",
+    "duration_seconds": 0.48,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -15.98,
+    "preview_start_seconds": 9.915
+  },
+  {
+    "cue": "mutate",
+    "duration_seconds": 0.6,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -16.73,
+    "preview_start_seconds": 10.845
+  },
+  {
+    "cue": "harvest",
+    "duration_seconds": 0.65,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -18.16,
+    "preview_start_seconds": 11.895
+  },
+  {
+    "cue": "train",
+    "duration_seconds": 0.55,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -18.11,
+    "preview_start_seconds": 12.995
+  },
+  {
+    "cue": "compost",
+    "duration_seconds": 0.4,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -18.66,
+    "preview_start_seconds": 13.995
+  },
+  {
+    "cue": "seal",
+    "duration_seconds": 0.65,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -20.31,
+    "preview_start_seconds": 14.845
+  },
+  {
+    "cue": "slash",
+    "duration_seconds": 0.18,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -14.44,
+    "preview_start_seconds": 15.945
+  },
+  {
+    "cue": "heavy_swing",
+    "duration_seconds": 0.27,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -15.94,
+    "preview_start_seconds": 16.575
+  },
+  {
+    "cue": "bow",
+    "duration_seconds": 0.25,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -19.23,
+    "preview_start_seconds": 17.295
+  },
+  {
+    "cue": "throw",
+    "duration_seconds": 0.23,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -13.98,
+    "preview_start_seconds": 17.995
+  },
+  {
+    "cue": "horn",
+    "duration_seconds": 0.4,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -15.13,
+    "preview_start_seconds": 18.675
+  },
+  {
+    "cue": "charge",
+    "duration_seconds": 0.38,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -17.77,
+    "preview_start_seconds": 19.525
+  },
+  {
+    "cue": "hit_slash",
+    "duration_seconds": 0.24,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -20.19,
+    "preview_start_seconds": 20.355
+  },
+  {
+    "cue": "hit_blunt",
+    "duration_seconds": 0.24,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -22.92,
+    "preview_start_seconds": 21.045
+  },
+  {
+    "cue": "block",
+    "duration_seconds": 0.24,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -21.76,
+    "preview_start_seconds": 21.735
+  },
+  {
+    "cue": "death",
+    "duration_seconds": 0.36,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -18.01,
+    "preview_start_seconds": 22.425
+  },
+  {
+    "cue": "ground",
+    "duration_seconds": 0.2,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -20.24,
+    "preview_start_seconds": 23.235
+  },
+  {
+    "cue": "explosion",
+    "duration_seconds": 0.65,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -20.41,
+    "preview_start_seconds": 23.885
+  },
+  {
+    "cue": "spore",
+    "duration_seconds": 0.42,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -20.6,
+    "preview_start_seconds": 24.985
+  },
+  {
+    "cue": "revive",
+    "duration_seconds": 0.75,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -18.36,
+    "preview_start_seconds": 25.855
+  },
+  {
+    "cue": "acid_rain",
+    "duration_seconds": 0.8,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -19.32,
+    "preview_start_seconds": 27.055
+  },
+  {
+    "cue": "battle_start",
+    "duration_seconds": 0.7,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -20.38,
+    "preview_start_seconds": 28.305
+  },
+  {
+    "cue": "battle_win",
+    "duration_seconds": 0.9,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -17.29,
+    "preview_start_seconds": 29.455
+  },
+  {
+    "cue": "run_win",
+    "duration_seconds": 1.5,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -16.35,
+    "preview_start_seconds": 30.805
+  },
+  {
+    "cue": "run_loss",
+    "duration_seconds": 1.2,
+    "peak_dbfs": -3.1,
+    "rms_dbfs": -16.33,
+    "preview_start_seconds": 32.755
+  }
+]

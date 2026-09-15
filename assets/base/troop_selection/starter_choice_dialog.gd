@@ -49,6 +49,7 @@ func _build_cards() -> void:
 
 
 func _on_card_pressed(package_id: StringName) -> void:
+	Audio.play_ui_cue(Sfx.Cue.SELECT)
 	_selected_id = package_id
 	_refresh_selection()
 

@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://.scratch/game-sfx/runtime_check.gd" id="1"]
+
+[node name="GameSoundCheck" type="Node"]
+process_mode = 3
+script = ExtResource("1")

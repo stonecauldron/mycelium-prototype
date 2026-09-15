@@ -250,4 +250,7 @@ func _run() -> void:
 		var screen := await _scene("res://assets/%s.tscn" % path)
 		_check(screen.find_child("RunMenu", true, false) == null, "%s has no in-run menu" % path)
 	print("SETTINGS MENU CHECK: ", _failures, " failures")
+	Audio.stop_music()
+	# Let result stingers finish and decoder voices retire before engine shutdown.
+	await _wait(1.6)
 	get_tree().quit(0 if _failures == 0 else 1)

@@ -424,6 +424,7 @@ func try_unlock_squad_slot() -> bool:
 
 func start_new_run() -> void:
 	reset_run()
+	Audio.play_base_music(true)
 	SceneTransition.change_scene(BASE_SCENE_PATH)
 
 

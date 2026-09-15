@@ -12,6 +12,8 @@ Status: Implemented and verified on 2026-09-15.
 - Music loops, continues while paused, and keeps normal pitch and speed during fast-forward and hitstop.
 - Provide two configurable music slots with dedicated players: Base and Battle. Crossfade into Battle over 2 seconds, restarting Battle music for each new combat, including rematches. Crossfade back to Base/title over 8 seconds, resuming Base music from where it paused at the end of its fade-out.
 - Music playback survives scene replacement.
+- Starting a new Run from title, game over, or victory restarts Base music from the beginning with a 0.5-second fade-in. Ordinary Base/result visits retain playback continuity.
+- Battle music plays 3 dB lower than its previous level, including during crossfades. This is a per-track adjustment; the Music and SFX volume preferences remain independent.
 - Title and Base select Base music; combat selects Battle music. Only the selected song remains audible after a crossfade. Day summary, victory, and game over start the eight-second crossfade back to Base music. Continuing from results to Base keeps that fade and playback position without restarting either.
 - Pause the outgoing song when its crossfade finishes. Initial playback from silence starts only the selected track with a 0.5-second fade-in.
 - Empty track slots are valid and remain silent; selecting one still fades out the other track. Explicitly stopping music fades out and stops both tracks over 0.5 seconds, clearing their playback positions.
@@ -41,7 +43,7 @@ The authoring guide explains how to assign the two tracks and trigger SFX. The g
 ## Verification
 
 - Godot 4.7 editor initialization/import completed without script errors.
-- The focused runtime check passed all 97 assertions covering independent bus volumes, mute/unmute, persistence, defaults and invalid values, SFX overlap/pause/scene cleanup, randomized/custom/fixed pitch and gameplay RNG independence, music loops, two-second and eight-second crossfades, paused Base position and resumption, new-combat and rematch restarts, all three result-screen transitions, interrupted fades and stops, empty slots, first-entry behavior, and actual Settings mouse/keyboard input.
+- The focused runtime check passed all 106 assertions covering independent bus volumes, mute/unmute, persistence, defaults and invalid values, SFX overlap/pause/scene cleanup, randomized/custom/fixed pitch and gameplay RNG independence, music loops, two-second and eight-second crossfades, paused Base position and resumption, new-combat and rematch restarts, all three result-screen transitions and New Run buttons, the Battle track's −3 dB level, interrupted fades and stops, empty slots, first-entry behavior, and actual Settings mouse/keyboard input.
 - The existing settings/combat runtime check passed all 57 assertions, including pause/resume at 1×/2×/4× and reset of engine timing on return to title.
 - The native UI check passed and its rendered Settings panel was inspected. It used the Dummy audio driver; sound samples were generated in memory for verification.
 - The native OpenGL run reports the existing three-texture cleanup diagnostics on process exit. The final headless audio check has no warnings or errors.

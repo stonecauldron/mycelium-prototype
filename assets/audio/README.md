@@ -10,7 +10,9 @@ The title screen and Base play Base music. Each new Battle restarts Battle music
 
 Returning directly from combat to Base/title also uses the eight-second crossfade. Initial playback from silence fades in over 0.5 seconds and starts only the selected song. Empty slots stay silent; selecting one still fades out the other song. The Music settings slider scales both songs during transitions.
 
-Use `Audio.play_battle_music(true)` when starting a new combat, including rematches. Use `Audio.play_base_music()` on results and Base/title entry. Repeated selection of the same song preserves playback and the current fade. `Audio.stop_music()` fades out and stops both songs over 0.5 seconds, clearing their positions; the next request starts playback from the beginning.
+Use `Audio.play_battle_music(true)` when starting a new combat, including rematches. Use `Audio.play_base_music()` on results and Base/title entry. Starting a new Run calls `Audio.play_base_music(true)` to restart Base music with a 0.5-second fade-in. Repeated selection without a restart preserves playback and the current fade. `Audio.stop_music()` fades out and stops both songs over 0.5 seconds, clearing their positions; the next request starts playback from the beginning.
+
+Battle music is trimmed by **−3 dB** relative to its original level, including throughout crossfades. Adjust `_BATTLE_VOLUME_DB` in `assets/autoload/audio.gd` to tune this balance. The in-game Music slider still controls both songs together.
 
 OGG, MP3, and WAV tracks loop automatically. Existing loop offsets/points are preserved; changes apply to a playback copy, so using the same file as an effect does not make the effect loop. Other Godot stream types repeat when they finish; use native loop points for seamless music.
 

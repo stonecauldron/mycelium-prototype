@@ -8,6 +8,7 @@ const _DEFAULT_PITCH_VARIATION := 0.1
 const _MUSIC_FADE_SECONDS := 0.5
 const _BATTLE_CROSSFADE_SECONDS := 2.0
 const _BASE_CROSSFADE_SECONDS := 8.0
+const _BATTLE_VOLUME_DB := -3.0
 
 @export var base_music: AudioStream
 @export var battle_music: AudioStream
@@ -95,8 +96,10 @@ func _on_slider_changed(_value: float, slider: Slider) -> void:
 		play_ui_cue(Sfx.Cue.UI_TICK)
 
 
-func play_base_music() -> AudioStreamPlayer:
-	return _play_music(_base_player, base_music, _BASE_CROSSFADE_SECONDS)
+## New Runs restart with a short fade-in; returning to Base resumes with a crossfade.
+func play_base_music(restart: bool = false) -> AudioStreamPlayer:
+	var seconds := _MUSIC_FADE_SECONDS if restart else _BASE_CROSSFADE_SECONDS
+	return _play_music(_base_player, base_music, seconds, restart)
 
 
 ## Restart for a new combat, including rematches in the same scene.
@@ -240,7 +243,7 @@ func _fade_music(seconds: float) -> void:
 	for player in [_base_player, _battle_player]:
 		var volume := 0.0
 		if player == _current_music and player.has_stream_playback():
-			volume = 1.0
+			volume = db_to_linear(_BATTLE_VOLUME_DB) if player == _battle_player else 1.0
 		_music_fade.tween_property(player, "volume_linear", volume, seconds)
 	if _current_music == null:
 		_music_fade.chain().tween_callback(_finish_music_stop)

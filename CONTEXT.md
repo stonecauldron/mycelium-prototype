@@ -237,7 +237,7 @@ A unit's Melee, Mid, or Ranged role in battle.
 ### Audio
 
 **Base music**:
-The music featured on the title screen and in the Base. It pauses after fading out for a Battle and resumes from that position starting on the day summary, victory, or game over screen.
+The music featured on the title screen and in the Base. It pauses after fading out for a Battle and resumes from that position starting on the day summary, victory, or game over screen. Starting a new Run restarts it from the beginning.
 
 **Battle music**:
 The music featured during Battles. It restarts for each new Battle and fades back to Base music starting on the day summary, victory, or game over screen.

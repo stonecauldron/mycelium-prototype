@@ -6,11 +6,11 @@
 2. Open `assets/autoload/audio.tscn` in Godot and select the root **Audio** node.
 3. Assign **Base Music** and **Battle Music** in the Inspector, then save the scene.
 
-The title screen and Base play Base music at full volume with Battle music silent. Each new Battle restarts Battle music from the beginning and brings it to full volume while Base music lowers to 20%. Returning to Base or title restores Base music to full volume and silences Battle music. Base music keeps its playback position throughout. Volume changes take 0.5 seconds.
+The title screen and Base play Base music. Each new Battle restarts Battle music from the beginning and crossfades from Base to Battle over **2 seconds**. Base music pauses once it has faded to silence. Entering day summary, game over, or victory resumes Base music from that paused position and crossfades back over **8 seconds**. Continuing to Base or title preserves that playback and any fade already in progress. Only the selected song remains audible once a crossfade finishes.
 
-Combat, day summary, victory, and game over use the Battle mix. Result screens continue the current Battle music without restarting it. A direct launch into one of these scenes starts both tracks at those levels. Empty slots stay silent, while an assigned other track keeps its usual level; an empty Base slot does not make Battle music audible in Base. The Music settings slider scales the entire mix.
+Returning directly from combat to Base/title also uses the eight-second crossfade. Initial playback from silence fades in over 0.5 seconds and starts only the selected song. Empty slots stay silent; selecting one still fades out the other song. The Music settings slider scales both songs during transitions.
 
-Use `Audio.play_battle_music(true)` when starting a new combat, including rematches. Use `Audio.play_battle_music()` on result screens to preserve playback, and `Audio.play_base_music()` on Base/title entry. `Audio.stop_music()` fades out and stops both songs; the next request starts playback from the beginning.
+Use `Audio.play_battle_music(true)` when starting a new combat, including rematches. Use `Audio.play_base_music()` on results and Base/title entry. Repeated selection of the same song preserves playback and the current fade. `Audio.stop_music()` fades out and stops both songs over 0.5 seconds, clearing their positions; the next request starts playback from the beginning.
 
 OGG, MP3, and WAV tracks loop automatically. Existing loop offsets/points are preserved; changes apply to a playback copy, so using the same file as an effect does not make the effect loop. Other Godot stream types repeat when they finish; use native loop points for seamless music.
 

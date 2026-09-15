@@ -32,7 +32,7 @@ const _FORMATION_COLORS := {
 
 
 func _ready() -> void:
-	Audio.play_battle_music()
+	Audio.play_base_music()
 	_title.text = "Day %d => Day %d" % [GameState.current_day, GameState.current_day + 1]
 	_populate_combat_recap()
 	_populate_entries(DaySummaryFeed.take_entries())

@@ -5,8 +5,9 @@ extends Node
 const _SFX_VOICES := 16
 const _UI_VOICES := 4
 const _DEFAULT_PITCH_VARIATION := 0.1
-const _MUSIC_TRANSITION_SECONDS := 0.5
-const _BACKGROUND_MUSIC_VOLUME := 0.2
+const _MUSIC_FADE_SECONDS := 0.5
+const _BATTLE_CROSSFADE_SECONDS := 2.0
+const _BASE_CROSSFADE_SECONDS := 8.0
 
 @export var base_music: AudioStream
 @export var battle_music: AudioStream
@@ -20,7 +21,6 @@ var _gameplay_scene: Node
 var _pitch_rng := RandomNumberGenerator.new()
 var _current_music: AudioStreamPlayer
 var _music_sources: Dictionary[AudioStreamPlayer, AudioStream] = {}
-var _battle_music_started: bool = false
 var _music_fade: Tween
 var _last_gameplay_cues: Dictionary[Sfx.Cue, int] = {}
 var _last_ui_cues: Dictionary[Sfx.Cue, int] = {}
@@ -96,22 +96,19 @@ func _on_slider_changed(_value: float, slider: Slider) -> void:
 
 
 func play_base_music() -> AudioStreamPlayer:
-	return _play_music(_base_player)
+	return _play_music(_base_player, base_music, _BASE_CROSSFADE_SECONDS)
 
 
-## Restart for a new combat; result screens keep the current playback position.
+## Restart for a new combat, including rematches in the same scene.
 func play_battle_music(restart: bool = false) -> AudioStreamPlayer:
-	_battle_music_started = true
-	if restart:
-		_battle_player.stop()
-	return _play_music(_battle_player)
+	return _play_music(_battle_player, battle_music, _BATTLE_CROSSFADE_SECONDS, restart)
 
 
 func stop_music() -> void:
 	if _current_music == null:
 		return
 	_current_music = null
-	_fade_music()
+	_fade_music(_MUSIC_FADE_SECONDS)
 
 
 ## Returned players are pooled; do not retain them across later playback calls.
@@ -182,14 +179,20 @@ func _play_effect(
 	return player
 
 
-func _play_music(foreground: AudioStreamPlayer) -> AudioStreamPlayer:
-	var changed := _ensure_music_player(_base_player, base_music)
-	if _battle_music_started:
-		changed = _ensure_music_player(_battle_player, battle_music) or changed
-	if _current_music != foreground or changed:
-		_current_music = foreground
-		_fade_music()
-	return foreground if foreground.stream != null else null
+func _play_music(
+	player: AudioStreamPlayer,
+	stream: AudioStream,
+	seconds: float,
+	restart: bool = false
+) -> AudioStreamPlayer:
+	var initial := not _base_player.has_stream_playback() and not _battle_player.has_stream_playback()
+	if restart:
+		player.stop()
+	var changed := _ensure_music_player(player, stream)
+	if _current_music != player or changed:
+		_current_music = player
+		_fade_music(_MUSIC_FADE_SECONDS if initial else seconds)
+	return player if player.stream != null else null
 
 
 func _ensure_music_player(player: AudioStreamPlayer, stream: AudioStream) -> bool:
@@ -199,11 +202,14 @@ func _ensure_music_player(player: AudioStreamPlayer, stream: AudioStream) -> boo
 		player.stream = null
 		_music_sources.erase(player)
 		return changed
-	if _music_sources.get(player) == stream and player.playing:
-		return false
+	if _music_sources.get(player) == stream and player.has_stream_playback():
+		var was_paused := player.stream_paused
+		player.stream_paused = false
+		return was_paused
 	player.stop()
 	player.stream = _looping_music(stream)
 	player.volume_linear = 0.0
+	player.stream_paused = false
 	player.play()
 	_music_sources[player] = stream
 	return true
@@ -225,7 +231,7 @@ func _looping_music(stream: AudioStream) -> AudioStream:
 	return looped
 
 
-func _fade_music() -> void:
+func _fade_music(seconds: float) -> void:
 	if _music_fade != null:
 		_music_fade.kill()
 	_music_fade = create_tween().set_parallel(true)
@@ -233,14 +239,19 @@ func _fade_music() -> void:
 	_music_fade.set_ignore_time_scale(true)
 	for player in [_base_player, _battle_player]:
 		var volume := 0.0
-		if _current_music != null and player.playing:
-			if player == _current_music:
-				volume = 1.0
-			elif player == _base_player:
-				volume = _BACKGROUND_MUSIC_VOLUME
-		_music_fade.tween_property(player, "volume_linear", volume, _MUSIC_TRANSITION_SECONDS)
+		if player == _current_music and player.has_stream_playback():
+			volume = 1.0
+		_music_fade.tween_property(player, "volume_linear", volume, seconds)
 	if _current_music == null:
 		_music_fade.chain().tween_callback(_finish_music_stop)
+	else:
+		_music_fade.chain().tween_callback(_pause_outgoing_music)
+
+
+func _pause_outgoing_music() -> void:
+	for player in [_base_player, _battle_player]:
+		if player != _current_music:
+			player.stream_paused = true
 
 
 func _finish_music_stop() -> void:
@@ -248,4 +259,3 @@ func _finish_music_stop() -> void:
 		player.stop()
 		player.stream = null
 	_music_sources.clear()
-	_battle_music_started = false

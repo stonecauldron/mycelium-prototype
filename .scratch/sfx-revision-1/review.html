@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Mycelium · SFX review</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { color-scheme: light dark; --bg:light-dark(#fff,#171917); --fg:light-dark(#242824,#e8ece7); --muted:light-dark(#576057,#a9b3a8); --line:light-dark(#dce2db,#343d34); --soft:light-dark(#f2f5f0,#242c24); --accent:light-dark(#315b35,#bed7af); --on-accent:light-dark(#fff,#1b2918); --error:light-dark(#a52121,#ffaaaa); }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:14px/1.55 system-ui,sans-serif; }
+  main { max-width:1000px; margin:0 auto; padding:32px 24px 64px; }
+  h1 { margin:0; font-size:24px; line-height:1.3; }
+  h2 { font-size:18px; margin:32px 0 0; }
+  h3 { font-size:15px; margin:0; }
+  p { margin:6px 0; }
+  .secondary,.meta { color:var(--muted); }
+  .meta { font-size:12px; }
+  code { font-size:12px; color:var(--muted); overflow-wrap:anywhere; }
+  .controls { display:flex; gap:18px; flex-wrap:wrap; align-items:center; margin:20px 0 8px; }
+  .field { display:flex; flex-direction:column; gap:4px; }
+  .toggle { display:flex; align-items:center; gap:7px; }
+  button,select,textarea { font:inherit; color:var(--fg); }
+  button,select { padding:7px 12px; border:1px solid var(--line); border-radius:6px; background:var(--soft); }
+  button { cursor:pointer; white-space:nowrap; }
+  button:hover { border-color:var(--accent); }
+  button:disabled { opacity:.45; cursor:default; }
+  button[aria-pressed="true"] { background:var(--accent); color:var(--on-accent); }
+  :is(button,select,textarea,input):focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+  .sounds { list-style:none; padding:0; margin:0; }
+  .sound { border-bottom:1px solid var(--line); padding:18px 0; }
+  .sound-row { display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap; }
+  .description { flex:1 1 270px; min-width:0; }
+  .name { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .actions { display:flex; gap:8px; flex-shrink:0; flex-wrap:wrap; }
+  .note { margin-top:14px; }
+  textarea { width:100%; min-height:76px; resize:vertical; padding:10px; border:1px solid var(--line); border-radius:6px; background:var(--soft); }
+  .error { color:var(--error); }
+  #status { min-height:1.55em; }
+  footer { border-top:1px solid var(--line); margin-top:28px; padding-top:16px; }
+  [hidden] { display:none !important; }
+  @media (max-width:480px) { main { padding:20px 16px 40px; } .sound-row { gap:10px; } textarea,select { font-size:16px; } }
+  @media (pointer:coarse) { button,select { min-height:44px; } }
+</style>
+</head>
+<body>
+<main id="sfx-review">
+  <header>
+    <h1>Game SFX review</h1>
+    <p class="secondary">47 active sounds · 13 revised · 7 new Great cues · ElevenLabs Sound Effects V2 · Godot normalization enabled</p>
+    <p>Compare the revised sounds with their previous takes. Great cues include the regular sound for comparison. Your existing notes are preserved.</p>
+    <div class="controls">
+      <label class="field" for="show">Sounds <select id="show"><option value="revised">Revised &amp; Great sounds</option><option value="all">All sounds</option></select></label>
+      <label class="field" for="level">Playback level
+        <select id="level"><option value="review">Review level</option><option value="game">In-game levels</option></select>
+      </label>
+      <label class="toggle" for="pitch"><input id="pitch" type="checkbox">Random pitch variation</label>
+      <button type="button" id="stop" disabled>Stop audio</button>
+      <button type="button" id="copy-notes" hidden>Copy change requests</button>
+    </div>
+    <p class="meta">Review level: normalized clips at −6 dB. In-game levels: authored cue gains, SFX volume at 100%. One sound plays at a time.</p>
+    <p id="status" class="meta" role="status">Ready to play</p>
+    <p id="error" class="error" role="alert" hidden></p>
+  </header>
+  <div id="groups"></div>
+  <section id="requests" hidden><h2>Your change requests</h2><p class="secondary">Copy these into our chat when ready. Notes are saved in this browser.</p><textarea id="request-text" aria-label="Change requests to send to Codex" readonly></textarea></section>
+  <footer class="meta">Source: current Sfx cue bank and gameplay hooks. Audio captured from Godot’s imported resources at normal pitch, with lossless previews.</footer>
+</main>
+<script id="sfx-data" type="application/json">[]</script>
+<script>
+(() => {
+  const root = document.getElementById('sfx-review');
+  const cues = JSON.parse(document.getElementById('sfx-data').textContent);
+  const groups = root.querySelector('#groups');
+  const show = root.querySelector('#show');
+  const level = root.querySelector('#level');
+  const pitch = root.querySelector('#pitch');
+  const stopButton = root.querySelector('#stop');
+  const copyButton = root.querySelector('#copy-notes');
+  const status = root.querySelector('#status');
+  const errorBox = root.querySelector('#error');
+  const requests = root.querySelector('#requests');
+  const requestText = root.querySelector('#request-text');
+  const storageKey = 'mycelium-sfx-review-notes-v1';
+  const notes = {};
+  const buffers = new Map();
+  const playButtons = new Map();
+  let engine = null, current = null, currentId = null, revision = 0;
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+    for (const cue of cues) if (typeof saved[cue.id] === 'string') notes[cue.id] = saved[cue.id];
+  } catch (_) {}
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+  function resetPlaying() {
+    if (currentId) {
+      const button = playButtons.get(currentId);
+      button.textContent = button.dataset.label;
+      button.setAttribute('aria-pressed', 'false');
+    }
+    current = null; currentId = null; stopButton.disabled = true;
+  }
+  function stop() {
+    revision++;
+    if (current) { current.stop(); current.disconnect(); }
+    resetPlaying();
+  }
+  async function play(cue, previous = false) {
+    const key = cue.id + (previous ? ':previous' : '');
+    const take = previous ? cue.previous : cue;
+    const label = cue.title + (previous ? ' · ' + cue.previousLabel : '');
+    const same = currentId === key;
+    stop();
+    if (same) { status.textContent = 'Stopped'; return; }
+    const request = revision;
+    errorBox.hidden = true;
+    try {
+      if (!engine) engine = new AudioContext();
+      await engine.resume();
+      let buffer = buffers.get(key);
+      if (!buffer) {
+        const bytes = Uint8Array.from(atob(take.audio), x => x.charCodeAt(0));
+        buffer = await engine.decodeAudioData(bytes.buffer);
+        buffers.set(key, buffer);
+      }
+      if (request !== revision) return;
+      const source = engine.createBufferSource();
+      const gain = engine.createGain();
+      source.buffer = buffer;
+      source.playbackRate.value = pitch.checked ? 1 + (Math.random() * 2 - 1) * take.pitch_variation : 1;
+      gain.gain.value = level.value === 'game' ? Math.pow(10, (take.gain_db + 6) / 20) : 1;
+      source.connect(gain); gain.connect(engine.destination);
+      current = source; currentId = key; stopButton.disabled = false;
+      const button = playButtons.get(key);
+      button.textContent = 'Stop'; button.setAttribute('aria-pressed', 'true');
+      status.textContent = 'Playing ' + label + ' · ' + cue.id;
+      source.onended = () => {
+        source.disconnect(); gain.disconnect();
+        if (current === source) { resetPlaying(); status.textContent = 'Played ' + label + ' · ' + cue.id; }
+      };
+      source.start();
+    } catch (error) {
+      resetPlaying();
+      errorBox.textContent = 'Could not play ' + cue.id + ': ' + error.message;
+      errorBox.hidden = false;
+    }
+  }
+  function updateRequests() {
+    const selected = cues.filter(cue => notes[cue.id]?.trim());
+    requests.hidden = copyButton.hidden = !selected.length;
+    requestText.value = selected.length ? 'Please update these Mycelium SFX:\n\n' + selected.map(cue => cue.id + ': ' + notes[cue.id].trim()).join('\n') : '';
+    requestText.rows = Math.max(4, selected.length + 3);
+  }
+  for (const name of new Set(cues.map(cue => cue.group))) {
+    const section = element('section');
+    section.append(element('h2', '', name));
+    const list = element('ul', 'sounds'); list.setAttribute('role', 'list');
+    section.append(list); groups.append(section);
+    for (const cue of cues.filter(cue => cue.group === name)) {
+      const item = element('li', 'sound'); item.dataset.cue = cue.id; item.dataset.revised = String(!!cue.previous);
+      item.hidden = !cue.previous;
+      const row = element('div', 'sound-row');
+      const description = element('div', 'description');
+      const title = element('div', 'name');
+      title.append(element('h3', '', cue.title), element('code', '', cue.id));
+      if (cue.previous) title.append(element('span', 'meta', cue.previousLabel === 'Regular' ? 'New Great cue' : 'Revised'));
+      description.append(title, element('p', '', cue.context), element('p', 'meta', `${Math.round(cue.duration_seconds * 1000)} ms · Game gain ${cue.gain_db} dB · ${cue.pitch_variation ? 'Pitch ±' + Math.round(cue.pitch_variation * 100) + '%' : 'Fixed pitch'}`));
+      const actions = element('div', 'actions');
+      const playButton = element('button', '', cue.previous ? 'Play updated' : 'Play');
+      playButton.dataset.label = playButton.textContent;
+      playButton.type = 'button'; playButton.setAttribute('aria-label', 'Play ' + cue.title); playButton.setAttribute('aria-pressed', 'false');
+      playButton.addEventListener('click', () => play(cue)); playButtons.set(cue.id, playButton);
+      const noteButton = element('button', '', notes[cue.id]?.trim() ? 'Edit note' : 'Note');
+      noteButton.type = 'button'; noteButton.setAttribute('aria-label', 'Note for ' + cue.title); noteButton.setAttribute('aria-expanded', 'false'); noteButton.setAttribute('aria-controls', 'note-' + cue.id);
+      const note = element('div', 'note'); note.id = 'note-' + cue.id; note.hidden = true;
+      const label = element('label', 'field', 'Requested change for ' + cue.id); label.htmlFor = 'input-' + cue.id;
+      const input = element('textarea'); input.id = 'input-' + cue.id; input.value = notes[cue.id] || ''; input.rows = 2;
+      input.addEventListener('input', () => {
+        notes[cue.id] = input.value;
+        noteButton.textContent = input.value.trim() ? 'Edit note' : 'Note';
+        try { localStorage.setItem(storageKey, JSON.stringify(notes)); }
+        catch (_) { errorBox.textContent = 'Notes could not be saved in this browser. Copy your change requests before closing the page.'; errorBox.hidden = false; }
+        updateRequests();
+      });
+      noteButton.addEventListener('click', () => {
+        note.hidden = !note.hidden;
+        noteButton.setAttribute('aria-expanded', String(!note.hidden));
+        if (!note.hidden) input.focus();
+      });
+      label.append(input); note.append(label);
+      actions.append(playButton);
+      if (cue.previous) {
+        const before = element('button', '', 'Play ' + cue.previousLabel.toLowerCase());
+        before.type = 'button'; before.dataset.label = before.textContent;
+        before.setAttribute('aria-label', 'Play ' + cue.previousLabel.toLowerCase() + ' ' + cue.title);
+        before.setAttribute('aria-pressed', 'false');
+        before.addEventListener('click', () => play(cue, true));
+        playButtons.set(cue.id + ':previous', before); actions.append(before);
+      }
+      actions.append(noteButton); row.append(description, actions); item.append(row, note); list.append(item);
+    }
+  }
+  function filterSounds() {
+    stop();
+    for (const item of groups.querySelectorAll('.sound')) item.hidden = show.value === 'revised' && item.dataset.revised !== 'true';
+    for (const section of groups.children) section.hidden = !section.querySelector('.sound:not([hidden])');
+  }
+  show.addEventListener('change', filterSounds);
+  filterSounds();
+  stopButton.addEventListener('click', () => { stop(); status.textContent = 'Stopped'; });
+  level.addEventListener('change', stop);
+  copyButton.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(requestText.value); status.textContent = 'Change requests copied. Paste them into our chat.'; }
+    catch (_) { requestText.focus(); requestText.select(); status.textContent = 'Select and copy the change requests below.'; }
+  });
+  window.addEventListener('pagehide', () => { stop(); if (engine) engine.close(); });
+  updateRequests();
+})();
+</script>
+</body>
+</html>

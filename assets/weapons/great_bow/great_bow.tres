@@ -8,6 +8,7 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Great Bow"
+great_weapon_sfx = true
 short_description = "Patient, precise, punishing. Homing shot."
 formation_line = 2
 engagement_stance = 3

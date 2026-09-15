@@ -1,0 +1,284 @@
+[
+  [
+    "ui_hover",
+    "Button hover",
+    "Interface & selection",
+    "Hovering over or moving keyboard focus onto an enabled button."
+  ],
+  [
+    "ui_click",
+    "Button click",
+    "Interface & selection",
+    "Pressing a regular button across the title screen, menus, Base, and combat HUD. Some actions also play a dedicated cue."
+  ],
+  [
+    "ui_toggle",
+    "Toggle",
+    "Interface & selection",
+    "Pressing a toggle-mode button, including checkboxes and toggle controls."
+  ],
+  [
+    "ui_tick",
+    "Slider tick",
+    "Interface & selection",
+    "Changing a focused slider, including the SFX and Music volume sliders."
+  ],
+  [
+    "ui_open",
+    "Open / navigate",
+    "Interface & selection",
+    "Opening the run menu or Settings, switching Base tabs, and opening training or compost confirmation dialogs."
+  ],
+  [
+    "ui_close",
+    "Close / back",
+    "Interface & selection",
+    "Closing the run menu or going back from Settings, including keyboard Back/Escape."
+  ],
+  [
+    "ui_error",
+    "Action rejected",
+    "Interface & selection",
+    "Rejected actions shown by ActionFeedback, such as an unaffordable action. Hovering a rejection preview stays silent."
+  ],
+  [
+    "select",
+    "Choose a card",
+    "Interface & selection",
+    "Selecting a starter-package card or a Seal offer before confirming the choice."
+  ],
+  [
+    "move",
+    "Move / swap",
+    "Interface & selection",
+    "Rearranging Nursery stock, or moving and swapping units between squad and bench slots."
+  ],
+  [
+    "purchase",
+    "Purchase",
+    "Shop & unlocks",
+    "Successfully buying fertilizer or a mutation into stock. Applying a shop item directly to a plot uses its application cue."
+  ],
+  [
+    "sell",
+    "Sell",
+    "Shop & unlocks",
+    "Successfully selling a spore, fertilizer, or mutation from Nursery stock."
+  ],
+  [
+    "reroll",
+    "Reroll",
+    "Shop & unlocks",
+    "Successfully rerolling the Nursery shop, Scout army, or mid-run Seal offers."
+  ],
+  [
+    "lock",
+    "Lock offer",
+    "Shop & unlocks",
+    "Locking a Nursery shop offer so it is kept through a reroll."
+  ],
+  [
+    "unlock",
+    "Unlock",
+    "Shop & unlocks",
+    "Unlocking a shop offer, buying an additional Nursery plot, or unlocking a squad slot."
+  ],
+  [
+    "plant",
+    "Plant",
+    "Nursery & progression",
+    "Planting a stock spore or planting a fresh common mushroom in an empty Nursery plot."
+  ],
+  [
+    "fertilize",
+    "Fertilize",
+    "Nursery & progression",
+    "Successfully applying fertilizer to a plot, either from stock or directly from the shop."
+  ],
+  [
+    "mutate",
+    "Mutate",
+    "Nursery & progression",
+    "Successfully applying a mutation to a plot, either from stock or directly from the shop."
+  ],
+  [
+    "harvest",
+    "Harvest / starter received",
+    "Nursery & progression",
+    "Harvesting ready mushrooms into the troop, and receiving the confirmed starter package at the beginning of a run."
+  ],
+  [
+    "train",
+    "Begin training",
+    "Nursery & progression",
+    "Confirming training successfully places a unit into its pupation cocoon."
+  ],
+  [
+    "compost",
+    "Compost",
+    "Nursery & progression",
+    "Successfully composting a unit after confirming the action."
+  ],
+  [
+    "seal",
+    "Seal acquired",
+    "Nursery & progression",
+    "Successfully adding the confirmed Seal to the run."
+  ],
+  [
+    "slash",
+    "Slashing swing",
+    "Combat",
+    "Starting a regular non-blunt melee attack, shared by player and enemy units. Great weapons use their dedicated heavier swings. Contact uses a separate hit cue."
+  ],
+  [
+    "heavy_swing",
+    "Blunt swing",
+    "Combat",
+    "Starting a regular blunt melee attack, shared by player and enemy units. Great Hammer and Great Shield use Great swing."
+  ],
+  [
+    "bow",
+    "Bow / crossbow release",
+    "Combat",
+    "Launching a regular Bow or Crossbow projectile. Great Bow uses its own heavier bowstring release."
+  ],
+  [
+    "throw",
+    "Projectile launch",
+    "Combat",
+    "The default launch for regular thrown weapons, mortar shots and enemy projectiles. Great Spear has its own heavier throw."
+  ],
+  [
+    "horn",
+    "Horn blast",
+    "Combat",
+    "Launching the Great Horn projectile."
+  ],
+  [
+    "charge",
+    "Charge",
+    "Combat",
+    "A charging unit begins its charge run."
+  ],
+  [
+    "hit_slash",
+    "Slashing impact",
+    "Combat",
+    "Positive non-blunt damage on a unit. Direct Great weapon contacts have a dedicated impact; mitigated hits use Block."
+  ],
+  [
+    "hit_blunt",
+    "Blunt impact",
+    "Combat",
+    "Positive blunt damage on a unit, or regular damage to a wall. Direct Great weapon contacts have dedicated impacts; mitigated hits use Block."
+  ],
+  [
+    "block",
+    "Block / mitigation",
+    "Combat",
+    "Damage is reduced on a unit, or a projectile is intercepted. Great Shield damage reduction uses Great block."
+  ],
+  [
+    "death",
+    "Unit death",
+    "Combat",
+    "A player or enemy unit begins dying."
+  ],
+  [
+    "ground",
+    "Projectile landing",
+    "Combat",
+    "An unspent projectile reaches the ground, before sticking or arming an explosive fuse."
+  ],
+  [
+    "explosion",
+    "Explosion",
+    "Combat",
+    "An explosive projectile or Boom Cap detonates, or a wall is destroyed."
+  ],
+  [
+    "spore",
+    "Death spore",
+    "Combat",
+    "A fallen adult successfully generates a spore for the Nursery."
+  ],
+  [
+    "revive",
+    "Revival",
+    "Combat",
+    "A Zombie Cap revival successfully spawns the returning unit."
+  ],
+  [
+    "acid_rain",
+    "Acid Rain begins",
+    "Combat",
+    "The battlefield Acid Rain phase starts. This is an onset cue, not a continuous rain loop."
+  ],
+  [
+    "battle_start",
+    "Battle start",
+    "Battle & run",
+    "Combat starts, including combat sandbox encounters."
+  ],
+  [
+    "battle_win",
+    "Battle won",
+    "Battle & run",
+    "A battle resolves as a victory. A final run victory also has its own result-screen cue."
+  ],
+  [
+    "run_win",
+    "Run won",
+    "Battle & run",
+    "Entering the run victory screen."
+  ],
+  [
+    "run_loss",
+    "Run lost",
+    "Battle & run",
+    "Entering the game-over screen."
+  ],
+  [
+    "great_slash",
+    "Great slashing swing",
+    "Combat",
+    "Starting a Great Sword attack or a Great Spear close-range melee attack."
+  ],
+  [
+    "great_swing",
+    "Great hammer / shield swing",
+    "Combat",
+    "Starting a Great Hammer attack or a Great Shield bash. Shield damage remains slashing; only the sound changes."
+  ],
+  [
+    "great_bow",
+    "Great Bow release",
+    "Combat",
+    "Launching the Great Bow homing arrow, with a heavier bowstring release."
+  ],
+  [
+    "great_throw",
+    "Great Spear throw",
+    "Combat",
+    "Launching a Great Spear in its ranged attack mode."
+  ],
+  [
+    "great_hit_slash",
+    "Great piercing impact",
+    "Combat",
+    "An unmitigated Great Sword, Great Spear or Great Bow contact. Also used for their direct hits on walls and flag bearers."
+  ],
+  [
+    "great_hit_blunt",
+    "Great blunt impact",
+    "Combat",
+    "An unmitigated Great Hammer, Great Shield or Great Horn contact. Also used for their direct hits on walls and flag bearers."
+  ],
+  [
+    "great_block",
+    "Great Shield block",
+    "Combat",
+    "A unit equipped with Great Shield reduces incoming damage. Projectile interception retains its usual block cue."
+  ]
+]

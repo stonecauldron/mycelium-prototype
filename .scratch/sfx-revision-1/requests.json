@@ -1,0 +1,962 @@
+[
+  {
+    "cue": "purchase",
+    "take": 1,
+    "input": {
+      "text": "A classic mechanical cash register KA-CHING! One crisp lever clack immediately followed by a bright ringing metal bell and a short coin jingle. Unmistakable satisfying purchase confirmation, cheerful and punchy. Close, clean isolated sound, no voices or background music, natural bell decay.",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55e-e785-7c60-9b5c-ab3801ca213f",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55e-e785-7c60-9b5c-ab3801ca213f/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55e-e785-7c60-9b5c-ab3801ca213f",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87f5/tqMMs8TenylRo-4nctTef_sound_effect.mp3"
+  },
+  {
+    "cue": "purchase",
+    "take": 2,
+    "input": {
+      "text": "A classic mechanical cash register KA-CHING! One crisp lever clack immediately followed by a bright ringing metal bell and a short coin jingle. Unmistakable satisfying purchase confirmation, cheerful and punchy. Close, clean isolated sound, no voices or background music, natural bell decay.",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-4e00-7a02-8f46-7e8a6771f486",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-4e00-7a02-8f46-7e8a6771f486/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-4e00-7a02-8f46-7e8a6771f486",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87f8/3Q8OCVMF3Ho_18MYzZGpM_sound_effect.mp3"
+  },
+  {
+    "cue": "purchase",
+    "take": 3,
+    "input": {
+      "text": "A classic mechanical cash register KA-CHING! One crisp lever clack immediately followed by a bright ringing metal bell and a short coin jingle. Unmistakable satisfying purchase confirmation, cheerful and punchy. Close, clean isolated sound, no voices or background music, natural bell decay.",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-5ed8-70d0-b2b7-d171f26d59ad",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-5ed8-70d0-b2b7-d171f26d59ad/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-5ed8-70d0-b2b7-d171f26d59ad",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87f8/Iz1sNHKEbA7GqO98MpwmB_sound_effect.mp3"
+  },
+  {
+    "cue": "plant",
+    "take": 1,
+    "input": {
+      "text": "One close-up shovel digging into moist garden soil to bury a seed: sharp metal spade crunch into earth, a quick scoop of gritty dirt falling back into the hole, then a firm earthy pat. Clearly audible shovel and soil, chunky tactile gardening foley. One compact action, no voices, music or ambience.",
+      "duration_seconds": 1.3,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-701b-7713-a479-1cdc79baa406",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-701b-7713-a479-1cdc79baa406/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-701b-7713-a479-1cdc79baa406",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87f9/bnd1XL-WjV1uzp6DY-rG-_sound_effect.mp3"
+  },
+  {
+    "cue": "plant",
+    "take": 2,
+    "input": {
+      "text": "One close-up shovel digging into moist garden soil to bury a seed: sharp metal spade crunch into earth, a quick scoop of gritty dirt falling back into the hole, then a firm earthy pat. Clearly audible shovel and soil, chunky tactile gardening foley. One compact action, no voices, music or ambience.",
+      "duration_seconds": 1.3,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-7bfb-70a3-9262-40f842319290",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-7bfb-70a3-9262-40f842319290/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-7bfb-70a3-9262-40f842319290",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87f9/4DQoK6VBIa6c607EDx0aD_sound_effect.mp3"
+  },
+  {
+    "cue": "plant",
+    "take": 3,
+    "input": {
+      "text": "One close-up shovel digging into moist garden soil to bury a seed: sharp metal spade crunch into earth, a quick scoop of gritty dirt falling back into the hole, then a firm earthy pat. Clearly audible shovel and soil, chunky tactile gardening foley. One compact action, no voices, music or ambience.",
+      "duration_seconds": 1.3,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-8b32-7912-a0c3-a459e71e12a6",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-8b32-7912-a0c3-a459e71e12a6/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-8b32-7912-a0c3-a459e71e12a6",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87f9/IoXFIL4IrnZ5bStKy7yQK_sound_effect.mp3"
+  },
+  {
+    "cue": "harvest",
+    "take": 1,
+    "input": {
+      "text": "A powerful fantasy loot chest opening: immediate weighty wooden CLUNK and latch crack, an explosive magical reward burst, bright sparkling treasure chimes cascading into a satisfying major-key resolution. Exuberant punchy loot-box reveal for a whimsical mushroom game. One event, no voices or ambience.",
+      "duration_seconds": 2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-9b96-7f13-9569-66b43c29052e",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-9b96-7f13-9569-66b43c29052e/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-9b96-7f13-9569-66b43c29052e",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fa/p4Z0DTW6vf2uQ2yBOYz94_sound_effect.mp3"
+  },
+  {
+    "cue": "harvest",
+    "take": 2,
+    "input": {
+      "text": "A powerful fantasy loot chest opening: immediate weighty wooden CLUNK and latch crack, an explosive magical reward burst, bright sparkling treasure chimes cascading into a satisfying major-key resolution. Exuberant punchy loot-box reveal for a whimsical mushroom game. One event, no voices or ambience.",
+      "duration_seconds": 2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-a9e0-7d71-b387-199e3bb54692",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-a9e0-7d71-b387-199e3bb54692/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-a9e0-7d71-b387-199e3bb54692",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fa/A7Ik59nXMauDRQL27FzK0_sound_effect.mp3"
+  },
+  {
+    "cue": "harvest",
+    "take": 3,
+    "input": {
+      "text": "A powerful fantasy loot chest opening: immediate weighty wooden CLUNK and latch crack, an explosive magical reward burst, bright sparkling treasure chimes cascading into a satisfying major-key resolution. Exuberant punchy loot-box reveal for a whimsical mushroom game. One event, no voices or ambience.",
+      "duration_seconds": 2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-b5c8-7052-854c-8120ae831a67",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-b5c8-7052-854c-8120ae831a67/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-b5c8-7052-854c-8120ae831a67",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fb/8ENp6ivGurdzl_pT3qEE5_sound_effect.mp3"
+  },
+  {
+    "cue": "slash",
+    "take": 1,
+    "input": {
+      "text": "A single forceful sword slash: explosive sharp cutting SWISH with a hard metallic bite and a thick low-mid thwack, short clean decay. Fast aggressive attack onset, substantial body, not a faint airy swoosh. Stylized close-up fantasy combat, no voices, music, ambience or repeated attacks.",
+      "duration_seconds": 0.65,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-c1cd-71d2-9a34-5ab7f1f3a50e",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-c1cd-71d2-9a34-5ab7f1f3a50e/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-c1cd-71d2-9a34-5ab7f1f3a50e",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fb/SKc_Q_dN2hFxXA0UgBUCk_sound_effect.mp3"
+  },
+  {
+    "cue": "slash",
+    "take": 2,
+    "input": {
+      "text": "A single forceful sword slash: explosive sharp cutting SWISH with a hard metallic bite and a thick low-mid thwack, short clean decay. Fast aggressive attack onset, substantial body, not a faint airy swoosh. Stylized close-up fantasy combat, no voices, music, ambience or repeated attacks.",
+      "duration_seconds": 0.65,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-d151-70c3-acce-cf2b12ed581d",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-d151-70c3-acce-cf2b12ed581d/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-d151-70c3-acce-cf2b12ed581d",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fb/ggn-T1NNx4Pl-VONaz8nR_sound_effect.mp3"
+  },
+  {
+    "cue": "slash",
+    "take": 3,
+    "input": {
+      "text": "A single forceful sword slash: explosive sharp cutting SWISH with a hard metallic bite and a thick low-mid thwack, short clean decay. Fast aggressive attack onset, substantial body, not a faint airy swoosh. Stylized close-up fantasy combat, no voices, music, ambience or repeated attacks.",
+      "duration_seconds": 0.65,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-ddb9-7760-8733-03ca05d567cb",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-ddb9-7760-8733-03ca05d567cb/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-ddb9-7760-8733-03ca05d567cb",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fc/jcVZ8wCcqBbT56bch68dI_sound_effect.mp3"
+  },
+  {
+    "cue": "heavy_swing",
+    "take": 1,
+    "input": {
+      "text": "One heavy warhammer swing, forceful low air displacement WHOOM ending in a weighty wooden-metallic THUNK. Thick low-mid punch and crisp attack, compact decay, physical and powerful. Close-up stylized fantasy combat, no voices, music, background or repeated swings.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-ea1d-7be3-a662-cabc286fe352",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-ea1d-7be3-a662-cabc286fe352/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-ea1d-7be3-a662-cabc286fe352",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fc/SKruQqoQEiQ0vLcObmKGS_sound_effect.mp3"
+  },
+  {
+    "cue": "heavy_swing",
+    "take": 2,
+    "input": {
+      "text": "One heavy warhammer swing, forceful low air displacement WHOOM ending in a weighty wooden-metallic THUNK. Thick low-mid punch and crisp attack, compact decay, physical and powerful. Close-up stylized fantasy combat, no voices, music, background or repeated swings.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a55f-f5dc-7273-8918-02b32468c111",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-f5dc-7273-8918-02b32468c111/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a55f-f5dc-7273-8918-02b32468c111",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fc/Jw0Wd1p3vV5cWqpxrAMBQ_sound_effect.mp3"
+  },
+  {
+    "cue": "heavy_swing",
+    "take": 3,
+    "input": {
+      "text": "One heavy warhammer swing, forceful low air displacement WHOOM ending in a weighty wooden-metallic THUNK. Thick low-mid punch and crisp attack, compact decay, physical and powerful. Close-up stylized fantasy combat, no voices, music, background or repeated swings.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a560-03a0-7522-a228-b69028cda4cd",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-03a0-7522-a228-b69028cda4cd/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-03a0-7522-a228-b69028cda4cd",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fd/Qvsc6ab9sZOgiE5ZoOHNl_sound_effect.mp3"
+  },
+  {
+    "cue": "bow",
+    "take": 1,
+    "input": {
+      "text": "A single real wooden recurve bow releasing an arrow at full tension. Loud crisp bowstring SNAP-TWANG immediately at onset, short taut string vibration and wooden limb resonance, followed by a very quick arrow air zip. Recognizable archery release. No target impact, no voices, no music, no repeated shots.",
+      "duration_seconds": 0.7,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a560-10db-7032-b97b-fbe6273ccabd",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-10db-7032-b97b-fbe6273ccabd/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-10db-7032-b97b-fbe6273ccabd",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fd/pw5YAO3sEMPg7EoMVM5l2_sound_effect.mp3"
+  },
+  {
+    "cue": "bow",
+    "take": 2,
+    "input": {
+      "text": "A single real wooden recurve bow releasing an arrow at full tension. Loud crisp bowstring SNAP-TWANG immediately at onset, short taut string vibration and wooden limb resonance, followed by a very quick arrow air zip. Recognizable archery release. No target impact, no voices, no music, no repeated shots.",
+      "duration_seconds": 0.7,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a560-1ce4-73f0-a50a-fd4ee371bbcf",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-1ce4-73f0-a50a-fd4ee371bbcf/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-1ce4-73f0-a50a-fd4ee371bbcf",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fd/DQ-8DIg1lv_BjVghlZTUS_sound_effect.mp3"
+  },
+  {
+    "cue": "bow",
+    "take": 3,
+    "input": {
+      "text": "A single real wooden recurve bow releasing an arrow at full tension. Loud crisp bowstring SNAP-TWANG immediately at onset, short taut string vibration and wooden limb resonance, followed by a very quick arrow air zip. Recognizable archery release. No target impact, no voices, no music, no repeated shots.",
+      "duration_seconds": 0.7,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a560-3985-7210-8e14-644f3b6ee862",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-3985-7210-8e14-644f3b6ee862/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-3985-7210-8e14-644f3b6ee862",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa87fe/lJExNJJ5FjFjplTwru53f_sound_effect.mp3"
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 1,
+    "input": {
+      "text": "A single massive blunt hammer impact into a dense wooden stump: hard low-pitched THUD with a sharp wooden crack at onset and thick chesty low-mid body, very short solid decay. Dry, heavy and blunt, no metallic ringing or airy swish. Close isolated stylized combat impact, no music or voices.",
+      "duration_seconds": 0.65,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a560-9d23-7a93-9a1c-7340229b531b",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-9d23-7a93-9a1c-7340229b531b/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-9d23-7a93-9a1c-7340229b531b",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8800/_id4X5ikxXQdqX1qJoVYt_sound_effect.mp3"
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 2,
+    "input": {
+      "text": "A single massive blunt hammer impact into a dense wooden stump: hard low-pitched THUD with a sharp wooden crack at onset and thick chesty low-mid body, very short solid decay. Dry, heavy and blunt, no metallic ringing or airy swish. Close isolated stylized combat impact, no music or voices.",
+      "duration_seconds": 0.65,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a560-ad74-70f2-bd86-288d9abde8aa",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-ad74-70f2-bd86-288d9abde8aa/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-ad74-70f2-bd86-288d9abde8aa",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8801/IeOxACsp7FRRGgoYDkv3k_sound_effect.mp3"
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 3,
+    "input": {
+      "text": "A single massive blunt hammer impact into a dense wooden stump: hard low-pitched THUD with a sharp wooden crack at onset and thick chesty low-mid body, very short solid decay. Dry, heavy and blunt, no metallic ringing or airy swish. Close isolated stylized combat impact, no music or voices.",
+      "duration_seconds": 0.65,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a560-b9fb-7aa1-b9c5-cd29bf13b614",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-b9fb-7aa1-b9c5-cd29bf13b614/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-b9fb-7aa1-b9c5-cd29bf13b614",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8801/Lou60FW6Lz_EcwiP3_z-c_sound_effect.mp3"
+  },
+  {
+    "cue": "explosion",
+    "take": 1,
+    "input": {
+      "text": "One powerful bomb explosion. Immediate sharp explosive CRACK, huge deep BOOM, dense low-mid pressure wave and rumbling debris tail that quickly dies away. Strong broadband blast with real physical weight, not a puff, pop or tiny firecracker. Close isolated fantasy mortar detonation, no music, voices or ambience.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a560-c61d-7411-a02a-7d6aa1df3e08",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-c61d-7411-a02a-7d6aa1df3e08/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-c61d-7411-a02a-7d6aa1df3e08",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8801/9iH5WebalO4Wc4XK9W4tg_sound_effect.mp3"
+  },
+  {
+    "cue": "explosion",
+    "take": 2,
+    "input": {
+      "text": "One powerful bomb explosion. Immediate sharp explosive CRACK, huge deep BOOM, dense low-mid pressure wave and rumbling debris tail that quickly dies away. Strong broadband blast with real physical weight, not a puff, pop or tiny firecracker. Close isolated fantasy mortar detonation, no music, voices or ambience.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a560-eb3b-7343-a36f-57179d263e37",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-eb3b-7343-a36f-57179d263e37/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-eb3b-7343-a36f-57179d263e37",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8802/s1Z5yPSe-GYVk0pykVS98_sound_effect.mp3"
+  },
+  {
+    "cue": "explosion",
+    "take": 3,
+    "input": {
+      "text": "One powerful bomb explosion. Immediate sharp explosive CRACK, huge deep BOOM, dense low-mid pressure wave and rumbling debris tail that quickly dies away. Strong broadband blast with real physical weight, not a puff, pop or tiny firecracker. Close isolated fantasy mortar detonation, no music, voices or ambience.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a560-fd27-74b2-a417-b1bea71e2775",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-fd27-74b2-a417-b1bea71e2775/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a560-fd27-74b2-a417-b1bea71e2775",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8803/__VXeUVd38PL0l_EX2NaN_sound_effect.mp3"
+  },
+  {
+    "cue": "battle_start",
+    "take": 1,
+    "input": {
+      "text": "A bold bright orchestral trumpet fanfare announcing battle: three punchy rising brass notes in a clean major-key triad, reinforced by French horns and a crisp timpani accent. Confident heroic attack, loud open unmuted trumpets, accurately in tune, final note resolves with a short natural decay. One complete short fanfare; no vocals or ambience.",
+      "duration_seconds": 2.5,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-0c00-77e1-89c0-8814c02e2d15",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-0c00-77e1-89c0-8814c02e2d15/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-0c00-77e1-89c0-8814c02e2d15",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8803/_ZmHPzWHoHBhrN0sbBxiV_sound_effect.mp3"
+  },
+  {
+    "cue": "battle_start",
+    "take": 2,
+    "input": {
+      "text": "A bold bright orchestral trumpet fanfare announcing battle: three punchy rising brass notes in a clean major-key triad, reinforced by French horns and a crisp timpani accent. Confident heroic attack, loud open unmuted trumpets, accurately in tune, final note resolves with a short natural decay. One complete short fanfare; no vocals or ambience.",
+      "duration_seconds": 2.5,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-1b59-7a40-8cac-36d12bf069da",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-1b59-7a40-8cac-36d12bf069da/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-1b59-7a40-8cac-36d12bf069da",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8804/RR7X8gM3kEX1jz5Qvh-_N_sound_effect.mp3"
+  },
+  {
+    "cue": "battle_start",
+    "take": 3,
+    "input": {
+      "text": "A bold bright orchestral trumpet fanfare announcing battle: three punchy rising brass notes in a clean major-key triad, reinforced by French horns and a crisp timpani accent. Confident heroic attack, loud open unmuted trumpets, accurately in tune, final note resolves with a short natural decay. One complete short fanfare; no vocals or ambience.",
+      "duration_seconds": 2.5,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-2a9a-73f0-88bc-3047f04c7527",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-2a9a-73f0-88bc-3047f04c7527/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-2a9a-73f0-88bc-3047f04c7527",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8804/k5PNEXs9VplBK_5dbBteH_sound_effect.mp3"
+  },
+  {
+    "cue": "battle_win",
+    "take": 1,
+    "input": {
+      "text": "A triumphant victory fanfare played by bright open trumpets and French horns, four crisp rising major-key notes resolving to a glorious held tonic chord, strong timpani and small cymbal accent. Celebratory and unmistakably victorious, punchy full-bodied brass, all instruments in tune. Complete short phrase with natural final decay, no vocals or background ambience.",
+      "duration_seconds": 3.2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-3771-7a53-81f6-a8f67ea1b72b",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-3771-7a53-81f6-a8f67ea1b72b/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-3771-7a53-81f6-a8f67ea1b72b",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8804/thR6kTCSkUMcvN8ujLMdT_sound_effect.mp3"
+  },
+  {
+    "cue": "battle_win",
+    "take": 2,
+    "input": {
+      "text": "A triumphant victory fanfare played by bright open trumpets and French horns, four crisp rising major-key notes resolving to a glorious held tonic chord, strong timpani and small cymbal accent. Celebratory and unmistakably victorious, punchy full-bodied brass, all instruments in tune. Complete short phrase with natural final decay, no vocals or background ambience.",
+      "duration_seconds": 3.2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-427c-7a60-b5c8-e570ba8036d0",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-427c-7a60-b5c8-e570ba8036d0/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-427c-7a60-b5c8-e570ba8036d0",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8805/ViWh4XAwnimxSa7lF7oCp_sound_effect.mp3"
+  },
+  {
+    "cue": "battle_win",
+    "take": 3,
+    "input": {
+      "text": "A triumphant victory fanfare played by bright open trumpets and French horns, four crisp rising major-key notes resolving to a glorious held tonic chord, strong timpani and small cymbal accent. Celebratory and unmistakably victorious, punchy full-bodied brass, all instruments in tune. Complete short phrase with natural final decay, no vocals or background ambience.",
+      "duration_seconds": 3.2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-4fbc-7493-80d5-307e24d2bf34",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-4fbc-7493-80d5-307e24d2bf34/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-4fbc-7493-80d5-307e24d2bf34",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8805/KNzuEe6Z2mBcKOSWr3pD6_sound_effect.mp3"
+  },
+  {
+    "cue": "run_win",
+    "take": 1,
+    "input": {
+      "text": "A grand final-victory orchestral brass fanfare: bright trumpets, French horns and trombones play a jubilant rising major-key flourish then a huge sustained triumphant tonic chord, reinforced by timpani roll and cymbal crash. Larger and more celebratory than an ordinary battle victory. Clear in-tune unmuted brass, complete phrase with resolved tail. No vocals or ambience.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-5c61-7dc3-8904-9a1f5707d995",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-5c61-7dc3-8904-9a1f5707d995/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-5c61-7dc3-8904-9a1f5707d995",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8806/Y8ZaD145O6rzFc5jiuIAk_sound_effect.mp3"
+  },
+  {
+    "cue": "run_win",
+    "take": 2,
+    "input": {
+      "text": "A grand final-victory orchestral brass fanfare: bright trumpets, French horns and trombones play a jubilant rising major-key flourish then a huge sustained triumphant tonic chord, reinforced by timpani roll and cymbal crash. Larger and more celebratory than an ordinary battle victory. Clear in-tune unmuted brass, complete phrase with resolved tail. No vocals or ambience.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-6c1e-7203-ad14-d9540eb2ccbc",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-6c1e-7203-ad14-d9540eb2ccbc/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-6c1e-7203-ad14-d9540eb2ccbc",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8806/HNtbol6kD0ICjxvdqbJ8p_sound_effect.mp3"
+  },
+  {
+    "cue": "run_win",
+    "take": 3,
+    "input": {
+      "text": "A grand final-victory orchestral brass fanfare: bright trumpets, French horns and trombones play a jubilant rising major-key flourish then a huge sustained triumphant tonic chord, reinforced by timpani roll and cymbal crash. Larger and more celebratory than an ordinary battle victory. Clear in-tune unmuted brass, complete phrase with resolved tail. No vocals or ambience.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-7974-7282-8b98-ca880f893f9c",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-7974-7282-8b98-ca880f893f9c/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-7974-7282-8b98-ca880f893f9c",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8806/H0_VTD_PVD_tm4s6EkvoN_sound_effect.mp3"
+  },
+  {
+    "cue": "run_loss",
+    "take": 1,
+    "input": {
+      "text": "A short defeated sad-trumpet fanfare: mellow open trumpets and low trombones play a clear descending minor-key phrase, ending on a mournful held minor chord. Recognizable expressive brass, poignant theatrical disappointment, in tune and full-bodied, no distorted pitch slide, no comedy kazoo. Complete phrase and natural decay, no vocals or ambience.",
+      "duration_seconds": 3.2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-89ca-7ed3-a144-7575e5f37098",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-89ca-7ed3-a144-7575e5f37098/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-89ca-7ed3-a144-7575e5f37098",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8807/-1CDeiQnyEoxyk75qyDJ7_sound_effect.mp3"
+  },
+  {
+    "cue": "run_loss",
+    "take": 2,
+    "input": {
+      "text": "A short defeated sad-trumpet fanfare: mellow open trumpets and low trombones play a clear descending minor-key phrase, ending on a mournful held minor chord. Recognizable expressive brass, poignant theatrical disappointment, in tune and full-bodied, no distorted pitch slide, no comedy kazoo. Complete phrase and natural decay, no vocals or ambience.",
+      "duration_seconds": 3.2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-950c-7290-8eef-8b2954384169",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-950c-7290-8eef-8b2954384169/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-950c-7290-8eef-8b2954384169",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8807/n8ugqkh25KFDGtB3KoWLQ_sound_effect.mp3"
+  },
+  {
+    "cue": "run_loss",
+    "take": 3,
+    "input": {
+      "text": "A short defeated sad-trumpet fanfare: mellow open trumpets and low trombones play a clear descending minor-key phrase, ending on a mournful held minor chord. Recognizable expressive brass, poignant theatrical disappointment, in tune and full-bodied, no distorted pitch slide, no comedy kazoo. Complete phrase and natural decay, no vocals or ambience.",
+      "duration_seconds": 3.2,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-a4f9-7863-86fe-abefde178f9b",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-a4f9-7863-86fe-abefde178f9b/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-a4f9-7863-86fe-abefde178f9b",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8807/TrDoJi1MUgu-Y9xDESlfD_sound_effect.mp3"
+  },
+  {
+    "cue": "horn",
+    "take": 1,
+    "input": {
+      "text": "A single mighty fantasy war-horn blast used as a weapon: immediate strong brass BWAAM, thick resonant low-mid body with a punchy air-pressure thump, short powerful decay. Bigger than normal combat attacks, playful but forceful, clear clean horn tone, no melody, voices, ambience or background music.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a561-b6bc-7d20-96fe-6f894ae15954",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-b6bc-7d20-96fe-6f894ae15954/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a561-b6bc-7d20-96fe-6f894ae15954",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8808/liAJOp3_HCHMn444uCY2L_sound_effect.mp3"
+  },
+  {
+    "cue": "horn",
+    "take": 2,
+    "input": {
+      "text": "A single mighty fantasy war-horn blast used as a weapon: immediate strong brass BWAAM, thick resonant low-mid body with a punchy air-pressure thump, short powerful decay. Bigger than normal combat attacks, playful but forceful, clear clean horn tone, no melody, voices, ambience or background music.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-034b-7720-b06a-7e1127fc4119",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-034b-7720-b06a-7e1127fc4119/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-034b-7720-b06a-7e1127fc4119",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880a/enkrChdMTJIahtwHgA19a_sound_effect.mp3"
+  },
+  {
+    "cue": "horn",
+    "take": 3,
+    "input": {
+      "text": "A single mighty fantasy war-horn blast used as a weapon: immediate strong brass BWAAM, thick resonant low-mid body with a punchy air-pressure thump, short powerful decay. Bigger than normal combat attacks, playful but forceful, clear clean horn tone, no melody, voices, ambience or background music.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-10db-7372-a47e-35508ccade48",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-10db-7372-a47e-35508ccade48/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-10db-7372-a47e-35508ccade48",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880a/mxGCBmFiRnlYD8I7pFe8e_sound_effect.mp3"
+  },
+  {
+    "cue": "great_slash",
+    "take": 1,
+    "input": {
+      "text": "One enormous two-handed greatsword slash, sharper and heavier than a normal sword. Explosive metallic cutting SCHWACK layered with a deep forceful air rush, hard woody bite and thick low-mid punch. A single fast onset and compact clean decay, weighty oversized fantasy weapon. No voices, music, ambience or multiple attacks.",
+      "duration_seconds": 0.85,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-1ec4-7ab3-8d73-aae3e2533aa5",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-1ec4-7ab3-8d73-aae3e2533aa5/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-1ec4-7ab3-8d73-aae3e2533aa5",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880a/vZLKSQ6XfEdtV45M1Eogo_sound_effect.mp3"
+  },
+  {
+    "cue": "great_slash",
+    "take": 2,
+    "input": {
+      "text": "One enormous two-handed greatsword slash, sharper and heavier than a normal sword. Explosive metallic cutting SCHWACK layered with a deep forceful air rush, hard woody bite and thick low-mid punch. A single fast onset and compact clean decay, weighty oversized fantasy weapon. No voices, music, ambience or multiple attacks.",
+      "duration_seconds": 0.85,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-2beb-71f2-b27b-fce3169dc49a",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-2beb-71f2-b27b-fce3169dc49a/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-2beb-71f2-b27b-fce3169dc49a",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880b/foPtE08va6iXTI3mVHKzt_sound_effect.mp3"
+  },
+  {
+    "cue": "great_slash",
+    "take": 3,
+    "input": {
+      "text": "One enormous two-handed greatsword slash, sharper and heavier than a normal sword. Explosive metallic cutting SCHWACK layered with a deep forceful air rush, hard woody bite and thick low-mid punch. A single fast onset and compact clean decay, weighty oversized fantasy weapon. No voices, music, ambience or multiple attacks.",
+      "duration_seconds": 0.85,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-36e8-7121-85f8-212859530908",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-36e8-7121-85f8-212859530908/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-36e8-7121-85f8-212859530908",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880b/fxBc42PBKzXdJm-duro0E_sound_effect.mp3"
+  },
+  {
+    "cue": "great_swing",
+    "take": 1,
+    "input": {
+      "text": "One gigantic two-handed hammer or heavy shield bash swing. Explosive deep WHOOM-THUNK, a hard woody attack crack over dense low-mid air displacement and a short resonant heavy body. More massive and forceful than a regular hammer swing, not slow or airy. Single close-up stylized attack, no music, voices or ambience.",
+      "duration_seconds": 0.9,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-41d4-7703-852f-22117c3958c3",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-41d4-7703-852f-22117c3958c3/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-41d4-7703-852f-22117c3958c3",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880b/9QQbu4_swnKkSUcRrWHjp_sound_effect.mp3"
+  },
+  {
+    "cue": "great_swing",
+    "take": 2,
+    "input": {
+      "text": "One gigantic two-handed hammer or heavy shield bash swing. Explosive deep WHOOM-THUNK, a hard woody attack crack over dense low-mid air displacement and a short resonant heavy body. More massive and forceful than a regular hammer swing, not slow or airy. Single close-up stylized attack, no music, voices or ambience.",
+      "duration_seconds": 0.9,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-4e7e-7ad2-a431-cdbadb637db2",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-4e7e-7ad2-a431-cdbadb637db2/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-4e7e-7ad2-a431-cdbadb637db2",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880c/mvAWhEo25kgMklcq7-Lzm_sound_effect.mp3"
+  },
+  {
+    "cue": "great_swing",
+    "take": 3,
+    "input": {
+      "text": "One gigantic two-handed hammer or heavy shield bash swing. Explosive deep WHOOM-THUNK, a hard woody attack crack over dense low-mid air displacement and a short resonant heavy body. More massive and forceful than a regular hammer swing, not slow or airy. Single close-up stylized attack, no music, voices or ambience.",
+      "duration_seconds": 0.9,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-694d-7391-a5bd-19657442279d",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-694d-7391-a5bd-19657442279d/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-694d-7391-a5bd-19657442279d",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880c/8Y3LMKYNReq2QW8zMEmFN_sound_effect.mp3"
+  },
+  {
+    "cue": "great_bow",
+    "take": 1,
+    "input": {
+      "text": "One huge longbow releasing a heavy arrow at full tension. Explosive taut bowstring SNAP-THWANG, deep powerful wooden limb resonance and a forceful brief arrow rush. Unmistakable bow release, bigger and bassier than a normal bow but still crisp and compact. Single shot, no target impact, voices, music or ambience.",
+      "duration_seconds": 0.85,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-869d-73b0-8718-2e8e734ed46a",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-869d-73b0-8718-2e8e734ed46a/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-869d-73b0-8718-2e8e734ed46a",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880d/le1QyDz2AZGYZ4hipGFmh_sound_effect.mp3"
+  },
+  {
+    "cue": "great_bow",
+    "take": 2,
+    "input": {
+      "text": "One huge longbow releasing a heavy arrow at full tension. Explosive taut bowstring SNAP-THWANG, deep powerful wooden limb resonance and a forceful brief arrow rush. Unmistakable bow release, bigger and bassier than a normal bow but still crisp and compact. Single shot, no target impact, voices, music or ambience.",
+      "duration_seconds": 0.85,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-92dd-7510-9e4f-4bc234a387ce",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-92dd-7510-9e4f-4bc234a387ce/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-92dd-7510-9e4f-4bc234a387ce",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880d/-rT_l7ZUnusdFebEYdqkp_sound_effect.mp3"
+  },
+  {
+    "cue": "great_bow",
+    "take": 3,
+    "input": {
+      "text": "One huge longbow releasing a heavy arrow at full tension. Explosive taut bowstring SNAP-THWANG, deep powerful wooden limb resonance and a forceful brief arrow rush. Unmistakable bow release, bigger and bassier than a normal bow but still crisp and compact. Single shot, no target impact, voices, music or ambience.",
+      "duration_seconds": 0.85,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-9fcf-7102-a61c-f09c09294a47",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-9fcf-7102-a61c-f09c09294a47/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-9fcf-7102-a61c-f09c09294a47",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880e/cD9nd1gTjTkqINfgcAsM3_sound_effect.mp3"
+  },
+  {
+    "cue": "great_throw",
+    "take": 1,
+    "input": {
+      "text": "A giant heavy spear hurled with tremendous force: sharp hand-release snap, powerful low rushing WHOOOSH with a brief shaft vibration and dense air-pressure punch. Bigger and weightier than a regular spear throw. One compact attack starting immediately, no target impact, repeated throws, voices, music or background ambience.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-ab11-7633-9c43-27d2b085e7a4",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-ab11-7633-9c43-27d2b085e7a4/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-ab11-7633-9c43-27d2b085e7a4",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880e/W8m2J2AXT4MHuy6MecYkK_sound_effect.mp3"
+  },
+  {
+    "cue": "great_throw",
+    "take": 2,
+    "input": {
+      "text": "A giant heavy spear hurled with tremendous force: sharp hand-release snap, powerful low rushing WHOOOSH with a brief shaft vibration and dense air-pressure punch. Bigger and weightier than a regular spear throw. One compact attack starting immediately, no target impact, repeated throws, voices, music or background ambience.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-b8f0-7401-8281-de2f2dbd699d",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-b8f0-7401-8281-de2f2dbd699d/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-b8f0-7401-8281-de2f2dbd699d",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880e/gy8zdEWYBJeG9NLp0rocw_sound_effect.mp3"
+  },
+  {
+    "cue": "great_throw",
+    "take": 3,
+    "input": {
+      "text": "A giant heavy spear hurled with tremendous force: sharp hand-release snap, powerful low rushing WHOOOSH with a brief shaft vibration and dense air-pressure punch. Bigger and weightier than a regular spear throw. One compact attack starting immediately, no target impact, repeated throws, voices, music or background ambience.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-c45e-7101-b784-276aba10cc07",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-c45e-7101-b784-276aba10cc07/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-c45e-7101-b784-276aba10cc07",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880f/wz-kUX8t3YvH-WmtLmo5H_sound_effect.mp3"
+  },
+  {
+    "cue": "great_hit_slash",
+    "take": 1,
+    "input": {
+      "text": "One devastating greatsword or giant spear hit into dense fantasy armor and wood. Explosive slicing CRACK-THWACK with hard metallic bite, crunchy splinters and a deep chesty impact body. Much more weight and punch than a normal blade hit, compact dry decay. Single impact, no swoosh, voices, music or ambience.",
+      "duration_seconds": 0.75,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-d163-7383-a137-2304a5770847",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-d163-7383-a137-2304a5770847/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-d163-7383-a137-2304a5770847",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880f/SFIrgcvWKeIlG4wEiHSUt_sound_effect.mp3"
+  },
+  {
+    "cue": "great_hit_slash",
+    "take": 2,
+    "input": {
+      "text": "One devastating greatsword or giant spear hit into dense fantasy armor and wood. Explosive slicing CRACK-THWACK with hard metallic bite, crunchy splinters and a deep chesty impact body. Much more weight and punch than a normal blade hit, compact dry decay. Single impact, no swoosh, voices, music or ambience.",
+      "duration_seconds": 0.75,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-dd40-7de2-86af-fbcf31dc0493",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-dd40-7de2-86af-fbcf31dc0493/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-dd40-7de2-86af-fbcf31dc0493",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa880f/NODZn0lrQwV7ClYwv06gU_sound_effect.mp3"
+  },
+  {
+    "cue": "great_hit_slash",
+    "take": 3,
+    "input": {
+      "text": "One devastating greatsword or giant spear hit into dense fantasy armor and wood. Explosive slicing CRACK-THWACK with hard metallic bite, crunchy splinters and a deep chesty impact body. Much more weight and punch than a normal blade hit, compact dry decay. Single impact, no swoosh, voices, music or ambience.",
+      "duration_seconds": 0.75,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-e875-7001-9c61-5b1da15c5fba",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-e875-7001-9c61-5b1da15c5fba/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-e875-7001-9c61-5b1da15c5fba",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8810/hl7EmYRshlmy2wmOaKMqa_sound_effect.mp3"
+  },
+  {
+    "cue": "great_hit_blunt",
+    "take": 1,
+    "input": {
+      "text": "One gigantic hammer or shield smashing into dense hardwood. Huge blunt low THUD-CRACK, immediate hard attack, thick powerful low-mid body with short splintering debris decay. Massive solid physical impact, clearly heavier than a normal hammer hit. Not a metallic ring or explosion. Single dry hit, no voices, music or ambience.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a562-f61b-7631-8f79-bb887a4c61fc",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-f61b-7631-8f79-bb887a4c61fc/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a562-f61b-7631-8f79-bb887a4c61fc",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8810/kFrhgxQFumDx039fCRWm8_sound_effect.mp3"
+  },
+  {
+    "cue": "great_hit_blunt",
+    "take": 2,
+    "input": {
+      "text": "One gigantic hammer or shield smashing into dense hardwood. Huge blunt low THUD-CRACK, immediate hard attack, thick powerful low-mid body with short splintering debris decay. Massive solid physical impact, clearly heavier than a normal hammer hit. Not a metallic ring or explosion. Single dry hit, no voices, music or ambience.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a563-03f9-7d23-aa9b-3f786135b1fe",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a563-03f9-7d23-aa9b-3f786135b1fe/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a563-03f9-7d23-aa9b-3f786135b1fe",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8810/djzSyHAoio4DKhTyyhdYe_sound_effect.mp3"
+  },
+  {
+    "cue": "great_hit_blunt",
+    "take": 3,
+    "input": {
+      "text": "One gigantic hammer or shield smashing into dense hardwood. Huge blunt low THUD-CRACK, immediate hard attack, thick powerful low-mid body with short splintering debris decay. Massive solid physical impact, clearly heavier than a normal hammer hit. Not a metallic ring or explosion. Single dry hit, no voices, music or ambience.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a563-1bc2-7293-a45b-828a8455d857",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a563-1bc2-7293-a45b-828a8455d857/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a563-1bc2-7293-a45b-828a8455d857",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8811/zRUnX7ELIw5Zh3r034ecz_sound_effect.mp3"
+  },
+  {
+    "cue": "great_block",
+    "take": 1,
+    "input": {
+      "text": "A huge reinforced wooden shield blocking a powerful sword strike: immediate loud wooden-metallic CLANG-THUNK with dense bass punch, resonant shield body and a short gritty rattle. Mighty defensive impact, bigger than an ordinary block. One close dry hit, no long ringing, voices, music or ambience.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a563-2b2c-7d81-865c-a3db55c18b48",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a563-2b2c-7d81-865c-a3db55c18b48/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a563-2b2c-7d81-865c-a3db55c18b48",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8811/KoiLdT6O3RYSKeLSR83Ws_sound_effect.mp3"
+  },
+  {
+    "cue": "great_block",
+    "take": 2,
+    "input": {
+      "text": "A huge reinforced wooden shield blocking a powerful sword strike: immediate loud wooden-metallic CLANG-THUNK with dense bass punch, resonant shield body and a short gritty rattle. Mighty defensive impact, bigger than an ordinary block. One close dry hit, no long ringing, voices, music or ambience.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a563-3c1c-78f3-9e80-b2558c9a6da3",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a563-3c1c-78f3-9e80-b2558c9a6da3/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a563-3c1c-78f3-9e80-b2558c9a6da3",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8812/BxRR0ovZJLiINAfE9A0qs_sound_effect.mp3"
+  },
+  {
+    "cue": "great_block",
+    "take": 3,
+    "input": {
+      "text": "A huge reinforced wooden shield blocking a powerful sword strike: immediate loud wooden-metallic CLANG-THUNK with dense bass punch, resonant shield body and a short gritty rattle. Mighty defensive impact, bigger than an ordinary block. One close dry hit, no long ringing, voices, music or ambience.",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.75,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "request_id": "01a0a563-4a1b-7c92-a69a-a3d0641b22ae",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a563-4a1b-7c92-a69a-a3d0641b22ae/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a563-4a1b-7c92-a69a-a3d0641b22ae",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8812/1xxpe8K69iJj_NP7NXB5h_sound_effect.mp3"
+  }
+]

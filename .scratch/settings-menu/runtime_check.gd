@@ -252,5 +252,5 @@ func _run() -> void:
 	print("SETTINGS MENU CHECK: ", _failures, " failures")
 	Audio.stop_music()
 	# Let result stingers finish and decoder voices retire before engine shutdown.
-	await _wait(1.6)
+	await _wait(4.1)
 	get_tree().quit(0 if _failures == 0 else 1)

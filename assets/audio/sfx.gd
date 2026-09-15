@@ -44,6 +44,14 @@ enum Cue {
 	BATTLE_WIN,
 	RUN_WIN,
 	RUN_LOSS,
+	# Append only: projectile scenes serialize the existing cue IDs.
+	GREAT_SLASH,
+	GREAT_SWING,
+	GREAT_BOW,
+	GREAT_THROW,
+	GREAT_HIT_SLASH,
+	GREAT_HIT_BLUNT,
+	GREAT_BLOCK,
 }
 
 const SOUNDS: Dictionary = {
@@ -149,7 +157,7 @@ const SOUNDS: Dictionary = {
 	},
 	Cue.HORN: {
 		"stream": preload("res://assets/audio/sfx/horn.wav"),
-		"gain_db": -16.0, "cooldown_ms": 180, "pitch_variation": 0.1,
+		"gain_db": -12.0, "cooldown_ms": 180, "pitch_variation": 0.1,
 	},
 	Cue.CHARGE: {
 		"stream": preload("res://assets/audio/sfx/charge.wav"),
@@ -207,4 +215,41 @@ const SOUNDS: Dictionary = {
 		"stream": preload("res://assets/audio/sfx/run_loss.wav"),
 		"gain_db": -8.0, "cooldown_ms": 100, "pitch_variation": 0.0,
 	},
+	Cue.GREAT_SLASH: {
+		"stream": preload("res://assets/audio/sfx/great_slash.wav"),
+		"gain_db": -13.0, "cooldown_ms": 110, "pitch_variation": 0.08,
+	},
+	Cue.GREAT_SWING: {
+		"stream": preload("res://assets/audio/sfx/great_swing.wav"),
+		"gain_db": -11.0, "cooldown_ms": 130, "pitch_variation": 0.08,
+	},
+	Cue.GREAT_BOW: {
+		"stream": preload("res://assets/audio/sfx/great_bow.wav"),
+		"gain_db": -11.0, "cooldown_ms": 120, "pitch_variation": 0.08,
+	},
+	Cue.GREAT_THROW: {
+		"stream": preload("res://assets/audio/sfx/great_throw.wav"),
+		"gain_db": -13.0, "cooldown_ms": 120, "pitch_variation": 0.08,
+	},
+	Cue.GREAT_HIT_SLASH: {
+		"stream": preload("res://assets/audio/sfx/great_hit_slash.wav"),
+		"gain_db": -8.0, "cooldown_ms": 100, "pitch_variation": 0.08,
+	},
+	Cue.GREAT_HIT_BLUNT: {
+		"stream": preload("res://assets/audio/sfx/great_hit_blunt.wav"),
+		"gain_db": -8.0, "cooldown_ms": 100, "pitch_variation": 0.08,
+	},
+	Cue.GREAT_BLOCK: {
+		"stream": preload("res://assets/audio/sfx/great_block.wav"),
+		"gain_db": -9.0, "cooldown_ms": 140, "pitch_variation": 0.08,
+	},
 }
+
+
+static func great_variant(cue: Cue) -> Cue:
+	match cue:
+		Cue.SLASH: return Cue.GREAT_SLASH
+		Cue.HEAVY_SWING: return Cue.GREAT_SWING
+		Cue.BOW: return Cue.GREAT_BOW
+		Cue.THROW: return Cue.GREAT_THROW
+		_: return cue

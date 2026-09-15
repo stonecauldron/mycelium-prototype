@@ -29,6 +29,11 @@ coverage defined in [the SFX spec](../game-sfx/spec.md).
 
 ## Generation and authoring
 
+Current pack follow-up: [SFX revision 1](../sfx-revision-1/spec.md) supersedes
+thirteen of these takes and adds seven Great weapon cues. Installing this original
+batch alone restores its historical takes; install revision 1 afterward to restore
+the current pack.
+
 120 successful takes, totaling 92.4 requested seconds at $0.002/second:
 **$0.1848 estimated generation cost**. This does not claim an exact account
 balance. No additional generation is needed for offline preparation.

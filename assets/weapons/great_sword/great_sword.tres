@@ -7,6 +7,7 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Great Sword"
+great_weapon_sfx = true
 short_description = "Slow, sweeping strikes. Hits everyone in the arc."
 targeting_mode = 1
 base_damage = 7

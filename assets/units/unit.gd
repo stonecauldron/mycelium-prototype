@@ -962,7 +962,7 @@ func _start_attack() -> void:
 
 
 func _start_melee_lunge_attack() -> void:
-	Audio.play_cue(Sfx.Cue.HEAVY_SWING if combat.damage_type == WeaponData.DamageType.BLUNT else Sfx.Cue.SLASH)
+	Audio.play_cue(combat.get_melee_sfx())
 	if _hitbox != null:
 		_hitbox.enable_for_attack(
 			_get_attack_damage(false),
@@ -1474,7 +1474,8 @@ func take_damage(
 	killer: Unit = null,
 	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING,
 	count_in_recap: bool = true,
-	is_melee: bool = false
+	is_melee: bool = false,
+	impact_cue: int = -1
 ) -> void:
 	if _dying:
 		return
@@ -1495,7 +1496,10 @@ func take_damage(
 		amount = maxi(amount, 0)
 	if amount > 0:
 		if pre_mitigation > amount:
-			Audio.play_cue(Sfx.Cue.BLOCK)
+			var great_shield := combat != null and combat.great_weapon_sfx and combat.blocks_charges
+			Audio.play_cue(Sfx.Cue.GREAT_BLOCK if great_shield else Sfx.Cue.BLOCK)
+		elif impact_cue >= 0:
+			Audio.play_cue(impact_cue as Sfx.Cue)
 		else:
 			Audio.play_cue(Sfx.Cue.HIT_BLUNT if damage_type == WeaponData.DamageType.BLUNT else Sfx.Cue.HIT_SLASH)
 	if amount > 0 and count_in_recap:

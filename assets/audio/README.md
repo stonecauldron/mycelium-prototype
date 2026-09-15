@@ -20,7 +20,7 @@ Music and its volume transitions continue while paused and use real time during 
 
 ## Sound effects
 
-The game ships a [40-effect playful organic pack](sfx/README.md). Its streams,
+The game ships a [47-effect playful organic pack](sfx/README.md). Its streams,
 individual gains, pitch variation, and minimum spacing are authored in `sfx.gd`.
 Use the named cue helpers for gameplay and UI events:
 
@@ -40,6 +40,12 @@ Custom cards and successful actions use explicit semantic cues in their owning U
 controller. Projectiles expose **Launch Cue** in their scenes: throws by default,
 with bow/crossbow and horn overrides. New unit types using the shared combat scripts
 inherit attack, hit, block, and death feedback.
+
+Great weapon resources enable **Great Weapon SFX** to select dedicated heavier
+swings, releases and direct-hit cues. Great Shield also has a heavier block and
+bash sound. This presentation flag survives resource duplication and does not
+change combat stats or damage types. Great cues use ±8% pitch variation; the
+dedicated Horn uses its existing variation. Outcome fanfares retain fixed pitch.
 
 ### Custom streams
 

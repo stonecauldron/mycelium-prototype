@@ -34,6 +34,8 @@ const MELEE_HITBOX_Y := -20.0
 ## Stat used for outgoing damage bonus. Not tied to formation line or attack style.
 @export var damage_stat: DamageStat = DamageStat.STRENGTH
 @export var damage_type: DamageType = DamageType.SLASHING
+## Presentation only; survives resource duplication and does not change damage.
+@export var great_weapon_sfx: bool = false
 @export var targeting_mode: TargetingMode = TargetingMode.SINGLE
 @export var base_damage: int = 5
 ## Max throw/shot distance for PROJECTILE_THROW / BOW_SHOT (and HYBRID throw band).

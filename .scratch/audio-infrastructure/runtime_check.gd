@@ -74,7 +74,12 @@ func _check_cues() -> void:
 	for cue in Sfx.Cue.values():
 		var sound: Dictionary = Sfx.SOUNDS[cue]
 		var stream := sound.stream as AudioStreamWAV
-		valid_pack = valid_pack and stream != null and stream.get_length() > 0.0 and stream.get_length() <= 1.5
+		var max_length := 1.5
+		if cue in [Sfx.Cue.BATTLE_START, Sfx.Cue.BATTLE_WIN, Sfx.Cue.RUN_WIN, Sfx.Cue.RUN_LOSS]:
+			max_length = 4.0
+		elif cue == Sfx.Cue.HARVEST:
+			max_length = 2.0
+		valid_pack = valid_pack and stream != null and stream.get_length() > 0.0 and stream.get_length() <= max_length
 		valid_pack = valid_pack and stream.loop_mode == AudioStreamWAV.LOOP_DISABLED
 	_check(valid_pack, "Every named cue loads a short, non-looping sound")
 	Audio.stop_gameplay_sfx()

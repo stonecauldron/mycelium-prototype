@@ -7,6 +7,7 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Great Shield"
+great_weapon_sfx = true
 short_description = "Tanks 85% of incoming damage. Only deals 25% damage. Weak to blunt weapons."
 engagement_stance = 2
 base_damage = 1

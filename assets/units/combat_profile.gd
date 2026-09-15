@@ -20,6 +20,7 @@ const MELEE_HITBOX_NEAR := 20.0
 @export var attack_style: WeaponData.AttackStyle = WeaponData.AttackStyle.MELEE_LUNGE
 @export var damage_stat: WeaponData.DamageStat = WeaponData.DamageStat.STRENGTH
 @export var damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING
+@export var great_weapon_sfx: bool = false
 @export var targeting_mode: WeaponData.TargetingMode = WeaponData.TargetingMode.SINGLE
 @export var base_damage: int = 5
 ## Max throw/shot distance for PROJECTILE_THROW / BOW_SHOT (and HYBRID throw band).
@@ -42,6 +43,21 @@ const MELEE_HITBOX_NEAR := 20.0
 @export var melee_range: float = 96.0
 ## Scene spawned for PROJECTILE_THROW / BOW_SHOT. Null = style fallback.
 @export var projectile_scene: PackedScene
+
+
+func get_melee_sfx() -> Sfx.Cue:
+	var blunt := damage_type == WeaponData.DamageType.BLUNT or (great_weapon_sfx and blocks_charges)
+	var cue := Sfx.Cue.HEAVY_SWING if blunt else Sfx.Cue.SLASH
+	return Sfx.great_variant(cue) if great_weapon_sfx else cue
+
+
+## -1 preserves the target's normal impact sound (walls, armor, etc.).
+func get_impact_sfx() -> int:
+	if not great_weapon_sfx:
+		return -1
+	# Great Shield has slashing damage for gameplay, but sounds like a shield bash.
+	var blunt := damage_type == WeaponData.DamageType.BLUNT or blocks_charges
+	return Sfx.Cue.GREAT_HIT_BLUNT if blunt else Sfx.Cue.GREAT_HIT_SLASH
 
 
 func resolve_projectile_scene() -> PackedScene:
@@ -104,6 +120,7 @@ static func from_weapon(weapon: WeaponData) -> CombatProfile:
 	profile.attack_style = weapon.attack_style
 	profile.damage_stat = weapon.damage_stat
 	profile.damage_type = weapon.damage_type
+	profile.great_weapon_sfx = weapon.great_weapon_sfx
 	profile.targeting_mode = weapon.targeting_mode
 	profile.base_damage = weapon.base_damage
 	profile.projectile_range = weapon.projectile_range

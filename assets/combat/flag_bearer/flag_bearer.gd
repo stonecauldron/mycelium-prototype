@@ -278,8 +278,11 @@ func take_damage(
 	_killer: Unit = null,
 	_damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING,
 	_count_in_recap: bool = true,
-	_is_melee: bool = false
+	_is_melee: bool = false,
+	impact_cue: int = -1
 ) -> void:
+	if amount > 0 and impact_cue >= 0:
+		Audio.play_cue(impact_cue as Sfx.Cue)
 	_hits_taken += 1
 	_play_hurt_highlight()
 	_spawn_damage_number(amount)

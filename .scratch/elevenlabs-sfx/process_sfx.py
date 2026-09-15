@@ -118,11 +118,14 @@ def prepare(samples, max_duration, target_rms_db):
 
 
 def main():
+    global HERE
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--source-dir", type=Path, default=HERE, help="Directory containing this batch's plan and requests")
     parser.add_argument("--download", action="store_true")
     parser.add_argument("--prepare", action="store_true")
-    parser.add_argument("--install", action="store_true", help="Replace game assets only when all 40 cues are ready")
+    parser.add_argument("--install", action="store_true", help="Replace this batch's game assets only when all planned takes are ready")
     args = parser.parse_args()
+    HERE = args.source_dir.resolve()
     rows = [r for r in load_json("requests.json") if r.get("audio_url")]
     plan = load_json("plan.json")
     cues = {p["cue"]: p for p in plan["cues"]}
@@ -153,9 +156,11 @@ def main():
     for cue in cues:
         takes = candidates[cue]
         if takes:
-            winner = max(takes, key=lambda r: r["selection_score"])
+            preferred = cues[cue].get("preferred_take")
+            winner = next(r for r in takes if r["take"] == preferred) if preferred else max(takes, key=lambda r: r["selection_score"])
+            winner["selection_reason"] = cues[cue].get("selection_note", "Best retained energy and quiet tail")
             selected.append(winner)
-    manifest = {"model": plan["model"], "selection_method": "Best retained event energy and cleanest short tail; subjective review uses the preview.",
+    manifest = {"model": plan["model"], "selection_method": "Explicit preferred takes where authored; otherwise best retained energy and cleanest tail. Subjective review uses the preview.",
                 "estimated_generation_usd": round(sum(r["input"]["duration_seconds"] for r in rows) * plan["unit_price_usd"], 6),
                 "takes": [r for take_list in candidates.values() for r in take_list], "selected": selected}
     preview = []
@@ -171,7 +176,7 @@ def main():
             raise ValueError("Complete all three takes for every cue before installing")
         for row in selected:
             shutil.copyfile(HERE / row["prepared_file"], ROOT / "assets/audio/sfx" / (row["cue"] + ".wav"))
-        print("Installed all 40 ElevenLabs effects")
+        print(f"Installed {len(selected)} ElevenLabs effects from {HERE.name}")
 
 
 if __name__ == "__main__":

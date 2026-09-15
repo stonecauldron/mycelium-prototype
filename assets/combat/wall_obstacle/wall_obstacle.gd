@@ -74,13 +74,14 @@ func take_damage(
 	_killer: Node = null,
 	damage_type: WeaponData.DamageType = WeaponData.DamageType.SLASHING,
 	_count_in_recap: bool = true,
-	_is_melee: bool = false
+	_is_melee: bool = false,
+	impact_cue: int = -1
 ) -> void:
 	if _dying:
 		return
 	var applied := maxi(amount, 0)
 	if applied > 0:
-		Audio.play_cue(Sfx.Cue.HIT_BLUNT)
+		Audio.play_cue(impact_cue as Sfx.Cue if impact_cue >= 0 else Sfx.Cue.HIT_BLUNT)
 	if damage_type == WeaponData.DamageType.BLUNT:
 		applied *= 2
 	current_hp = maxi(current_hp - applied, 0)

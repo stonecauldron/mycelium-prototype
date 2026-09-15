@@ -1,0 +1,45 @@
+{
+  "takes": 60,
+  "selected": 20,
+  "requested_seconds": 85.35,
+  "estimated_generation_usd": 0.1707,
+  "godot_normalized_clips": 47,
+  "selected_retained_energy_min": 1.0,
+  "combat_mix": {
+    "scenario": "individual weapon matchups and mixed 18-Great-vs-24-Solar-Sword army, 4x, SFX slider100%",
+    "duration_seconds": 39.47392290249433,
+    "peak_dbfs": -1.0,
+    "clipped_samples": 0,
+    "recording_sha256": "9640b61e7a543f54230a1746b3d244a5b6d741261f5179de8f91720fd5dd8838"
+  },
+  "subjective_audition": "User review pending; sound direction is authored in prompts and take selection uses technical level/duration/tail metrics.",
+  "runtime_checks": {
+    "audio": {
+      "passed_assertions": 106,
+      "errors": 0,
+      "warnings": 0
+    },
+    "settings": {
+      "passed_assertions": 57,
+      "errors": 0,
+      "warnings": 0
+    },
+    "combat": {
+      "passed_assertions": 27,
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "browser": {
+    "visible_all_cues": 47,
+    "revised_comparisons": 20,
+    "successful_playback_buttons": 40,
+    "preserved_review_notes": 12,
+    "game_level_and_pitch_controls": "verified",
+    "screenshot": "checked"
+  },
+  "reviews": {
+    "standards_findings": 0,
+    "spec_findings": 0
+  }
+}

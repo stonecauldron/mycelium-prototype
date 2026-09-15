@@ -38,6 +38,8 @@ var _hit_targets: Dictionary = {}
 var _fuse_armed: bool = false
 ## Homing projectiles fly a normal arc until apex, then lock on.
 var _homing_active: bool = false
+## Snapshot at launch so a projectile retains its sound after its owner dies.
+var _impact_cue: int = -1
 
 
 func _ready() -> void:
@@ -53,7 +55,14 @@ func launch(
 	attack_knockback: float,
 	thrower: Node
 ) -> void:
-	Audio.play_cue(launch_cue)
+	var shot_cue := launch_cue
+	_impact_cue = -1
+	if is_instance_valid(thrower):
+		var profile = thrower.get("combat")
+		if profile != null and profile.get("great_weapon_sfx") == true:
+			shot_cue = Sfx.great_variant(launch_cue)
+			_impact_cue = int(profile.get_impact_sfx())
+	Audio.play_cue(shot_cue)
 	global_position = from_global
 	damage = attack_damage
 	knockback_force = attack_knockback
@@ -217,11 +226,11 @@ func _on_impact(hurtbox: Area2D) -> void:
 		_hit_targets[target] = true
 	var from_pos := (
 		(owner_unit as Node2D).global_position
-		if owner_unit is Node2D
+		if is_instance_valid(owner_unit) and owner_unit is Node2D
 		else global_position
 	)
 	var killer: Node = owner_unit if owner_unit != null and is_instance_valid(owner_unit) else null
-	hurtbox.call("receive_hit", damage, from_pos, knockback_force, killer, damage_type)
+	hurtbox.call("receive_hit", damage, from_pos, knockback_force, killer, damage_type, false, _impact_cue)
 	if killer != null:
 		if killer.has_method("grant_hit_biomass"):
 			var hit_at: Node2D = target as Node2D if target is Node2D else self

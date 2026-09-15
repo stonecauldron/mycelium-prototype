@@ -1,0 +1,166 @@
+{
+  "model": "fal-ai/elevenlabs/sound-effects/v2",
+  "unit_price_usd": 0.002,
+  "takes_per_cue": 3,
+  "prompt_influence": 0.75,
+  "output_format": "mp3_44100_192",
+  "loop": false,
+  "cues": [
+    {
+      "cue": "purchase",
+      "duration_seconds": 1.2,
+      "max_duration_seconds": 1.2,
+      "prompt": "A classic mechanical cash register KA-CHING! One crisp lever clack immediately followed by a bright ringing metal bell and a short coin jingle. Unmistakable satisfying purchase confirmation, cheerful and punchy. Close, clean isolated sound, no voices or background music, natural bell decay.",
+      "target_rms_dbfs": -15
+    },
+    {
+      "cue": "plant",
+      "duration_seconds": 1.3,
+      "max_duration_seconds": 1.3,
+      "prompt": "One close-up shovel digging into moist garden soil to bury a seed: sharp metal spade crunch into earth, a quick scoop of gritty dirt falling back into the hole, then a firm earthy pat. Clearly audible shovel and soil, chunky tactile gardening foley. One compact action, no voices, music or ambience.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 1,
+      "selection_note": "Preserve more of the shovel-and-soil sequence with a substantial body."
+    },
+    {
+      "cue": "harvest",
+      "duration_seconds": 2,
+      "max_duration_seconds": 2,
+      "prompt": "A powerful fantasy loot chest opening: immediate weighty wooden CLUNK and latch crack, an explosive magical reward burst, bright sparkling treasure chimes cascading into a satisfying major-key resolution. Exuberant punchy loot-box reveal for a whimsical mushroom game. One event, no voices or ambience.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 2,
+      "selection_note": "Longest reward tail and strongest peak-normalized average level among the takes."
+    },
+    {
+      "cue": "slash",
+      "duration_seconds": 0.65,
+      "max_duration_seconds": 0.65,
+      "prompt": "A single forceful sword slash: explosive sharp cutting SWISH with a hard metallic bite and a thick low-mid thwack, short clean decay. Fast aggressive attack onset, substantial body, not a faint airy swoosh. Stylized close-up fantasy combat, no voices, music, ambience or repeated attacks.",
+      "target_rms_dbfs": -15
+    },
+    {
+      "cue": "heavy_swing",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.8,
+      "prompt": "One heavy warhammer swing, forceful low air displacement WHOOM ending in a weighty wooden-metallic THUNK. Thick low-mid punch and crisp attack, compact decay, physical and powerful. Close-up stylized fantasy combat, no voices, music, background or repeated swings.",
+      "target_rms_dbfs": -14
+    },
+    {
+      "cue": "bow",
+      "duration_seconds": 0.7,
+      "max_duration_seconds": 0.7,
+      "prompt": "A single real wooden recurve bow releasing an arrow at full tension. Loud crisp bowstring SNAP-TWANG immediately at onset, short taut string vibration and wooden limb resonance, followed by a very quick arrow air zip. Recognizable archery release. No target impact, no voices, no music, no repeated shots.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 2,
+      "selection_note": "Retain a longer string resonance after the release transient."
+    },
+    {
+      "cue": "hit_blunt",
+      "duration_seconds": 0.65,
+      "max_duration_seconds": 0.65,
+      "prompt": "A single massive blunt hammer impact into a dense wooden stump: hard low-pitched THUD with a sharp wooden crack at onset and thick chesty low-mid body, very short solid decay. Dry, heavy and blunt, no metallic ringing or airy swish. Close isolated stylized combat impact, no music or voices.",
+      "target_rms_dbfs": -15
+    },
+    {
+      "cue": "explosion",
+      "duration_seconds": 1.5,
+      "max_duration_seconds": 1.5,
+      "prompt": "One powerful bomb explosion. Immediate sharp explosive CRACK, huge deep BOOM, dense low-mid pressure wave and rumbling debris tail that quickly dies away. Strong broadband blast with real physical weight, not a puff, pop or tiny firecracker. Close isolated fantasy mortar detonation, no music, voices or ambience.",
+      "target_rms_dbfs": -15
+    },
+    {
+      "cue": "battle_start",
+      "duration_seconds": 2.5,
+      "max_duration_seconds": 2.5,
+      "prompt": "A bold bright orchestral trumpet fanfare announcing battle: three punchy rising brass notes in a clean major-key triad, reinforced by French horns and a crisp timpani accent. Confident heroic attack, loud open unmuted trumpets, accurately in tune, final note resolves with a short natural decay. One complete short fanfare; no vocals or ambience.",
+      "target_rms_dbfs": -14
+    },
+    {
+      "cue": "battle_win",
+      "duration_seconds": 3.2,
+      "max_duration_seconds": 3.2,
+      "prompt": "A triumphant victory fanfare played by bright open trumpets and French horns, four crisp rising major-key notes resolving to a glorious held tonic chord, strong timpani and small cymbal accent. Celebratory and unmistakably victorious, punchy full-bodied brass, all instruments in tune. Complete short phrase with natural final decay, no vocals or background ambience.",
+      "target_rms_dbfs": -14
+    },
+    {
+      "cue": "run_win",
+      "duration_seconds": 4,
+      "max_duration_seconds": 4,
+      "prompt": "A grand final-victory orchestral brass fanfare: bright trumpets, French horns and trombones play a jubilant rising major-key flourish then a huge sustained triumphant tonic chord, reinforced by timpani roll and cymbal crash. Larger and more celebratory than an ordinary battle victory. Clear in-tune unmuted brass, complete phrase with resolved tail. No vocals or ambience.",
+      "target_rms_dbfs": -14
+    },
+    {
+      "cue": "run_loss",
+      "duration_seconds": 3.2,
+      "max_duration_seconds": 3.2,
+      "prompt": "A short defeated sad-trumpet fanfare: mellow open trumpets and low trombones play a clear descending minor-key phrase, ending on a mournful held minor chord. Recognizable expressive brass, poignant theatrical disappointment, in tune and full-bodied, no distorted pitch slide, no comedy kazoo. Complete phrase and natural decay, no vocals or ambience.",
+      "target_rms_dbfs": -14
+    },
+    {
+      "cue": "horn",
+      "duration_seconds": 1,
+      "max_duration_seconds": 1,
+      "prompt": "A single mighty fantasy war-horn blast used as a weapon: immediate strong brass BWAAM, thick resonant low-mid body with a punchy air-pressure thump, short powerful decay. Bigger than normal combat attacks, playful but forceful, clear clean horn tone, no melody, voices, ambience or background music.",
+      "target_rms_dbfs": -15
+    },
+    {
+      "cue": "great_slash",
+      "duration_seconds": 0.85,
+      "max_duration_seconds": 0.85,
+      "prompt": "One enormous two-handed greatsword slash, sharper and heavier than a normal sword. Explosive metallic cutting SCHWACK layered with a deep forceful air rush, hard woody bite and thick low-mid punch. A single fast onset and compact clean decay, weighty oversized fantasy weapon. No voices, music, ambience or multiple attacks.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 2,
+      "selection_note": "Stronger peak-normalized body for the oversized blade."
+    },
+    {
+      "cue": "great_swing",
+      "duration_seconds": 0.9,
+      "max_duration_seconds": 0.9,
+      "prompt": "One gigantic two-handed hammer or heavy shield bash swing. Explosive deep WHOOM-THUNK, a hard woody attack crack over dense low-mid air displacement and a short resonant heavy body. More massive and forceful than a regular hammer swing, not slow or airy. Single close-up stylized attack, no music, voices or ambience.",
+      "target_rms_dbfs": -14,
+      "preferred_take": 1,
+      "selection_note": "Strongest peak-normalized body for the heavy swing."
+    },
+    {
+      "cue": "great_bow",
+      "duration_seconds": 0.85,
+      "max_duration_seconds": 0.85,
+      "prompt": "One huge longbow releasing a heavy arrow at full tension. Explosive taut bowstring SNAP-THWANG, deep powerful wooden limb resonance and a forceful brief arrow rush. Unmistakable bow release, bigger and bassier than a normal bow but still crisp and compact. Single shot, no target impact, voices, music or ambience.",
+      "target_rms_dbfs": -15
+    },
+    {
+      "cue": "great_throw",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.8,
+      "prompt": "A giant heavy spear hurled with tremendous force: sharp hand-release snap, powerful low rushing WHOOOSH with a brief shaft vibration and dense air-pressure punch. Bigger and weightier than a regular spear throw. One compact attack starting immediately, no target impact, repeated throws, voices, music or background ambience.",
+      "target_rms_dbfs": -15
+    },
+    {
+      "cue": "great_hit_slash",
+      "duration_seconds": 0.75,
+      "max_duration_seconds": 0.75,
+      "prompt": "One devastating greatsword or giant spear hit into dense fantasy armor and wood. Explosive slicing CRACK-THWACK with hard metallic bite, crunchy splinters and a deep chesty impact body. Much more weight and punch than a normal blade hit, compact dry decay. Single impact, no swoosh, voices, music or ambience.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 2,
+      "selection_note": "Strongest peak-normalized body for the piercing impact."
+    },
+    {
+      "cue": "great_hit_blunt",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.8,
+      "prompt": "One gigantic hammer or shield smashing into dense hardwood. Huge blunt low THUD-CRACK, immediate hard attack, thick powerful low-mid body with short splintering debris decay. Massive solid physical impact, clearly heavier than a normal hammer hit. Not a metallic ring or explosion. Single dry hit, no voices, music or ambience.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 3,
+      "selection_note": "Strongest and longest peak-normalized blunt impact body."
+    },
+    {
+      "cue": "great_block",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.8,
+      "prompt": "A huge reinforced wooden shield blocking a powerful sword strike: immediate loud wooden-metallic CLANG-THUNK with dense bass punch, resonant shield body and a short gritty rattle. Mighty defensive impact, bigger than an ordinary block. One close dry hit, no long ringing, voices, music or ambience.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 3,
+      "selection_note": "Stronger peak-normalized shield resonance than the automatic short-tail choice."
+    }
+  ]
+}

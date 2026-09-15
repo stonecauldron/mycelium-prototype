@@ -1,8 +1,9 @@
 # Mycelium sound pack
 
-47 effects generated with **ElevenLabs Sound Effects V2** through fal.ai:
-44.1 kHz, mono, 16-bit PCM WAV, 55 ms–2.94 s. Source WAVs have tapered ends and
-at least 3.1 dB of peak headroom. Godot additionally normalizes all 47 clips
+47 effects: 45 based on **ElevenLabs Sound Effects V2** through fal.ai and two
+based on the user's supplied archery recording. The regular Bow WAV is that
+original 96 kHz stereo 24-bit file, copied verbatim; the other assets are
+44.1 kHz mono 16-bit PCM WAV. Godot normalizes all 47 clips
 during import (`edit/normalize=true`); per-cue gains in `../sfx.gd` shape the
 in-game mix after import.
 
@@ -31,35 +32,49 @@ an estimated revision total of **$0.668**. These estimates are not a billing
 statement. Prompts, requests, sources, screening results, layer recipes, and
 the twelve previous WAVs are retained in `.scratch/sfx-revision-2/`.
 
-The bow releases combine a tightly damped generated string pluck with an arrow
-release snap. Great Bow adds a lower string resonance and wooden body, with a
-cue gain 3 dB above regular Bow. Blunt impacts and the sledgehammer layer a low
-thud under their attack. The eleven replacements import as uncompressed PCM
+Revision 2 combined generated string/release layers for bows and low thuds for
+blunt impacts. Those bow and sledgehammer versions are superseded below.
+Its eleven replacements imported as uncompressed PCM
 (`compress/mode=0`), retaining Godot normalization. The original MP3 source layers
 remain lossy; the finishing and Godot import stages introduce no further lossy
-compression. Four new brass fanfares retain fixed pitch and play 3 dB louder.
+compression. Its four brass fanfares retained fixed pitch and played 3 dB louder.
+
+[Revision 3](../../../.scratch/sfx-revision-3/spec.md) uses the supplied
+**Epidemic Sound — Weapons, Bow, Bow, String, Draw, Release 01 (2417-2943)**
+recording for both bows. Regular Bow is a byte-for-byte copy, with no source
+trimming. Great Bow retains the full release with bass emphasis and gentle
+compression, playing 3 dB above the regular bow. Both retain the existing random
+pitch variation at runtime and Godot import normalization.
+
+Harvest has a stronger hatching crack and body; Blunt impact has a harder attack
+and longer body; Explosion adds saturated blast energy and low rumble with an
+additional 2 dB of cue gain. The four selected Previous versions—Run win, Run
+loss, Great swing and Great throw—are restored exactly from revision 1, including
+their gains and import compression. Revision 3 uses existing/supplied audio and
+costs **$0 in generation credits**. Its plan, source copies, previous WAVs and
+hashes are retained in `.scratch/sfx-revision-3/`. The five newly processed/copied
+assets use uncompressed PCM imports; the four restores keep their original imports.
 
 Preparation removes low rumble, trims quiet padding, adds short fades, and
 adjusts level within a peak ceiling. Selection favors complete events with
 quiet tails. Revision 2 also uses open-ended automated sound descriptions to
 reject mismatched candidates; these are an imperfect signal, not human audition.
 Use the current sequential
-[listening preview](../../../.scratch/sfx-revision-2/preview.wav) for subjective
+[listening preview](../../../.scratch/sfx-revision-3/preview.wav) for subjective
 review. Its cue order and timestamps are in `manifest.json`; the preview omits
 Godot's import normalization and the game's per-cue gains and pitch variation.
 
 From the repository root:
 
 ```sh
-python3 .scratch/elevenlabs-sfx/process_sfx.py --source-dir .scratch/sfx-revision-2 --prepare
-python3 .scratch/sfx-revision-2/finish_sfx.py
+python3 .scratch/sfx-revision-3/build_sfx.py
 ```
 
 Requires Python 3 and `ffmpeg`. This rebuilds all prepared WAVs, the selection
 manifest, and preview from the saved originals without generation or credits.
-Add `--install` to **both commands**, in that order, to replace this revision's
-eleven WAVs, including the finished layers. To rebuild the entire current pack,
-prepare/install the original batch, revision 1, then revision 2. Earlier batches
+Add `--install` to replace this revision's nine WAVs. To rebuild the entire pack,
+prepare/install the original batch, revision 1, revision 2 (including its
+`finish_sfx.py` step), then revision 3. Earlier batches
 alone restore earlier takes. Gameplay uses the bundled files and requires no
 network or fal.ai account.
 
@@ -91,12 +106,12 @@ An SFX-bus peak limiter caps overlapping bursts at -1 dB; it leaves ordinary
 individual cues below the threshold unchanged. The Music bus is separate.
 The limiter uses Godot's [AudioEffectHardLimiter](https://docs.godotengine.org/en/stable/classes/class_audioeffecthardlimiter.html).
 
-The [browser review](http://127.0.0.1:8787/) offers all 47 cues and twelve A/B
+The [browser review](http://127.0.0.1:8787/) offers all 47 cues and nine A/B
 comparisons against their immediately previous versions. It defaults to in-game
 levels so the louder explosion is audible, with optional pitch variation and
 saved notes. `review.html`, `review-contexts.json` and `build_review.py` in
 `.scratch/sfx-revision-1/` build it from Godot captures and the previous review
-data; pass `--revision-dir .scratch/sfx-revision-2`. It is a local page and
+data; pass `--revision-dir .scratch/sfx-revision-3`. It is a local page and
 requires the review server to be running.
 
 Replace individual WAVs at the same paths to change the sound palette while

@@ -1,0 +1,335 @@
+{
+  "generation_cost_usd": 0,
+  "bow_source": {
+    "provided_path": "/Users/cauldron/Downloads/ES_Weapons, Bow, Bow, String, Draw, Release 01 - Epidemic Sound - 2417-2943.wav",
+    "attribution": "Epidemic Sound \u2014 Weapons, Bow, Bow, String, Draw, Release 01 (2417-2943); supplied by the user."
+  },
+  "selected": [
+    {
+      "cue": "harvest",
+      "operation": "mix",
+      "note": "Egg-shell crack with deeper wooden body and a fuller shell crumble.",
+      "sha256": "e2c48065f92727f11122350b294dbe44a892da5af5b50890b190c77c47865929",
+      "prepared_file": "prepared/harvest.wav",
+      "sources": [
+        {
+          "source": "previous/harvest.wav",
+          "filters": "anull",
+          "gain": 1,
+          "sha256": "f227797cda527943963e3345211353070c91bc45d7553b451c35eee4813153de"
+        },
+        {
+          "source": "source/heavy_swing.wav",
+          "filters": "asetrate=34398,aresample=44100,lowpass=f=1400",
+          "gain": 0.65,
+          "sha256": "caebea681b84cd57082fe6692de88143e8b9d3b381ddbe22a5cd7a95252bc4c4"
+        },
+        {
+          "source": "previous/harvest.wav",
+          "filters": "asetrate=30870,aresample=44100,lowpass=f=2800",
+          "gain": 0.4,
+          "sha256": "f227797cda527943963e3345211353070c91bc45d7553b451c35eee4813153de"
+        }
+      ],
+      "before": {
+        "duration_seconds": 0.8421315192743765,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -24.82,
+        "crest_db": 21.72
+      },
+      "after": {
+        "duration_seconds": 1.1923356009070294,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -22.04,
+        "crest_db": 18.94
+      },
+      "preview_start_seconds": 0.0
+    },
+    {
+      "cue": "bow",
+      "operation": "copy",
+      "note": "Byte-for-byte copy of the user-supplied 96 kHz stereo 24-bit archery recording; no trimming or processing of the source WAV.",
+      "sha256": "c5c8d22a5a28a7966690e7abc0504206cc81b827352e721386566b92a324dfba",
+      "prepared_file": "prepared/bow.wav",
+      "sources": [
+        {
+          "source": "source/bow-reference.wav",
+          "sha256": "c5c8d22a5a28a7966690e7abc0504206cc81b827352e721386566b92a324dfba"
+        }
+      ],
+      "before": {
+        "duration_seconds": 0.13972789115646259,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -15.57,
+        "crest_db": 12.48
+      },
+      "after": {
+        "duration_seconds": 0.526,
+        "sample_rate": 96000,
+        "channels": 2,
+        "bits_per_sample": 24,
+        "peak_dbfs": -3.21,
+        "rms_dbfs": -20.83,
+        "crest_db": 17.62
+      },
+      "preview_start_seconds": 1.642
+    },
+    {
+      "cue": "hit_blunt",
+      "operation": "mix",
+      "note": "Harder crack over a longer, dense blunt body.",
+      "sha256": "fb653a3edb0f4c35baa92c0db935c5c538fcc4cb083a51a06c16ebe9bdaca0e2",
+      "prepared_file": "prepared/hit_blunt.wav",
+      "sources": [
+        {
+          "source": "../sfx-revision-2/previous/hit_blunt.wav",
+          "filters": "anull",
+          "gain": 1.1,
+          "sha256": "376450e4cba11b4b2d2734db84744898e50ae22a952f585aff25a180d84adbd4"
+        },
+        {
+          "source": "source/great_hit_blunt.wav",
+          "filters": "lowpass=f=3500",
+          "gain": 0.7,
+          "sha256": "a92d90c8cda0cf980a282b06686b5e8cb27ce31a9828522c199698e09828c98a"
+        },
+        {
+          "source": "../sfx-revision-2/raw/hit_blunt_6.mp3",
+          "filters": "atrim=start=0.10:duration=0.18,asetpts=PTS-STARTPTS",
+          "gain": 0.35,
+          "sha256": "83bdaa6d9465b2b98c7ad2afcde1b8e31db826d8473ac57f464a62ccf7120542"
+        }
+      ],
+      "before": {
+        "duration_seconds": 0.18462585034013607,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -16.42,
+        "crest_db": 13.32
+      },
+      "after": {
+        "duration_seconds": 0.45900226757369617,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -16.78,
+        "crest_db": 13.68
+      },
+      "preview_start_seconds": 2.618
+    },
+    {
+      "cue": "explosion",
+      "operation": "mix",
+      "note": "Original blast with stronger saturated body and a delayed low rumble; cue gain raised another 2 dB.",
+      "sha256": "a496f7db56eea252d4aceee4ad96c424fcf24ae4c1fec9636b2c9a4fa234629d",
+      "prepared_file": "prepared/explosion.wav",
+      "sources": [
+        {
+          "source": "previous/explosion.wav",
+          "filters": "anull",
+          "gain": 1,
+          "sha256": "42f09545c899284b61b411271ca737c9b72dcd766a341f827100ea2b4624e014"
+        },
+        {
+          "source": "previous/explosion.wav",
+          "filters": "asetrate=31752,aresample=44100,lowpass=f=1800,adelay=100:all=1",
+          "gain": 0.35,
+          "sha256": "42f09545c899284b61b411271ca737c9b72dcd766a341f827100ea2b4624e014"
+        }
+      ],
+      "before": {
+        "duration_seconds": 0.7234013605442177,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -15.6,
+        "crest_db": 12.51
+      },
+      "after": {
+        "duration_seconds": 0.9878004535147392,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -13.34,
+        "crest_db": 10.24
+      },
+      "preview_start_seconds": 3.527
+    },
+    {
+      "cue": "run_win",
+      "operation": "restore",
+      "note": "Restore the exact Previous version selected in the review, including import and cue gain.",
+      "sha256": "f2d010a33f9263f06493bfcf8d1208d4f43520a1e9fe9686944b0434c7c1d4f7",
+      "prepared_file": "prepared/run_win.wav",
+      "sources": [
+        {
+          "source": "../sfx-revision-2/previous/run_win.wav",
+          "sha256": "f2d010a33f9263f06493bfcf8d1208d4f43520a1e9fe9686944b0434c7c1d4f7"
+        }
+      ],
+      "before": {
+        "duration_seconds": 2.639047619047619,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -15.66,
+        "crest_db": 12.56
+      },
+      "after": {
+        "duration_seconds": 2.49437641723356,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -14.36,
+        "crest_db": 11.26
+      },
+      "preview_start_seconds": 4.965
+    },
+    {
+      "cue": "run_loss",
+      "operation": "restore",
+      "note": "Restore the exact Previous version selected in the review, including import and cue gain.",
+      "sha256": "a5d9827ff791a1cb4ec6eecd4104fed9138f9a89c58bf026e96cc15034cc1559",
+      "prepared_file": "prepared/run_loss.wav",
+      "sources": [
+        {
+          "source": "../sfx-revision-2/previous/run_loss.wav",
+          "sha256": "a5d9827ff791a1cb4ec6eecd4104fed9138f9a89c58bf026e96cc15034cc1559"
+        }
+      ],
+      "before": {
+        "duration_seconds": 2.933378684807256,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -16.1,
+        "crest_db": 13.0
+      },
+      "after": {
+        "duration_seconds": 2.8236281179138323,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -14.36,
+        "crest_db": 11.27
+      },
+      "preview_start_seconds": 7.91
+    },
+    {
+      "cue": "great_swing",
+      "operation": "restore",
+      "note": "Restore the exact Previous version selected in the review, including import and cue gain.",
+      "sha256": "ae462580d3524745177488436ecbc4e89b2f1fa173ae186491fb33de78da02f4",
+      "prepared_file": "prepared/great_swing.wav",
+      "sources": [
+        {
+          "source": "../sfx-revision-2/previous/great_swing.wav",
+          "sha256": "ae462580d3524745177488436ecbc4e89b2f1fa173ae186491fb33de78da02f4"
+        }
+      ],
+      "before": {
+        "duration_seconds": 0.5088888888888888,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -19.12,
+        "crest_db": 16.02
+      },
+      "after": {
+        "duration_seconds": 0.384172335600907,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -17.27,
+        "crest_db": 14.17
+      },
+      "preview_start_seconds": 11.183
+    },
+    {
+      "cue": "great_bow",
+      "operation": "mix",
+      "note": "Same complete archery release, with a 6 dB low shelf, gentle compression and 3 dB higher game gain than regular Bow. No synthesized layers or pitch shift.",
+      "sha256": "385f89853b601b17051c31c025ba889ff378b813e7f83fc895003d841fbbe797",
+      "prepared_file": "prepared/great_bow.wav",
+      "sources": [
+        {
+          "source": "source/bow-reference.wav",
+          "filters": "bass=g=6:f=180:w=0.8",
+          "gain": 1,
+          "sha256": "c5c8d22a5a28a7966690e7abc0504206cc81b827352e721386566b92a324dfba"
+        }
+      ],
+      "before": {
+        "duration_seconds": 0.20956916099773243,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -15.36,
+        "crest_db": 12.27
+      },
+      "after": {
+        "duration_seconds": 0.5260090702947846,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -18.59,
+        "crest_db": 15.49
+      },
+      "preview_start_seconds": 12.017
+    },
+    {
+      "cue": "great_throw",
+      "operation": "restore",
+      "note": "Restore the exact Previous version selected in the review, including import and cue gain.",
+      "sha256": "08580e6533121c6b7ae9a90b4099df0d1eb5907b911bf27cdc1fe30ab71037ad",
+      "prepared_file": "prepared/great_throw.wav",
+      "sources": [
+        {
+          "source": "../sfx-revision-2/previous/great_throw.wav",
+          "sha256": "08580e6533121c6b7ae9a90b4099df0d1eb5907b911bf27cdc1fe30ab71037ad"
+        }
+      ],
+      "before": {
+        "duration_seconds": 0.46399092970521544,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -16.61,
+        "crest_db": 13.51
+      },
+      "after": {
+        "duration_seconds": 0.43405895691609975,
+        "sample_rate": 44100,
+        "channels": 1,
+        "bits_per_sample": 16,
+        "peak_dbfs": -3.1,
+        "rms_dbfs": -16.21,
+        "crest_db": 13.11
+      },
+      "preview_start_seconds": 12.993
+    }
+  ]
+}

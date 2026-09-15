@@ -36,16 +36,16 @@ def main():
             channels, rate = source.getnchannels(), source.getframerate()
         if sys.byteorder != "little":
             pcm.byteswap()
-        mono = array("h", (round(sum(pcm[i:i + channels]) / channels) for i in range(0, len(pcm), channels)))
-        active = [i for i, value in enumerate(mono) if abs(value) > 2]
+        # Preserve the captured channels, including the supplied stereo bow.
+        active = [i // channels for i, value in enumerate(pcm) if abs(value) > 2]
         assert active, cue_id
         start = max(0, active[0] - round(rate * .004))
-        end = min(len(mono), active[-1] + round(rate * .008))
-        clipped = mono[start:end]
+        end = min(len(pcm) // channels, active[-1] + round(rate * .008))
+        clipped = pcm[start * channels:end * channels]
         if sys.byteorder != "little":
             clipped.byteswap()
         lossless = subprocess.check_output([
-            "ffmpeg", "-v", "error", "-f", "s16le", "-ar", str(rate), "-ac", "1", "-i", "-",
+            "ffmpeg", "-v", "error", "-f", "s16le", "-ar", str(rate), "-ac", str(channels), "-i", "-",
             "-c:a", "flac", "-compression_level", "8", "-metadata_header_padding", "0", "-f", "flac", "-",
         ], input=clipped.tobytes())
         rows.append({**{k: v for k, v in row.items() if k != "capture_gain_db"},

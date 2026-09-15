@@ -1,0 +1,154 @@
+{
+  "generation_cost_usd": 0,
+  "baseline": "5f7f66b",
+  "restore_commit": "c915ad2",
+  "cues": [
+    {
+      "cue": "harvest",
+      "operation": "mix",
+      "max_duration_seconds": 1.5,
+      "target_rms_dbfs": -12,
+      "layers": [
+        {
+          "source": "previous/harvest.wav",
+          "filters": "anull",
+          "gain": 1
+        },
+        {
+          "source": "source/heavy_swing.wav",
+          "filters": "asetrate=34398,aresample=44100,lowpass=f=1400",
+          "gain": 0.65
+        },
+        {
+          "source": "previous/harvest.wav",
+          "filters": "asetrate=30870,aresample=44100,lowpass=f=2800",
+          "gain": 0.4
+        }
+      ],
+      "finish": "acompressor=threshold=0.20:ratio=3:attack=2:release=70,alimiter=limit=0.2:attack=1:release=50:level=false:latency=true",
+      "note": "Egg-shell crack with deeper wooden body and a fuller shell crumble."
+    },
+    {
+      "cue": "bow",
+      "operation": "copy",
+      "source": "source/bow-reference.wav",
+      "note": "Byte-for-byte copy of the user-supplied 96 kHz stereo 24-bit archery recording; no trimming or processing of the source WAV."
+    },
+    {
+      "cue": "hit_blunt",
+      "operation": "mix",
+      "max_duration_seconds": 0.6,
+      "target_rms_dbfs": -12,
+      "layers": [
+        {
+          "source": "../sfx-revision-2/previous/hit_blunt.wav",
+          "filters": "anull",
+          "gain": 1.1
+        },
+        {
+          "source": "source/great_hit_blunt.wav",
+          "filters": "lowpass=f=3500",
+          "gain": 0.7
+        },
+        {
+          "source": "../sfx-revision-2/raw/hit_blunt_6.mp3",
+          "filters": "atrim=start=0.10:duration=0.18,asetpts=PTS-STARTPTS",
+          "gain": 0.35
+        }
+      ],
+      "finish": "acompressor=threshold=0.22:ratio=2.5:attack=2:release=45,alimiter=limit=0.32:attack=1:release=50:level=false:latency=true",
+      "note": "Harder crack over a longer, dense blunt body."
+    },
+    {
+      "cue": "explosion",
+      "operation": "mix",
+      "max_duration_seconds": 1.5,
+      "target_rms_dbfs": -12,
+      "layers": [
+        {
+          "source": "previous/explosion.wav",
+          "filters": "anull",
+          "gain": 1
+        },
+        {
+          "source": "previous/explosion.wav",
+          "filters": "asetrate=31752,aresample=44100,lowpass=f=1800,adelay=100:all=1",
+          "gain": 0.35
+        }
+      ],
+      "finish": "anull",
+      "note": "Original blast with stronger saturated body and a delayed low rumble; cue gain raised another 2 dB.",
+      "saturation_drive": 4
+    },
+    {
+      "cue": "run_win",
+      "operation": "restore",
+      "source": "../sfx-revision-2/previous/run_win.wav",
+      "note": "Restore the exact Previous version selected in the review, including import and cue gain."
+    },
+    {
+      "cue": "run_loss",
+      "operation": "restore",
+      "source": "../sfx-revision-2/previous/run_loss.wav",
+      "note": "Restore the exact Previous version selected in the review, including import and cue gain."
+    },
+    {
+      "cue": "great_swing",
+      "operation": "restore",
+      "source": "../sfx-revision-2/previous/great_swing.wav",
+      "note": "Restore the exact Previous version selected in the review, including import and cue gain."
+    },
+    {
+      "cue": "great_bow",
+      "operation": "mix",
+      "max_duration_seconds": 0.5261,
+      "target_rms_dbfs": -12,
+      "preserve_padding": true,
+      "layers": [
+        {
+          "source": "source/bow-reference.wav",
+          "filters": "bass=g=6:f=180:w=0.8",
+          "gain": 1
+        }
+      ],
+      "finish": "acompressor=threshold=0.22:ratio=2:attack=2:release=50",
+      "note": "Same complete archery release, with a 6 dB low shelf, gentle compression and 3 dB higher game gain than regular Bow. No synthesized layers or pitch shift."
+    },
+    {
+      "cue": "great_throw",
+      "operation": "restore",
+      "source": "../sfx-revision-2/previous/great_throw.wav",
+      "note": "Restore the exact Previous version selected in the review, including import and cue gain."
+    }
+  ],
+  "level_changes": {
+    "harvest": {
+      "from_db": -8,
+      "to_db": -6
+    },
+    "hit_blunt": {
+      "from_db": -9,
+      "to_db": -8
+    },
+    "explosion": {
+      "from_db": -4,
+      "to_db": -2
+    },
+    "run_win": {
+      "from_db": -5,
+      "to_db": -8
+    },
+    "run_loss": {
+      "from_db": -5,
+      "to_db": -8
+    },
+    "great_swing": {
+      "from_db": -9,
+      "to_db": -11
+    }
+  },
+  "bow_source": {
+    "provided_path": "/Users/cauldron/Downloads/ES_Weapons, Bow, Bow, String, Draw, Release 01 - Epidemic Sound - 2417-2943.wav",
+    "attribution": "Epidemic Sound \u2014 Weapons, Bow, Bow, String, Draw, Release 01 (2417-2943); supplied by the user."
+  }
+}

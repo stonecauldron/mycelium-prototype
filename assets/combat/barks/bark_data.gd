@@ -35,7 +35,7 @@ const LINES := {
 	Kind.VICTORY: [
 		"Praise the Hallowed Mycelium!",
 		"The Holy Pruning will carry on!",
-		"Each triumph expands the Hallowed Mycelium!",
+		"With each triumph, the Hallowed Mycelium expands its reach!",
 		"Victory, comrades!",
 		"The Sun has lost!",
 		"Let the fallen rest.",

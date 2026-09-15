@@ -6,11 +6,15 @@
 2. Open `assets/autoload/audio.tscn` in Godot and select the root **Audio** node.
 3. Assign **Base Music** and **Battle Music** in the Inspector, then save the scene.
 
-Empty slots are silent. The game already selects Base music on title/Base and Battle music on combat/day summary/victory/game over, including direct scene launches. Selecting the current track keeps its position. Switching tracks crossfades over 0.5 seconds; returning to a different track starts it from the beginning.
+The title screen and Base start Base music at full volume. On the first Battle, Base music lowers to 20% and Battle music begins at full volume. Returning to Base or title raises Base music to full volume and lowers Battle music to 20%. Both songs keep playing and looping, so later transitions preserve both playback positions. Volume changes take 0.5 seconds.
+
+Combat, day summary, victory, and game over use the Battle mix. A direct launch into one of these scenes starts both tracks at those levels. Battle music starts only once a Battle/result screen is entered; it is silent on the initial title/Base visit. Empty slots stay silent, while an assigned other track keeps its normal foreground/background level. The Music settings slider scales the entire mix.
+
+`Audio.stop_music()` fades out and stops both songs. The next request starts playback from the beginning; normal scene transitions only change their volumes.
 
 OGG, MP3, and WAV tracks loop automatically. Existing loop offsets/points are preserved; changes apply to a playback copy, so using the same file as an effect does not make the effect loop. Other Godot stream types repeat when they finish; use native loop points for seamless music.
 
-Music and its fades continue while paused and use real time during fast-forward and hitstop.
+Music and its volume transitions continue while paused and use real time during fast-forward and hitstop.
 
 ## Sound effects
 

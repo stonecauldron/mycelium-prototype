@@ -5,44 +5,48 @@ extends Node
 const _SFX_VOICES := 16
 const _UI_VOICES := 4
 const _DEFAULT_PITCH_VARIATION := 0.1
-const _CROSSFADE_SECONDS := 0.5
+const _MUSIC_TRANSITION_SECONDS := 0.5
+const _BACKGROUND_MUSIC_VOLUME := 0.2
 
 @export var base_music: AudioStream
 @export var battle_music: AudioStream
 
-@onready var _music_a: AudioStreamPlayer = %MusicA
-@onready var _music_b: AudioStreamPlayer = %MusicB
+@onready var _base_player: AudioStreamPlayer = %MusicA
+@onready var _battle_player: AudioStreamPlayer = %MusicB
 
 var _gameplay_players: Array[AudioStreamPlayer] = []
 var _ui_players: Array[AudioStreamPlayer] = []
 var _gameplay_scene: Node
 var _pitch_rng := RandomNumberGenerator.new()
 var _current_music: AudioStreamPlayer
-var _current_track: AudioStream
+var _music_sources: Dictionary[AudioStreamPlayer, AudioStream] = {}
+var _battle_music_started: bool = false
 var _music_fade: Tween
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_pitch_rng.randomize()
-	_music_a.bus = &"Music"
-	_music_b.bus = &"Music"
+	_base_player.bus = &"Music"
+	_battle_player.bus = &"Music"
 	# Native loop points are used where available; other stream types repeat here.
-	_music_a.finished.connect(_music_a.play)
-	_music_b.finished.connect(_music_b.play)
+	_base_player.finished.connect(_base_player.play)
+	_battle_player.finished.connect(_battle_player.play)
 
 
 func play_base_music() -> AudioStreamPlayer:
-	return _play_music(base_music)
+	return _play_music(_base_player)
 
 
 func play_battle_music() -> AudioStreamPlayer:
-	return _play_music(battle_music)
+	_battle_music_started = true
+	return _play_music(_battle_player)
 
 
 func stop_music() -> void:
+	if _current_music == null:
+		return
 	_current_music = null
-	_current_track = null
 	_fade_music()
 
 
@@ -113,21 +117,31 @@ func _play_effect(
 	return player
 
 
-func _play_music(stream: AudioStream) -> AudioStreamPlayer:
+func _play_music(foreground: AudioStreamPlayer) -> AudioStreamPlayer:
+	var changed := _ensure_music_player(_base_player, base_music)
+	if _battle_music_started:
+		changed = _ensure_music_player(_battle_player, battle_music) or changed
+	if _current_music != foreground or changed:
+		_current_music = foreground
+		_fade_music()
+	return foreground if foreground.stream != null else null
+
+
+func _ensure_music_player(player: AudioStreamPlayer, stream: AudioStream) -> bool:
 	if stream == null:
-		stop_music()
-		return null
-	if _current_track == stream and _current_music != null and _current_music.playing:
-		return _current_music
-	var incoming := _music_b if _current_music == _music_a else _music_a
-	incoming.stop()
-	incoming.stream = _looping_music(stream)
-	incoming.volume_linear = 0.0
-	incoming.play()
-	_current_music = incoming
-	_current_track = stream
-	_fade_music()
-	return incoming
+		var changed := player.stream != null
+		player.stop()
+		player.stream = null
+		_music_sources.erase(player)
+		return changed
+	if _music_sources.get(player) == stream and player.playing:
+		return false
+	player.stop()
+	player.stream = _looping_music(stream)
+	player.volume_linear = 0.0
+	player.play()
+	_music_sources[player] = stream
+	return true
 
 
 func _looping_music(stream: AudioStream) -> AudioStream:
@@ -152,13 +166,18 @@ func _fade_music() -> void:
 	_music_fade = create_tween().set_parallel(true)
 	_music_fade.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	_music_fade.set_ignore_time_scale(true)
-	for player in [_music_a, _music_b]:
-		_music_fade.tween_property(player, "volume_linear", 1.0 if player == _current_music else 0.0, _CROSSFADE_SECONDS)
-	_music_fade.chain().tween_callback(_finish_music_fade)
+	for player in [_base_player, _battle_player]:
+		var volume := 0.0
+		if _current_music != null and player.playing:
+			volume = 1.0 if player == _current_music else _BACKGROUND_MUSIC_VOLUME
+		_music_fade.tween_property(player, "volume_linear", volume, _MUSIC_TRANSITION_SECONDS)
+	if _current_music == null:
+		_music_fade.chain().tween_callback(_finish_music_stop)
 
 
-func _finish_music_fade() -> void:
-	for player in [_music_a, _music_b]:
-		if player != _current_music:
-			player.stop()
-			player.stream = null
+func _finish_music_stop() -> void:
+	for player in [_base_player, _battle_player]:
+		player.stop()
+		player.stream = null
+	_music_sources.clear()
+	_battle_music_started = false

@@ -237,10 +237,10 @@ A unit's Melee, Mid, or Ranged role in battle.
 ### Audio
 
 **Base music**:
-The background music for the title screen and Base.
+The music featured on the title screen and in the Base, also heard quietly under Battle music.
 
 **Battle music**:
-The background music for Battles and their result screens, including day summary, victory, and game over.
+The music featured during Battles and their result screens, including day summary, victory, and game over. Once introduced, it continues quietly under Base music between Battles.
 
 ### Distribution
 

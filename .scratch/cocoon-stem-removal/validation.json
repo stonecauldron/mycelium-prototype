@@ -1,0 +1,52 @@
+[
+  {
+    "path": "assets/base/pupation/cocoon.png",
+    "size": [
+      512,
+      512
+    ],
+    "previous_bounds": [
+      99,
+      0,
+      427,
+      504
+    ],
+    "bounds": [
+      99,
+      62,
+      427,
+      504
+    ],
+    "stem_area_transparent": true,
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e852b1c0f61bf8f1e5595e54e22131324389b789e2c706572a5e8dc9c84fffcf"
+  },
+  {
+    "path": "assets/base/pupation/cocoon_open.png",
+    "size": [
+      512,
+      512
+    ],
+    "previous_bounds": [
+      99,
+      0,
+      427,
+      504
+    ],
+    "bounds": [
+      99,
+      62,
+      427,
+      504
+    ],
+    "stem_area_transparent": true,
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "8d064617380b4c49841dbfa22625d8348304dacac6c6929458d8b7e91aa3f57c"
+  }
+]

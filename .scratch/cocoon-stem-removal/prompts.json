@@ -1,0 +1,22 @@
+{
+  "prompts": [
+    {
+      "name": "cocoon",
+      "prompt": "Use case: precise-object-edit.\nEdit only the top of this CLOSED cocoon sprite: remove the entire narrow dark stem / stalk / neck rising above the oval body. Replace its attachment area with a smooth, low, rounded closed crown that continues the pale khaki outer wrap and thick near-black contour. The result is a stemless oval cocoon, with no stalk, no pointed tip, no knob, no hanging attachment.\nPreserve the existing body width, base position, broad diagonal wrap bands, colors, matte shading, line thickness and closed state. Do not change the lower body or add decoration. Retain the same 512-by-512 square canvas composition: the body stays in its current position, and the space occupied by the removed stalk becomes transparent. Do not stretch the cocoon upward to fill that space. The body's rounded crown should begin around 12 percent down the canvas, while the base remains near the bottom.\nOutput one centered CLOSED cocoon with genuine transparent alpha background, no painted checkerboard, no ground shadow, text or props. This is only stem removal, not a redesign."
+    },
+    {
+      "name": "cocoon_open",
+      "prompt": "Use case: precise-object-edit.\nImage 1 is the OPEN cocoon edit target. Image 2 is the matching CLOSED cocoon after removal of its stem; use image 2 only as the reference for the new rounded stemless top.\nRemove the entire dark stem / stalk / narrow neck from the top of image 1. Replace its attachment with a smooth low rounded crown continuing the pale khaki wrap and heavy near-black outline, matching the stemless shape in image 2. No stalk, pointed tip, knob or hanging attachment.\nKeep image 1's OPEN state: its tall opaque dark olive interior and pale folded silk opening edges must stay. Preserve its existing body width, base position, wrapper bands, opening proportions, ivory/khaki colors and matte shading. Do not close the opening. Do not change the lower body.\nKeep the square canvas and same body placement, leaving transparent space above the rounded crown where the stem was removed. Do not stretch the body upward into that empty space. Same overall oval silhouette as image 2, so the two states remain a matched pair.\nOutput one OPEN stemless cocoon on a genuine transparent alpha background, no painted checkerboard, no ground shadow, no extra objects or text. This is only stem removal, not a redesign."
+    }
+  ],
+  "generation": [
+    {
+      "name": "cocoon",
+      "output_hint": "Generated images are saved to /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508 as /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508/exec-36aa5020-f7d6-483b-b217-f8e574b0a08e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    },
+    {
+      "name": "cocoon_open",
+      "output_hint": "Generated images are saved to /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508 as /Users/cauldron/.codex/generated_images/01a0a0f0-ee73-7242-8938-a28325fe5508/exec-3101e329-43fd-47d8-b78f-db28ca47f1a3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+    }
+  ]
+}

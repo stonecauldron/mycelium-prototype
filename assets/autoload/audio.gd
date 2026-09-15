@@ -4,6 +4,7 @@ extends Node
 
 const _SFX_VOICES := 16
 const _UI_VOICES := 4
+const _DEFAULT_PITCH_VARIATION := 0.1
 const _CROSSFADE_SECONDS := 0.5
 
 @export var base_music: AudioStream
@@ -15,6 +16,7 @@ const _CROSSFADE_SECONDS := 0.5
 var _gameplay_players: Array[AudioStreamPlayer] = []
 var _ui_players: Array[AudioStreamPlayer] = []
 var _gameplay_scene: Node
+var _pitch_rng := RandomNumberGenerator.new()
 var _current_music: AudioStreamPlayer
 var _current_track: AudioStream
 var _music_fade: Tween
@@ -22,6 +24,9 @@ var _music_fade: Tween
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_pitch_rng.randomize()
+	_music_a.bus = &"Music"
+	_music_b.bus = &"Music"
 	# Native loop points are used where available; other stream types repeat here.
 	_music_a.finished.connect(_music_a.play)
 	_music_b.finished.connect(_music_b.play)
@@ -42,18 +47,27 @@ func stop_music() -> void:
 
 
 ## Returned players are pooled; do not retain them across later playback calls.
-func play_sfx(stream: AudioStream, volume_db: float = 0.0) -> AudioStreamPlayer:
+## Pitch variation is a fraction of normal pitch; zero disables randomization.
+func play_sfx(
+	stream: AudioStream,
+	volume_db: float = 0.0,
+	pitch_variation: float = _DEFAULT_PITCH_VARIATION
+) -> AudioStreamPlayer:
 	if stream == null or get_tree().paused:
 		return null
 	var scene := get_tree().current_scene
 	if scene != null and _gameplay_scene != scene:
 		_gameplay_scene = scene
 		scene.tree_exiting.connect(stop_gameplay_sfx, CONNECT_ONE_SHOT)
-	return _play_effect(stream, volume_db, _gameplay_players, _SFX_VOICES, Node.PROCESS_MODE_PAUSABLE)
+	return _play_effect(stream, volume_db, pitch_variation, _gameplay_players, _SFX_VOICES, Node.PROCESS_MODE_PAUSABLE)
 
 
-func play_ui_sfx(stream: AudioStream, volume_db: float = 0.0) -> AudioStreamPlayer:
-	return _play_effect(stream, volume_db, _ui_players, _UI_VOICES, Node.PROCESS_MODE_ALWAYS)
+func play_ui_sfx(
+	stream: AudioStream,
+	volume_db: float = 0.0,
+	pitch_variation: float = _DEFAULT_PITCH_VARIATION
+) -> AudioStreamPlayer:
+	return _play_effect(stream, volume_db, pitch_variation, _ui_players, _UI_VOICES, Node.PROCESS_MODE_ALWAYS)
 
 
 func stop_gameplay_sfx() -> void:
@@ -65,6 +79,7 @@ func stop_gameplay_sfx() -> void:
 func _play_effect(
 	stream: AudioStream,
 	volume_db: float,
+	pitch_variation: float,
 	players: Array[AudioStreamPlayer],
 	limit: int,
 	mode: ProcessMode
@@ -90,6 +105,10 @@ func _play_effect(
 	player.stop()
 	player.stream = stream
 	player.volume_db = volume_db
+	if not is_finite(pitch_variation):
+		pitch_variation = _DEFAULT_PITCH_VARIATION
+	var variation := clampf(pitch_variation, 0.0, 0.99)
+	player.pitch_scale = _pitch_rng.randf_range(1.0 - variation, 1.0 + variation)
 	player.play()
 	return player
 

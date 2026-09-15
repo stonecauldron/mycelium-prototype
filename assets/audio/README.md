@@ -29,6 +29,8 @@ func on_button_pressed() -> void:
 
 Both helpers accept an optional per-effect gain in decibels, for example `Audio.play_sfx(hit_sound, -6.0)`. A missing stream is a silent no-op. Effects are non-positional and share the **SFX** volume control.
 
+Every call chooses a fresh pitch within ±10% of normal (0.9–1.1×), including when reusing a pooled player. The optional third argument changes this fractional variation: `Audio.play_sfx(hit_sound, -6.0, 0.05)` uses ±5%; `Audio.play_ui_sfx(click_sound, 0.0, 0.0)` plays at exactly normal pitch. Variation is clamped to 0–0.99; non-finite values use the default. Pitch variation also changes the effect's playback speed. Music keeps its normal pitch and speed, and audio randomization does not consume gameplay randomness.
+
 - Gameplay effects pause/resume with gameplay; new requests while paused are ignored. They stop when their current scene exits. `Audio.stop_gameplay_sfx()` also clears them explicitly, for example when resetting a battle within the same scene.
 - UI effects remain available during pause.
 - Pools hold up to 16 gameplay effects and 4 UI effects. A full pool replaces its oldest effect. The returned `AudioStreamPlayer` is pooled: use it only for immediate adjustments, not as a lasting playback handle.

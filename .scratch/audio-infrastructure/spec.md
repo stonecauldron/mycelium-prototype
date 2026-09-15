@@ -8,6 +8,7 @@ Status: Implemented and verified on 2026-09-15.
 - SFX and Music are separate volume groups. Multiple SFX can play simultaneously.
 - Add SFX and Music sliders to the existing in-run Settings page: 0–100%, default 100%, apply immediately, persist across launches. Zero mutes that group.
 - SFX are non-positional. Gameplay SFX pause with gameplay; UI SFX can play while the menu is open.
+- Both SFX helpers randomize each playback's pitch by ±10% by default, including reused voices. An optional fractional variation controls the range; zero gives normal pitch. Audio uses its own random generator so sound playback does not alter gameplay rolls. Music pitch remains unchanged.
 - Music loops, continues while paused, and keeps normal pitch and speed during fast-forward and hitstop.
 - Provide two configurable music slots: Base and Battle. Changing tracks uses a short crossfade. Re-requesting the current track keeps its playback position.
 - Music playback survives scene replacement.
@@ -39,7 +40,7 @@ The authoring guide explains how to assign the two tracks and trigger SFX. The g
 ## Verification
 
 - Godot 4.7 editor initialization/import completed without script errors.
-- The focused runtime check passed 54 assertions covering independent bus volumes, mute/unmute, persistence, defaults and invalid values, SFX overlap/pause/scene cleanup, music loops and crossfades, scene selection, and actual Settings mouse/keyboard input.
+- The focused runtime check passed 65 assertions covering independent bus volumes, mute/unmute, persistence, defaults and invalid values, SFX overlap/pause/scene cleanup, randomized/custom/fixed pitch and gameplay RNG independence, music loops and crossfades, scene selection, and actual Settings mouse/keyboard input.
 - The existing settings/combat runtime check passed all 57 assertions, including pause/resume at 1×/2×/4× and reset of engine timing on return to title.
 - The native UI check passed and its rendered Settings panel was inspected. It used the Dummy audio driver; sound samples were generated in memory for verification.
 - The native OpenGL run reports the existing three-texture cleanup diagnostics on process exit. The final headless audio check has no warnings or errors.

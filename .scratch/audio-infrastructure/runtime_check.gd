@@ -130,6 +130,44 @@ func _check_sfx() -> void:
 	_check(not first.playing and not second.playing, "Gameplay effects can be cleared without stopping UI audio")
 	_check(ui.playing, "UI effect survives gameplay clear")
 	ui.stop()
+	_check_sfx_pitch(audio, clip)
+	# Let the mixer finish this deliberately large burst before testing music.
+	await _wait()
+
+
+func _check_sfx_pitch(audio: Node, clip: AudioStream) -> void:
+	for helper in [&"play_sfx", &"play_ui_sfx"]:
+		var pitches: Array[float] = []
+		var in_range := true
+		var players: Array[AudioStreamPlayer] = []
+		seed(7341)
+		var expected_random := randf()
+		seed(7341)
+		for i in 32:
+			var player: AudioStreamPlayer = audio.call(helper, clip)
+			pitches.append(player.pitch_scale)
+			in_range = in_range and player.pitch_scale >= 0.9 and player.pitch_scale <= 1.1
+			if player not in players:
+				players.append(player)
+		_check(in_range and pitches.min() < pitches.max(), "%s randomizes every playback within 10 percent of normal pitch" % helper)
+		_check(randf() == expected_random, "%s pitch randomness leaves gameplay RNG unchanged" % helper)
+		var custom_in_range := true
+		var fixed_pitch := true
+		for i in 32:
+			var custom: AudioStreamPlayer = audio.call(helper, clip, 0.0, 0.02)
+			custom_in_range = custom_in_range and custom.pitch_scale >= 0.98 and custom.pitch_scale <= 1.02
+		for i in 32:
+			var fixed: AudioStreamPlayer = audio.call(helper, clip, 0.0, 0.0)
+			fixed_pitch = fixed_pitch and fixed.pitch_scale == 1.0
+		_check(custom_in_range, "%s accepts a custom pitch variation" % helper)
+		_check(fixed_pitch, "%s zero variation resets reused voices to normal pitch" % helper)
+		var safe_pitch := true
+		for variation in [-1.0, 5.0, NAN, INF]:
+			var player: AudioStreamPlayer = audio.call(helper, clip, 0.0, variation)
+			safe_pitch = safe_pitch and is_finite(player.pitch_scale) and player.pitch_scale > 0.0 and player.pitch_scale <= 1.99
+		_check(safe_pitch, "%s keeps pitch valid for out-of-range variation" % helper)
+		for player in players:
+			player.stop()
 
 
 func _check_music() -> void:
@@ -141,7 +179,8 @@ func _check_music() -> void:
 	audio.set("battle_music", _tone(2.0))
 	var base: AudioStreamPlayer = audio.call("play_base_music")
 	await _wait(0.65)
-	_check(base.playing and base.bus == &"Music", "Base track loops beyond its length on the Music bus")
+	_check(base.playing, "Base track loops beyond its length")
+	_check(base.bus == &"Music", "Base track routes through the Music volume control")
 	_check(is_equal_approx(base.volume_linear, 1.0), "Base track finishes fading in")
 	var same: AudioStreamPlayer = audio.call("play_base_music")
 	_check(same == base and is_equal_approx(same.volume_linear, 1.0), "Selecting the current track preserves playback without another fade")

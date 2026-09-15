@@ -1,0 +1,831 @@
+[
+  {
+    "cue": "bow",
+    "take": 1,
+    "input": {
+      "text": "Archery foley: a wooden recurve bow releases one arrow. A tight, wiry bowstring twang followed by the arrow's brief feathered hiss. Close microphone beside the archer. Realistic dry recording of a bow and arrow being fired once.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d6-23d0-77d1-a69d-8ad7de6a195f",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d6-23d0-77d1-a69d-8ad7de6a195f/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d6-23d0-77d1-a69d-8ad7de6a195f",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b03/kH-AKyomwHoMJwO7bE05k_sound_effect.wav",
+    "source_extension": "wav"
+  },
+  {
+    "cue": "harvest",
+    "take": 1,
+    "input": {
+      "text": "A large egg hatching. Brittle eggshell cracks sharply, breaks open with a satisfying crunchy pop, and little shell pieces tumble down. Close dry foley, one quick hatching event. No chimes, voices or music.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d8-7cf9-7112-ab13-c1e1a40b4b05",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d8-7cf9-7112-ab13-c1e1a40b4b05/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d8-7cf9-7112-ab13-c1e1a40b4b05",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b12/qY0SMamLR6QVK7kCMFFmW_sound_effect.wav"
+  },
+  {
+    "cue": "harvest",
+    "take": 2,
+    "input": {
+      "text": "A large egg hatching. Brittle eggshell cracks sharply, breaks open with a satisfying crunchy pop, and little shell pieces tumble down. Close dry foley, one quick hatching event. No chimes, voices or music.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d8-b76a-7c82-95e7-333fec48cd2c",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d8-b76a-7c82-95e7-333fec48cd2c/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d8-b76a-7c82-95e7-333fec48cd2c",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b14/NAcu1POFSOXzghhe4fAug_sound_effect.wav"
+  },
+  {
+    "cue": "harvest",
+    "take": 3,
+    "input": {
+      "text": "A large egg hatching. Brittle eggshell cracks sharply, breaks open with a satisfying crunchy pop, and little shell pieces tumble down. Close dry foley, one quick hatching event. No chimes, voices or music.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d8-ca83-7ac3-9831-4e1e5bbb9702",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d8-ca83-7ac3-9831-4e1e5bbb9702/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d8-ca83-7ac3-9831-4e1e5bbb9702",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b14/GsRjvw55aK0T3U_Kv85jh_sound_effect.wav"
+  },
+  {
+    "cue": "heavy_swing",
+    "take": 1,
+    "input": {
+      "text": "A heavy hammer swung forcefully, with a short dense rush of air and a hard wooden thump. Punchy low-mid weight, immediate attack, one swing. Close dry physical foley.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d8-f75d-7e43-8427-37d1b41f68e9",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d8-f75d-7e43-8427-37d1b41f68e9/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d8-f75d-7e43-8427-37d1b41f68e9",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b15/q_EUkibdwJAd9ouE0ZZy4_sound_effect.wav"
+  },
+  {
+    "cue": "heavy_swing",
+    "take": 2,
+    "input": {
+      "text": "A heavy hammer swung forcefully, with a short dense rush of air and a hard wooden thump. Punchy low-mid weight, immediate attack, one swing. Close dry physical foley.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-07c3-7a01-8dfc-9f1a2390afdd",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-07c3-7a01-8dfc-9f1a2390afdd/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-07c3-7a01-8dfc-9f1a2390afdd",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b16/YO1sAx5Nb8j3hK8z8VMqg_sound_effect.wav"
+  },
+  {
+    "cue": "heavy_swing",
+    "take": 3,
+    "input": {
+      "text": "A heavy hammer swung forcefully, with a short dense rush of air and a hard wooden thump. Punchy low-mid weight, immediate attack, one swing. Close dry physical foley.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-19d2-73a0-aefd-8599359a330d",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-19d2-73a0-aefd-8599359a330d/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-19d2-73a0-aefd-8599359a330d",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b16/VCnZPvSfH8LiewCjgN2cG_sound_effect.wav"
+  },
+  {
+    "cue": "bow",
+    "take": 2,
+    "input": {
+      "text": "Archery foley: a wooden recurve bow releases one arrow. A tight, wiry bowstring twang followed by the arrow's brief feathered hiss. Close microphone beside the archer. Realistic dry recording of a bow and arrow being fired once.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-26c4-7f82-8e2e-3dad5173b371",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-26c4-7f82-8e2e-3dad5173b371/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-26c4-7f82-8e2e-3dad5173b371",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b16/-cRu1XvkoNAmQ-8YHxMqd_sound_effect.wav"
+  },
+  {
+    "cue": "bow",
+    "take": 3,
+    "input": {
+      "text": "Archery foley: a wooden recurve bow releases one arrow. A tight, wiry bowstring twang followed by the arrow's brief feathered hiss. Close microphone beside the archer. Realistic dry recording of a bow and arrow being fired once.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-3372-77e3-8b24-41a3abc1191e",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-3372-77e3-8b24-41a3abc1191e/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-3372-77e3-8b24-41a3abc1191e",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b17/lwOCMOuqs7RBlxkeKiA_q_sound_effect.wav"
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 1,
+    "input": {
+      "text": "A hammer hits a solid block of dense hardwood once. A sharp attack over a deep chunky thud with a very short decay. Close, dry, forceful blunt impact foley.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-3f7b-7392-b611-50d901fc350d",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-3f7b-7392-b611-50d901fc350d/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-3f7b-7392-b611-50d901fc350d",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b17/hCgDShdPM0OMC-Y_Vp8CR_sound_effect.wav"
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 2,
+    "input": {
+      "text": "A hammer hits a solid block of dense hardwood once. A sharp attack over a deep chunky thud with a very short decay. Close, dry, forceful blunt impact foley.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-4bd7-7c42-b944-aea5781298ff",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-4bd7-7c42-b944-aea5781298ff/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-4bd7-7c42-b944-aea5781298ff",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b17/DlSSaPe22fhN5uxZV0D7c_sound_effect.wav"
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 3,
+    "input": {
+      "text": "A hammer hits a solid block of dense hardwood once. A sharp attack over a deep chunky thud with a very short decay. Close, dry, forceful blunt impact foley.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-581e-7811-99b5-b1d5f644bb3a",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-581e-7811-99b5-b1d5f644bb3a/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-581e-7811-99b5-b1d5f644bb3a",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b18/zzuJ1Zrp3hYpCKDku33t3_sound_effect.wav"
+  },
+  {
+    "cue": "battle_start",
+    "take": 1,
+    "input": {
+      "text": "A real trumpet section plays a loud military charge fanfare: crisp bright brass playing three rising notes, then holding a strong final note. Open trumpets, clean studio recording, confident, sharply articulated and in tune. Brass instruments only.",
+      "duration_seconds": 3.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-64f9-7d80-96f2-5cd0684662d7",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-64f9-7d80-96f2-5cd0684662d7/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-64f9-7d80-96f2-5cd0684662d7",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b18/bXr7lTT_1uv-wERIGFqk1_sound_effect.wav"
+  },
+  {
+    "cue": "battle_start",
+    "take": 2,
+    "input": {
+      "text": "A real trumpet section plays a loud military charge fanfare: crisp bright brass playing three rising notes, then holding a strong final note. Open trumpets, clean studio recording, confident, sharply articulated and in tune. Brass instruments only.",
+      "duration_seconds": 3.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-70e8-7151-90e3-80bcb183f7af",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-70e8-7151-90e3-80bcb183f7af/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-70e8-7151-90e3-80bcb183f7af",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b18/OziPgacSI7gKrWaGfSuug_sound_effect.wav"
+  },
+  {
+    "cue": "battle_start",
+    "take": 3,
+    "input": {
+      "text": "A real trumpet section plays a loud military charge fanfare: crisp bright brass playing three rising notes, then holding a strong final note. Open trumpets, clean studio recording, confident, sharply articulated and in tune. Brass instruments only.",
+      "duration_seconds": 3.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-80f8-7fa3-b12c-38981e2dd042",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-80f8-7fa3-b12c-38981e2dd042/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-80f8-7fa3-b12c-38981e2dd042",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b19/ZApBkVQXNcfib_AoaDfJe_sound_effect.wav"
+  },
+  {
+    "cue": "battle_win",
+    "take": 1,
+    "input": {
+      "text": "A triumphant victory trumpet fanfare. A real brass section plays a bold rising major-key melody ending on a sustained victorious chord. Bright open trumpets in the foreground, celebratory, full volume, clean studio recording, in tune.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-8e40-78e3-902c-e3a4968944f0",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-8e40-78e3-902c-e3a4968944f0/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-8e40-78e3-902c-e3a4968944f0",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b19/wbqTmr0UfFm4nN5ZQMjqP_sound_effect.wav"
+  },
+  {
+    "cue": "battle_win",
+    "take": 2,
+    "input": {
+      "text": "A triumphant victory trumpet fanfare. A real brass section plays a bold rising major-key melody ending on a sustained victorious chord. Bright open trumpets in the foreground, celebratory, full volume, clean studio recording, in tune.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-9c42-71e1-a96b-1b6cc146d7f6",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-9c42-71e1-a96b-1b6cc146d7f6/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-9c42-71e1-a96b-1b6cc146d7f6",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b19/E_mRB5gR0sGI5LXL2rLMC_sound_effect.wav"
+  },
+  {
+    "cue": "battle_win",
+    "take": 3,
+    "input": {
+      "text": "A triumphant victory trumpet fanfare. A real brass section plays a bold rising major-key melody ending on a sustained victorious chord. Bright open trumpets in the foreground, celebratory, full volume, clean studio recording, in tune.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-a8e3-7532-ac5d-812f4cfa0413",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-a8e3-7532-ac5d-812f4cfa0413/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-a8e3-7532-ac5d-812f4cfa0413",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1a/QWlYd79hes4qEVDcdzT5L_sound_effect.wav"
+  },
+  {
+    "cue": "run_win",
+    "take": 1,
+    "input": {
+      "text": "A grand triumphant trumpet fanfare celebrating the final victory. A large real brass ensemble plays a jubilant rising flourish and an emphatic sustained major chord. Bright trumpets over rich trombones, powerful and celebratory. Clean, in-tune orchestral recording.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-b5da-7a13-9513-55822dc69062",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-b5da-7a13-9513-55822dc69062/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-b5da-7a13-9513-55822dc69062",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1a/XT9kaQ__a_S3YRNdeHFQz_sound_effect.wav"
+  },
+  {
+    "cue": "run_win",
+    "take": 2,
+    "input": {
+      "text": "A grand triumphant trumpet fanfare celebrating the final victory. A large real brass ensemble plays a jubilant rising flourish and an emphatic sustained major chord. Bright trumpets over rich trombones, powerful and celebratory. Clean, in-tune orchestral recording.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-c32c-7740-9f89-574e6f25ec6d",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-c32c-7740-9f89-574e6f25ec6d/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-c32c-7740-9f89-574e6f25ec6d",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1a/2aPJ7Lzlo6zelB-SULnHJ_sound_effect.wav"
+  },
+  {
+    "cue": "run_win",
+    "take": 3,
+    "input": {
+      "text": "A grand triumphant trumpet fanfare celebrating the final victory. A large real brass ensemble plays a jubilant rising flourish and an emphatic sustained major chord. Bright trumpets over rich trombones, powerful and celebratory. Clean, in-tune orchestral recording.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-d09e-7113-8fff-7a387c586c8f",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-d09e-7113-8fff-7a387c586c8f/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-d09e-7113-8fff-7a387c586c8f",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1b/YjQ2iLm39U-g5yirW_Iu2_sound_effect.wav"
+  },
+  {
+    "cue": "run_loss",
+    "take": 1,
+    "input": {
+      "text": "Sad trumpets play a short descending minor-key defeat fanfare. A real trumpet and trombone section, mournful but clearly audible, ending on a low sustained minor chord. Rich expressive brass, clean studio recording, in tune. No voices.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5d9-de62-7ba2-9a2c-3e271b9ef0fe",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-de62-7ba2-9a2c-3e271b9ef0fe/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5d9-de62-7ba2-9a2c-3e271b9ef0fe",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1b/Ps1DD8N5WRGw2qX8SwoAv_sound_effect.wav"
+  },
+  {
+    "cue": "run_loss",
+    "take": 2,
+    "input": {
+      "text": "Sad trumpets play a short descending minor-key defeat fanfare. A real trumpet and trombone section, mournful but clearly audible, ending on a low sustained minor chord. Rich expressive brass, clean studio recording, in tune. No voices.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-0237-7263-91a7-d7d586cee32a",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-0237-7263-91a7-d7d586cee32a/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-0237-7263-91a7-d7d586cee32a",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1c/LV8kwVzOK1aBhjsEKOYXw_sound_effect.wav"
+  },
+  {
+    "cue": "run_loss",
+    "take": 3,
+    "input": {
+      "text": "Sad trumpets play a short descending minor-key defeat fanfare. A real trumpet and trombone section, mournful but clearly audible, ending on a low sustained minor chord. Rich expressive brass, clean studio recording, in tune. No voices.",
+      "duration_seconds": 4,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-0fa7-7fe1-af25-21d03cea355c",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-0fa7-7fe1-af25-21d03cea355c/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-0fa7-7fe1-af25-21d03cea355c",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1c/fPN4Ryor7VoJC8YiceZwJ_sound_effect.wav"
+  },
+  {
+    "cue": "great_swing",
+    "take": 1,
+    "input": {
+      "text": "One massive steel sledgehammer smashing a thick wooden beam. A heavy low thud with an explosive dry crack and a short shower of splinters. Extremely weighty close-up sledgehammer impact foley, one powerful blow.",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-1d6a-75b0-b7fe-6e9c2fa80ac4",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-1d6a-75b0-b7fe-6e9c2fa80ac4/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-1d6a-75b0-b7fe-6e9c2fa80ac4",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1d/XMKWaYr0yYyn3lYtlytsH_sound_effect.wav"
+  },
+  {
+    "cue": "great_swing",
+    "take": 2,
+    "input": {
+      "text": "One massive steel sledgehammer smashing a thick wooden beam. A heavy low thud with an explosive dry crack and a short shower of splinters. Extremely weighty close-up sledgehammer impact foley, one powerful blow.",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-2b56-7e30-9cc0-fb02bd5f8437",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-2b56-7e30-9cc0-fb02bd5f8437/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-2b56-7e30-9cc0-fb02bd5f8437",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1d/5NN5GbLT2WYxHazayMPyT_sound_effect.wav"
+  },
+  {
+    "cue": "great_swing",
+    "take": 3,
+    "input": {
+      "text": "One massive steel sledgehammer smashing a thick wooden beam. A heavy low thud with an explosive dry crack and a short shower of splinters. Extremely weighty close-up sledgehammer impact foley, one powerful blow.",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-39e1-78b3-97f2-4a568476c3be",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-39e1-78b3-97f2-4a568476c3be/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-39e1-78b3-97f2-4a568476c3be",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1d/Blj6MQJ_8TYfx5s2DXhJd_sound_effect.wav"
+  },
+  {
+    "cue": "great_bow",
+    "take": 1,
+    "input": {
+      "text": "Archery foley: a heavy English longbow releases one arrow. A powerful low wiry bowstring TWANG with wooden bow-limb resonance and a brief arrow feather hiss. Close microphone beside the archer, one forceful shot. Realistic bow and arrow release.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-5243-7f11-b89a-f92d23c19da7",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-5243-7f11-b89a-f92d23c19da7/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-5243-7f11-b89a-f92d23c19da7",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1e/-Mv9_9ALG9KNO7jpREEP3_sound_effect.wav"
+  },
+  {
+    "cue": "great_bow",
+    "take": 2,
+    "input": {
+      "text": "Archery foley: a heavy English longbow releases one arrow. A powerful low wiry bowstring TWANG with wooden bow-limb resonance and a brief arrow feather hiss. Close microphone beside the archer, one forceful shot. Realistic bow and arrow release.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-6205-7ef0-96e7-cf1ca229f006",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-6205-7ef0-96e7-cf1ca229f006/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-6205-7ef0-96e7-cf1ca229f006",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1f/juCGsWVeBuOHcTlcbSTyu_sound_effect.wav"
+  },
+  {
+    "cue": "great_bow",
+    "take": 3,
+    "input": {
+      "text": "Archery foley: a heavy English longbow releases one arrow. A powerful low wiry bowstring TWANG with wooden bow-limb resonance and a brief arrow feather hiss. Close microphone beside the archer, one forceful shot. Realistic bow and arrow release.",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-6fd2-7e50-b7a0-c6dda407a4cf",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-6fd2-7e50-b7a0-c6dda407a4cf/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-6fd2-7e50-b7a0-c6dda407a4cf",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b1f/3xnb2ykp2p7KqIQvDR-jc_sound_effect.wav"
+  },
+  {
+    "cue": "great_throw",
+    "take": 1,
+    "input": {
+      "text": "A heavy spear thrown once through the air. One smooth clean rushing whoosh with a crisp release and a short natural decay. Close dry foley. No crackling, buzzing, warbling, rattling or metallic ringing.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-c109-76c2-ad30-a610d37baf7d",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-c109-76c2-ad30-a610d37baf7d/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-c109-76c2-ad30-a610d37baf7d",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b21/wNaAEczbOcneAaYqshH3u_sound_effect.wav"
+  },
+  {
+    "cue": "great_throw",
+    "take": 2,
+    "input": {
+      "text": "A heavy spear thrown once through the air. One smooth clean rushing whoosh with a crisp release and a short natural decay. Close dry foley. No crackling, buzzing, warbling, rattling or metallic ringing.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-d0b1-7951-b13f-fabd5db92b47",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-d0b1-7951-b13f-fabd5db92b47/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-d0b1-7951-b13f-fabd5db92b47",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b21/xzPelYRVDN5ylUvPlxuQX_sound_effect.wav"
+  },
+  {
+    "cue": "great_throw",
+    "take": 3,
+    "input": {
+      "text": "A heavy spear thrown once through the air. One smooth clean rushing whoosh with a crisp release and a short natural decay. Close dry foley. No crackling, buzzing, warbling, rattling or metallic ringing.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.9,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5da-ddc2-7992-9d7a-38be9ea22838",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-ddc2-7992-9d7a-38be9ea22838/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5da-ddc2-7992-9d7a-38be9ea22838",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b22/w0GihzIPh__v9cE7ZehGa_sound_effect.wav"
+  },
+  {
+    "cue": "bow",
+    "take": 4,
+    "input": {
+      "text": "A tight springy TWANG from the vibrating string of a medieval archery bow as one arrow is released. One clear pitched bowstring pluck with a short woody resonance. Dry close-up foley. No air whoosh.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.5,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5df-bcb8-7610-83dc-fb1b40de629f",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5df-bcb8-7610-83dc-fb1b40de629f/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5df-bcb8-7610-83dc-fb1b40de629f",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b42/Xm93HlCWHat0VRDaSlrBm_sound_effect.wav"
+  },
+  {
+    "cue": "bow",
+    "take": 5,
+    "input": {
+      "text": "Bow and arrow firing. A single traditional archery bowstring released from full draw: sharp string snap and unmistakable vibrating twang. One isolated archery shot.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.5,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5df-cf0c-7141-87a8-1e0bf8f8a5fd",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5df-cf0c-7141-87a8-1e0bf8f8a5fd/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5df-cf0c-7141-87a8-1e0bf8f8a5fd",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b42/XGs5xaXJAk6MUgzM4IbsO_sound_effect.wav"
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 4,
+    "input": {
+      "text": "One deep muffled thump: a heavy padded mallet striking a dense solid wooden block. Low-pitched, dull, weighty physical impact, short and dry. No ringing.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.5,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5df-e526-7291-9fd0-d997c065027a",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5df-e526-7291-9fd0-d997c065027a/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5df-e526-7291-9fd0-d997c065027a",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b43/1_1DnQhGCvzAwLS3RWuuj_sound_effect.wav"
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 5,
+    "input": {
+      "text": "One powerful body punch. A low solid thud with a sharp impact onset and a very short bassy decay. Dense dry blunt-force combat hit, no metallic or musical tone.",
+      "duration_seconds": 1,
+      "prompt_influence": 0.5,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5df-fb18-75e3-8f91-e0e87d377ae4",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5df-fb18-75e3-8f91-e0e87d377ae4/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5df-fb18-75e3-8f91-e0e87d377ae4",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b45/1J-1NoOazYDysrX24fW3E_sound_effect.wav"
+  },
+  {
+    "cue": "great_bow",
+    "take": 4,
+    "input": {
+      "text": "The deep springy twang of a taut heavy bowstring. One thick string plucked forcefully, vibrating with a wooden resonant body. Cartoon archery longbow firing one arrow. Strong bowstring sound, no wind.",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.5,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5e1-73a1-78d3-9e46-f38b7526b40a",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e1-73a1-78d3-9e46-f38b7526b40a/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e1-73a1-78d3-9e46-f38b7526b40a",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b4d/0wZb8wDKB57kkaD2rf1ET_sound_effect.wav"
+  },
+  {
+    "cue": "great_swing",
+    "take": 4,
+    "input": {
+      "text": "A heavy steel sledgehammer hits concrete once. Deep crushing thud with a sharp gritty crack and falling stone chips. Huge mass, low rumbling impact, close-up construction foley.",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.5,
+      "output_format": "pcm_44100",
+      "loop": false
+    },
+    "request_id": "01a0a5e1-886c-7540-bdc7-cc3f1b6e9c22",
+    "status": "completed",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e1-886c-7540-bdc7-cc3f1b6e9c22/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e1-886c-7540-bdc7-cc3f1b6e9c22",
+    "source_extension": "wav",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b4d/Fv0AmuR509QXgDPQZn0Fo_sound_effect.wav"
+  },
+  {
+    "cue": "bow",
+    "take": 6,
+    "input": {
+      "text": "The sound of a single arrow being shot from a wooden recurve archery bow. Audible bowstring twang.",
+      "duration_seconds": 3,
+      "prompt_influence": 0.3,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "status": "completed",
+    "recipe": {
+      "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+      "input": {
+        "text": "The sound of a single arrow being shot from a wooden recurve archery bow. Audible bowstring twang.",
+        "duration_seconds": 3,
+        "prompt_influence": 0.3,
+        "output_format": "mp3_44100_192",
+        "loop": false
+      },
+      "note": "These are the submitted inputs, not resolved server defaults. For a variation, copy them and change only requested fields; reuse returned_seed when supported by the schema. Source URLs may expire."
+    },
+    "request_id": "01a0a5e5-de5d-73e0-abd2-7d96fd18a370",
+    "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e5-de5d-73e0-abd2-7d96fd18a370/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e5-de5d-73e0-abd2-7d96fd18a370",
+    "cancel_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e5-de5d-73e0-abd2-7d96fd18a370/cancel",
+    "poll_after_seconds": 20,
+    "polling_hint": "Wait poll_after_seconds before calling check_job with the same request_id and status_url. This interval is not an ETA. Report meaningful status changes rather than repeating unchanged progress. Do not submit another job to check progress.",
+    "hint": "Job submitted. Use check_job with status_url to check status, then get_job_result with response_url when it completes.",
+    "source_extension": "mp3",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b6a/Lrg1SpraazEbH1LeysXPT_sound_effect.mp3",
+    "rejection_reason": "Effectively silent: -58 dBFS peak and -80 dBFS RMS."
+  },
+  {
+    "cue": "bow",
+    "take": 7,
+    "input": {
+      "text": "Archery bow and arrow shot, close up foley.",
+      "duration_seconds": 3,
+      "prompt_influence": 0.3,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "status": "completed",
+    "recipe": {
+      "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+      "input": {
+        "text": "Archery bow and arrow shot, close up foley.",
+        "duration_seconds": 3,
+        "prompt_influence": 0.3,
+        "output_format": "mp3_44100_192",
+        "loop": false
+      },
+      "note": "These are the submitted inputs, not resolved server defaults. For a variation, copy them and change only requested fields; reuse returned_seed when supported by the schema. Source URLs may expire."
+    },
+    "request_id": "01a0a5e5-fc02-7720-a5c3-112f3ab73de7",
+    "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e5-fc02-7720-a5c3-112f3ab73de7/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e5-fc02-7720-a5c3-112f3ab73de7",
+    "cancel_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e5-fc02-7720-a5c3-112f3ab73de7/cancel",
+    "poll_after_seconds": 20,
+    "polling_hint": "Wait poll_after_seconds before calling check_job with the same request_id and status_url. This interval is not an ETA. Report meaningful status changes rather than repeating unchanged progress. Do not submit another job to check progress.",
+    "hint": "Job submitted. Use check_job with status_url to check status, then get_job_result with response_url when it completes.",
+    "source_extension": "mp3",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b6b/iZD4JO2rqM0E7-SBRy-3H_sound_effect.mp3"
+  },
+  {
+    "cue": "great_bow",
+    "take": 5,
+    "input": {
+      "text": "A single arrow released from a powerful medieval longbow. Loud archery bowstring twang and arrow swoosh.",
+      "duration_seconds": 3,
+      "prompt_influence": 0.3,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "status": "completed",
+    "recipe": {
+      "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+      "input": {
+        "text": "A single arrow released from a powerful medieval longbow. Loud archery bowstring twang and arrow swoosh.",
+        "duration_seconds": 3,
+        "prompt_influence": 0.3,
+        "output_format": "mp3_44100_192",
+        "loop": false
+      },
+      "note": "These are the submitted inputs, not resolved server defaults. For a variation, copy them and change only requested fields; reuse returned_seed when supported by the schema. Source URLs may expire."
+    },
+    "request_id": "01a0a5e6-1dd0-73d2-87e8-3d7b4c21b0d9",
+    "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e6-1dd0-73d2-87e8-3d7b4c21b0d9/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e6-1dd0-73d2-87e8-3d7b4c21b0d9",
+    "cancel_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e6-1dd0-73d2-87e8-3d7b4c21b0d9/cancel",
+    "poll_after_seconds": 20,
+    "polling_hint": "Wait poll_after_seconds before calling check_job with the same request_id and status_url. This interval is not an ETA. Report meaningful status changes rather than repeating unchanged progress. Do not submit another job to check progress.",
+    "hint": "Job submitted. Use check_job with status_url to check status, then get_job_result with response_url when it completes.",
+    "source_extension": "mp3",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b6b/TiLzLljyFskMxxRO2dcuL_sound_effect.mp3"
+  },
+  {
+    "cue": "great_swing",
+    "take": 5,
+    "input": {
+      "text": "One heavy sledgehammer striking concrete with a deep crashing thud.",
+      "duration_seconds": 3,
+      "prompt_influence": 0.3,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "status": "completed",
+    "recipe": {
+      "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+      "input": {
+        "text": "One heavy sledgehammer striking concrete with a deep crashing thud.",
+        "duration_seconds": 3,
+        "prompt_influence": 0.3,
+        "output_format": "mp3_44100_192",
+        "loop": false
+      },
+      "note": "These are the submitted inputs, not resolved server defaults. For a variation, copy them and change only requested fields; reuse returned_seed when supported by the schema. Source URLs may expire."
+    },
+    "request_id": "01a0a5e6-44b1-7562-bcee-f08364ee9207",
+    "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e6-44b1-7562-bcee-f08364ee9207/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e6-44b1-7562-bcee-f08364ee9207",
+    "cancel_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e6-44b1-7562-bcee-f08364ee9207/cancel",
+    "poll_after_seconds": 20,
+    "polling_hint": "Wait poll_after_seconds before calling check_job with the same request_id and status_url. This interval is not an ETA. Report meaningful status changes rather than repeating unchanged progress. Do not submit another job to check progress.",
+    "hint": "Job submitted. Use check_job with status_url to check status, then get_job_result with response_url when it completes.",
+    "source_extension": "mp3",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b6c/vfeNWX8fxXBGTXbBXh9B-_sound_effect.mp3"
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 6,
+    "input": {
+      "text": "A deep heavy thud of a baseball bat striking a punching bag, single blunt impact.",
+      "duration_seconds": 3,
+      "prompt_influence": 0.3,
+      "output_format": "mp3_44100_192",
+      "loop": false
+    },
+    "status": "completed",
+    "recipe": {
+      "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+      "input": {
+        "text": "A deep heavy thud of a baseball bat striking a punching bag, single blunt impact.",
+        "duration_seconds": 3,
+        "prompt_influence": 0.3,
+        "output_format": "mp3_44100_192",
+        "loop": false
+      },
+      "note": "These are the submitted inputs, not resolved server defaults. For a variation, copy them and change only requested fields; reuse returned_seed when supported by the schema. Source URLs may expire."
+    },
+    "request_id": "01a0a5e6-62c7-7e51-9d0d-63a0e2b7ca7c",
+    "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+    "status_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e6-62c7-7e51-9d0d-63a0e2b7ca7c/status",
+    "response_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e6-62c7-7e51-9d0d-63a0e2b7ca7c",
+    "cancel_url": "https://queue.fal.run/fal-ai/elevenlabs/requests/01a0a5e6-62c7-7e51-9d0d-63a0e2b7ca7c/cancel",
+    "poll_after_seconds": 20,
+    "polling_hint": "Wait poll_after_seconds before calling check_job with the same request_id and status_url. This interval is not an ETA. Report meaningful status changes rather than repeating unchanged progress. Do not submit another job to check progress.",
+    "hint": "Job submitted. Use check_job with status_url to check status, then get_job_result with response_url when it completes.",
+    "source_extension": "mp3",
+    "audio_url": "https://v3b.fal.media/files/b/0aaa8b6d/y3Fu0WTf-rnR1iGINBvjJ_sound_effect.mp3"
+  }
+]

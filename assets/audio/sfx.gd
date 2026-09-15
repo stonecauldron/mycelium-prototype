@@ -145,11 +145,11 @@ const SOUNDS: Dictionary = {
 	},
 	Cue.HEAVY_SWING: {
 		"stream": preload("res://assets/audio/sfx/heavy_swing.wav"),
-		"gain_db": -14.0, "cooldown_ms": 110, "pitch_variation": 0.1,
+		"gain_db": -12.0, "cooldown_ms": 110, "pitch_variation": 0.1,
 	},
 	Cue.BOW: {
 		"stream": preload("res://assets/audio/sfx/bow.wav"),
-		"gain_db": -14.0, "cooldown_ms": 100, "pitch_variation": 0.1,
+		"gain_db": -13.0, "cooldown_ms": 100, "pitch_variation": 0.1,
 	},
 	Cue.THROW: {
 		"stream": preload("res://assets/audio/sfx/throw.wav"),
@@ -169,7 +169,7 @@ const SOUNDS: Dictionary = {
 	},
 	Cue.HIT_BLUNT: {
 		"stream": preload("res://assets/audio/sfx/hit_blunt.wav"),
-		"gain_db": -10.0, "cooldown_ms": 80, "pitch_variation": 0.1,
+		"gain_db": -9.0, "cooldown_ms": 80, "pitch_variation": 0.1,
 	},
 	Cue.BLOCK: {
 		"stream": preload("res://assets/audio/sfx/block.wav"),
@@ -185,7 +185,7 @@ const SOUNDS: Dictionary = {
 	},
 	Cue.EXPLOSION: {
 		"stream": preload("res://assets/audio/sfx/explosion.wav"),
-		"gain_db": -8.0, "cooldown_ms": 120, "pitch_variation": 0.1,
+		"gain_db": -4.0, "cooldown_ms": 120, "pitch_variation": 0.1,
 	},
 	Cue.SPORE: {
 		"stream": preload("res://assets/audio/sfx/spore.wav"),
@@ -201,19 +201,19 @@ const SOUNDS: Dictionary = {
 	},
 	Cue.BATTLE_START: {
 		"stream": preload("res://assets/audio/sfx/battle_start.wav"),
-		"gain_db": -8.0, "cooldown_ms": 100, "pitch_variation": 0.0,
+		"gain_db": -5.0, "cooldown_ms": 100, "pitch_variation": 0.0,
 	},
 	Cue.BATTLE_WIN: {
 		"stream": preload("res://assets/audio/sfx/battle_win.wav"),
-		"gain_db": -8.0, "cooldown_ms": 100, "pitch_variation": 0.0,
+		"gain_db": -5.0, "cooldown_ms": 100, "pitch_variation": 0.0,
 	},
 	Cue.RUN_WIN: {
 		"stream": preload("res://assets/audio/sfx/run_win.wav"),
-		"gain_db": -8.0, "cooldown_ms": 100, "pitch_variation": 0.0,
+		"gain_db": -5.0, "cooldown_ms": 100, "pitch_variation": 0.0,
 	},
 	Cue.RUN_LOSS: {
 		"stream": preload("res://assets/audio/sfx/run_loss.wav"),
-		"gain_db": -8.0, "cooldown_ms": 100, "pitch_variation": 0.0,
+		"gain_db": -5.0, "cooldown_ms": 100, "pitch_variation": 0.0,
 	},
 	Cue.GREAT_SLASH: {
 		"stream": preload("res://assets/audio/sfx/great_slash.wav"),
@@ -221,11 +221,11 @@ const SOUNDS: Dictionary = {
 	},
 	Cue.GREAT_SWING: {
 		"stream": preload("res://assets/audio/sfx/great_swing.wav"),
-		"gain_db": -11.0, "cooldown_ms": 130, "pitch_variation": 0.08,
+		"gain_db": -9.0, "cooldown_ms": 130, "pitch_variation": 0.08,
 	},
 	Cue.GREAT_BOW: {
 		"stream": preload("res://assets/audio/sfx/great_bow.wav"),
-		"gain_db": -11.0, "cooldown_ms": 120, "pitch_variation": 0.08,
+		"gain_db": -10.0, "cooldown_ms": 120, "pitch_variation": 0.08,
 	},
 	Cue.GREAT_THROW: {
 		"stream": preload("res://assets/audio/sfx/great_throw.wav"),

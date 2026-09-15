@@ -1,0 +1,26 @@
+[
+  {
+    "cue": "bow",
+    "take": 4,
+    "text": "A tight springy TWANG from the vibrating string of a medieval archery bow as one arrow is released. One clear pitched bowstring pluck with a short woody resonance. Dry close-up foley. No air whoosh.",
+    "duration_seconds": 1
+  },
+  {
+    "cue": "bow",
+    "take": 5,
+    "text": "Bow and arrow firing. A single traditional archery bowstring released from full draw: sharp string snap and unmistakable vibrating twang. One isolated archery shot.",
+    "duration_seconds": 1
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 4,
+    "text": "One deep muffled thump: a heavy padded mallet striking a dense solid wooden block. Low-pitched, dull, weighty physical impact, short and dry. No ringing.",
+    "duration_seconds": 1
+  },
+  {
+    "cue": "hit_blunt",
+    "take": 5,
+    "text": "One powerful body punch. A low solid thud with a sharp impact onset and a very short bassy decay. Dense dry blunt-force combat hit, no metallic or musical tone.",
+    "duration_seconds": 1
+  }
+]

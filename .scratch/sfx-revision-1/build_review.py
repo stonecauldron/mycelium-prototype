@@ -17,11 +17,13 @@ def main():
     parser.add_argument("--capture-dir", type=Path, required=True)
     parser.add_argument("--previous", type=Path, required=True, help="Previous review-data.json for comparison")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--revision-dir", type=Path, default=HERE, help="Batch plan whose changes should be compared")
     args = parser.parse_args()
     captures = {r["id"]: r for r in json.loads((args.capture_dir / "capture.json").read_text())}
     previous = {r["id"]: r for r in json.loads(args.previous.read_text())}
     contexts = json.loads((HERE / "review-contexts.json").read_text())
-    revised = {r["cue"] for r in json.loads((HERE / "plan.json").read_text())["cues"]}
+    plan = json.loads((args.revision_dir / "plan.json").read_text())
+    revised = {r["cue"] for r in plan["cues"]} | set(plan.get("level_changes", {}))
     regular = {"great_slash": "slash", "great_swing": "heavy_swing", "great_bow": "bow",
                "great_throw": "throw", "great_hit_slash": "hit_slash",
                "great_hit_blunt": "hit_blunt", "great_block": "block"}
@@ -52,15 +54,20 @@ def main():
     assert len(rows) == len(captures) == 47
     current = {r["id"]: dict(r) for r in rows}
     for row in rows:
-        if row["id"] in regular:
+        if row["id"] in regular and row["id"] not in previous:
             row["previous"] = current[regular[row["id"]]]
             row["previousLabel"] = "Regular"
         elif row["id"] in revised:
-            row["previous"] = previous[row["id"]]
+            row["previous"] = {k: v for k, v in previous[row["id"]].items() if k not in ("previous", "previousLabel")}
             row["previousLabel"] = "Previous"
     payload = json.dumps(rows, separators=(",", ":")).replace("<", "\\u003c")
     marker = '<script id="sfx-data" type="application/json">[]</script>'
     template = (HERE / "review.html").read_text()
+    new_count = sum(row.get("previousLabel") == "Regular" for row in rows)
+    summary = f"{len(rows)} active sounds · {len(revised) - new_count} revised"
+    if new_count:
+        summary += f" · {new_count} new Great cues"
+    template = template.replace("{{SOUND_SUMMARY}}", summary)
     assert template.count(marker) == 1
     output = template.replace(marker, '<script id="sfx-data" type="application/json">' + payload + '</script>')
     args.output.parent.mkdir(parents=True, exist_ok=True)

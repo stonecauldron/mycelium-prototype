@@ -26,8 +26,12 @@ def load_json(name):
     return json.loads((HERE / name).read_text())
 
 
+def source_name(row):
+    return f"{row['cue']}_{row['take']}.{row.get('source_extension', 'mp3')}"
+
+
 def download(row):
-    name = f"{row['cue']}_{row['take']}.mp3"
+    name = source_name(row)
     path = HERE / "raw" / name
     if path.exists() and path.stat().st_size > 0:
         return name
@@ -140,8 +144,10 @@ def main():
     prepared.mkdir(exist_ok=True)
     candidates = {cue: [] for cue in cues}
     for row in rows:
+        if row.get("rejection_reason"):
+            continue
         name = f"{row['cue']}_{row['take']}"
-        raw = HERE / "raw" / (name + ".mp3")
+        raw = HERE / "raw" / source_name(row)
         cue = cues[row["cue"]]
         samples, report = prepare(decode(raw), cue["max_duration_seconds"], cue["target_rms_dbfs"])
         output = prepared / (name + ".wav")
@@ -162,6 +168,7 @@ def main():
             selected.append(winner)
     manifest = {"model": plan["model"], "selection_method": "Explicit preferred takes where authored; otherwise best retained energy and cleanest tail. Subjective review uses the preview.",
                 "estimated_generation_usd": round(sum(r["input"]["duration_seconds"] for r in rows) * plan["unit_price_usd"], 6),
+                "rejected": [{"cue": r["cue"], "take": r["take"], "reason": r["rejection_reason"]} for r in rows if r.get("rejection_reason")],
                 "takes": [r for take_list in candidates.values() for r in take_list], "selected": selected}
     preview = []
     for row in selected:

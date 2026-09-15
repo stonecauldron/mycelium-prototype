@@ -1,0 +1,110 @@
+[
+  {
+    "cue": "bow",
+    "input": {
+      "audio_url": "https://v3b.fal.media/files/b/0aaa8b89/514dyULhySLOmEFW0zWLl_bow_finished.wav",
+      "prompt": "In at most 70 words, describe the sound you actually hear and identify its likely physical source or instrument. Is it tonal or noise? Is it one action or a sequence? Flag obvious distortion, warbling or abrupt cutoff. Do not assume any intended sound. This is sound-effect review, not speech transcription.",
+      "detailed_analysis": false
+    },
+    "status": "submitted",
+    "recipe": {
+      "endpoint_id": "fal-ai/audio-understanding",
+      "input": {
+        "audio_url": "https://v3b.fal.media/files/b/0aaa8b89/514dyULhySLOmEFW0zWLl_bow_finished.wav",
+        "prompt": "In at most 70 words, describe the sound you actually hear and identify its likely physical source or instrument. Is it tonal or noise? Is it one action or a sequence? Flag obvious distortion, warbling or abrupt cutoff. Do not assume any intended sound. This is sound-effect review, not speech transcription.",
+        "detailed_analysis": false
+      },
+      "note": "These are the submitted inputs, not resolved server defaults. For a variation, copy them and change only requested fields; reuse returned_seed when supported by the schema. Source URLs may expire."
+    },
+    "request_id": "01a0a5ea-db75-77d1-bdbd-5b9ca8957440",
+    "endpoint_id": "fal-ai/audio-understanding",
+    "status_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5ea-db75-77d1-bdbd-5b9ca8957440/status",
+    "response_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5ea-db75-77d1-bdbd-5b9ca8957440",
+    "cancel_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5ea-db75-77d1-bdbd-5b9ca8957440/cancel",
+    "poll_after_seconds": 20,
+    "polling_hint": "Wait poll_after_seconds before calling check_job with the same request_id and status_url. This interval is not an ETA. Report meaningful status changes rather than repeating unchanged progress. Do not submit another job to check progress.",
+    "hint": "Job submitted. Use check_job with status_url to check status, then get_job_result with response_url when it completes.",
+    "output": "A single, high-pitched metallic strike rings out with a clear, sustained decay. The sound is distinctly tonal and results from a single action. Its likely physical source is a small percussion instrument, such as a triangle or chime, being struck. The recording is clean, with no obvious distortion, warbling, or abrupt cutoff."
+  },
+  {
+    "cue": "great_bow",
+    "input": {
+      "audio_url": "https://v3b.fal.media/files/b/0aaa8b8b/bFymkiWHFe-tECNQONSIK_great_bow_finished.wav",
+      "prompt": "In at most 70 words, describe the sound you actually hear and identify its likely physical source or instrument. Is it tonal or noise? Is it one action or a sequence? Flag obvious distortion, warbling or abrupt cutoff. Do not assume any intended sound. This is sound-effect review, not speech transcription.",
+      "detailed_analysis": false
+    },
+    "status": "submitted",
+    "recipe": {
+      "endpoint_id": "fal-ai/audio-understanding",
+      "input": {
+        "audio_url": "https://v3b.fal.media/files/b/0aaa8b8b/bFymkiWHFe-tECNQONSIK_great_bow_finished.wav",
+        "prompt": "In at most 70 words, describe the sound you actually hear and identify its likely physical source or instrument. Is it tonal or noise? Is it one action or a sequence? Flag obvious distortion, warbling or abrupt cutoff. Do not assume any intended sound. This is sound-effect review, not speech transcription.",
+        "detailed_analysis": false
+      },
+      "note": "These are the submitted inputs, not resolved server defaults. For a variation, copy them and change only requested fields; reuse returned_seed when supported by the schema. Source URLs may expire."
+    },
+    "request_id": "01a0a5ea-fdc9-78c3-8c3b-de2d97f4c320",
+    "endpoint_id": "fal-ai/audio-understanding",
+    "status_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5ea-fdc9-78c3-8c3b-de2d97f4c320/status",
+    "response_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5ea-fdc9-78c3-8c3b-de2d97f4c320",
+    "cancel_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5ea-fdc9-78c3-8c3b-de2d97f4c320/cancel",
+    "poll_after_seconds": 20,
+    "polling_hint": "Wait poll_after_seconds before calling check_job with the same request_id and status_url. This interval is not an ETA. Report meaningful status changes rather than repeating unchanged progress. Do not submit another job to check progress.",
+    "hint": "Job submitted. Use check_job with status_url to check status, then get_job_result with response_url when it completes.",
+    "output": "I am ready to analyze the sound effect. Please provide the audio file. I will then describe the sound, identify its likely source, classify it as tonal or noise and as a single action or sequence, and flag any obvious distortion or cutoff. The entire review will be 70 words or less, as requested."
+  },
+  {
+    "cue": "great_swing",
+    "input": {
+      "audio_url": "https://v3b.fal.media/files/b/0aaa8b8c/8XIwCGTWw2sZ_GiElImbX_great_swing_finished.wav",
+      "prompt": "In at most 70 words, describe the sound you actually hear and identify its likely physical source or instrument. Is it tonal or noise? Is it one action or a sequence? Flag obvious distortion, warbling or abrupt cutoff. Do not assume any intended sound. This is sound-effect review, not speech transcription.",
+      "detailed_analysis": false
+    },
+    "status": "submitted",
+    "recipe": {
+      "endpoint_id": "fal-ai/audio-understanding",
+      "input": {
+        "audio_url": "https://v3b.fal.media/files/b/0aaa8b8c/8XIwCGTWw2sZ_GiElImbX_great_swing_finished.wav",
+        "prompt": "In at most 70 words, describe the sound you actually hear and identify its likely physical source or instrument. Is it tonal or noise? Is it one action or a sequence? Flag obvious distortion, warbling or abrupt cutoff. Do not assume any intended sound. This is sound-effect review, not speech transcription.",
+        "detailed_analysis": false
+      },
+      "note": "These are the submitted inputs, not resolved server defaults. For a variation, copy them and change only requested fields; reuse returned_seed when supported by the schema. Source URLs may expire."
+    },
+    "request_id": "01a0a5eb-2500-77a2-896e-c265f8d02d8b",
+    "endpoint_id": "fal-ai/audio-understanding",
+    "status_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5eb-2500-77a2-896e-c265f8d02d8b/status",
+    "response_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5eb-2500-77a2-896e-c265f8d02d8b",
+    "cancel_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5eb-2500-77a2-896e-c265f8d02d8b/cancel",
+    "poll_after_seconds": 20,
+    "polling_hint": "Wait poll_after_seconds before calling check_job with the same request_id and status_url. This interval is not an ETA. Report meaningful status changes rather than repeating unchanged progress. Do not submit another job to check progress.",
+    "hint": "Job submitted. Use check_job with status_url to check status, then get_job_result with response_url when it completes.",
+    "output": "A single, resonant knock with a low-mid pitch. The sound has a sharp attack and a quick decay, suggesting a fist or knuckle striking a solid wooden door. This is a tonal sound produced by a single action. The sound's decay is natural, with no obvious distortion or abrupt cutoff."
+  },
+  {
+    "cue": "hit_blunt",
+    "input": {
+      "audio_url": "https://v3b.fal.media/files/b/0aaa8b8d/oNsxSw8WoeBuwJjmt2SXX_hit_blunt_finished.wav",
+      "prompt": "In at most 70 words, describe the sound you actually hear and identify its likely physical source or instrument. Is it tonal or noise? Is it one action or a sequence? Flag obvious distortion, warbling or abrupt cutoff. Do not assume any intended sound. This is sound-effect review, not speech transcription.",
+      "detailed_analysis": false
+    },
+    "status": "submitted",
+    "recipe": {
+      "endpoint_id": "fal-ai/audio-understanding",
+      "input": {
+        "audio_url": "https://v3b.fal.media/files/b/0aaa8b8d/oNsxSw8WoeBuwJjmt2SXX_hit_blunt_finished.wav",
+        "prompt": "In at most 70 words, describe the sound you actually hear and identify its likely physical source or instrument. Is it tonal or noise? Is it one action or a sequence? Flag obvious distortion, warbling or abrupt cutoff. Do not assume any intended sound. This is sound-effect review, not speech transcription.",
+        "detailed_analysis": false
+      },
+      "note": "These are the submitted inputs, not resolved server defaults. For a variation, copy them and change only requested fields; reuse returned_seed when supported by the schema. Source URLs may expire."
+    },
+    "request_id": "01a0a5eb-6cf3-74f2-9610-d16cd6a22180",
+    "endpoint_id": "fal-ai/audio-understanding",
+    "status_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5eb-6cf3-74f2-9610-d16cd6a22180/status",
+    "response_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5eb-6cf3-74f2-9610-d16cd6a22180",
+    "cancel_url": "https://queue.fal.run/fal-ai/audio-understanding/requests/01a0a5eb-6cf3-74f2-9610-d16cd6a22180/cancel",
+    "poll_after_seconds": 20,
+    "polling_hint": "Wait poll_after_seconds before calling check_job with the same request_id and status_url. This interval is not an ETA. Report meaningful status changes rather than repeating unchanged progress. Do not submit another job to check progress.",
+    "hint": "Job submitted. Use check_job with status_url to check status, then get_job_result with response_url when it completes.",
+    "output": "Please provide the sound for review.\n\nOnce received, I will describe its audible characteristics and identify the likely source. I will state whether it is tonal or noise, and if it results from a single action or a sequence. Any obvious distortion, warbling, or abrupt cutoff will be noted. My analysis will be objective and concise, adhering to the 70-word limit."
+  }
+]

@@ -1,7 +1,7 @@
 # Mycelium sound pack
 
 47 effects generated with **ElevenLabs Sound Effects V2** through fal.ai:
-44.1 kHz, mono, 16-bit PCM WAV, 55 ms–2.83 s. Source WAVs have tapered ends and
+44.1 kHz, mono, 16-bit PCM WAV, 55 ms–2.94 s. Source WAVs have tapered ends and
 at least 3.1 dB of peak headroom. Godot additionally normalizes all 47 clips
 during import (`edit/normalize=true`); per-cue gains in `../sfx.gd` shape the
 in-game mix after import.
@@ -23,26 +23,45 @@ The revision requested 85.35 seconds, costing an estimated **$0.1707**. Selectio
 retains full event bodies and trumpet phrase tails, with explicit preferred takes
 for stronger peak-normalized body or longer release resonance where useful.
 
+[Revision 2](../../../.scratch/sfx-revision-2/spec.md) replaces eleven WAVs and
+raises the existing explosion by **4 dB**. It uses 44 new takes (39 lossless WAVs
+and five MP3s), totaling 94 requested seconds: estimated generation **$0.188**.
+Automated audio screening adds approximately **$0.48** (48 short checks), for
+an estimated revision total of **$0.668**. These estimates are not a billing
+statement. Prompts, requests, sources, screening results, layer recipes, and
+the twelve previous WAVs are retained in `.scratch/sfx-revision-2/`.
+
+The bow releases combine a tightly damped generated string pluck with an arrow
+release snap. Great Bow adds a lower string resonance and wooden body, with a
+cue gain 3 dB above regular Bow. Blunt impacts and the sledgehammer layer a low
+thud under their attack. The eleven replacements import as uncompressed PCM
+(`compress/mode=0`), retaining Godot normalization. The original MP3 source layers
+remain lossy; the finishing and Godot import stages introduce no further lossy
+compression. Four new brass fanfares retain fixed pitch and play 3 dB louder.
+
 Preparation removes low rumble, trims quiet padding, adds short fades, and
 adjusts level within a peak ceiling. Selection favors complete events with
-quiet tails; it does not assess artistic quality. Use the revision's sequential
-[listening preview](../../../.scratch/sfx-revision-1/preview.wav) for subjective
+quiet tails. Revision 2 also uses open-ended automated sound descriptions to
+reject mismatched candidates; these are an imperfect signal, not human audition.
+Use the current sequential
+[listening preview](../../../.scratch/sfx-revision-2/preview.wav) for subjective
 review. Its cue order and timestamps are in `manifest.json`; the preview omits
 Godot's import normalization and the game's per-cue gains and pitch variation.
 
 From the repository root:
 
 ```sh
-python3 .scratch/elevenlabs-sfx/process_sfx.py --source-dir .scratch/sfx-revision-1 --prepare
+python3 .scratch/elevenlabs-sfx/process_sfx.py --source-dir .scratch/sfx-revision-2 --prepare
+python3 .scratch/sfx-revision-2/finish_sfx.py
 ```
 
 Requires Python 3 and `ffmpeg`. This rebuilds all prepared WAVs, the selection
 manifest, and preview from the saved originals without generation or credits.
-Add `--install` to replace only this revision's twenty WAVs with the selected
-takes. To rebuild the entire current pack, prepare/install the original batch
-first, then this revision; installing the original batch alone restores old takes.
-Normal
-gameplay uses the bundled files and requires no network or fal.ai account.
+Add `--install` to **both commands**, in that order, to replace this revision's
+eleven WAVs, including the finished layers. To rebuild the entire current pack,
+prepare/install the original batch, revision 1, then revision 2. Earlier batches
+alone restore earlier takes. Gameplay uses the bundled files and requires no
+network or fal.ai account.
 
 The previous synthesized pack can still be recreated for comparison using
 `.scratch/game-sfx/generate_sfx.py`. It writes to `.scratch/game-sfx/synthesized/`
@@ -53,7 +72,7 @@ so it cannot overwrite this pack.
 - `ui_*`, `select`, `move`: wood taps, seed-shell pops, and paper movement.
 - `purchase`: cash register ka-ching; `sell`, `reroll`, `lock`, `unlock`: tactile shop feedback.
 - `plant`, `fertilize`, `mutate`, `harvest`, `train`, `compost`, `seal`: soil,
-  shovel-and-soil planting, pops, growing bubbles, and a forceful treasure reveal.
+  shovel-and-soil planting, pops, growing bubbles, and egg-shell hatching at harvest.
 - `slash`, `heavy_swing`, `charge`, `bow`, `throw`, `horn`: attack and release.
 - `hit_slash`, `hit_blunt`, `block`, `ground`, `death`: distinct contact sounds.
 - `explosion`, `spore`, `revive`, `acid_rain`: special combat events.
@@ -72,10 +91,12 @@ An SFX-bus peak limiter caps overlapping bursts at -1 dB; it leaves ordinary
 individual cues below the threshold unchanged. The Music bus is separate.
 The limiter uses Godot's [AudioEffectHardLimiter](https://docs.godotengine.org/en/stable/classes/class_audioeffecthardlimiter.html).
 
-The [browser review](http://127.0.0.1:8787/) offers all 47 cues, twenty A/B
-comparisons, game/review levels, optional pitch variation and saved notes.
-`review.html`, `review-contexts.json` and `build_review.py` in the revision folder
-build it from Godot captures and the previous review data. It is a local page and
+The [browser review](http://127.0.0.1:8787/) offers all 47 cues and twelve A/B
+comparisons against their immediately previous versions. It defaults to in-game
+levels so the louder explosion is audible, with optional pitch variation and
+saved notes. `review.html`, `review-contexts.json` and `build_review.py` in
+`.scratch/sfx-revision-1/` build it from Godot captures and the previous review
+data; pass `--revision-dir .scratch/sfx-revision-2`. It is a local page and
 requires the review server to be running.
 
 Replace individual WAVs at the same paths to change the sound palette while

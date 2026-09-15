@@ -1,0 +1,250 @@
+{
+  "model": "fal-ai/elevenlabs/sound-effects/v2",
+  "unit_price_usd": 0.002,
+  "takes_per_cue": 3,
+  "prompt_influence": 0.9,
+  "output_format": "pcm_44100",
+  "loop": false,
+  "cues": [
+    {
+      "cue": "harvest",
+      "duration_seconds": 1.5,
+      "max_duration_seconds": 1.5,
+      "prompt": "A large egg hatching. Brittle eggshell cracks sharply, breaks open with a satisfying crunchy pop, and little shell pieces tumble down. Close dry foley, one quick hatching event. No chimes, voices or music.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 3,
+      "selection_note": "Screened as a clean hard-shell/capsule crack; closest to egg hatching."
+    },
+    {
+      "cue": "heavy_swing",
+      "duration_seconds": 1,
+      "max_duration_seconds": 1,
+      "prompt": "A heavy hammer swung forcefully, with a short dense rush of air and a hard wooden thump. Punchy low-mid weight, immediate attack, one swing. Close dry physical foley.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 2,
+      "selection_note": "Screened as a clean sharp thud with pronounced low-frequency punch."
+    },
+    {
+      "cue": "bow",
+      "duration_seconds": 1.5,
+      "max_duration_seconds": 1.5,
+      "prompt": "Archery foley: a wooden recurve bow releases one arrow. A tight, wiry bowstring twang followed by the arrow's brief feathered hiss. Close microphone beside the archer. Realistic dry recording of a bow and arrow being fired once.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 7,
+      "selection_note": "Arrow-release snap from take 7 with a tightly damped generated string pluck; avoids sustained bell-like ringing.",
+      "layers": [
+        {
+          "source": "raw/bow_7.mp3",
+          "gain": 0.45,
+          "pitch": 1,
+          "duration_seconds": 0.2,
+          "decay_seconds": 0.07,
+          "lowpass_hz": 9000,
+          "start_seconds": 2.25
+        },
+        {
+          "source": "raw/great_bow_4.wav",
+          "gain": 1,
+          "pitch": 1.35,
+          "duration_seconds": 0.25,
+          "decay_seconds": 0.065,
+          "lowpass_hz": 6500,
+          "start_seconds": 0
+        }
+      ]
+    },
+    {
+      "cue": "hit_blunt",
+      "duration_seconds": 1,
+      "max_duration_seconds": 1,
+      "prompt": "A hammer hits a solid block of dense hardwood once. A sharp attack over a deep chunky thud with a very short decay. Close, dry, forceful blunt impact foley.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 6,
+      "selection_note": "Short generated impact crack layered over a much stronger low wooden thud; metallic ringing candidates rejected.",
+      "layers": [
+        {
+          "source": "raw/hit_blunt_6.mp3",
+          "gain": 0.18,
+          "pitch": 0.85,
+          "duration_seconds": 0.18,
+          "decay_seconds": 0.055,
+          "lowpass_hz": 2800,
+          "start_seconds": 0.1
+        },
+        {
+          "source": "raw/heavy_swing_2.wav",
+          "gain": 1,
+          "pitch": 0.85,
+          "duration_seconds": 0.32,
+          "decay_seconds": 0.1,
+          "lowpass_hz": 1500,
+          "start_seconds": 0
+        }
+      ]
+    },
+    {
+      "cue": "battle_start",
+      "duration_seconds": 3.5,
+      "max_duration_seconds": 3.5,
+      "prompt": "A real trumpet section plays a loud military charge fanfare: crisp bright brass playing three rising notes, then holding a strong final note. Open trumpets, clean studio recording, confident, sharply articulated and in tune. Brass instruments only.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 2,
+      "selection_note": "Screened as a bright clear trumpet fanfare, without warbling or distortion."
+    },
+    {
+      "cue": "battle_win",
+      "duration_seconds": 4,
+      "max_duration_seconds": 4,
+      "prompt": "A triumphant victory trumpet fanfare. A real brass section plays a bold rising major-key melody ending on a sustained victorious chord. Bright open trumpets in the foreground, celebratory, full volume, clean studio recording, in tune.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 1,
+      "selection_note": "Screened as a triumphant brass fanfare with a celebratory melody."
+    },
+    {
+      "cue": "run_win",
+      "duration_seconds": 4,
+      "max_duration_seconds": 4,
+      "prompt": "A grand triumphant trumpet fanfare celebrating the final victory. A large real brass ensemble plays a jubilant rising flourish and an emphatic sustained major chord. Bright trumpets over rich trombones, powerful and celebratory. Clean, in-tune orchestral recording.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 2,
+      "selection_note": "Screened as a brass ensemble fanfare; train-horn candidates rejected."
+    },
+    {
+      "cue": "run_loss",
+      "duration_seconds": 4,
+      "max_duration_seconds": 4,
+      "prompt": "Sad trumpets play a short descending minor-key defeat fanfare. A real trumpet and trombone section, mournful but clearly audible, ending on a low sustained minor chord. Rich expressive brass, clean studio recording, in tune. No voices.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 1,
+      "selection_note": "Screened as a slow mournful brass melodic phrase."
+    },
+    {
+      "cue": "great_swing",
+      "duration_seconds": 1.2,
+      "max_duration_seconds": 1.2,
+      "prompt": "One massive steel sledgehammer smashing a thick wooden beam. A heavy low thud with an explosive dry crack and a short shower of splinters. Extremely weighty close-up sledgehammer impact foley, one powerful blow.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 5,
+      "selection_note": "Generated steel-on-hard-surface strike with added low hammer mass, a short crack, and damped metallic overtones.",
+      "layers": [
+        {
+          "source": "raw/great_swing_5.mp3",
+          "gain": 0.7,
+          "pitch": 0.9,
+          "duration_seconds": 0.8,
+          "decay_seconds": 0.22,
+          "lowpass_hz": 2400,
+          "start_seconds": 0
+        },
+        {
+          "source": "raw/heavy_swing_2.wav",
+          "gain": 1,
+          "pitch": 0.7,
+          "duration_seconds": 0.4,
+          "decay_seconds": 0.12,
+          "lowpass_hz": 1100,
+          "start_seconds": 0
+        },
+        {
+          "source": "raw/hit_blunt_6.mp3",
+          "gain": 0.25,
+          "pitch": 0.8,
+          "duration_seconds": 0.15,
+          "decay_seconds": 0.045,
+          "lowpass_hz": 4500,
+          "start_seconds": 0.1
+        }
+      ]
+    },
+    {
+      "cue": "great_bow",
+      "duration_seconds": 1.5,
+      "max_duration_seconds": 1.5,
+      "prompt": "Archery foley: a heavy English longbow releases one arrow. A powerful low wiry bowstring TWANG with wooden bow-limb resonance and a brief arrow feather hiss. Close microphone beside the archer, one forceful shot. Realistic bow and arrow release.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 4,
+      "selection_note": "Lower, longer string twang and fuller wooden body than the regular release; game gain is 3 dB higher.",
+      "layers": [
+        {
+          "source": "raw/bow_7.mp3",
+          "gain": 0.5,
+          "pitch": 0.85,
+          "duration_seconds": 0.24,
+          "decay_seconds": 0.1,
+          "lowpass_hz": 8500,
+          "start_seconds": 2.25
+        },
+        {
+          "source": "raw/great_bow_4.wav",
+          "gain": 1,
+          "pitch": 0.85,
+          "duration_seconds": 0.35,
+          "decay_seconds": 0.1,
+          "lowpass_hz": 5000,
+          "start_seconds": 0
+        },
+        {
+          "source": "raw/heavy_swing_2.wav",
+          "gain": 0.35,
+          "pitch": 0.9,
+          "duration_seconds": 0.18,
+          "decay_seconds": 0.06,
+          "lowpass_hz": 600,
+          "start_seconds": 0
+        }
+      ]
+    },
+    {
+      "cue": "great_throw",
+      "duration_seconds": 1,
+      "max_duration_seconds": 1,
+      "prompt": "A heavy spear thrown once through the air. One smooth clean rushing whoosh with a crisp release and a short natural decay. Close dry foley. No crackling, buzzing, warbling, rattling or metallic ringing.",
+      "target_rms_dbfs": -15,
+      "preferred_take": 2,
+      "selection_note": "Screened as a clean whoosh/impact without artifacts; distorted candidate rejected."
+    }
+  ],
+  "level_changes": {
+    "heavy_swing": {
+      "from_db": -14,
+      "to_db": -12
+    },
+    "bow": {
+      "from_db": -14,
+      "to_db": -13
+    },
+    "hit_blunt": {
+      "from_db": -10,
+      "to_db": -9
+    },
+    "explosion": {
+      "from_db": -8,
+      "to_db": -4
+    },
+    "battle_start": {
+      "from_db": -8,
+      "to_db": -5
+    },
+    "battle_win": {
+      "from_db": -8,
+      "to_db": -5
+    },
+    "run_win": {
+      "from_db": -8,
+      "to_db": -5
+    },
+    "run_loss": {
+      "from_db": -8,
+      "to_db": -5
+    },
+    "great_swing": {
+      "from_db": -11,
+      "to_db": -9
+    },
+    "great_bow": {
+      "from_db": -11,
+      "to_db": -10
+    }
+  },
+  "screening_note": "Open-ended automated audio descriptions are used alongside level/tail metrics. They are an imperfect source-identification signal, not human audition."
+}

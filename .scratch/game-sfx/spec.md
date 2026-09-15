@@ -2,6 +2,13 @@
 
 Status: Implemented and verified on 2026-09-15.
 
+Follow-up: the user requested ElevenLabs Sound Effects V2 after purchasing
+fal.ai credit. The 40 synthesized WAVs are superseded by the generated pack in
+[`../elevenlabs-sfx/spec.md`](../elevenlabs-sfx/spec.md). Playback hooks and cue
+coverage below remain in use. The original generator now writes comparison
+files under `synthesized/`; the original verification results below describe
+the synthesized pack.
+
 ## User request
 
 Create SFX for the whole game, including UI actions and combat. The user chose

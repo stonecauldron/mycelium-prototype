@@ -1,4 +1,4 @@
-"""Build the original Mycelium SFX pack with Python's standard library.
+"""Rebuild the original synthesized SFX pack in a separate comparison folder.
 
 No recordings or third-party samples. Run from any directory. All synthesis
 randomness is local and seeded; rerunning reproduces the WAV files exactly.
@@ -13,8 +13,7 @@ import sys
 import wave
 
 RATE = 44100
-ROOT = Path(__file__).resolve().parents[2]
-OUTPUT = ROOT / "assets/audio/sfx"
+OUTPUT = Path(__file__).resolve().parent / "synthesized"
 TAU = math.tau
 RNG = random.Random(73129)
 
@@ -197,6 +196,6 @@ if __name__ == "__main__":
             "preview_start_seconds": round(len(preview) / RATE, 3),
         })
         preview += [round(x * 0.6) for x in pcm] + [0] * round(RATE * 0.45)
-    write_wav(Path(__file__).with_name("preview.wav"), preview)
-    Path(__file__).with_name("audio_report.json").write_text(json.dumps(report, indent=2) + "\n")
-    print(f"Created {len(report)} original mono PCM WAV effects and preview.wav")
+    write_wav(OUTPUT / "preview.wav", preview)
+    (OUTPUT / "audio_report.json").write_text(json.dumps(report, indent=2) + "\n")
+    print(f"Created {len(report)} original synthesized effects in {OUTPUT}")

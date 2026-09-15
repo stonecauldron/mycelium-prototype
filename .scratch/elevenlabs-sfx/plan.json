@@ -1,0 +1,290 @@
+{
+  "model": "fal-ai/elevenlabs/sound-effects/v2",
+  "unit_price_usd": 0.002,
+  "takes_per_cue": 3,
+  "prompt_influence": 0.65,
+  "output_format": "mp3_44100_192",
+  "loop": false,
+  "cues": [
+    {
+      "cue": "ui_hover",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.1,
+      "prompt": "One extremely tiny light seed-shell tick, delicate wooden UI hover sound, a single crisp tap at the very start. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -14.85
+    },
+    {
+      "cue": "ui_click",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.15,
+      "prompt": "One tiny warm wooden button click with a dry papery fingertip tap. Single crisp tap at the very start, soft hollow seed-shell body, short decay. No repeated taps. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -17.91
+    },
+    {
+      "cue": "ui_toggle",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.24,
+      "prompt": "One small wooden toggle switch being flipped, two closely spaced tactile seed-shell clacks, quick and satisfying. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "ui_tick",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.1,
+      "prompt": "One miniature dry wooden bead tick, a soft subtle UI slider step, sharp but gentle and extremely short. No repeats. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -14.36
+    },
+    {
+      "cue": "ui_open",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.26,
+      "prompt": "One quick soft paper card unfolding, papery flutter with a tiny warm wooden pop at the end. Friendly UI panel opening. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -15.09
+    },
+    {
+      "cue": "ui_close",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.24,
+      "prompt": "One small parchment card folding shut, quick soft paper swish into a muted wooden tap. UI panel closing. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -17.8
+    },
+    {
+      "cue": "ui_error",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.28,
+      "prompt": "One small dull wooden double knock, low and soft, a gently dismissive hollow clonk-clonk for an unavailable game action. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "select",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.2,
+      "prompt": "One plucky hollow mushroom cap pop, upward little rubbery wood-plop, pleasantly tactile and quick, selection confirmed. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -14.6
+    },
+    {
+      "cue": "move",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.27,
+      "prompt": "One quick parchment card slide across a wooden table ending in a light wooden placement tap. Single gesture. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -17.15
+    },
+    {
+      "cue": "purchase",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.65,
+      "prompt": "A tiny cheerful purchase reward, two ascending woody kalimba plucks with a light seed-bead rattle, quick and delicate. Musical sound effect only, no background music. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -16.34
+    },
+    {
+      "cue": "sell",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.6,
+      "prompt": "A small pouch of dry seed beads landing softly in a palm, with two descending warm wooden plinks. Quick gentle sale feedback. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -16.63
+    },
+    {
+      "cue": "reroll",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.55,
+      "prompt": "One quick shake and tumble of five tiny wooden dice, light hollow seed-shell rattles then a final settling tick. Compact organic game reroll sound. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -16.92
+    },
+    {
+      "cue": "lock",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.23,
+      "prompt": "One tiny wooden latch engaging, a tight papery scrape then a satisfying low seed-shell clack. Small tactile lock. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "unlock",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.32,
+      "prompt": "One small wooden latch springing open, a light click followed by a buoyant cork pop. Quick organic game unlock. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "plant",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.46,
+      "prompt": "One little mushroom spore pressed into soft damp soil, gentle earth crunch and a round soft plop. Cute tactile planting action, not gross. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -17.95
+    },
+    {
+      "cue": "fertilize",
+      "duration_seconds": 1,
+      "max_duration_seconds": 0.7,
+      "prompt": "One quick sprinkle of sandy fertilizer and tiny water droplets onto soil, soft granular patter with a few delicate plips. Small friendly organic growth action. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -15.98
+    },
+    {
+      "cue": "mutate",
+      "duration_seconds": 1,
+      "max_duration_seconds": 0.8,
+      "prompt": "One mushroom changing shape, three quick rising elastic bubble pops and a soft leafy squish, whimsical organic transformation, cute not gross. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -16.73
+    },
+    {
+      "cue": "harvest",
+      "duration_seconds": 1,
+      "max_duration_seconds": 0.85,
+      "prompt": "One plump mushroom popping out of soft soil with a small leaf rustle, followed immediately by three bright ascending wooden kalimba notes. Happy game harvest reward. No background music. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "train",
+      "duration_seconds": 1,
+      "max_duration_seconds": 0.75,
+      "prompt": "One soft mushroom cocoon wrapping shut, dry silky leaf rustle curling inward and a round hollow wooden sealing pop. Quick magical organic training action. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "compost",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.55,
+      "prompt": "One soft spent mushroom gently crumbling into soil, papery leaf crumble with a low soft squish and earthy thump. Gentle organic composting, not gross. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "seal",
+      "duration_seconds": 1,
+      "max_duration_seconds": 0.85,
+      "prompt": "One ornate wooden stamp pressing into soft wax, satisfying deep wooden thunk followed by a tiny warm three-note kalimba flourish. Magical game seal chosen, no background music. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "slash",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.25,
+      "prompt": "One short crisp light sword swing through air, dry focused whoosh with a slight leafy edge, small fast attack. No impact and no metallic ringing. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -14.44
+    },
+    {
+      "cue": "heavy_swing",
+      "duration_seconds": 0.6,
+      "max_duration_seconds": 0.38,
+      "prompt": "One heavy wooden mallet swung quickly through the air, short low broad whoosh with weight, no impact, no ringing. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -15.94
+    },
+    {
+      "cue": "bow",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.33,
+      "prompt": "One small wooden bow releasing an arrow, taut string snap and short warm wooden twang with a whisper of rushing air. Immediate single shot. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "throw",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.3,
+      "prompt": "One quick wooden spear thrown through air, a short papery hand release and tight airy swish. Single throw, no impact. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -13.98
+    },
+    {
+      "cue": "horn",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.58,
+      "prompt": "One short comically warm low wooden war-horn toot, round brassy-woody blast with a soft breathy edge, decisive single puff. A game weapon sound, not a melody. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -15.13
+    },
+    {
+      "cue": "charge",
+      "duration_seconds": 0.8,
+      "max_duration_seconds": 0.5,
+      "prompt": "One short accelerating rush, three quick soft wooden footfall thumps under a low leafy air whoosh. A tiny mushroom soldier lunging forward, compact single charge. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -17.77
+    },
+    {
+      "cue": "hit_slash",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.24,
+      "prompt": "One light blade hit against a tough mushroom stem, crisp fibrous wooden chop with a soft fleshy pop underneath. Snappy stylized combat impact, not gory. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "hit_blunt",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.28,
+      "prompt": "One heavy wooden club hitting a plump mushroom, rounded low woody thunk with a small soft squash. Solid readable single combat impact, cute not gory. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "block",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.26,
+      "prompt": "One sword striking a small wooden shield, sharp dry wood clack with a little stiff papery vibration. Short decisive parry, no long metal ringing. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "death",
+      "duration_seconds": 0.7,
+      "max_duration_seconds": 0.42,
+      "prompt": "One small mushroom puffing apart, soft hollow pop into a brief powdery spore puff and light leaf crumble. Gentle cartoon defeat, no voice and no gore. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "ground",
+      "duration_seconds": 0.5,
+      "max_duration_seconds": 0.22,
+      "prompt": "One wooden arrow striking soft dry soil, tiny pointed wood tick followed by a short sandy crunch. Very small single landing. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "explosion",
+      "duration_seconds": 1,
+      "max_duration_seconds": 0.75,
+      "prompt": "One compact mushroom spore bomb bursting, deep rounded woody pop with a short crunchy leaf crackle and powdery air puff. Punchy small organic explosion, no long rumble. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "spore",
+      "duration_seconds": 0.7,
+      "max_duration_seconds": 0.45,
+      "prompt": "One small mushroom releasing a spore, light airy dust puff with a tiny hollow seed pop. Soft delicate organic particle burst. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "revive",
+      "duration_seconds": 1,
+      "max_duration_seconds": 0.9,
+      "prompt": "One fallen mushroom springing back to life, soft soil rustle rising into an elastic cork pop and three warm ascending wooden chime notes. Brief joyful revival, no background music. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "acid_rain",
+      "duration_seconds": 1.2,
+      "max_duration_seconds": 0.9,
+      "prompt": "A brief sudden shower of tiny sizzling acidic droplets hitting broad leaves, soft rain patter and delicate fizz, quick warning burst. No thunder, no extended ambience. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "battle_start",
+      "duration_seconds": 1.2,
+      "max_duration_seconds": 1.2,
+      "prompt": "A very brief wooden battle signal: two low hollow hand-drum knocks followed by one warm wooden horn puff. Playful miniature army start cue, complete within one second. No background score. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -18
+    },
+    {
+      "cue": "battle_win",
+      "duration_seconds": 1.4,
+      "max_duration_seconds": 1.2,
+      "prompt": "A short cheerful victory sound effect: four ascending warm kalimba plucks and a soft wooden drum tap, bright friendly resolution. Complete little fanfare within one second, no continuing music. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -17.29
+    },
+    {
+      "cue": "run_win",
+      "duration_seconds": 1.8,
+      "max_duration_seconds": 1.5,
+      "prompt": "A tiny triumphant completion fanfare, quick ascending warm wooden marimba notes with a soft hand-drum accent, ending in a bright resolved chord. Playful mushroom adventure won. Complete in one and a half seconds, no continuing music. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -16.35
+    },
+    {
+      "cue": "run_loss",
+      "duration_seconds": 1.6,
+      "max_duration_seconds": 1.4,
+      "prompt": "A brief gentle defeat stinger: three descending soft wooden marimba notes ending on one low hollow wood plonk. Wry and sympathetic, not frightening. Complete within one second, no continuing music. Playful organic mushroom strategy game. Close, dry, isolated sound with a clean quick ending. No background ambience, no voices, no reverb, no background music.",
+      "target_rms_dbfs": -16.33
+    }
+  ]
+}

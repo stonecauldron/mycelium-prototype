@@ -1,25 +1,39 @@
 # Mycelium sound pack
 
-40 original synthesized effects: 44.1 kHz, mono, 16-bit PCM WAV, 55 ms–1.5 s.
-All clips have tapered ends and approximately −3.1 dBFS peak headroom before
-the quieter per-cue gains in `../sfx.gd`.
+40 effects generated with **ElevenLabs Sound Effects V2** through fal.ai:
+44.1 kHz, mono, 16-bit PCM WAV, 55 ms–1.4 s. All clips have tapered ends and
+at least 3.1 dB of peak headroom before the per-cue gains in `../sfx.gd`.
 
 ## Sources
 
-Created specifically for this project using the Python standard library.
-No recordings, downloaded samples, or third-party audio are incorporated.
-The source is [generate_sfx.py](../../../.scratch/game-sfx/generate_sfx.py).
-Its random generator is seeded and independent of gameplay randomness.
+Generated on 2026-09-15 using `fal-ai/elevenlabs/sound-effects/v2`. Three takes
+were generated for each cue, with prompts for playful organic one-shot sounds.
+The 120 original MP3s, prompts, request IDs, selected takes, and source hashes
+are retained in [the authoring folder](../../../.scratch/elevenlabs-sfx/).
+Requested audio totals 92.4 seconds; estimated generation cost was $0.1848 at
+$0.002/second. This is an estimate, not an account billing statement.
+
+Preparation removes low rumble, trims quiet padding, adds short fades, and
+adjusts level within a peak ceiling. Selection favors complete events with
+quiet tails; it does not assess artistic quality. Use the sequential
+[listening preview](../../../.scratch/elevenlabs-sfx/preview.wav) for subjective
+review. Its cue order and timestamps are in `manifest.json`; the preview omits
+the game's per-cue gains and pitch variation.
 
 From the repository root:
 
 ```sh
-python3 .scratch/game-sfx/generate_sfx.py
+python3 .scratch/elevenlabs-sfx/process_sfx.py --prepare
 ```
 
-This rebuilds the WAVs and writes a sequential listening preview plus a timing,
-peak, and RMS report in `.scratch/game-sfx/`. The preview presents clips louder
-than their in-game mix to make auditioning quiet UI sounds easier.
+Requires Python 3 and `ffmpeg`. This rebuilds all prepared WAVs, the selection
+manifest, and preview from the saved originals without generation or credits.
+Add `--install` to replace the game's WAVs with the selected takes. Normal
+gameplay uses the bundled files and requires no network or fal.ai account.
+
+The previous synthesized pack can still be recreated for comparison using
+`.scratch/game-sfx/generate_sfx.py`. It writes to `.scratch/game-sfx/synthesized/`
+so it cannot overwrite this pack.
 
 ## Sound families
 

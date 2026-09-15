@@ -234,6 +234,14 @@ A unit's rest position in battle, measured from the Flag bearer (player) or the 
 A unit's Melee, Mid, or Ranged role in battle.
 *Avoid*: formation, FormationLine (code)
 
+### Audio
+
+**Base music**:
+The background music for the title screen and Base.
+
+**Battle music**:
+The background music for Battles and their result screens, including day summary, victory, and game over.
+
 ### Distribution
 
 **Steam App**:

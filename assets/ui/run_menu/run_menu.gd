@@ -19,6 +19,10 @@ const _TITLE_SCENE := "res://assets/title/title.tscn"
 @onready var _confirmation_page: Control = %ConfirmationPage
 @onready var _settings_button: Button = %SettingsButton
 @onready var _fullscreen_button: Button = %FullscreenButton
+@onready var _sfx_volume: HSlider = %SFXVolume
+@onready var _music_volume: HSlider = %MusicVolume
+@onready var _sfx_percent: Label = %SFXPercent
+@onready var _music_percent: Label = %MusicPercent
 @onready var _confirm_button: Button = %ConfirmButton
 @onready var _cancel_button: Button = %CancelButton
 
@@ -27,7 +31,7 @@ var _open: bool = false
 var _available: bool = true
 var _was_paused: bool = false
 var _leaving: bool = false
-var _focus_buttons: Array[Control] = []
+var _focus_controls: Array[Control] = []
 
 
 func _ready() -> void:
@@ -44,6 +48,8 @@ func _ready() -> void:
 	# Press on input-down so web fullscreen runs within the browser's user gesture.
 	_fullscreen_button.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 	_fullscreen_button.pressed.connect(_toggle_fullscreen)
+	_sfx_volume.value_changed.connect(_on_sfx_volume_changed)
+	_music_volume.value_changed.connect(_on_music_volume_changed)
 	_overlay.hide()
 
 
@@ -70,11 +76,11 @@ func _shortcut_input(event: InputEvent) -> void:
 	# Let the panel handle keyboard navigation, but block gameplay/debug shortcuts.
 	if _open:
 		# Start focus only after an explicit navigation key, never when opening a page.
-		if get_viewport().gui_get_focus_owner() == null and not _focus_buttons.is_empty():
+		if get_viewport().gui_get_focus_owner() == null and not _focus_controls.is_empty():
 			if event.is_action_pressed("ui_focus_next") or event.is_action_pressed("ui_down") or event.is_action_pressed("ui_right"):
-				_focus_buttons.front().grab_focus()
+				_focus_controls.front().grab_focus()
 			elif event.is_action_pressed("ui_focus_prev") or event.is_action_pressed("ui_up") or event.is_action_pressed("ui_left"):
-				_focus_buttons.back().grab_focus()
+				_focus_controls.back().grab_focus()
 		get_viewport().set_input_as_handled()
 
 
@@ -130,6 +136,7 @@ func _show_page(page: Page) -> void:
 			_confine_focus(_settings_page)
 			_heading.text = "Settings"
 			_fullscreen_button.set_pressed_no_signal(SettingsServer.is_fullscreen())
+			_refresh_audio_controls()
 		Page.RETURN_TO_TITLE, Page.QUIT:
 			_confine_focus(%ConfirmationActions)
 			var action := "Return to title" if page == Page.RETURN_TO_TITLE else "Quit"
@@ -138,20 +145,44 @@ func _show_page(page: Page) -> void:
 
 
 func _confine_focus(page: Control) -> void:
-	_focus_buttons.clear()
-	for child in page.get_children():
-		if child is BaseButton and child.visible:
-			_focus_buttons.append(child)
-	for i in _focus_buttons.size():
-		var button := _focus_buttons[i]
-		var previous := button.get_path_to(_focus_buttons[(i - 1 + _focus_buttons.size()) % _focus_buttons.size()])
-		var next := button.get_path_to(_focus_buttons[(i + 1) % _focus_buttons.size()])
-		button.focus_previous = previous
-		button.focus_next = next
-		button.focus_neighbor_top = previous
-		button.focus_neighbor_bottom = next
-		button.focus_neighbor_left = previous
-		button.focus_neighbor_right = next
+	_focus_controls.clear()
+	_collect_focus_controls(page)
+	for i in _focus_controls.size():
+		var control := _focus_controls[i]
+		var previous := control.get_path_to(_focus_controls[(i - 1 + _focus_controls.size()) % _focus_controls.size()])
+		var next := control.get_path_to(_focus_controls[(i + 1) % _focus_controls.size()])
+		control.focus_previous = previous
+		control.focus_next = next
+		control.focus_neighbor_top = previous
+		control.focus_neighbor_bottom = next
+		# Horizontal arrows belong to the slider, including at its limits.
+		control.focus_neighbor_left = NodePath(".") if control is HSlider else previous
+		control.focus_neighbor_right = NodePath(".") if control is HSlider else next
+
+
+func _collect_focus_controls(parent: Control) -> void:
+	for child in parent.get_children():
+		if child is Control and child.visible:
+			if child.focus_mode == Control.FOCUS_ALL:
+				_focus_controls.append(child)
+			_collect_focus_controls(child)
+
+
+func _refresh_audio_controls() -> void:
+	_sfx_volume.set_value_no_signal(SettingsServer.sfx_volume * 100.0)
+	_music_volume.set_value_no_signal(SettingsServer.music_volume * 100.0)
+	_sfx_percent.text = "%d%%" % roundi(_sfx_volume.value)
+	_music_percent.text = "%d%%" % roundi(_music_volume.value)
+
+
+func _on_sfx_volume_changed(value: float) -> void:
+	SettingsServer.sfx_volume = value / 100.0
+	_sfx_percent.text = "%d%%" % roundi(value)
+
+
+func _on_music_volume_changed(value: float) -> void:
+	SettingsServer.music_volume = value / 100.0
+	_music_percent.text = "%d%%" % roundi(value)
 
 
 func _toggle_fullscreen() -> void:

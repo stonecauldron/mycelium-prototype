@@ -14,13 +14,33 @@ var show_tutorial: bool = true:
 		_show_tutorial = value
 		_save()
 
+var sfx_volume: float = 1.0:
+	get:
+		return _sfx_volume
+	set(value):
+		_sfx_volume = _valid_volume(value)
+		_apply_volume(&"SFX", _sfx_volume)
+		_save()
+
+var music_volume: float = 1.0:
+	get:
+		return _music_volume
+	set(value):
+		_music_volume = _valid_volume(value)
+		_apply_volume(&"Music", _music_volume)
+		_save()
+
 var _show_tutorial: bool = true
 var _fullscreen: bool = false
+var _sfx_volume: float = 1.0
+var _music_volume: float = 1.0
 
 
 func _ready() -> void:
 	_fullscreen = is_fullscreen()
 	_load()
+	_apply_volume(&"SFX", _sfx_volume)
+	_apply_volume(&"Music", _music_volume)
 
 
 func is_fullscreen() -> bool:
@@ -54,6 +74,8 @@ func _load() -> void:
 	if err != OK:
 		return
 	_show_tutorial = cfg.get_value(SECTION, "show_tutorial", true)
+	_sfx_volume = _valid_volume(cfg.get_value("audio", "sfx_volume", 1.0))
+	_music_volume = _valid_volume(cfg.get_value("audio", "music_volume", 1.0))
 	if not OS.has_feature("web") and cfg.has_section_key("display", "fullscreen"):
 		_fullscreen = cfg.get_value("display", "fullscreen", _fullscreen)
 		_apply_fullscreen(_fullscreen)
@@ -63,8 +85,26 @@ func _save() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(PATH)  # Preserve other keys if present; ignore missing file.
 	cfg.set_value(SECTION, "show_tutorial", _show_tutorial)
+	cfg.set_value("audio", "sfx_volume", _sfx_volume)
+	cfg.set_value("audio", "music_volume", _music_volume)
 	if not OS.has_feature("web"):
 		cfg.set_value("display", "fullscreen", _fullscreen)
 	var err := cfg.save(PATH)
 	if err != OK:
 		push_warning("SettingsServer: save failed (%s)" % error_string(err))
+
+
+func _valid_volume(value: Variant) -> float:
+	if (value is float or value is int) and is_finite(float(value)):
+		return clampf(float(value), 0.0, 1.0)
+	return 1.0
+
+
+func _apply_volume(bus_name: StringName, volume: float) -> void:
+	var bus := AudioServer.get_bus_index(bus_name)
+	if bus < 0:
+		push_error("SettingsServer: missing audio bus %s" % bus_name)
+		return
+	AudioServer.set_bus_mute(bus, volume == 0.0)
+	# Keep the gain finite at zero; the mute flag provides exact silence.
+	AudioServer.set_bus_volume_linear(bus, maxf(volume, 0.0001))

@@ -1,0 +1,50 @@
+# Adding audio
+
+## Music
+
+1. Add your music files under `assets/audio/` (OGG is a good default).
+2. Open `assets/autoload/audio.tscn` in Godot and select the root **Audio** node.
+3. Assign **Base Music** and **Battle Music** in the Inspector, then save the scene.
+
+Empty slots are silent. The game already selects Base music on title/Base and Battle music on combat/day summary/victory/game over, including direct scene launches. Selecting the current track keeps its position. Switching tracks crossfades over 0.5 seconds; returning to a different track starts it from the beginning.
+
+OGG, MP3, and WAV tracks loop automatically. Existing loop offsets/points are preserved; changes apply to a playback copy, so using the same file as an effect does not make the effect loop. Other Godot stream types repeat when they finish; use native loop points for seamless music.
+
+Music and its fades continue while paused and use real time during fast-forward and hitstop.
+
+## Sound effects
+
+Load or export an `AudioStream` on the scene that owns the action, then trigger it where the action occurs:
+
+```gdscript
+@export var hit_sound: AudioStream
+@export var click_sound: AudioStream
+
+func on_hit() -> void:
+	Audio.play_sfx(hit_sound)
+
+func on_button_pressed() -> void:
+	Audio.play_ui_sfx(click_sound)
+```
+
+Both helpers accept an optional per-effect gain in decibels, for example `Audio.play_sfx(hit_sound, -6.0)`. A missing stream is a silent no-op. Effects are non-positional and share the **SFX** volume control.
+
+- Gameplay effects pause/resume with gameplay; new requests while paused are ignored. They stop when their current scene exits. `Audio.stop_gameplay_sfx()` also clears them explicitly, for example when resetting a battle within the same scene.
+- UI effects remain available during pause.
+- Pools hold up to 16 gameplay effects and 4 UI effects. A full pool replaces its oldest effect. The returned `AudioStreamPlayer` is pooled: use it only for immediate adjustments, not as a lasting playback handle.
+
+For a scene-owned `AudioStreamPlayer` or animation audio track, set its bus to **SFX** and choose the appropriate process mode. Music uses the persistent Audio service. Both buses feed **Master**.
+
+## Settings
+
+The Base/combat menu exposes SFX and Music sliders from 0–100%. They apply immediately and are saved in the existing `user://settings.cfg`, independently of Run data. Both default to 100%; 0% mutes the corresponding bus. `SettingsServer.sfx_volume` and `SettingsServer.music_volume` use normalized values from 0.0–1.0.
+
+## Verification
+
+Run the focused runtime scene, which creates temporary test tones in memory and restores the preferences file on exit:
+
+```sh
+godot --headless --path . res://.scratch/audio-infrastructure/runtime_check.tscn
+```
+
+On macOS, launch outside the agent sandbox as required by `AGENTS.md`. For visual verification, replace `--headless` with `--rendering-method gl_compatibility --audio-driver Dummy`. The check writes `/private/tmp/audio-settings.png` and, when preferences already exist, a recovery backup at `/private/tmp/audio-infrastructure-settings.backup`.

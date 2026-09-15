@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[sub_resource type="GDScript" id="Script_ready_effect"]
+script/source = "extends Node
+
+var effect: AudioStreamPlayer
+
+func _ready() -> void:
+	var clip := AudioStreamWAV.new()
+	var samples := PackedByteArray()
+	samples.resize(441000)
+	clip.data = samples
+	effect = Audio.play_sfx(clip)
+"
+
+[node name="ReadyEffect" type="Node"]
+script = SubResource("Script_ready_effect")

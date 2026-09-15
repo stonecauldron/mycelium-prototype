@@ -34,6 +34,7 @@ var _progress_tracks: Array[CombatProgressTrack] = []
 
 
 func _ready() -> void:
+	Audio.play_base_music()
 	if not GameState.run_started:
 		GameState.reset_run()
 	_camera.make_current()

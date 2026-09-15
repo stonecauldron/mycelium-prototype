@@ -168,6 +168,7 @@ func start_battle(
 	player_roster: Array[RosterUnitData],
 	enemy_roster: Array[RosterUnitData]
 ) -> void:
+	Audio.play_battle_music()
 	_run_battle(player_roster, enemy_roster)
 
 

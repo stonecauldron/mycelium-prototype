@@ -15,6 +15,24 @@ content_margin_top = 6.0
 content_margin_right = 10.0
 content_margin_bottom = 8.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBox_volume_track"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.48, 0.45, 0.34, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_volume_fill"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.16, 0.36, 0.31, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper"]
 content_margin_left = 48.0
 content_margin_top = 36.0
@@ -196,6 +214,72 @@ theme_override_colors/font_pressed_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_colors/font_hover_color = Color(0.18, 0.16, 0.14, 1)
 theme_override_font_sizes/font_size = 28
 text = "Fullscreen"
+
+[node name="SFXRow" type="HBoxContainer" parent="Root/Overlay/Center/Panel/Content/SettingsPage"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Root/Overlay/Center/Panel/Content/SettingsPage/SFXRow"]
+custom_minimum_size = Vector2(92, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_font_sizes/font_size = 28
+text = "SFX"
+
+[node name="SFXVolume" type="HSlider" parent="Root/Overlay/Center/Panel/Content/SettingsPage/SFXRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tooltip_text = "Sound effects volume"
+theme_override_styles/slider = SubResource("StyleBox_volume_track")
+theme_override_styles/grabber_area = SubResource("StyleBox_volume_fill")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBox_volume_fill")
+value = 100.0
+scrollable = false
+
+[node name="SFXPercent" type="Label" parent="Root/Overlay/Center/Panel/Content/SettingsPage/SFXRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_font_sizes/font_size = 26
+text = "100%"
+horizontal_alignment = 2
+
+[node name="MusicRow" type="HBoxContainer" parent="Root/Overlay/Center/Panel/Content/SettingsPage"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Root/Overlay/Center/Panel/Content/SettingsPage/MusicRow"]
+custom_minimum_size = Vector2(92, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_font_sizes/font_size = 28
+text = "Music"
+
+[node name="MusicVolume" type="HSlider" parent="Root/Overlay/Center/Panel/Content/SettingsPage/MusicRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tooltip_text = "Music volume"
+theme_override_styles/slider = SubResource("StyleBox_volume_track")
+theme_override_styles/grabber_area = SubResource("StyleBox_volume_fill")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBox_volume_fill")
+value = 100.0
+scrollable = false
+
+[node name="MusicPercent" type="Label" parent="Root/Overlay/Center/Panel/Content/SettingsPage/MusicRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_font_sizes/font_size = 26
+text = "100%"
+horizontal_alignment = 2
 
 [node name="Spacer" type="Control" parent="Root/Overlay/Center/Panel/Content/SettingsPage" unique_id=1696289694]
 layout_mode = 2

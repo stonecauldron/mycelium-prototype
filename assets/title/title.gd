@@ -6,6 +6,7 @@ extends Control
 
 
 func _ready() -> void:
+	Audio.play_base_music()
 	_new_run_button.pressed.connect(_on_new_run_pressed)
 	_wishlist_button.pressed.connect(_on_wishlist_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)

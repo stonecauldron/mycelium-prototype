@@ -39,6 +39,6 @@ held_weapon = ExtResource("6_held")
 show_held_weapon = false
 stats = SubResource("Stats_seed_lobber")
 min_day = 5
-composition_cost = 21
+composition_cost = 23
 is_strong = true
 composition_weight = 0.7

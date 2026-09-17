@@ -31,6 +31,6 @@ combat = SubResource("Combat_canopy")
 held_weapon = ExtResource("5_held")
 stats = SubResource("Stats_canopy")
 min_day = 5
-composition_cost = 18
+composition_cost = 20
 is_strong = true
 composition_weight = 0.6

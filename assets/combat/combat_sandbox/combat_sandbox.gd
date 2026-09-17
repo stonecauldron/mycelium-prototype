@@ -6,7 +6,6 @@ const _SPEAR_WEAPON := preload("res://assets/weapons/spear/spear.tres")
 const _BOW_WEAPON := preload("res://assets/weapons/bow/bow.tres")
 const _SHIELD_WEAPON := preload("res://assets/weapons/shield/shield.tres")
 const _SICKLE_WEAPON := preload("res://assets/weapons/sickle/sickle.tres")
-const _RAPIER_WEAPON := preload("res://assets/weapons/rapier/rapier.tres")
 const _GREAT_SWORD_WEAPON := preload("res://assets/weapons/great_sword/great_sword.tres")
 const _GREAT_HAMMER_WEAPON := preload("res://assets/weapons/great_hammer/great_hammer.tres")
 const _MACE_WEAPON := preload("res://assets/weapons/mace/mace.tres")
@@ -16,7 +15,6 @@ const _SWORD_SHIELD_WEAPON := preload("res://assets/weapons/sword_and_shield/swo
 const _MACE_SHIELD_WEAPON := preload("res://assets/weapons/mace_and_shield/mace_and_shield.tres")
 const _SPEAR_SHIELD_WEAPON := preload("res://assets/weapons/spear_and_shield/spear_and_shield.tres")
 const _LANCE_WEAPON := preload("res://assets/weapons/lance/lance.tres")
-const _SCYTHE_WEAPON := preload("res://assets/weapons/scythe/scythe.tres")
 const _GREAT_SPEAR_WEAPON := preload("res://assets/weapons/great_spear/great_spear.tres")
 const _GREAT_SHIELD_WEAPON := preload("res://assets/weapons/great_shield/great_shield.tres")
 const _UMBRELLA_WEAPON := preload("res://assets/weapons/umbrella/umbrella.tres")
@@ -42,7 +40,6 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Bow", "weapon": _BOW_WEAPON},
 	{"name": "Shield", "weapon": _SHIELD_WEAPON},
 	{"name": "Sickle", "weapon": _SICKLE_WEAPON},
-	{"name": "Rapier", "weapon": _RAPIER_WEAPON},
 	{"name": "Great Sword", "weapon": _GREAT_SWORD_WEAPON},
 	{"name": "Great Hammer", "weapon": _GREAT_HAMMER_WEAPON},
 	{"name": "Mace", "weapon": _MACE_WEAPON},
@@ -53,7 +50,6 @@ const _WEAPON_OPTIONS: Array[Dictionary] = [
 	{"name": "Mace and Shield", "weapon": _MACE_SHIELD_WEAPON},
 	{"name": "Spear and Shield", "weapon": _SPEAR_SHIELD_WEAPON},
 	{"name": "Lance", "weapon": _LANCE_WEAPON},
-	{"name": "Scythe", "weapon": _SCYTHE_WEAPON},
 	{"name": "Great Spear", "weapon": _GREAT_SPEAR_WEAPON},
 	{"name": "Great Shield", "weapon": _GREAT_SHIELD_WEAPON},
 	{"name": "Umbrella", "weapon": _UMBRELLA_WEAPON},

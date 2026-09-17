@@ -80,17 +80,16 @@ static func add_fallen_unit(
 	entries.append(entry)
 
 
-static func add_unit_emerged_from_pupation(unit: RosterUnitData, school: int) -> void:
+static func add_unit_emerged_from_pupation(unit: RosterUnitData, _school: int) -> void:
 	if unit == null:
 		return
 	var weapon_name := "a new form"
 	if unit.weapon != null and not unit.weapon.display_name.is_empty():
 		weapon_name = unit.weapon.display_name
 	entries.append({
-		"text": "%s emerged with %s (%s training)." % [
+		"text": "%s emerged with %s." % [
 			unit.display_name,
 			weapon_name,
-			WeaponSchool.display_name(school),
 		],
 		"formation_line": int(unit.get_formation_line()),
 		"unit": unit,

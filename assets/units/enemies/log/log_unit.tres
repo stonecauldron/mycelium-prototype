@@ -33,6 +33,6 @@ combat = SubResource("Combat_log")
 held_weapon = ExtResource("5_held")
 stats = SubResource("Stats_log")
 min_day = 5
-composition_cost = 21
+composition_cost = 23
 is_strong = true
 composition_weight = 0.5

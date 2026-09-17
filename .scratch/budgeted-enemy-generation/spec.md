@@ -34,14 +34,14 @@ Edit `composition_cost`, `is_strong`, and `min_day` on each `assets/units/enemie
 | Rose Thorn | Regular | 2 | 10 | Ranged throw with melee follow-up |
 | Peashooter | Regular | 2 | 10 | Sustained ranged threat |
 | Stump | Regular | 4 | 12 | Slashing resistance and charge blocking, offset by low offense |
-| Solar Cleaver | Strong | 5 | 21 | Heavy area melee attack |
-| Durian | Strong | 5 | 23 | Area blunt damage bypasses shield-style slashing resistance |
-| Log | Strong | 5 | 21 | Heavy slashing resistance and charge blocking, with very low offense |
-| Canopy | Strong | 5 | 20 | Projectile interception and charge blocking; limited offense |
-| Seed Lobber | Strong | 5 | 23 | Ranged area explosions |
-| Acorn Knight | Strong | 5 | 21 | Charge pressure, checked by charge blockers |
+| Solar Cleaver | Strong | 5 | 23 | Heavy area melee attack |
+| Durian | Strong | 5 | 25 | Area blunt damage bypasses shield-style slashing resistance |
+| Log | Strong | 5 | 23 | Heavy slashing resistance and charge blocking, with very low offense |
+| Canopy | Strong | 5 | 22 | Projectile interception and charge blocking; limited offense |
+| Seed Lobber | Strong | 5 | 25 | Ranged area explosions |
+| Acorn Knight | Strong | 5 | 23 | Charge pressure, checked by charge blockers |
 
-Strong costs were reduced by 20% on 2026-09-17, then increased by 10% from those reduced values. Each adjustment rounds to the nearest whole Army-budget point.
+Strong costs were reduced by 20% on 2026-09-17, then increased by 10% twice, each time from the preceding values. Each adjustment rounds to the nearest whole Army-budget point.
 
 Canopy intercepts colliding shots; Lobber-style delayed radius explosions bypass its interception. Enemy costs should be adjusted from playtesting alongside Day budgets.
 

@@ -33,6 +33,6 @@ combat = SubResource("Combat_durian")
 held_weapon = ExtResource("5_held")
 stats = SubResource("Stats_durian")
 min_day = 5
-composition_cost = 26
+composition_cost = 21
 is_strong = true
 composition_weight = 0.7

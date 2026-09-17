@@ -32,6 +32,6 @@ combat = SubResource("Combat_acorn_knight")
 held_weapon = ExtResource("5_held")
 stats = SubResource("Stats_acorn_knight")
 min_day = 5
-composition_cost = 24
+composition_cost = 19
 is_strong = true
 composition_weight = 0.8

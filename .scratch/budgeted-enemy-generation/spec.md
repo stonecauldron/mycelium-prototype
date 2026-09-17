@@ -24,7 +24,7 @@ Each Day defines an Army-budget range. Initial generation rolls an allocation fr
 
 Selecting two Strong types on a mixed Day removes the other Strong types from the remaining picks. A Strong type may dominate a pattern, with its higher cost reducing army size. Elite budgets create the difficulty spike; their Strong-only pool establishes the army's character.
 
-## Starting enemy costs
+## Current enemy costs
 
 Edit `composition_cost`, `is_strong`, and `min_day` on each `assets/units/enemies/<type>/<type>_unit.tres`. Existing stats, combat profiles, visuals, and selection weights are unchanged. These costs are starting estimates informed by current combat traits, not simulated balance results.
 
@@ -34,12 +34,14 @@ Edit `composition_cost`, `is_strong`, and `min_day` on each `assets/units/enemie
 | Rose Thorn | Regular | 2 | 10 | Ranged throw with melee follow-up |
 | Peashooter | Regular | 2 | 10 | Sustained ranged threat |
 | Stump | Regular | 4 | 12 | Slashing resistance and charge blocking, offset by low offense |
-| Solar Cleaver | Strong | 5 | 24 | Heavy area melee attack |
-| Durian | Strong | 5 | 26 | Area blunt damage bypasses shield-style slashing resistance |
-| Log | Strong | 5 | 24 | Heavy slashing resistance and charge blocking, with very low offense |
-| Canopy | Strong | 5 | 22 | Projectile interception and charge blocking; limited offense |
-| Seed Lobber | Strong | 5 | 26 | Ranged area explosions |
-| Acorn Knight | Strong | 5 | 24 | Charge pressure, checked by charge blockers |
+| Solar Cleaver | Strong | 5 | 19 | Heavy area melee attack |
+| Durian | Strong | 5 | 21 | Area blunt damage bypasses shield-style slashing resistance |
+| Log | Strong | 5 | 19 | Heavy slashing resistance and charge blocking, with very low offense |
+| Canopy | Strong | 5 | 18 | Projectile interception and charge blocking; limited offense |
+| Seed Lobber | Strong | 5 | 21 | Ranged area explosions |
+| Acorn Knight | Strong | 5 | 19 | Charge pressure, checked by charge blockers |
+
+Strong costs were reduced by 20% on 2026-09-17, rounded to the nearest whole Army-budget point.
 
 Canopy intercepts colliding shots; Lobber-style delayed radius explosions bypass its interception. Enemy costs should be adjusted from playtesting alongside Day budgets.
 

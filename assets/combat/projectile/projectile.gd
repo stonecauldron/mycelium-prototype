@@ -21,7 +21,7 @@ const _MORTAR_SPORE_COLOR := Color("9dcc6a")
 @export var explode_delay: float = 0.0
 ## Keep flying through units, damaging each once (great horn). Unrelated to blunt damage type.
 @export var piercing: bool = false
-## After ballistic apex, steer toward a locked target with no gravity (great bow).
+## After ballistic apex, steer without gravity while the locked target lives (great bow).
 @export var homing: bool = false
 @export var launch_cue: Sfx.Cue = Sfx.Cue.THROW
 
@@ -134,7 +134,8 @@ func _physics_homing_flight(delta: float) -> void:
 		var to_target := (homing_target as Node2D).global_position - global_position
 		if to_target.length_squared() > 1.0:
 			_velocity = to_target.normalized() * speed
-	# Else keep last velocity and fly straight (no gravity).
+	else:
+		_velocity += _gravity_vector() * delta
 	var next_position := global_position + _velocity * delta
 	if next_position.y >= FLOOR_Y:
 		global_position = next_position

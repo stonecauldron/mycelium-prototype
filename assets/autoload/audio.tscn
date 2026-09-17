@@ -1,15 +1,17 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dx0j47fqipxre"]
 
-[ext_resource type="Script" path="res://assets/autoload/audio.gd" id="1"]
+[ext_resource type="Script" uid="uid://ffy5gl3aof27" path="res://assets/autoload/audio.gd" id="1"]
+[ext_resource type="AudioStream" uid="uid://b84mv0rxa2726" path="res://assets/audio/base_bgm.mp3" id="2_uc7dl"]
+[ext_resource type="AudioStream" uid="uid://c00kyhqnxv3vg" path="res://assets/audio/battle_bgm.mp3" id="3_o5ihw"]
 
-[node name="Audio" type="Node"]
+[node name="Audio" type="Node" unique_id=779633477]
 process_mode = 3
 script = ExtResource("1")
+base_music = ExtResource("2_uc7dl")
+battle_music = ExtResource("3_o5ihw")
 
-[node name="MusicA" type="AudioStreamPlayer" parent="."]
+[node name="MusicA" type="AudioStreamPlayer" parent="." unique_id=417738702]
 unique_name_in_owner = true
-bus = &"Music"
 
-[node name="MusicB" type="AudioStreamPlayer" parent="."]
+[node name="MusicB" type="AudioStreamPlayer" parent="." unique_id=792451261]
 unique_name_in_owner = true
-bus = &"Music"

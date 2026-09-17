@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://drm1bg6fdninn" path="res://assets/units/unit.gd" id="1_unit"]
 
-[node name="Unit" type="CharacterBody2D"]
+[node name="Unit" type="CharacterBody2D" unique_id=1768136340]
 collision_layer = 2
 script = ExtResource("1_unit")
 
-[node name="Visual" type="Node2D" parent="."]
+[node name="Visual" type="Node2D" parent="." unique_id=479302221]

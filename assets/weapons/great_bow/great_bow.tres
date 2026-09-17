@@ -8,12 +8,12 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Great Bow"
-great_weapon_sfx = true
 short_description = "Patient, precise, punishing. Homing shot."
 formation_line = 2
 engagement_stance = 3
 attack_style = 2
 damage_stat = 1
+great_weapon_sfx = true
 base_damage = 10
 projectile_range = 1600.0
 attack_interval = 3.5

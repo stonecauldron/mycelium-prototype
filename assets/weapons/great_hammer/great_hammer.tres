@@ -7,9 +7,9 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Great Hammer"
-great_weapon_sfx = true
 short_description = "A crushing great weapon. Blunt force with long reach."
 damage_type = 1
+great_weapon_sfx = true
 targeting_mode = 1
 base_damage = 7
 attack_interval = 2.5

@@ -66,10 +66,10 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -299.0
-offset_top = 193.0
-offset_right = 381.0
-offset_bottom = 546.0
+offset_left = -334.0
+offset_top = 202.0
+offset_right = 346.0
+offset_bottom = 555.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="CocoonMargin" type="MarginContainer" parent="CocoonPanel" unique_id=309864513]
@@ -99,9 +99,9 @@ unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-offset_left = 52.0
+offset_left = 3.0
 offset_top = 116.0
-offset_right = -1244.0
+offset_right = -1293.0
 offset_bottom = 475.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 

@@ -114,6 +114,11 @@ func _run() -> void:
 	if _visual:
 		# Let the native startup fullscreen animation finish before injecting input.
 		await _wait(3.0)
+	if "--title-return-only" in OS.get_cmdline_user_args():
+		await _check_title_return()
+		print("TITLE RETURN CHECK: ", _failures, " failures")
+		get_tree().quit(0 if _failures == 0 else 1)
+		return
 	GameState.reset_run()
 	var base := await _scene("res://assets/base/base.tscn")
 	var menu := base.get_node("RunMenu") as RunMenu
@@ -260,3 +265,27 @@ func _run() -> void:
 	# Let result stingers finish and decoder voices retire before engine shutdown.
 	await _wait(4.1)
 	get_tree().quit(0 if _failures == 0 else 1)
+
+
+func _check_title_return() -> void:
+	for choice in ["Seal", "Starter"]:
+		GameState.reset_run()
+		var base := await _scene("res://assets/base/base.tscn")
+		var colony := base.get_node("%ColonyScreen")
+		if choice == "Starter":
+			var seal := colony.get("_seal_dialog") as SealChoiceDialog
+			seal.call("_on_card_pressed", seal.get("_offers")[0])
+			seal.call("_on_confirm_pressed")
+			await _wait()
+		var menu := base.get_node("RunMenu") as RunMenu
+		await _button(menu, "GearButton")
+		await _button(menu, "TitleButton")
+		_check(menu.get_node("%ConfirmationPage").visible, choice + " choice: title confirmation opens")
+		await _button(menu, "ConfirmButton")
+		await _wait(1.1)
+		_check(get_tree().current_scene.scene_file_path.ends_with("title.tscn") and not get_tree().paused,
+			choice + " choice: return reaches unpaused title")
+		_check(not SceneTransition.is_transitioning(), choice + " choice: title fade completes")
+		await _capture("title-return-" + choice.to_lower())
+	Audio.stop_music()
+	await _wait(0.6)

@@ -8,12 +8,12 @@
 [resource]
 script = ExtResource("1_weapon")
 display_name = "Great Spear"
-great_weapon_sfx = true
 short_description = "Heavy spear. Slow, but it hits hard."
 formation_line = 1
 engagement_stance = 4
 attack_style = 1
 damage_stat = 2
+great_weapon_sfx = true
 base_damage = 10
 projectile_range = 650.0
 attack_interval = 2.5

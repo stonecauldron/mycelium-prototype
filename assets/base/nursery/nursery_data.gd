@@ -53,6 +53,8 @@ const _CAP_MUTATION_PATHS: Array[String] = [
 @export var shop_rerolls_today: int = 0
 
 var _seeded: bool = false
+## Keep the first emitted spore after use so later spores do not repeat the Run's hint.
+var first_lineage_spore: SporeData = null
 ## Monotonic stamp for FIFO eviction when death-spores overflow stock.
 var _next_stock_seq: int = 1
 const _STOCK_SEQ_META := &"_nursery_stock_seq"
@@ -90,6 +92,7 @@ func reset() -> void:
 	_ensure_spore_shop()
 	spore_shop.clear()
 	_seeded = false
+	first_lineage_spore = null
 	_next_stock_seq = 1
 	_ensure_plot_count()
 	_ensure_stock()
@@ -213,6 +216,8 @@ func add_death_spore(unit: RosterUnitData) -> SporeData:
 		_evict_oldest_stock_item()
 	if not add_stock_item(spore):
 		return null
+	if first_lineage_spore == null:
+		first_lineage_spore = spore
 	unit.emitted_death_spore = true
 	return spore
 

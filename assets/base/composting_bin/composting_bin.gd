@@ -88,7 +88,7 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	title.add_theme_color_override("font_color", Color(0.03, 0.035, 0.027, 1))
 	box.add_child(title)
 	var body := StatDisplay.make_rich_label(
-		"Kill a unit for biomass.\nAdults also emit spores.\nChild %s\nAdult %s" % [
+		"Kill a unit for biomass.\nChild %s\nAdult %s\n\nAdults emit plantable spores" % [
 			BiomassDisplay.text(BiomassData.COMPOST_CHILD, true),
 			BiomassDisplay.text(BiomassData.COMPOST_ADULT, true),
 		],

@@ -4,8 +4,10 @@ extends PanelContainer
 signal spore_clicked(card: SporeCard)
 
 const CARD_SIZE := Vector2(200, 100)
+const LINEAGE_HINT_SIZE := Vector2(96, 96)
 const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
+const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
 const _HOVER_AMPLITUDE_PX := 5.0
 const _HOVER_HALF_DURATION_SEC := 1.35
 
@@ -20,6 +22,7 @@ var stock_index: int = 0
 var _pressing: bool = false
 var _did_drag: bool = false
 var _hover_tween: Tween
+var _lineage_hint_arrow: FloatingArrow = null
 var _hover_y: float = 0.0:
 	set(value):
 		_hover_y = value
@@ -48,6 +51,22 @@ func reset_compact_layout() -> void:
 	size = CARD_SIZE
 	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+
+func set_lineage_hint_visible(should_show: bool) -> void:
+	if should_show:
+		if _lineage_hint_arrow == null:
+			_lineage_hint_arrow = _FLOATING_ARROW_SCENE.instantiate() as FloatingArrow
+			_name_label.add_child(_lineage_hint_arrow)
+			_lineage_hint_arrow.set_anchors_preset(Control.PRESET_CENTER_TOP)
+			_lineage_hint_arrow.scale = LINEAGE_HINT_SIZE / FloatingArrow.ARROW_SIZE
+			_lineage_hint_arrow.offset_left = -LINEAGE_HINT_SIZE.x * 0.5
+			_lineage_hint_arrow.offset_right = _lineage_hint_arrow.offset_left + FloatingArrow.ARROW_SIZE.x
+			_lineage_hint_arrow.offset_top = -LINEAGE_HINT_SIZE.y - 4.0
+			_lineage_hint_arrow.offset_bottom = _lineage_hint_arrow.offset_top + FloatingArrow.ARROW_SIZE.y
+		_lineage_hint_arrow.show_arrow()
+	elif _lineage_hint_arrow != null:
+		_lineage_hint_arrow.hide_arrow()
 
 
 func _ready() -> void:

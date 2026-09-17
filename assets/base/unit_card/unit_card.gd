@@ -10,6 +10,7 @@ const _UNIT_CARD_SCENE := preload("res://assets/base/unit_card/unit_card.tscn")
 const _UNIT_DETAIL_CARD_SCENE := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
 const _WEAPON_DETAIL_CARD_SCENE := preload("res://assets/base/weapon_detail_card/weapon_detail_card.tscn")
 const _STAT_CHIP_SCENE := preload("res://assets/ui/stat_chip/stat_chip.tscn")
+const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
 const _DETAIL_TOOLTIP_SEPARATION := 12.0
 var unit_data: Resource
 var source: String = "bench"
@@ -17,6 +18,7 @@ var slot: Node
 var _drag_started_flag: bool = false
 var _portrait_instance: Node2D = null
 var _mutation_chip: Control = null
+var _training_hint_arrow: FloatingArrow = null
 
 @onready var _name_label: Label = %NameLabel
 @onready var _weapon_label: Label = %WeaponLabel
@@ -50,6 +52,22 @@ func reset_compact_layout() -> void:
 	pivot_offset = CARD_SIZE * 0.5
 	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+
+func set_training_hint_visible(should_show: bool) -> void:
+	if should_show:
+		if _training_hint_arrow == null:
+			_training_hint_arrow = _FLOATING_ARROW_SCENE.instantiate() as FloatingArrow
+			# Anchor above the name; the card's PanelContainer would relayout a direct child.
+			_name_label.add_child(_training_hint_arrow)
+			_training_hint_arrow.set_anchors_preset(Control.PRESET_CENTER_TOP)
+			_training_hint_arrow.offset_left = -FloatingArrow.ARROW_SIZE.x * 0.5
+			_training_hint_arrow.offset_right = FloatingArrow.ARROW_SIZE.x * 0.5
+			_training_hint_arrow.offset_top = -FloatingArrow.ARROW_SIZE.y - 4.0
+			_training_hint_arrow.offset_bottom = -4.0
+		_training_hint_arrow.show_arrow()
+	elif _training_hint_arrow != null:
+		_training_hint_arrow.hide_arrow()
 
 
 func _ready() -> void:

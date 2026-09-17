@@ -6,8 +6,8 @@ const BATTLE_REWARD_DAY_1 := 10
 const BATTLE_REWARD_PER_DAY := 5
 ## ± swing applied from easiest→hardest army for that day (0.1 → 0.9…1.1).
 const BATTLE_REWARD_DIFFICULTY_SWING := 0.1
-const COMPOST_CHILD := 2
-const COMPOST_ADULT := 3
+const COMPOST_CHILD := 6
+const COMPOST_ADULT := 8
 const COMMON_SPORE_COST := 4
 const UNCOMMON_SPORE_COST := 8
 const RARE_SPORE_COST := 16

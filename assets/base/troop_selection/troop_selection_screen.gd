@@ -29,6 +29,7 @@ var _compost_bin: CompostingBin = null
 var _bench_slots: Array[DropSlot] = []
 var _cocoon_slots: Array = []
 var _pupation_dialog: PupationConfirmDialog = null
+var _pending_pupation_unit: RosterUnitData = null
 var _compost_dialog: CompostConfirmDialog = null
 var _starter_dialog: StarterChoiceDialog = null
 var _seal_dialog: SealChoiceDialog = null
@@ -60,10 +61,10 @@ func on_screen_shown() -> void:
 	ensure_pending_modals()
 
 
-## Seal then starter picks — safe to call from base even when another tab is active.
+## Starter then seal picks — safe to call from base even when another tab is active.
 func ensure_pending_modals() -> void:
-	_ensure_seal_choice()
 	_ensure_starter_choice()
+	_ensure_seal_choice()
 
 
 func _hydrate_from_troop_data() -> void:
@@ -174,8 +175,6 @@ func _ensure_starter_choice() -> void:
 	# Dialog teardown can defer this until after Base has left the scene tree.
 	if not is_inside_tree():
 		return
-	if GameState.pending_seal_choice:
-		return
 	if GameState.troop.is_seeded():
 		return
 	if _seal_dialog != null and is_instance_valid(_seal_dialog):
@@ -219,6 +218,8 @@ func _on_starter_dialog_closed() -> void:
 	if not GameState.troop.is_seeded():
 		# Recreate if closed without a choice (should not happen for blocking dialog).
 		call_deferred("_ensure_starter_choice")
+	else:
+		call_deferred("_ensure_seal_choice")
 
 
 func _ensure_flag_seals_overlay() -> void:
@@ -245,6 +246,8 @@ func _ensure_seal_choice() -> void:
 		return
 	if not GameState.pending_seal_choice:
 		return
+	if not GameState.troop.is_seeded():
+		return
 	if _starter_dialog != null and is_instance_valid(_starter_dialog):
 		return
 	if _seal_dialog != null and is_instance_valid(_seal_dialog):
@@ -252,7 +255,7 @@ func _ensure_seal_choice() -> void:
 	var offers := SealCatalog.roll_offers(3, GameState.seals)
 	if offers.is_empty():
 		GameState.clear_pending_seal_choice()
-		call_deferred("_ensure_starter_choice")
+		_sync_all_slots()
 		return
 	var dialog: SealChoiceDialog = _SEAL_CHOICE_SCENE.instantiate()
 	# Run-start pick is day 0; mid-run picks (after days 2 / 5 / 8) may reroll.
@@ -277,15 +280,12 @@ func _on_seal_chosen(seal: SealData) -> void:
 	_sync_all_slots()
 	_notify_start_combat_state()
 	_refresh_base_hud()
-	call_deferred("_ensure_starter_choice")
 
 
 func _on_seal_dialog_closed() -> void:
 	_seal_dialog = null
 	if GameState.pending_seal_choice:
 		call_deferred("_ensure_seal_choice")
-	else:
-		call_deferred("_ensure_starter_choice")
 
 
 func _row(source: String) -> Array:
@@ -386,6 +386,8 @@ func _on_squad_unlock_pressed(_slot: DropSlot) -> void:
 
 
 func _sync_all_slots() -> void:
+	if not is_inside_tree():
+		return
 	bench = GameState.troop.bench
 	squad = GameState.troop.squad
 	for slot in _squad_slots:
@@ -432,10 +434,12 @@ func _on_compost_drop(slot: CompostingBin, drag_data: Dictionary) -> void:
 func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
 	var dialog: PupationConfirmDialog = _PUPATION_CONFIRM_SCENE.instantiate()
 	_pupation_dialog = dialog
+	_pending_pupation_unit = unit
 	dialog.confirmed.connect(_on_pupation_confirmed)
 	dialog.tree_exited.connect(_on_pupation_dialog_closed)
 	add_child(dialog)
 	dialog.setup(unit, school)
+	_sync_all_slots()
 	Audio.play_ui_cue(Sfx.Cue.UI_OPEN)
 
 
@@ -451,10 +455,11 @@ func _open_compost_confirm(unit: RosterUnitData) -> void:
 
 func _on_pupation_confirmed(unit: RosterUnitData, school: int) -> void:
 	_pupation_dialog = null
+	_pending_pupation_unit = null
 	if GameState.try_cocoon_for_pupation(unit, school):
 		Audio.play_ui_cue(Sfx.Cue.TRAIN)
-		_sync_all_slots()
-		_refresh_base_hud()
+	_sync_all_slots()
+	_refresh_base_hud()
 
 
 func _on_compost_confirmed(unit: RosterUnitData) -> void:
@@ -467,6 +472,9 @@ func _on_compost_confirmed(unit: RosterUnitData) -> void:
 
 func _on_pupation_dialog_closed() -> void:
 	_pupation_dialog = null
+	if _pending_pupation_unit != null:
+		_pending_pupation_unit = null
+		call_deferred("_sync_all_slots")
 
 
 func _on_compost_dialog_closed() -> void:
@@ -483,12 +491,28 @@ func _sync_slot_card(slot: DropSlot, source: String) -> void:
 	var row := _row(source)
 	var unit: RosterUnitData = row[slot.slot_index] if slot.slot_index < row.size() else null
 	slot.clear_card()
-	if unit == null:
+	# Keep the source slot empty during the training preview, including after drag-end.
+	if unit == null or unit == _pending_pupation_unit:
 		return
 	var card: UnitCard = _UNIT_CARD_SCENE.instantiate()
 	card.setup(unit, source, slot)
 	card.clicked.connect(_on_unit_card_clicked)
 	slot.set_card(card)
+	card.set_training_hint_visible(unit == get_training_hint_unit())
+
+
+func get_training_hint_unit() -> RosterUnitData:
+	if not GameState.show_start_combat_hint or GameState.current_day != 0:
+		return null
+	if GameState.pending_seal_choice:
+		return null
+	# Once the starter Child enters a cocoon, guide the player to the first battle.
+	for row in [GameState.troop.squad, GameState.troop.bench]:
+		for entry in row:
+			var unit := entry as RosterUnitData
+			if unit != null and not unit.is_adult_stage():
+				return unit
+	return null
 
 
 func can_start_combat() -> bool:

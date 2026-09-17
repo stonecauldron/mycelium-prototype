@@ -125,7 +125,11 @@ func _ensure_start_arrow() -> void:
 func _refresh_start_arrow() -> void:
 	if _start_arrow == null:
 		return
-	if GameState.show_start_combat_hint and not _start_combat_button.disabled:
+	if (
+		GameState.show_start_combat_hint
+		and not _start_combat_button.disabled
+		and _colony_screen.get_training_hint_unit() == null
+	):
 		_start_arrow.show_arrow()
 	else:
 		_start_arrow.hide_arrow()

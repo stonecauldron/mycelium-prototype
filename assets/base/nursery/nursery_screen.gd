@@ -20,6 +20,8 @@ const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertili
 const _MUTATION_ICON := preload("res://assets/base/nursery/mutations/mutation_icon.png")
 
 @onready var _stock_row: HBoxContainer = %StockRow
+@onready var _stock_vbox: VBoxContainer = _stock_row.get_parent() as VBoxContainer
+@onready var _stock_row_spacing: int = _stock_vbox.get_theme_constant("separation")
 @onready var _shop_drop_zone: ShopDropZone = %ShopDropZone
 @onready var _shop_row: HBoxContainer = %ShopRow
 @onready var _middle_shop_column: VBoxContainer = %MiddleShopColumn
@@ -220,6 +222,12 @@ func _make_shop_card_spacer() -> Control:
 
 func _sync_stock_slots() -> void:
 	var stock := GameState.nursery.stock
+	var first_spore := GameState.nursery.first_lineage_spore
+	var has_lineage_hint := first_spore != null and stock.slots.has(first_spore)
+	# Leave room above the spore so its arrow does not cover the Inventory heading.
+	_stock_vbox.add_theme_constant_override(
+		"separation", _stock_row_spacing + (int(SporeCard.LINEAGE_HINT_SIZE.y) if has_lineage_hint else 0)
+	)
 	_update_stock_slot_accepts()
 	for i in _stock_slots.size():
 		var slot := _stock_slots[i]
@@ -230,6 +238,7 @@ func _sync_stock_slots() -> void:
 			card.setup(item as SporeData, i)
 			card.spore_clicked.connect(_on_stock_spore_clicked)
 			slot.set_card(card)
+			card.set_lineage_hint_visible(item == GameState.nursery.first_lineage_spore)
 		elif item is FertilizerData:
 			var fert_card: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
 			fert_card.setup(item as FertilizerData, i)

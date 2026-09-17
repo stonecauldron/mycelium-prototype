@@ -78,3 +78,15 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
+
+[node name="TrainingHintMargin" type="MarginContainer" parent="CardPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/margin_top = 12
+
+[node name="TrainingHint" type="Label" parent="CardPanel/Margin/VBox/TrainingHintMargin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 18
+text = "Drag and drop a unit inside a cocoon to train it."
+horizontal_alignment = 1
+autowrap_mode = 3

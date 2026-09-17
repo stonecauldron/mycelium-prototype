@@ -62,11 +62,10 @@ static func from_fallen_unit(unit: RosterUnitData) -> SporeData:
 		lineage = "Unit"
 	var template := _template_for_unit(unit)
 	var spore := SporeData.new()
+	spore.days_to_mature = 1
 	if template != null:
-		spore.days_to_mature = template.days_to_mature
 		spore.biomass_cost = template.biomass_cost
 	else:
-		spore.days_to_mature = 2
 		spore.biomass_cost = 4
 	spore.display_name = "%s's spores" % lineage
 	spore.lineage_name = lineage

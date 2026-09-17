@@ -54,8 +54,6 @@ var plot_index: int = 0
 var is_unlockable: bool = false
 var unlock_cost: int = 0
 var _plot: NurseryPlotData
-## True when the player can afford pay-on-plot fresh planting (hint arrow).
-var _can_afford_fresh_plant: bool = false
 var _base_modulate: Color = Color.WHITE
 var _fertilizer_chips: Array[StatChip] = []
 var _fertilizer_icon_atlas: AtlasTexture
@@ -109,15 +107,15 @@ func _ready() -> void:
 	_refresh_stats_panel_visibility()
 	# Plant-hint Y is measured from ActionSlot; that rect is (0,0) until the first sort.
 	_action_slot.item_rect_changed.connect(_refresh_arrow)
+	GameState.biomass.changed.connect(_refresh_affordability)
 	if is_unlockable or _plot != null:
 		_refresh()
 	call_deferred("_refresh_arrow")
 
 
-func setup(index: int, plot: NurseryPlotData, can_afford_fresh_plant: bool = false) -> void:
+func setup(index: int, plot: NurseryPlotData) -> void:
 	plot_index = index
 	_plot = plot
-	_can_afford_fresh_plant = can_afford_fresh_plant
 	is_unlockable = false
 	unlock_cost = 0
 	if is_node_ready():
@@ -129,7 +127,6 @@ func setup(index: int, plot: NurseryPlotData, can_afford_fresh_plant: bool = fal
 func setup_unlockable(index: int, cost: int) -> void:
 	plot_index = index
 	_plot = null
-	_can_afford_fresh_plant = false
 	is_unlockable = true
 	unlock_cost = cost
 	if is_node_ready():
@@ -221,7 +218,9 @@ func _should_show_harvest_hint() -> bool:
 func _should_show_plant_hint() -> bool:
 	if not GameState.show_plot_plant_hint:
 		return false
-	if is_unlockable or _plot == null or not _can_afford_fresh_plant:
+	if is_unlockable or _plot == null:
+		return false
+	if not GameState.biomass.can_afford(SealModifiers.fresh_plant_cost()):
 		return false
 	return _plot.get_state() == NurseryPlotData.State.EMPTY
 
@@ -272,14 +271,10 @@ func _refresh() -> void:
 		_plant_button.visible = false
 		_unlock_button.visible = true
 		_unlock_cost_label.text = "%d" % unlock_cost
-		var can_unlock := GameState.biomass.can_afford(unlock_cost)
-		_unlock_button.disabled = not can_unlock
 		_unlock_button.mouse_filter = Control.MOUSE_FILTER_STOP
 		modulate = _LOCKED_MODULATE
 		_base_modulate = modulate
-		# Compensate for dimmed card; fade further when unaffordable.
-		var button_mod := Color.WHITE / _LOCKED_MODULATE
-		_unlock_button.modulate = button_mod if can_unlock else button_mod * Color(1, 1, 1, 0.45)
+		_refresh_unlock_affordability()
 		_lock_icon.modulate = Color.WHITE / _LOCKED_MODULATE
 		tooltip_text = ""
 		_refresh_lineage_name()
@@ -344,6 +339,22 @@ func _refresh() -> void:
 	_apply_visual_state()
 	_refresh_arrow()
 	_sync_active_detail_tip()
+
+
+func _refresh_affordability() -> void:
+	if is_unlockable:
+		_refresh_unlock_affordability()
+	else:
+		_refresh_plant_button(_plot != null and _plot.get_state() == NurseryPlotData.State.EMPTY)
+	_refresh_arrow()
+
+
+func _refresh_unlock_affordability() -> void:
+	var can_unlock := GameState.biomass.can_afford(unlock_cost)
+	_unlock_button.disabled = not can_unlock
+	# Compensate for dimmed card; fade further when unaffordable.
+	var button_mod := Color.WHITE / _LOCKED_MODULATE
+	_unlock_button.modulate = button_mod if can_unlock else button_mod * Color(1, 1, 1, 0.45)
 
 
 func _refresh_plant_button(should_show: bool) -> void:

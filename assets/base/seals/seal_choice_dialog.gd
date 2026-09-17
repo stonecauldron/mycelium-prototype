@@ -28,6 +28,7 @@ func setup(offers: Array[SealData], allow_reroll: bool = true) -> void:
 
 
 func _ready() -> void:
+	GameState.biomass.changed.connect(_refresh_reroll_affordability)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	z_index = 100
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

@@ -54,6 +54,7 @@ var _preview_unit: RosterUnitData
 
 
 func _ready() -> void:
+	GameState.biomass.changed.connect(_refresh_affordability)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	z_index = 100
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -99,7 +100,10 @@ func _refresh() -> void:
 	if not is_adult:
 		_fill_current_side()
 	_fill_result_side()
+	_refresh_affordability()
 
+
+func _refresh_affordability() -> void:
 	var can_afford := GameState.biomass.can_afford(WeaponSchool.COCOON_COST)
 	_confirm_button.text = "Confirm %s" % BiomassDisplay.number(WeaponSchool.COCOON_COST)
 	_confirm_button.disabled = not can_afford

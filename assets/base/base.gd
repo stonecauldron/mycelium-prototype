@@ -39,6 +39,7 @@ func _ready() -> void:
 		GameState.reset_run()
 	_camera.make_current()
 	_wire_progress_tracks()
+	GameState.biomass.changed.connect(_refresh_biomass_amount)
 	_refresh_hud()
 	_build_tab_bar()
 	_start_combat_button.pressed.connect(_on_start_combat_pressed)
@@ -141,11 +142,15 @@ func set_start_combat_enabled(enabled: bool) -> void:
 func _refresh_hud() -> void:
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	_day_label.text = "Day %d / %d" % [day, GameState.WIN_DAYS]
-	_biomass_amount.text = BiomassDisplay.number(GameState.biomass.amount)
+	_refresh_biomass_amount()
 	for track in _progress_tracks:
 		track.refresh()
 	if _colony_screen != null:
 		_colony_screen.refresh_unlock_affordability()
+
+
+func _refresh_biomass_amount() -> void:
+	_biomass_amount.text = BiomassDisplay.number(GameState.biomass.amount)
 
 
 func _wire_progress_tracks() -> void:

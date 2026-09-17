@@ -17,6 +17,7 @@ var _reward_day: int = 1
 
 
 func _ready() -> void:
+	GameState.biomass.changed.connect(_refresh_reroll_affordability)
 	if _scout_reroll_button != null:
 		_scout_reroll_button.pressed.connect(_on_scout_reroll_pressed)
 	refresh()

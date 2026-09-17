@@ -52,6 +52,7 @@ func _ready() -> void:
 	_build_stock_slots()
 	_build_plot_tiles()
 	_set_structure_mouse_ignore()
+	GameState.biomass.changed.connect(_refresh_shop_affordability)
 	_hydrate_and_refresh()
 
 
@@ -254,14 +255,13 @@ func _refresh() -> void:
 		expected_visible += 1
 	if _tiles.size() != expected_visible:
 		_build_plot_tiles()
-	var can_afford_fresh := GameState.biomass.can_afford(SealModifiers.fresh_plant_cost())
 	_sync_stock_slots()
 	_refresh_shop_affordability()
 	for i in nursery.unlocked_plot_count:
 		if i >= _tiles.size():
 			break
 		var plot := nursery.plots[i] as NurseryPlotData if i < nursery.plots.size() else null
-		_tiles[i].setup(i, plot, can_afford_fresh)
+		_tiles[i].setup(i, plot)
 	if nursery.can_unlock_plot() and _tiles.size() > nursery.unlocked_plot_count:
 		var unlock_index := nursery.unlocked_plot_count
 		_tiles[unlock_index].setup_unlockable(unlock_index, nursery.next_unlock_cost())
@@ -275,9 +275,6 @@ func _refresh_shop_affordability() -> void:
 	# Keep mouse events so hover preview still works when unaffordable.
 	_reroll_button.disabled = false
 	_reroll_button.modulate = Color.WHITE if can_reroll else Color(1, 1, 1, 0.45)
-	for tile in _tiles:
-		if tile.is_unlockable:
-			tile.setup_unlockable(tile.plot_index, tile.unlock_cost)
 
 
 func _on_reroll_hover_entered() -> void:

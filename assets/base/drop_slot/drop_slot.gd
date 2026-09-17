@@ -56,6 +56,7 @@ func _ready() -> void:
 	_set_children_mouse_filter_ignore(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	mouse_exited.connect(clear_drop_highlight)
+	GameState.biomass.changed.connect(_refresh_unlock_affordability)
 	if _unlock_button != null and not _unlock_button.pressed.is_connected(_on_unlock_pressed):
 		_unlock_button.pressed.connect(_on_unlock_pressed)
 	_update_placeholder()
@@ -96,15 +97,21 @@ func _refresh_unlockable() -> void:
 	if _unlock_button != null:
 		_unlock_button.visible = true
 		_unlock_button.mouse_filter = Control.MOUSE_FILTER_STOP
-		var can_unlock := GameState.biomass.can_afford(unlock_cost)
-		_unlock_button.disabled = not can_unlock
-		var button_mod := Color.WHITE / _LOCKED_MODULATE
-		_unlock_button.modulate = button_mod if can_unlock else button_mod * Color(1, 1, 1, 0.45)
+		_refresh_unlock_affordability()
 	if _unlock_cost_label != null:
 		_unlock_cost_label.text = "%d" % unlock_cost
 	modulate = _LOCKED_MODULATE
 	_base_modulate = modulate
 	tooltip_text = ""
+
+
+func _refresh_unlock_affordability() -> void:
+	if not is_unlockable or _unlock_button == null:
+		return
+	var can_unlock := GameState.biomass.can_afford(unlock_cost)
+	_unlock_button.disabled = not can_unlock
+	var button_mod := Color.WHITE / _LOCKED_MODULATE
+	_unlock_button.modulate = button_mod if can_unlock else button_mod * Color(1, 1, 1, 0.45)
 
 
 func clear_drop_highlight() -> void:

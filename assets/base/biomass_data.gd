@@ -20,7 +20,12 @@ const PLOT_UNLOCK_COST := 8
 const SQUAD_SLOT_UNLOCK_COST := 8
 const STARTING_AMOUNT := 3
 
-@export var amount: int = STARTING_AMOUNT
+@export var amount: int = STARTING_AMOUNT:
+	set(value):
+		if amount == value:
+			return
+		amount = value
+		emit_changed()
 
 
 ## Day-scaled Battle reward before difficulty (upcoming battle day, 1-based).

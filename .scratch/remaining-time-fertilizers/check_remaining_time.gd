@@ -144,7 +144,53 @@ func _run() -> void:
 		errs.append("Greenhouse after Slow and Steady should add")
 	_eq(errs, slow_plot.remaining_days(), 3, "Greenhouse is not multiplied by Slow and Steady")
 
+	await _check_greenhouse_ui_refresh(errs)
 	_finish(errs)
+
+
+func _check_greenhouse_ui_refresh(errs: Array[String]) -> void:
+	GameState.reset_run()
+	GameState.pending_seal_choice = false
+	GameState.troop.seed_if_empty(StarterPackages.build_units(StarterPackages.PACKAGE_IDS[0]))
+	GameState.current_day = 2
+	GameState.prefer_nursery_tab = true
+	var nursery := GameState.nursery
+	nursery.unlocked_plot_count = NurseryData.MAX_PLOT_COUNT
+	for i in 3:
+		if not nursery.plant_spore(i, nursery.make_fresh_common_spore()):
+			errs.append("Greenhouse UI: plant %d failed" % i)
+	nursery.plots[1].tick_day()
+	var slow := load("res://assets/base/nursery/fertilizers/slow_and_steady.tres") as FertilizerData
+	if not nursery.plots[2].apply_fertilizer(slow):
+		errs.append("Greenhouse UI: Slow and Steady failed")
+	var base := preload("res://assets/base/base.tscn").instantiate()
+	get_tree().root.add_child(base)
+	get_tree().current_scene = base
+	var screen := base.get_node("%NurseryScreen") as NurseryScreen
+	var colony := base.get_node("%ColonyScreen") as TroopSelectionScreen
+	_eq(errs, screen._tiles[0]._days_chip._value_label.text, "2", "UI before seal: fresh grow")
+	_eq(errs, screen._tiles[1]._days_chip._value_label.text, "1", "UI before seal: last day")
+	_eq(errs, screen._tiles[2]._days_chip._value_label.text, "4", "UI before seal: Slow and Steady")
+	GameState.pending_seal_choice = true
+	colony.ensure_pending_modals()
+	var greenhouse := load("res://assets/base/seals/greenhouse.tres") as SealData
+	var dialog := colony._seal_dialog
+	dialog._offers = [greenhouse]
+	dialog._build_cards()
+	dialog._on_card_pressed(greenhouse)
+	dialog._on_confirm_pressed()
+	_eq(errs, nursery.plots[0].remaining_days(), 1, "seal selection reduces stored Remaining Time")
+	_eq(errs, screen._tiles[0]._days_chip._value_label.text, "1", "seal selection immediately refreshes countdown")
+	_eq(errs, nursery.plots[1].can_harvest(), true, "seal selection matures last-day grow")
+	_eq(errs, screen._tiles[1]._days_chip.icon, PlotTile._HARVEST_ICON, "seal selection immediately shows harvest icon")
+	_eq(errs, screen._tiles[1]._days_chip._value_label.visible, false, "seal selection hides completed countdown")
+	_eq(errs, screen._tiles[2]._days_chip._value_label.text, "3", "seal selection refreshes fertilized countdown")
+	_eq(errs, screen._tiles[3]._days_chip.visible, false, "empty plot keeps countdown hidden")
+	_eq(errs, GameState.try_add_seal(greenhouse), false, "duplicate Greenhouse rejected")
+	_eq(errs, nursery.plots[0].remaining_days(), 1, "duplicate Greenhouse does not cut again")
+	base.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
 
 
 func _eq(errs: Array[String], got: Variant, expected: Variant, label: String) -> void:

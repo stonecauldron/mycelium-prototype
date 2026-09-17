@@ -53,6 +53,7 @@ func _ready() -> void:
 	_build_plot_tiles()
 	_set_structure_mouse_ignore()
 	GameState.biomass.changed.connect(_refresh_shop_affordability)
+	GameState.seals_changed.connect(_hydrate_and_refresh)
 	_hydrate_and_refresh()
 
 

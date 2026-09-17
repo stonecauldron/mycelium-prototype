@@ -2,6 +2,7 @@ extends Node
 
 ## Session owner for persistent run state.
 signal debug_mode_changed(is_active: bool)
+signal seals_changed()
 
 const WIN_DAYS := 10
 const NURSERY_UNLOCK_DAY := 1
@@ -249,6 +250,7 @@ func try_add_seal(seal: SealData) -> bool:
 			biomass.add(mould)
 			Analytics.biomass_source("Seal", "golden_mould", mould)
 	ensure_nursery_seeded()
+	seals_changed.emit()
 	return true
 
 

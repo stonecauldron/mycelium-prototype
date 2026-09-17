@@ -206,6 +206,7 @@ func _on_starter_package_chosen(package_id: StringName) -> void:
 	_starter_dialog = null
 	var units := StarterPackages.build_units(package_id)
 	GameState.troop.seed_if_empty(units)
+	Audio.play_ui_cue(Sfx.Cue.SEAL)
 	bench = GameState.troop.bench
 	squad = GameState.troop.squad
 	_sync_all_slots()

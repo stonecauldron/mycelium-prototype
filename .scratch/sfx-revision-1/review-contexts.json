@@ -105,7 +105,7 @@
     "harvest",
     "Harvest",
     "Nursery & progression",
-    "Harvesting ready mushrooms into the troop from the Nursery. Receiving the confirmed starter package is silent."
+    "Harvesting ready mushrooms into the troop from the Nursery."
   ],
   [
     "train",
@@ -121,9 +121,9 @@
   ],
   [
     "seal",
-    "Seal acquired",
+    "Seal / starter confirmed",
     "Nursery & progression",
-    "Successfully adding the confirmed Seal to the run."
+    "Successfully adding the confirmed Seal to the run, or confirming the starter package at the beginning of a run."
   ],
   [
     "slash",

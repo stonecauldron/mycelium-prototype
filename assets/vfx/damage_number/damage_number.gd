@@ -1,7 +1,7 @@
 class_name DamageNumber
-extends Node2D
+extends "res://assets/vfx/combat_popup.gd"
 
-const FLOAT_DISTANCE := 48.0
+const FLOAT_DISTANCE := 16.0
 const DURATION := 0.75
 const SPAWN_JITTER_X := 28.0
 const BIG_HIT_THRESHOLD := 8
@@ -27,6 +27,7 @@ func display(amount: int) -> void:
 	if amount >= BIG_HIT_THRESHOLD:
 		_label.modulate = BIG_HIT_COLOR
 	scale = Vector2(start_scale, start_scale)
+	_layout_content(_label)
 
 	var tween := create_tween()
 	tween.set_parallel(true)

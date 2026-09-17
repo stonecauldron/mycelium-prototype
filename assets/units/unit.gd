@@ -70,7 +70,6 @@ const SHAKE_ON_HIT := 0.1
 const SHAKE_ON_DEATH := 0.22
 const SPORE_COLOR := Color("b7b08d")
 const ENEMY_SPORE_COLOR := Color(0.85, 0.28, 0.18, 1.0)
-const CALLOUT_HEIGHT := -140.0
 const SWING_WINDUP_DEG := -120.0
 const SWING_STRIKE_DEG := 120.0
 const SWING_OUT_TIME := 0.14
@@ -273,6 +272,13 @@ func get_bark_anchor() -> Vector2:
 		return global_position + Vector2(0, -120)
 	var bounds := _appearance.global_transform * _appearance.visual_rect_local(false)
 	return Vector2(bounds.get_center().x, bounds.position.y - 16.0)
+
+
+func get_popup_anchor() -> Vector2:
+	if _appearance == null:
+		return global_position + Vector2(0.0, -120.0)
+	var bounds := _appearance.global_transform * _appearance.visual_rect_local(false)
+	return Vector2(bounds.get_center().x, bounds.position.y)
 
 
 func _clear_visual_children() -> void:
@@ -1534,7 +1540,11 @@ func grant_hit_biomass(hit_at: Node2D = null) -> void:
 		return
 	var amount := weapon.biomass_on_hit
 	GameState.biomass.add(amount)
-	var spawn_at := hit_at.global_position if hit_at != null else global_position
+	var spawn_at := get_popup_anchor()
+	if hit_at is Unit or hit_at is FlagBearer:
+		spawn_at = hit_at.get_popup_anchor()
+	elif hit_at != null:
+		spawn_at = hit_at.global_position
 	var stage := _find_combat_stage()
 	if stage != null and not bool(stage.get("sandboxed")):
 		Analytics.note_hit_biomass(amount)
@@ -1550,16 +1560,16 @@ func grant_hit_biomass(hit_at: Node2D = null) -> void:
 
 
 func _spawn_biomass_number(amount: int) -> void:
-	_spawn_biomass_number_at(global_position, amount)
+	_spawn_biomass_number_at(get_popup_anchor(), amount)
 
 
-func _spawn_biomass_number_at(at_global: Vector2, amount: int) -> void:
+func _spawn_biomass_number_at(anchor_global: Vector2, amount: int) -> void:
 	var world := _get_world_node()
 	if world == null or amount <= 0:
 		return
 	var number: BiomassNumber = _BIOMASS_NUMBER_SCENE.instantiate()
 	world.add_child(number)
-	number.global_position = at_global + Vector2(0, -128)
+	number.global_position = anchor_global
 	number.display(amount)
 
 
@@ -1773,7 +1783,7 @@ func _spawn_damage_number(amount: int) -> void:
 
 	var number: DamageNumber = _DAMAGE_NUMBER_SCENE.instantiate()
 	world.add_child(number)
-	number.global_position = global_position + Vector2(0, -72)
+	number.global_position = get_popup_anchor()
 	number.display(amount)
 
 
@@ -1790,7 +1800,7 @@ func _spawn_combat_callout(text: String, kind: CombatCallout.Kind) -> void:
 		return
 	var callout: CombatCallout = _COMBAT_CALLOUT_SCENE.instantiate()
 	world.add_child(callout)
-	callout.global_position = global_position + Vector2(0.0, CALLOUT_HEIGHT)
+	callout.global_position = get_popup_anchor()
 	callout.display(text, kind)
 
 

@@ -1,7 +1,7 @@
 class_name SporeGenerated
-extends Node2D
+extends "res://assets/vfx/combat_popup.gd"
 
-const FLOAT_DISTANCE := 48.0
+const FLOAT_DISTANCE := 16.0
 const DURATION := 0.9
 const SPAWN_JITTER_X := 28.0
 const COLOR := Color(0.92, 0.86, 0.72, 1.0)
@@ -19,6 +19,7 @@ func display(tint: Color = Color.WHITE) -> void:
 	position.x += randf_range(-SPAWN_JITTER_X, SPAWN_JITTER_X)
 	rotation_degrees = randf_range(-10.0, 10.0)
 	scale = Vector2(1.45, 1.45)
+	_layout_content(_row)
 
 	var tween := create_tween()
 	tween.set_parallel(true)

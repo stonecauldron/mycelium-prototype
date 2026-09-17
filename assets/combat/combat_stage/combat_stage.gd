@@ -361,7 +361,7 @@ func _show_acid_rain_callout() -> void:
 	var callout: CombatCallout = _COMBAT_CALLOUT_SCENE.instantiate()
 	_hud.add_child(callout)
 	callout.position = Vector2(960.0, 220.0)
-	callout.display("Acid Rain!", CombatCallout.Kind.STREAK)
+	callout.display("Acid Rain!", CombatCallout.Kind.STREAK, false)
 
 
 func _acid_rain_damage() -> int:
@@ -454,7 +454,7 @@ func record_biomass_yield(amount: int) -> void:
 	_refresh_biomass_hud()
 
 
-func _spawn_biomass_number(at_global: Vector2, amount: int) -> void:
+func _spawn_biomass_number(anchor_global: Vector2, amount: int) -> void:
 	if amount <= 0:
 		return
 	var world := get_node_or_null("World") as Node2D
@@ -462,7 +462,7 @@ func _spawn_biomass_number(at_global: Vector2, amount: int) -> void:
 		return
 	var number: BiomassNumber = _BIOMASS_NUMBER_SCENE.instantiate()
 	world.add_child(number)
-	number.global_position = at_global + Vector2(0, -128)
+	number.global_position = anchor_global
 	number.display(amount)
 
 
@@ -586,7 +586,7 @@ func _on_unit_died(unit: Unit, is_player: bool) -> void:
 			_fallen_units.append(roster)
 			GameState.troop.remove_unit(roster)
 			if not wants_zombie_respawn:
-				_try_emit_death_spore(roster, unit.global_position)
+				_try_emit_death_spore(roster, unit.get_popup_anchor())
 		# Enemy deaths no longer drip biomass; Battle reward is granted on victory.
 	if wants_zombie_respawn:
 		_schedule_zombie_respawn(roster, is_player, unit.squad_index)
@@ -594,24 +594,23 @@ func _on_unit_died(unit: Unit, is_player: bool) -> void:
 		_check_battle_end()
 
 
-func _try_emit_death_spore(roster: RosterUnitData, at_global: Vector2) -> void:
+func _try_emit_death_spore(roster: RosterUnitData, anchor_global: Vector2) -> void:
 	if roster == null or not roster.is_adult_stage():
 		return
 	var spore := GameState.nursery.add_death_spore(roster)
 	if spore == null:
 		return
-	_spawn_spore_generated(at_global, spore.tint)
+	_spawn_spore_generated(anchor_global, spore.tint)
 	Audio.play_cue(Sfx.Cue.SPORE)
 
 
-func _spawn_spore_generated(at_global: Vector2, tint: Color = Color.WHITE) -> void:
+func _spawn_spore_generated(anchor_global: Vector2, tint: Color = Color.WHITE) -> void:
 	var world := get_node_or_null("World") as Node2D
 	if world == null:
 		return
 	var callout: SporeGenerated = _SPORE_GENERATED_SCENE.instantiate()
 	world.add_child(callout)
-	# Higher than biomass/damage numbers so the wider label doesn't clip the body.
-	callout.global_position = at_global + Vector2(0, -220)
+	callout.global_position = anchor_global
 	callout.display(tint)
 
 
@@ -891,7 +890,7 @@ func _spawn_victory_callout() -> void:
 	hud.add_child(callout)
 	var viewport_size := get_viewport().get_visible_rect().size
 	callout.position = viewport_size * 0.5 + Vector2(0.0, -48.0)
-	callout.display("Victory!", CombatCallout.Kind.VICTORY)
+	callout.display("Victory!", CombatCallout.Kind.VICTORY, false)
 
 
 func _refresh_unit_process_order() -> void:

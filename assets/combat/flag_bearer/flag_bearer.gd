@@ -87,6 +87,11 @@ func get_bark_anchor() -> Vector2:
 	return Vector2(bounds.get_center().x, bounds.position.y - 16.0)
 
 
+func get_popup_anchor() -> Vector2:
+	var bounds := _shroom.global_transform * _shroom.get_rect()
+	return Vector2(bounds.get_center().x, bounds.position.y)
+
+
 func _reset_shroom_rest_pose() -> void:
 	if _shroom == null:
 		return
@@ -347,7 +352,7 @@ func _spawn_damage_number(amount: int) -> void:
 
 	var number: DamageNumber = _DAMAGE_NUMBER_SCENE.instantiate()
 	world.add_child(number)
-	number.global_position = global_position + Vector2(0, -72)
+	number.global_position = get_popup_anchor()
 	number.display(amount)
 
 

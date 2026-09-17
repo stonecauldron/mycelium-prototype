@@ -1,7 +1,7 @@
 class_name BiomassNumber
-extends Node2D
+extends "res://assets/vfx/combat_popup.gd"
 
-const FLOAT_DISTANCE := 48.0
+const FLOAT_DISTANCE := 16.0
 const DURATION := 0.75
 const SPAWN_JITTER_X := 28.0
 const COLOR := Color(1.0, 0.88, 0.28, 1.0)
@@ -18,6 +18,7 @@ func display(amount: int) -> void:
 	position.x += randf_range(-SPAWN_JITTER_X, SPAWN_JITTER_X)
 	rotation_degrees = randf_range(-10.0, 10.0)
 	scale = Vector2(1.6, 1.6)
+	_layout_content(_row)
 
 	var tween := create_tween()
 	tween.set_parallel(true)

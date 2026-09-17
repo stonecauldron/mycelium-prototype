@@ -1,9 +1,9 @@
 class_name CombatCallout
-extends Node2D
+extends "res://assets/vfx/combat_popup.gd"
 
 enum Kind { STREAK, FALLEN, VICTORY }
 
-const FLOAT_DISTANCE := 40.0
+const FLOAT_DISTANCE := 16.0
 const STREAK_DURATION := 1.15
 const FALLEN_DURATION := 1.35
 const VICTORY_DURATION := 1.6
@@ -12,12 +12,12 @@ const STREAK_COLOR := Color(1.0, 0.88, 0.35, 1.0)
 const FALLEN_COLOR := Color(0.75, 0.82, 0.95, 1.0)
 const VICTORY_COLOR := Color(1.0, 0.92, 0.35, 1.0)
 const VICTORY_FONT_SIZE := 80
-const VICTORY_FLOAT := 28.0
+const VICTORY_FLOAT := 16.0
 
 @onready var _label: Label = $Label
 
 
-func display(text: String, kind: Kind = Kind.STREAK) -> void:
+func display(text: String, kind: Kind = Kind.STREAK, above_anchor: bool = true) -> void:
 	_label.text = text
 	if kind != Kind.VICTORY:
 		position.x += randf_range(-SPAWN_JITTER_X, SPAWN_JITTER_X)
@@ -50,6 +50,7 @@ func display(text: String, kind: Kind = Kind.STREAK) -> void:
 			float_distance = VICTORY_FLOAT
 
 	scale = Vector2(start_scale, start_scale)
+	_layout_content(_label, above_anchor)
 
 	var tween := create_tween()
 	tween.set_ignore_time_scale(true)

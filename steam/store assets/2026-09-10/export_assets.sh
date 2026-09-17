@@ -15,6 +15,7 @@ export_png sources/header_generated.png 920x430 upload/store/store_capsule_heade
 export_png sources/main_generated.png 1232x706 upload/store/store_capsule_main_en.png
 export_png sources/small_generated.png 462x174 upload/store/store_capsule_Small_en.png
 export_png sources/vertical_generated.png 748x896 upload/store/store_capsule_vertical_en.png
+export_png sources/square_generated.png 800x800 upload/store/store_capsule_square_en.png
 export_png sources/page_background_generated.png 1438x810 upload/store/store_page_background_en.png
 export_png sources/library_generated.png 600x900 upload/library/library_capsule_en.png
 export_png sources/hero_final_generated.png 3840x1240 upload/library/library_hero_en.png

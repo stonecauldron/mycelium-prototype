@@ -13,6 +13,10 @@ The `upload/` folder contains the four required Store capsules, four required Li
 - Page Background: `upload/store/store_page_background_en.png` — 1438 × 810. Ambient forest artwork without characters, equipment, or text; subdued colors and lighting keep it quiet behind the page content. Steam applies its own blue tint and edge fade after upload.
 - Screenshots: `upload/store/screenshots/1.png` through `5.png` — 1920 × 1080 each. These are existing gameplay captures from the repository, resized with negligible edge cropping to exact 16:9. No gameplay imagery was generated.
 
+## Additional capsule formats
+
+- Square Capsule (added 17 September 2026): `upload/store/store_capsule_square_en.png` — 800 × 800. Uses the two-line logo and preserves all seven fighters in the same forest composition. This is an additional requested marketing format, separate from Steam's required capsule slots.
+
 ## Library uploads
 
 - Library Capsule: `upload/library/library_capsule_en.png` — 600 × 900.

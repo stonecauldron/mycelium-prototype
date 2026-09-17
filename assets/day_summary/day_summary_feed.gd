@@ -87,7 +87,7 @@ static func add_unit_emerged_from_pupation(unit: RosterUnitData, _school: int) -
 	if unit.weapon != null and not unit.weapon.display_name.is_empty():
 		weapon_name = unit.weapon.display_name
 	entries.append({
-		"text": "%s emerged with %s." % [
+		"text": "%s emerged with %s" % [
 			unit.display_name,
 			weapon_name,
 		],

@@ -6,8 +6,8 @@ enum Kind { OPENING, KILL, MOURNING, VICTORY }
 const LINES := {
 	Kind.OPENING: [
 		"No mercy for the Sun worshippers!",
-		"Chlorophyll is nothing but deception.",
-		"Mycelium will prevail.",
+		"Chlorophyll only serves deception.",
+		"The Hallowed Mycelium will prevail.",
 		"Onward, Comrades!",
 		"May their roots tremble in fear!",
 		"Forward! Let the Hallowed Mycelium bless us!",
@@ -36,8 +36,8 @@ const LINES := {
 		"Praise the Hallowed Mycelium!",
 		"The Holy Pruning will carry on!",
 		"With each triumph, the Hallowed Mycelium expands its reach!",
-		"Victory, comrades!",
-		"The Sun has lost!",
+		"Rejoice in our victory, comrades!",
+		"Rot and decomposition!",
 		"Let the fallen rest.",
 		"A glorious day for the Holy Pruning!",
 		"Fungus vult!",

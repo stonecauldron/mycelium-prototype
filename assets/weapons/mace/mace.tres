@@ -9,6 +9,7 @@ script = ExtResource("1_weapon")
 display_name = "Mace"
 short_description = "Like a sword, but blunt."
 damage_type = 1
+base_damage = 3
 attack_interval = 1.25
 appearance_scene = ExtResource("2_appear")
 icon = ExtResource("3_icon")

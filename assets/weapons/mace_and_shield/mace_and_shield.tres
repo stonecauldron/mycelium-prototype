@@ -10,6 +10,7 @@ script = ExtResource("1_weapon")
 display_name = "Mace and Shield"
 short_description = "Blunt mace strikes with shield protection. Blunt hits bypass the shield."
 damage_type = 1
+base_damage = 3
 attack_interval = 1.25
 biomass_cost = 4
 incoming_damage_multiplier = 0.5

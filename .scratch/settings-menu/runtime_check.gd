@@ -58,6 +58,9 @@ func _click(position: Vector2) -> void:
 
 
 func _button(menu: RunMenu, name: String) -> void:
+	# Let containers finish laying out newly visible pages before reading hitboxes.
+	await get_tree().process_frame
+	await get_tree().process_frame
 	var button := menu.get_node("%" + name) as Control
 	await _click(button.get_global_rect().get_center())
 
@@ -114,9 +117,12 @@ func _run() -> void:
 	if _visual:
 		# Let the native startup fullscreen animation finish before injecting input.
 		await _wait(3.0)
+	await _check_title_return()
+	await _check_title_settings()
 	if "--title-return-only" in OS.get_cmdline_user_args():
-		await _check_title_return()
 		print("TITLE RETURN CHECK: ", _failures, " failures")
+		Audio.stop_music()
+		await _wait(0.6)
 		get_tree().quit(0 if _failures == 0 else 1)
 		return
 	GameState.reset_run()
@@ -146,7 +152,7 @@ func _run() -> void:
 	await _button(menu, "SettingsButton")
 	_check(menu.get_node("%SettingsPage").visible and get_tree().paused, "Settings opens without unpausing")
 	await _capture("settings")
-	if _visual and "--confirmation-only" not in OS.get_cmdline_user_args():
+	if _visual and "--confirmation-only" not in OS.get_cmdline_user_args() and "--skip-fullscreen" not in OS.get_cmdline_user_args():
 		var before_fullscreen := SettingsServer.is_fullscreen()
 		await _button(menu, "FullscreenButton")
 		await _wait(2.0)
@@ -257,7 +263,7 @@ func _run() -> void:
 		_check(get_tree().current_scene.scene_file_path.ends_with("title.tscn") and not get_tree().paused, "%dx combat return reaches unpaused title" % speed)
 		_check(Engine.time_scale == 1.0 and Engine.physics_ticks_per_second == normal_ticks and Engine.max_physics_steps_per_frame == normal_steps, "%dx exit restores engine timing" % speed)
 		_check(GameState.combat_fast_forward == speed, "%dx preference survives exit" % speed)
-	for path in ["title/title", "day_summary/day_summary", "victory/victory", "game_over/game_over"]:
+	for path in ["day_summary/day_summary", "victory/victory", "game_over/game_over"]:
 		var screen := await _scene("res://assets/%s.tscn" % path)
 		_check(screen.find_child("RunMenu", true, false) == null, "%s has no in-run menu" % path)
 	print("SETTINGS MENU CHECK: ", _failures, " failures")
@@ -287,5 +293,29 @@ func _check_title_return() -> void:
 			choice + " choice: return reaches unpaused title")
 		_check(not SceneTransition.is_transitioning(), choice + " choice: title fade completes")
 		await _capture("title-return-" + choice.to_lower())
-	Audio.stop_music()
-	await _wait(0.6)
+
+
+func _check_title_settings() -> void:
+	var title := await _scene("res://assets/title/title.tscn")
+	var menu := title.get_node("RunMenu") as RunMenu
+	var gear := menu.get_node("%GearButton") as Button
+	_check(gear.is_visible_in_tree() and gear.get_global_rect().get_center().x > get_viewport().get_visible_rect().size.x * 0.9,
+		"Title has a visible gear in the upper right")
+	await _capture("title")
+	await _button(menu, "GearButton")
+	_check(menu.get_node("%SettingsPage").is_visible_in_tree() and not menu.get_node("%MenuPage").is_visible_in_tree(),
+		"Title gear opens Settings directly")
+	_check(not menu.get_node("%TitleButton").is_visible_in_tree(), "Title Settings has no Return to title action")
+	_check(is_equal_approx(menu.get_node("%SFXVolume").value, SettingsServer.sfx_volume * 100.0)
+		and is_equal_approx(menu.get_node("%MusicVolume").value, SettingsServer.music_volume * 100.0),
+		"Title Settings reflects saved audio preferences")
+	await _capture("title-settings")
+	await _button(menu, "BackButton")
+	_check(not menu.get_node("%Overlay").visible and not get_tree().paused, "Title Settings Back closes and releases pause")
+	await _key(KEY_ESCAPE)
+	_check(menu.get_node("%SettingsPage").visible and get_tree().paused, "Title Escape opens Settings")
+	await _key(KEY_ESCAPE)
+	_check(not menu.get_node("%Overlay").visible and not get_tree().paused, "Title Escape closes Settings")
+	await _button(menu, "GearButton")
+	await _click(Vector2(8, 8))
+	_check(not menu.get_node("%Overlay").visible and not get_tree().paused, "Title outside click closes Settings")

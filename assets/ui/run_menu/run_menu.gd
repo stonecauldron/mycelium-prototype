@@ -8,6 +8,7 @@ enum Page { MENU, SETTINGS, RETURN_TO_TITLE, QUIT }
 const _TITLE_SCENE := "res://assets/title/title.tscn"
 
 @export var intent_scene: String = "base"
+@export var settings_only: bool = false
 
 @onready var _gear: Button = %GearButton
 @onready var _overlay: Control = %Overlay
@@ -42,7 +43,7 @@ func _ready() -> void:
 	%TitleButton.pressed.connect(_show_page.bind(Page.RETURN_TO_TITLE))
 	%QuitButton.pressed.connect(_show_page.bind(Page.QUIT))
 	%QuitButton.visible = not OS.has_feature("web")
-	%BackButton.pressed.connect(_show_page.bind(Page.MENU))
+	%BackButton.pressed.connect(_on_settings_back_pressed)
 	_cancel_button.pressed.connect(_show_page.bind(Page.MENU))
 	_confirm_button.pressed.connect(_confirm_exit)
 	# Press on input-down so web fullscreen runs within the browser's user gesture.
@@ -66,7 +67,7 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			if not _open:
 				open_menu()
-			elif _page != Page.MENU:
+			elif not settings_only and _page != Page.MENU:
 				_show_page(Page.MENU)
 			else:
 				close_menu()
@@ -109,8 +110,8 @@ func open_menu() -> void:
 	_gear.focus_mode = Control.FOCUS_NONE
 	_overlay.show()
 	Audio.play_ui_cue(Sfx.Cue.UI_OPEN)
-	_page = Page.MENU
-	_show_page(Page.MENU)
+	_page = Page.SETTINGS if settings_only else Page.MENU
+	_show_page(_page)
 
 
 func close_menu() -> void:
@@ -192,6 +193,13 @@ func _on_music_volume_changed(value: float) -> void:
 
 func _toggle_fullscreen() -> void:
 	SettingsServer.set_fullscreen(not SettingsServer.is_fullscreen())
+
+
+func _on_settings_back_pressed() -> void:
+	if settings_only:
+		close_menu()
+	else:
+		_show_page(Page.MENU)
 
 
 func _on_dim_gui_input(event: InputEvent) -> void:

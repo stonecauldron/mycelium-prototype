@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://ct4bgro45wopc" path="res://assets/title/title.gd" id="1_title"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://b6mfiqthp4vam" path="res://assets/base/background/bg_battlegrounds.png" id="3_pajnb"]
+[ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="4_run_menu"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="6_paper"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
@@ -94,3 +95,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Quit"
+
+[node name="RunMenu" parent="." instance=ExtResource("4_run_menu")]
+intent_scene = "title"
+settings_only = true

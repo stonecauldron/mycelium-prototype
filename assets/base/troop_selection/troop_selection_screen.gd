@@ -171,6 +171,9 @@ func _build_cocoon_ui() -> void:
 
 
 func _ensure_starter_choice() -> void:
+	# Dialog teardown can defer this until after Base has left the scene tree.
+	if not is_inside_tree():
+		return
 	if GameState.pending_seal_choice:
 		return
 	if GameState.troop.is_seeded():
@@ -236,6 +239,9 @@ func _refresh_flag_seals() -> void:
 
 
 func _ensure_seal_choice() -> void:
+	# Dialog teardown can defer this until after Base has left the scene tree.
+	if not is_inside_tree():
+		return
 	if not GameState.pending_seal_choice:
 		return
 	if _starter_dialog != null and is_instance_valid(_starter_dialog):

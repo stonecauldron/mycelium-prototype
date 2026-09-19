@@ -1,5 +1,7 @@
 # Image generation prompts
 
+The 900 × 1200 IGDB Cover added on 19 September 2026 uses `sources/igdb_cover_generated.png`; its full built-in imagegen prompt is recorded in `sources/igdb_cover_prompt.txt`.
+
 The 800 × 800 Square Capsule added on 17 September 2026 uses `sources/square_generated.png`; its full built-in imagegen prompt is recorded in `sources/square_prompt.txt`.
 
 The ambient Store Page Background uses `sources/page_background_generated.png`; its full built-in imagegen prompt is recorded in `sources/page_background_prompt.txt`.

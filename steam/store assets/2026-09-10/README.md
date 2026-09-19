@@ -26,6 +26,12 @@ The `upload/` folder contains the four required Store capsules, four required Li
 
 In Steam's Library logo placement tool, choose **centered top**. The hero keeps the fighters centered and the upper canopy quiet for the separate logo. The documented central 860 × 380 crop is provided in the preview folder for inspection.
 
+## IGDB cover
+
+- Cover (added 19 September 2026): `upload/igdb/igdb_cover_en.png` — 900 × 1200, opaque RGB PNG. Uses the supplied game artwork and prominent two-line Auto Shrooms title, with all seven fighters visible and no platform marks, ratings, watermarks, or promotional text. Prepared for upload to IGDB.
+- [IGDB cover guidelines](https://github.com/twitchtv/igdb-contribution-guidelines/wiki/Cover), checked 19 September 2026, prefer 3:4 artwork at a minimum of 600 × 800 in JPG or PNG format. This export has the exact preferred ratio and exceeds the minimum resolution.
+- Generated master: `sources/igdb_cover_generated.png`. The built-in imagegen prompt is recorded in `sources/igdb_cover_prompt.txt`.
+
 ## Art direction and validation
 
 The capsule adaptations preserve the opposing mushroom/plant teams, seven character identities, central golden tunnel, dark root canopy, and cyan mushrooms. Portraits reflow the title into two lines and extend the environment vertically. The Small Capsule removes all fighters and equipment, using a large title over the forest; legibility was checked at Steam's 120 × 45 and 184 × 69 display sizes.

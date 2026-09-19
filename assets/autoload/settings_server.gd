@@ -14,6 +14,14 @@ var show_tutorial: bool = true:
 		_show_tutorial = value
 		_save()
 
+var master_volume: float = 1.0:
+	get:
+		return _master_volume
+	set(value):
+		_master_volume = _valid_volume(value)
+		_apply_volume(&"Master", _master_volume)
+		_save()
+
 var sfx_volume: float = 1.0:
 	get:
 		return _sfx_volume
@@ -32,6 +40,7 @@ var music_volume: float = 1.0:
 
 var _show_tutorial: bool = true
 var _fullscreen: bool = false
+var _master_volume: float = 1.0
 var _sfx_volume: float = 1.0
 var _music_volume: float = 1.0
 
@@ -39,6 +48,7 @@ var _music_volume: float = 1.0
 func _ready() -> void:
 	_fullscreen = is_fullscreen()
 	_load()
+	_apply_volume(&"Master", _master_volume)
 	_apply_volume(&"SFX", _sfx_volume)
 	_apply_volume(&"Music", _music_volume)
 
@@ -74,6 +84,7 @@ func _load() -> void:
 	if err != OK:
 		return
 	_show_tutorial = cfg.get_value(SECTION, "show_tutorial", true)
+	_master_volume = _valid_volume(cfg.get_value("audio", "master_volume", 1.0))
 	_sfx_volume = _valid_volume(cfg.get_value("audio", "sfx_volume", 1.0))
 	_music_volume = _valid_volume(cfg.get_value("audio", "music_volume", 1.0))
 	if not OS.has_feature("web") and cfg.has_section_key("display", "fullscreen"):
@@ -85,6 +96,7 @@ func _save() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(PATH)  # Preserve other keys if present; ignore missing file.
 	cfg.set_value(SECTION, "show_tutorial", _show_tutorial)
+	cfg.set_value("audio", "master_volume", _master_volume)
 	cfg.set_value("audio", "sfx_volume", _sfx_volume)
 	cfg.set_value("audio", "music_volume", _music_volume)
 	if not OS.has_feature("web"):

@@ -75,13 +75,13 @@ Every call chooses a fresh pitch within ±10% of normal (0.9–1.1×), including
 
 For a scene-owned `AudioStreamPlayer` or animation audio track, set its bus to **SFX** and choose the appropriate process mode. Music uses the persistent Audio service. Both buses feed **Master**.
 
-Master applies a fixed **−6 dB** trim before a **−1 dB** peak limiter, protecting the combined music/SFX mix. This is authored as the Master limiter's `pre_gain_db`, independent of the saved volume sliders. Keep Master at unity gain so its output respects that ceiling. The SFX limiter still controls crowded effects before they join the music.
+Master applies a fixed **−6 dB** trim before a **−1 dB** peak limiter, protecting the combined music/SFX mix. This is authored as the Master limiter's `pre_gain_db`, independent of the saved volume sliders. The Master slider attenuates the combined output and is capped at unity gain so its output respects that ceiling. The SFX limiter still controls crowded effects before they join the music.
 
 Web uses **Stream** playback (`audio/general/default_playback_type.web=0`) so both limiters and the Master trim actually run; Godot's default Web Sample playback bypasses bus effects. The Web export already enables threads for Stream playback. Validate browser audio when changing these settings.
 
 ## Settings
 
-The Base/combat menu exposes SFX and Music sliders from 0–100%. They apply immediately and are saved in the existing `user://settings.cfg`, independently of Run data. Both default to 100%; 0% mutes the corresponding bus. `SettingsServer.sfx_volume` and `SettingsServer.music_volume` use normalized values from 0.0–1.0.
+The title/Base/combat settings menu exposes Master, SFX, and Music sliders from 0–100%. They apply immediately and are saved in the existing `user://settings.cfg`, independently of Run data. All default to 100%; 0% mutes the corresponding bus. Master controls the combined output without changing the SFX/Music balance. `SettingsServer.master_volume`, `SettingsServer.sfx_volume`, and `SettingsServer.music_volume` use normalized values from 0.0–1.0.
 
 ## Verification
 

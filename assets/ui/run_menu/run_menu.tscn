@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://ddnoqvcffekxj" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 7.png" id="6_exit"]
 [ext_resource type="Texture2D" uid="uid://pmej1l8yxfyh" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 8.png" id="8_cancel"]
 [ext_resource type="FontFile" uid="uid://cwyplmcwdoujh" path="res://assets/fonts/SpicyRice-Regular.ttf" id="10_heading_font"]
+[ext_resource type="Texture2D" uid="uid://b3j7ianjwcwe" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 9.png" id="11_volume_track"]
+[ext_resource type="Texture2D" uid="uid://bhm55aruevryv" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 6.png" id="12_volume_fill"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBox_gear"]
 content_margin_left = 10.0
@@ -15,23 +17,15 @@ content_margin_top = 6.0
 content_margin_right = 10.0
 content_margin_bottom = 8.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_volume_track"]
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.48, 0.45, 0.34, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_left = 4
-corner_radius_bottom_right = 4
+[sub_resource type="StyleBoxTexture" id="StyleBox_volume_track"]
+content_margin_top = 11.0
+content_margin_bottom = 11.0
+texture = ExtResource("11_volume_track")
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_volume_fill"]
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.16, 0.36, 0.31, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_left = 4
-corner_radius_bottom_right = 4
+[sub_resource type="StyleBoxTexture" id="StyleBox_volume_fill"]
+content_margin_top = 11.0
+content_margin_bottom = 11.0
+texture = ExtResource("12_volume_fill")
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper"]
 content_margin_left = 48.0
@@ -201,6 +195,7 @@ text = "Quit"
 [node name="SettingsPage" type="VBoxContainer" parent="Root/Overlay/Center/Panel/Content" unique_id=805163549]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 20
@@ -215,24 +210,61 @@ theme_override_colors/font_hover_color = Color(0.18, 0.16, 0.14, 1)
 theme_override_font_sizes/font_size = 28
 text = "Fullscreen"
 
+[node name="MasterRow" type="HBoxContainer" parent="Root/Overlay/Center/Panel/Content/SettingsPage"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Root/Overlay/Center/Panel/Content/SettingsPage/MasterRow"]
+custom_minimum_size = Vector2(108, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.294, 0.176, 0.204, 1)
+theme_override_font_sizes/font_size = 28
+text = "Master"
+
+[node name="MasterVolume" type="HSlider" parent="Root/Overlay/Center/Panel/Content/SettingsPage/MasterRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tooltip_text = "Overall volume for music and sound effects"
+theme_override_constants/grabber_offset = 6
+theme_override_styles/slider = SubResource("StyleBox_volume_track")
+theme_override_styles/grabber_area = SubResource("StyleBox_volume_fill")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBox_volume_fill")
+value = 100.0
+scrollable = false
+
+[node name="MasterPercent" type="Label" parent="Root/Overlay/Center/Panel/Content/SettingsPage/MasterRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(68, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.294, 0.176, 0.204, 1)
+theme_override_font_sizes/font_size = 26
+text = "100%"
+horizontal_alignment = 2
+
 [node name="SFXRow" type="HBoxContainer" parent="Root/Overlay/Center/Panel/Content/SettingsPage"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Label" type="Label" parent="Root/Overlay/Center/Panel/Content/SettingsPage/SFXRow"]
-custom_minimum_size = Vector2(92, 0)
+custom_minimum_size = Vector2(108, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_colors/font_color = Color(0.294, 0.176, 0.204, 1)
 theme_override_font_sizes/font_size = 28
 text = "SFX"
 
 [node name="SFXVolume" type="HSlider" parent="Root/Overlay/Center/Panel/Content/SettingsPage/SFXRow"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 tooltip_text = "Sound effects volume"
+theme_override_constants/grabber_offset = 6
 theme_override_styles/slider = SubResource("StyleBox_volume_track")
 theme_override_styles/grabber_area = SubResource("StyleBox_volume_fill")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBox_volume_fill")
@@ -243,7 +275,7 @@ scrollable = false
 unique_name_in_owner = true
 custom_minimum_size = Vector2(68, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_colors/font_color = Color(0.294, 0.176, 0.204, 1)
 theme_override_font_sizes/font_size = 26
 text = "100%"
 horizontal_alignment = 2
@@ -254,18 +286,20 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Label" type="Label" parent="Root/Overlay/Center/Panel/Content/SettingsPage/MusicRow"]
-custom_minimum_size = Vector2(92, 0)
+custom_minimum_size = Vector2(108, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_colors/font_color = Color(0.294, 0.176, 0.204, 1)
 theme_override_font_sizes/font_size = 28
 text = "Music"
 
 [node name="MusicVolume" type="HSlider" parent="Root/Overlay/Center/Panel/Content/SettingsPage/MusicRow"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 tooltip_text = "Music volume"
+theme_override_constants/grabber_offset = 6
 theme_override_styles/slider = SubResource("StyleBox_volume_track")
 theme_override_styles/grabber_area = SubResource("StyleBox_volume_fill")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBox_volume_fill")
@@ -276,7 +310,7 @@ scrollable = false
 unique_name_in_owner = true
 custom_minimum_size = Vector2(68, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_colors/font_color = Color(0.294, 0.176, 0.204, 1)
 theme_override_font_sizes/font_size = 26
 text = "100%"
 horizontal_alignment = 2

@@ -6,6 +6,8 @@ signal returning_to_title
 enum Page { MENU, SETTINGS, RETURN_TO_TITLE, QUIT }
 
 const _TITLE_SCENE := "res://assets/title/title.tscn"
+const _VOLUME_GRABBER: Texture2D = preload("res://assets/asset_packs/Cila - Paper UI stylized/arrow/arrow border 10.png")
+const _VOLUME_GRABBER_HIGHLIGHT: Texture2D = preload("res://assets/asset_packs/Cila - Paper UI stylized/arrow/arrow border 13.png")
 
 @export var intent_scene: String = "base"
 @export var settings_only: bool = false
@@ -20,8 +22,10 @@ const _TITLE_SCENE := "res://assets/title/title.tscn"
 @onready var _confirmation_page: Control = %ConfirmationPage
 @onready var _settings_button: Button = %SettingsButton
 @onready var _fullscreen_button: Button = %FullscreenButton
+@onready var _master_volume: HSlider = %MasterVolume
 @onready var _sfx_volume: HSlider = %SFXVolume
 @onready var _music_volume: HSlider = %MusicVolume
+@onready var _master_percent: Label = %MasterPercent
 @onready var _sfx_percent: Label = %SFXPercent
 @onready var _music_percent: Label = %MusicPercent
 @onready var _confirm_button: Button = %ConfirmButton
@@ -49,6 +53,8 @@ func _ready() -> void:
 	# Press on input-down so web fullscreen runs within the browser's user gesture.
 	_fullscreen_button.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 	_fullscreen_button.pressed.connect(_toggle_fullscreen)
+	_configure_audio_sliders()
+	_master_volume.value_changed.connect(_on_master_volume_changed)
 	_sfx_volume.value_changed.connect(_on_sfx_volume_changed)
 	_music_volume.value_changed.connect(_on_music_volume_changed)
 	_overlay.hide()
@@ -174,11 +180,30 @@ func _collect_focus_controls(parent: Control) -> void:
 			_collect_focus_controls(child)
 
 
+func _configure_audio_sliders() -> void:
+	# Slider icons use their texture's native size; keep the source art unchanged.
+	var grabber := ImageTexture.create_from_image(_VOLUME_GRABBER.get_image())
+	var highlight := ImageTexture.create_from_image(_VOLUME_GRABBER_HIGHLIGHT.get_image())
+	grabber.set_size_override(Vector2i(22, 40))
+	highlight.set_size_override(Vector2i(22, 40))
+	for slider in [_master_volume, _music_volume, _sfx_volume]:
+		slider.add_theme_icon_override("grabber", grabber)
+		slider.add_theme_icon_override("grabber_highlight", highlight)
+		slider.add_theme_icon_override("grabber_disabled", grabber)
+
+
 func _refresh_audio_controls() -> void:
+	_master_volume.set_value_no_signal(SettingsServer.master_volume * 100.0)
 	_sfx_volume.set_value_no_signal(SettingsServer.sfx_volume * 100.0)
 	_music_volume.set_value_no_signal(SettingsServer.music_volume * 100.0)
+	_master_percent.text = "%d%%" % roundi(_master_volume.value)
 	_sfx_percent.text = "%d%%" % roundi(_sfx_volume.value)
 	_music_percent.text = "%d%%" % roundi(_music_volume.value)
+
+
+func _on_master_volume_changed(value: float) -> void:
+	SettingsServer.master_volume = value / 100.0
+	_master_percent.text = "%d%%" % roundi(value)
 
 
 func _on_sfx_volume_changed(value: float) -> void:

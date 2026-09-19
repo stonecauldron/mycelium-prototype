@@ -1,10 +1,8 @@
 extends Node
 
 ## GameAnalytics wrapper. Event names are the ADR-0009 dashboard contract.
-## Sessions (app open/close, retention) are automatic after init. Editor and
-## desktop (macOS / Windows) never init — GA 3.1 OnQuit SIGTRAPs in the native
-## GDExtension on Godot 4.7. Web still inits. Manual events are dropped while
-## debug cheats are active.
+## Sessions (app open/close, retention) are automatic after init. Editor builds
+## never init. Manual events are dropped while debug cheats are active.
 
 const GAME_KEY := "dfd8028a3c14a8354ddc1bc19f09bdc9"
 const SECRET_KEY := "62e546a11c4f887ded9f5ee69e3441c0531d7b19"
@@ -30,7 +28,7 @@ var _shutting_down: bool = false
 
 
 func _ready() -> void:
-	if OS.has_feature("editor") or not OS.has_feature("web"):
+	if OS.has_feature("editor"):
 		return
 	if not Engine.has_singleton("GameAnalytics"):
 		push_warning("GameAnalytics plugin is not enabled")
@@ -104,7 +102,8 @@ func biomass_sink(item_type: String, item_id: String, amount: int) -> void:
 func intent(kind: String, scene: String) -> void:
 	if not _can_send():
 		return
-	ga.addDesignEvent("intent:%s:%s" % [slug(kind), slug(scene)])
+	# The native binding requires options even when there are no custom fields.
+	ga.addDesignEvent("intent:%s:%s" % [slug(kind), slug(scene)], {})
 
 
 func intent_scene() -> String:

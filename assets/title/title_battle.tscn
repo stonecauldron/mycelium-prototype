@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://assets/title/title_battle.gd" id="1_battle"]
+
+[sub_resource type="World2D" id="World2D_battle"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_left"]
+normal = Vector2(1, 0)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_right"]
+normal = Vector2(-1, 0)
+
+[node name="TitleBattle" type="SubViewportContainer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -360.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+stretch = true
+script = ExtResource("1_battle")
+
+[node name="Viewport" type="SubViewport" parent="."]
+transparent_bg = true
+handle_input_locally = false
+world_2d = SubResource("World2D_battle")
+size = Vector2i(1920, 360)
+render_target_update_mode = 4
+gui_disable_input = true
+
+[node name="Camera" type="Camera2D" parent="Viewport"]
+position = Vector2(960, 666)
+
+[node name="World" type="Node2D" parent="Viewport"]
+
+[node name="Boundary" type="StaticBody2D" parent="Viewport/World"]
+collision_mask = 0
+
+[node name="Floor" type="CollisionShape2D" parent="Viewport/World/Boundary"]
+position = Vector2(0, 786)
+shape = SubResource("WorldBoundaryShape2D_floor")
+
+[node name="Left" type="CollisionShape2D" parent="Viewport/World/Boundary"]
+position = Vector2(80, 0)
+shape = SubResource("WorldBoundaryShape2D_left")
+disabled = true
+
+[node name="Right" type="CollisionShape2D" parent="Viewport/World/Boundary"]
+position = Vector2(1840, 0)
+shape = SubResource("WorldBoundaryShape2D_right")
+disabled = true

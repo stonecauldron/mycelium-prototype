@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://b6mfiqthp4vam" path="res://assets/base/background/bg_battlegrounds.png" id="3_pajnb"]
 [ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="4_run_menu"]
+[ext_resource type="PackedScene" path="res://assets/title/title_battle.tscn" id="5_battle"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="6_paper"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
@@ -49,6 +50,9 @@ mouse_filter = 2
 texture = ExtResource("3_pajnb")
 expand_mode = 1
 
+[node name="TitleBattle" parent="." instance=ExtResource("5_battle")]
+layout_mode = 1
+
 [node name="Center" type="CenterContainer" parent="." unique_id=1012023005]
 layout_mode = 1
 anchors_preset = 15
@@ -56,6 +60,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+offset_top = -130.0
+offset_bottom = -130.0
 
 [node name="Panel" type="PanelContainer" parent="Center" unique_id=814831916]
 custom_minimum_size = Vector2(760, 440)

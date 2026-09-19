@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://.scratch/title-battles/preview.gd" id="1_preview"]
+
+[node name="TitleBattleCheck" type="Node"]
+script = ExtResource("1_preview")

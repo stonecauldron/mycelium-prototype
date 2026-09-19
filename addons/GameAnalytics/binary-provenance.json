@@ -1,0 +1,50 @@
+{
+  "sdk_version": "3.1.1",
+  "source_repository": "https://github.com/GameAnalytics/GA-SDK-GODOT",
+  "source_commit": "48fbc9ce71f50228bc7852bceb45c59305f14cea",
+  "godot_cpp_commit": "05057de73de4b99f114d36c40d84ca46926c0e25",
+  "cpp_sdk_version": "5.4.1",
+  "source_changes": [],
+  "upstream_fix": "https://github.com/GameAnalytics/GA-SDK-GODOT/pull/39",
+  "ci_run": "https://github.com/GameAnalytics/GA-SDK-GODOT/actions/runs/34941259026",
+  "libraries": {
+    "bin/macos/libGodotGameAnalytics.dylib": {
+      "sha256": "fb3d3f3a560c0b4299e350d4ba0a320ad328cf35e3c6c96cfbf3217bfafa20bd",
+      "origin": "local source build",
+      "command": "scons platform=macos target=template_release arch=universal -j8",
+      "scons": "4.11.0",
+      "compiler": "Apple clang version 17.0.0 (clang-1700.6.4.2)",
+      "architectures": [
+        "arm64",
+        "x86_64"
+      ],
+      "signature": "ad-hoc, applied by upstream SConstruct"
+    },
+    "bin/web/libGodotGameAnalytics.wasm": {
+      "sha256": "c3e86968fe8b0ae1ee7652efbb47cc3cb246d78521705cfa8803357e2ed61a40",
+      "origin": "official upstream CI artifact",
+      "artifact_name": "godotgameanalytics-web-release",
+      "artifact_id": 10385103244,
+      "artifact_zip_sha256": "9d58adb82f67189809b9a20dd237cfae559556d661ff817547d6586d43966085"
+    },
+    "bin/windows/libGodotGameAnalytics.dll": {
+      "sha256": "0d25b250fd1498b9597394db84e531ef7e17e70177c4721dd8931718d9f1f270",
+      "origin": "unchanged release binary; identical to official CI binary except PE COFF and debug-directory timestamps",
+      "artifact_name": "godotgameanalytics-windows-release",
+      "artifact_id": 10385272875,
+      "artifact_zip_sha256": "88c3e4caa22af13c8044f2985c944303aa3098444b45938c22e93cce007688ed",
+      "ci_binary_sha256": "73ec45507240b4a46677b38f358ce25cd180c51a2a7b37fc6a9f86ce862f3a33",
+      "timestamp_offsets": [
+        272,
+        1717796
+      ]
+    },
+    "bin/linux/libGodotGameAnalytics.so": {
+      "sha256": "8039ffd1104a8a051bf884101551aa22d0a4a7753d3749ebca8fb8440d2acf66",
+      "origin": "unchanged release binary, identical to official upstream CI artifact",
+      "artifact_name": "godotgameanalytics-linux-release",
+      "artifact_id": 10385153116,
+      "artifact_zip_sha256": "b470c170b2dbe7eb30e3d3a2e5e82f5f48967eaec07b6c3a19340f8f1bb66742"
+    }
+  }
+}

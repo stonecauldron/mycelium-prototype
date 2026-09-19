@@ -8,7 +8,7 @@ const _DEFAULT_PITCH_VARIATION := 0.1
 const _MUSIC_FADE_SECONDS := 0.5
 const _BATTLE_CROSSFADE_SECONDS := 2.0
 const _BASE_CROSSFADE_SECONDS := 8.0
-const _BATTLE_VOLUME_DB := -3.0
+const _BATTLE_VOLUME_DB := -7.0
 
 @export var base_music: AudioStream
 @export var battle_music: AudioStream

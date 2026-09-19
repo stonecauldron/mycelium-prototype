@@ -12,7 +12,7 @@ Returning directly from combat to Base/title also uses the eight-second crossfad
 
 Use `Audio.play_battle_music(true)` when starting a new combat, including rematches. Use `Audio.play_base_music()` on results and Base/title entry. Starting a new Run calls `Audio.play_base_music(true)` to restart Base music with a 0.5-second fade-in. Repeated selection without a restart preserves playback and the current fade. `Audio.stop_music()` fades out and stops both songs over 0.5 seconds, clearing their positions; the next request starts playback from the beginning.
 
-Battle music is trimmed by **−3 dB** relative to its original level, including throughout crossfades. Adjust `_BATTLE_VOLUME_DB` in `assets/autoload/audio.gd` to tune this balance. The in-game Music slider still controls both songs together.
+Battle music is trimmed by **−7 dB** relative to its original level, including throughout crossfades. Adjust `_BATTLE_VOLUME_DB` in `assets/autoload/audio.gd` to tune this balance. The in-game Music slider still controls both songs together.
 
 OGG, MP3, and WAV tracks loop automatically. Existing loop offsets/points are preserved; changes apply to a playback copy, so using the same file as an effect does not make the effect loop. Other Godot stream types repeat when they finish; use native loop points for seamless music.
 
@@ -75,6 +75,10 @@ Every call chooses a fresh pitch within ±10% of normal (0.9–1.1×), including
 
 For a scene-owned `AudioStreamPlayer` or animation audio track, set its bus to **SFX** and choose the appropriate process mode. Music uses the persistent Audio service. Both buses feed **Master**.
 
+Master applies a fixed **−6 dB** trim before a **−1 dB** peak limiter, protecting the combined music/SFX mix. This is authored as the Master limiter's `pre_gain_db`, independent of the saved volume sliders. Keep Master at unity gain so its output respects that ceiling. The SFX limiter still controls crowded effects before they join the music.
+
+Web uses **Stream** playback (`audio/general/default_playback_type.web=0`) so both limiters and the Master trim actually run; Godot's default Web Sample playback bypasses bus effects. The Web export already enables threads for Stream playback. Validate browser audio when changing these settings.
+
 ## Settings
 
 The Base/combat menu exposes SFX and Music sliders from 0–100%. They apply immediately and are saved in the existing `user://settings.cfg`, independently of Run data. Both default to 100%; 0% mutes the corresponding bus. `SettingsServer.sfx_volume` and `SettingsServer.music_volume` use normalized values from 0.0–1.0.
@@ -88,3 +92,11 @@ godot --headless --path . res://.scratch/audio-infrastructure/runtime_check.tscn
 ```
 
 On macOS, launch outside the agent sandbox as required by `AGENTS.md`. For visual verification, replace `--headless` with `--rendering-method gl_compatibility --audio-driver Dummy`. The check writes `/private/tmp/audio-settings.png` and, when preferences already exist, a recovery backup at `/private/tmp/audio-infrastructure-settings.backup`.
+
+The focused mix check captures actual Master output, verifies the fixed trim, slider/mute behavior, overload protection, and crowded SFX with Battle music at 1×/4×. It restores saved settings on completion. Run with the dummy audio driver so the deliberate overload probe is inaudible:
+
+```sh
+godot --headless --path . res://.scratch/audio-infrastructure/mix_check.tscn
+```
+
+For Web validation, copy this scene and its script into a non-hidden folder in a temporary project containing the same audio assets, autoloads, bus layout and audio settings; update their paths and export with the scene as the entry point. Godot omits `.scratch` from exports. Click **Run muted audio checks** to enable the browser audio context. The scene captures before the Master fader, keeps test tones inaudible at output, displays its results, and prints `AUDIO_MIX_RESULT` to the browser console.

@@ -43,9 +43,14 @@ const _ACID_RAIN_BASE_DAMAGE := 1
 @onready var _hud: CanvasLayer = $HUD
 @onready var _run_menu: RunMenu = $RunMenu
 @onready var _barks: CombatBarks = $World/CombatBarks
+@onready var _right_edge: CollisionShape2D = $World/WorldBoundary/RightEdge
+@onready var _camera: Camera2D = $World/MainCamera
 
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2
+var _right_edge_start_x: float
+var _camera_start_limit_right: int
+var _background_segment_count: int = 4
 var _battle_over: bool = false
 var _fallen_units: Array[RosterUnitData] = []
 var _biomass_earned_this_fight: int = 0
@@ -79,6 +84,8 @@ func _ready() -> void:
 	_saved_max_physics_steps = Engine.max_physics_steps_per_frame
 	_player_spawn = player_troop.get_formation_anchor_global()
 	_enemy_spawn = enemy_troop.get_formation_anchor_global()
+	_right_edge_start_x = _right_edge.global_position.x
+	_camera_start_limit_right = _camera.limit_right
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	_run_menu.returning_to_title.connect(_restore_engine_timing)
 	_fast_forward_button.pressed.connect(_on_fast_forward_pressed)
@@ -293,11 +300,49 @@ func _run_battle(
 		Color.WHITE,
 		false
 	)
+	_space_starting_armies()
 	_refresh_unit_process_order()
 	_setup_army_hp_hud()
 	_barks.begin_battle(player_troop)
 	_notify_battle_start()
 	_set_fast_forward(_fast_forward_scale)
+
+
+func _space_starting_armies() -> void:
+	_right_edge.global_position.x = _right_edge_start_x
+	_camera.limit_right = _camera_start_limit_right
+	var player_front := player_troop.get_frontmost_living_unit()
+	var enemy_front := enemy_troop.get_frontmost_living_unit()
+	if player_front == null or enemy_front == null:
+		return
+	# Measure occupied Homes, including gaps in the player's Squad slots. Leave
+	# half a viewport width between the fronts at the camera's normal (1x) zoom.
+	var offset := Vector2(
+		player_front.global_position.x + get_viewport_rect().size.x * 0.5 - enemy_front.global_position.x,
+		0.0
+	)
+	enemy_troop.reset_for_scenario(enemy_troop.get_formation_anchor_global() + offset)
+	for unit in enemy_troop.get_units():
+		unit.global_position += offset
+	# Keep the authored retreat space beyond the enemy rear and allow the camera
+	# to follow armies that no longer fit within the original arena.
+	var extension := maxf(offset.x, 0.0)
+	_right_edge.global_position.x += extension
+	_camera.limit_right += ceili(extension)
+	_extend_battlefield_background()
+
+
+func _extend_battlefield_background() -> void:
+	var background: Node2D = $World/Background
+	var segment: Node2D = background.get_node("Segment%d" % (_background_segment_count - 1))
+	var segment_width: float = $World/Background/Segment1.position.x - $World/Background/Segment0.position.x
+	while segment.global_position.x + segment_width < float(_camera.limit_right):
+		var next := segment.duplicate() as Node2D
+		next.name = "Segment%d" % _background_segment_count
+		next.position.x += segment_width
+		background.add_child(next)
+		segment = next
+		_background_segment_count += 1
 
 
 func _notify_battle_start() -> void:

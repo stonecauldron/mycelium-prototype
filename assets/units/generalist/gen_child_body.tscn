@@ -73,7 +73,6 @@ update_scale = false
 [node name="CapMountFollow" type="RemoteTransform2D" parent="Sprite" unique_id=1548098226]
 position = Vector2(10, -175)
 remote_path = NodePath("../../CapMount")
-update_rotation = false
 
 [node name="CapMount" type="Node2D" parent="." unique_id=743226308]
 position = Vector2(4, -70)

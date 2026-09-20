@@ -1,0 +1,10 @@
+{
+  "codec": "png",
+  "pixel_format": "rgb24",
+  "fps": 60,
+  "width": 2560,
+  "height": 1440,
+  "frame_count": 1510,
+  "decoded_rgb_sha256": "1bb40514f64ee0c7789fc27ca0a0cd4c24130df9073b1a90c9214946b9ec8114",
+  "raw_capture_matches_mov": true
+}

@@ -13,5 +13,17 @@
 # Oversized local Steam source files (keep PNGs in repo)
 steam/**/*.psd
 
+# Steam media production: keep large sources and generated working files locally.
+/steam/store assets/2026-09-20-store-refresh/sources/takes/**/*.mov
+/steam/store assets/2026-09-20-store-refresh/sources/takes/archive/
+/steam/store assets/2026-09-20-store-refresh/sources/masters/
+/steam/store assets/2026-09-20-store-refresh/sources/legacy-mjpeg/
+/steam/store assets/2026-09-20-store-refresh/work/
+/steam/store assets/2026-09-20-store-refresh/preview/
+/steam/store assets/2026-09-20-store-refresh/*.zip
+/steam/store assets/2026-09-20-store-refresh/**/*.log
+/steam/store assets/2026-09-20-store-refresh/scripts/__pycache__/
+/.scratch/steam-store-media/*.log
+
 # Oversized local background Photoshop source
 /assets/base/sporelings_bg_design_05.psd

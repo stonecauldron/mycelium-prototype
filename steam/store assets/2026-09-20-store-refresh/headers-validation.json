@@ -1,0 +1,77 @@
+[
+  {
+    "name": "01-grow-your-units",
+    "text": "Grow your units",
+    "loop": "01-plant-and-harvest",
+    "file": "exports/headers/01-grow-your-units.png",
+    "width": 1170,
+    "height": 150,
+    "bytes": 17767,
+    "text_bounds": [
+      306,
+      30,
+      558,
+      90
+    ]
+  },
+  {
+    "name": "02-fight-the-heathen",
+    "text": "Fight the heathen",
+    "loop": "04-battle",
+    "file": "exports/headers/02-fight-the-heathen.png",
+    "width": 1170,
+    "height": 150,
+    "bytes": 15102,
+    "text_bounds": [
+      271,
+      29,
+      628,
+      92
+    ]
+  },
+  {
+    "name": "03-pupate-and-train",
+    "text": "Pupate & Train",
+    "loop": "02-train-and-combine",
+    "file": "exports/headers/03-pupate-and-train.png",
+    "width": 1170,
+    "height": 150,
+    "bytes": 18312,
+    "text_bounds": [
+      316,
+      32,
+      538,
+      86
+    ]
+  },
+  {
+    "name": "04-arrange-your-troop",
+    "text": "Arrange your troop",
+    "loop": "03-arrange-your-squad",
+    "file": "exports/headers/04-arrange-your-troop.png",
+    "width": 1170,
+    "height": 150,
+    "bytes": 19560,
+    "text_bounds": [
+      233,
+      33,
+      704,
+      84
+    ]
+  },
+  {
+    "name": "05-create-powerful-lineages",
+    "text": "Create powerful lineages",
+    "loop": "05-lineage",
+    "file": "exports/headers/05-create-powerful-lineages.png",
+    "width": 1170,
+    "height": 150,
+    "bytes": 24153,
+    "text_bounds": [
+      144,
+      29,
+      882,
+      92
+    ]
+  }
+]

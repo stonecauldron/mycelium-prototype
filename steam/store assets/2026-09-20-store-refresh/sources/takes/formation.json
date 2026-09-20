@@ -1,0 +1,237 @@
+[
+	{
+		"adults": 7,
+		"children": 3,
+		"class_counts_melee_mid_ranged": [
+			4,
+			3,
+			3
+		],
+		"order": "rear to front",
+		"roster": [
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Darwin",
+				"range_class": "Ranged",
+				"slot": 0,
+				"stage": "Adult",
+				"weapon": "Great Bow"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Curie II",
+				"range_class": "Ranged",
+				"slot": 1,
+				"stage": "Child",
+				"weapon": "Crossbow"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "Inky",
+				"name": "Mendel",
+				"range_class": "Ranged",
+				"slot": 2,
+				"stage": "Adult",
+				"weapon": "Bow"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Hooke",
+				"range_class": "Mid",
+				"slot": 3,
+				"stage": "Adult",
+				"weapon": "Great Horn"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Linnaeus II",
+				"range_class": "Mid",
+				"slot": 4,
+				"stage": "Child",
+				"weapon": "Spear"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Pasteur",
+				"range_class": "Mid",
+				"slot": 5,
+				"stage": "Adult",
+				"weapon": "Great Spear"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "Boom",
+				"name": "Rosalind II",
+				"range_class": "Melee",
+				"slot": 6,
+				"stage": "Child",
+				"weapon": "Sword"
+			},
+			{
+				"body_mutation": "Thorny",
+				"cap_mutation": "",
+				"name": "Haeckel",
+				"range_class": "Melee",
+				"slot": 7,
+				"stage": "Adult",
+				"weapon": "Great Sword"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Wallace",
+				"range_class": "Melee",
+				"slot": 8,
+				"stage": "Adult",
+				"weapon": "Sword and Shield"
+			},
+			{
+				"body_mutation": "Rubber",
+				"cap_mutation": "",
+				"name": "Lamarck",
+				"range_class": "Melee",
+				"slot": 9,
+				"stage": "Adult",
+				"weapon": "Great Shield"
+			}
+		],
+		"roster_label": "initial"
+	},
+	{
+		"enemies": {
+			"Rose Thorn": 2,
+			"Solar Sword": 20
+		},
+		"run_seed": 260,
+		"setup_day": 7
+	},
+	{
+		"action": "squad_swap",
+		"frame": 190,
+		"seconds": 3.16666666666667
+	},
+	{
+		"action": "bench_exchange",
+		"frame": 390,
+		"seconds": 6.5
+	},
+	{
+		"adults": 7,
+		"children": 3,
+		"class_counts_melee_mid_ranged": [
+			4,
+			3,
+			3
+		],
+		"order": "rear to front",
+		"roster": [
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Franklin",
+				"range_class": "Ranged",
+				"slot": 0,
+				"stage": "Adult",
+				"weapon": "Bow"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "Inky",
+				"name": "Mendel",
+				"range_class": "Ranged",
+				"slot": 1,
+				"stage": "Adult",
+				"weapon": "Bow"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Curie II",
+				"range_class": "Ranged",
+				"slot": 2,
+				"stage": "Child",
+				"weapon": "Crossbow"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Hooke",
+				"range_class": "Mid",
+				"slot": 3,
+				"stage": "Adult",
+				"weapon": "Great Horn"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Linnaeus II",
+				"range_class": "Mid",
+				"slot": 4,
+				"stage": "Child",
+				"weapon": "Spear"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Pasteur",
+				"range_class": "Mid",
+				"slot": 5,
+				"stage": "Adult",
+				"weapon": "Great Spear"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "Boom",
+				"name": "Rosalind II",
+				"range_class": "Melee",
+				"slot": 6,
+				"stage": "Child",
+				"weapon": "Sword"
+			},
+			{
+				"body_mutation": "Thorny",
+				"cap_mutation": "",
+				"name": "Haeckel",
+				"range_class": "Melee",
+				"slot": 7,
+				"stage": "Adult",
+				"weapon": "Great Sword"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Wallace",
+				"range_class": "Melee",
+				"slot": 8,
+				"stage": "Adult",
+				"weapon": "Sword and Shield"
+			},
+			{
+				"body_mutation": "Rubber",
+				"cap_mutation": "",
+				"name": "Lamarck",
+				"range_class": "Melee",
+				"slot": 9,
+				"stage": "Adult",
+				"weapon": "Great Shield"
+			}
+		],
+		"roster_label": "formation_result"
+	},
+	{
+		"action": "take_complete",
+		"frame": 565,
+		"seconds": 9.41666666666667
+	},
+	{
+		"height": 1440,
+		"raw_format": "rgb24",
+		"raw_frames": 565,
+		"width": 2560
+	}
+]

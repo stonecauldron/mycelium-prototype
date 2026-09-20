@@ -136,6 +136,10 @@ The player's War Chamber roster as a whole (units on the squad and bench).
 **Squad**:
 The units in the troop that will fight the next battle, occupying Squad slots.
 
+**Formation**:
+The ordered placement of the Squad's Units in its slots before a Battle. Rearranging a Formation can include swapping Units with the Bench.
+*Avoid*: Troop (the whole roster), Range class, live battle commands
+
 **Squad slot**:
 A fighting position in the Squad. Slots unlock in order from the flag. A locked slot cannot hold a Unit; unlocking one spends biomass. When every unlocked Squad slot is full, a new Unit goes to the Bench.
 *Avoid*: troop slot (when you mean a Squad position)

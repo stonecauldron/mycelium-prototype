@@ -1,0 +1,355 @@
+{
+  "revision": 2,
+  "landscape_revision": 8,
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "duration": 32,
+  "gameplay_rect": [
+    0,
+    180,
+    1080,
+    1080
+  ],
+  "key_text_safe_rect": [
+    80,
+    270,
+    820,
+    978
+  ],
+  "caption_position": [
+    90,
+    1186
+  ],
+  "caption_max_height": 62,
+  "chapters": [
+    {
+      "name": "01-hook",
+      "duration": 4,
+      "transition": "smoothleft",
+      "overlap": 0.1,
+      "clips": [
+        {
+          "source": "battle_a",
+          "start": 6.5,
+          "duration": 1,
+          "crop": [
+            780,
+            780,
+            400,
+            250
+          ],
+          "title": "portrait-hook"
+        },
+        {
+          "source": "battle_b",
+          "start": 3,
+          "duration": 1,
+          "crop": [
+            1440,
+            960,
+            60,
+            60
+          ],
+          "title": "portrait-hook"
+        },
+        {
+          "source": "battle_a",
+          "start": 7.5,
+          "duration": 1,
+          "crop": [
+            720,
+            720,
+            470,
+            300
+          ],
+          "title": "portrait-hook"
+        },
+        {
+          "source": "battle_elite",
+          "start": 5,
+          "duration": 1,
+          "crop": [
+            1000,
+            1000,
+            350,
+            50
+          ],
+          "title": "portrait-hook"
+        }
+      ]
+    },
+    {
+      "name": "02-grow",
+      "duration": 5,
+      "transition": "smoothup",
+      "overlap": 0.1,
+      "clips": [
+        {
+          "source": "nursery",
+          "start": 0.9,
+          "duration": 1.5,
+          "crop": [
+            1080,
+            1080,
+            0,
+            0
+          ],
+          "title": "grow"
+        },
+        {
+          "source": "nursery",
+          "start": 3.45,
+          "duration": 1,
+          "crop": [
+            1080,
+            1080,
+            0,
+            0
+          ],
+          "title": "two-days"
+        },
+        {
+          "source": "nursery",
+          "start": 4.5,
+          "duration": 0.65,
+          "crop": [
+            1080,
+            1080,
+            0,
+            0
+          ],
+          "title": "grow"
+        },
+        {
+          "source": "nursery",
+          "start": 5.15,
+          "duration": 1.85,
+          "crop": [
+            960,
+            960,
+            0,
+            0
+          ],
+          "title": "grow"
+        }
+      ]
+    },
+    {
+      "name": "03-train",
+      "duration": 5,
+      "transition": "smoothleft",
+      "overlap": 0.1,
+      "clips": [
+        {
+          "source": "training",
+          "start": 1.45,
+          "duration": 1.75,
+          "crop": [
+            1080,
+            1080,
+            0,
+            0
+          ],
+          "title": "train"
+        },
+        {
+          "source": "training",
+          "start": 3.85,
+          "duration": 2.25,
+          "crop": [
+            1080,
+            1080,
+            420,
+            0
+          ],
+          "title": "train"
+        },
+        {
+          "source": "training",
+          "start": 6.15,
+          "duration": 1,
+          "crop": [
+            1080,
+            1080,
+            420,
+            0
+          ],
+          "title": "train"
+        }
+      ]
+    },
+    {
+      "name": "04-arrange",
+      "duration": 3,
+      "transition": "smoothleft",
+      "overlap": 0.1,
+      "clips": [
+        {
+          "source": "formation",
+          "start": 2,
+          "duration": 1.5,
+          "crop": [
+            1080,
+            1080,
+            0,
+            0
+          ],
+          "title": "portrait-arrange"
+        },
+        {
+          "source": "formation",
+          "start": 5.5,
+          "duration": 1.5,
+          "crop": [
+            1080,
+            1080,
+            0,
+            0
+          ],
+          "title": "portrait-arrange"
+        }
+      ]
+    },
+    {
+      "name": "05-battle",
+      "duration": 10,
+      "transition": "fade",
+      "overlap": 0.25,
+      "clips": [
+        {
+          "source": "battle_a",
+          "start": 2.5,
+          "duration": 1.5,
+          "title": "fight",
+          "crop": [
+            1620,
+            1080,
+            0,
+            0
+          ]
+        },
+        {
+          "source": "battle_a",
+          "start": 6.2,
+          "duration": 1,
+          "crop": [
+            780,
+            780,
+            400,
+            250
+          ],
+          "title": "fight"
+        },
+        {
+          "source": "battle_b",
+          "start": 5.2,
+          "duration": 1,
+          "crop": [
+            780,
+            780,
+            320,
+            250
+          ],
+          "title": "fight"
+        },
+        {
+          "source": "battle_a",
+          "start": 7,
+          "duration": 1,
+          "crop": [
+            720,
+            720,
+            460,
+            300
+          ],
+          "title": "fight"
+        },
+        {
+          "source": "battle_elite",
+          "start": 7,
+          "duration": 1,
+          "crop": [
+            1000,
+            1000,
+            350,
+            50
+          ],
+          "title": "fight"
+        },
+        {
+          "source": "battle_elite",
+          "start": 13.45,
+          "duration": 0.5,
+          "crop": [
+            1000,
+            1000,
+            550,
+            50
+          ],
+          "title": "fight"
+        },
+        {
+          "source": "battle_b",
+          "start": 9,
+          "duration": 1,
+          "crop": [
+            1000,
+            1000,
+            400,
+            50
+          ],
+          "title": "fight"
+        },
+        {
+          "source": "battle_elite",
+          "start": 10,
+          "duration": 1,
+          "crop": [
+            1000,
+            1000,
+            460,
+            50
+          ],
+          "title": "fight"
+        },
+        {
+          "source": "battle_a",
+          "start": 13.5,
+          "duration": 1,
+          "crop": [
+            1000,
+            1000,
+            600,
+            50
+          ],
+          "title": "fight"
+        },
+        {
+          "source": "battle_b",
+          "start": 12,
+          "duration": 1,
+          "crop": [
+            1000,
+            1000,
+            500,
+            50
+          ],
+          "title": "fight"
+        }
+      ]
+    },
+    {
+      "name": "06-end-card",
+      "duration": 5,
+      "overlap": 0,
+      "clips": [
+        {
+          "source": "end-card",
+          "start": 0,
+          "duration": 5
+        }
+      ]
+    }
+  ]
+}

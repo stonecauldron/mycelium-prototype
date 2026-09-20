@@ -1,0 +1,36 @@
+{
+  "width": 1170,
+  "height": 150,
+  "ribbon_inset": 12,
+  "ribbon_height": 132,
+  "point_size": 84,
+  "font": "sources/fonts/SpicyRice-Regular.ttf",
+  "ink": "#2e2924",
+  "headers": [
+    {
+      "name": "01-grow-your-units",
+      "text": "Grow your units",
+      "loop": "01-plant-and-harvest"
+    },
+    {
+      "name": "02-fight-the-heathen",
+      "text": "Fight the heathen",
+      "loop": "04-battle"
+    },
+    {
+      "name": "03-pupate-and-train",
+      "text": "Pupate & Train",
+      "loop": "02-train-and-combine"
+    },
+    {
+      "name": "04-arrange-your-troop",
+      "text": "Arrange your troop",
+      "loop": "03-arrange-your-squad"
+    },
+    {
+      "name": "05-create-powerful-lineages",
+      "text": "Create powerful lineages",
+      "loop": "05-lineage"
+    }
+  ]
+}

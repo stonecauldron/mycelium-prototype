@@ -1,0 +1,131 @@
+{
+  "file": "exports/social/auto-shrooms-reel-32s-1080x1920.mp4",
+  "bytes": 23598967,
+  "width": 1080,
+  "height": 1920,
+  "aspect_ratio": "9:16",
+  "fps": "60/1",
+  "frames": 1920,
+  "container_duration": 32.033333,
+  "video_bitrate": 5759532,
+  "audio_bitrate": 128044,
+  "fast_start": true,
+  "edit_lists": false,
+  "lossless_master": "sources/masters/auto-shrooms-reel-32s-lossless.mov",
+  "pcm_matches_landscape_master": true,
+  "revision": 2,
+  "landscape_revision": 8,
+  "landscape_master_sha256": "a601ad3efc6e8a1fb26d7bd6f81ad5fe8bc90b515e63c0f98aa29cc9e5b42809",
+  "training": {
+    "confirmed": true,
+    "day_advanced": false,
+    "emergence_shown": false,
+    "final_location": "Sword Cocoon",
+    "initial_stage": "Child",
+    "initial_weapon": "Sword",
+    "name": "Franklin II",
+    "preview_weapon": "Great Sword",
+    "school": "Sword",
+    "training_verified": true,
+    "confirmation_source_seconds": 6.98333333333333,
+    "edit_end_source_seconds": 7.15,
+    "extra_transition_handle": 0.1
+  },
+  "editorial_safe_rect": [
+    80,
+    270,
+    820,
+    978
+  ],
+  "text_bounds": {
+    "capsule": [
+      90,
+      360,
+      810,
+      464
+    ],
+    "tagline": [
+      264,
+      864,
+      461,
+      100
+    ],
+    "steam_logo": [
+      136,
+      1049,
+      180,
+      55
+    ],
+    "wishlist": [
+      344,
+      1052,
+      510,
+      48
+    ],
+    "attribution": [
+      90,
+      1160,
+      810,
+      70
+    ],
+    "caption_train": [
+      90,
+      1186,
+      193,
+      62
+    ],
+    "caption_portrait-hook": [
+      90,
+      1186,
+      328,
+      62
+    ],
+    "caption_fight": [
+      90,
+      1186,
+      183,
+      62
+    ],
+    "caption_two-days": [
+      90,
+      1186,
+      279,
+      62
+    ],
+    "caption_portrait-arrange": [
+      90,
+      1186,
+      426,
+      62
+    ],
+    "caption_grow": [
+      90,
+      1186,
+      180,
+      62
+    ]
+  },
+  "checks": [
+    "Full MP4 decoding passed",
+    "1920 frames at native 60 fps",
+    "Progressive H.264 High / AAC / BT.709",
+    "Original chapter pacing and five-second end card",
+    "Original quick grow sequence; no extended loops",
+    "All source crops stay inside the captured frame",
+    "Critical text within editorial margins",
+    "Sword Child / Great Sword preview / confirmation; no emergence",
+    "Matching training source ranges in both trailers",
+    "Lossless RGB master and PCM soundtrack matching current landscape",
+    "Quiet audio tail"
+  ],
+  "audio_review": {
+    "integrated_lufs": -16.2,
+    "true_peak_dbfs": -1.2,
+    "loudness_range_lu": 1.4,
+    "analysis": "preview/sword-child/portrait-audio-analysis.log"
+  },
+  "visual_review": {
+    "training": "Sword Child and Great Sword comparison readable, confirmation shown, no emergence",
+    "previews": "preview/sword-child/portrait-final-contact.jpg"
+  }
+}

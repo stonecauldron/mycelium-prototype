@@ -1,0 +1,415 @@
+{
+  "rosters": [
+    {
+      "take": "battle_a",
+      "stage": "initial",
+      "passed": true
+    },
+    {
+      "take": "battle_a",
+      "stage": "battle_start",
+      "passed": true
+    },
+    {
+      "take": "battle_b",
+      "stage": "initial",
+      "passed": true
+    },
+    {
+      "take": "battle_b",
+      "stage": "battle_start",
+      "passed": true
+    },
+    {
+      "take": "battle_elite",
+      "stage": "initial",
+      "passed": true
+    },
+    {
+      "take": "battle_elite",
+      "stage": "battle_start",
+      "passed": true
+    },
+    {
+      "take": "formation",
+      "stage": "initial",
+      "passed": true
+    },
+    {
+      "take": "formation",
+      "stage": "formation_result",
+      "passed": true
+    },
+    {
+      "take": "gardening",
+      "stage": "initial",
+      "passed": true
+    },
+    {
+      "take": "lineage_sword",
+      "stage": "dedicated_lineage",
+      "passed": true
+    },
+    {
+      "take": "nursery",
+      "stage": "initial",
+      "passed": true
+    },
+    {
+      "take": "summary",
+      "stage": "initial",
+      "passed": true
+    },
+    {
+      "take": "summary",
+      "stage": "battle_start",
+      "passed": true
+    },
+    {
+      "take": "training",
+      "stage": "initial",
+      "passed": true
+    }
+  ],
+  "exports": [
+    {
+      "file": "exports/trailer/auto-shrooms-trailer-32s.mp4",
+      "duration": 32.0,
+      "width": 1920,
+      "height": 1080,
+      "fps": "60/1",
+      "pixel_format": "yuv420p",
+      "color_range": "tv",
+      "bytes": 33122965
+    },
+    {
+      "file": "exports/loops/01-plant-and-harvest.mp4",
+      "duration": 10.0,
+      "width": 1170,
+      "height": 658,
+      "fps": "30/1",
+      "pixel_format": "yuv420p",
+      "color_range": "tv",
+      "bytes": 616067
+    },
+    {
+      "file": "exports/loops/02-train-and-combine.mp4",
+      "duration": 6.5,
+      "width": 1170,
+      "height": 658,
+      "fps": "30/1",
+      "pixel_format": "yuv420p",
+      "color_range": "tv",
+      "bytes": 1033459
+    },
+    {
+      "file": "exports/loops/03-arrange-your-squad.mp4",
+      "duration": 7.8,
+      "width": 1170,
+      "height": 658,
+      "fps": "30/1",
+      "pixel_format": "yuv420p",
+      "color_range": "tv",
+      "bytes": 1287697
+    },
+    {
+      "file": "exports/loops/04-battle.mp4",
+      "duration": 8.0,
+      "width": 1170,
+      "height": 438,
+      "fps": "30/1",
+      "pixel_format": "yuv420p",
+      "color_range": "tv",
+      "bytes": 2745652
+    },
+    {
+      "file": "exports/loops/05-lineage.mp4",
+      "duration": 10.0,
+      "width": 1170,
+      "height": 658,
+      "fps": "30/1",
+      "pixel_format": "yuv420p",
+      "color_range": "tv",
+      "bytes": 1364933
+    },
+    {
+      "file": "exports/loops/01-plant-and-harvest.gif",
+      "duration": 10.0,
+      "bytes": 1442999
+    },
+    {
+      "file": "exports/loops/02-train-and-combine.gif",
+      "duration": 6.54,
+      "bytes": 2713169
+    },
+    {
+      "file": "exports/loops/03-arrange-your-squad.gif",
+      "duration": 7.8,
+      "bytes": 3119007
+    },
+    {
+      "file": "exports/loops/04-battle.gif",
+      "duration": 8.01,
+      "bytes": 2515315
+    },
+    {
+      "file": "exports/loops/05-lineage.gif",
+      "duration": 10.0,
+      "bytes": 2688993
+    }
+  ],
+  "sources": [
+    {
+      "file": "sources/takes/battle_a.mov",
+      "codec": "png",
+      "pixel_format": "rgb24",
+      "fps": 60,
+      "width": 2560,
+      "height": 1440,
+      "frame_count": 1480,
+      "decoded_rgb_sha256": "c2692c384bf9b6a0b33afe4688981ab5fb1e20ad6ebf71737b2a15f6cea11713",
+      "raw_capture_matches_mov": true
+    },
+    {
+      "file": "sources/takes/battle_b.mov",
+      "codec": "png",
+      "pixel_format": "rgb24",
+      "fps": 60,
+      "width": 2560,
+      "height": 1440,
+      "frame_count": 1480,
+      "decoded_rgb_sha256": "4e6e91c49b77c5ff3b358be88649d49eda988aaa5dd6710c79d4512567a1a014",
+      "raw_capture_matches_mov": true
+    },
+    {
+      "file": "sources/takes/battle_elite.mov",
+      "codec": "png",
+      "pixel_format": "rgb24",
+      "fps": 60,
+      "width": 2560,
+      "height": 1440,
+      "frame_count": 1480,
+      "decoded_rgb_sha256": "38369bae09acd48542d5dabf89dc9cc1c739d1cab711b7ee2998a45dd120b84e",
+      "raw_capture_matches_mov": true
+    },
+    {
+      "file": "sources/takes/formation.mov",
+      "codec": "png",
+      "pixel_format": "rgb24",
+      "fps": 60,
+      "width": 2560,
+      "height": 1440,
+      "frame_count": 565,
+      "decoded_rgb_sha256": "bcad0587233b9d8d06d1b6ce3b052708028efd3ab42646899cf8518e9ac10923",
+      "raw_capture_matches_mov": true
+    },
+    {
+      "file": "sources/takes/gardening.mov",
+      "codec": "png",
+      "pixel_format": "rgb24",
+      "fps": 60,
+      "width": 2560,
+      "height": 1440,
+      "frame_count": 821,
+      "decoded_rgb_sha256": "9b8d4be744c902b4cf79ceb34b4925a256f222d31523ee28c28cb597d76a78b9",
+      "raw_capture_matches_mov": true
+    },
+    {
+      "file": "sources/takes/lineage_sword.mov",
+      "codec": "png",
+      "pixel_format": "rgb24",
+      "fps": 60,
+      "width": 2560,
+      "height": 1440,
+      "frame_count": 2000,
+      "decoded_rgb_sha256": "b793ac5add9ed3a961adf6e265e0ffe2771ef0d3baabdd2ca9792721ca49b04d",
+      "raw_capture_matches_mov": true
+    },
+    {
+      "file": "sources/takes/nursery.mov",
+      "codec": "png",
+      "pixel_format": "rgb24",
+      "fps": 60,
+      "width": 2560,
+      "height": 1440,
+      "frame_count": 542,
+      "decoded_rgb_sha256": "b72a4e0795793cfe63f52c72f98511464c02ca8e43a45cb33c70219d322b87cf",
+      "raw_capture_matches_mov": true
+    },
+    {
+      "file": "sources/takes/summary.mov",
+      "codec": "png",
+      "pixel_format": "rgb24",
+      "fps": 60,
+      "width": 2560,
+      "height": 1440,
+      "frame_count": 1510,
+      "decoded_rgb_sha256": "1bb40514f64ee0c7789fc27ca0a0cd4c24130df9073b1a90c9214946b9ec8114",
+      "raw_capture_matches_mov": true
+    },
+    {
+      "file": "sources/takes/training.mov",
+      "codec": "png",
+      "pixel_format": "rgb24",
+      "fps": 60,
+      "width": 2560,
+      "height": 1440,
+      "frame_count": 437,
+      "decoded_rgb_sha256": "4cb2c51a7889803fdc09aeb6487a922f15be3fbe5824ecb15ae79680e72a98c1",
+      "raw_capture_matches_mov": true
+    }
+  ],
+  "checks": [
+    "No Mortar in any recorded featured roster",
+    "Great Sword and Great Horn present in main footage",
+    "Main Squad: 3 Children / 7 Adults",
+    "Main Squad: 4 Melee / 3 Mid / 3 Ranged, correctly ordered",
+    "Main Squad: Great Shield at the front",
+    "Mutated Children and Adults",
+    "Dedicated lineage battle: one Sword Adult ahead of two Bow Units",
+    "32-second 1920-frame trailer",
+    "Five 6\u201310-second MP4/GIF loop pairs",
+    "Six full-resolution screenshot pairs",
+    "Full MP4 decode passed",
+    "Nine pixel-exact RGB lossless 1440p60 source MOVs",
+    "Lossless 1080p60 trailer master",
+    "Bottom-left paper captions",
+    "Fungus Vult! capsule end card with Fredoka CTA and Steam logo",
+    "Fertilizer and Mutation applied by UI drag to the same growing Plot",
+    "Actual combat death followed through emitted spore to Lamarck II",
+    "Sword Child enters Sword Training with a Great Sword preview",
+    "Training loop and trailer stop immediately after confirmation; no emergence",
+    "Original Plant / Day jump / Harvest trailer sequence restored",
+    "Expanded gardening and lineage remain standalone description loops",
+    "Five-second end card retained",
+    "Training screenshot shows the Child \u2192 Adult / Sword \u2192 Great Sword preview"
+  ],
+  "lossless_master": "sources/masters/auto-shrooms-trailer-32s-lossless.mov",
+  "screenshot_gif_bytes": 14375328,
+  "revision": 8,
+  "ending": {
+    "end_card_duration": 5,
+    "music_fade_duration": 2.8,
+    "quiet_tail": 0.2,
+    "picture_fade_duration": 0.2
+  },
+  "new_loop_actions": {
+    "gardening": {
+      "child": "Crick",
+      "fertilizer": "Reinforced Chitin",
+      "gardening_verified": true,
+      "mutation": "Inky"
+    },
+    "lineage": {
+      "descendant": "Lamarck II",
+      "descendant_generation": 2,
+      "inherited_body_mutation": "Rubber",
+      "inherited_weapon": "Sword",
+      "lineage_verified": true,
+      "parent": "Lamarck",
+      "parent_generation": 1,
+      "spore": "Lamarck's spores"
+    }
+  },
+  "trailer_actions": {
+    "original_grow": [
+      {
+        "action": "planted",
+        "source": "nursery",
+        "source_seconds": 2.06666666666667,
+        "trailer_seconds": 5.16666666666667,
+        "caption": "grow"
+      },
+      {
+        "action": "two_days_later",
+        "source": "nursery",
+        "source_seconds": 3.88333333333333,
+        "trailer_seconds": 5.933333333333329,
+        "caption": "two-days"
+      },
+      {
+        "action": "harvested",
+        "source": "nursery",
+        "source_seconds": 5.26666666666667,
+        "trailer_seconds": 7.266666666666669,
+        "caption": null
+      }
+    ]
+  },
+  "training": {
+    "trailer": {
+      "confirmed": true,
+      "day_advanced": false,
+      "emergence_shown": false,
+      "final_location": "Sword Cocoon",
+      "initial_stage": "Child",
+      "initial_weapon": "Sword",
+      "name": "Franklin II",
+      "preview_weapon": "Great Sword",
+      "school": "Sword",
+      "training_verified": true,
+      "confirmation_source_seconds": 6.98333333333333,
+      "edit_end_source_seconds": 7.15,
+      "extra_transition_handle": 0.1
+    },
+    "description_loop": {
+      "confirmed": true,
+      "day_advanced": false,
+      "emergence_shown": false,
+      "final_location": "Sword Cocoon",
+      "initial_stage": "Child",
+      "initial_weapon": "Sword",
+      "name": "Franklin II",
+      "preview_weapon": "Great Sword",
+      "school": "Sword",
+      "training_verified": true,
+      "confirmation_source_seconds": 6.98333333333333,
+      "edit_end_source_seconds": 7.15,
+      "extra_transition_handle": 0
+    }
+  },
+  "audio_review": {
+    "integrated_lufs": -16.1,
+    "true_peak_dbfs": -1.0,
+    "loudness_range_lu": 1.3,
+    "quiet_tail_peak": 0.0,
+    "analysis": "preview/sword-child/landscape-audio-analysis.log"
+  },
+  "visual_review": {
+    "training": "Sword Child, Great Sword comparison and confirmation visible; no emergence",
+    "end_card": "Blurred capsule-art background matches portrait treatment",
+    "previews": "preview/sword-child/"
+  },
+  "training_screenshot": {
+    "source": "sources/takes/training.mov",
+    "frame": 270,
+    "source_seconds": 4.5,
+    "subject": "Child \u2192 Adult / Sword \u2192 Great Sword comparison",
+    "files": {
+      "sources/stills/training-great-sword-preview.png": {
+        "dimensions": "2560x1440",
+        "sha256": "47d9ae6d697dc19f5cf835c0cf64a3f2ea0937e4ead3cedd3991cd2dc177b45a"
+      },
+      "exports/screenshots/06-training-combo.png": {
+        "dimensions": "1920x1080",
+        "sha256": "6865c20355365a0a167694b346fd656bfe194473b8c241540a2eac03b8862f5d"
+      },
+      "exports/screenshots/06-training-combo.jpg": {
+        "dimensions": "1920x1080",
+        "sha256": "0b898cfcb4a02fb23ae8ce07734b92776a436a3789a63080ebd5db67e4ea8851"
+      }
+    },
+    "visual_review": "Full comparison, both portraits, stage labels, weapon names and Confirm button visible"
+  },
+  "description_headers": {
+    "count": 5,
+    "dimensions": [
+      1170,
+      150
+    ],
+    "format": "PNG RGBA",
+    "recipe": "scripts/headers.json",
+    "details": "headers-validation.json",
+    "visual_review": "All five headings fit without clipping; combat heading reads Fight the heathen at the shared 84-point size"
+  }
+}

@@ -11,6 +11,7 @@
 *.bmp -text
 *.dds -text
 *.exr -text
+*.gif -text
 *.hdr -text
 *.jpg -text
 *.jpeg -text
@@ -21,6 +22,7 @@
 
 # Audio and Video formats
 *.mp3 -text
+*.mp4 -text
 *.wav -text
 *.ogg -text
 *.ogx -text

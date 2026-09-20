@@ -1,0 +1,551 @@
+{
+  "fps": 60,
+  "width": 1920,
+  "height": 1080,
+  "music_start": 8,
+  "chapters": [
+    {
+      "name": "01-hook",
+      "duration": 4,
+      "transition": "smoothleft",
+      "overlap": 0.1,
+      "clips": [
+        {
+          "source": "battle_a",
+          "start": 6.5,
+          "duration": 1,
+          "crop": [
+            1280,
+            720,
+            420,
+            300
+          ]
+        },
+        {
+          "source": "battle_b",
+          "start": 3,
+          "duration": 1
+        },
+        {
+          "source": "battle_a",
+          "start": 7.5,
+          "duration": 1,
+          "crop": [
+            1120,
+            630,
+            430,
+            300
+          ]
+        },
+        {
+          "source": "battle_elite",
+          "start": 5,
+          "duration": 1,
+          "crop": [
+            1440,
+            810,
+            360,
+            270
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02-grow",
+      "duration": 5,
+      "transition": "smoothup",
+      "overlap": 0.1,
+      "clips": [
+        {
+          "source": "nursery",
+          "start": 0.9,
+          "duration": 1.5,
+          "crop": [
+            1536,
+            864,
+            0,
+            190
+          ],
+          "title": "grow"
+        },
+        {
+          "source": "nursery",
+          "start": 3.45,
+          "duration": 1,
+          "crop": [
+            1536,
+            864,
+            0,
+            190
+          ],
+          "title": "two-days"
+        },
+        {
+          "source": "nursery",
+          "start": 4.5,
+          "duration": 2.5,
+          "crop": [
+            1536,
+            864,
+            0,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03-train",
+      "duration": 5,
+      "transition": "smoothleft",
+      "overlap": 0.1,
+      "clips": [
+        {
+          "source": "training",
+          "start": 1.45,
+          "duration": 1.75,
+          "crop": [
+            1440,
+            810,
+            0,
+            90
+          ],
+          "title": "train"
+        },
+        {
+          "source": "training",
+          "start": 3.85,
+          "duration": 2.25,
+          "crop": [
+            1536,
+            864,
+            192,
+            120
+          ]
+        },
+        {
+          "source": "training",
+          "start": 6.15,
+          "duration": 1,
+          "crop": [
+            1536,
+            864,
+            192,
+            120
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04-arrange",
+      "duration": 3,
+      "transition": "smoothleft",
+      "overlap": 0.1,
+      "clips": [
+        {
+          "source": "formation",
+          "start": 2,
+          "duration": 1.5,
+          "crop": [
+            1728,
+            972,
+            0,
+            80
+          ]
+        },
+        {
+          "source": "formation",
+          "start": 5.5,
+          "duration": 1.5,
+          "crop": [
+            1728,
+            972,
+            0,
+            80
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05-battle",
+      "duration": 10,
+      "transition": "fade",
+      "overlap": 0.25,
+      "clips": [
+        {
+          "source": "battle_a",
+          "start": 2.5,
+          "duration": 1.5,
+          "title": "fight"
+        },
+        {
+          "source": "battle_a",
+          "start": 6.2,
+          "duration": 1,
+          "crop": [
+            1280,
+            720,
+            400,
+            300
+          ]
+        },
+        {
+          "source": "battle_b",
+          "start": 5.2,
+          "duration": 1,
+          "crop": [
+            1280,
+            720,
+            580,
+            300
+          ]
+        },
+        {
+          "source": "battle_a",
+          "start": 7,
+          "duration": 1,
+          "crop": [
+            1120,
+            630,
+            430,
+            300
+          ]
+        },
+        {
+          "source": "battle_elite",
+          "start": 7,
+          "duration": 1
+        },
+        {
+          "source": "battle_elite",
+          "start": 13.45,
+          "duration": 0.5,
+          "crop": [
+            1280,
+            720,
+            420,
+            300
+          ]
+        },
+        {
+          "source": "battle_b",
+          "start": 9,
+          "duration": 1,
+          "crop": [
+            1440,
+            810,
+            340,
+            270
+          ]
+        },
+        {
+          "source": "battle_elite",
+          "start": 10,
+          "duration": 1,
+          "crop": [
+            1280,
+            720,
+            500,
+            300
+          ]
+        },
+        {
+          "source": "battle_a",
+          "start": 13.5,
+          "duration": 1,
+          "crop": [
+            1280,
+            720,
+            600,
+            300
+          ]
+        },
+        {
+          "source": "battle_b",
+          "start": 12,
+          "duration": 1,
+          "crop": [
+            1280,
+            720,
+            500,
+            300
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06-end-card",
+      "duration": 5,
+      "overlap": 0,
+      "clips": [
+        {
+          "source": "end-card",
+          "start": 0,
+          "duration": 5
+        }
+      ]
+    }
+  ],
+  "revision": 8,
+  "headline_position": {
+    "x": 48,
+    "bottom_margin": 28,
+    "style": "cream cut-paper ribbon / dark ink"
+  },
+  "end_card": {
+    "graphic": "sources/graphics/end-card.png",
+    "tagline": "Fungus Vult!",
+    "cta": "Wishlist on Steam",
+    "cta_font": "Fredoka SemiBold",
+    "capsule": "sources/graphics/capsule.png",
+    "steam_logo": "sources/graphics/steam-logo.svg",
+    "background": "Blurred capsule artwork; same crop, blur and dimming recipe as portrait"
+  },
+  "loop_caption_positions": {
+    "01-plant-and-harvest": {
+      "scale": 0.6,
+      "bottom_margin": 6
+    }
+  },
+  "ending": {
+    "music_fade_duration": 2.8,
+    "quiet_tail": 0.2,
+    "picture_fade_duration": 0.2
+  },
+  "description_loops": {
+    "01-plant-and-harvest": [
+      {
+        "source": "gardening",
+        "start": 1.1,
+        "duration": 1.3,
+        "crop": [
+          1280,
+          640,
+          0,
+          270
+        ],
+        "title": "plant",
+        "footer": true,
+        "caption_bottom": 12
+      },
+      {
+        "source": "gardening",
+        "start": 2.9,
+        "duration": 2.3,
+        "crop": [
+          1280,
+          640,
+          0,
+          270
+        ],
+        "title": "fertilize",
+        "footer": true,
+        "caption_bottom": 12
+      },
+      {
+        "source": "gardening",
+        "start": 5.8,
+        "duration": 2.3,
+        "crop": [
+          1280,
+          640,
+          0,
+          270
+        ],
+        "title": "mutate",
+        "footer": true,
+        "caption_bottom": 12
+      },
+      {
+        "source": "gardening",
+        "start": 8.68,
+        "duration": 0.7,
+        "crop": [
+          1280,
+          640,
+          0,
+          270
+        ],
+        "title": "two-days",
+        "footer": true,
+        "caption_bottom": 12
+      },
+      {
+        "source": "gardening",
+        "start": 9.43,
+        "duration": 0.73,
+        "crop": [
+          1280,
+          640,
+          0,
+          270
+        ],
+        "title": "harvest",
+        "footer": true,
+        "caption_bottom": 12
+      },
+      {
+        "source": "gardening",
+        "start": 10.16,
+        "duration": 2.67,
+        "crop": [
+          960,
+          480,
+          0,
+          35
+        ],
+        "title": "harvest",
+        "footer": true,
+        "caption_bottom": 12
+      }
+    ],
+    "05-lineage": [
+      {
+        "source": "lineage_sword",
+        "start": 4.216667,
+        "duration": 2.4,
+        "crop": [
+          1120,
+          560,
+          380,
+          290
+        ],
+        "title": "lineage-death",
+        "footer": true,
+        "caption_bottom": 12
+      },
+      {
+        "source": "lineage_sword",
+        "start": 22.4,
+        "duration": 1.4,
+        "crop": [
+          960,
+          480,
+          0,
+          210
+        ],
+        "title": "lineage-spores",
+        "footer": true,
+        "caption_bottom": 12
+      },
+      {
+        "source": "lineage_sword",
+        "start": 24.616667,
+        "duration": 2.1,
+        "crop": [
+          1280,
+          640,
+          0,
+          300
+        ],
+        "title": "lineage-plant",
+        "footer": true,
+        "caption_bottom": 12
+      },
+      {
+        "source": "lineage_sword",
+        "start": 27.866667,
+        "duration": 0.6,
+        "crop": [
+          1280,
+          640,
+          0,
+          300
+        ],
+        "title": "one-day",
+        "footer": true,
+        "caption_bottom": 12
+      },
+      {
+        "source": "lineage_sword",
+        "start": 28.616667,
+        "duration": 0.73,
+        "crop": [
+          1280,
+          640,
+          0,
+          300
+        ],
+        "title": "lineage-harvest",
+        "footer": true,
+        "caption_bottom": 12
+      },
+      {
+        "source": "lineage_sword",
+        "start": 29.35,
+        "duration": 2.77,
+        "crop": [
+          960,
+          480,
+          0,
+          35
+        ],
+        "title": "lineage-result",
+        "footer": true,
+        "caption_bottom": 12
+      }
+    ],
+    "02-train-and-combine": [
+      {
+        "source": "training",
+        "start": 0.65,
+        "duration": 2.55,
+        "crop": [
+          1440,
+          810,
+          0,
+          90
+        ]
+      },
+      {
+        "source": "training",
+        "start": 3.2,
+        "duration": 3.95,
+        "crop": [
+          1536,
+          864,
+          192,
+          120
+        ]
+      }
+    ]
+  },
+  "loop_gif_options": {
+    "05-lineage": {
+      "max_bytes": 4900000,
+      "presets": [
+        [
+          780,
+          12,
+          128,
+          3
+        ],
+        [
+          702,
+          12,
+          128,
+          4
+        ],
+        [
+          702,
+          12,
+          96,
+          4
+        ],
+        [
+          702,
+          12,
+          64,
+          5
+        ]
+      ]
+    }
+  },
+  "screenshot_sources": {
+    "06-training-combo": {
+      "source": "training",
+      "frame": 270,
+      "still": "training-great-sword-preview",
+      "subject": "Sword Child \u2192 Great Sword Adult comparison before confirmation"
+    }
+  }
+}

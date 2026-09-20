@@ -1,0 +1,128 @@
+[
+	{
+		"casting": "dedicated Sword lineage battle",
+		"enemies": {
+			"Rose Thorn": 2,
+			"Solar Sword": 1
+		},
+		"run_seed": 26,
+		"setup_day": 2
+	},
+	{
+		"adults": 2,
+		"children": 1,
+		"class_counts_melee_mid_ranged": [
+			1,
+			0,
+			2
+		],
+		"order": "rear to front",
+		"roster": [
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Darwin",
+				"range_class": "Ranged",
+				"slot": 0,
+				"stage": "Adult",
+				"weapon": "Bow"
+			},
+			{
+				"body_mutation": "",
+				"cap_mutation": "",
+				"name": "Curie II",
+				"range_class": "Ranged",
+				"slot": 1,
+				"stage": "Child",
+				"weapon": "Bow"
+			},
+			{
+				"body_mutation": "Rubber",
+				"cap_mutation": "",
+				"name": "Lamarck",
+				"range_class": "Melee",
+				"slot": 2,
+				"stage": "Adult",
+				"weapon": "Sword"
+			}
+		],
+		"roster_label": "dedicated_lineage"
+	},
+	{
+		"action": "player_death:Lamarck:",
+		"frame": 319,
+		"seconds": 5.31666666666667
+	},
+	{
+		"lineage_death": "Lamarck",
+		"screen_x_1080p": 986.869873046875,
+		"screen_y_1080p": 785.929321289062,
+		"seconds": 5.31666666666667
+	},
+	{
+		"action": "dedicated_battle_won",
+		"frame": 937,
+		"seconds": 15.6166666666667
+	},
+	{
+		"action": "seal_choice_completed",
+		"frame": 1282,
+		"seconds": 21.3666666666667
+	},
+	{
+		"action": "lineage_spore_visible",
+		"frame": 1342,
+		"seconds": 22.3666666666667
+	},
+	{
+		"action": "lineage_plant_start",
+		"frame": 1477,
+		"seconds": 24.6166666666667
+	},
+	{
+		"action": "lineage_planted",
+		"frame": 1592,
+		"seconds": 26.5333333333333
+	},
+	{
+		"action": "one_day_later",
+		"frame": 1677,
+		"seconds": 27.95
+	},
+	{
+		"action": "lineage_harvest_start",
+		"frame": 1717,
+		"seconds": 28.6166666666667
+	},
+	{
+		"action": "lineage_harvested:Lamarck II",
+		"frame": 1765,
+		"seconds": 29.4166666666667
+	},
+	{
+		"descendant": "Lamarck II",
+		"descendant_generation": 2,
+		"inherited_body_mutation": "Rubber",
+		"inherited_weapon": "Sword",
+		"lineage_verified": true,
+		"parent": "Lamarck",
+		"parent_generation": 1,
+		"spore": "Lamarck's spores"
+	},
+	{
+		"action": "lineage_result",
+		"frame": 2000,
+		"seconds": 33.3333333333333
+	},
+	{
+		"action": "take_complete",
+		"frame": 2000,
+		"seconds": 33.3333333333333
+	},
+	{
+		"height": 1440,
+		"raw_format": "rgb24",
+		"raw_frames": 2000,
+		"width": 2560
+	}
+]

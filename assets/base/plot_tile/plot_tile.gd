@@ -621,11 +621,7 @@ func _texture_for_plot() -> Texture2D:
 		return _TEX_EMPTY
 	if _plot.get_state() == NurseryPlotData.State.READY:
 		return _TEX_EMPTY
-	var left := _plot.remaining_days()
-	var grown := _plot.days_grown
-	var needed := maxi(grown + left, 1)
-	var progress := float(grown) / float(needed)
-	if progress < 0.5:
+	if _plot.remaining_days() > 1:
 		return _TEX_GROWTH0
 	return _TEX_GROWTH1
 

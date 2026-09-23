@@ -144,8 +144,50 @@ func _run() -> void:
 		errs.append("Greenhouse after Slow and Steady should add")
 	_eq(errs, slow_plot.remaining_days(), 3, "Greenhouse is not multiplied by Slow and Steady")
 
+	await _check_quick_growth_ui_refresh(errs)
 	await _check_greenhouse_ui_refresh(errs)
 	_finish(errs)
+
+
+func _check_quick_growth_ui_refresh(errs: Array[String]) -> void:
+	GameState.reset_run()
+	GameState.activate_debug_cheats()
+	var nursery := GameState.nursery
+	nursery.unlocked_plot_count = NurseryData.MAX_PLOT_COUNT
+	var quick := load("res://assets/base/nursery/fertilizers/quick_growth.tres") as FertilizerData
+	var slow := load("res://assets/base/nursery/fertilizers/slow_and_steady.tres") as FertilizerData
+	for i in 2:
+		_eq(errs, nursery.plant_spore(i, nursery.make_fresh_common_spore()), true, "UI: plant %d" % i)
+	_eq(errs, nursery.apply_fertilizer_to_plot(1, slow), true, "UI: apply Slow and Steady")
+	_eq(errs, nursery.apply_fertilizer_to_plot(2, quick), true, "UI: prepare Quick Growth")
+	_eq(errs, nursery.plant_spore(2, nursery.make_fresh_common_spore()), true, "UI: plant prepared plot")
+	var screen := preload("res://assets/base/nursery/nursery_screen.tscn").instantiate() as NurseryScreen
+	add_child(screen)
+	_eq(errs, screen._tiles[0]._plot_visual.texture, PlotTile._TEX_GROWTH0, "fresh grow starts small")
+	_eq(errs, screen._tiles[2]._plot_visual.texture, PlotTile._TEX_GROWTH1, "prepared Quick Growth starts larger")
+	_eq(errs, nursery.add_fertilizer(quick), true, "UI: stock Quick Growth")
+	screen._on_plot_item_dropped(screen._tiles[0], {
+		"type": "fertilizer", "stock_index": nursery.stock.slots.find(quick), "fertilizer": quick,
+	})
+	_eq(errs, screen._tiles[0]._days_chip._value_label.text, "1", "Quick Growth immediately updates countdown")
+	_eq(errs, screen._tiles[0]._plot_visual.texture, PlotTile._TEX_GROWTH1, "Quick Growth immediately enlarges grow")
+	_eq(errs, nursery.plots[0].days_grown, 0, "Quick Growth does not advance elapsed days")
+	_eq(errs, nursery.plots[0].growth_time(), 2, "Quick Growth does not change Growth Time")
+	_eq(errs, screen._tiles[1]._plot_visual.texture, PlotTile._TEX_GROWTH0, "Slow and Steady starts small")
+	nursery.plots[0].tick_day()
+	nursery.plots[1].tick_day()
+	screen.on_screen_shown()
+	_eq(errs, screen._tiles[0]._egg_visual.visible, true, "Quick Growth harvest shows mature egg")
+	_eq(errs, screen._tiles[1]._plot_visual.texture, PlotTile._TEX_GROWTH0, "Slow and Steady stays small with three days left")
+	nursery.plots[1].tick_day()
+	screen.on_screen_shown()
+	_eq(errs, screen._tiles[1]._plot_visual.texture, PlotTile._TEX_GROWTH0, "Slow and Steady stays small with two days left")
+	nursery.plots[1].tick_day()
+	screen.on_screen_shown()
+	_eq(errs, screen._tiles[1]._plot_visual.texture, PlotTile._TEX_GROWTH1, "Slow and Steady grows larger with one day left")
+	screen.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
 
 
 func _check_greenhouse_ui_refresh(errs: Array[String]) -> void:
@@ -181,6 +223,7 @@ func _check_greenhouse_ui_refresh(errs: Array[String]) -> void:
 	dialog._on_confirm_pressed()
 	_eq(errs, nursery.plots[0].remaining_days(), 1, "seal selection reduces stored Remaining Time")
 	_eq(errs, screen._tiles[0]._days_chip._value_label.text, "1", "seal selection immediately refreshes countdown")
+	_eq(errs, screen._tiles[0]._plot_visual.texture, PlotTile._TEX_GROWTH1, "Greenhouse shows larger grow with one day left")
 	_eq(errs, nursery.plots[1].can_harvest(), true, "seal selection matures last-day grow")
 	_eq(errs, screen._tiles[1]._days_chip.icon, PlotTile._HARVEST_ICON, "seal selection immediately shows harvest icon")
 	_eq(errs, screen._tiles[1]._days_chip._value_label.visible, false, "seal selection hides completed countdown")

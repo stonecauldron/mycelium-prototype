@@ -34,18 +34,18 @@ Edit `composition_cost`, `is_strong`, and `min_day` on each `assets/units/enemie
 | Rose Thorn | Regular | 2 | 10 | Ranged throw with melee follow-up |
 | Peashooter | Regular | 2 | 10 | Sustained ranged threat |
 | Stump | Regular | 4 | 12 | Slashing resistance and charge blocking, offset by low offense |
-| Solar Cleaver | Strong | 5 | 23 | Heavy area melee attack |
-| Durian | Strong | 5 | 25 | Area blunt damage bypasses shield-style slashing resistance |
-| Log | Strong | 5 | 23 | Heavy slashing resistance and charge blocking, with very low offense |
+| Solar Cleaver | Strong | 5 | 24 | Heavy area melee attack |
+| Durian | Strong | 5 | 26 | Area blunt damage bypasses shield-style slashing resistance |
+| Log | Strong | 5 | 24 | Heavy slashing resistance and charge blocking, with very low offense |
 | Canopy | Strong | 5 | 22 | Projectile interception and charge blocking; limited offense |
-| Seed Lobber | Strong | 5 | 25 | Ranged area explosions |
-| Acorn Knight | Strong | 5 | 23 | Charge pressure, checked by charge blockers |
+| Seed Lobber | Strong | 5 | 26 | Ranged area explosions |
+| Acorn Knight | Strong | 5 | 24 | Charge pressure, checked by charge blockers |
 
-Strong costs were reduced by 20% on 2026-09-17, then increased by 10% twice, each time from the preceding values. Each adjustment rounds to the nearest whole Army-budget point.
+Original Strong costs were restored on 2026-09-23.
 
 Canopy intercepts colliding shots; Lobber-style delayed radius explosions bypass its interception. Enemy costs should be adjusted from playtesting alongside Day budgets.
 
-## Starting Day-budget ranges
+## Current Day-budget ranges
 
 Edit `_DAY_BUDGET_RANGES` in `assets/base/troop_selection/enemy_composer.gd`; `budget_range_for_day()` is also used by reward calculation. Values are inclusive integer allocations. Day 6 deliberately eases after the first elite battle before the next ramp.
 
@@ -55,12 +55,14 @@ Edit `_DAY_BUDGET_RANGES` in `assets/base/troop_selection/enemy_composer.gd`; `b
 | 2 | 22 | 30 |
 | 3 | 28 | 40 |
 | 4 | 40 | 56 |
-| 5 — elite | 108 | 144 |
+| 5 — elite | 97 | 130 |
 | 6 | 90 | 120 |
 | 7 | 108 | 144 |
 | 8 | 132 | 176 |
 | 9 | 168 | 216 |
 | 10 — elite | 240 | 312 |
+
+Day 5's bounds were reduced by 10% on 2026-09-23 and rounded to whole points: 108–144 → 97–130. Its mean allocation is now 113.5 rather than 126 points (a 9.92% reduction, the nearest representable mean to the 113.4-point target).
 
 The minimum is a minimum **allocation**, not a minimum amount that must be spent. Rounding can produce an army whose actual cost is below it. Day 1's allocations can buy two or three Swords; with uniform integer allocation, the three-Sword army occurs only at 18 points.
 

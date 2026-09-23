@@ -12,7 +12,7 @@ const _DAY_BUDGET_RANGES: Array[Vector2i] = [
 	Vector2i(22, 30),
 	Vector2i(28, 40),
 	Vector2i(40, 56),
-	Vector2i(108, 144), # Elite: Strong enemies only.
+	Vector2i(97, 130), # Elite: Strong enemies only.
 	Vector2i(90, 120),
 	Vector2i(108, 144),
 	Vector2i(132, 176),

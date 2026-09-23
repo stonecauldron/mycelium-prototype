@@ -116,6 +116,7 @@ func _refresh_duration_chip() -> void:
 		days = _unit.effective_cocoon_days()
 	_duration_chip.set_value(maxi(days, 0))
 	_adult_duration_chip.set_value(maxi(days, 0))
+	_adult_duration_chip.visible = days > 0
 	var suffix := "instant" if days <= 0 else WeaponSchool.day_word(days)
 	_duration_suffix.text = suffix
 	_adult_duration_suffix.text = suffix

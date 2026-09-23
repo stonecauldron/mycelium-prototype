@@ -174,13 +174,13 @@ func can_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
 		return false
 	if pupation.find_school_for_unit(unit) >= 0:
 		return false
-	# Must leave at least one fighter after removing this unit from troop.
-	if available_fighter_count() <= 1:
+	# Training with a wait must leave at least one fighter in the troop.
+	if unit.effective_cocoon_days() > 0 and available_fighter_count() <= 1:
 		return false
 	return true
 
 
-## Cocoon a unit for school training (spend biomass, remove from troop).
+## Spend biomass on training; only remove the unit from troop when there is a wait.
 func try_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
 	if not can_cocoon_for_pupation(unit, school):
 		return false
@@ -188,22 +188,19 @@ func try_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
 		return false
 	if not biomass.try_spend(WeaponSchool.COCOON_COST):
 		return false
-	troop.remove_unit(unit)
-	if not pupation.try_place(unit, school):
-		biomass.add(WeaponSchool.COCOON_COST)
-		troop.try_add_unit(unit)
-		return false
+	if unit.effective_cocoon_days() <= 0:
+		unit.apply_pupation_training(school)
+	else:
+		troop.remove_unit(unit)
+		if not pupation.try_place(unit, school):
+			biomass.add(WeaponSchool.COCOON_COST)
+			troop.try_add_unit(unit)
+			return false
 	Analytics.biomass_sink(
 		"Training",
 		Analytics.slug(WeaponSchool.display_name(school)),
 		WeaponSchool.COCOON_COST
 	)
-	# Cocoon duration <= 0 emerges immediately.
-	if pupation.get_days_remaining(school) <= 0:
-		var placed := pupation.take_occupant(school)
-		if placed != null:
-			placed.apply_pupation_training(school)
-			troop.try_add_unit(placed)
 	return true
 
 

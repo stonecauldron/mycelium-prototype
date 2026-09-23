@@ -175,11 +175,11 @@ The War Chamber's dedicated place for Compost, separate from weapon-school Cocoo
 *Avoid*: composting cocoon
 
 **Training**:
-Putting a Child or Adult through a weapon school to gain that school's fighting identity. A Child emerges as an Adult; an Adult can train again with its Stats unchanged.
+Putting a Child or Adult through a weapon school to gain that school's fighting identity. A Child emerges as an Adult; an Adult trains instantly on confirmation with its Stats and troop position unchanged.
 *Avoid*: WeaponSchool (code)
 
 **Cocoon**:
-The Base slot where a unit sits while Training, out of the troop until it emerges.
+The Base slot used to start Training. A Child sits here out of the troop until it emerges; Adult Training completes instantly.
 
 **Weapon school**:
 Sword, Mace, Shield, Spear, or Bow — the fighting identity Training grants.

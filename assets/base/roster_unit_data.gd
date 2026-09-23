@@ -43,7 +43,7 @@ var emitted_death_spore: bool = false
 @export var has_revived: bool = false
 ## Favourite Child seal: permanent 1.5x ATK/HP from first hatch of a day.
 @export var favourite_child_buff: bool = false
-## Child cocoon duration in days (−1 = default). Adults always use the default.
+## Child cocoon duration in days (−1 = default). Adult training is instant.
 @export var cocoon_duration_days: int = -1
 ## Multiplier for pupation school stat gains (Cocooning fertiliser).
 @export var pupation_stat_multiplier: int = 1
@@ -169,7 +169,7 @@ func _apply_pending_adult_stat_bonus() -> void:
 ## Cocoon wait in days. 0 or less means instant emerge on place.
 func effective_cocoon_days() -> int:
 	if is_adult_stage():
-		return WeaponSchool.COCOON_DURATION_DAYS
+		return 0
 	if cocoon_duration_days >= 0:
 		return cocoon_duration_days
 	return WeaponSchool.COCOON_DURATION_DAYS

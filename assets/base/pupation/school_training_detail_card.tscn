@@ -1,8 +1,12 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://assets/base/pupation/school_training_detail_card.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://gords6jtecxc" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 04.png" id="3_paper"]
+[ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="4_tag"]
+[ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="5_chip"]
+[ext_resource type="Texture2D" uid="uid://bio1y8cond5lm" path="res://assets/base/nursery/spore_card/hourglass_icon.png" id="6_hourglass"]
+[ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="7_biomass"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_training"]
 content_margin_left = 32.0
@@ -12,7 +16,7 @@ content_margin_bottom = 44.0
 texture = ExtResource("3_paper")
 
 [node name="SchoolTrainingDetailCard" type="Control"]
-custom_minimum_size = Vector2(360, 280)
+custom_minimum_size = Vector2(400, 280)
 clip_contents = false
 layout_mode = 3
 anchors_preset = 0
@@ -23,7 +27,7 @@ script = ExtResource("1_script")
 [node name="CardPanel" type="PanelContainer" parent="."]
 clip_contents = false
 anchors_preset = 0
-offset_right = 360.0
+offset_right = 400.0
 offset_bottom = 280.0
 mouse_filter = 2
 theme_type_variation = &"DetailTooltipPanel"
@@ -64,20 +68,51 @@ autowrap_mode = 3
 [node name="ChildrenStats" type="HBoxContainer" parent="CardPanel/Margin/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
-alignment = 1
 
-[node name="ChildrenLabel" type="Label" parent="CardPanel/Margin/VBox/ChildrenStats"]
+[node name="ChildTag" parent="CardPanel/Margin/VBox/ChildrenStats" instance=ExtResource("4_tag")]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 18
-text = "Children:"
-vertical_alignment = 1
+size_flags_vertical = 4
+text = "Child"
 
 [node name="StatsRow" type="HBoxContainer" parent="CardPanel/Margin/VBox/ChildrenStats"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_constants/separation = 10
 alignment = 1
+
+[node name="DurationChip" parent="CardPanel/Margin/VBox/ChildrenStats" instance=ExtResource("5_chip")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+icon = ExtResource("6_hourglass")
+chip_size = Vector2(36, 36)
+value_font_size = 22
+
+[node name="AdultTraining" type="HBoxContainer" parent="CardPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="AdultTag" parent="CardPanel/Margin/VBox/AdultTraining" instance=ExtResource("4_tag")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+text = "Adult"
+
+[node name="StatsLabel" type="Label" parent="CardPanel/Margin/VBox/AdultTraining"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 18
+text = "no stats gains"
+vertical_alignment = 1
+
+[node name="DurationLabel" type="Label" parent="CardPanel/Margin/VBox/AdultTraining"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
+theme_override_font_sizes/font_size = 18
+text = "· instant"
+vertical_alignment = 1
 
 [node name="TrainingHintMargin" type="MarginContainer" parent="CardPanel/Margin/VBox"]
 layout_mode = 2
@@ -90,3 +125,25 @@ theme_override_font_sizes/font_size = 18
 text = "Drag and drop a unit inside a cocoon to train it."
 horizontal_alignment = 1
 autowrap_mode = 3
+
+[node name="PriceRow" type="HBoxContainer" parent="CardPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 2
+
+[node name="PriceLabel" type="Label" parent="CardPanel/Margin/VBox/PriceRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 22
+text = "3"
+horizontal_alignment = 1
+
+[node name="BiomassIcon" type="TextureRect" parent="CardPanel/Margin/VBox/PriceRow"]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("7_biomass")
+expand_mode = 1
+stretch_mode = 5

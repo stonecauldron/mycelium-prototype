@@ -8,17 +8,18 @@ Implemented and reviewed following authorization through the implement skill.
 - Adults may enter Cocoons for weapon-school Training with STR, DEX, and CON unchanged: neither school bonuses nor penalties apply. The resulting Weapon can still change combat performance.
 - Adult Training uses the same school-history mechanism as descendant Training: retain at most two schools, replacing the oldest on further Training. Same-school pairs remain valid.
 - Lineage spores inherit the parent's current Trainings, including schools learned as an Adult.
-- Adult Training costs 3 biomass and takes 1 Day, including Adults raised with Cocooning. Child Training keeps its existing Fertilizer behavior.
-- Existing Cocoon capacity, cancellation/refund, and minimum-one-fighter rules remain.
-- Cocoons continue suspending aging, Stimulants decay, and daily Mutation effects. Repeat Adult Training may reuse this shelter, including when the Weapon stays unchanged.
+- Adult Training costs 3 biomass and completes instantly on confirmation, including Adults raised with Cocooning. The Adult stays in its original Squad or Bench slot. Child Training keeps its existing Fertilizer behavior.
+- Existing Cocoon capacity remains. Cancellation/refund and minimum-one-fighter rules apply to Training with a wait; the last Adult can train instantly.
+- Cocoons continue suspending aging, Stimulants decay, and daily Mutation effects for Children. Adults remain in the troop and cannot use Training as shelter.
 - Show “Stats unchanged” in the Adult confirmation. Omit the training hint below the Cocoons.
-- Collapse school tooltip Stat changes into one line labeled “Children”, retaining the existing Stat icons and signed gain/loss colors.
-- School tooltips show the school icon, title, and compact Children Stat row. Omit Combo weapon recipes: visual review found them too cluttered.
+- School tooltips use a Child tag followed by school Stat changes and the default duration hourglass, retaining the existing Stat icons and signed gain/loss colors. A second row uses an Adult tag followed by “no stats gains” and “instant”.
+- School tooltips show the school icon, title, and the biomass price in the bottom-right corner using the Shop price style. Omit Combo weapon recipes: visual review found them too cluttered.
 - Adult confirmations show only the final result in a centered card, with duration, “Stats unchanged”, and the confirmation price. Children retain the before/after comparison. Add no school-replacement information.
 - The confirmation title says “Train [unit name]” for Adults and “Pupate [unit name]” for Children.
 
 ## Visual review
 
+- Training tooltip follow-up: rendered all five school cards in Godot at 1920 × 1080. Each fits at 400 × 424 with Child/Adult tags, signed school Stats followed by the one-Day hourglass, “no stats gains · instant”, and the 3-biomass price at bottom right. No clipped content in the rendered cards.
 - Text recipes and then icon recipes were tried in the tooltips; the user chose to remove the recipe section after reviewing the clutter. The single Children row retains Stat icons and signed gain/loss colors.
 - Adult final-result and Child comparison layouts were inspected at 1920 × 1080, including reusing the dialog Adult → Child → Adult. The Adult panel centers the result and retains duration, unchanged-Stats text, and price; the Child comparison is restored correctly. The tooltip without recipes and removal of the Cocoon hint were also visually checked.
 
@@ -32,6 +33,10 @@ Implemented and reviewed following authorization through the implement skill.
 - Repeating a school can preserve the immediate Combo weapon while changing school order; repeating Sword on Sword + Sword changes neither.
 
 ## Validation
+
+- Instant Training follow-up: a temporary Godot 4.7 runtime scene passed 22 checks, including the actual confirmation-button signal, preview/cancel without mutation, immediate combo updates, unchanged Adult Stats, exact biomass charge, preserved Squad/Bench positions, last-Adult eligibility, repeat Training, insufficient funds, and occupied Cocoons. Normal Child emergence, Cocooning's two-Day wait, cancellation/refund, and the last-Child restriction also passed. The temporary scene was removed after verification.
+
+The original one-Day Adult Training checks below describe the earlier implementation; instant Adult Training supersedes its wait, cancellation, and shelter behavior.
 
 - Godot 4.7 editor import completed without errors. No configured test suite or pre-agreed TDD seams exist; validation used a temporary runtime preview scene, removed after inspection.
 - An Adult with STR 10 / DEX 8 / CON 12, doubled school Stats, and a 2-Day Cocoon override trained into Mace in 1 Day with all Stats unchanged, then retrained into Umbrella Shield with all Stats still unchanged.

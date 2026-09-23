@@ -104,6 +104,8 @@ func _check_army(day: int, specs: Array[EnemyUnitSpec], budget: int) -> void:
 		_expect(strong.is_empty(), "no Strong enemies before Day 5")
 	elif GameState.is_elite_day(day):
 		_expect(strong.size() == types.size(), "elite is Strong-only")
+		if day == 5:
+			_expect(strong.size() <= 1, "Day 5 has at most one Strong type")
 	else:
 		_expect(strong.size() <= 2, "mixed day has at most two Strong types")
 
@@ -131,8 +133,9 @@ func _check_reward_bounds() -> void:
 	for day in range(1, 11):
 		var bounds := EnemyComposer.budget_range_for_day(day)
 		var midpoint := floori((float(bounds.x) + float(bounds.y)) * 0.5)
+		var midpoint_t := float(midpoint - bounds.x) / float(bounds.y - bounds.x)
 		var costs := [bounds.x - 2, bounds.x, midpoint, bounds.y, bounds.y + 2]
-		var expected_t := [0.0, 0.0, 0.5, 1.0, 1.0]
+		var expected_t := [0.0, 0.0, midpoint_t, 1.0, 1.0]
 		for i in costs.size():
 			var unit := _type_with_cost(costs[i])
 			var specs: Array[EnemyUnitSpec] = [EnemyUnitSpec.make(unit)]

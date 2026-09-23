@@ -163,12 +163,15 @@ static func _generate_with_budget(
 	rng: RandomNumberGenerator
 ) -> Array[EnemyUnitSpec]:
 	var unit_archetype: ArmyArchetype = (rng.randi() % 3) as ArmyArchetype
+	var max_strong_types := 3 if GameState.is_elite_day(day) else 2
+	if day == 5:
+		max_strong_types = 1
 	var unit_slots := _distribute_mix(
 		_enemy_pool_for_day(day),
 		unit_archetype,
 		budget,
 		rng,
-		3 if GameState.is_elite_day(day) else 2
+		max_strong_types
 	)
 
 	var specs: Array[EnemyUnitSpec] = []

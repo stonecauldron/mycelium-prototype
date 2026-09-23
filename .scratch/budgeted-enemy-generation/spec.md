@@ -19,7 +19,8 @@ Each Day defines an Army-budget range. Initial generation rolls an allocation fr
 - Day 1: Solar Sword only.
 - Days 2–3: Solar Sword, Rose Thorn, and Peashooter.
 - Day 4: all four Regular types, adding Stump.
-- Elite Days 5 and 10: Strong types only.
+- Elite Day 5: Strong enemies only, with at most one distinct type.
+- Elite Day 10: Strong enemies only, with up to three distinct types.
 - Days 6–9: Regular types plus at most two distinct Strong types. Zero Strong types is allowed; the restriction limits distinct types, not individual enemies.
 
 Selecting two Strong types on a mixed Day removes the other Strong types from the remaining picks. A Strong type may dominate a pattern, with its higher cost reducing army size. Elite budgets create the difficulty spike; their Strong-only pool establishes the army's character.

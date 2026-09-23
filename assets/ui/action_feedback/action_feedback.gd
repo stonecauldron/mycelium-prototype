@@ -5,7 +5,7 @@ extends CanvasLayer
 enum PresentationMode { DRAG_MESSAGE, ANCHORED_MESSAGE, GLOBAL_MESSAGE }
 
 const _LAYER := 120
-const _HOVER_DELAY_MSEC := 300
+const _HOVER_DELAY_MSEC := 100
 const _DISPLAY_SEC := 1.75
 const _FADE_SEC := 0.16
 const _NUDGE_COOLDOWN_MSEC := 400

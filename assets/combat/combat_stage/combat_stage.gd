@@ -45,6 +45,10 @@ const _ACID_RAIN_BASE_DAMAGE := 1
 @onready var _barks: CombatBarks = $World/CombatBarks
 @onready var _right_edge: CollisionShape2D = $World/WorldBoundary/RightEdge
 @onready var _camera: Camera2D = $World/MainCamera
+@onready var _acid_rain_status: PanelContainer = %AcidRainStatus
+@onready var _acid_rain_label: Label = %AcidRainLabel
+@onready var _acid_rain_effect: ColorRect = %AcidRainEffect
+@onready var _acid_rain_material: ShaderMaterial = _acid_rain_effect.material as ShaderMaterial
 
 var _player_spawn: Vector2
 var _enemy_spawn: Vector2
@@ -70,7 +74,6 @@ var _battle_elapsed_sec: float = 0.0
 var _acid_rain_active: bool = false
 var _acid_rain_tick_accum: float = 0.0
 var _acid_rain_active_elapsed: float = 0.0
-var _acid_rain_label: Label = null
 
 
 func _ready() -> void:
@@ -92,7 +95,7 @@ func _ready() -> void:
 	_set_fast_forward(GameState.combat_fast_forward)
 	_refresh_biomass_hud()
 	_setup_debug_kill_hint()
-	_ensure_acid_rain_label()
+	set_process(false)
 	GameState.debug_mode_changed.connect(_on_debug_mode_changed)
 
 	if sandboxed:
@@ -187,6 +190,7 @@ func _process(delta: float) -> void:
 	_battle_elapsed_sec += delta
 	if not _acid_rain_active:
 		if _battle_elapsed_sec < _ACID_RAIN_GRACE_SEC:
+			_refresh_acid_rain_hud()
 			return
 		_start_acid_rain()
 		if _battle_over:
@@ -198,6 +202,8 @@ func _process(delta: float) -> void:
 		_tick_acid_rain()
 		if _battle_over:
 			return
+	_refresh_acid_rain_hud()
+	_update_acid_rain_effect()
 
 
 func _on_fast_forward_pressed() -> void:
@@ -359,33 +365,35 @@ func _reset_acid_rain() -> void:
 	_acid_rain_active = false
 	_acid_rain_tick_accum = 0.0
 	_acid_rain_active_elapsed = 0.0
-	_ensure_acid_rain_label()
-	if _acid_rain_label != null:
-		_acid_rain_label.visible = false
+	_acid_rain_effect.hide()
+	_acid_rain_material.set_shader_parameter(&"rain_time", 0.0)
+	_acid_rain_material.set_shader_parameter(&"strength", 0.0)
+	_refresh_acid_rain_hud()
+	set_process(true)
 
 
-func _ensure_acid_rain_label() -> void:
-	if _acid_rain_label != null and is_instance_valid(_acid_rain_label):
-		return
-	if _hud == null:
-		return
-	var label := Label.new()
-	label.name = "AcidRainLabel"
-	label.visible = false
-	label.text = "Acid Rain"
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override(&"font_size", 36)
-	label.add_theme_color_override(&"font_color", Color(0.55, 0.95, 0.35, 1.0))
-	label.add_theme_color_override(&"font_outline_color", Color(0, 0, 0, 1.0))
-	label.add_theme_constant_override(&"outline_size", 6)
-	label.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	label.offset_left = -160.0
-	label.offset_right = 160.0
-	label.offset_top = 112.0
-	label.offset_bottom = 156.0
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hud.add_child(label)
-	_acid_rain_label = label
+func _refresh_acid_rain_hud() -> void:
+	var remaining := maxf(_ACID_RAIN_GRACE_SEC - _battle_elapsed_sec, 0.0)
+	_acid_rain_status.visible = _acid_rain_active or remaining <= 5.0
+	if _acid_rain_active:
+		_acid_rain_label.text = "Acid Rain"
+	else:
+		_acid_rain_label.text = "Acid Rain in 0:%02d" % ceili(remaining)
+
+
+func _update_acid_rain_effect() -> void:
+	# Use battle time instead of shader TIME so rain follows pause and hitstop.
+	var canvas_inverse := get_viewport().get_canvas_transform().affine_inverse()
+	var viewport_size := get_viewport_rect().size
+	_acid_rain_material.set_shader_parameter(&"world_origin", canvas_inverse.origin)
+	_acid_rain_material.set_shader_parameter(
+		&"world_size", canvas_inverse.basis_xform(viewport_size)
+	)
+	_acid_rain_material.set_shader_parameter(&"floor_y", FLOOR_SURFACE_Y)
+	_acid_rain_material.set_shader_parameter(&"rain_time", _acid_rain_active_elapsed)
+	var fade := clampf(_acid_rain_active_elapsed / 0.8, 0.0, 1.0)
+	var intensity := minf(1.0 + float(_acid_rain_damage() - 1) * 0.12, 1.6)
+	_acid_rain_material.set_shader_parameter(&"strength", fade * intensity)
 
 
 func _start_acid_rain() -> void:
@@ -393,9 +401,7 @@ func _start_acid_rain() -> void:
 	_acid_rain_active = true
 	_acid_rain_tick_accum = 0.0
 	_acid_rain_active_elapsed = 0.0
-	_ensure_acid_rain_label()
-	if _acid_rain_label != null:
-		_acid_rain_label.visible = true
+	_acid_rain_effect.show()
 	_show_acid_rain_callout()
 	_tick_acid_rain()
 
@@ -405,7 +411,7 @@ func _show_acid_rain_callout() -> void:
 		return
 	var callout: CombatCallout = _COMBAT_CALLOUT_SCENE.instantiate()
 	_hud.add_child(callout)
-	callout.position = Vector2(960.0, 220.0)
+	callout.position = Vector2(get_viewport_rect().size.x * 0.5, 280.0)
 	callout.display("Acid Rain!", CombatCallout.Kind.STREAK, false)
 
 
@@ -431,8 +437,6 @@ func _tick_acid_rain() -> void:
 			null,
 			WeaponData.DamageType.BLUNT
 		)
-	if _acid_rain_label != null:
-		_acid_rain_label.text = "Acid Rain  %d" % amount
 
 
 func _notify_battle_end() -> void:
@@ -751,8 +755,9 @@ func _check_battle_end() -> void:
 		return
 	_battle_over = true
 	_barks.end_battle()
-	if _acid_rain_label != null:
-		_acid_rain_label.visible = false
+	_acid_rain_status.hide()
+	_acid_rain_effect.hide()
+	set_process(false)
 	_run_menu.set_available(false)
 
 	if player_wiped:

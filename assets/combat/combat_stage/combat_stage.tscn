@@ -12,6 +12,28 @@
 [ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="13_run_menu"]
 [ext_resource type="PackedScene" path="res://assets/vfx/ambient_motes/ambient_motes.tscn" id="14_ambient_motes"]
 [ext_resource type="PackedScene" path="res://assets/combat/barks/combat_barks.tscn" id="15_barks"]
+[ext_resource type="Shader" path="res://assets/vfx/acid_rain/acid_rain.gdshader" id="16_acid_rain"]
+[ext_resource type="Texture2D" uid="uid://bhm55aruevryv" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 6.png" id="17_paper"]
+[ext_resource type="FontFile" uid="uid://by4qnwfw0wsas" path="res://assets/fonts/Fredoka-VariableFont_wdth,wght.ttf" id="18_font"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_acid_rain"]
+resource_local_to_scene = true
+shader = ExtResource("16_acid_rain")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_acid_status"]
+content_margin_left = 30.0
+content_margin_top = 16.0
+content_margin_right = 30.0
+content_margin_bottom = 16.0
+texture = ExtResource("17_paper")
+texture_margin_left = 25.454597
+texture_margin_right = 31.818249
+
+[sub_resource type="FontVariation" id="Font_acid_status"]
+base_font = ExtResource("18_font")
+variation_opentype = {
+2003265652: 500
+}
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_floor"]
 
@@ -137,7 +159,47 @@ drag_left_margin = 0.05
 editor_draw_drag_margin = true
 script = ExtResource("2_camera")
 
+[node name="AcidRainLayer" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="AcidRainEffect" type="ColorRect" parent="AcidRainLayer"]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_acid_rain")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1373945268]
+layer = 2
+
+[node name="AcidRainStatus" type="PanelContainer" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -180.0
+offset_top = 118.0
+offset_right = 180.0
+offset_bottom = 190.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_acid_status")
+
+[node name="AcidRainLabel" type="Label" parent="HUD/AcidRainStatus"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_fonts/font = SubResource("Font_acid_status")
+theme_override_font_sizes/font_size = 32
+text = "Acid Rain in 0:05"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="BiomassChip" parent="HUD" unique_id=1625388454 instance=ExtResource("11_biomass_chip")]
 unique_name_in_owner = true

@@ -1,0 +1,6 @@
+Use case: compositing.
+Asset type: Auto Shrooms press-kit landscape cover, version with the official logo.
+Input image 1 is the exact finished clean cover and the EDIT TARGET.
+Input image 2 is the existing official Auto Shrooms wordmark, a SUPPORTING INSERT. Preserve its exact recognizable single-line lettering, warm ivory fill, black outline and proportions. The transparent padding around this reference wordmark is not part of the visible logo.
+Primary request: add this logo centered horizontally in the quiet dark canopy near the top of image 1. The visible logo should span approximately 68% of the canvas width, with its visible top edge about 11% down the canvas; it should sit wholly above the flagpole finial and the fighters. Text (verbatim): "Auto Shrooms".
+CRITICAL: keep image 1 otherwise unchanged. Preserve its framing, exact seven characters, faces, poses, equipment, flag, background, lighting, colors and all composition. Do not redraw or move the artwork to make room. No tagline, CTA, platform branding, new objects, border or watermark. Full-bleed 16:9 landscape finished cover; keep the same canvas aspect ratio as image 1.

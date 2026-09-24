@@ -1,0 +1,6 @@
+Use case: precise-object-edit.
+Asset type: Auto Shrooms press-kit landscape cover, clean key art without the game logo.
+Input image 1 is the edit target: the approved clean Auto Shrooms key art.
+Create a press-ready high-resolution 16:9 landscape adaptation, target 3840 by 2160 pixels. Use the entire reference composition with only the minimal framing adjustment needed for 16:9. Preserve all seven existing fighters, their exact designs, expressions, poses, weapons, flag, relative sizes and positions: four mushroom allies on the left facing the sunflower, rose and wooden stump enemies on the right. Preserve the painterly dark root canopy, bioluminescent cyan mushrooms and golden tunnel glow. Keep the characters large and readable at the existing proportions; do not use the very wide library-hero layout.
+Retain the quiet dark upper canopy where a separate logo can later be placed, and keep the full banner and all feet visible. Refine clarity for a high-quality press illustration without redesigning or adding details to the characters.
+Constraints: same visual identity, composition and palette as the supplied image. No title, lettering, game logo, tagline, CTA, platform marks, watermark, border, or new characters. The mushroom symbol already on the in-world flag must remain. Full-bleed finished key art, not a mockup.

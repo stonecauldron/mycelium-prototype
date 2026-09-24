@@ -53,6 +53,7 @@ const _CAP_MUTATION_PATHS: Array[String] = [
 @export var shop_rerolls_today: int = 0
 
 var _seeded: bool = false
+var _first_spore_planted: bool = false
 ## Keep the first emitted spore after use so later spores do not repeat the Run's hint.
 var first_lineage_spore: SporeData = null
 ## Monotonic stamp for FIFO eviction when death-spores overflow stock.
@@ -92,6 +93,7 @@ func reset() -> void:
 	_ensure_spore_shop()
 	spore_shop.clear()
 	_seeded = false
+	_first_spore_planted = false
 	first_lineage_spore = null
 	_next_stock_seq = 1
 	_ensure_plot_count()
@@ -366,10 +368,15 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 	if not can_plant_on_plot(plot_index):
 		return false
 	var plot := plots[plot_index] as NurseryPlotData
+	# First planting each Run takes at most one day before Greenhouse and Fertilizers.
+	if not _first_spore_planted and spore.days_to_mature > 1:
+		spore = spore.duplicate(true) as SporeData
+		spore.days_to_mature = 1
 	plot.planted_spore = spore
 	# Inherited spore mutations stay on planted_spore — do not seed plot slots, so the
 	# plot apply chip stays empty and the player can still apply one mutation this grow.
 	plot.begin_planted_grow()
+	_first_spore_planted = true
 	return true
 
 

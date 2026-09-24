@@ -68,7 +68,10 @@ func _check_generation() -> void:
 				_expect(seen.has(id), "unlocked regular appears: %s day %d" % [id, day])
 		if GameState.is_elite_day(day):
 			for id in _STRONG_IDS:
-				_expect(seen.has(id), "elite pool covers %s" % id)
+				if day == 5 and id == &"durian":
+					_expect(not seen.has(id), "Durian excluded from Day 5")
+				else:
+					_expect(seen.has(id), "elite pool covers %s" % id)
 		if day >= 6 and day <= 9:
 			_expect(empty_strong_seen and one_strong_seen and two_strong_seen, "mixed day supports zero, one, or two Strong types")
 		if day == 1:

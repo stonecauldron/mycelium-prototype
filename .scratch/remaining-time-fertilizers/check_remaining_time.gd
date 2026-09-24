@@ -122,6 +122,7 @@ func _run() -> void:
 
 	GameState.seals.reset()
 	GameState.nursery.reset()
+	_consume_first_plant_bonus(errs)
 	if not GameState.nursery.plant_spore(0, GameState.nursery.make_fresh_common_spore()):
 		errs.append("GameState plant failed")
 	var growing := GameState.nursery.plots[0] as NurseryPlotData
@@ -133,6 +134,7 @@ func _run() -> void:
 
 	GameState.seals.reset()
 	GameState.nursery.reset()
+	_consume_first_plant_bonus(errs)
 	GameState.seals.add(spreader)
 	if not GameState.nursery.plant_spore(0, GameState.nursery.make_fresh_common_spore()):
 		errs.append("GameState plant for Slow+Greenhouse failed")
@@ -151,6 +153,7 @@ func _run() -> void:
 
 func _check_quick_growth_ui_refresh(errs: Array[String]) -> void:
 	GameState.reset_run()
+	_consume_first_plant_bonus(errs)
 	GameState.activate_debug_cheats()
 	var nursery := GameState.nursery
 	nursery.unlocked_plot_count = NurseryData.MAX_PLOT_COUNT
@@ -192,6 +195,7 @@ func _check_quick_growth_ui_refresh(errs: Array[String]) -> void:
 
 func _check_greenhouse_ui_refresh(errs: Array[String]) -> void:
 	GameState.reset_run()
+	_consume_first_plant_bonus(errs)
 	GameState.pending_seal_choice = false
 	GameState.troop.seed_if_empty(StarterPackages.build_units(StarterPackages.PACKAGE_IDS[0]))
 	GameState.current_day = 2
@@ -234,6 +238,13 @@ func _check_greenhouse_ui_refresh(errs: Array[String]) -> void:
 	base.queue_free()
 	await get_tree().process_frame
 	await get_tree().process_frame
+
+
+## These checks cover normal grows; the first-plant bonus has its own harness.
+func _consume_first_plant_bonus(errs: Array[String]) -> void:
+	var nursery := GameState.nursery
+	_eq(errs, nursery.plant_spore(0, nursery.make_fresh_common_spore()), true, "consume first planting")
+	nursery.plots[0].clear()
 
 
 func _eq(errs: Array[String], got: Variant, expected: Variant, label: String) -> void:

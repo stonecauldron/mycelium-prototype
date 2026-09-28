@@ -1,0 +1,17 @@
+{
+  "file": "auto-shrooms-spore-mortar-v1.mp4",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "frames": 960,
+  "duration": 16.033333,
+  "bytes": 9374267,
+  "full_decode": "passed",
+  "audio": {
+    "codec": "aac",
+    "sample_rate": 48000,
+    "integrated_lufs": "-14.13",
+    "true_peak_dbtp": "-1.53"
+  },
+  "scope": "Single Spore Mortar pilot; remaining four reels deferred for user critique."
+}

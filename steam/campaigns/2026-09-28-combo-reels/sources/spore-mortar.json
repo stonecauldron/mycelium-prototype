@@ -1,0 +1,107 @@
+{
+	"audio_preroll_frames": 30,
+	"events": [
+		{
+			"action": "reveal",
+			"frame": 120,
+			"weapon": "Spore Mortar"
+		},
+		{
+			"action": "close",
+			"enemies": 3,
+			"frame": 240,
+			"players": 1,
+			"weapon": "Spore Mortar"
+		},
+		{
+			"alive": 1,
+			"damage_dealt": 0,
+			"frame": 240,
+			"zoom": 1.2
+		},
+		{
+			"alive": 1,
+			"damage_dealt": 0,
+			"frame": 300,
+			"zoom": 1.2
+		},
+		{
+			"alive": 1,
+			"damage_dealt": 0,
+			"frame": 360,
+			"zoom": 1.2
+		},
+		{
+			"alive": 1,
+			"damage_dealt": 0,
+			"frame": 420,
+			"zoom": 1.2
+		},
+		{
+			"alive": 1,
+			"damage_dealt": 8,
+			"frame": 480,
+			"zoom": 1.2
+		},
+		{
+			"action": "army",
+			"enemies": 18,
+			"frame": 540,
+			"players": 10,
+			"weapon": "Spore Mortar"
+		},
+		{
+			"alive": 10,
+			"damage_dealt": 0,
+			"frame": 540,
+			"zoom": 0.912621359223301
+		},
+		{
+			"alive": 10,
+			"damage_dealt": 0,
+			"frame": 600,
+			"zoom": 0.939723456369869
+		},
+		{
+			"alive": 10,
+			"damage_dealt": 0,
+			"frame": 660,
+			"zoom": 0.93999814205309
+		},
+		{
+			"alive": 10,
+			"damage_dealt": 9,
+			"frame": 720,
+			"zoom": 1.00108197254129
+		},
+		{
+			"alive": 10,
+			"damage_dealt": 50,
+			"frame": 780,
+			"zoom": 1.08155799490946
+		},
+		{
+			"alive": 10,
+			"damage_dealt": 62,
+			"frame": 840,
+			"zoom": 1.11886905317771
+		},
+		{
+			"alive": 10,
+			"damage_dealt": 84,
+			"frame": 900,
+			"zoom": 1.12070173159209
+		},
+		{
+			"alive": 10,
+			"damage_dealt": 106,
+			"frame": 960,
+			"zoom": 1.25197576645017
+		}
+	],
+	"fps": 60,
+	"frames": 960,
+	"height": 1920,
+	"weapon": "spore-mortar",
+	"width": 1080
+}

@@ -1,0 +1,15 @@
+{
+  "provider": "fal.ai",
+  "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+  "request_id": "01a0e799-e76c-7b03-af8a-0063e1736882",
+  "output_url": "https://v3b.fal.media/files/b/0aac3a02/aQITQDI5fmV0pabQJCLr8_sound_effect.mp3",
+  "local_source": "cocoon-heavy-pop-generated.mp3",
+  "input": {
+    "text": "A single forceful oversized champagne cork release: a sharp woody CRACK fused with a deep resonant hollow THWOMP and a thick, short rush of air. Strong full-bodied low-mid punch, close-miked, exaggerated playful game Foley. One decisive pop at the beginning, body sustains for 150 milliseconds then decays cleanly. No music, voices, repeated hits, explosions, rumble or glass breakage.",
+    "duration_seconds": 0.7,
+    "prompt_influence": 0.75,
+    "output_format": "mp3_44100_192",
+    "loop": false
+  },
+  "processing": "Compressed dry attack, parallel 0.8x pitch layer and short harmonic low-mid body; soft saturation and -2.2 dBFS peak normalization. Original mix ducks before release and recovers before landing."
+}

@@ -1,0 +1,47 @@
+{
+  "file": "auto-shrooms-spore-mortar-v9.mp4",
+  "source_picture": "auto-shrooms-spore-mortar-v7.mp4",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "frames": 960,
+  "duration": 16.033333,
+  "bytes": 8509543,
+  "full_decode": "passed",
+  "video_packets_and_timestamps_identical": true,
+  "audio": {
+    "codec": "aac",
+    "sample_rate": 48000,
+    "integrated_lufs": "-13.81",
+    "true_peak_dbtp": "-2.15",
+    "unchanged_region_correlations": {
+      "before_reveal": 0.9999030135962672,
+      "landing_and_battles": 0.9998975941732108
+    }
+  },
+  "cocoon_sound": {
+    "effect": "cocoon-heavy-pop.wav",
+    "generated_source": "cocoon-heavy-pop-generated.mp3",
+    "source_trim_seconds": [
+      0,
+      0.42
+    ],
+    "effect_peak_dbfs": -2.2,
+    "layers": [
+      "compressed cork attack",
+      "0.8x pitched cork body",
+      "short harmonic thump"
+    ],
+    "transient_local_seconds": 0.015,
+    "timeline_start_seconds": 2.5183333333333335,
+    "transient_timeline_seconds": 2.533333,
+    "original_chime_gain_at_pop": 0.07,
+    "original_mix_restored_seconds": 3.033333,
+    "explosion_sound": false
+  },
+  "visual_validation": "validation-v7.json (identical picture)",
+  "impact_vs_v8_first_150ms": {
+    "full_band_gain_db": 7.144817656602243,
+    "low_mid_120_600_hz_gain_db": 5.890245920705036
+  }
+}

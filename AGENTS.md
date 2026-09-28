@@ -60,6 +60,10 @@ Binary assets (`*.png`/`*.svg`/etc.) are normal git blobs, not Git LFS. `.gitatt
 
 ## Agent skills
 
+### Weapon combo reels
+
+When creating or revising weapon-combo reels, read `steam/campaigns/weapon-combo-reels-spec.md` for the shared script, presentation/audio rules, range-dependent battle spacing, and acceptance checks.
+
 ### Issue tracker
 
 Issues live as local markdown under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.

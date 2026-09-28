@@ -1,0 +1,217 @@
+{
+	"audio_preroll_frames": 30,
+	"equation_center_x": 540.0,
+	"events": [
+		{
+			"action": "cocoon_entry",
+			"frame": 0,
+			"held_school": 2,
+			"life_stage": "child",
+			"unit_scale": 1.65
+		},
+		{
+			"action": "cocoon_reveal",
+			"complete_equation": true,
+			"frame": 150,
+			"sound": "train",
+			"unit_scale": 1.65,
+			"weapon": "Spore Mortar"
+		},
+		{
+			"action": "weapon_name",
+			"frame": 240
+		},
+		{
+			"action": "close",
+			"enemies": 3,
+			"frame": 240,
+			"players": 1,
+			"weapon": "Spore Mortar"
+		},
+		{
+			"action": "cut",
+			"camera_x": 3457.69116210938,
+			"frame": 240,
+			"shot": "single_wide",
+			"zoom": 1.08529123252464
+		},
+		{
+			"alive": 1,
+			"camera_x": 3457.69116210938,
+			"damage_dealt": 0,
+			"enemies_alive": 3,
+			"frame": 240,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"zoom": 1.08529126644135
+		},
+		{
+			"alive": 1,
+			"camera_x": 3457.69116210938,
+			"damage_dealt": 0,
+			"enemies_alive": 3,
+			"frame": 300,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"zoom": 1.08529126644135
+		},
+		{
+			"alive": 1,
+			"camera_x": 3457.69116210938,
+			"damage_dealt": 0,
+			"enemies_alive": 3,
+			"frame": 360,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"zoom": 1.08529126644135
+		},
+		{
+			"alive": 1,
+			"camera_x": 3457.69116210938,
+			"damage_dealt": 0,
+			"enemies_alive": 3,
+			"frame": 420,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"zoom": 1.08529126644135
+		},
+		{
+			"alive": 1,
+			"camera_x": 3457.69116210938,
+			"damage_dealt": 6,
+			"enemies_alive": 3,
+			"frame": 480,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"zoom": 1.08529126644135
+		},
+		{
+			"action": "army",
+			"enemies": 18,
+			"frame": 540,
+			"players": 3,
+			"weapon": "Spore Mortar"
+		},
+		{
+			"action": "cut",
+			"camera_x": 3208.0,
+			"frame": 540,
+			"shot": "army_launch",
+			"zoom": 1.65
+		},
+		{
+			"alive": 3,
+			"camera_x": 3208.0,
+			"damage_dealt": 0,
+			"enemies_alive": 18,
+			"frame": 540,
+			"fully_visible_enemies": 0,
+			"fully_visible_players": 3,
+			"shot": "army_launch",
+			"zoom": 1.64999997615814
+		},
+		{
+			"alive": 3,
+			"camera_x": 3208.0,
+			"damage_dealt": 0,
+			"enemies_alive": 18,
+			"frame": 600,
+			"fully_visible_enemies": 0,
+			"fully_visible_players": 3,
+			"shot": "army_launch",
+			"zoom": 1.64999997615814
+		},
+		{
+			"alive": 3,
+			"camera_x": 3208.0,
+			"damage_dealt": 0,
+			"enemies_alive": 18,
+			"frame": 660,
+			"fully_visible_enemies": 1,
+			"fully_visible_players": 3,
+			"shot": "army_launch",
+			"zoom": 1.64999997615814
+		},
+		{
+			"action": "cut",
+			"camera_x": 3514.0,
+			"frame": 678,
+			"shot": "army_impact",
+			"zoom": 1.65
+		},
+		{
+			"alive": 3,
+			"camera_x": 3514.0,
+			"damage_dealt": 0,
+			"enemies_alive": 18,
+			"frame": 720,
+			"fully_visible_enemies": 6,
+			"fully_visible_players": 0,
+			"shot": "army_impact",
+			"zoom": 1.64999997615814
+		},
+		{
+			"alive": 3,
+			"camera_x": 3514.0,
+			"damage_dealt": 18,
+			"enemies_alive": 17,
+			"frame": 780,
+			"fully_visible_enemies": 6,
+			"fully_visible_players": 0,
+			"shot": "army_impact",
+			"zoom": 1.64999997615814
+		},
+		{
+			"action": "cut",
+			"camera_x": 3460.06323242188,
+			"frame": 810,
+			"shot": "army_wide",
+			"zoom": 0.46915154773249
+		},
+		{
+			"alive": 3,
+			"camera_x": 3460.06323242188,
+			"damage_dealt": 18,
+			"enemies_alive": 17,
+			"frame": 840,
+			"fully_visible_enemies": 17,
+			"fully_visible_players": 3,
+			"shot": "army_wide",
+			"zoom": 0.469151556491852
+		},
+		{
+			"alive": 3,
+			"camera_x": 3460.06323242188,
+			"damage_dealt": 30,
+			"enemies_alive": 17,
+			"frame": 900,
+			"fully_visible_enemies": 17,
+			"fully_visible_players": 3,
+			"shot": "army_wide",
+			"zoom": 0.469151556491852
+		},
+		{
+			"alive": 3,
+			"camera_x": 3460.06323242188,
+			"damage_dealt": 30,
+			"enemies_alive": 17,
+			"frame": 960,
+			"fully_visible_enemies": 17,
+			"fully_visible_players": 3,
+			"shot": "army_wide",
+			"zoom": 0.469151556491852
+		}
+	],
+	"fps": 60,
+	"frames": 960,
+	"height": 1920,
+	"unit_scale": 1.65,
+	"version": 3,
+	"weapon": "spore-mortar",
+	"width": 1080
+}

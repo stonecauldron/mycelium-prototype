@@ -1,0 +1,16 @@
+{
+  "provider": "fal.ai",
+  "endpoint_id": "fal-ai/elevenlabs/sound-effects/v2",
+  "request_id": "01a0e796-01f4-7883-96d0-d8b34ea8b07b",
+  "output_url": "https://v3b.fal.media/files/b/0aac39e8/KJH8E2QZhoEIqm9P3oeja_sound_effect.mp3",
+  "local_source": "cocoon-cork-pop-generated.mp3",
+  "input": {
+    "text": "One single satisfying bottle uncorking sound, close and dry. A tiny tight cork squeak immediately releases into a strong rounded hollow PLOP, with a weighty woody attack and a short airy puff of escaping pressure. Playful and tactile, like a mushroom cocoon popping open. Quick decay to silence. Isolated studio Foley, no speech, music, explosions, glass breaking, liquid pouring, or repeated pops.",
+    "duration_seconds": 1,
+    "prompt_influence": 0.65,
+    "output_format": "mp3_44100_192",
+    "loop": false
+  },
+  "quoted_price": {"unit_price_usd": 0.002, "unit": "seconds", "estimated_generation_usd": 0.002},
+  "processing": "Isolate first pop at 0.025-0.25 seconds; high-pass 65 Hz, low-pass 14 kHz, short edge fades; peak-normalize to -4 dBFS and sync its strongest 3 ms window to the shell opening."
+}

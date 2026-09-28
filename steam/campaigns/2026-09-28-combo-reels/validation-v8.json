@@ -1,0 +1,38 @@
+{
+  "file": "auto-shrooms-spore-mortar-v8.mp4",
+  "source_picture": "auto-shrooms-spore-mortar-v7.mp4",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "frames": 960,
+  "duration": 16.033333,
+  "bytes": 8512988,
+  "full_decode": "passed",
+  "video_packets_and_timestamps_identical": true,
+  "audio": {
+    "codec": "aac",
+    "sample_rate": 48000,
+    "integrated_lufs": "-13.81",
+    "true_peak_dbtp": "-1.90",
+    "unchanged_region_correlations": {
+      "before_reveal": 0.9995713242503482,
+      "landing_and_battles": 0.9998457647965798
+    }
+  },
+  "cocoon_sound": {
+    "effect": "cocoon-cork-pop.wav",
+    "generated_source": "cocoon-cork-pop-generated.mp3",
+    "source_trim_seconds": [
+      0.025,
+      0.25
+    ],
+    "effect_peak_dbfs": -4.0,
+    "transient_local_seconds": 0.108,
+    "timeline_start_seconds": 2.425333333333333,
+    "transient_timeline_seconds": 2.533333,
+    "original_chime_gain_at_pop": 0.22,
+    "original_mix_restored_seconds": 3.033333,
+    "explosion_sound": false
+  },
+  "visual_validation": "validation-v7.json (identical picture)"
+}

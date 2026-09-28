@@ -1,0 +1,32 @@
+{
+  "file": "auto-shrooms-spore-mortar-v3.mp4",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "frames": 960,
+  "duration": 16.033333,
+  "bytes": 7736033,
+  "full_decode": "passed",
+  "audio": {
+    "codec": "aac",
+    "sample_rate": 48000,
+    "integrated_lufs": "-15.33",
+    "true_peak_dbtp": "-1.53"
+  },
+  "composition": {
+    "equation_center_x": 540,
+    "army_players": 3,
+    "army_enemies": 18,
+    "child_entry": true,
+    "complete_recipe_before_name": true,
+    "camera_zooms": {
+      "single_wide": 1.08529123252464,
+      "army_launch": 1.65,
+      "army_impact": 1.65,
+      "army_wide": 0.46915154773249
+    },
+    "both_armies_visible_in_wide_shots": true,
+    "camera_cuts_without_panning": true
+  },
+  "scope": "Single Spore Mortar pilot; remaining four reels deferred for user critique."
+}

@@ -293,7 +293,8 @@ func _refresh_combat_deltas() -> void:
 
 func _apply_combat_delta(chip: StatChip, label: Label, delta: int) -> void:
 	var color := StatDisplay.GAIN_COLOR if delta > 0 else StatDisplay.LOSS_COLOR
-	chip.set_value_color(color.lightened(0.45) if delta != 0 else Color.WHITE)
+	var chip_color := color.lightened(0.65 if delta > 0 else 0.45)
+	chip.set_value_color(chip_color if delta != 0 else Color.WHITE)
 	label.text = "%+d" % delta if delta != 0 else ""
 	label.add_theme_color_override("font_color", color)
 

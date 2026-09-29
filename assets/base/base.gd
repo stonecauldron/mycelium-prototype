@@ -193,6 +193,11 @@ func _wire_progress_tracks() -> void:
 		track.elite_hovered.connect(_on_elite_track_hovered)
 	if not track.elite_unhovered.is_connected(_on_elite_track_unhovered):
 		track.elite_unhovered.connect(_on_elite_track_unhovered)
+	if not track.elite_pressed.is_connected(_on_elite_track_pressed):
+		track.elite_pressed.connect(_on_elite_track_pressed)
+	var scout := _scout_bubble()
+	if scout != null and not scout.elite_focus_changed.is_connected(track.set_focused_elite_day):
+		scout.elite_focus_changed.connect(track.set_focused_elite_day)
 
 
 func _on_elite_track_hovered(day: int) -> void:
@@ -205,6 +210,16 @@ func _on_elite_track_unhovered() -> void:
 	var scout := _scout_bubble()
 	if scout != null:
 		scout.clear_preview()
+
+
+func _on_elite_track_pressed(day: int) -> void:
+	var scout := _scout_bubble()
+	if scout == null:
+		return
+	if scout.focused_elite_day() == day:
+		scout.return_to_next_battle()
+	else:
+		scout.pin_elite_for_day(day)
 
 
 func _scout_bubble() -> ScoutBubble:

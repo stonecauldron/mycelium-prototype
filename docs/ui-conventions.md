@@ -8,6 +8,12 @@ Training comparisons and Unit detail cards share the same weapon equation: two p
 
 In Training comparisons, keep Weapon tags' rounded shape and tint their fill with the light gain/loss palette: green for added tags on the result side, red for removed tags on the before side. Changed range or scaling shows the old tag in red and the new tag in green. Enlarge changed tags with 20px text (normally 16px), proportionally larger icons and padding. Shared tags keep their neutral appearance and normal size. Compare the tag's gameplay meaning, including scaling Stats, rather than its position or caption.
 
+## Elite Battle previews
+
+Hovering the chapter's elite skull temporarily previews that Elite Day in Scout. Clicking the skull pins the preview so the player can move onto enemy portraits and inspect their tooltips. Keep the selected skull highlighted while the actual upcoming-day marker stays in place. A paper **Back to Next Battle** button replaces Scout's reroll control while pinned; clicking the selected skull again also returns to the upcoming army.
+
+Previewing never changes the cached upcoming enemy army, reroll cost, biomass, or the Battle that Start Battle launches. Returning restores that army and its reward, with normal reroll availability. When the Elite Day is already next, show the actual upcoming army without a redundant Back control. Leaving the War Chamber or refreshing it for a new Day clears the pinned preview and releases offscreen keyboard focus.
+
 ## Biomass hover previews
 
 The Base biomass counter normally shows the actual balance. Hovering an action that changes biomass enlarges its paper chip and shows the projected balance: **current balance + signed change**. A small cream paper tab shows the signed change. Leaving the action restores the actual balance and normal chip size. Hovering never spends, grants, reserves, or refunds biomass.

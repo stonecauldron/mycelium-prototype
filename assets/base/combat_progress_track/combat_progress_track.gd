@@ -5,6 +5,7 @@ extends Control
 
 signal elite_hovered(day: int)
 signal elite_unhovered
+signal elite_pressed(day: int)
 
 const _SKULL_TEXTURE := preload("res://assets/base/combat_progress_track/skull.png")
 const _SEAL_TEXTURE := preload("res://assets/base/seals/seal.png")
@@ -31,6 +32,7 @@ var _node_controls: Array[Control] = []
 var _built_chapter_start: int = -1
 var _hover_t: Array[float] = []  # 0..1 per node; drives animated size
 var _hover_tweens: Dictionary = {}  # index -> Tween
+var _focused_elite_day: int = 0
 
 
 func _ready() -> void:
@@ -58,6 +60,13 @@ func chapter_elite_day() -> int:
 	return _chapter_start + CHAPTER_LENGTH - 1
 
 
+func set_focused_elite_day(day: int) -> void:
+	_focused_elite_day = day
+	_apply_node_hover_visual(NODE_COUNT - 1)
+	_update_marker()
+	queue_redraw()
+
+
 func _build_nodes() -> void:
 	_kill_hover_tweens()
 	for child in get_children():
@@ -75,7 +84,16 @@ func _build_nodes() -> void:
 		var is_elite := i == NODE_COUNT - 1
 		var node: Control
 		if is_elite:
-			node = Control.new()
+			var button := Button.new()
+			button.flat = true
+			button.accessibility_name = "Preview Elite Battle on Day %d" % day
+			var empty := StyleBoxEmpty.new()
+			for state in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
+				button.add_theme_stylebox_override(state, empty)
+			button.pressed.connect(_on_elite_pressed.bind(day))
+			button.focus_entered.connect(queue_redraw)
+			button.focus_exited.connect(queue_redraw)
+			node = button
 		else:
 			var day_node := CombatProgressDayNode.new()
 			day_node.setup(day)
@@ -162,6 +180,8 @@ func _hover_amount(index: int) -> float:
 
 
 func _node_scale_for(index: int) -> float:
+	if index == NODE_COUNT - 1 and _focused_elite_day == chapter_elite_day():
+		return HOVER_SCALE
 	return lerpf(1.0, HOVER_SCALE, _hover_amount(index))
 
 
@@ -200,6 +220,11 @@ func _draw() -> void:
 
 	for i in _node_centers.size():
 		if i == NODE_COUNT - 1:
+			var elite_radius := _node_visual_radius(i)
+			if _focused_elite_day == chapter_elite_day():
+				draw_circle(_node_centers[i], elite_radius + 6.0, Color(0.467, 0.6, 0.467, 1))
+			if _skull_control != null and _skull_control.has_focus():
+				draw_arc(_node_centers[i], elite_radius + 10.0, 0.0, TAU, 48, _FILL, 2.0, true)
 			continue  # Elite uses skull.png TextureRect.
 		var center: Vector2 = _node_centers[i]
 		var radius := _node_visual_radius(i)
@@ -216,6 +241,10 @@ func _draw() -> void:
 			tip,
 		])
 		draw_polyline(pts, _INK, 3.0, true)
+
+
+func _on_elite_pressed(day: int) -> void:
+	elite_pressed.emit(day)
 
 
 func _on_node_entered(index: int, is_elite: bool, day: int) -> void:

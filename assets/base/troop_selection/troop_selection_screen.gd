@@ -61,6 +61,15 @@ func on_screen_shown() -> void:
 	ensure_pending_modals()
 
 
+func on_screen_hidden() -> void:
+	if _scout_bubble != null:
+		_scout_bubble.return_to_next_battle()
+	# Camera tabs keep controls visible; release focus before they move offscreen.
+	var focused := get_viewport().gui_get_focus_owner()
+	if focused != null and is_ancestor_of(focused):
+		focused.release_focus()
+
+
 ## Starter then seal picks — safe to call from base even when another tab is active.
 func ensure_pending_modals() -> void:
 	_ensure_starter_choice()

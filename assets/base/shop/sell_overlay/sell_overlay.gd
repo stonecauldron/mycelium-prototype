@@ -28,20 +28,49 @@ func show_amount(amount: int) -> void:
 
 func hide_overlay() -> void:
 	_reset_badge_scale()
+	set_drop_highlight(false)
 	visible = false
+
+
+func contains_sell_point(viewport_position: Vector2) -> bool:
+	if not is_visible_in_tree() or _badge == null:
+		return false
+	var point := _badge.get_global_transform_with_canvas().affine_inverse() * viewport_position
+	var paper := _badge.get_theme_stylebox("panel") as StyleBoxTexture
+	var bounds := Rect2(Vector2.ZERO, _badge.size)
+	if paper != null:
+		bounds = bounds.grow_individual(
+			paper.expand_margin_left, paper.expand_margin_top,
+			paper.expand_margin_right, paper.expand_margin_bottom
+		)
+	return bounds.has_point(point)
+
+
+func _has_point(point: Vector2) -> bool:
+	return contains_sell_point(get_global_transform_with_canvas() * point)
+
+
+func set_drop_highlight(active: bool) -> void:
+	_badge.modulate = Color(0.7, 1.0, 0.75, 1.0) if active else Color.WHITE
 
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	var zone := get_parent() as ShopDropZone
 	if zone != null:
-		return zone._can_drop_data(at_position, data)
+		return zone._can_drop_data(_zone_position(zone, at_position), data)
 	return false
 
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
 	var zone := get_parent() as ShopDropZone
 	if zone != null:
-		zone._drop_data(at_position, data)
+		zone._drop_data(_zone_position(zone, at_position), data)
+
+
+func _zone_position(zone: ShopDropZone, at_position: Vector2) -> Vector2:
+	return zone.get_global_transform_with_canvas().affine_inverse() * (
+		get_global_transform_with_canvas() * at_position
+	)
 
 
 func _on_mouse_entered() -> void:
@@ -57,7 +86,7 @@ func _on_mouse_exited() -> void:
 func _sync_hover_scale() -> void:
 	if not visible or not is_inside_tree():
 		return
-	if get_global_rect().has_point(get_global_mouse_position()):
+	if _has_point(get_local_mouse_position()):
 		_tween_badge_scale(_HOVER_SCALE)
 	else:
 		_tween_badge_scale(1.0)

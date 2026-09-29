@@ -8,20 +8,20 @@ const _SELL_OVERLAY_SCENE := preload("res://assets/base/shop/sell_overlay/sell_o
 @export var accepted_drag_types: PackedStringArray = PackedStringArray()
 @export var accepts_drops: bool = true
 
-var _base_modulate: Color = Color.WHITE
 var _drop_highlight_active: bool = false
 var _sell_overlay: ShopSellOverlay = null
 
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	_base_modulate = modulate
 	set_process(false)
 	mouse_exited.connect(clear_drop_highlight)
 	BiomassPreview.bind(self, _biomass_preview_delta)
 
 
 func _biomass_preview_delta() -> Variant:
+	if not _is_over_sell_button(get_local_mouse_position()):
+		return null
 	var amount := _sell_amount_for_current_drag()
 	return amount if amount >= 0 else null
 
@@ -29,7 +29,14 @@ func _biomass_preview_delta() -> Variant:
 func clear_drop_highlight() -> void:
 	_drop_highlight_active = false
 	set_process(false)
-	modulate = _base_modulate
+	if _sell_overlay != null:
+		_sell_overlay.set_drop_highlight(false)
+
+
+func _is_over_sell_button(at_position: Vector2) -> bool:
+	return _sell_overlay != null and _sell_overlay.contains_sell_point(
+		get_global_transform_with_canvas() * at_position
+	)
 
 
 func _is_accepted_drag(data: Dictionary) -> bool:
@@ -39,24 +46,24 @@ func _is_accepted_drag(data: Dictionary) -> bool:
 	return drop_type != "" and drop_type in accepted_drag_types
 
 
-func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	if typeof(data) != TYPE_DICTIONARY:
 		clear_drop_highlight()
 		return false
-	if not _is_accepted_drag(data):
+	if not _is_accepted_drag(data) or not _is_over_sell_button(at_position):
 		clear_drop_highlight()
 		return false
 	_drop_highlight_active = true
 	set_process(true)
-	modulate = Color(0.7, 1.0, 0.75, 1.0)
+	_sell_overlay.set_drop_highlight(true)
 	return true
 
 
-func _drop_data(_at_position: Vector2, data: Variant) -> void:
+func _drop_data(at_position: Vector2, data: Variant) -> void:
 	clear_drop_highlight()
 	if typeof(data) != TYPE_DICTIONARY:
 		return
-	if not _is_accepted_drag(data):
+	if not _is_accepted_drag(data) or not _is_over_sell_button(at_position):
 		return
 	item_dropped.emit(self, data)
 
@@ -65,7 +72,7 @@ func _process(_delta: float) -> void:
 	# mouse_exited often does not fire while a drag preview is active.
 	if not _drop_highlight_active:
 		return
-	if not get_global_rect().has_point(get_global_mouse_position()):
+	if not _is_over_sell_button(get_local_mouse_position()):
 		clear_drop_highlight()
 
 

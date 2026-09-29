@@ -23,6 +23,7 @@ Use the same gain/loss palette as Training through `StatDisplay.change_color`: g
 - Preview current costs for Shop purchases, paid rerolls, fresh planting, Plot/Squad unlocks, and Evolve/Train confirmation.
 - Preview Compost's complete direct biomass payout, including the unit's Bank balance, and Stock sale value. Do not substitute a generic stage payout for a known unit's outcome.
 - Drag targets preview the action for the current dragged item or unit: School training, Compost, Stock sales, and Shop purchases dropped into Stock or onto a Plot. Applying an already owned Stock item does not purchase it again.
+- Stock sales accept drops and preview biomass only over the visible Sell button's paper area, including its hover scale. The surrounding Shop panel and offers are not sale targets.
 - Start Battle previews only the upcoming army's **Battle reward**, labeled **“On victory”**. It is conditional income, not an immediate grant or a forecast of all biomass effects during battle. Scout's future Elite Day previews do not change this action's projection. See [Battle rewards](adr/0005-day-scaled-battle-reward.md) and [army budgets](adr/0015-budgeted-enemy-armies.md).
 
 ### Integration and lifetime

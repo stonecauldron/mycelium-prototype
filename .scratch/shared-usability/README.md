@@ -4,7 +4,7 @@ Implemented the approved ordinary-Run subset of the onboarding exploration:
 
 - Receiving-Day Seal icons and timing tooltips on Days 1, 3, 6, and 9.
 - Hide / Select Seal / Start Battle flow, preserving offers, selection, paid rerolls, and Base edits while combat remains gated by the pending choice.
-- Training recipes, roles, actual availability, and explicit oldest-Training replacement using the existing preview rules.
+- Training confirmation shows recipes, roles, actual availability, and explicit oldest-Training replacement using the existing preview rules. School hover tooltips retain their original compact presentation.
 - Formation title and flag placement. The Rear / Front / Enemies orientation rail was removed following UI review.
 - Quiet Nursery-tab count badge for harvest-ready Plots, updated by growth, Fertilizers, Greenhouse, harvesting, and grow removal. The badge hides at zero; harvest details remain in the tooltip.
 - Compost preview of parent removal, payout, lineage Child, Generation, Tier, Trainings, Mutations, and saved Stats.

@@ -67,8 +67,6 @@ static func run(host: Control) -> int:
 			card.fit_to_content()
 		print("SCHOOL_CARD_SIZE ", school, " ", card.card_size())
 		card.position = (host.size - card.card_size()) * 0.5
-		failures += _check((card.get_node("%RecipeLabel") as Label).text
-			== WeaponSchool.training_recipe_text([school, school]), "Repeated-school recipe visible")
 		failures += _check(card.card_size().y < 1000.0, "School hover fits play height")
 		if school == WeaponSchool.Id.SWORD:
 			await _snapshot(host, "/tmp/usability-training-school.png")

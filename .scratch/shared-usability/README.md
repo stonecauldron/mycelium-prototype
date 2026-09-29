@@ -6,6 +6,7 @@ Implemented the approved ordinary-Run subset of the onboarding exploration:
 - Hide / Select Seal / Start Battle flow, preserving offers, selection, paid rerolls, and Base edits while combat remains gated by the pending choice.
 - Training confirmation shows recipes, roles, actual availability, and explicit oldest-Training replacement using the existing preview rules. School hover tooltips retain their original compact presentation.
 - Unit details show two Training slots and the resulting Weapon icon in one equation, with visible empty slots.
+- Attack chips angle the sword diagonally while keeping the number upright on Unit cards, detail tooltips, Training comparisons, and Scout tooltips.
 - Subtle ink rules and spacing separate Fertilizers, Mutations, Trainings, and the Generation footer; hidden sections leave no divider behind. The Unit card's footer sits closer to its lower paper edge.
 - Formation title and flag placement. The Rear / Front / Enemies orientation rail was removed following UI review.
 - Quiet Nursery-tab count badge for harvest-ready Plots, updated by growth, Fertilizers, Greenhouse, harvesting, and grow removal. The badge hides at zero; harvest details remain in the tooltip.

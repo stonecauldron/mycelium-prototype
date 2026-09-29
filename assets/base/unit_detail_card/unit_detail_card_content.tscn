@@ -45,6 +45,7 @@ alignment = 1
 [node name="AtkChip" parent="CombatRow" unique_id=837116753 instance=ExtResource("4_chip")]
 unique_name_in_owner = true
 icon = ExtResource("2_sword")
+icon_rotation_degrees = 45.0
 chip_size = Vector2(72, 72)
 value_font_size = 30
 

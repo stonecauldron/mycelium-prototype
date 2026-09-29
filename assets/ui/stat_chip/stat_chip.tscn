@@ -28,7 +28,7 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Value" type="Label" parent="Icon"]
+[node name="Value" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15

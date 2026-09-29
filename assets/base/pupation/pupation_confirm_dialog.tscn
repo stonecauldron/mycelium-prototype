@@ -205,6 +205,7 @@ alignment = 1
 [node name="LeftAtkChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow" unique_id=1375269215 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
 icon = ExtResource("4_sword")
+icon_rotation_degrees = 45.0
 
 [node name="LeftHpChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow" unique_id=1532846583 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
@@ -350,6 +351,7 @@ alignment = 1
 [node name="RightAtkChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow" unique_id=953783332 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
 icon = ExtResource("4_sword")
+icon_rotation_degrees = 45.0
 
 [node name="RightHpChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow" unique_id=608338665 instance=ExtResource("3_chip")]
 unique_name_in_owner = true

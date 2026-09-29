@@ -90,7 +90,7 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 	combat_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	vbox.add_child(combat_row)
 
-	combat_row.add_child(_make_stat_chip(_SWORD_ICON, atk))
+	combat_row.add_child(_make_stat_chip(_SWORD_ICON, atk, 45.0))
 	combat_row.add_child(_make_stat_chip(_HP_ICON, hp))
 
 	var speed_label := Label.new()
@@ -128,10 +128,11 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 	return panel
 
 
-func _make_stat_chip(icon: Texture2D, value: int) -> StatChip:
+func _make_stat_chip(icon: Texture2D, value: int, icon_angle: float = 0.0) -> StatChip:
 	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
 	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	chip.icon = icon
+	chip.icon_rotation_degrees = icon_angle
 	chip.chip_size = _CHIP_SIZE
 	chip.value_font_size = _CHIP_FONT_SIZE
 	if chip.is_node_ready():

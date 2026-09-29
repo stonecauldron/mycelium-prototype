@@ -6,7 +6,7 @@ Implemented the approved ordinary-Run subset of the onboarding exploration:
 - Hide / Select Seal / Start Battle flow, preserving offers, selection, paid rerolls, and Base edits while combat remains gated by the pending choice.
 - Training recipes, roles, actual availability, and explicit oldest-Training replacement using the existing preview rules.
 - Rear / Front / enemy-facing Formation cues matching ascending combat Home indices.
-- Quiet Nursery-tab count of harvest-ready Plots, updated by growth, Fertilizers, Greenhouse, harvesting, and grow removal.
+- Quiet Nursery-tab count badge for harvest-ready Plots, updated by growth, Fertilizers, Greenhouse, harvesting, and grow removal. The badge hides at zero; harvest details remain in the tooltip.
 - Compost preview of parent removal, payout, lineage Child, Generation, Tier, Trainings, Mutations, and saved Stats.
 
 Costs, eligibility, waits, inheritance, combat behavior, and the 10-Day Run remain unchanged. Guided mode, a clickable Train entry point, and Training-return indicators are outside this work.

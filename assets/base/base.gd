@@ -29,6 +29,7 @@ var _current_screen: BaseScreen
 var _tab_buttons: Dictionary = {}
 var _tab_underlines: Dictionary = {}
 var _tab_key_order: Array[TabId] = []
+var _nursery_ready_badge: Label
 var _camera_tween: Tween
 var _start_arrow: FloatingArrow = null
 var _progress_tracks: Array[CombatProgressTrack] = []
@@ -240,6 +241,7 @@ func _build_tab_bar() -> void:
 	_tab_buttons.clear()
 	_tab_underlines.clear()
 	_tab_key_order.clear()
+	_nursery_ready_badge = null
 
 	var key_index := 1
 	for def in TAB_DEFS:
@@ -259,6 +261,8 @@ func _build_tab_bar() -> void:
 		button.focus_mode = Control.FOCUS_NONE
 		button.pressed.connect(_select_tab.bind(tab_id, false))
 		column.add_child(button)
+		if tab_id == TabId.NURSERY:
+			_add_nursery_ready_badge(button)
 
 		var underline := ColorRect.new()
 		underline.custom_minimum_size = Vector2(0, 4)
@@ -276,15 +280,35 @@ func _build_tab_bar() -> void:
 	_refresh_nursery_readiness()
 
 
+func _add_nursery_ready_badge(button: Button) -> void:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.43, 0.19, 0.22, 1)
+	style.border_color = PaperStyles.CREAM
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(16)
+	_nursery_ready_badge = Label.new()
+	_nursery_ready_badge.name = "ReadyBadge"
+	_nursery_ready_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_nursery_ready_badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_nursery_ready_badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_nursery_ready_badge.add_theme_stylebox_override("normal", style)
+	_nursery_ready_badge.add_theme_color_override("font_color", PaperStyles.CREAM)
+	_nursery_ready_badge.add_theme_font_size_override("font_size", 20)
+	button.add_child(_nursery_ready_badge)
+	_nursery_ready_badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_nursery_ready_badge.offset_left = -26.0
+	_nursery_ready_badge.offset_right = 6.0
+	_nursery_ready_badge.offset_top = -10.0
+	_nursery_ready_badge.offset_bottom = 22.0
+
+
 func _refresh_nursery_readiness() -> void:
 	var button := _tab_buttons.get(TabId.NURSERY) as Button
 	if button == null:
 		return
 	var count := GameState.nursery.ready_plot_count()
-	var key_index := _tab_key_order.find(TabId.NURSERY) + 1
-	button.text = "%d  Nursery" % key_index
-	if count > 0:
-		button.text += " · %d ready" % count
+	_nursery_ready_badge.text = str(count)
+	_nursery_ready_badge.visible = count > 0
 	button.tooltip_text = "%d Plot%s ready to harvest" % [count, "" if count == 1 else "s"] if count > 0 else ""
 
 

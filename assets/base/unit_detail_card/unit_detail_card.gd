@@ -56,6 +56,10 @@ func fit_to_content() -> void:
 
 
 func _ready() -> void:
+	# Keep the generation marker near this card's lower paper edge.
+	var paper := _card_panel.get_theme_stylebox("panel").duplicate() as StyleBox
+	paper.content_margin_bottom = 72.0
+	_card_panel.add_theme_stylebox_override("panel", paper)
 	_set_children_mouse_filter_ignore(self)
 	_apply_interaction_mode()
 	if unit_data == null and get_tree().current_scene == self:

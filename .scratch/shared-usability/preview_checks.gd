@@ -88,8 +88,15 @@ static func _unit_training_cards(host: Control) -> void:
 		var trainings: Array[int] = []
 		for index in count:
 			trainings.append(WeaponSchool.Id.BOW)
-		var unit := make_unit(trainings, true)
+		var unit := make_unit(trainings, count > 0)
 		unit.display_name = ["No Trainings", "One Training", "Two Trainings"][count]
+		if count > 0:
+			unit.applied_fertilizers.append(
+				load("res://assets/base/nursery/fertilizers/brute_force.tres") as FertilizerData
+			)
+		if count == 2:
+			unit.cap_mutation = load("res://assets/base/nursery/mutations/cap/inky.tres") as MutationData
+			unit.body_mutation = load("res://assets/base/nursery/mutations/body/thorny.tres") as MutationData
 		var card: UnitDetailCard = scene.instantiate()
 		card.setup(unit, false, false)
 		host.add_child(card)
@@ -100,8 +107,12 @@ static func _unit_training_cards(host: Control) -> void:
 			card.fit_to_content()
 	for index in cards.size():
 		var card := cards[index]
-		card.position = Vector2(host.size.x * 0.5 + float(index - 1) * 430.0 - card.card_size().x * 0.5,
-			(host.size.y - card.card_size().y) * 0.5)
+		var fit_scale := minf(1.0, (host.size.y - 48.0) / card.card_size().y)
+		card.scale = Vector2.ONE * fit_scale
+		var visual_size := card.card_size() * fit_scale
+		card.position = Vector2(host.size.x * 0.5 + float(index - 1) * 430.0 - visual_size.x * 0.5,
+			(host.size.y - visual_size.y) * 0.5)
+		print("UNIT_CARD_SIZE ", index, " ", card.card_size(), " scale=", fit_scale)
 	await _snapshot(host, "/tmp/usability-unit-trainings.png")
 	for card in cards:
 		card.queue_free()

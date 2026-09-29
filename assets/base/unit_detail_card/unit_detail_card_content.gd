@@ -25,6 +25,7 @@ var _fertilizer_icon: AtlasTexture = null
 
 @onready var _name_label: Label = %NameLabel
 @onready var _type_label: Label = %TypeLabel
+@onready var _mutations_divider: HSeparator = %MutationsDivider
 @onready var _mutations_list: Control = %MutationsList
 @onready var _cap_label: RichTextLabel = %CapLabel
 @onready var _body_label: RichTextLabel = %BodyLabel
@@ -37,8 +38,11 @@ var _fertilizer_icon: AtlasTexture = null
 @onready var _dex_row: StatValueRow = %DexRow
 @onready var _con_row: StatValueRow = %ConRow
 @onready var _fertilizers_label: Label = %FertilizersLabel
+@onready var _fertilizers_divider: HSeparator = %FertilizersDivider
 @onready var _fertilizers_list: VBoxContainer = %FertilizersList
 @onready var _trainings_label: Label = %TrainingsLabel
+@onready var _trainings_divider: HSeparator = %TrainingsDivider
+@onready var _footer_divider: HSeparator = %FooterDivider
 @onready var _trainings_list: VBoxContainer = %TrainingsList
 
 
@@ -169,6 +173,7 @@ func _refresh_fertilizers() -> void:
 
 
 func _set_fertilizers_visible(show_section: bool) -> void:
+	_fertilizers_divider.visible = show_section
 	if _fertilizers_label != null:
 		_fertilizers_label.visible = show_section
 	if _fertilizers_list != null:
@@ -189,9 +194,13 @@ func _refresh_trainings() -> void:
 		return
 	if unit_data == null or unit_data.enemy_unit_data != null:
 		_trainings_label.visible = false
+		_trainings_divider.visible = false
+		_footer_divider.visible = false
 		_trainings_list.visible = false
 		return
 	_trainings_label.visible = true
+	_trainings_divider.visible = true
+	_footer_divider.visible = true
 	_trainings_list.visible = true
 	_trainings_label.text = "Trainings"
 	var trainings := unit_data.weapon_trainings
@@ -331,6 +340,7 @@ func _refresh_mutation_chip() -> void:
 
 
 func _refresh_mutation_meta() -> void:
+	_mutations_divider.visible = unit_data.enemy_unit_data == null
 	if unit_data.enemy_unit_data != null:
 		_type_label.text = unit_data.enemy_unit_data.display_name
 		if _mutations_list != null:

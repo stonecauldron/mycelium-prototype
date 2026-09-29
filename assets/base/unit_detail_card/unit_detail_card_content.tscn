@@ -9,6 +9,10 @@
 [ext_resource type="Texture2D" uid="uid://bmafi7fsp42s8" path="res://assets/base/nursery/mutations/cap_mutation_icon.png" id="6_cap"]
 [ext_resource type="Texture2D" uid="uid://dqj2wxtjs1xc5" path="res://assets/base/nursery/mutations/body_mutation_icon.png" id="7_body"]
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_section"]
+color = Color(0.28, 0.17, 0.14, 0.45)
+thickness = 2
+
 [node name="UnitDetailCardContent" type="VBoxContainer" unique_id=1295183022]
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
@@ -85,6 +89,14 @@ theme_override_constants/v_separation = 4
 unique_name_in_owner = true
 text = "Child"
 
+[node name="FertilizersDivider" type="HSeparator" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 14
+theme_override_styles/separator = SubResource("StyleBoxLine_section")
+
 [node name="FertilizersLabel" type="Label" parent="." unique_id=1606604418]
 unique_name_in_owner = true
 visible = false
@@ -102,6 +114,13 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
+
+[node name="MutationsDivider" type="HSeparator" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 14
+theme_override_styles/separator = SubResource("StyleBoxLine_section")
 
 [node name="TypeLabel" type="Label" parent="." unique_id=425229254]
 unique_name_in_owner = true
@@ -173,6 +192,13 @@ scroll_active = false
 text = "None"
 autowrap_mode = 3
 
+[node name="TrainingsDivider" type="HSeparator" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 14
+theme_override_styles/separator = SubResource("StyleBoxLine_section")
+
 [node name="TrainingsLabel" type="Label" parent="." unique_id=768126601]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(350, 0)
@@ -188,6 +214,13 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
+
+[node name="FooterDivider" type="HSeparator" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 14
+theme_override_styles/separator = SubResource("StyleBoxLine_section")
 
 [node name="FooterRow" type="HBoxContainer" parent="." unique_id=200356719]
 layout_mode = 2

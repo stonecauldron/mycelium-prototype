@@ -6,7 +6,7 @@ Implemented the approved ordinary-Run subset of the onboarding exploration:
 - Hide / Select Seal / Start Battle flow, preserving offers, selection, paid rerolls, and Base edits while combat remains gated by the pending choice.
 - Training confirmation compares the current and resulting Unit for both Children and Adults, including Weapon tags and colored Attack/HP and Stat changes. Children use the Evolve action; Adult Training shows Instant in place of the hourglass. Explanatory labels above the preview were removed following UI review. School hover tooltips retain their original compact presentation.
 - Unit details show two Training slots and the resulting Weapon icon in one equation, with visible empty slots.
-- Attack chips angle the sword diagonally while keeping the number upright on Unit cards, detail tooltips, Training comparisons, and Scout tooltips. Swords below Units are 20% larger without changing the number or chip spacing.
+- Attack chips angle the sword diagonally while keeping the number upright on Unit cards, detail tooltips, Training comparisons, and Scout tooltips. Swords below Units are 40% larger than the default icon size without changing the number or chip spacing.
 - Subtle ink rules and spacing separate Fertilizers, Mutations, Trainings, and the Generation footer; hidden sections leave no divider behind. The Unit card's footer sits closer to its lower paper edge.
 - Troop title and flag placement. The heading was restored from Formation to Troop, and the Rear / Front / Enemies orientation rail was removed following UI review.
 - Quiet Nursery-tab count badge for harvest-ready Plots, updated by growth, Fertilizers, Greenhouse, harvesting, and grow removal. The badge hides at zero; harvest details remain in the tooltip.

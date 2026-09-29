@@ -8,6 +8,7 @@ const PORTRAIT_SCALE := 0.7
 const PORTRAIT_SHADOW := 20.0
 const _BIOMASS_ICON := preload("res://assets/base/biomass_small_icon.png")
 const _TAG_CHIP_SCENE := preload("res://assets/ui/tag_chip/tag_chip.tscn")
+const _CHANGED_TAG_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 13.png")
 const _STAT_FONT_SIZE := 18
 const _CHANGED_STAT_FONT_SIZE := 24
 const _CHANGED_CHIP_SCALE := 1.3
@@ -126,9 +127,7 @@ func _fill_current_side() -> void:
 	_clear_portrait(_left_portrait)
 	_unit.mount_portrait(_left_portrait, PORTRAIT_SCALE, PORTRAIT_SHADOW)
 	_left_stage.text = WeaponSchool.stage_display_name(_unit.life_stage_id)
-	var left_weapon := _unit.weapon
 	_left_weapon_row.set_unit(_unit)
-	_fill_weapon_tags(_left_weapon_tags, left_weapon)
 	_set_combat_chips(_unit, _left_atk_chip, _left_hp_chip, GameState.troop)
 	var stats := _unit.stats
 	if stats != null:
@@ -157,7 +156,8 @@ func _fill_result_side() -> void:
 
 	_right_stage.text = WeaponSchool.stage_display_name(next_stage)
 	_right_weapon_row.set_unit(_preview_unit, _unit)
-	_fill_weapon_tags(_right_weapon_tags, right_weapon)
+	_fill_weapon_tags(_left_weapon_tags, _unit.weapon, right_weapon)
+	_fill_weapon_tags(_right_weapon_tags, right_weapon, _unit.weapon)
 	_set_combat_chips(_preview_unit, _right_atk_chip, _right_hp_chip, _preview_troop)
 	_refresh_combat_deltas()
 
@@ -308,7 +308,7 @@ func _apply_combat_delta(chip: StatChip, label: Label, delta: int) -> void:
 	label.add_theme_color_override("font_color", StatDisplay.change_color(delta))
 
 
-func _fill_weapon_tags(row: HFlowContainer, weapon: WeaponData) -> void:
+func _fill_weapon_tags(row: HFlowContainer, weapon: WeaponData, other_weapon: WeaponData) -> void:
 	for child in row.get_children():
 		row.remove_child(child)
 		child.queue_free()
@@ -318,20 +318,34 @@ func _fill_weapon_tags(row: HFlowContainer, weapon: WeaponData) -> void:
 		"Mid Range" if weapon.formation_line == WeaponData.FormationLine.MID
 		else str(WeaponData.FORMATION_LINE_LABELS.get(weapon.formation_line, "?"))
 	)
-	_add_weapon_tag(row, range_text)
-	var scaling := _add_weapon_tag(row, "")
+	_add_weapon_tag(row, range_text,
+		other_weapon == null or weapon.formation_line != other_weapon.formation_line)
+	var scaling := _add_weapon_tag(row, "",
+		other_weapon == null or weapon.damage_stat != other_weapon.damage_stat)
 	scaling.show_icons(StatDisplay.textures_for_damage_stat(weapon.damage_stat), "or", 16, "Scaling")
 	if weapon.damage_type == WeaponData.DamageType.BLUNT:
-		_add_weapon_tag(row, "Blunt")
+		_add_weapon_tag(row, "Blunt",
+			other_weapon == null or other_weapon.damage_type != WeaponData.DamageType.BLUNT)
 	if weapon.targeting_mode == WeaponData.TargetingMode.AOE:
-		_add_weapon_tag(row, "AOE")
+		_add_weapon_tag(row, "AOE",
+			other_weapon == null or other_weapon.targeting_mode != WeaponData.TargetingMode.AOE)
 
 
-func _add_weapon_tag(row: HFlowContainer, text: String) -> TagChip:
+func _add_weapon_tag(row: HFlowContainer, text: String, changed: bool) -> TagChip:
 	var tag: TagChip = _TAG_CHIP_SCENE.instantiate()
 	row.add_child(tag)
 	tag.set_content_font_size(16)
 	tag.set_text(text)
+	if changed:
+		var paper := StyleBoxTexture.new()
+		paper.texture = _CHANGED_TAG_TEXTURE
+		paper.texture_margin_left = 9.0
+		paper.texture_margin_right = 9.0
+		paper.content_margin_left = 12.0
+		paper.content_margin_right = 12.0
+		paper.content_margin_top = 8.0
+		paper.content_margin_bottom = 12.0
+		tag.add_theme_stylebox_override("panel", paper)
 	return tag
 
 

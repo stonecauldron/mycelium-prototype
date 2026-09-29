@@ -6,6 +6,7 @@ const COMPOST_SCENE := preload("res://assets/base/pupation/compost_confirm_dialo
 const TRAINING_EQUATION_SCRIPT := preload("res://assets/ui/training_equation/training_equation.gd")
 const SLOT_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 14.png")
 const CHANGED_SLOT_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 13.png")
+const TAG_CHIP_SCENE := preload("res://assets/ui/tag_chip/tag_chip.tscn")
 
 
 ## Run from a live Base fixture; temporary Seal/Troop fixtures are restored after checking.
@@ -22,7 +23,7 @@ static func run(host: Control) -> int:
 		failures += _check(WeaponSchool.training_availability_text(child) == expected,
 			"Child availability for %d days" % days)
 		failures += await _training_dialog(host, child, WeaponSchool.Id.BOW,
-			"Bow Training → Bow", expected, [0])
+			"Bow Training → Bow", expected, [0], ["Melee", "Scaling"], ["Ranged", "Scaling"])
 		if days > 0:
 			var cocoon := PupationData.new()
 			failures += _check(cocoon.try_place(child, WeaponSchool.Id.BOW), "Child enters Cocoon")
@@ -34,17 +35,18 @@ static func run(host: Control) -> int:
 	var adult := make_unit([WeaponSchool.Id.SWORD], true)
 	adult.cocoon_duration_days = 2
 	failures += await _training_dialog(host, adult, WeaponSchool.Id.MACE,
-		"Sword + Mace → Warhammer", "Ready immediately · Stats unchanged", [1])
+		"Sword + Mace → Warhammer", "Ready immediately · Stats unchanged", [1], [], ["Blunt"])
 	failures += _check(adult.effective_cocoon_days() == 0, "Adult overrides Child wait")
 	failures += await _training_dialog(host, adult, WeaponSchool.Id.SWORD,
-		"Sword + Sword → Great Sword", "Ready immediately · Stats unchanged", [1])
+		"Sword + Sword → Great Sword", "Ready immediately · Stats unchanged", [1], [], ["AOE"])
 	var dual := make_unit([WeaponSchool.Id.SWORD, WeaponSchool.Id.BOW], true)
 	failures += await _training_dialog(host, dual, WeaponSchool.Id.MACE,
-		"Bow + Mace → Great Horn", "Ready immediately · Stats unchanged", [0, 1])
+		"Bow + Mace → Great Horn", "Ready immediately · Stats unchanged", [0, 1],
+		["Ranged", "Scaling"], ["Mid Range", "Scaling", "Blunt"])
 	failures += _check(WeaponSchool.training_replacement_text(dual, WeaponSchool.Id.MACE)
 		== "Replaces oldest Training: Sword. Keeps Bow and adds Mace.", "Oldest replacement named")
 	failures += await _training_dialog(host, dual, WeaponSchool.Id.SWORD,
-		"Bow + Sword → Crossbow", "Ready immediately · Stats unchanged", [0, 1])
+		"Bow + Sword → Crossbow", "Ready immediately · Stats unchanged", [0, 1], [], [])
 	failures += _check(WeaponSchool.training_replacement_text(dual, WeaponSchool.Id.SWORD)
 		== "Trains Sword again, replacing its oldest Training. Keeps Bow.", "Oldest renewal named")
 
@@ -59,7 +61,8 @@ static func run(host: Control) -> int:
 	descendant.pending_adult_stat_bonus = 7
 	failures += await _training_dialog(host, descendant, WeaponSchool.Id.MACE,
 		"Bow + Mace → Great Horn",
-		"Returns after the next Battle · Becomes an Adult", [0, 1])
+		"Returns after the next Battle · Becomes an Adult", [0, 1],
+		["Ranged", "Scaling"], ["Mid Range", "Scaling", "Blunt"])
 	failures += await _training_equation_reuse(host)
 	for school in WeaponSchool.DISPLAY_ORDER:
 		var card: SchoolTrainingDetailCard = SCHOOL_SCENE.instantiate()
@@ -128,7 +131,7 @@ static func _unit_training_cards(host: Control) -> int:
 
 static func _training_dialog(
 	host: Control, unit: RosterUnitData, school: int, recipe: String, availability: String,
-	changed_slots: Array[int]
+	changed_slots: Array[int], before_changed_tags: Array[String], after_changed_tags: Array[String]
 ) -> int:
 	var failures := 0
 	var original_stats := _stats(unit)
@@ -176,12 +179,8 @@ static func _training_dialog(
 	failures += _check_combat_preview(dialog, "Hp", hp_before, hp_after)
 	for side in ["Left", "Right"]:
 		failures += _check_portrait_alignment(dialog, side)
-		var tags := dialog.get_node("%%%sWeaponTags" % side) as HFlowContainer
-		var visible_tags := 0
-		for tag in tags.get_children():
-			if tag is Control and (tag as Control).visible:
-				visible_tags += 1
-		failures += _check(visible_tags >= 2, side + " Weapon shows range and scaling tags")
+	failures += _check_weapon_tag_comparison(dialog, unit.weapon, actual.weapon,
+		before_changed_tags, after_changed_tags)
 	failures += _check((dialog.get_node("%ConfirmButton") as Button).text
 		== "%s %s" % [action, BiomassDisplay.number(WeaponSchool.COCOON_COST)], "Actual cost visible")
 	var panel := dialog.get_node("Center/Panel") as Control
@@ -262,6 +261,54 @@ static func _check_equation_icon(node: Node, weapon: WeaponData, label: String) 
 		and icon.texture.resource_path == weapon.icon.resource_path, label + " icon matches gameplay")
 
 
+static func _check_weapon_tag_comparison(
+	dialog: Control, before: WeaponData, after: WeaponData,
+	before_changed: Array[String], after_changed: Array[String]
+) -> int:
+	return _check_weapon_tags(dialog.get_node("%LeftWeaponTags") as HFlowContainer, before, before_changed) \
+		+ _check_weapon_tags(dialog.get_node("%RightWeaponTags") as HFlowContainer, after, after_changed)
+
+
+static func _check_weapon_tags(row: HFlowContainer, weapon: WeaponData, changed: Array[String]) -> int:
+	var range_label := "Mid Range" if weapon.formation_line == WeaponData.FormationLine.MID \
+		else str(WeaponData.FORMATION_LINE_LABELS[weapon.formation_line])
+	var labels: Array[String] = [range_label, "Scaling"]
+	if weapon.damage_type == WeaponData.DamageType.BLUNT:
+		labels.append("Blunt")
+	if weapon.targeting_mode == WeaponData.TargetingMode.AOE:
+		labels.append("AOE")
+	var failures := _check(row.get_child_count() == labels.size(), str(row.name) + " has the exact Weapon tags")
+	var default_tag: TagChip = TAG_CHIP_SCENE.instantiate()
+	var default_panel := default_tag.get_theme_stylebox("panel")
+	default_tag.free()
+	for index in mini(row.get_child_count(), labels.size()):
+		var tag := row.get_child(index) as TagChip
+		var label := "%s %s" % [row.name, labels[index]]
+		failures += _check(tag != null and tag.visible, label + " tag is visible")
+		if tag == null:
+			continue
+		failures += _check((tag.get_node("%Label") as Label).text == labels[index], label + " caption preserved")
+		var paper := tag.get_theme_stylebox("panel")
+		if changed.has(labels[index]):
+			var changed_paper := paper as StyleBoxTexture
+			failures += _check(changed_paper != null and changed_paper.texture == CHANGED_SLOT_TEXTURE,
+				label + " change uses the blue paper border")
+		else:
+			failures += _check(paper == default_panel, label + " unchanged tag keeps its default style")
+		failures += _check(row.get_global_rect().grow(1.0).encloses(tag.get_global_rect()), label + " fits its row")
+		var icons: Array[Texture2D] = []
+		if index == 1:
+			icons = StatDisplay.textures_for_damage_stat(weapon.damage_stat)
+		for icon_index in 2:
+			var icon := tag.get_node("%IconA" if icon_index == 0 else "%IconB") as TextureRect
+			failures += _check(icon.visible == (icon_index < icons.size()), label + " keeps the expected icon count")
+			if icon_index < icons.size():
+				failures += _check(icon.texture == icons[icon_index], label + " keeps the actual scaling icon")
+		failures += _check((tag.get_node("%Glue") as Label).visible == (icons.size() == 2),
+			label + " scaling icon separator is correct")
+	return failures
+
+
 static func _training_equation_reuse(host: Control) -> int:
 	var failures := 0
 	var dialog: PupationConfirmDialog = TRAINING_SCENE.instantiate()
@@ -270,10 +317,18 @@ static func _training_equation_reuse(host: Control) -> int:
 		make_unit([WeaponSchool.Id.SWORD, WeaponSchool.Id.BOW], true),
 		make_unit([], false),
 		make_unit([WeaponSchool.Id.BOW], true),
+		make_unit([WeaponSchool.Id.SWORD, WeaponSchool.Id.SWORD], true),
+		make_unit([WeaponSchool.Id.MACE, WeaponSchool.Id.SWORD], true),
 		make_unit([WeaponSchool.Id.BOW, WeaponSchool.Id.BOW], true),
 	]
-	# With Bow Training, these results change slot 1, slot 1, slot 2, then neither.
-	var changed_slots: Array[Array] = [[0], [0], [1], []]
+	# Bow Training also removes AOE from Great Sword and Blunt from Warhammer.
+	var changed_slots: Array[Array] = [[0], [0], [1], [1], [0, 1], []]
+	var before_changed_tags: Array[Array] = [
+		["Scaling"], ["Melee", "Scaling"], [], ["Melee", "AOE"], ["Melee", "Blunt"], [],
+	]
+	var after_changed_tags: Array[Array] = [
+		["Scaling"], ["Ranged", "Scaling"], [], ["Ranged"], ["Ranged"], [],
+	]
 	for index in units.size():
 		var unit := units[index]
 		dialog.setup(unit, WeaponSchool.Id.BOW)
@@ -286,8 +341,20 @@ static func _training_equation_reuse(host: Control) -> int:
 		expected_changes.assign(changed_slots[index])
 		failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow,
 			actual, "Reused after %d" % index, expected_changes)
+		var before_changes: Array[String] = []
+		var after_changes: Array[String] = []
+		before_changes.assign(before_changed_tags[index])
+		after_changes.assign(after_changed_tags[index])
+		failures += _check_weapon_tag_comparison(dialog, unit.weapon, actual.weapon,
+			before_changes, after_changes)
+		failures += _check((dialog.get_node("Center/Panel") as Control).size.y < 1000.0,
+			"Reused Training confirmation fits play height")
 		if expected_changes.is_empty():
 			await _snapshot(host, "/tmp/usability-training-unchanged.png")
+		elif unit.weapon.targeting_mode == WeaponData.TargetingMode.AOE:
+			await _snapshot(host, "/tmp/usability-training-removed-aoe.png")
+		elif unit.weapon.damage_type == WeaponData.DamageType.BLUNT:
+			await _snapshot(host, "/tmp/usability-training-removed-blunt.png")
 	dialog.queue_free()
 	await host.get_tree().process_frame
 	return failures

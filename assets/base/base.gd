@@ -11,7 +11,6 @@ const TAB_DEFS := [
 const VIEWPORT_SIZE := Vector2(1920, 1080)
 const CAMERA_TWEEN_SECONDS := 0.35
 const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
-const _TEXT_TOOLTIP_SCRIPT := preload("res://assets/ui/detail_tooltip/text_tooltip.gd")
 const _READY_BADGE_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 6.png")
 
 @onready var _camera: Camera2D = %BaseCamera
@@ -261,7 +260,6 @@ func _build_tab_bar() -> void:
 		column.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 
 		var button := Button.new()
-		button.set_script(_TEXT_TOOLTIP_SCRIPT)
 		button.theme_type_variation = &"NavButton"
 		button.text = "%d  %s" % [key_index, str(def["label"])]
 		button.custom_minimum_size = Vector2(180, 72)
@@ -313,7 +311,6 @@ func _refresh_nursery_readiness() -> void:
 	var count := GameState.nursery.ready_plot_count()
 	_nursery_ready_badge.text = str(count)
 	_nursery_ready_badge.visible = count > 0
-	button.tooltip_text = "%d Plot%s ready to harvest" % [count, "" if count == 1 else "s"] if count > 0 else ""
 
 
 func _select_tab(tab_id: TabId, instant: bool = false) -> void:

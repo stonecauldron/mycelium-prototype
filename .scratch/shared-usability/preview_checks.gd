@@ -174,10 +174,9 @@ static func _compost_checks(host: Control) -> int:
 	await host.get_tree().process_frame
 	failures += _check(not bool(GameState.preview_compost_outcome(child).get("emits_spore")),
 		"Child Compost creates no spore")
-	failures += _check(not (child_dialog.get_node("%LineagePreview") as Control).visible,
-		"Child Compost hides descendant preview")
 	failures += _check((child_dialog.get_node("%OutcomeSpore") as Label).text.contains("Only Adults"),
 		"Child Compost explains no spore")
+	await _snapshot(host, "/tmp/usability-compost-child.png")
 	child_dialog.queue_free()
 	await host.get_tree().process_frame
 
@@ -210,30 +209,12 @@ static func _compost_checks(host: Control) -> int:
 	await host.get_tree().process_frame
 	failures += _check((dialog.get_node("%OutcomeSpore") as Label).text.contains(spore.display_name),
 		"Actual lineage spore named")
-	failures += _check((dialog.get_node("%DescendantTitle") as Label).text
-		== "After harvest: %s · Child" % descendant.display_name, "Actual descendant name/stage preview")
 	failures += _check((dialog.get_node("%GrowthTime") as Label).text
 		== "Growth Time: %d %s" % [spore.days_to_mature_effective(),
 			WeaponSchool.day_word(spore.days_to_mature_effective())], "Effective Growth Time preview")
-	var mutations := (dialog.get_node("%InheritedMutations") as Label).text
-	failures += _check(mutations.contains(parent.body_mutation.title_text())
-		and mutations.contains(parent.cap_mutation.title_text()), "Both Mutation previews visible")
-	failures += _check((dialog.get_node("%InheritedTrainings") as Label).text.contains("Sword + Mace → Warhammer"),
-		"Actual inherited recipe visible")
-	failures += _check((dialog.get_node("%InheritedStats") as Label).tooltip_text.contains("Fertilizer items do not carry"),
-		"Fertilizer inheritance detail accessible")
 	failures += _check((dialog.get_node("Center/Panel") as Control).size.y < 1000.0,
 		"Compost confirmation fits play height")
 	await _snapshot(host, "/tmp/usability-compost-adult.png")
-	if OS.get_cmdline_user_args().has("--visual"):
-		var detail := dialog.get_node("%InheritedStats") as Control
-		var motion := InputEventMouseMotion.new()
-		motion.position = detail.get_global_transform_with_canvas() * (detail.size * 0.5)
-		host.get_viewport().push_input(motion, true)
-		await host.get_tree().create_timer(0.4).timeout
-		failures += _check(host.get_viewport().gui_get_hovered_control() == detail,
-			"Compost Stat detail is hoverable")
-		await _snapshot(host, "/tmp/usability-compost-detail.png")
 	dialog.queue_free()
 	await host.get_tree().process_frame
 	return failures

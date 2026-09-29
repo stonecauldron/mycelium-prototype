@@ -22,12 +22,6 @@ var _unit: RosterUnitData
 @onready var _outcome_biomass: RichTextLabel = %OutcomeBiomass
 @onready var _outcome_spore: Label = %OutcomeSpore
 @onready var _growth_time: Label = %GrowthTime
-@onready var _lineage_preview: VBoxContainer = %LineagePreview
-@onready var _descendant_title: Label = %DescendantTitle
-@onready var _generation: Label = %Generation
-@onready var _inherited_trainings: Label = %InheritedTrainings
-@onready var _inherited_mutations: Label = %InheritedMutations
-@onready var _inherited_stats: Label = %InheritedStats
 @onready var _confirm_button: Button = %ConfirmButton
 
 
@@ -69,13 +63,12 @@ func _refresh() -> void:
 	var biomass := int(preview.get("biomass", 0))
 	var emits_spore := bool(preview.get("emits_spore", false))
 	StatDisplay.apply_to(_outcome_biomass, BiomassDisplay.text(biomass, true), 24, _COLOR_UP)
-	_lineage_preview.visible = emits_spore
 	_growth_time.visible = emits_spore
 	if emits_spore:
 		var spore := SporeData.from_fallen_unit(_unit)
 		_outcome_spore.text = "%s\nAdded to Stock" % spore.display_name
 		_outcome_spore.add_theme_color_override("font_color", _COLOR_UP)
-		_refresh_lineage_preview(spore)
+		_refresh_growth_time(spore)
 	else:
 		_outcome_spore.text = "No lineage spore\nOnly Adults leave spores."
 		_outcome_spore.add_theme_color_override("font_color", _COLOR_NEUTRAL)
@@ -88,56 +81,13 @@ func _refresh() -> void:
 	)
 
 
-func _refresh_lineage_preview(spore: SporeData) -> void:
+func _refresh_growth_time(spore: SporeData) -> void:
 	var days := spore.days_to_mature_effective()
 	_growth_time.text = "Growth Time: %d %s" % [days, WeaponSchool.day_word(days)]
 	_growth_time.tooltip_text = (
 		"Plant this lineage spore on an unlocked, empty Plot.\n"
 		+ "Planting consumes the spore without paying for a fresh grow.\n"
 		+ "Plot Fertilizers may change Remaining Time."
-	)
-	var child_generation := maxi(spore.parent_generation, 1) + 1
-	var child_name := UnitNames.format_unit_name(spore.lineage_name, child_generation)
-	_descendant_title.text = "After harvest: %s · Child" % child_name
-	_generation.text = "%s → %s · %s Tier unchanged" % [
-		UnitNames.format_generation_label(spore.parent_generation),
-		UnitNames.format_generation_label(child_generation),
-		UnitStatsData.label_for_tier(spore.power_tier),
-	]
-	var trainings: PackedStringArray = []
-	for training in spore.weapon_trainings:
-		trainings.append(WeaponSchool.display_name(training))
-	var weapon := WeaponSchool.resolve_weapon(spore.weapon_trainings)
-	var weapon_name := weapon.display_name if weapon != null else "—"
-	_inherited_trainings.text = "Trainings inherited: %s → %s" % [
-		" + ".join(trainings) if not trainings.is_empty() else "None",
-		weapon_name,
-	]
-	_inherited_trainings.tooltip_text = (
-		"The Child uses this Weapon immediately, including Trainings "
-		+ "learned by its parent as an Adult."
-	)
-	var mutations: PackedStringArray = []
-	if spore.body_mutation != null:
-		mutations.append(spore.body_mutation.title_text())
-	if spore.cap_mutation != null:
-		mutations.append(spore.cap_mutation.title_text())
-	_inherited_mutations.text = "Mutations inherited: %s" % (
-		" + ".join(mutations) if not mutations.is_empty() else "None"
-	)
-	_inherited_mutations.tooltip_text = "\n".join(spore.mutation_tooltip_lines())
-	var mean := spore.mean_stats
-	var stats_detail := "Saved Stats: STR %d · DEX %d · CON %d" % [
-		mean.strength if mean != null else UnitStatsData.NEUTRAL_STAT,
-		mean.dex if mean != null else UnitStatsData.NEUTRAL_STAT,
-		mean.con if mean != null else UnitStatsData.NEUTRAL_STAT,
-	]
-	_inherited_stats.tooltip_text = (
-		stats_detail
-		+ "\nEach Stat rolls ±1 around its saved value (within 1–99), before Plot modifiers."
-		+ "\nA higher Generation does not automatically raise Stats.\n"
-		+ "Fertilizer items do not carry onto the spore; baked Stat "
-		+ "gains are included in saved Stats."
 	)
 
 

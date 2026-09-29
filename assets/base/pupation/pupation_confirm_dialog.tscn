@@ -179,6 +179,7 @@ unique_name_in_owner = true
 size_flags_horizontal = 4
 icon = ExtResource("4_sword")
 icon_rotation_degrees = 45.0
+icon_scale = 1.4
 
 [node name="LeftAtkDelta" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow/LeftAttackGroup"]
 unique_name_in_owner = true
@@ -382,6 +383,7 @@ unique_name_in_owner = true
 size_flags_horizontal = 4
 icon = ExtResource("4_sword")
 icon_rotation_degrees = 45.0
+icon_scale = 1.4
 
 [node name="RightAtkDelta" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow/RightAttackGroup"]
 unique_name_in_owner = true

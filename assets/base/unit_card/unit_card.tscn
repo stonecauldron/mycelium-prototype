@@ -93,6 +93,7 @@ alignment = 1
 unique_name_in_owner = true
 icon = ExtResource("3_sword")
 icon_rotation_degrees = 45.0
+icon_scale = 1.2
 
 [node name="HpChip" parent="Margin/VBox/Body/StatsRow" unique_id=1988214518 instance=ExtResource("5_chip")]
 unique_name_in_owner = true

@@ -13,7 +13,12 @@ const DEFAULT_VALUE_FONT_SIZE := 24
 @export_range(-180.0, 180.0, 1.0) var icon_rotation_degrees: float = 0.0:
 	set(value):
 		icon_rotation_degrees = value
-		_apply_icon_rotation()
+		_apply_icon_transform()
+
+@export_range(0.5, 2.0, 0.05) var icon_scale: float = 1.0:
+	set(value):
+		icon_scale = value
+		_apply_icon_transform()
 
 @export var chip_size: Vector2 = CHIP_SIZE:
 	set(value):
@@ -33,9 +38,9 @@ var custom_tooltip_factory: Callable
 
 
 func _ready() -> void:
-	_icon.resized.connect(_apply_icon_rotation)
+	_icon.resized.connect(_apply_icon_transform)
 	_apply_chip_size()
-	_apply_icon_rotation()
+	_apply_icon_transform()
 	_apply_value_font_size()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_set_children_mouse_filter_ignore(self)
@@ -63,11 +68,12 @@ func _apply_chip_size() -> void:
 	size = chip_size
 
 
-func _apply_icon_rotation() -> void:
+func _apply_icon_transform() -> void:
 	if _icon == null:
 		return
 	_icon.pivot_offset = _icon.size * 0.5
 	_icon.rotation_degrees = icon_rotation_degrees
+	_icon.scale = Vector2.ONE * icon_scale
 
 
 func _apply_value_font_size() -> void:

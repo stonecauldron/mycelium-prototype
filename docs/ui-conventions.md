@@ -14,7 +14,7 @@ For example, with 3 biomass, a cost of 8 previews a balance of **−5** and a ch
 | Loss | Red, with a `−` sign on the change. |
 | Zero | Neutral result; omit the change tab. |
 
-Use the same gain/loss palette as Training through `StatDisplay.change_color`: gain `Color(0.12, 0.45, 0.18, 1)` and loss `Color(0.7, 0.15, 0.12, 1)`. Result numerals on the colored chip use the light variants (gain lightened by 0.65, loss by 0.45); the signed change uses the base ink colors on cream paper. Signs carry meaning independently of color. Color reflects the action's change, not whether the resulting balance is above or below zero.
+Use the same gain/loss palette as Training through `StatDisplay.change_color`: gain `Color(0.12, 0.45, 0.18, 1)` and loss `Color(0.7, 0.15, 0.12, 1)`. Biomass result numerals on green paper use the light variants (gain lightened by 0.65, loss by 0.45). Outlined Attack/HP numerals in Training use stronger variants (gain lightened by 0.35, loss by 0.2). Signed changes use the base ink colors on cream paper. Signs carry meaning independently of color. Color reflects the action's change, not whether the resulting balance is above or below zero.
 
 ### Action coverage
 

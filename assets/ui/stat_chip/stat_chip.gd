@@ -63,6 +63,10 @@ func set_value(value: Variant = null) -> void:
 	_value_label.text = str(value)
 
 
+func set_value_color(color: Color) -> void:
+	_value_label.add_theme_color_override("font_color", color)
+
+
 func _apply_chip_size() -> void:
 	custom_minimum_size = chip_size
 	size = chip_size

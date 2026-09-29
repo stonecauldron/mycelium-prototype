@@ -148,11 +148,11 @@ A fighting position in the Squad. Slots unlock in order from the flag. A locked 
 The units in the troop held out of the fighting lineup. Bench positions are available for the whole run — they are not Squad slots.
 
 **Child**:
-A unit that has not yet become an Adult through Training (or a starter package Adult).
+A unit at the life stage before Evolution into an Adult.
 *Avoid*: juvenile (code id)
 
 **Adult**:
-A unit at adult life stage — reached by Training emerge, or granted by a starter package.
+A unit at adult life stage — reached through Evolution, or granted by a starter package.
 *Avoid*: imago, fully_evolved (code ids)
 
 **Strain**:
@@ -175,11 +175,15 @@ The War Chamber's dedicated place for Compost, separate from weapon-school Cocoo
 *Avoid*: composting cocoon
 
 **Training**:
-Putting a Child or Adult through a weapon school to gain that school's fighting identity. A Child emerges as an Adult; an Adult trains instantly on confirmation with its Stats and troop position unchanged.
+Putting a Child or Adult through a weapon school to gain that school's fighting identity. Child Training includes Evolution into an Adult; Adults use **Train** and complete Training instantly on confirmation with their Stats and troop position unchanged.
 *Avoid*: WeaponSchool (code)
 
+**Evolution**:
+A Child's transition into an Adult through weapon-school Training, started with **Evolve**. Evolution applies the Child's Training and Stat changes when it completes; it does not advance Generation.
+*Avoid*: pupate, pupation; using Evolution for an Adult's further Training
+
 **Cocoon**:
-The Base slot used to start Training. A Child sits here out of the troop until it emerges; Adult Training completes instantly.
+The Base slot used to start Training. A Child with a wait stays here out of the Troop until Evolution completes; Adult Training completes instantly.
 
 **Weapon school**:
 Sword, Mace, Shield, Spear, or Bow — the fighting identity Training grants.

@@ -5,7 +5,7 @@ const SCHOOL_SCENE := preload("res://assets/base/pupation/school_training_detail
 const COMPOST_SCENE := preload("res://assets/base/pupation/compost_confirm_dialog.tscn")
 
 
-## Run from a live Base fixture with autoloads available. Does not mutate GameState.
+## Run from a live Base fixture; temporary Seal/Troop fixtures are restored after checking.
 static func run(host: Control) -> int:
 	var failures := 0
 	for days in [0, 1, 2]:
@@ -73,6 +73,7 @@ static func run(host: Control) -> int:
 		card.queue_free()
 		await host.get_tree().process_frame
 
+	failures += await _training_seal_checks(host)
 	await _unit_training_cards(host)
 	failures += await _compost_checks(host)
 	print("PREVIEW_CHECKS failures=", failures)
@@ -143,16 +144,39 @@ static func _training_dialog(
 	host.add_child(dialog)
 	await host.get_tree().process_frame
 	await host.get_tree().process_frame
-	failures += _check((dialog.get_node("%PupateTitle") as Label).text == "Train %s" % unit.display_name,
-		"Train action terminology")
-	failures += _check((dialog.get_node("%RecipeLabel") as Label).text == recipe,
-		"Actual recipe visible: " + recipe)
-	failures += _check((dialog.get_node("%AvailabilityLabel") as Label).text == availability,
-		"Actual availability visible")
+	var action := "Train" if unit.is_adult_stage() else "Evolve"
+	failures += _check((dialog.get_node("%PupateTitle") as Label).text == "%s %s" % [action, unit.display_name],
+		"Life-stage action terminology")
+	failures += _check(WeaponSchool.training_recipe_text(preview.weapon_trainings) == recipe,
+		"Actual recipe: " + recipe)
+	failures += _check(WeaponSchool.training_availability_text(unit) == availability,
+		"Actual availability preserved")
+	failures += _check((dialog.get_node("%LeftColumn") as Control).visible
+		and (dialog.get_node("%MidColumn") as Control).visible, "Both life stages show comparison")
+	failures += _check((dialog.get_node("%LeftWeaponName") as Label).text == unit.weapon.display_name,
+		"Before portrait Weapon matches current Unit")
+	var days := unit.effective_cocoon_days()
+	failures += _check((dialog.get_node("%DurationChip") as Control).visible == (days > 0),
+		"Hourglass only shown for delayed Evolution")
+	failures += _check((dialog.get_node("%DurationSuffix") as Label).text
+		== (WeaponSchool.day_word(days) if days > 0 else "Instant"), "Preview timing label")
 	failures += _check((dialog.get_node("%RightWeaponName") as Label).text == actual.weapon.display_name,
 		"Result portrait Weapon matches actual Training")
+	var attack_before := SealModifiers.effective_attack_damage(unit)
+	var attack_after := SealModifiers.effective_attack_damage(actual)
+	var hp_before := SealModifiers.effective_max_hp(unit)
+	var hp_after := SealModifiers.effective_max_hp(actual)
+	failures += _check_combat_preview(dialog, "Atk", attack_before, attack_after)
+	failures += _check_combat_preview(dialog, "Hp", hp_before, hp_after)
+	for side in ["Left", "Right"]:
+		var tags := dialog.get_node("%%%sWeaponTags" % side) as HFlowContainer
+		var visible_tags := 0
+		for tag in tags.get_children():
+			if tag is Control and (tag as Control).visible:
+				visible_tags += 1
+		failures += _check(visible_tags >= 2, side + " Weapon shows range and scaling tags")
 	failures += _check((dialog.get_node("%ConfirmButton") as Button).text
-		== "Train %s" % BiomassDisplay.number(WeaponSchool.COCOON_COST), "Actual cost visible")
+		== "%s %s" % [action, BiomassDisplay.number(WeaponSchool.COCOON_COST)], "Actual cost visible")
 	var panel := dialog.get_node("Center/Panel") as Control
 	print("TRAINING_PANEL_SIZE ", recipe, " ", panel.size)
 	failures += _check(panel.size.y < 1000.0, "Training confirmation fits play height")
@@ -160,8 +184,69 @@ static func _training_dialog(
 		await _snapshot(host, "/tmp/usability-training-child.png")
 	elif recipe == "Sword + Mace → Warhammer" and unit.is_adult_stage():
 		await _snapshot(host, "/tmp/usability-training-adult.png")
+	elif recipe == "Sword + Sword → Great Sword" and unit.is_adult_stage():
+		await _snapshot(host, "/tmp/usability-training-aoe.png")
 	dialog.queue_free()
 	await host.get_tree().process_frame
+	return failures
+
+
+static func _check_combat_preview(dialog: Control, chip_name: String, before: int, after: int) -> int:
+	var failures := 0
+	var left := dialog.get_node("%%Left%sChip" % chip_name) as StatChip
+	var right := dialog.get_node("%%Right%sChip" % chip_name) as StatChip
+	var delta_label := dialog.get_node("%%Right%sDelta" % chip_name) as Label
+	var delta := after - before
+	failures += _check((left.get_node("%Value") as Label).text == str(before),
+		chip_name + " before value matches gameplay")
+	failures += _check((right.get_node("%Value") as Label).text == str(after),
+		chip_name + " after value matches gameplay")
+	failures += _check(delta_label.text == ("%+d" % delta if delta != 0 else ""),
+		chip_name + " signed change matches gameplay")
+	if delta != 0:
+		var expected_color := StatDisplay.GAIN_COLOR if delta > 0 else StatDisplay.LOSS_COLOR
+		failures += _check(delta_label.get_theme_color("font_color") == expected_color,
+			chip_name + " change uses gain/loss color")
+	return failures
+
+
+static func _training_seal_checks(host: Control) -> int:
+	var failures := 0
+	var saved_troop := GameState.troop
+	var saved_seals := GameState.seals
+	GameState.seals = SealsCollection.new()
+	for seal_name in ["favourite_child", "bulwark", "ranger", "neotonia"]:
+		GameState.seals.add(load("res://assets/base/seals/%s.tres" % seal_name) as SealData)
+	for scenario in ["squad", "bench", "instant_child"]:
+		var unit := make_unit([WeaponSchool.Id.SWORD], scenario != "instant_child")
+		unit.favourite_child_buff = true
+		unit.cocoon_duration_days = 0
+		GameState.troop = TroopData.new()
+		var slots: Array = GameState.troop.bench if scenario == "bench" else GameState.troop.squad
+		slots[0] = unit
+		var attack_before := SealModifiers.effective_attack_damage(unit)
+		var hp_before := SealModifiers.effective_max_hp(unit)
+		var actual := unit.duplicate(true) as RosterUnitData
+		actual.apply_pupation_training(WeaponSchool.Id.MACE)
+		slots[0] = actual
+		var attack_after := SealModifiers.effective_attack_damage(actual)
+		var hp_after := SealModifiers.effective_max_hp(actual)
+		slots[0] = unit
+		var dialog: PupationConfirmDialog = TRAINING_SCENE.instantiate()
+		dialog.setup(unit, WeaponSchool.Id.MACE)
+		host.add_child(dialog)
+		await host.get_tree().process_frame
+		await host.get_tree().process_frame
+		failures += _check_combat_preview(dialog, "Atk", attack_before, attack_after)
+		failures += _check_combat_preview(dialog, "Hp", hp_before, hp_after)
+		failures += _check(slots[0] == unit and unit.weapon_trainings == [WeaponSchool.Id.SWORD],
+			"Seal comparison preserves live Unit and Formation: " + scenario)
+		if scenario == "squad":
+			await _snapshot(host, "/tmp/usability-training-seals.png")
+		dialog.queue_free()
+		await host.get_tree().process_frame
+	GameState.troop = saved_troop
+	GameState.seals = saved_seals
 	return failures
 
 

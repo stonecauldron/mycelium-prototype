@@ -7,25 +7,19 @@ signal cancelled
 const PORTRAIT_SCALE := 0.7
 const PORTRAIT_SHADOW := 20.0
 const _BIOMASS_ICON := preload("res://assets/base/biomass_small_icon.png")
+const _TAG_CHIP_SCENE := preload("res://assets/ui/tag_chip/tag_chip.tscn")
 const _STAT_FONT_SIZE := 18
 
 var _unit: RosterUnitData
 var _school: int = 0
 var _preview_unit: RosterUnitData
+var _preview_troop: TroopData
 
 @onready var _dim: ColorRect = %Dim
 @onready var _school_icon: TextureRect = %SchoolIcon
 @onready var _header_title: Label = %HeaderTitle
 @onready var _close_button: Button = %CloseButton
 @onready var _pupate_title: Label = %PupateTitle
-@onready var _recipe_label: Label = %RecipeLabel
-@onready var _role_label: RichTextLabel = %RoleLabel
-@onready var _availability_label: Label = %AvailabilityLabel
-@onready var _replacement_label: Label = %ReplacementLabel
-@onready var _panel: PanelContainer = $Center/Panel
-@onready var _comparison_width: float = _panel.custom_minimum_size.x
-@onready var _left_column: VBoxContainer = %LeftColumn
-@onready var _mid_column: VBoxContainer = %MidColumn
 @onready var _left_portrait: Control = %LeftPortrait
 @onready var _left_atk_chip: StatChip = %LeftAtkChip
 @onready var _left_hp_chip: StatChip = %LeftHpChip
@@ -33,6 +27,7 @@ var _preview_unit: RosterUnitData
 @onready var _left_weapon_row: PupationWeaponHoverRow = %LeftWeaponRow
 @onready var _left_weapon_icon: TextureRect = %LeftWeaponIcon
 @onready var _left_weapon_name: Label = %LeftWeaponName
+@onready var _left_weapon_tags: HFlowContainer = %LeftWeaponTags
 @onready var _left_str: StatValueRow = %LeftStr
 @onready var _left_dex: StatValueRow = %LeftDex
 @onready var _left_con: StatValueRow = %LeftCon
@@ -44,10 +39,13 @@ var _preview_unit: RosterUnitData
 @onready var _right_portrait: Control = %RightPortrait
 @onready var _right_atk_chip: StatChip = %RightAtkChip
 @onready var _right_hp_chip: StatChip = %RightHpChip
+@onready var _right_atk_delta: Label = %RightAtkDelta
+@onready var _right_hp_delta: Label = %RightHpDelta
 @onready var _right_stage: Label = %RightStage
 @onready var _right_weapon_row: PupationWeaponHoverRow = %RightWeaponRow
 @onready var _right_weapon_icon: TextureRect = %RightWeaponIcon
 @onready var _right_weapon_name: Label = %RightWeaponName
+@onready var _right_weapon_tags: HFlowContainer = %RightWeaponTags
 @onready var _right_str: StatValueRow = %RightStr
 @onready var _right_dex: StatValueRow = %RightDex
 @onready var _right_con: StatValueRow = %RightCon
@@ -90,35 +88,21 @@ func _refresh() -> void:
 	var school_weapon := WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(_school))
 	_school_icon.texture = school_weapon.icon if school_weapon != null else null
 	_header_title.text = "%s Training" % WeaponSchool.display_name(_school)
-	var is_adult := _unit.is_adult_stage()
-	_pupate_title.text = "Train %s" % _unit.display_name
-	_left_column.visible = not is_adult
-	_mid_column.visible = not is_adult
-	_panel.custom_minimum_size.x = 660.0 if is_adult else _comparison_width
+	_pupate_title.text = "%s %s" % [_action_verb(), _unit.display_name]
 	_refresh_duration_chip()
 
-	if not is_adult:
-		_fill_current_side()
+	_fill_current_side()
 	_fill_result_side()
-	_refresh_summary()
 	_refresh_affordability()
 
 
-func _refresh_summary() -> void:
-	if _preview_unit == null:
-		return
-	_recipe_label.text = WeaponSchool.training_recipe_text(_preview_unit.weapon_trainings)
-	_availability_label.text = WeaponSchool.training_availability_text(_unit)
-	_replacement_label.text = WeaponSchool.training_replacement_text(_unit, _school)
-	var weapon := _preview_unit.weapon
-	_role_label.visible = weapon != null
-	if weapon != null:
-		StatDisplay.apply_to(_role_label, WeaponSchool.training_role_text(weapon), 20, StatDisplay.INK_MUTED)
+func _action_verb() -> String:
+	return "Train" if _unit == null or _unit.is_adult_stage() else "Evolve"
 
 
 func _refresh_affordability() -> void:
 	var can_afford := GameState.biomass.can_afford(WeaponSchool.COCOON_COST)
-	_confirm_button.text = "Train %s" % BiomassDisplay.number(WeaponSchool.COCOON_COST)
+	_confirm_button.text = "%s %s" % [_action_verb(), BiomassDisplay.number(WeaponSchool.COCOON_COST)]
 	_confirm_button.disabled = not can_afford
 	_confirm_button.modulate = Color.WHITE if can_afford else Color(0.55, 0.55, 0.55, 1)
 
@@ -129,7 +113,7 @@ func _refresh_duration_chip() -> void:
 		days = _unit.effective_cocoon_days()
 	_duration_chip.set_value(maxi(days, 0))
 	_duration_chip.visible = days > 0
-	var suffix := "instant" if days <= 0 else WeaponSchool.day_word(days)
+	var suffix := "Instant" if days <= 0 else WeaponSchool.day_word(days)
 	_duration_suffix.text = suffix
 
 
@@ -141,7 +125,8 @@ func _fill_current_side() -> void:
 	_left_weapon_icon.texture = left_weapon.icon if left_weapon != null else null
 	_left_weapon_name.text = left_weapon.display_name if left_weapon != null else "—"
 	_left_weapon_row.set_weapon(left_weapon)
-	_set_combat_chips(_unit, _left_atk_chip, _left_hp_chip)
+	_fill_weapon_tags(_left_weapon_tags, left_weapon)
+	_set_combat_chips(_unit, _left_atk_chip, _left_hp_chip, GameState.troop)
 	var stats := _unit.stats
 	if stats != null:
 		_configure_current_stat(_left_str, "STR", str(stats.strength))
@@ -155,6 +140,7 @@ func _fill_current_side() -> void:
 
 func _fill_result_side() -> void:
 	_preview_unit = WeaponSchool.preview_emerged_unit(_unit, _school)
+	_preview_troop = _make_preview_troop()
 	var next_stage := (
 		_preview_unit.life_stage_id if _preview_unit != null
 		else WeaponSchool.next_stage_after_training(_unit)
@@ -170,7 +156,9 @@ func _fill_result_side() -> void:
 	_right_weapon_icon.texture = right_weapon.icon if right_weapon != null else null
 	_right_weapon_name.text = right_weapon.display_name if right_weapon != null else "—"
 	_right_weapon_row.set_weapon(right_weapon)
-	_set_combat_chips(_preview_unit, _right_atk_chip, _right_hp_chip)
+	_fill_weapon_tags(_right_weapon_tags, right_weapon)
+	_set_combat_chips(_preview_unit, _right_atk_chip, _right_hp_chip, _preview_troop)
+	_refresh_combat_deltas()
 
 	if preview_stats != null and _unit.stats != null:
 		_apply_result_stat(
@@ -255,13 +243,86 @@ func _apply_result_stat(
 	_configure_mid_delta(mid_row, abbrev, delta)
 
 
-func _set_combat_chips(roster: RosterUnitData, atk_chip: StatChip, hp_chip: StatChip) -> void:
+func _set_combat_chips(
+	roster: RosterUnitData,
+	atk_chip: StatChip,
+	hp_chip: StatChip,
+	troop: TroopData
+) -> void:
+	atk_chip.set_value_color(Color.WHITE)
+	hp_chip.set_value_color(Color.WHITE)
 	if roster == null or roster.stats == null:
 		atk_chip.set_value("—")
 		hp_chip.set_value("—")
 		return
-	atk_chip.set_value(SealModifiers.effective_attack_damage(roster))
-	hp_chip.set_value(SealModifiers.effective_max_hp(roster))
+	atk_chip.set_value(SealModifiers.effective_attack_damage(roster, troop))
+	hp_chip.set_value(SealModifiers.effective_max_hp(roster, troop))
+
+
+func _make_preview_troop() -> TroopData:
+	var troop := GameState.troop
+	if troop == null:
+		return null
+	# Compare in the same formation without replacing the live Unit.
+	var preview := TroopData.new()
+	preview.unlocked_squad_count = troop.unlocked_squad_count
+	preview.squad = troop.squad.duplicate()
+	preview.bench = troop.bench.duplicate()
+	for row in [preview.squad, preview.bench]:
+		for index in row.size():
+			if row[index] == _unit:
+				row[index] = _preview_unit
+	return preview
+
+
+func _refresh_combat_deltas() -> void:
+	var attack_delta := 0
+	var hp_delta := 0
+	if _preview_unit != null and _preview_unit.stats != null and _unit.stats != null:
+		attack_delta = (
+			SealModifiers.effective_attack_damage(_preview_unit, _preview_troop)
+			- SealModifiers.effective_attack_damage(_unit, GameState.troop)
+		)
+		hp_delta = (
+			SealModifiers.effective_max_hp(_preview_unit, _preview_troop)
+			- SealModifiers.effective_max_hp(_unit, GameState.troop)
+		)
+	_apply_combat_delta(_right_atk_chip, _right_atk_delta, attack_delta)
+	_apply_combat_delta(_right_hp_chip, _right_hp_delta, hp_delta)
+
+
+func _apply_combat_delta(chip: StatChip, label: Label, delta: int) -> void:
+	var color := StatDisplay.GAIN_COLOR if delta > 0 else StatDisplay.LOSS_COLOR
+	chip.set_value_color(color.lightened(0.45) if delta != 0 else Color.WHITE)
+	label.text = "%+d" % delta if delta != 0 else ""
+	label.add_theme_color_override("font_color", color)
+
+
+func _fill_weapon_tags(row: HFlowContainer, weapon: WeaponData) -> void:
+	for child in row.get_children():
+		row.remove_child(child)
+		child.queue_free()
+	if weapon == null:
+		return
+	var range_text := (
+		"Mid Range" if weapon.formation_line == WeaponData.FormationLine.MID
+		else str(WeaponData.FORMATION_LINE_LABELS.get(weapon.formation_line, "?"))
+	)
+	_add_weapon_tag(row, range_text)
+	var scaling := _add_weapon_tag(row, "")
+	scaling.show_icons(StatDisplay.textures_for_damage_stat(weapon.damage_stat), "or", 16, "Scaling")
+	if weapon.damage_type == WeaponData.DamageType.BLUNT:
+		_add_weapon_tag(row, "Blunt")
+	if weapon.targeting_mode == WeaponData.TargetingMode.AOE:
+		_add_weapon_tag(row, "AOE")
+
+
+func _add_weapon_tag(row: HFlowContainer, text: String) -> TagChip:
+	var tag: TagChip = _TAG_CHIP_SCENE.instantiate()
+	row.add_child(tag)
+	tag.set_content_font_size(16)
+	tag.set_text(text)
+	return tag
 
 
 func _clear_portrait(host: Control) -> void:

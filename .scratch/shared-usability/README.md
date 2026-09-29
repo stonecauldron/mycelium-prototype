@@ -4,7 +4,7 @@ Implemented the approved ordinary-Run subset of the onboarding exploration:
 
 - Receiving-Day Seal icons and timing tooltips on Days 1, 3, 6, and 9.
 - Hide / Select Seal / Start Battle flow, preserving offers, selection, paid rerolls, and Base edits while combat remains gated by the pending choice.
-- Training confirmation shows recipes, roles, actual availability, and explicit oldest-Training replacement using the existing preview rules. School hover tooltips retain their original compact presentation.
+- Training confirmation compares the current and resulting Unit for both Children and Adults, including Weapon tags and colored Attack/HP and Stat changes. Children use the Evolve action; Adult Training shows Instant in place of the hourglass. Explanatory labels above the preview were removed following UI review. School hover tooltips retain their original compact presentation.
 - Unit details show two Training slots and the resulting Weapon icon in one equation, with visible empty slots.
 - Attack chips angle the sword diagonally while keeping the number upright on Unit cards, detail tooltips, Training comparisons, and Scout tooltips. Swords below Units are 20% larger without changing the number or chip spacing.
 - Subtle ink rules and spacing separate Fertilizers, Mutations, Trainings, and the Generation footer; hidden sections leave no divider behind. The Unit card's footer sits closer to its lower paper edge.
@@ -12,6 +12,7 @@ Implemented the approved ordinary-Run subset of the onboarding exploration:
 - Quiet Nursery-tab count badge for harvest-ready Plots, updated by growth, Fertilizers, Greenhouse, harvesting, and grow removal. The badge hides at zero; harvest details remain in the tooltip.
 - Compact Compost confirmation with the Unit portrait, payout, and a spore icon/name in a spacious outcome panel. Growth Time, stock messaging, the detailed inheritance block, and the red removal message were removed following UI review.
 - Dialog close controls share a burgundy paper square and a light cross, with visible hover and pressed states.
+- Training and Compost dialog headings share a burgundy paper title strip with light text.
 
 Costs, eligibility, waits, inheritance, combat behavior, and the 10-Day Run remain unchanged. Guided mode, a clickable Train entry point, and Training-return indicators are outside this work.
 
@@ -27,7 +28,7 @@ godot --headless --path . res://.scratch/shared-usability/verify.tscn --quit-aft
 godot --path . --rendering-method gl_compatibility --rendering-driver opengl3 --windowed --resolution 1280x720 res://.scratch/shared-usability/verify.tscn --quit-after 2400 -- --visual
 ```
 
-`verify.gd` exercises real Base controls with viewport input, hide/reopen/Escape, both tabs, empty-Squad gating, reroll preservation, immediate Plot readiness, the ordinary reward calendar, icon hover/focus, chapter transitions, and the existing opening flow. `preview_checks.gd` compares Training previews with actual application for Child waits 0/1/2, Adult instant Training, repeat-school recipes, replacement/renewal, and modified/clamped Stats. It also checks Child/Adult Compost and real lineage-spore harvest inheritance.
+`verify.gd` exercises real Base controls with viewport input, hide/reopen/Escape, both tabs, empty-Squad gating, reroll preservation, immediate Plot readiness, the ordinary reward calendar, icon hover/focus, chapter transitions, and the existing opening flow. `preview_checks.gd` compares Training previews with actual application for Child waits 0/1/2, Adult instant Training, repeat-school recipes, replacement/renewal, and modified/clamped Stats. Combat values and signed changes are also checked with Favourite Child, Bulwark, Ranger, and Neotonia on Squad/Bench Adults and an instant Child Evolution, preserving the live Unit and Formation. It also checks Child/Adult Compost and real lineage-spore harvest inheritance.
 
 The visual pass writes `/tmp/usability-*.png` for the Seal chooser, Formation with 4 and 10 slots, Nursery readiness, progression tooltip, Child/Adult Training, school hover, Unit details with zero/one/two Trainings plus Fertilizers and Mutations, and Child/Adult Compost. These were inspected for readability and fit at play size. Renderer/resource cleanup diagnostics can appear on engine exit; the scenario checks separately report their failure count.
 

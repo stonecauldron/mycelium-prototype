@@ -346,6 +346,7 @@ static func preview_emerged_unit(unit: RosterUnitData, school: int) -> RosterUni
 	data.weapon = next_weapon
 	data.body_mutation = unit.body_mutation
 	data.cap_mutation = unit.cap_mutation
+	data.favourite_child_buff = unit.favourite_child_buff
 	data.power_tier = unit.power_tier
 	data.life_stage_id = next_stage
 	data.is_imago = next_stage != RosterUnitData.STAGE_JUVENILE

@@ -4,6 +4,8 @@ Use the vocabulary in [CONTEXT.md](../CONTEXT.md). Presentation previews describ
 
 In Training comparisons, emphasize nonzero changes with larger result Attack/HP icons and numerals (130% size), 24px signed changes, and 24px text with proportionally enlarged icons for changed STR/DEX/CON rows. Unchanged values retain their normal size. Reset the emphasis when a refreshed preview no longer changes a value.
 
+Training comparisons and Unit detail cards share the same weapon equation: two paper Training slots in their stored order, separated by `+`, then `=` and the resulting Weapon icon. Label unfilled slots `Empty`. The comparison's before side uses the current Unit; its after side uses the preview Unit, including replaced Trainings. Keep Weapon tags below the equation and the result Weapon details available on hover in the comparison.
+
 ## Biomass hover previews
 
 The Base biomass counter normally shows the actual balance. Hovering an action that changes biomass enlarges its paper chip and shows the projected balance: **current balance + signed change**. A small cream paper tab shows the signed change. Leaving the action restores the actual balance and normal chip size. Hovering never spends, grants, reserves, or refunds biomass.

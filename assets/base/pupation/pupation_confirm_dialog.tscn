@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
 
 [ext_resource type="StyleBox" path="res://assets/themes/paper/paper_dialog_title.tres" id="11_title"]
+[ext_resource type="Script" path="res://assets/ui/training_equation/training_equation.gd" id="12_training_equation"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
 content_margin_left = 28.0
@@ -230,20 +231,10 @@ script = ExtResource("8_weapon_row")
 
 [node name="HoverPunch" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftWeaponRow" unique_id=48865956 instance=ExtResource("7_punch")]
 
-[node name="LeftWeaponIcon" type="TextureRect" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftWeaponRow" unique_id=692268013]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(36, 36)
+[node name="TrainingEquation" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftWeaponRow"]
 layout_mode = 2
-mouse_filter = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="LeftWeaponName" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftWeaponRow" unique_id=1986215216]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
-theme_override_font_sizes/font_size = 18
-text = "Sickle"
+size_flags_horizontal = 4
+script = ExtResource("12_training_equation")
 
 [node name="LeftWeaponTags" type="HFlowContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn"]
 unique_name_in_owner = true
@@ -327,7 +318,7 @@ mouse_filter = 2
 
 [node name="MidWeaponSpacer" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn" unique_id=155252842]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
 [node name="MidTagsSpacer" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn"]
@@ -439,20 +430,10 @@ script = ExtResource("8_weapon_row")
 
 [node name="HoverPunch" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightWeaponRow" unique_id=1256339607 instance=ExtResource("7_punch")]
 
-[node name="RightWeaponIcon" type="TextureRect" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightWeaponRow" unique_id=832420109]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(36, 36)
+[node name="TrainingEquation" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightWeaponRow"]
 layout_mode = 2
-mouse_filter = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="RightWeaponName" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightWeaponRow" unique_id=79445283]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
-theme_override_font_sizes/font_size = 18
-text = "Sword"
+size_flags_horizontal = 4
+script = ExtResource("12_training_equation")
 
 [node name="RightWeaponTags" type="HFlowContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn"]
 unique_name_in_owner = true

@@ -27,8 +27,6 @@ var _preview_troop: TroopData
 @onready var _left_hp_chip: StatChip = %LeftHpChip
 @onready var _left_stage: Label = %LeftStage
 @onready var _left_weapon_row: PupationWeaponHoverRow = %LeftWeaponRow
-@onready var _left_weapon_icon: TextureRect = %LeftWeaponIcon
-@onready var _left_weapon_name: Label = %LeftWeaponName
 @onready var _left_weapon_tags: HFlowContainer = %LeftWeaponTags
 @onready var _left_str: StatValueRow = %LeftStr
 @onready var _left_dex: StatValueRow = %LeftDex
@@ -45,8 +43,6 @@ var _preview_troop: TroopData
 @onready var _right_hp_delta: Label = %RightHpDelta
 @onready var _right_stage: Label = %RightStage
 @onready var _right_weapon_row: PupationWeaponHoverRow = %RightWeaponRow
-@onready var _right_weapon_icon: TextureRect = %RightWeaponIcon
-@onready var _right_weapon_name: Label = %RightWeaponName
 @onready var _right_weapon_tags: HFlowContainer = %RightWeaponTags
 @onready var _right_str: StatValueRow = %RightStr
 @onready var _right_dex: StatValueRow = %RightDex
@@ -131,9 +127,7 @@ func _fill_current_side() -> void:
 	_unit.mount_portrait(_left_portrait, PORTRAIT_SCALE, PORTRAIT_SHADOW)
 	_left_stage.text = WeaponSchool.stage_display_name(_unit.life_stage_id)
 	var left_weapon := _unit.weapon
-	_left_weapon_icon.texture = left_weapon.icon if left_weapon != null else null
-	_left_weapon_name.text = left_weapon.display_name if left_weapon != null else "—"
-	_left_weapon_row.set_weapon(left_weapon)
+	_left_weapon_row.set_unit(_unit)
 	_fill_weapon_tags(_left_weapon_tags, left_weapon)
 	_set_combat_chips(_unit, _left_atk_chip, _left_hp_chip, GameState.troop)
 	var stats := _unit.stats
@@ -162,9 +156,7 @@ func _fill_result_side() -> void:
 		_preview_unit.mount_portrait(_right_portrait, PORTRAIT_SCALE, PORTRAIT_SHADOW)
 
 	_right_stage.text = WeaponSchool.stage_display_name(next_stage)
-	_right_weapon_icon.texture = right_weapon.icon if right_weapon != null else null
-	_right_weapon_name.text = right_weapon.display_name if right_weapon != null else "—"
-	_right_weapon_row.set_weapon(right_weapon)
+	_right_weapon_row.set_unit(_preview_unit)
 	_fill_weapon_tags(_right_weapon_tags, right_weapon)
 	_set_combat_chips(_preview_unit, _right_atk_chip, _right_hp_chip, _preview_troop)
 	_refresh_combat_deltas()

@@ -3,6 +3,7 @@ extends RefCounted
 const TRAINING_SCENE := preload("res://assets/base/pupation/pupation_confirm_dialog.tscn")
 const SCHOOL_SCENE := preload("res://assets/base/pupation/school_training_detail_card.tscn")
 const COMPOST_SCENE := preload("res://assets/base/pupation/compost_confirm_dialog.tscn")
+const TRAINING_EQUATION_SCRIPT := preload("res://assets/ui/training_equation/training_equation.gd")
 
 
 ## Run from a live Base fixture; temporary Seal/Troop fixtures are restored after checking.
@@ -57,6 +58,7 @@ static func run(host: Control) -> int:
 	failures += await _training_dialog(host, descendant, WeaponSchool.Id.MACE,
 		"Bow + Mace → Great Horn",
 		"Returns after the next Battle · Becomes an Adult")
+	failures += await _training_equation_reuse(host)
 	for school in WeaponSchool.DISPLAY_ORDER:
 		var card: SchoolTrainingDetailCard = SCHOOL_SCENE.instantiate()
 		card.setup(school)
@@ -74,15 +76,14 @@ static func run(host: Control) -> int:
 		await host.get_tree().process_frame
 
 	failures += await _training_seal_checks(host)
-	await _unit_training_cards(host)
+	failures += await _unit_training_cards(host)
 	failures += await _compost_checks(host)
 	print("PREVIEW_CHECKS failures=", failures)
 	return failures
 
 
-static func _unit_training_cards(host: Control) -> void:
-	if not OS.get_cmdline_user_args().has("--visual"):
-		return
+static func _unit_training_cards(host: Control) -> int:
+	var failures := 0
 	var scene := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
 	var cards: Array[UnitDetailCard] = []
 	for count in 3:
@@ -108,6 +109,8 @@ static func _unit_training_cards(host: Control) -> void:
 			card.fit_to_content()
 	for index in cards.size():
 		var card := cards[index]
+		var equation := card._content.get_node("%TrainingsList").get_child(0) as HBoxContainer
+		failures += _check_training_equation(equation, card.unit_data, "Unit detail %d" % index)
 		var fit_scale := minf(1.0, (host.size.y - 48.0) / card.card_size().y)
 		card.scale = Vector2.ONE * fit_scale
 		var visual_size := card.card_size() * fit_scale
@@ -118,6 +121,7 @@ static func _unit_training_cards(host: Control) -> void:
 	for card in cards:
 		card.queue_free()
 	await host.get_tree().process_frame
+	return failures
 
 
 static func _training_dialog(
@@ -153,15 +157,13 @@ static func _training_dialog(
 		"Actual availability preserved")
 	failures += _check((dialog.get_node("%LeftColumn") as Control).visible
 		and (dialog.get_node("%MidColumn") as Control).visible, "Both life stages show comparison")
-	failures += _check((dialog.get_node("%LeftWeaponName") as Label).text == unit.weapon.display_name,
-		"Before portrait Weapon matches current Unit")
+	failures += _check_weapon_equation(dialog.get_node("%LeftWeaponRow") as PupationWeaponHoverRow, unit, "Before")
 	var days := unit.effective_cocoon_days()
 	failures += _check((dialog.get_node("%DurationChip") as Control).visible == (days > 0),
 		"Hourglass only shown for delayed Evolution")
 	failures += _check((dialog.get_node("%DurationSuffix") as Label).text
 		== (WeaponSchool.day_word(days) if days > 0 else "Instant"), "Preview timing label")
-	failures += _check((dialog.get_node("%RightWeaponName") as Label).text == actual.weapon.display_name,
-		"Result portrait Weapon matches actual Training")
+	failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow, actual, "After")
 	var attack_before := SealModifiers.effective_attack_damage(unit)
 	var attack_after := SealModifiers.effective_attack_damage(actual)
 	var hp_before := SealModifiers.effective_max_hp(unit)
@@ -186,11 +188,110 @@ static func _training_dialog(
 	elif recipe == "Sword + Mace → Warhammer" and unit.is_adult_stage():
 		await _snapshot(host, "/tmp/usability-training-adult.png")
 		await _snapshot_close_hover(host, dialog, "/tmp/usability-training-close-hover.png")
+		failures += await _check_weapon_hover(host, dialog.get_node("%LeftWeaponRow") as PupationWeaponHoverRow)
+		failures += await _check_weapon_hover(host, dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow)
 	elif recipe == "Sword + Sword → Great Sword" and unit.is_adult_stage():
 		await _snapshot(host, "/tmp/usability-training-aoe.png")
+	elif recipe == "Bow + Mace → Great Horn" and unit.is_adult_stage():
+		await _snapshot(host, "/tmp/usability-training-replacement.png")
 	dialog.queue_free()
 	await host.get_tree().process_frame
 	return failures
+
+
+static func _check_weapon_equation(row: PupationWeaponHoverRow, unit: RosterUnitData, label: String) -> int:
+	var failures := _check(row.weapon != null and row.weapon.display_name == unit.weapon.display_name,
+		label + " Weapon hover matches actual Unit")
+	var equation := row.get_node_or_null("TrainingEquation") as HBoxContainer
+	failures += _check_training_equation(equation, unit, label)
+	if equation != null:
+		failures += _check(row.get_global_rect().grow(1.0).encloses(equation.get_global_rect()),
+			label + " Training equation fits its comparison row")
+	return failures
+
+
+static func _check_training_equation(equation: HBoxContainer, unit: RosterUnitData, label: String) -> int:
+	var failures := _check(equation != null, label + " Training equation exists")
+	if equation == null:
+		return failures
+	failures += _check(equation.get_script() == TRAINING_EQUATION_SCRIPT, label + " uses the shared equation renderer")
+	var separators: Array[String] = []
+	for child in equation.get_children():
+		if child is Label:
+			separators.append((child as Label).text)
+	failures += _check(separators == ["+", "="], label + " shows a two-slot equation")
+	for index in 2:
+		var slot := equation.get_node_or_null("TrainingSlot%d" % (index + 1)) as PanelContainer
+		failures += _check(slot != null and slot.visible, label + " Training slot is visible")
+		if slot == null:
+			continue
+		failures += _check(slot.custom_minimum_size == Vector2(64, 64) and slot.get_child_count() == 1,
+			label + " Training slot keeps the Unit card's paper frame")
+		if slot.get_child_count() != 1:
+			continue
+		var content := slot.get_child(0)
+		if index >= unit.weapon_trainings.size():
+			failures += _check(content is Label and (content as Label).text == "Empty",
+				label + " unused Training slot is explicitly Empty")
+		else:
+			var weapon := WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(unit.weapon_trainings[index]))
+			failures += _check_equation_icon(content, weapon, label + " ordered Training %d" % index)
+	var result := equation.get_node_or_null("ResultWeapon")
+	failures += _check_equation_icon(result, unit.weapon, label + " resulting Weapon")
+	return failures
+
+
+static func _check_equation_icon(node: Node, weapon: WeaponData, label: String) -> int:
+	var icon := node as TextureRect
+	return _check(icon != null and icon.visible and icon.custom_minimum_size == Vector2(48, 48)
+		and icon.texture != null and weapon != null and weapon.icon != null
+		and icon.texture.resource_path == weapon.icon.resource_path, label + " icon matches gameplay")
+
+
+static func _training_equation_reuse(host: Control) -> int:
+	var failures := 0
+	var dialog: PupationConfirmDialog = TRAINING_SCENE.instantiate()
+	host.add_child(dialog)
+	var units: Array[RosterUnitData] = [
+		make_unit([WeaponSchool.Id.SWORD, WeaponSchool.Id.BOW], true),
+		make_unit([], false),
+		make_unit([WeaponSchool.Id.BOW], true),
+	]
+	for unit in units:
+		dialog.setup(unit, WeaponSchool.Id.BOW)
+		for frame in 4:
+			await host.get_tree().process_frame
+		var actual := unit.duplicate(true) as RosterUnitData
+		actual.apply_pupation_training(WeaponSchool.Id.BOW)
+		failures += _check_weapon_equation(dialog.get_node("%LeftWeaponRow") as PupationWeaponHoverRow, unit, "Reused before")
+		failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow, actual, "Reused after")
+	dialog.queue_free()
+	await host.get_tree().process_frame
+	return failures
+
+
+static func _check_weapon_hover(host: Control, row: PupationWeaponHoverRow) -> int:
+	var result := row.get_node("TrainingEquation/ResultWeapon") as Control
+	var point := result.get_global_transform_with_canvas() * (result.size * 0.5)
+	await _move_pointer(host, point)
+	var failures := _check(host.get_viewport().gui_get_hovered_control() == row,
+		"Training equation preserves the containing Weapon hover")
+	var overlay := DetailTooltipPopup._instance
+	var tip := overlay._tip as WeaponDetailCard if is_instance_valid(overlay) else null
+	failures += _check(is_instance_valid(tip) and tip.is_visible_in_tree() and tip.weapon_data == row.weapon,
+		"Training result icon opens its actual Weapon detail")
+	await _snapshot(host, "/tmp/usability-training-equation-hover-%s.png" % row.name)
+	await _move_pointer(host, Vector2(4, 4))
+	return failures
+
+
+static func _move_pointer(host: Control, point: Vector2) -> void:
+	host.get_viewport().warp_mouse(point)
+	var motion := InputEventMouseMotion.new()
+	motion.position = host.get_viewport().get_final_transform() * point
+	motion.global_position = motion.position
+	Input.parse_input_event(motion)
+	await host.get_tree().create_timer(0.4).timeout
 
 
 static func _check_portrait_alignment(dialog: Control, side: String) -> int:
@@ -210,6 +311,15 @@ static func _check_portrait_alignment(dialog: Control, side: String) -> int:
 	var body_center := portrait.global_position.x + body.get_center().x
 	var failures := _check(absf(body_center - chips_center) <= 2.0,
 		side + " Unit body is centered above combat chips")
+	var weapon_row := dialog.get_node("%%%sWeaponRow" % side) as Control
+	var first_slot := weapon_row.get_node("TrainingEquation/TrainingSlot1") as Control
+	var result_weapon := weapon_row.get_node("TrainingEquation/ResultWeapon") as Control
+	var equation_center := (first_slot.get_global_rect().position.x
+		+ result_weapon.get_global_rect().end.x) * 0.5
+	failures += _check(absf(equation_center - weapon_row.get_global_rect().get_center().x) <= 1.0,
+		side + " visible Training equation is centered in its row")
+	failures += _check(absf(equation_center - body_center) <= 2.0,
+		side + " visible Training equation is centered below the Unit body")
 	var full_art := appearance.transform * appearance.visual_rect_local(true)
 	failures += _check(full_art.position.x >= -2.0 and full_art.end.x <= portrait.size.x + 2.0,
 		side + " held Weapon remains inside portrait")

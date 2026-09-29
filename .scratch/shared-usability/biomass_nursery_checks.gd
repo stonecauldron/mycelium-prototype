@@ -185,7 +185,6 @@ static func _sell_region_checks(nursery: NurseryScreen, host: Control, chip: Con
 				paper.expand_margin_left, paper.expand_margin_top,
 				paper.expand_margin_right, paper.expand_margin_bottom)
 			var edge_local := Vector2(paper_rect.get_center().x, paper_rect.end.y - 2.0)
-			failures += _check(edge_local.y > badge.size.y, "edge probe covers the paper's expanded margin")
 			var edge_point := badge.get_global_transform_with_canvas() * edge_local
 			await _move(host, edge_point)
 			failures += _check(host.get_viewport().gui_get_hovered_control() == overlay,

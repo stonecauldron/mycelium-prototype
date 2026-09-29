@@ -182,6 +182,8 @@ static func _compost_checks(host: Control) -> int:
 
 	var parent := make_unit([WeaponSchool.Id.SWORD, WeaponSchool.Id.MACE], true)
 	parent.generation = 2
+	parent.lineage_name = "Van Leeuwenhoek"
+	parent.display_name = UnitNames.format_unit_name(parent.lineage_name, parent.generation)
 	parent.body_mutation = load("res://assets/base/nursery/mutations/body/thorny.tres") as MutationData
 	parent.cap_mutation = load("res://assets/base/nursery/mutations/cap/inky.tres") as MutationData
 	parent.applied_fertilizers.append(
@@ -207,11 +209,8 @@ static func _compost_checks(host: Control) -> int:
 	host.add_child(dialog)
 	await host.get_tree().process_frame
 	await host.get_tree().process_frame
-	failures += _check((dialog.get_node("%OutcomeSpore") as Label).text.contains(spore.display_name),
+	failures += _check((dialog.get_node("%OutcomeSpore") as Label).text == spore.display_name,
 		"Actual lineage spore named")
-	failures += _check((dialog.get_node("%GrowthTime") as Label).text
-		== "Growth Time: %d %s" % [spore.days_to_mature_effective(),
-			WeaponSchool.day_word(spore.days_to_mature_effective())], "Effective Growth Time preview")
 	failures += _check((dialog.get_node("Center/Panel") as Control).size.y < 1000.0,
 		"Compost confirmation fits play height")
 	await _snapshot(host, "/tmp/usability-compost-adult.png")

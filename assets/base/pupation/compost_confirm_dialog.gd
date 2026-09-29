@@ -21,7 +21,7 @@ var _unit: RosterUnitData
 @onready var _left_stage: Label = %LeftStage
 @onready var _outcome_biomass: RichTextLabel = %OutcomeBiomass
 @onready var _outcome_spore: Label = %OutcomeSpore
-@onready var _growth_time: Label = %GrowthTime
+@onready var _spore_icon: TextureRect = %SporeIcon
 @onready var _confirm_button: Button = %ConfirmButton
 
 
@@ -63,12 +63,14 @@ func _refresh() -> void:
 	var biomass := int(preview.get("biomass", 0))
 	var emits_spore := bool(preview.get("emits_spore", false))
 	StatDisplay.apply_to(_outcome_biomass, BiomassDisplay.text(biomass, true), 24, _COLOR_UP)
-	_growth_time.visible = emits_spore
+	_spore_icon.visible = emits_spore
+	_outcome_spore.horizontal_alignment = (
+		HORIZONTAL_ALIGNMENT_LEFT if emits_spore else HORIZONTAL_ALIGNMENT_CENTER
+	)
 	if emits_spore:
 		var spore := SporeData.from_fallen_unit(_unit)
-		_outcome_spore.text = "%s\nAdded to Stock" % spore.display_name
+		_outcome_spore.text = spore.display_name
 		_outcome_spore.add_theme_color_override("font_color", _COLOR_UP)
-		_refresh_growth_time(spore)
 	else:
 		_outcome_spore.text = "No lineage spore\nOnly Adults leave spores."
 		_outcome_spore.add_theme_color_override("font_color", _COLOR_NEUTRAL)
@@ -78,16 +80,6 @@ func _refresh() -> void:
 	_confirm_button.disabled = not GameState.can_compost_unit(_unit)
 	_confirm_button.modulate = (
 		Color.WHITE if not _confirm_button.disabled else Color(0.55, 0.55, 0.55, 1)
-	)
-
-
-func _refresh_growth_time(spore: SporeData) -> void:
-	var days := spore.days_to_mature_effective()
-	_growth_time.text = "Growth Time: %d %s" % [days, WeaponSchool.day_word(days)]
-	_growth_time.tooltip_text = (
-		"Plant this lineage spore on an unlocked, empty Plot.\n"
-		+ "Planting consumes the spore without paying for a fresh grow.\n"
-		+ "Plot Fertilizers may change Remaining Time."
 	)
 
 

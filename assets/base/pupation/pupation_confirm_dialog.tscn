@@ -4,7 +4,6 @@
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="3_chip"]
 [ext_resource type="Texture2D" uid="uid://sdkqu2q3e1u" path="res://assets/base/unit_card/sword_icon.png" id="4_sword"]
-[ext_resource type="Texture2D" uid="uid://tvkubuhhq6x3" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 7.png" id="4_wwinx"]
 [ext_resource type="Texture2D" uid="uid://dd4spufbne6hh" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 02.png" id="4_x6f5w"]
 [ext_resource type="Texture2D" uid="uid://dqwo514d7ery6" path="res://assets/base/unit_card/hp_icon.png" id="5_hp"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="6_biomass"]
@@ -26,17 +25,6 @@ texture_margin_right = 120.829544
 texture_margin_bottom = 154.10434
 expand_margin_top = 29.0
 expand_margin_bottom = 75.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8dimj"]
-content_margin_left = 10.0
-content_margin_top = 6.0
-content_margin_right = 10.0
-content_margin_bottom = 8.0
-texture = ExtResource("4_wwinx")
-texture_margin_left = 28.0
-texture_margin_top = 24.0
-texture_margin_right = 28.0
-texture_margin_bottom = 28.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wwinx"]
 texture = ExtResource("4_x6f5w")
@@ -121,7 +109,6 @@ custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PaperIconButton"
-theme_override_styles/normal = SubResource("StyleBoxTexture_8dimj")
 text = "X"
 
 [node name="PupateTitle" type="Label" parent="Center/Panel/Margin/VBox" unique_id=1400949728]

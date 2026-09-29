@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://assets/base/pupation/compost_confirm_dialog.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
@@ -6,7 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://c2pffsxsdkf27" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 2/paper 1 01.png" id="tex_paper_card"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
 
-[ext_resource type="Script" path="res://assets/ui/detail_tooltip/text_tooltip.gd" id="6_tooltip"]
+[ext_resource type="Texture2D" uid="uid://f8n1147me83h" path="res://assets/base/nursery/spores.png" id="6_spores"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_spores"]
+atlas = ExtResource("6_spores")
+region = Rect2(160, 160, 192, 192)
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
 content_margin_left = 28.0
@@ -23,9 +27,9 @@ expand_margin_bottom = 75.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_card"]
 content_margin_left = 16.0
-content_margin_top = 32.0
+content_margin_top = 64.0
 content_margin_right = 18.0
-content_margin_bottom = 32.0
+content_margin_bottom = 48.0
 texture = ExtResource("tex_paper_card")
 texture_margin_left = 40.0
 texture_margin_top = 40.0
@@ -190,25 +194,31 @@ horizontal_alignment = 1
 fit_content = true
 scroll_active = false
 
-[node name="OutcomeSpore" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn"]
+[node name="SporeOutcomeRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="SporeIcon" type="TextureRect" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/SporeOutcomeRow"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = SubResource("AtlasTexture_spores")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="OutcomeSpore" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/SporeOutcomeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 20
 text = "No spores"
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 3
-
-[node name="GrowthTime" type="Label" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 1
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
-theme_override_font_sizes/font_size = 20
-text = "Growth Time: 1 day"
-horizontal_alignment = 1
-
-script = ExtResource("6_tooltip")
 
 [node name="FooterRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
 layout_mode = 2

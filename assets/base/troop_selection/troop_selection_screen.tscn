@@ -152,40 +152,6 @@ size_flags_horizontal = 0
 theme_type_variation = &"SectionTitleLabel"
 text = "Formation"
 
-[node name="FormationOrientation" type="HBoxContainer" parent="SquadPanel/SquadMargin/SquadRows"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(584, 28)
-layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 2
-theme_override_constants/separation = 14
-
-[node name="Rear" type="Label" parent="SquadPanel/SquadMargin/SquadRows/FormationOrientation"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
-theme_override_colors/font_shadow_color = Color(0.08, 0.06, 0.04, 0.9)
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 24
-text = "Rear"
-
-[node name="DirectionLine" type="ColorRect" parent="SquadPanel/SquadMargin/SquadRows/FormationOrientation"]
-custom_minimum_size = Vector2(0, 2)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-mouse_filter = 2
-color = Color(0.94, 0.94, 0.88, 0.5)
-
-[node name="Front" type="Label" parent="SquadPanel/SquadMargin/SquadRows/FormationOrientation"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
-theme_override_colors/font_shadow_color = Color(0.08, 0.06, 0.04, 0.9)
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 24
-text = "Front  →  Enemies"
-
 [node name="SquadSlotRow" type="HBoxContainer" parent="SquadPanel/SquadMargin/SquadRows" unique_id=1407487622]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 200)

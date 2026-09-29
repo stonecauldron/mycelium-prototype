@@ -118,6 +118,15 @@ func is_plot_unlocked(plot_index: int) -> bool:
 	return plot_index >= 0 and plot_index < unlocked_plot_count
 
 
+func ready_plot_count() -> int:
+	var count := 0
+	for i in mini(unlocked_plot_count, plots.size()):
+		var plot := plots[i] as NurseryPlotData
+		if plot != null and plot.can_harvest():
+			count += 1
+	return count
+
+
 func can_unlock_plot() -> bool:
 	return unlocked_plot_count < MAX_PLOT_COUNT
 
@@ -377,6 +386,7 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 	# plot apply chip stays empty and the player can still apply one mutation this grow.
 	plot.begin_planted_grow()
 	_first_spore_planted = true
+	emit_changed()
 	return true
 
 
@@ -401,7 +411,10 @@ func apply_fertilizer_to_plot(plot_index: int, fertilizer: FertilizerData) -> bo
 	var plot := plots[plot_index] as NurseryPlotData
 	if plot == null:
 		return false
-	return plot.apply_fertilizer(fertilizer)
+	if not plot.apply_fertilizer(fertilizer):
+		return false
+	emit_changed()
+	return true
 
 
 func apply_mutation_from_stock(plot_index: int, stock_index: int) -> bool:
@@ -438,6 +451,7 @@ func apply_greenhouse_remaining_cut(days: int) -> void:
 		var plot := plots[i] as NurseryPlotData
 		if plot != null:
 			plot.apply_greenhouse_remaining_cut(days)
+	emit_changed()
 
 
 func advance_day() -> Array[Dictionary]:
@@ -457,6 +471,7 @@ func advance_day() -> Array[Dictionary]:
 				"tint": plot.planted_spore.tint,
 				"as_imago": false,
 			})
+	emit_changed()
 	return matured
 
 
@@ -488,6 +503,7 @@ func harvest(plot_index: int) -> Array[RosterUnitData]:
 	)
 	_apply_favourite_child_if_first_hatch(result)
 	plot.clear()
+	emit_changed()
 	return result
 
 

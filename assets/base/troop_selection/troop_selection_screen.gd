@@ -17,6 +17,7 @@ var bench: Array = []
 var squad: Array = []
 
 @onready var _squad_slot_row: HBoxContainer = %SquadSlotRow
+@onready var _formation_orientation: HBoxContainer = %FormationOrientation
 @onready var _bench_grid: HBoxContainer = %BenchGrid
 @onready var _bench_panel: PanelContainer = %BenchPanel
 @onready var _cocoon_row: HBoxContainer = %CocoonRow
@@ -122,6 +123,12 @@ func _build_squad_ui() -> void:
 		slot.unit_dropped.connect(_on_unit_dropped.bind("squad"))
 		_squad_slot_row.add_child(slot)
 		_squad_slots.append(slot)
+	# Slot 0 is nearest the combat Flag; higher indices are farther toward enemies.
+	# Keep the orientation rail over fighting slots only, excluding unlock/Compost.
+	_formation_orientation.custom_minimum_size.x = (
+		DropSlot.SLOT_SIZE.x * float(troop.unlocked_squad_count)
+		+ float(_squad_slot_row.get_theme_constant("separation") * (troop.unlocked_squad_count - 1))
+	)
 	if troop.can_unlock_squad_slot():
 		var unlock_slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		unlock_slot.slot_index = troop.unlocked_squad_count
@@ -263,12 +270,35 @@ func _ensure_seal_choice() -> void:
 	_seal_dialog = dialog
 	dialog.seal_chosen.connect(_on_seal_chosen)
 	dialog.tree_exited.connect(_on_seal_dialog_closed)
+	dialog.visibility_changed.connect(_notify_start_combat_state)
 	var hud := _hud_root()
 	if hud != null:
+		dialog.base_action_button = hud.get_node("%StartCombatButton") as Button
 		dialog.z_index = 100
 		hud.add_child(dialog)
 	else:
 		add_child(dialog)
+	_notify_start_combat_state()
+
+
+func is_seal_choice_visible() -> bool:
+	return is_instance_valid(_seal_dialog) and _seal_dialog.is_visible_in_tree()
+
+
+func hide_seal_choice() -> void:
+	if is_seal_choice_visible():
+		_seal_dialog.hide()
+
+
+func toggle_seal_choice() -> void:
+	if not GameState.pending_seal_choice:
+		return
+	if not is_instance_valid(_seal_dialog):
+		_ensure_seal_choice()
+	elif _seal_dialog.visible:
+		_seal_dialog.hide()
+	else:
+		_seal_dialog.reopen()
 
 
 func _on_seal_chosen(seal: SealData) -> void:
@@ -284,8 +314,6 @@ func _on_seal_chosen(seal: SealData) -> void:
 
 func _on_seal_dialog_closed() -> void:
 	_seal_dialog = null
-	if GameState.pending_seal_choice:
-		call_deferred("_ensure_seal_choice")
 
 
 func _row(source: String) -> Array:

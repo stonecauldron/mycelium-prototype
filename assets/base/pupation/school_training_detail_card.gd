@@ -1,7 +1,7 @@
 class_name SchoolTrainingDetailCard
 extends Control
 
-const CARD_WIDTH := 400.0
+const CARD_WIDTH := 440.0
 const _STAT_ROW_SCENE := preload("res://assets/ui/stat_value_row/stat_value_row.tscn")
 
 var school: int = 0
@@ -9,10 +9,12 @@ var school: int = 0
 @onready var _card_panel: PanelContainer = $CardPanel
 @onready var _school_icon: TextureRect = %SchoolIcon
 @onready var _title_label: Label = %TitleLabel
+@onready var _role_label: RichTextLabel = %RoleLabel
+@onready var _recipe_label: Label = %RecipeLabel
+@onready var _child_availability: Label = %ChildAvailability
 @onready var _stats_row: HBoxContainer = %StatsRow
 @onready var _child_tag: TagChip = %ChildTag
 @onready var _adult_tag: TagChip = %AdultTag
-@onready var _duration_chip: StatChip = %DurationChip
 @onready var _price_label: Label = %PriceLabel
 
 
@@ -59,9 +61,16 @@ func _refresh() -> void:
 	var weapon := WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(school))
 	_school_icon.texture = weapon.icon if weapon != null else null
 	_title_label.text = "%s Training" % WeaponSchool.display_name(school)
+	StatDisplay.apply_to(_role_label, WeaponSchool.training_role_text(weapon), 18, StatDisplay.INK_MUTED)
+	_recipe_label.text = WeaponSchool.training_recipe_text([school, school])
 	_child_tag.set_content_font_size(18)
 	_adult_tag.set_content_font_size(18)
-	_duration_chip.set_value(WeaponSchool.COCOON_DURATION_DAYS)
+	var days := WeaponSchool.COCOON_DURATION_DAYS
+	_child_availability.text = (
+		"Usually returns after the next Battle as an Adult."
+		if days == 1
+		else "Usually returns after %d Battles as an Adult." % days
+	)
 	_price_label.text = BiomassDisplay.number(WeaponSchool.COCOON_COST)
 	_refresh_stats()
 

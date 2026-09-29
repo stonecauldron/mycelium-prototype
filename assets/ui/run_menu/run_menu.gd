@@ -71,6 +71,10 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if (event as InputEventKey).keycode == KEY_ESCAPE:
 			get_viewport().set_input_as_handled()
+			var scene := get_tree().current_scene
+			if not _open and scene != null and scene.has_method("hide_pending_seal_choice"):
+				if scene.hide_pending_seal_choice():
+					return
 			if not _open:
 				open_menu()
 			elif not settings_only and _page != Page.MENU:

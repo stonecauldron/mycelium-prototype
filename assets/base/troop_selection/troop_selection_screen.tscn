@@ -131,9 +131,9 @@ unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-offset_left = 12.0
+offset_left = 144.0
 offset_top = 509.0
-offset_right = -20.0
+offset_right = -8.0
 offset_bottom = 849.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
@@ -150,7 +150,41 @@ theme_type_variation = &"TightVBox"
 layout_mode = 2
 size_flags_horizontal = 0
 theme_type_variation = &"SectionTitleLabel"
-text = "Troop"
+text = "Formation"
+
+[node name="FormationOrientation" type="HBoxContainer" parent="SquadPanel/SquadMargin/SquadRows"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(584, 28)
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 14
+
+[node name="Rear" type="Label" parent="SquadPanel/SquadMargin/SquadRows/FormationOrientation"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0.08, 0.06, 0.04, 0.9)
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 24
+text = "Rear"
+
+[node name="DirectionLine" type="ColorRect" parent="SquadPanel/SquadMargin/SquadRows/FormationOrientation"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(0.94, 0.94, 0.88, 0.5)
+
+[node name="Front" type="Label" parent="SquadPanel/SquadMargin/SquadRows/FormationOrientation"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.94, 0.94, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0.08, 0.06, 0.04, 0.9)
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 24
+text = "Front  →  Enemies"
 
 [node name="SquadSlotRow" type="HBoxContainer" parent="SquadPanel/SquadMargin/SquadRows" unique_id=1407487622]
 unique_name_in_owner = true
@@ -161,6 +195,5 @@ theme_type_variation = &"SlotRow"
 
 [node name="FlagBearer" parent="." unique_id=222675723 instance=ExtResource("5_u66j2")]
 unique_name_in_owner = true
-position = Vector2(1782, 822)
-rotation = 3.1415925
-scale = Vector2(1, -1)
+position = Vector2(66, 822)
+scale = Vector2(0.85, 0.85)

@@ -11,6 +11,7 @@ const TAB_DEFS := [
 const VIEWPORT_SIZE := Vector2(1920, 1080)
 const CAMERA_TWEEN_SECONDS := 0.35
 const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
+const _TEXT_TOOLTIP_SCRIPT := preload("res://assets/ui/detail_tooltip/text_tooltip.gd")
 
 @onready var _camera: Camera2D = %BaseCamera
 @onready var _tab_bar: HBoxContainer = %TabBar
@@ -40,6 +41,7 @@ func _ready() -> void:
 	_camera.make_current()
 	_wire_progress_tracks()
 	GameState.biomass.changed.connect(_refresh_biomass_amount)
+	GameState.nursery.changed.connect(_refresh_nursery_readiness)
 	_refresh_hud()
 	_build_tab_bar()
 	_start_combat_button.pressed.connect(_on_start_combat_pressed)
@@ -81,12 +83,20 @@ func _on_debug_advance_day_pressed() -> void:
 
 func _on_start_combat_pressed() -> void:
 	if GameState.pending_seal_choice:
-		_colony_screen.ensure_pending_modals()
+		_colony_screen.toggle_seal_choice()
 		return
 	GameState.show_start_combat_hint = false
 	if _start_arrow != null:
 		_start_arrow.hide_arrow()
 	_colony_screen.start_combat()
+
+
+## RunMenu gives Escape to the visible chooser before opening its pause menu.
+func hide_pending_seal_choice() -> bool:
+	if not _colony_screen.is_seal_choice_visible():
+		return false
+	_colony_screen.hide_seal_choice()
+	return true
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -127,6 +137,7 @@ func _refresh_start_arrow() -> void:
 		return
 	if (
 		GameState.show_start_combat_hint
+		and not GameState.pending_seal_choice
 		and not _start_combat_button.disabled
 		and _colony_screen.get_training_hint_unit() == null
 	):
@@ -139,7 +150,12 @@ func set_start_combat_enabled(enabled: bool) -> void:
 	# War Chamber screen _ready can run before this node's @onready vars are set.
 	if _start_combat_button == null:
 		return
-	_start_combat_button.disabled = not enabled
+	var pending := GameState.pending_seal_choice
+	var chooser_visible := _colony_screen.is_seal_choice_visible()
+	_start_combat_button.text = ("Hide" if chooser_visible else "Select Seal") if pending else "Start Battle"
+	_start_combat_button.disabled = not pending and not enabled
+	# The chooser leaves this button's hit area open; draw it above the dimmer too.
+	_start_combat_button.z_index = 101 if chooser_visible else 0
 	_refresh_start_arrow()
 
 
@@ -147,6 +163,7 @@ func _refresh_hud() -> void:
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	_day_label.text = "Day %d / %d" % [day, GameState.WIN_DAYS]
 	_refresh_biomass_amount()
+	_refresh_nursery_readiness()
 	for track in _progress_tracks:
 		track.refresh()
 	if _colony_screen != null:
@@ -235,6 +252,7 @@ func _build_tab_bar() -> void:
 		column.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 
 		var button := Button.new()
+		button.set_script(_TEXT_TOOLTIP_SCRIPT)
 		button.theme_type_variation = &"NavButton"
 		button.text = "%d  %s" % [key_index, str(def["label"])]
 		button.custom_minimum_size = Vector2(180, 72)
@@ -255,6 +273,19 @@ func _build_tab_bar() -> void:
 		key_index += 1
 
 	_tab_bar.visible = _tab_key_order.size() >= 2
+	_refresh_nursery_readiness()
+
+
+func _refresh_nursery_readiness() -> void:
+	var button := _tab_buttons.get(TabId.NURSERY) as Button
+	if button == null:
+		return
+	var count := GameState.nursery.ready_plot_count()
+	var key_index := _tab_key_order.find(TabId.NURSERY) + 1
+	button.text = "%d  Nursery" % key_index
+	if count > 0:
+		button.text += " · %d ready" % count
+	button.tooltip_text = "%d Plot%s ready to harvest" % [count, "" if count == 1 else "s"] if count > 0 else ""
 
 
 func _select_tab(tab_id: TabId, instant: bool = false) -> void:

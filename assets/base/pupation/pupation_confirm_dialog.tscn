@@ -129,8 +129,46 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
 theme_override_font_sizes/font_size = 28
-text = "Pupate Unit"
+text = "Train Unit"
 horizontal_alignment = 1
+
+[node name="RecipeLabel" type="Label" parent="Center/Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_font_sizes/font_size = 26
+text = "Sword + Mace → Warhammer"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="RoleLabel" type="RichTextLabel" parent="Center/Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "Melee · Heavy, single-target blunt strikes with strong knockback."
+fit_content = true
+scroll_active = false
+
+[node name="AvailabilityLabel" type="Label" parent="Center/Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
+theme_override_font_sizes/font_size = 20
+text = "Returns after the next Battle · Becomes an Adult"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ReplacementLabel" type="Label" parent="Center/Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.22, 0.18, 1)
+theme_override_font_sizes/font_size = 18
+text = "Adds Mace Training"
+horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="ComparePanel" type="PanelContainer" parent="Center/Panel/Margin/VBox" unique_id=2105736607]
 layout_mode = 2
@@ -370,32 +408,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AdultTrainingInfo" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="AdultDurationChip" parent="Center/Panel/Margin/VBox/AdultTrainingInfo" instance=ExtResource("3_chip")]
-unique_name_in_owner = true
-icon = ExtResource("9_hourglass")
-
-[node name="AdultDurationSuffix" type="Label" parent="Center/Panel/Margin/VBox/AdultTrainingInfo"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
-theme_override_font_sizes/font_size = 16
-text = "day"
-vertical_alignment = 1
-
-[node name="StatsUnchanged" type="Label" parent="Center/Panel/Margin/VBox/AdultTrainingInfo"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03, 0.035, 0.027, 1)
-theme_override_font_sizes/font_size = 16
-text = "· Stats unchanged"
-vertical_alignment = 1
-
 [node name="FooterRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox" unique_id=1133550446]
 layout_mode = 2
 theme_override_constants/separation = 16
@@ -408,7 +420,7 @@ layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"NavButton"
 theme_override_constants/icon_max_width = 24
-text = "Confirm 3"
+text = "Train 3"
 icon = ExtResource("6_biomass")
 icon_alignment = 2
 expand_icon = true

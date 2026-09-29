@@ -221,6 +221,17 @@ func _refresh_trainings() -> void:
 		label.text = WeaponSchool.display_name(school)
 		row.add_child(label)
 	_trainings_list.add_child(row)
+	if unit_data.weapon != null:
+		_trainings_list.add_child(StatDisplay.make_rich_label(
+			"→ %s" % unit_data.weapon.display_name, 22, _ROW_TEXT_COLOR, 280.0
+		))
+	if trainings.size() >= 2:
+		_trainings_list.add_child(StatDisplay.make_rich_label(
+			"Oldest: %s · replaced by the next Training" % WeaponSchool.display_name(
+				int(trainings[0])
+			),
+			18, _ROW_TEXT_COLOR, 280.0
+		))
 
 
 func _make_training_separator() -> Label:

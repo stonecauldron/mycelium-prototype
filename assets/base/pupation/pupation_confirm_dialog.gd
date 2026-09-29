@@ -18,13 +18,14 @@ var _preview_unit: RosterUnitData
 @onready var _header_title: Label = %HeaderTitle
 @onready var _close_button: Button = %CloseButton
 @onready var _pupate_title: Label = %PupateTitle
+@onready var _recipe_label: Label = %RecipeLabel
+@onready var _role_label: RichTextLabel = %RoleLabel
+@onready var _availability_label: Label = %AvailabilityLabel
+@onready var _replacement_label: Label = %ReplacementLabel
 @onready var _panel: PanelContainer = $Center/Panel
 @onready var _comparison_width: float = _panel.custom_minimum_size.x
 @onready var _left_column: VBoxContainer = %LeftColumn
 @onready var _mid_column: VBoxContainer = %MidColumn
-@onready var _adult_training_info: HBoxContainer = %AdultTrainingInfo
-@onready var _adult_duration_chip: StatChip = %AdultDurationChip
-@onready var _adult_duration_suffix: Label = %AdultDurationSuffix
 @onready var _left_portrait: Control = %LeftPortrait
 @onready var _left_atk_chip: StatChip = %LeftAtkChip
 @onready var _left_hp_chip: StatChip = %LeftHpChip
@@ -90,22 +91,34 @@ func _refresh() -> void:
 	_school_icon.texture = school_weapon.icon if school_weapon != null else null
 	_header_title.text = "%s Training" % WeaponSchool.display_name(_school)
 	var is_adult := _unit.is_adult_stage()
-	_pupate_title.text = ("Train %s" if is_adult else "Pupate %s") % _unit.display_name
+	_pupate_title.text = "Train %s" % _unit.display_name
 	_left_column.visible = not is_adult
 	_mid_column.visible = not is_adult
-	_adult_training_info.visible = is_adult
-	_panel.custom_minimum_size.x = 540.0 if is_adult else _comparison_width
+	_panel.custom_minimum_size.x = 660.0 if is_adult else _comparison_width
 	_refresh_duration_chip()
 
 	if not is_adult:
 		_fill_current_side()
 	_fill_result_side()
+	_refresh_summary()
 	_refresh_affordability()
+
+
+func _refresh_summary() -> void:
+	if _preview_unit == null:
+		return
+	_recipe_label.text = WeaponSchool.training_recipe_text(_preview_unit.weapon_trainings)
+	_availability_label.text = WeaponSchool.training_availability_text(_unit)
+	_replacement_label.text = WeaponSchool.training_replacement_text(_unit, _school)
+	var weapon := _preview_unit.weapon
+	_role_label.visible = weapon != null
+	if weapon != null:
+		StatDisplay.apply_to(_role_label, WeaponSchool.training_role_text(weapon), 20, StatDisplay.INK_MUTED)
 
 
 func _refresh_affordability() -> void:
 	var can_afford := GameState.biomass.can_afford(WeaponSchool.COCOON_COST)
-	_confirm_button.text = "Confirm %s" % BiomassDisplay.number(WeaponSchool.COCOON_COST)
+	_confirm_button.text = "Train %s" % BiomassDisplay.number(WeaponSchool.COCOON_COST)
 	_confirm_button.disabled = not can_afford
 	_confirm_button.modulate = Color.WHITE if can_afford else Color(0.55, 0.55, 0.55, 1)
 
@@ -115,11 +128,9 @@ func _refresh_duration_chip() -> void:
 	if _unit != null:
 		days = _unit.effective_cocoon_days()
 	_duration_chip.set_value(maxi(days, 0))
-	_adult_duration_chip.set_value(maxi(days, 0))
-	_adult_duration_chip.visible = days > 0
+	_duration_chip.visible = days > 0
 	var suffix := "instant" if days <= 0 else WeaponSchool.day_word(days)
 	_duration_suffix.text = suffix
-	_adult_duration_suffix.text = suffix
 
 
 func _fill_current_side() -> void:

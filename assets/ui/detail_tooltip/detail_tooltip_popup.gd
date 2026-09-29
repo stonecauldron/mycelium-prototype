@@ -39,7 +39,7 @@ static func configure(tip: Control, anchor_to_cursor: bool = false) -> Control:
 	var overlay := _ensure()
 	overlay._present(tip, anchor_to_cursor)
 	var lease := _make_lease()
-	lease.tree_exiting.connect(_on_lease_exiting.bind(tip))
+	lease.tree_exiting.connect(_on_lease_exiting.bind(tip.get_instance_id()))
 	return lease
 
 
@@ -93,10 +93,11 @@ static func _ensure() -> DetailTooltipPopup:
 	return overlay
 
 
-static func _on_lease_exiting(tracked: Control) -> void:
+static func _on_lease_exiting(tracked_id: int) -> void:
 	if _instance == null or not is_instance_valid(_instance):
 		return
-	if is_instance_valid(tracked) and _instance._tip == tracked:
+	# A hover tip can be replaced and freed before its lease exits (e.g. keyboard focus).
+	if is_instance_valid(_instance._tip) and _instance._tip.get_instance_id() == tracked_id:
 		_instance._dismiss()
 
 

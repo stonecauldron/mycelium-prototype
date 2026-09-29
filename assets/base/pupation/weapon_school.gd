@@ -180,6 +180,54 @@ static func preview_weapon_after_training(
 	return resolve_weapon(next)
 
 
+static func training_recipe_text(trainings: Array) -> String:
+	var schools: PackedStringArray = []
+	for training in trainings:
+		schools.append(display_name(int(training)))
+	var weapon := resolve_weapon(trainings)
+	if schools.is_empty() or weapon == null:
+		return ""
+	if schools.size() == 1:
+		return "%s Training → %s" % [schools[0], weapon.display_name]
+	return "%s → %s" % [" + ".join(schools), weapon.display_name]
+
+
+static func training_role_text(weapon: WeaponData) -> String:
+	if weapon == null:
+		return ""
+	var role := str(WeaponData.FORMATION_LINE_LABELS.get(weapon.formation_line, ""))
+	if not weapon.short_description.is_empty():
+		role += " · " + weapon.short_description
+	return role
+
+
+static func training_availability_text(unit: RosterUnitData) -> String:
+	if unit == null:
+		return ""
+	if unit.is_adult_stage():
+		return "Ready immediately · Stats unchanged"
+	var days := unit.effective_cocoon_days()
+	if days <= 0:
+		return "Ready immediately · Becomes an Adult"
+	if days == 1:
+		return "Returns after the next Battle · Becomes an Adult"
+	return "Returns after %d Battles · Becomes an Adult" % days
+
+
+static func training_replacement_text(unit: RosterUnitData, school: int) -> String:
+	if unit == null or unit.weapon_trainings.size() < 2:
+		return "Adds %s Training" % display_name(school)
+	var oldest := int(unit.weapon_trainings[0])
+	var kept := display_name(int(unit.weapon_trainings[1]))
+	if oldest == school:
+		return "Trains %s again, replacing its oldest Training. Keeps %s." % [
+			display_name(school), kept
+		]
+	return "Replaces oldest Training: %s. Keeps %s and adds %s." % [
+		display_name(oldest), kept, display_name(school)
+	]
+
+
 static func apply_school_stats(
 	stats: UnitStatsData,
 	school: int,

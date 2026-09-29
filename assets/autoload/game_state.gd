@@ -79,9 +79,13 @@ func begin_day() -> void:
 
 
 func maybe_queue_seal_choice() -> void:
-	# After completing days 2 / 5 / 8 (one fight earlier than 3 / 6 / 9).
-	if current_day == 2 or current_day == 5 or current_day == 8:
+	if current_day > 0 and is_seal_choice_day(get_upcoming_day()):
 		pending_seal_choice = true
+
+
+## Receiving Days, shared by the ordinary Run reward schedule and progression UI.
+func is_seal_choice_day(day: int) -> bool:
+	return day >= 1 and day <= WIN_DAYS and (day == 1 or day % 3 == 0)
 
 
 ## Available fighters = living troop units (cocooned units are already out of troop).

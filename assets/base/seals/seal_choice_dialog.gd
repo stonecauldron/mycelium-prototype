@@ -13,6 +13,8 @@ var _cards: Dictionary = {} # SealData -> SealCard
 var _allow_reroll: bool = true
 ## Paid rerolls already bought during this pick (resets per dialog).
 var _rerolls_this_pick: int = 0
+## The Base action stays reachable through the modal's input layer.
+var base_action_button: Button
 
 @onready var _dim: ColorRect = %Dim
 @onready var _cards_row: HBoxContainer = %CardsRow
@@ -32,7 +34,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	z_index = 100
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_dim.gui_input.connect(_on_dim_gui_input)
+	_dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_confirm_button.pressed.connect(_on_confirm_pressed)
 	_confirm_button.disabled = true
 	_reroll_button.pressed.connect(_on_reroll_pressed)
@@ -43,14 +45,26 @@ func _ready() -> void:
 	_refresh_reroll_affordability()
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		if (event as InputEventKey).keycode == KEY_ESCAPE:
-			get_viewport().set_input_as_handled()
+func reopen() -> void:
+	# Refresh state-dependent cards and affordability without rolling new offers.
+	for seal in _cards:
+		(_cards[seal] as SealCard).setup(seal)
+	_refresh_selection()
+	_refresh_reroll_affordability()
+	show()
 
 
-func _on_dim_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
+func _has_point(point: Vector2) -> bool:
+	if is_instance_valid(base_action_button):
+		var canvas_point := get_global_transform_with_canvas() * point
+		var button_point := base_action_button.get_global_transform_with_canvas().affine_inverse() * canvas_point
+		if Rect2(Vector2.ZERO, base_action_button.size).has_point(button_point):
+			return false
+	return Rect2(Vector2.ZERO, size).has_point(point)
+
+
+func _unhandled_input(_event: InputEvent) -> void:
+	if is_visible_in_tree():
 		get_viewport().set_input_as_handled()
 
 

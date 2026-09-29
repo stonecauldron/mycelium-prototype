@@ -7,6 +7,7 @@ signal elite_hovered(day: int)
 signal elite_unhovered
 
 const _SKULL_TEXTURE := preload("res://assets/base/combat_progress_track/skull.png")
+const _SEAL_TEXTURE := preload("res://assets/base/seals/seal.png")
 
 const CHAPTER_LENGTH := 5
 const NODE_COUNT := 5
@@ -98,6 +99,16 @@ func _build_nodes() -> void:
 			skull.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 			skull.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			node.add_child(skull)
+		if GameState.is_seal_choice_day(day):
+			var seal_icon := TextureRect.new()
+			seal_icon.name = "SealIcon"
+			seal_icon.texture = _SEAL_TEXTURE
+			seal_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			seal_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			seal_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			seal_icon.size = Vector2(32, 32)
+			seal_icon.position = Vector2((node_size - 32.0) * 0.5, -36.0)
+			node.add_child(seal_icon)
 
 	_marker = Polygon2D.new()
 	_marker.name = "CurrentMarker"

@@ -164,7 +164,7 @@ grow_vertical = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 24
 disabled = true
-text = "Confirm"
+text = "Confirm Seal"
 
 [node name="TitlePanel" type="PanelContainer" parent="." unique_id=61064739]
 custom_maximum_size = Vector2(400, -1)

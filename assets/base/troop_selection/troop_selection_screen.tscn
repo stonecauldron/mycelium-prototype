@@ -150,7 +150,7 @@ theme_type_variation = &"TightVBox"
 layout_mode = 2
 size_flags_horizontal = 0
 theme_type_variation = &"SectionTitleLabel"
-text = "Formation"
+text = "Troop"
 
 [node name="SquadSlotRow" type="HBoxContainer" parent="SquadPanel/SquadMargin/SquadRows" unique_id=1407487622]
 unique_name_in_owner = true

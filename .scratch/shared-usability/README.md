@@ -8,7 +8,7 @@ Implemented the approved ordinary-Run subset of the onboarding exploration:
 - Unit details show two Training slots and the resulting Weapon icon in one equation, with visible empty slots.
 - Attack chips angle the sword diagonally while keeping the number upright on Unit cards, detail tooltips, Training comparisons, and Scout tooltips. Swords below Units are 20% larger without changing the number or chip spacing.
 - Subtle ink rules and spacing separate Fertilizers, Mutations, Trainings, and the Generation footer; hidden sections leave no divider behind. The Unit card's footer sits closer to its lower paper edge.
-- Formation title and flag placement. The Rear / Front / Enemies orientation rail was removed following UI review.
+- Troop title and flag placement. The heading was restored from Formation to Troop, and the Rear / Front / Enemies orientation rail was removed following UI review.
 - Quiet Nursery-tab count badge for harvest-ready Plots, updated by growth, Fertilizers, Greenhouse, harvesting, and grow removal. The badge hides at zero; harvest details remain in the tooltip.
 - Compact Compost confirmation with the Unit portrait, payout, and a spore icon/name in a spacious outcome panel. Growth Time, stock messaging, the detailed inheritance block, and the red removal message were removed following UI review.
 - Dialog close controls share a burgundy paper square and a light cross, with visible hover and pressed states.

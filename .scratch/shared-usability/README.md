@@ -5,6 +5,7 @@ Implemented the approved ordinary-Run subset of the onboarding exploration:
 - Receiving-Day Seal icons and timing tooltips on Days 1, 3, 6, and 9.
 - Hide / Select Seal / Start Battle flow, preserving offers, selection, paid rerolls, and Base edits while combat remains gated by the pending choice.
 - Training confirmation shows recipes, roles, actual availability, and explicit oldest-Training replacement using the existing preview rules. School hover tooltips retain their original compact presentation.
+- Unit details show two Training slots and the resulting Weapon icon in one equation, with visible empty slots.
 - Formation title and flag placement. The Rear / Front / Enemies orientation rail was removed following UI review.
 - Quiet Nursery-tab count badge for harvest-ready Plots, updated by growth, Fertilizers, Greenhouse, harvesting, and grow removal. The badge hides at zero; harvest details remain in the tooltip.
 - Compost preview of parent removal, payout, lineage Child, Generation, Tier, Trainings, Mutations, and saved Stats.
@@ -25,7 +26,7 @@ godot --path . --rendering-method gl_compatibility --rendering-driver opengl3 --
 
 `verify.gd` exercises real Base controls with viewport input, hide/reopen/Escape, both tabs, empty-Squad gating, reroll preservation, immediate Plot readiness, the ordinary reward calendar, icon hover/focus, chapter transitions, and the existing opening flow. `preview_checks.gd` compares Training previews with actual application for Child waits 0/1/2, Adult instant Training, repeat-school recipes, replacement/renewal, and modified/clamped Stats. It also checks Child/Adult Compost and real lineage-spore harvest inheritance.
 
-The visual pass writes `/tmp/usability-*.png` for the Seal chooser, Formation with 4 and 10 slots, Nursery readiness, progression tooltip, Child/Adult Training, school hover, and Adult Compost. These were inspected for readability and fit at play size. Renderer/resource cleanup diagnostics can appear on engine exit; the scenario checks separately report their failure count.
+The visual pass writes `/tmp/usability-*.png` for the Seal chooser, Formation with 4 and 10 slots, Nursery readiness, progression tooltip, Child/Adult Training, school hover, Unit details with zero/one/two Trainings, and Adult Compost. These were inspected for readability and fit at play size. Renderer/resource cleanup diagnostics can appear on engine exit; the scenario checks separately report their failure count.
 
 ## Review
 

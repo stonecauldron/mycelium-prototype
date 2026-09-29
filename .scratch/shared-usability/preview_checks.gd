@@ -73,9 +73,39 @@ static func run(host: Control) -> int:
 		card.queue_free()
 		await host.get_tree().process_frame
 
+	await _unit_training_cards(host)
 	failures += await _compost_checks(host)
 	print("PREVIEW_CHECKS failures=", failures)
 	return failures
+
+
+static func _unit_training_cards(host: Control) -> void:
+	if not OS.get_cmdline_user_args().has("--visual"):
+		return
+	var scene := preload("res://assets/base/unit_detail_card/unit_detail_card.tscn")
+	var cards: Array[UnitDetailCard] = []
+	for count in 3:
+		var trainings: Array[int] = []
+		for index in count:
+			trainings.append(WeaponSchool.Id.BOW)
+		var unit := make_unit(trainings, true)
+		unit.display_name = ["No Trainings", "One Training", "Two Trainings"][count]
+		var card: UnitDetailCard = scene.instantiate()
+		card.setup(unit, false, false)
+		host.add_child(card)
+		cards.append(card)
+	for pass_index in 5:
+		await host.get_tree().process_frame
+		for card in cards:
+			card.fit_to_content()
+	for index in cards.size():
+		var card := cards[index]
+		card.position = Vector2(host.size.x * 0.5 + float(index - 1) * 430.0 - card.card_size().x * 0.5,
+			(host.size.y - card.card_size().y) * 0.5)
+	await _snapshot(host, "/tmp/usability-unit-trainings.png")
+	for card in cards:
+		card.queue_free()
+	await host.get_tree().process_frame
 
 
 static func _training_dialog(

@@ -23,7 +23,9 @@ func _biomass_preview_delta() -> Variant:
 	if not _is_over_sell_button(get_local_mouse_position()):
 		return null
 	var amount := _sell_amount_for_current_drag()
-	return amount if amount >= 0 else null
+	if amount < 0:
+		return null
+	return amount
 
 
 func clear_drop_highlight() -> void:

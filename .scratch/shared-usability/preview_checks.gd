@@ -185,6 +185,7 @@ static func _training_dialog(
 		await _snapshot(host, "/tmp/usability-training-child.png")
 	elif recipe == "Sword + Mace → Warhammer" and unit.is_adult_stage():
 		await _snapshot(host, "/tmp/usability-training-adult.png")
+		await _snapshot_close_hover(host, dialog, "/tmp/usability-training-close-hover.png")
 	elif recipe == "Sword + Sword → Great Sword" and unit.is_adult_stage():
 		await _snapshot(host, "/tmp/usability-training-aoe.png")
 	dialog.queue_free()
@@ -323,9 +324,23 @@ static func _compost_checks(host: Control) -> int:
 	failures += _check((dialog.get_node("Center/Panel") as Control).size.y < 1000.0,
 		"Compost confirmation fits play height")
 	await _snapshot(host, "/tmp/usability-compost-adult.png")
+	await _snapshot_close_hover(host, dialog, "/tmp/usability-compost-close-hover.png")
 	dialog.queue_free()
 	await host.get_tree().process_frame
 	return failures
+
+
+static func _snapshot_close_hover(host: Control, dialog: Control, path: String) -> void:
+	if not OS.get_cmdline_user_args().has("--visual"):
+		return
+	var close_button := dialog.get_node("%CloseButton") as Button
+	var motion := InputEventMouseMotion.new()
+	motion.position = close_button.get_global_transform_with_canvas() * (close_button.size * 0.5)
+	host.get_viewport().push_input(motion, true)
+	await _snapshot(host, path)
+	motion = InputEventMouseMotion.new()
+	motion.position = Vector2.ZERO
+	host.get_viewport().push_input(motion, true)
 
 
 static func _snapshot(host: Control, path: String) -> void:

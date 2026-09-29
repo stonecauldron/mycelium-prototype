@@ -9,7 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://r2jxi58t3ovw" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 3 6.png" id="7_c8sri"]
 [ext_resource type="StyleBox" uid="uid://cvsxo5ho127wu" path="res://assets/themes/paper/paper_tooltip_panel.tres" id="8_tooltip_panel"]
 [ext_resource type="Texture2D" uid="uid://81frowvo5wno" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 2 9.png" id="10_c8sri"]
-[ext_resource type="Texture2D" uid="uid://d3wxm5pduf23n" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square border 6.png" id="tex_paper_chip"]
+[ext_resource type="Texture2D" uid="uid://pi1cdc0aaat0" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 6.png" id="tex_paper_chip"]
+[ext_resource type="Texture2D" uid="uid://d3wxm5pduf23n" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square border 6.png" id="tex_paper_chip_outline"]
 
 [sub_resource type="FontVariation" id="Font_figtree_button"]
 base_font = ExtResource("4_fredoka")
@@ -57,19 +58,19 @@ texture_margin_left = 28.0
 texture_margin_top = 24.0
 texture_margin_right = 28.0
 texture_margin_bottom = 28.0
-modulate_color = Color(0.538462, 0.692308, 0.636364, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBox_paper_chip_focus"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip_hover"]
 content_margin_left = 10.0
 content_margin_top = 6.0
 content_margin_right = 10.0
 content_margin_bottom = 8.0
-texture = ExtResource("tex_paper_chip")
+texture = ExtResource("tex_paper_chip_outline")
 texture_margin_left = 28.0
 texture_margin_top = 24.0
 texture_margin_right = 28.0
 texture_margin_bottom = 28.0
-modulate_color = Color(0.646154, 0.83077, 0.763637, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip_pressed"]
 content_margin_left = 10.0
@@ -81,7 +82,7 @@ texture_margin_left = 28.0
 texture_margin_top = 24.0
 texture_margin_right = 28.0
 texture_margin_bottom = 28.0
-modulate_color = Color(0.43077, 0.553846, 0.509091, 1)
+modulate_color = Color(0.8, 0.8, 0.8, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n83um"]
 content_margin_left = 24.0
@@ -188,8 +189,9 @@ PaperIconButton/colors/font_hover_color = Color(0.94, 0.94, 0.88, 1)
 PaperIconButton/colors/font_hover_pressed_color = Color(0.94, 0.94, 0.88, 1)
 PaperIconButton/colors/font_pressed_color = Color(0.94, 0.94, 0.88, 1)
 PaperIconButton/styles/disabled = SubResource("StyleBox_paper_chip")
-PaperIconButton/styles/focus = SubResource("StyleBox_paper_chip_hover")
+PaperIconButton/styles/focus = SubResource("StyleBox_paper_chip_focus")
 PaperIconButton/styles/hover = SubResource("StyleBox_paper_chip_hover")
+PaperIconButton/styles/hover_pressed = SubResource("StyleBox_paper_chip_hover")
 PaperIconButton/styles/normal = SubResource("StyleBox_paper_chip")
 PaperIconButton/styles/pressed = SubResource("StyleBox_paper_chip_pressed")
 PlaceholderLabel/base_type = &"Label"

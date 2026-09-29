@@ -12,7 +12,7 @@ const VIEWPORT_SIZE := Vector2(1920, 1080)
 const CAMERA_TWEEN_SECONDS := 0.35
 const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
 const _TEXT_TOOLTIP_SCRIPT := preload("res://assets/ui/detail_tooltip/text_tooltip.gd")
-const _READY_BADGE_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 10.png")
+const _READY_BADGE_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 6.png")
 
 @onready var _camera: Camera2D = %BaseCamera
 @onready var _tab_bar: HBoxContainer = %TabBar
@@ -290,7 +290,7 @@ func _add_nursery_ready_badge(button: Button) -> void:
 	_nursery_ready_badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_nursery_ready_badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_nursery_ready_badge.add_theme_stylebox_override("normal", style)
-	_nursery_ready_badge.add_theme_color_override("font_color", PaperStyles.INK)
+	_nursery_ready_badge.add_theme_color_override("font_color", PaperStyles.CREAM)
 	_nursery_ready_badge.add_theme_font_size_override("font_size", 20)
 	button.add_child(_nursery_ready_badge)
 	_nursery_ready_badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)

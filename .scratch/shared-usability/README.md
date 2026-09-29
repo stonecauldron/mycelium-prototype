@@ -5,6 +5,7 @@ Implemented the approved ordinary-Run subset of the onboarding exploration:
 - Receiving-Day Seal icons and timing tooltips on Days 1, 3, 6, and 9.
 - Hide / Select Seal / Start Battle flow, preserving offers, selection, paid rerolls, and Base edits while combat remains gated by the pending choice.
 - Training confirmation compares the current and resulting Unit for both Children and Adults, including Weapon tags and colored Attack/HP and Stat changes. Children use the Evolve action; Adult Training shows Instant in place of the hourglass. Explanatory labels above the preview were removed following UI review. School hover tooltips retain their original compact presentation.
+- Training preview bodies are centered over their Attack/HP chips; held Weapons fit inside the portrait without shifting the body to one side.
 - Unit details show two Training slots and the resulting Weapon icon in one equation, with visible empty slots.
 - Attack chips angle the sword diagonally while keeping the number upright on Unit cards, detail tooltips, Training comparisons, and Scout tooltips. Swords below Units are 40% larger than the default icon size without changing the number or chip spacing.
 - Subtle ink rules and spacing separate Fertilizers, Mutations, Trainings, and the Generation footer; hidden sections leave no divider behind. The Unit card's footer sits closer to its lower paper edge.

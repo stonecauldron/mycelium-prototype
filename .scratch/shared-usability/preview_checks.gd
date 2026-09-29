@@ -169,6 +169,7 @@ static func _training_dialog(
 	failures += _check_combat_preview(dialog, "Atk", attack_before, attack_after)
 	failures += _check_combat_preview(dialog, "Hp", hp_before, hp_after)
 	for side in ["Left", "Right"]:
+		failures += _check_portrait_alignment(dialog, side)
 		var tags := dialog.get_node("%%%sWeaponTags" % side) as HFlowContainer
 		var visible_tags := 0
 		for tag in tags.get_children():
@@ -188,6 +189,29 @@ static func _training_dialog(
 		await _snapshot(host, "/tmp/usability-training-aoe.png")
 	dialog.queue_free()
 	await host.get_tree().process_frame
+	return failures
+
+
+static func _check_portrait_alignment(dialog: Control, side: String) -> int:
+	var portrait := dialog.get_node("%%%sPortrait" % side) as Control
+	var appearance: UnitAppearance = null
+	for child in portrait.get_children():
+		if child is UnitAppearance:
+			appearance = child as UnitAppearance
+			break
+	if appearance == null:
+		return _check(false, side + " comparison portrait exists")
+	var attack := dialog.get_node("%%%sAtkChip" % side) as StatChip
+	var health := dialog.get_node("%%%sHpChip" % side) as StatChip
+	var chips_center := (attack.get_global_rect().get_center().x
+		+ health.get_global_rect().get_center().x) * 0.5
+	var body := appearance.transform * appearance.visual_rect_local(false)
+	var body_center := portrait.global_position.x + body.get_center().x
+	var failures := _check(absf(body_center - chips_center) <= 2.0,
+		side + " Unit body is centered above combat chips")
+	var full_art := appearance.transform * appearance.visual_rect_local(true)
+	failures += _check(full_art.position.x >= -2.0 and full_art.end.x <= portrait.size.x + 2.0,
+		side + " held Weapon remains inside portrait")
 	return failures
 
 

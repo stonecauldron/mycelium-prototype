@@ -304,9 +304,16 @@ static func _fit_portrait_to_host(host: Control, appearance: UnitAppearance) -> 
 	var local := appearance.visual_rect_local(true)
 	if local.size.x <= 1.0 or local.size.y <= 1.0:
 		return
+	var center_x := local.get_center().x
+	if bool(host.get_meta("_portrait_center_body", false)):
+		var body := appearance.visual_rect_local(false)
+		if body.size.x > 1.0:
+			center_x = body.get_center().x
 	var max_w := maxf(8.0, host.size.x - PAD * 2.0)
 	var max_h := maxf(8.0, host.size.y - PAD * 2.0)
-	var vis_w := local.size.x * absf(appearance.scale.x)
+	# Keep room for the full weapon on either side of the chosen center.
+	var half_width := maxf(center_x - local.position.x, local.end.x - center_x)
+	var vis_w := half_width * 2.0 * absf(appearance.scale.x)
 	var vis_h := local.size.y * absf(appearance.scale.y) * IDLE_SLACK
 	var fit := minf(1.0, minf(max_w / vis_w, max_h / vis_h))
 	if fit < 1.0:
@@ -320,7 +327,7 @@ static func _fit_portrait_to_host(host: Control, appearance: UnitAppearance) -> 
 	var top_off := minf(y0, y1)
 	var bot_off := maxf(y0, y1)
 	appearance.position = Vector2(
-		(host.size.x - (left_off + right_off)) * 0.5,
+		host.size.x * 0.5 - center_x * appearance.scale.x,
 		host.size.y - PAD - bot_off
 	)
 	var top := appearance.position.y + top_off

@@ -57,6 +57,7 @@ texture_margin_left = 28.0
 texture_margin_top = 24.0
 texture_margin_right = 28.0
 texture_margin_bottom = 28.0
+modulate_color = Color(0.538462, 0.692308, 0.636364, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip_hover"]
 content_margin_left = 10.0
@@ -68,7 +69,7 @@ texture_margin_left = 28.0
 texture_margin_top = 24.0
 texture_margin_right = 28.0
 texture_margin_bottom = 28.0
-modulate_color = Color(1.2, 1.2, 1.2, 1)
+modulate_color = Color(0.646154, 0.83077, 0.763637, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip_pressed"]
 content_margin_left = 10.0
@@ -80,7 +81,7 @@ texture_margin_left = 28.0
 texture_margin_top = 24.0
 texture_margin_right = 28.0
 texture_margin_bottom = 28.0
-modulate_color = Color(0.8, 0.8, 0.8, 1)
+modulate_color = Color(0.43077, 0.553846, 0.509091, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n83um"]
 content_margin_left = 24.0

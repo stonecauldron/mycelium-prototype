@@ -11,7 +11,7 @@ Implemented the approved ordinary-Run subset of the onboarding exploration:
 - Troop title and flag placement. The heading was restored from Formation to Troop, and the Rear / Front / Enemies orientation rail was removed following UI review.
 - Quiet Nursery-tab count badge for harvest-ready Plots, updated by growth, Fertilizers, Greenhouse, harvesting, and grow removal. The badge hides at zero; harvest details remain in the tooltip.
 - Compact Compost confirmation with the Unit portrait, payout, and a spore icon/name in a spacious outcome panel. Growth Time, stock messaging, the detailed inheritance block, and the red removal message were removed following UI review.
-- Dialog close controls share a burgundy paper square and a light cross, with visible hover and pressed states.
+- Dialog close controls share a burgundy paper square with a sage-green outline and a light cross, with visible hover and pressed states.
 - Training and Compost dialog headings share a burgundy paper title strip with light text.
 
 Costs, eligibility, waits, inheritance, combat behavior, and the 10-Day Run remain unchanged. Guided mode, a clickable Train entry point, and Training-return indicators are outside this work.

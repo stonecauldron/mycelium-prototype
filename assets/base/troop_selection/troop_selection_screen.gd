@@ -458,7 +458,11 @@ func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
 	_pending_pupation_unit = unit
 	dialog.confirmed.connect(_on_pupation_confirmed)
 	dialog.tree_exited.connect(_on_pupation_dialog_closed)
-	add_child(dialog)
+	var hud := _hud_root()
+	if hud != null:
+		hud.add_child(dialog)
+	else:
+		add_child(dialog)
 	dialog.setup(unit, school)
 	_sync_all_slots()
 	Audio.play_ui_cue(Sfx.Cue.UI_OPEN)
@@ -469,7 +473,11 @@ func _open_compost_confirm(unit: RosterUnitData) -> void:
 	_compost_dialog = dialog
 	dialog.confirmed.connect(_on_compost_confirmed)
 	dialog.tree_exited.connect(_on_compost_dialog_closed)
-	add_child(dialog)
+	var hud := _hud_root()
+	if hud != null:
+		hud.add_child(dialog)
+	else:
+		add_child(dialog)
 	dialog.setup(unit)
 	Audio.play_ui_cue(Sfx.Cue.UI_OPEN)
 

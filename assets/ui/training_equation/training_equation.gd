@@ -4,6 +4,7 @@ extends HBoxContainer
 const SLOT_SIZE := Vector2(64, 64)
 const _ICON_SIZE := Vector2(48, 48)
 const _SLOT_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 14.png")
+const _CHANGED_SLOT_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 13.png")
 const _TEXT_COLOR := Color(0.2, 0.22, 0.18, 1)
 
 
@@ -15,7 +16,7 @@ func _init() -> void:
 	alignment = BoxContainer.ALIGNMENT_BEGIN
 
 
-func setup(unit: RosterUnitData) -> void:
+func setup(unit: RosterUnitData, previous_unit: RosterUnitData = null) -> void:
 	for child in get_children():
 		remove_child(child)
 		child.queue_free()
@@ -25,7 +26,8 @@ func setup(unit: RosterUnitData) -> void:
 		var weapon: WeaponData = null
 		if unit != null and i < unit.weapon_trainings.size():
 			weapon = WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(unit.weapon_trainings[i]))
-		var slot := _make_slot(weapon)
+		var changed := previous_unit != null and _school_at(unit, i) != _school_at(previous_unit, i)
+		var slot := _make_slot(weapon, changed)
 		slot.name = "TrainingSlot%d" % (i + 1)
 		add_child(slot)
 	add_child(_make_separator("="))
@@ -34,12 +36,18 @@ func setup(unit: RosterUnitData) -> void:
 	add_child(result)
 
 
-func _make_slot(weapon: WeaponData) -> PanelContainer:
+func _school_at(unit: RosterUnitData, index: int) -> int:
+	if unit == null or index >= unit.weapon_trainings.size():
+		return -1
+	return unit.weapon_trainings[index]
+
+
+func _make_slot(weapon: WeaponData, changed: bool) -> PanelContainer:
 	var slot := PanelContainer.new()
 	slot.custom_minimum_size = SLOT_SIZE
 	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var paper := StyleBoxTexture.new()
-	paper.texture = _SLOT_TEXTURE
+	paper.texture = _CHANGED_SLOT_TEXTURE if changed else _SLOT_TEXTURE
 	paper.set_content_margin_all(8.0)
 	slot.add_theme_stylebox_override("panel", paper)
 	if weapon == null:

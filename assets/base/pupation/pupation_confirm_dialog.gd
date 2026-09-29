@@ -156,7 +156,7 @@ func _fill_result_side() -> void:
 		_preview_unit.mount_portrait(_right_portrait, PORTRAIT_SCALE, PORTRAIT_SHADOW)
 
 	_right_stage.text = WeaponSchool.stage_display_name(next_stage)
-	_right_weapon_row.set_unit(_preview_unit)
+	_right_weapon_row.set_unit(_preview_unit, _unit)
 	_fill_weapon_tags(_right_weapon_tags, right_weapon)
 	_set_combat_chips(_preview_unit, _right_atk_chip, _right_hp_chip, _preview_troop)
 	_refresh_combat_deltas()

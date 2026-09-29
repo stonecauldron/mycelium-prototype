@@ -4,6 +4,8 @@ const TRAINING_SCENE := preload("res://assets/base/pupation/pupation_confirm_dia
 const SCHOOL_SCENE := preload("res://assets/base/pupation/school_training_detail_card.tscn")
 const COMPOST_SCENE := preload("res://assets/base/pupation/compost_confirm_dialog.tscn")
 const TRAINING_EQUATION_SCRIPT := preload("res://assets/ui/training_equation/training_equation.gd")
+const SLOT_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 14.png")
+const CHANGED_SLOT_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 13.png")
 
 
 ## Run from a live Base fixture; temporary Seal/Troop fixtures are restored after checking.
@@ -20,7 +22,7 @@ static func run(host: Control) -> int:
 		failures += _check(WeaponSchool.training_availability_text(child) == expected,
 			"Child availability for %d days" % days)
 		failures += await _training_dialog(host, child, WeaponSchool.Id.BOW,
-			"Bow Training → Bow", expected)
+			"Bow Training → Bow", expected, [0])
 		if days > 0:
 			var cocoon := PupationData.new()
 			failures += _check(cocoon.try_place(child, WeaponSchool.Id.BOW), "Child enters Cocoon")
@@ -32,17 +34,17 @@ static func run(host: Control) -> int:
 	var adult := make_unit([WeaponSchool.Id.SWORD], true)
 	adult.cocoon_duration_days = 2
 	failures += await _training_dialog(host, adult, WeaponSchool.Id.MACE,
-		"Sword + Mace → Warhammer", "Ready immediately · Stats unchanged")
+		"Sword + Mace → Warhammer", "Ready immediately · Stats unchanged", [1])
 	failures += _check(adult.effective_cocoon_days() == 0, "Adult overrides Child wait")
 	failures += await _training_dialog(host, adult, WeaponSchool.Id.SWORD,
-		"Sword + Sword → Great Sword", "Ready immediately · Stats unchanged")
+		"Sword + Sword → Great Sword", "Ready immediately · Stats unchanged", [1])
 	var dual := make_unit([WeaponSchool.Id.SWORD, WeaponSchool.Id.BOW], true)
 	failures += await _training_dialog(host, dual, WeaponSchool.Id.MACE,
-		"Bow + Mace → Great Horn", "Ready immediately · Stats unchanged")
+		"Bow + Mace → Great Horn", "Ready immediately · Stats unchanged", [0, 1])
 	failures += _check(WeaponSchool.training_replacement_text(dual, WeaponSchool.Id.MACE)
 		== "Replaces oldest Training: Sword. Keeps Bow and adds Mace.", "Oldest replacement named")
 	failures += await _training_dialog(host, dual, WeaponSchool.Id.SWORD,
-		"Bow + Sword → Crossbow", "Ready immediately · Stats unchanged")
+		"Bow + Sword → Crossbow", "Ready immediately · Stats unchanged", [0, 1])
 	failures += _check(WeaponSchool.training_replacement_text(dual, WeaponSchool.Id.SWORD)
 		== "Trains Sword again, replacing its oldest Training. Keeps Bow.", "Oldest renewal named")
 
@@ -57,7 +59,7 @@ static func run(host: Control) -> int:
 	descendant.pending_adult_stat_bonus = 7
 	failures += await _training_dialog(host, descendant, WeaponSchool.Id.MACE,
 		"Bow + Mace → Great Horn",
-		"Returns after the next Battle · Becomes an Adult")
+		"Returns after the next Battle · Becomes an Adult", [0, 1])
 	failures += await _training_equation_reuse(host)
 	for school in WeaponSchool.DISPLAY_ORDER:
 		var card: SchoolTrainingDetailCard = SCHOOL_SCENE.instantiate()
@@ -125,7 +127,8 @@ static func _unit_training_cards(host: Control) -> int:
 
 
 static func _training_dialog(
-	host: Control, unit: RosterUnitData, school: int, recipe: String, availability: String
+	host: Control, unit: RosterUnitData, school: int, recipe: String, availability: String,
+	changed_slots: Array[int]
 ) -> int:
 	var failures := 0
 	var original_stats := _stats(unit)
@@ -163,7 +166,8 @@ static func _training_dialog(
 		"Hourglass only shown for delayed Evolution")
 	failures += _check((dialog.get_node("%DurationSuffix") as Label).text
 		== (WeaponSchool.day_word(days) if days > 0 else "Instant"), "Preview timing label")
-	failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow, actual, "After")
+	failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow,
+		actual, "After", changed_slots)
 	var attack_before := SealModifiers.effective_attack_damage(unit)
 	var attack_after := SealModifiers.effective_attack_damage(actual)
 	var hp_before := SealModifiers.effective_max_hp(unit)
@@ -199,18 +203,22 @@ static func _training_dialog(
 	return failures
 
 
-static func _check_weapon_equation(row: PupationWeaponHoverRow, unit: RosterUnitData, label: String) -> int:
+static func _check_weapon_equation(
+	row: PupationWeaponHoverRow, unit: RosterUnitData, label: String, changed_slots: Array[int] = []
+) -> int:
 	var failures := _check(row.weapon != null and row.weapon.display_name == unit.weapon.display_name,
 		label + " Weapon hover matches actual Unit")
 	var equation := row.get_node_or_null("TrainingEquation") as HBoxContainer
-	failures += _check_training_equation(equation, unit, label)
+	failures += _check_training_equation(equation, unit, label, changed_slots)
 	if equation != null:
 		failures += _check(row.get_global_rect().grow(1.0).encloses(equation.get_global_rect()),
 			label + " Training equation fits its comparison row")
 	return failures
 
 
-static func _check_training_equation(equation: HBoxContainer, unit: RosterUnitData, label: String) -> int:
+static func _check_training_equation(
+	equation: HBoxContainer, unit: RosterUnitData, label: String, changed_slots: Array[int] = []
+) -> int:
 	var failures := _check(equation != null, label + " Training equation exists")
 	if equation == null:
 		return failures
@@ -225,6 +233,12 @@ static func _check_training_equation(equation: HBoxContainer, unit: RosterUnitDa
 		failures += _check(slot != null and slot.visible, label + " Training slot is visible")
 		if slot == null:
 			continue
+		var paper := slot.get_theme_stylebox("panel") as StyleBoxTexture
+		var expected_texture := CHANGED_SLOT_TEXTURE if changed_slots.has(index) else SLOT_TEXTURE
+		failures += _check(paper != null and paper.texture != null
+			and paper.texture.resource_path == expected_texture.resource_path,
+			"%s slot %d uses the %s paper border" % [label, index + 1,
+				"blue changed" if changed_slots.has(index) else "green unchanged"])
 		failures += _check(slot.custom_minimum_size == Vector2(64, 64) and slot.get_child_count() == 1,
 			label + " Training slot keeps the Unit card's paper frame")
 		if slot.get_child_count() != 1:
@@ -256,15 +270,24 @@ static func _training_equation_reuse(host: Control) -> int:
 		make_unit([WeaponSchool.Id.SWORD, WeaponSchool.Id.BOW], true),
 		make_unit([], false),
 		make_unit([WeaponSchool.Id.BOW], true),
+		make_unit([WeaponSchool.Id.BOW, WeaponSchool.Id.BOW], true),
 	]
-	for unit in units:
+	# With Bow Training, these results change slot 1, slot 1, slot 2, then neither.
+	var changed_slots: Array[Array] = [[0], [0], [1], []]
+	for index in units.size():
+		var unit := units[index]
 		dialog.setup(unit, WeaponSchool.Id.BOW)
 		for frame in 4:
 			await host.get_tree().process_frame
 		var actual := unit.duplicate(true) as RosterUnitData
 		actual.apply_pupation_training(WeaponSchool.Id.BOW)
 		failures += _check_weapon_equation(dialog.get_node("%LeftWeaponRow") as PupationWeaponHoverRow, unit, "Reused before")
-		failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow, actual, "Reused after")
+		var expected_changes: Array[int] = []
+		expected_changes.assign(changed_slots[index])
+		failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow,
+			actual, "Reused after %d" % index, expected_changes)
+		if expected_changes.is_empty():
+			await _snapshot(host, "/tmp/usability-training-unchanged.png")
 	dialog.queue_free()
 	await host.get_tree().process_frame
 	return failures

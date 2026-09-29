@@ -12,6 +12,7 @@ const VIEWPORT_SIZE := Vector2(1920, 1080)
 const CAMERA_TWEEN_SECONDS := 0.35
 const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
 const _TEXT_TOOLTIP_SCRIPT := preload("res://assets/ui/detail_tooltip/text_tooltip.gd")
+const _READY_BADGE_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 10.png")
 
 @onready var _camera: Camera2D = %BaseCamera
 @onready var _tab_bar: HBoxContainer = %TabBar
@@ -281,18 +282,15 @@ func _build_tab_bar() -> void:
 
 
 func _add_nursery_ready_badge(button: Button) -> void:
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.43, 0.19, 0.22, 1)
-	style.border_color = PaperStyles.CREAM
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(16)
+	var style := StyleBoxTexture.new()
+	style.texture = _READY_BADGE_TEXTURE
 	_nursery_ready_badge = Label.new()
 	_nursery_ready_badge.name = "ReadyBadge"
 	_nursery_ready_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_nursery_ready_badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_nursery_ready_badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_nursery_ready_badge.add_theme_stylebox_override("normal", style)
-	_nursery_ready_badge.add_theme_color_override("font_color", PaperStyles.CREAM)
+	_nursery_ready_badge.add_theme_color_override("font_color", PaperStyles.INK)
 	_nursery_ready_badge.add_theme_font_size_override("font_size", 20)
 	button.add_child(_nursery_ready_badge)
 	_nursery_ready_badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)

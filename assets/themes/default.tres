@@ -54,10 +54,6 @@ content_margin_top = 6.0
 content_margin_right = 10.0
 content_margin_bottom = 8.0
 texture = ExtResource("tex_paper_chip")
-texture_margin_left = 28.0
-texture_margin_top = 24.0
-texture_margin_right = 28.0
-texture_margin_bottom = 28.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBox_paper_chip_focus"]
 
@@ -67,10 +63,6 @@ content_margin_top = 6.0
 content_margin_right = 10.0
 content_margin_bottom = 8.0
 texture = ExtResource("tex_paper_chip_outline")
-texture_margin_left = 28.0
-texture_margin_top = 24.0
-texture_margin_right = 28.0
-texture_margin_bottom = 28.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_chip_pressed"]
 content_margin_left = 10.0
@@ -78,10 +70,6 @@ content_margin_top = 6.0
 content_margin_right = 10.0
 content_margin_bottom = 8.0
 texture = ExtResource("tex_paper_chip")
-texture_margin_left = 28.0
-texture_margin_top = 24.0
-texture_margin_right = 28.0
-texture_margin_bottom = 28.0
 modulate_color = Color(0.8, 0.8, 0.8, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n83um"]

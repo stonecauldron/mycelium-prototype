@@ -166,6 +166,7 @@ size_flags_horizontal = 3
 mouse_filter = 2
 
 [node name="LeftCombatRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn" unique_id=456554766]
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
@@ -173,6 +174,7 @@ alignment = 1
 [node name="LeftAttackGroup" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow"]
 layout_mode = 2
 theme_override_constants/separation = 0
+alignment = 1
 
 [node name="LeftAtkChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow/LeftAttackGroup" unique_id=1375269215 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
@@ -193,6 +195,7 @@ vertical_alignment = 1
 [node name="LeftHealthGroup" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow"]
 layout_mode = 2
 theme_override_constants/separation = 0
+alignment = 1
 
 [node name="LeftHpChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn/LeftCombatRow/LeftHealthGroup" unique_id=1532846583 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
@@ -299,7 +302,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="MidDurationRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn" unique_id=1607217947]
-custom_minimum_size = Vector2(0, 62)
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 theme_override_constants/separation = 4
 alignment = 1
@@ -370,13 +373,16 @@ size_flags_horizontal = 3
 mouse_filter = 2
 
 [node name="RightCombatRow" type="HBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn" unique_id=435594227]
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
 [node name="RightAttackGroup" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow"]
+custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 theme_override_constants/separation = 0
+alignment = 1
 
 [node name="RightAtkChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow/RightAttackGroup" unique_id=953783332 instance=ExtResource("3_chip")]
 unique_name_in_owner = true
@@ -395,8 +401,10 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RightHealthGroup" type="VBoxContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow"]
+custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 theme_override_constants/separation = 0
+alignment = 1
 
 [node name="RightHpChip" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn/RightCombatRow/RightHealthGroup" unique_id=608338665 instance=ExtResource("3_chip")]
 unique_name_in_owner = true

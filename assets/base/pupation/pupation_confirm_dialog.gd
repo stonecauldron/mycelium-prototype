@@ -9,6 +9,8 @@ const PORTRAIT_SHADOW := 20.0
 const _BIOMASS_ICON := preload("res://assets/base/biomass_small_icon.png")
 const _TAG_CHIP_SCENE := preload("res://assets/ui/tag_chip/tag_chip.tscn")
 const _STAT_FONT_SIZE := 18
+const _CHANGED_STAT_FONT_SIZE := 24
+const _CHANGED_CHIP_SCALE := 1.3
 
 var _unit: RosterUnitData
 var _school: int = 0
@@ -201,6 +203,7 @@ func _configure_current_stat(row: StatValueRow, abbrev: String, value_text: Stri
 		StatValueRow.Layout.ICON_FIRST,
 		StatDisplay.INK
 	)
+	row.custom_minimum_size.y = StatDisplay.icon_px(_CHANGED_STAT_FONT_SIZE)
 
 
 func _configure_mid_delta(row: StatValueRow, abbrev: String, delta: int) -> void:
@@ -214,12 +217,13 @@ func _configure_mid_delta(row: StatValueRow, abbrev: String, delta: int) -> void
 	row.configure(
 		abbrev,
 		"%+d" % delta if delta != 0 else "",
-		_STAT_FONT_SIZE,
+		_CHANGED_STAT_FONT_SIZE if delta != 0 else _STAT_FONT_SIZE,
 		color,
 		false,
 		StatValueRow.Layout.ICON_LAST,
 		StatDisplay.INK
 	)
+	row.custom_minimum_size.y = StatDisplay.icon_px(_CHANGED_STAT_FONT_SIZE)
 
 
 func _apply_result_stat(
@@ -241,12 +245,13 @@ func _apply_result_stat(
 		right_row.configure(
 			abbrev,
 			right_text,
-			_STAT_FONT_SIZE,
+			_CHANGED_STAT_FONT_SIZE if delta != 0 else _STAT_FONT_SIZE,
 			color,
 			false,
 			StatValueRow.Layout.ICON_FIRST,
 			StatDisplay.INK
 		)
+		right_row.custom_minimum_size.y = StatDisplay.icon_px(_CHANGED_STAT_FONT_SIZE)
 	_configure_mid_delta(mid_row, abbrev, delta)
 
 
@@ -299,11 +304,15 @@ func _refresh_combat_deltas() -> void:
 
 
 func _apply_combat_delta(chip: StatChip, label: Label, delta: int) -> void:
+	var emphasis := _CHANGED_CHIP_SCALE if delta != 0 else 1.0
+	chip.chip_size = StatChip.CHIP_SIZE * emphasis
+	chip.value_font_size = roundi(StatChip.DEFAULT_VALUE_FONT_SIZE * emphasis)
 	var color := Color.WHITE
 	if delta != 0:
 		color = StatDisplay.change_color(delta).lightened(0.35 if delta > 0 else 0.2)
 	chip.set_value_color(color)
 	label.text = "%+d" % delta if delta != 0 else ""
+	label.add_theme_font_size_override("font_size", _CHANGED_STAT_FONT_SIZE if delta != 0 else _STAT_FONT_SIZE)
 	label.add_theme_color_override("font_color", StatDisplay.change_color(delta))
 
 

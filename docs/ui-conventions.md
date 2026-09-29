@@ -6,7 +6,7 @@ In Training comparisons, emphasize nonzero changes with larger result Attack/HP 
 
 Training comparisons and Unit detail cards share the same weapon equation: two paper Training slots in their stored order, separated by `+`, then `=` and the resulting Weapon icon. Label unfilled slots `Empty`. The comparison's before side uses the current Unit; its after side uses the preview Unit, including replaced Trainings. Highlight each result slot whose displayed Training changes with blue-bordered paper; unchanged slots, the before side, and Unit detail cards keep green borders. Keep Weapon tags below the equation and the result Weapon details available on hover in the comparison.
 
-In Training comparisons, use blue-bordered paper for Weapon tags that differ between the two Weapons. Added tags are highlighted on the result side, removed tags on the before side, and changed range or scaling tags on both sides. Shared tags keep their neutral appearance. Compare the tag's gameplay meaning, including scaling Stats, rather than its position or caption. Blue indicates a change, not a numerical gain or loss.
+In Training comparisons, keep Weapon tags' rounded shape and tint their fill with the light gain/loss palette: green for added tags on the result side, red for removed tags on the before side. Changed range or scaling shows the old tag in red and the new tag in green. Enlarge changed tags with 20px text (normally 16px), proportionally larger icons and padding. Shared tags keep their neutral appearance and normal size. Compare the tag's gameplay meaning, including scaling Stats, rather than its position or caption.
 
 ## Biomass hover previews
 

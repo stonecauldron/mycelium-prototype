@@ -238,7 +238,7 @@ script = ExtResource("12_training_equation")
 
 [node name="LeftWeaponTags" type="HFlowContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/LeftColumn"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 84)
+custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
@@ -322,7 +322,7 @@ custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
 [node name="MidTagsSpacer" type="Control" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/MidColumn"]
-custom_minimum_size = Vector2(0, 84)
+custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
 mouse_filter = 2
 
@@ -437,7 +437,7 @@ script = ExtResource("12_training_equation")
 
 [node name="RightWeaponTags" type="HFlowContainer" parent="Center/Panel/Margin/VBox/ComparePanel/CompareRow/RightColumn"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 84)
+custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2

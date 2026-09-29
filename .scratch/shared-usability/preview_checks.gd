@@ -265,11 +265,13 @@ static func _check_weapon_tag_comparison(
 	dialog: Control, before: WeaponData, after: WeaponData,
 	before_changed: Array[String], after_changed: Array[String]
 ) -> int:
-	return _check_weapon_tags(dialog.get_node("%LeftWeaponTags") as HFlowContainer, before, before_changed) \
-		+ _check_weapon_tags(dialog.get_node("%RightWeaponTags") as HFlowContainer, after, after_changed)
+	return _check_weapon_tags(dialog.get_node("%LeftWeaponTags") as HFlowContainer, before, before_changed, -1) \
+		+ _check_weapon_tags(dialog.get_node("%RightWeaponTags") as HFlowContainer, after, after_changed, 1)
 
 
-static func _check_weapon_tags(row: HFlowContainer, weapon: WeaponData, changed: Array[String]) -> int:
+static func _check_weapon_tags(
+	row: HFlowContainer, weapon: WeaponData, changed: Array[String], change_direction: int
+) -> int:
 	var range_label := "Mid Range" if weapon.formation_line == WeaponData.FormationLine.MID \
 		else str(WeaponData.FORMATION_LINE_LABELS[weapon.formation_line])
 	var labels: Array[String] = [range_label, "Scaling"]
@@ -287,12 +289,19 @@ static func _check_weapon_tags(row: HFlowContainer, weapon: WeaponData, changed:
 		failures += _check(tag != null and tag.visible, label + " tag is visible")
 		if tag == null:
 			continue
-		failures += _check((tag.get_node("%Label") as Label).text == labels[index], label + " caption preserved")
+		var caption := tag.get_node("%Label") as Label
+		failures += _check(caption.text == labels[index], label + " caption preserved")
+		var is_changed := changed.has(labels[index])
+		failures += _check(caption.get_theme_font_size("font_size") == (20 if is_changed else 16),
+			label + " text is enlarged only when changed")
 		var paper := tag.get_theme_stylebox("panel")
-		if changed.has(labels[index]):
-			var changed_paper := paper as StyleBoxTexture
-			failures += _check(changed_paper != null and changed_paper.texture == CHANGED_SLOT_TEXTURE,
-				label + " change uses the blue paper border")
+		if is_changed:
+			var changed_paper := paper as StyleBoxFlat
+			failures += _check(changed_paper != null
+				and changed_paper.corner_radius_top_left > 0 and changed_paper.corner_radius_top_right > 0
+				and changed_paper.corner_radius_bottom_left > 0 and changed_paper.corner_radius_bottom_right > 0
+				and changed_paper.bg_color.is_equal_approx(StatDisplay.change_color(change_direction, true)),
+				label + " keeps rounded corners with the directional change fill")
 		else:
 			failures += _check(paper == default_panel, label + " unchanged tag keeps its default style")
 		failures += _check(row.get_global_rect().grow(1.0).encloses(tag.get_global_rect()), label + " fits its row")
@@ -304,6 +313,8 @@ static func _check_weapon_tags(row: HFlowContainer, weapon: WeaponData, changed:
 			failures += _check(icon.visible == (icon_index < icons.size()), label + " keeps the expected icon count")
 			if icon_index < icons.size():
 				failures += _check(icon.texture == icons[icon_index], label + " keeps the actual scaling icon")
+				failures += _check(icon.custom_minimum_size == Vector2.ONE * (30 if is_changed else 24),
+					label + " scaling icon is enlarged only when changed")
 		failures += _check((tag.get_node("%Glue") as Label).visible == (icons.size() == 2),
 			label + " scaling icon separator is correct")
 	return failures

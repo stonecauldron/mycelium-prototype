@@ -34,6 +34,15 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 theme_override_constants/separation = 8
 
+[node name="WeaponIcon" type="TextureRect" parent="CardPanel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
 [node name="NameLabel" type="Label" parent="CardPanel/Margin/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 0)

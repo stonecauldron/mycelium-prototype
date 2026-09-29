@@ -7,6 +7,7 @@ var weapon_data: WeaponData
 var interactive: bool = true
 
 @onready var _card_panel: PanelContainer = $CardPanel
+@onready var _weapon_icon: TextureRect = %WeaponIcon
 @onready var _name_label: Label = %NameLabel
 @onready var _desc_label: RichTextLabel = %DescLabel
 @onready var _dmg_label: Label = %DmgLabel
@@ -71,6 +72,8 @@ func _ready() -> void:
 func _refresh() -> void:
 	if weapon_data == null:
 		return
+	_weapon_icon.texture = weapon_data.icon
+	_weapon_icon.visible = weapon_data.icon != null
 	_name_label.text = weapon_data.display_name
 	StatDisplay.apply_to(
 		_desc_label,

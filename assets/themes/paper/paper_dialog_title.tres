@@ -1,11 +1,11 @@
 [gd_resource type="StyleBoxTexture" load_steps=2 format=3]
 
-[ext_resource type="Texture2D" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 3 6.png" id="1_title"]
+[ext_resource type="Texture2D" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 3 9.png" id="1_title"]
 
 [resource]
 content_margin_left = 24.0
 content_margin_top = 8.0
-content_margin_right = 36.0
+content_margin_right = 48.0
 content_margin_bottom = 8.0
 texture = ExtResource("1_title")
 texture_margin_left = 34.0

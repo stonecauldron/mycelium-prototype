@@ -38,6 +38,7 @@ func _ready() -> void:
 	_confirm_button.pressed.connect(_on_confirm_pressed)
 	_confirm_button.disabled = true
 	_reroll_button.pressed.connect(_on_reroll_pressed)
+	BiomassPreview.bind(_reroll_button, _biomass_preview_delta)
 	if _offers.is_empty():
 		_offers = SealCatalog.roll_offers(_OFFER_COUNT, GameState.seals)
 	_build_cards()
@@ -99,6 +100,12 @@ func _refresh_selection() -> void:
 
 func _current_seal_reroll_cost() -> int:
 	return BiomassData.seal_reroll_price(_rerolls_this_pick + 1)
+
+
+func _biomass_preview_delta() -> Variant:
+	if not _allow_reroll:
+		return null
+	return -_current_seal_reroll_cost()
 
 
 func _refresh_reroll_affordability() -> void:

@@ -57,6 +57,8 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	mouse_exited.connect(clear_drop_highlight)
 	GameState.biomass.changed.connect(_refresh_unlock_affordability)
+	BiomassPreview.bind(self, _shop_drop_biomass_delta)
+	BiomassPreview.bind(_unlock_button, _unlock_biomass_delta)
 	if _unlock_button != null and not _unlock_button.pressed.is_connected(_on_unlock_pressed):
 		_unlock_button.pressed.connect(_on_unlock_pressed)
 	_update_placeholder()
@@ -112,6 +114,32 @@ func _refresh_unlock_affordability() -> void:
 	_unlock_button.disabled = not can_unlock
 	var button_mod := Color.WHITE / _LOCKED_MODULATE
 	_unlock_button.modulate = button_mod if can_unlock else button_mod * Color(1, 1, 1, 0.45)
+
+
+func _unlock_biomass_delta() -> Variant:
+	if not is_unlockable or get_viewport().gui_is_dragging():
+		return null
+	if not GameState.troop.can_unlock_squad_slot():
+		return null
+	if slot_index != GameState.troop.unlocked_squad_count:
+		return null
+	return -GameState.troop.next_squad_unlock_cost()
+
+
+func _shop_drop_biomass_delta() -> Variant:
+	if not get_viewport().gui_is_dragging():
+		return null
+	var data: Variant = get_viewport().gui_get_drag_data()
+	if not data is Dictionary or not _is_accepted_drag(data):
+		return null
+	if not GameState.nursery.can_add_stock_item():
+		return null
+	var drop_type := str(data.get("type", ""))
+	if drop_type == "shop_fertilizer" and data.get("fertilizer") is FertilizerData:
+		return -int(data.get("cost", 0))
+	if drop_type == "shop_mutation" and data.get("mutation") is MutationData:
+		return -int(data.get("cost", 0))
+	return null
 
 
 func clear_drop_highlight() -> void:

@@ -19,10 +19,21 @@ var _hover_mask: BitMap = BitMap.new()
 
 func _ready() -> void:
 	_base_modulate = modulate
+	BiomassPreview.bind(self, _biomass_preview_delta)
 	_hover_mask.create_from_image_alpha(_bin_image.texture.get_image())
 	mouse_exited.connect(_on_mouse_exited)
 	_bin_image.resized.connect(_sync_bin_pivot)
 	_sync_bin_pivot()
+
+
+func _biomass_preview_delta() -> Variant:
+	var viewport := get_viewport()
+	if not viewport.gui_is_dragging():
+		return null
+	var data: Variant = viewport.gui_get_drag_data()
+	if not _accepts_drag_data(data):
+		return null
+	return int(GameState.preview_compost_outcome(data.get("unit")).get("biomass", 0))
 
 
 func _has_point(point: Vector2) -> bool:

@@ -37,7 +37,7 @@ const _ACID_RAIN_BASE_DAMAGE := 1
 @onready var player_troop: Troop = $World/PlayerTroop
 @onready var enemy_troop: Troop = $World/EnemyTroop
 @onready var _fast_forward_button: Button = %FastForwardButton
-@onready var _biomass_amount: Label = %BiomassChip.get_node("%BiomassAmount")
+@onready var _biomass_chip: BiomassChip = %BiomassChip
 @onready var _player_army_hp: ArmyHpChip = %PlayerArmyHp
 @onready var _enemy_army_hp: ArmyHpChip = %EnemyArmyHp
 @onready var _hud: CanvasLayer = $HUD
@@ -516,9 +516,9 @@ func _spawn_biomass_number(anchor_global: Vector2, amount: int) -> void:
 
 
 func _refresh_biomass_hud() -> void:
-	if _biomass_amount == null:
+	if _biomass_chip == null:
 		return
-	_biomass_amount.text = BiomassDisplay.number(GameState.biomass.amount)
+	_biomass_chip.refresh()
 
 
 func _setup_army_hp_hud() -> void:

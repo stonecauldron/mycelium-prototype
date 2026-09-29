@@ -32,6 +32,7 @@ func _ready() -> void:
 	_dim.gui_input.connect(_on_dim_gui_input)
 	_close_button.pressed.connect(_on_cancel_pressed)
 	_confirm_button.pressed.connect(_on_confirm_pressed)
+	BiomassPreview.bind(_confirm_button, _biomass_preview_delta)
 	_header_icon.texture = _COMPOST_ICON
 	if _unit != null:
 		_refresh()
@@ -48,6 +49,12 @@ func setup(unit: RosterUnitData) -> void:
 	_unit = unit
 	if is_node_ready():
 		_refresh()
+
+
+func _biomass_preview_delta() -> Variant:
+	if not GameState.can_compost_unit(_unit):
+		return null
+	return int(GameState.preview_compost_outcome(_unit).get("biomass", 0))
 
 
 func _refresh() -> void:

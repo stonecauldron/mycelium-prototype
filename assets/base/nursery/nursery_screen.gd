@@ -49,6 +49,7 @@ func _ready() -> void:
 	_reroll_button.pressed.connect(_on_reroll_pressed)
 	_reroll_button.mouse_entered.connect(_on_reroll_hover_entered)
 	_reroll_button.mouse_exited.connect(_on_reroll_hover_exited)
+	BiomassPreview.bind(_reroll_button, _reroll_biomass_delta)
 	_shop_drop_zone.accepted_drag_types = PackedStringArray(["spore", "fertilizer", "mutation"])
 	_shop_drop_zone.item_dropped.connect(_on_shop_sell_dropped)
 	_build_stock_slots()
@@ -295,6 +296,12 @@ func _on_reroll_hover_entered() -> void:
 func _on_reroll_hover_exited() -> void:
 	for card in _shop_cards:
 		card.set_reroll_preview(false)
+
+
+func _reroll_biomass_delta() -> Variant:
+	if get_viewport().gui_is_dragging():
+		return null
+	return -GameState.nursery.current_shop_reroll_cost()
 
 
 func _on_reroll_pressed() -> void:

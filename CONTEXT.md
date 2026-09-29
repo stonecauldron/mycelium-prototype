@@ -2,6 +2,8 @@
 
 A 10-day auto-battler run where you grow mushroom troops, train them, and fight daily enemy armies for biomass.
 
+Shared presentation guidance: [UI conventions](docs/ui-conventions.md).
+
 ## Language
 
 ### Run loop

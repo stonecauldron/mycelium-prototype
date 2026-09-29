@@ -74,6 +74,7 @@ func _refresh_arrow() -> void:
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	BiomassPreview.bind(self, _biomass_preview_delta)
 	custom_minimum_size = _SLOT_SIZE
 	_base_modulate = modulate
 	mouse_exited.connect(_on_mouse_exited)
@@ -82,6 +83,13 @@ func _ready() -> void:
 	_refresh_weapon_icon()
 	_refresh_visuals()
 	_prepare_cocoon_pivot()
+
+
+func _biomass_preview_delta() -> Variant:
+	var viewport := get_viewport()
+	if not viewport.gui_is_dragging() or not _accepts_drag_data(viewport.gui_get_drag_data()):
+		return null
+	return -WeaponSchool.COCOON_COST
 
 
 func _prepare_cocoon_pivot() -> void:

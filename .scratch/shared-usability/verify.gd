@@ -153,6 +153,12 @@ func _run() -> void:
 	GameState.troop.unlock_all_squad_slots()
 	colony.on_screen_shown()
 	await capture("formation-full")
+	var biomass_checks = load("res://.scratch/shared-usability/biomass_checks.gd")
+	if biomass_checks != null:
+		failures += await biomass_checks.run(base)
+	var biomass_nursery_checks = load("res://.scratch/shared-usability/biomass_nursery_checks.gd")
+	if biomass_nursery_checks != null:
+		failures += await biomass_nursery_checks.run(base)
 	var preview_checks = load("res://.scratch/shared-usability/preview_checks.gd")
 	if preview_checks != null:
 		failures += await preview_checks.run(base.get_node("HudLayer/HudRoot"))

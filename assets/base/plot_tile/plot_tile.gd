@@ -100,6 +100,8 @@ func _ready() -> void:
 	_plant_button.pressed.connect(_on_plant_pressed)
 	_unlock_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	_unlock_button.pressed.connect(_on_unlock_pressed)
+	BiomassPreview.bind(self, _biomass_preview_delta)
+	BiomassPreview.bind(_unlock_button, _unlock_biomass_delta)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	mouse_exited.connect(_on_mouse_exited)
 	if _egg_visual != null:
@@ -188,6 +190,38 @@ func _accepts_spore_drag(data: Variant) -> bool:
 	if drop_type == "spore":
 		return state == NurseryPlotData.State.EMPTY
 	return false
+
+
+func _biomass_preview_delta() -> Variant:
+	if get_viewport().gui_is_dragging():
+		return _shop_drop_biomass_delta()
+	if is_unlockable or _plot == null or not GameState.nursery.can_plant_on_plot(plot_index):
+		return null
+	return -SealModifiers.fresh_plant_cost()
+
+
+func _unlock_biomass_delta() -> Variant:
+	if not is_unlockable or get_viewport().gui_is_dragging():
+		return null
+	if not GameState.nursery.can_unlock_plot():
+		return null
+	if plot_index != GameState.nursery.unlocked_plot_count:
+		return null
+	return -GameState.nursery.next_unlock_cost()
+
+
+func _shop_drop_biomass_delta() -> Variant:
+	if not get_viewport().gui_is_dragging():
+		return null
+	var data: Variant = get_viewport().gui_get_drag_data()
+	if not data is Dictionary:
+		return null
+	if str(data.get("type", "")) not in ["shop_fertilizer", "shop_mutation"]:
+		return null
+	var decision := _plot_item_drag_decision(data)
+	if decision == null or not decision.allowed:
+		return null
+	return -int(data.get("cost", 0))
 
 
 func _plot_item_drag_decision(data: Variant) -> ActionDecision:
@@ -569,6 +603,8 @@ func _make_slot_chip(icon_tex: Texture2D) -> StatChip:
 	_stats_row.add_child(chip)
 	# StatChip._ready defaults to IGNORE; re-enable for hover punch + tooltips.
 	chip.mouse_filter = Control.MOUSE_FILTER_STOP
+	# Inspecting a modifier does not activate the containing Plot's Plant action.
+	BiomassPreview.bind(chip, _shop_drop_biomass_delta)
 	return chip
 
 

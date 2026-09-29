@@ -186,7 +186,20 @@ func _ready() -> void:
 	_set_children_mouse_filter_ignore(_content)
 	_lock_icon.mouse_filter = Control.MOUSE_FILTER_STOP
 	_lock_icon.gui_input.connect(_on_lock_gui_input)
+	BiomassPreview.bind(self, _biomass_preview_delta)
+	BiomassPreview.bind(_lock_icon, func() -> Variant: return null)
 	reset_compact_layout()
+
+
+func _biomass_preview_delta() -> Variant:
+	if get_viewport().gui_is_dragging() or not GameState.nursery.can_add_stock_item():
+		return null
+	var offer_type := str(payload.get("type", ""))
+	if offer_type == "shop_fertilizer" and payload.get("fertilizer") is FertilizerData:
+		return -int(payload.get("cost", 0))
+	if offer_type == "shop_mutation" and payload.get("mutation") is MutationData:
+		return -int(payload.get("cost", 0))
+	return null
 
 
 func _apply_content(title: String, subtitle: String, description: String, icon: Texture2D) -> void:

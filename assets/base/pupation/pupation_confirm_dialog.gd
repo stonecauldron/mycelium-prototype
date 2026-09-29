@@ -60,6 +60,7 @@ func _ready() -> void:
 	_dim.gui_input.connect(_on_dim_gui_input)
 	_close_button.pressed.connect(_on_cancel_pressed)
 	_confirm_button.pressed.connect(_on_confirm_pressed)
+	BiomassPreview.bind(_confirm_button, _biomass_preview_delta)
 	_confirm_button.icon = _BIOMASS_ICON
 	_confirm_button.expand_icon = true
 	_confirm_button.icon_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -98,6 +99,12 @@ func _refresh() -> void:
 
 func _action_verb() -> String:
 	return "Train" if _unit == null or _unit.is_adult_stage() else "Evolve"
+
+
+func _biomass_preview_delta() -> Variant:
+	if not GameState.can_cocoon_for_pupation(_unit, _school):
+		return null
+	return -WeaponSchool.COCOON_COST
 
 
 func _refresh_affordability() -> void:
@@ -292,11 +299,9 @@ func _refresh_combat_deltas() -> void:
 
 
 func _apply_combat_delta(chip: StatChip, label: Label, delta: int) -> void:
-	var color := StatDisplay.GAIN_COLOR if delta > 0 else StatDisplay.LOSS_COLOR
-	var chip_color := color.lightened(0.65 if delta > 0 else 0.45)
-	chip.set_value_color(chip_color if delta != 0 else Color.WHITE)
+	chip.set_value_color(StatDisplay.change_color(delta, true))
 	label.text = "%+d" % delta if delta != 0 else ""
-	label.add_theme_color_override("font_color", color)
+	label.add_theme_color_override("font_color", StatDisplay.change_color(delta))
 
 
 func _fill_weapon_tags(row: HFlowContainer, weapon: WeaponData) -> void:

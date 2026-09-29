@@ -20,6 +20,7 @@ func _ready() -> void:
 	GameState.biomass.changed.connect(_refresh_reroll_affordability)
 	if _scout_reroll_button != null:
 		_scout_reroll_button.pressed.connect(_on_scout_reroll_pressed)
+		BiomassPreview.bind(_scout_reroll_button, _biomass_preview_delta)
 	refresh()
 
 
@@ -94,6 +95,12 @@ func _reroll_allowed() -> bool:
 		return false
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	return not GameState.is_elite_day(day)
+
+
+func _biomass_preview_delta() -> Variant:
+	if not _reroll_allowed():
+		return null
+	return -GameState.current_scout_reroll_cost()
 
 
 func _refresh_reroll_affordability() -> void:

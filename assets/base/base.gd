@@ -17,7 +17,7 @@ const _READY_BADGE_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI 
 @onready var _camera: Camera2D = %BaseCamera
 @onready var _tab_bar: HBoxContainer = %TabBar
 @onready var _day_label: Label = %DayLabel
-@onready var _biomass_amount: Label = %BiomassChip.get_node("%BiomassAmount")
+@onready var _biomass_chip: BiomassChip = %BiomassChip
 @onready var _debug_advance_day_button: Button = %DebugAdvanceDayButton
 @onready var _start_combat_button: Button = %StartCombatButton
 @onready var _nursery_zone: Node2D = %NurseryZone
@@ -42,11 +42,11 @@ func _ready() -> void:
 		GameState.reset_run()
 	_camera.make_current()
 	_wire_progress_tracks()
-	GameState.biomass.changed.connect(_refresh_biomass_amount)
 	GameState.nursery.changed.connect(_refresh_nursery_readiness)
 	_refresh_hud()
 	_build_tab_bar()
 	_start_combat_button.pressed.connect(_on_start_combat_pressed)
+	BiomassPreview.bind(_start_combat_button, _battle_biomass_preview, "On victory")
 	_debug_advance_day_button.pressed.connect(_on_debug_advance_day_pressed)
 	_debug_advance_day_button.visible = GameState.debug_mode_active
 	GameState.debug_mode_changed.connect(_on_debug_mode_changed)
@@ -173,7 +173,13 @@ func _refresh_hud() -> void:
 
 
 func _refresh_biomass_amount() -> void:
-	_biomass_amount.text = BiomassDisplay.number(GameState.biomass.amount)
+	_biomass_chip.refresh()
+
+
+func _battle_biomass_preview() -> Variant:
+	if _start_combat_button.disabled or not _colony_screen.can_start_combat():
+		return null
+	return EnemyComposer.battle_reward_for(GameState.get_upcoming_day(), GameState.upcoming_enemy_formation)
 
 
 func _wire_progress_tracks() -> void:

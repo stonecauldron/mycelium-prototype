@@ -39,6 +39,14 @@ static var _signed_value_regex: RegEx
 static var _signed_stat_value_regex: RegEx
 
 
+## Signed changes use ink on paper; chip numerals use the lighter matching tint.
+static func change_color(delta: int, light: bool = false) -> Color:
+	if delta == 0:
+		return Color.WHITE if light else INK
+	var color := GAIN_COLOR if delta > 0 else LOSS_COLOR
+	return color.lightened(0.65 if delta > 0 else 0.45) if light else color
+
+
 static func white_icon(abbrev: String) -> Texture2D:
 	var key := abbrev.to_upper()
 	if _white_icons.has(key):

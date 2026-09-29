@@ -18,6 +18,12 @@ func _ready() -> void:
 	_base_modulate = modulate
 	set_process(false)
 	mouse_exited.connect(clear_drop_highlight)
+	BiomassPreview.bind(self, _biomass_preview_delta)
+
+
+func _biomass_preview_delta() -> Variant:
+	var amount := _sell_amount_for_current_drag()
+	return amount if amount >= 0 else null
 
 
 func clear_drop_highlight() -> void:

@@ -1,0 +1,6 @@
+work/
+__pycache__/
+
+# Retain storyboards and selected review stills, not regenerable frame probes.
+preview/great-sword-v*-*.png
+preview/export-v*-*.jpg

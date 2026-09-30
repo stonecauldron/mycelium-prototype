@@ -1,0 +1,15 @@
+{
+  "command": "godot --headless --path . --scene .scratch/knockback-recovery/check_recovery.tscn",
+  "exit_code": 0,
+  "cases": 4,
+  "failures": 0,
+  "unit_script_sha256": "bf190b786b5bb4dc5d6f804216125410edb3b2e23669c6ac8de741935386e771",
+  "knockback_recovery_seconds": 0.35,
+  "results": [
+    {"enemy": "solar_sword", "speed": 1, "landing_frames": 16, "protected_frames": 22, "hits": 62, "attacks": 1, "projectile_emitted": false, "retaliation_damage": 2},
+    {"enemy": "peashooter", "speed": 1, "landing_frames": 16, "protected_frames": 22, "hits": 72, "attacks": 1, "projectile_emitted": true, "retaliation_damage": 0},
+    {"enemy": "solar_sword", "speed": 4, "landing_frames": 16, "protected_frames": 22, "hits": 61, "attacks": 1, "projectile_emitted": false, "retaliation_damage": 2},
+    {"enemy": "peashooter", "speed": 4, "landing_frames": 16, "protected_frames": 22, "hits": 72, "attacks": 1, "projectile_emitted": true, "retaliation_damage": 0}
+  ],
+  "shutdown_diagnostics": "Godot reported 8 leaked ObjectDB instances and 3 resources in use at shutdown; no failed assertions."
+}

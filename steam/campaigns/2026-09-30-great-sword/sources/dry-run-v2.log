@@ -1,0 +1,33 @@
+Initializing GameAnalytics
+GameAnalytics - Initializing http client
+GameAnalytics - Initializing Log
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 4.1 Metal - 89.4 - Compatibility - Using Device: Apple - Apple M3
+
+Movie Maker mode enabled, recording movie in 1920×1080 @ 60 FPS...
+2026-09-30 13:17:50.891 godot[89766:45157279] not in fullscreen state
+CAPTURE great-sword single 1 vs 3
+CAPTURE great-sword army 9 vs 18
+CAPTURE complete great-sword frames=0
+ERROR: Texture with GL ID of 29: leaked 21844 bytes.
+   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)
+ERROR: Texture with GL ID of 31: leaked 21844 bytes.
+   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)
+ERROR: Texture with GL ID of 32: leaked 21844 bytes.
+   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)
+ERROR: Parameter "RenderingServer::get_singleton()" is null.
+   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)
+ERROR: Parameter "RenderingServer::get_singleton()" is null.
+   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)
+ERROR: Parameter "RenderingServer::get_singleton()" is null.
+   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)
+--------------------------------------------------------------------------------
+Done recording movie at path: /Users/cauldron/.codex/worktrees/great-sword-reel/mycelium-prototype/steam/campaigns/2026-09-30-great-sword/work/dry-run-v2-timing.avi
+1231 frames at 60 FPS (movie length: 00:00:20:31), recorded in 00:00:53 (37% of real-time speed).
+CPU render time: 0.33 seconds (average: 0.26 ms/frame)
+GPU render time: 0.00 seconds (average: 0.00 ms/frame)
+Encoding time: 13.31 seconds (average: 10.81 ms/frame)
+--------------------------------------------------------------------------------
+ERROR: 3 RID allocations of type 'N5GLES37TextureE' were leaked at exit.

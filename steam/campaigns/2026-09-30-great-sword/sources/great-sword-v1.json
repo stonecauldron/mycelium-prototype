@@ -1,0 +1,1092 @@
+{
+	"audio_preroll_frames": 30,
+	"equation_center_x": 540.0,
+	"events": [
+		{
+			"action": "cocoon_entry",
+			"frame": 0,
+			"held_school": 0,
+			"life_stage": "child",
+			"unit_scale": 1.65
+		},
+		{
+			"action": "walk_started",
+			"animation_speed": 2.1,
+			"frame": 21
+		},
+		{
+			"action": "cocoon_closed",
+			"frame": 51
+		},
+		{
+			"action": "cocoon_reveal",
+			"apex_hold_seconds": 0.1,
+			"complete_equation": true,
+			"frame": 150,
+			"hop_height": 240.0,
+			"shell_pieces": 2,
+			"sound": "train",
+			"unit_scale": 1.65,
+			"weapon": "Great Sword"
+		},
+		{
+			"action": "reveal_landing",
+			"frame": 186,
+			"sound": "ground"
+		},
+		{
+			"action": "weapon_name",
+			"frame": 240
+		},
+		{
+			"action": "single",
+			"enemies": 3,
+			"enemy_spawn_offset": -234.0,
+			"enemy_stats": [
+				{
+					"con": 3,
+					"dex": 3,
+					"strength": 1
+				},
+				{
+					"con": 2,
+					"dex": 1,
+					"strength": 3
+				},
+				{
+					"con": 1,
+					"dex": 2,
+					"strength": 3
+				}
+			],
+			"enemy_type": "solar_sword",
+			"frame": 240,
+			"nearest_front_gap": 308.228820800781,
+			"players": 1,
+			"profile": {
+				"attack_interval": 2.5,
+				"attack_style": 0,
+				"engagement_stance": 0,
+				"knockback_force": 420.0,
+				"melee_engage_range": 126.0,
+				"melee_range": 144.0,
+				"projectile_range": 48.0,
+				"skirmish_distance": 80.0,
+				"targeting_mode": 1
+			},
+			"seed": 30092026,
+			"weapon": "Great Sword"
+		},
+		{
+			"action": "cut",
+			"background_screen_scale": 0.428668588399887,
+			"camera_x": 3420.38671875,
+			"frame": 240,
+			"screen_fixed_forest_visible": false,
+			"shot": "single_wide",
+			"zoom": 0.857337152194226
+		},
+		{
+			"alive": 1,
+			"camera_x": 3420.38671875,
+			"damage_dealt": 0,
+			"enemies_alive": 3,
+			"frame": 240,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"zoom": 0.857337176799774
+		},
+		{
+			"action": "player_swing",
+			"battle": "single",
+			"frame": 271,
+			"shot": "single_wide",
+			"unit": 0,
+			"visible": true,
+			"x": 3178.0,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_hit",
+			"battle": "single",
+			"damage": 11,
+			"frame": 276,
+			"melee_clearance": 94.85009765625,
+			"shot": "single_wide",
+			"unit": 0,
+			"visible": true
+		},
+		{
+			"alive": 1,
+			"camera_x": 3420.38671875,
+			"damage_dealt": 11,
+			"enemies_alive": 2,
+			"frame": 300,
+			"fully_visible_enemies": 2,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"zoom": 0.857337176799774
+		},
+		{
+			"action": "first_melee_range",
+			"battle": "single",
+			"frame": 311,
+			"melee_clearance": -1.599609375
+		},
+		{
+			"alive": 1,
+			"camera_x": 3420.38671875,
+			"damage_dealt": 11,
+			"enemies_alive": 2,
+			"frame": 360,
+			"fully_visible_enemies": 2,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"zoom": 0.857337176799774
+		},
+		{
+			"alive": 1,
+			"camera_x": 3420.38671875,
+			"damage_dealt": 11,
+			"enemies_alive": 2,
+			"frame": 420,
+			"fully_visible_enemies": 2,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"zoom": 0.857337176799774
+		},
+		{
+			"alive": 1,
+			"camera_x": 3420.38671875,
+			"damage_dealt": 11,
+			"enemies_alive": 2,
+			"frame": 480,
+			"fully_visible_enemies": 2,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"zoom": 0.857337176799774
+		},
+		{
+			"action": "player_swing",
+			"battle": "single",
+			"frame": 489,
+			"shot": "single_wide",
+			"unit": 0,
+			"visible": true,
+			"x": 2966.9951171875,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_hit",
+			"battle": "single",
+			"damage": 11,
+			"frame": 494,
+			"melee_clearance": 55.25537109375,
+			"shot": "single_wide",
+			"unit": 0,
+			"visible": true
+		},
+		{
+			"action": "army",
+			"enemies": 18,
+			"enemy_spawn_offset": -234.0,
+			"enemy_stats": [
+				{
+					"con": 2,
+					"dex": 2,
+					"strength": 3
+				},
+				{
+					"con": 2,
+					"dex": 3,
+					"strength": 3
+				},
+				{
+					"con": 3,
+					"dex": 1,
+					"strength": 2
+				},
+				{
+					"con": 3,
+					"dex": 1,
+					"strength": 3
+				},
+				{
+					"con": 1,
+					"dex": 1,
+					"strength": 3
+				},
+				{
+					"con": 3,
+					"dex": 3,
+					"strength": 3
+				},
+				{
+					"con": 3,
+					"dex": 1,
+					"strength": 2
+				},
+				{
+					"con": 1,
+					"dex": 1,
+					"strength": 2
+				},
+				{
+					"con": 2,
+					"dex": 1,
+					"strength": 1
+				},
+				{
+					"con": 3,
+					"dex": 3,
+					"strength": 3
+				},
+				{
+					"con": 3,
+					"dex": 3,
+					"strength": 1
+				},
+				{
+					"con": 3,
+					"dex": 2,
+					"strength": 3
+				},
+				{
+					"con": 3,
+					"dex": 3,
+					"strength": 3
+				},
+				{
+					"con": 3,
+					"dex": 1,
+					"strength": 2
+				},
+				{
+					"con": 2,
+					"dex": 2,
+					"strength": 2
+				},
+				{
+					"con": 2,
+					"dex": 1,
+					"strength": 2
+				},
+				{
+					"con": 1,
+					"dex": 3,
+					"strength": 1
+				},
+				{
+					"con": 1,
+					"dex": 2,
+					"strength": 3
+				}
+			],
+			"enemy_type": "solar_sword",
+			"frame": 540,
+			"nearest_front_gap": 308.228820800781,
+			"players": 9,
+			"profile": {
+				"attack_interval": 2.5,
+				"attack_style": 0,
+				"engagement_stance": 0,
+				"knockback_force": 420.0,
+				"melee_engage_range": 126.0,
+				"melee_range": 144.0,
+				"projectile_range": 48.0,
+				"skirmish_distance": 80.0,
+				"targeting_mode": 1
+			},
+			"seed": 30092126,
+			"weapon": "Great Sword"
+		},
+		{
+			"action": "cut",
+			"background_screen_scale": 0.349081873893738,
+			"camera_x": 3692.712890625,
+			"frame": 540,
+			"screen_fixed_forest_visible": false,
+			"shot": "army_launch",
+			"zoom": 0.69816375181497
+		},
+		{
+			"alive": 9,
+			"camera_x": 3692.712890625,
+			"damage_dealt": 0,
+			"enemies_alive": 18,
+			"frame": 540,
+			"fully_visible_enemies": 5,
+			"fully_visible_players": 9,
+			"shot": "army_launch",
+			"zoom": 0.698163747787476
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 571,
+			"shot": "army_launch",
+			"unit": 8,
+			"visible": true,
+			"x": 3818.0,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 11,
+			"frame": 576,
+			"melee_clearance": 94.85009765625,
+			"shot": "army_launch",
+			"unit": 8,
+			"visible": true
+		},
+		{
+			"action": "first_melee_range",
+			"battle": "army",
+			"frame": 599,
+			"melee_clearance": -4.599609375
+		},
+		{
+			"alive": 9,
+			"camera_x": 3692.712890625,
+			"damage_dealt": 11,
+			"enemies_alive": 17,
+			"frame": 600,
+			"fully_visible_enemies": 6,
+			"fully_visible_players": 9,
+			"shot": "army_launch",
+			"zoom": 0.698163747787476
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 601,
+			"shot": "army_launch",
+			"unit": 7,
+			"visible": true,
+			"x": 3816.599609375,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 11,
+			"frame": 606,
+			"melee_clearance": 39.4844207763672,
+			"shot": "army_launch",
+			"unit": 7,
+			"visible": true
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 632,
+			"shot": "army_launch",
+			"unit": 6,
+			"visible": true,
+			"x": 3818.19921875,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 10,
+			"frame": 637,
+			"melee_clearance": 80.10302734375,
+			"shot": "army_launch",
+			"unit": 6,
+			"visible": true
+		},
+		{
+			"alive": 9,
+			"camera_x": 3692.712890625,
+			"damage_dealt": 32,
+			"enemies_alive": 15,
+			"frame": 660,
+			"fully_visible_enemies": 6,
+			"fully_visible_players": 9,
+			"shot": "army_launch",
+			"zoom": 0.698163747787476
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 667,
+			"shot": "army_launch",
+			"unit": 5,
+			"visible": true,
+			"x": 3831.798828125,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 10,
+			"frame": 672,
+			"melee_clearance": 42.5643920898438,
+			"shot": "army_launch",
+			"unit": 5,
+			"visible": true
+		},
+		{
+			"action": "cut",
+			"background_screen_scale": 0.649999976158142,
+			"camera_x": 4015.6015625,
+			"frame": 678,
+			"screen_fixed_forest_visible": false,
+			"shot": "army_impact",
+			"zoom": 1.3
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 693,
+			"shot": "army_impact",
+			"unit": 4,
+			"visible": true,
+			"x": 3818.3984375,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 9,
+			"frame": 698,
+			"melee_clearance": -25.719612121582,
+			"shot": "army_impact",
+			"unit": 4,
+			"visible": true
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 720,
+			"shot": "army_impact",
+			"unit": 3,
+			"visible": true,
+			"x": 3819.3984375,
+			"y": 785.929382324219
+		},
+		{
+			"alive": 9,
+			"camera_x": 4015.6015625,
+			"damage_dealt": 51,
+			"enemies_alive": 14,
+			"frame": 720,
+			"fully_visible_enemies": 7,
+			"fully_visible_players": 8,
+			"shot": "army_impact",
+			"zoom": 1.29999995231628
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 11,
+			"frame": 725,
+			"melee_clearance": 16.5874938964844,
+			"shot": "army_impact",
+			"unit": 3,
+			"visible": true
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 749,
+			"shot": "army_impact",
+			"unit": 2,
+			"visible": true,
+			"x": 3826.3984375,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 9,
+			"frame": 754,
+			"melee_clearance": -1.32283782958984,
+			"shot": "army_impact",
+			"unit": 2,
+			"visible": true
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 773,
+			"shot": "army_impact",
+			"unit": 1,
+			"visible": true,
+			"x": 3818.3984375,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 775,
+			"shot": "army_impact",
+			"unit": 7,
+			"visible": true,
+			"x": 3819.599609375,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 18,
+			"frame": 778,
+			"melee_clearance": -14.9236373901367,
+			"shot": "army_impact",
+			"unit": 1,
+			"visible": true
+		},
+		{
+			"alive": 9,
+			"camera_x": 4015.6015625,
+			"damage_dealt": 89,
+			"enemies_alive": 13,
+			"frame": 780,
+			"fully_visible_enemies": 8,
+			"fully_visible_players": 7,
+			"shot": "army_impact",
+			"zoom": 1.29999995231628
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 11,
+			"frame": 784,
+			"melee_clearance": 51.376708984375,
+			"shot": "army_impact",
+			"unit": 7,
+			"visible": true
+		},
+		{
+			"action": "cut",
+			"background_screen_scale": 0.297256529331207,
+			"camera_x": 4138.42578125,
+			"frame": 810,
+			"screen_fixed_forest_visible": false,
+			"shot": "army_wide",
+			"zoom": 0.594513084961138
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 815,
+			"shot": "army_wide",
+			"unit": 0,
+			"visible": true,
+			"x": 3841.59765625,
+			"y": 785.929382324219
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 20,
+			"frame": 820,
+			"melee_clearance": 47.65478515625,
+			"shot": "army_wide",
+			"unit": 0,
+			"visible": true
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 837,
+			"shot": "army_wide",
+			"unit": 6,
+			"visible": true,
+			"x": 3818.798828125,
+			"y": 785.929382324219
+		},
+		{
+			"action": "outro_started",
+			"frame": 840,
+			"prompt": "Which combo next?",
+			"result_visible": false
+		},
+		{
+			"action": "outro_input",
+			"frame": 840,
+			"pair": [
+				0,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"alive": 9,
+			"camera_x": 4138.42578125,
+			"damage_dealt": 120,
+			"enemies_alive": 11,
+			"frame": 840,
+			"fully_visible_enemies": 11,
+			"fully_visible_players": 9,
+			"shot": "army_wide",
+			"zoom": 0.594513058662415
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 10,
+			"frame": 842,
+			"melee_clearance": 25.84716796875,
+			"shot": "army_wide",
+			"unit": 6,
+			"visible": true
+		},
+		{
+			"action": "outro_input",
+			"frame": 844,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 849,
+			"pair": [
+				4,
+				3
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 851,
+			"shot": "army_wide",
+			"unit": 8,
+			"visible": true,
+			"x": 3866.255859375,
+			"y": 785.929382324219
+		},
+		{
+			"action": "outro_input",
+			"frame": 853,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 22,
+			"frame": 856,
+			"melee_clearance": 97.79736328125,
+			"shot": "army_wide",
+			"unit": 8,
+			"visible": true
+		},
+		{
+			"action": "outro_input",
+			"frame": 858,
+			"pair": [
+				1,
+				0
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 862,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 867,
+			"pair": [
+				2,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_spear/great_spear.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 871,
+			"pair": [
+				2,
+				4
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/polehammer/polehammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 876,
+			"pair": [
+				3,
+				4
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 880,
+			"pair": [
+				3,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/great_bow/great_bow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 885,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 889,
+			"pair": [
+				0,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 894,
+			"pair": [
+				2,
+				1
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 898,
+			"pair": [
+				2,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"alive": 9,
+			"camera_x": 4138.42578125,
+			"damage_dealt": 152,
+			"enemies_alive": 8,
+			"frame": 900,
+			"fully_visible_enemies": 8,
+			"fully_visible_players": 9,
+			"shot": "army_wide",
+			"zoom": 0.594513058662415
+		},
+		{
+			"action": "outro_input",
+			"frame": 903,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 907,
+			"pair": [
+				4,
+				4
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/great_hammer/great_hammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 912,
+			"pair": [
+				3,
+				4
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 916,
+			"pair": [
+				3,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/umbrella/umbrella.tres"
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 917,
+			"shot": "army_wide",
+			"unit": 5,
+			"visible": true,
+			"x": 3847.3984375,
+			"y": 785.929382324219
+		},
+		{
+			"action": "outro_input",
+			"frame": 921,
+			"pair": [
+				1,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_shield/great_shield.tres"
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 20,
+			"frame": 922,
+			"melee_clearance": -31.1167068481445,
+			"shot": "army_wide",
+			"unit": 5,
+			"visible": true
+		},
+		{
+			"action": "outro_input",
+			"frame": 925,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 930,
+			"pair": [
+				0,
+				2
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 934,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 939,
+			"pair": [
+				4,
+				3
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 943,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 948,
+			"pair": [
+				1,
+				0
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 952,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "player_swing",
+			"battle": "army",
+			"frame": 952,
+			"shot": "army_wide",
+			"unit": 4,
+			"visible": true,
+			"x": 3829.798828125,
+			"y": 785.929382324219
+		},
+		{
+			"action": "outro_input",
+			"frame": 957,
+			"pair": [
+				2,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_spear/great_spear.tres"
+		},
+		{
+			"action": "player_hit",
+			"battle": "army",
+			"damage": 9,
+			"frame": 957,
+			"melee_clearance": 14.5185546875,
+			"shot": "army_wide",
+			"unit": 4,
+			"visible": true
+		},
+		{
+			"alive": 9,
+			"camera_x": 4138.42578125,
+			"damage_dealt": 181,
+			"enemies_alive": 6,
+			"frame": 959,
+			"fully_visible_enemies": 6,
+			"fully_visible_players": 9,
+			"shot": "army_wide",
+			"zoom": 0.594513058662415
+		}
+	],
+	"featured_mechanic": "slow AOE slashing melee with knockback",
+	"fps": 60,
+	"frames": 960,
+	"height": 1920,
+	"recipe": [
+		0,
+		0
+	],
+	"seed": 30092026,
+	"shot_metrics": {
+		"army_impact": {
+			"damage": 58,
+			"first_action_frame": 571,
+			"first_effect_frame": 576,
+			"frames": 132,
+			"frames_all_enemies_visible": 0,
+			"frames_all_players_visible": 17,
+			"min_enemies_alive": 12,
+			"min_players_alive": 9
+		},
+		"army_launch": {
+			"damage": 42,
+			"first_action_frame": 571,
+			"first_effect_frame": 576,
+			"frames": 138,
+			"frames_all_enemies_visible": 0,
+			"frames_all_players_visible": 138,
+			"min_enemies_alive": 14,
+			"min_players_alive": 9
+		},
+		"army_wide": {
+			"damage": 81,
+			"first_action_frame": 571,
+			"first_effect_frame": 576,
+			"frames": 150,
+			"frames_all_enemies_visible": 150,
+			"frames_all_players_visible": 150,
+			"min_enemies_alive": 6,
+			"min_players_alive": 9
+		},
+		"single_wide": {
+			"damage": 22,
+			"first_action_frame": 271,
+			"first_effect_frame": 276,
+			"frames": 300,
+			"frames_all_enemies_visible": 300,
+			"frames_all_players_visible": 300,
+			"min_enemies_alive": 1,
+			"min_players_alive": 1
+		}
+	},
+	"unit_scale": 1.65,
+	"version": 1,
+	"visibility_failures": [],
+	"weapon": "great-sword",
+	"width": 1080
+}

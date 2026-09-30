@@ -276,6 +276,31 @@ static func _ensure_portrait_host_sync(host: Control) -> void:
 static func _sync_portrait_in_host(host: Control) -> void:
 	if not is_instance_valid(host):
 		return
+	var hosts: Array[Control] = [host]
+	if host.has_meta("_portrait_fit_partner"):
+		var partner: Variant = host.get_meta("_portrait_fit_partner")
+		if is_instance_valid(partner) and partner is Control:
+			hosts.append(partner as Control)
+	var fit := 1.0
+	for portrait_host in hosts:
+		for child in portrait_host.get_children():
+			if child is UnitAppearance:
+				var appearance := child as UnitAppearance
+				if portrait_host.has_meta("_portrait_base_scale"):
+					appearance.scale = portrait_host.get_meta("_portrait_base_scale")
+				if bool(portrait_host.get_meta("_portrait_fit", false)):
+					fit = minf(fit, _portrait_fit_scale(portrait_host, appearance))
+	for portrait_host in hosts:
+		_position_portrait_in_host(portrait_host, fit)
+
+
+## Comparisons share one fitting multiplier, preserving authored life-stage sizes.
+static func link_portrait_fitting(first: Control, second: Control) -> void:
+	first.set_meta("_portrait_fit_partner", second)
+	second.set_meta("_portrait_fit_partner", first)
+
+
+static func _position_portrait_in_host(host: Control, fit: float) -> void:
 	var shadow_clearance := 0.0
 	if host.has_meta("_portrait_shadow_clearance"):
 		shadow_clearance = float(host.get_meta("_portrait_shadow_clearance"))
@@ -286,8 +311,6 @@ static func _sync_portrait_in_host(host: Control) -> void:
 	for child in host.get_children():
 		if child is UnitAppearance:
 			var appearance := child as UnitAppearance
-			if host.has_meta("_portrait_base_scale"):
-				appearance.scale = host.get_meta("_portrait_base_scale")
 			var bottom_pad := 4.0
 			if shadow_clearance > 0.0:
 				# Feet-pivoted: origin at soles; shadow extends below +Y.
@@ -295,18 +318,19 @@ static func _sync_portrait_in_host(host: Control) -> void:
 			var feet_y := host.size.y * y_factor - bottom_pad
 			appearance.position = Vector2(host.size.x * 0.5, feet_y)
 			if bool(host.get_meta("_portrait_fit", false)):
-				_fit_portrait_to_host(host, appearance)
+				_fit_portrait_to_host(host, appearance, fit)
 
 
-static func _fit_portrait_to_host(host: Control, appearance: UnitAppearance) -> void:
+static func _portrait_fit_scale(host: Control, appearance: UnitAppearance) -> float:
 	const PAD := 6.0
 	const IDLE_SLACK := 1.08
-	var local := appearance.visual_rect_local(true)
+	var trim := bool(host.get_meta("_portrait_trim_transparency", false))
+	var local := appearance.visual_rect_local(true, trim)
 	if local.size.x <= 1.0 or local.size.y <= 1.0:
-		return
+		return 1.0
 	var center_x := local.get_center().x
 	if bool(host.get_meta("_portrait_center_body", false)):
-		var body := appearance.visual_rect_local(false)
+		var body := appearance.visual_rect_local(false, trim)
 		if body.size.x > 1.0:
 			center_x = body.get_center().x
 	var max_w := maxf(8.0, host.size.x - PAD * 2.0)
@@ -315,9 +339,21 @@ static func _fit_portrait_to_host(host: Control, appearance: UnitAppearance) -> 
 	var half_width := maxf(center_x - local.position.x, local.end.x - center_x)
 	var vis_w := half_width * 2.0 * absf(appearance.scale.x)
 	var vis_h := local.size.y * absf(appearance.scale.y) * IDLE_SLACK
-	var fit := minf(1.0, minf(max_w / vis_w, max_h / vis_h))
-	if fit < 1.0:
-		appearance.scale *= fit
+	return minf(1.0, minf(max_w / vis_w, max_h / vis_h))
+
+
+static func _fit_portrait_to_host(host: Control, appearance: UnitAppearance, fit: float) -> void:
+	const PAD := 6.0
+	var trim := bool(host.get_meta("_portrait_trim_transparency", false))
+	var local := appearance.visual_rect_local(true, trim)
+	if local.size.x <= 1.0 or local.size.y <= 1.0:
+		return
+	var center_x := local.get_center().x
+	if bool(host.get_meta("_portrait_center_body", false)):
+		var body := appearance.visual_rect_local(false, trim)
+		if body.size.x > 1.0:
+			center_x = body.get_center().x
+	appearance.scale *= fit
 	var x0 := local.position.x * appearance.scale.x
 	var x1 := local.end.x * appearance.scale.x
 	var y0 := local.position.y * appearance.scale.y

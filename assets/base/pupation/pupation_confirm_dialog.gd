@@ -54,6 +54,7 @@ var _preview_troop: TroopData
 
 func _ready() -> void:
 	GameState.biomass.changed.connect(_refresh_affordability)
+	RosterUnitData.link_portrait_fitting(_left_portrait, _right_portrait)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	z_index = 100
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -126,7 +127,7 @@ func _refresh_duration_chip() -> void:
 
 func _fill_current_side() -> void:
 	_clear_portrait(_left_portrait)
-	_unit.mount_portrait(_left_portrait, PORTRAIT_SCALE, PORTRAIT_SHADOW)
+	_mount_comparison_portrait(_unit, _left_portrait)
 	_left_stage.text = WeaponSchool.stage_display_name(_unit.life_stage_id)
 	_left_weapon_row.set_unit(_unit)
 	_set_combat_chips(_unit, _left_atk_chip, _left_hp_chip, GameState.troop)
@@ -153,7 +154,7 @@ func _fill_result_side() -> void:
 
 	_clear_portrait(_right_portrait)
 	if _preview_unit != null:
-		_preview_unit.mount_portrait(_right_portrait, PORTRAIT_SCALE, PORTRAIT_SHADOW)
+		_mount_comparison_portrait(_preview_unit, _right_portrait)
 
 	_right_stage.text = WeaponSchool.stage_display_name(next_stage)
 	_right_weapon_row.set_unit(_preview_unit, _unit)
@@ -347,6 +348,13 @@ func _add_weapon_tag(row: HFlowContainer, text: String, change: int) -> TagChip:
 		for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
 			style.set_content_margin(side, style.get_content_margin(side) * emphasis)
 	return tag
+
+
+func _mount_comparison_portrait(unit: RosterUnitData, host: Control) -> void:
+	var appearance := unit.mount_portrait(host, PORTRAIT_SCALE, PORTRAIT_SHADOW)
+	if appearance != null and appearance.animation_player != null:
+		# Compare the same idle pose; weapon changes should not imply body changes.
+		appearance.animation_player.seek(0.0, true)
 
 
 func _clear_portrait(host: Control) -> void:

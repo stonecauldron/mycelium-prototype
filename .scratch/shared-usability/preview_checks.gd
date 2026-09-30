@@ -408,7 +408,7 @@ static func _check_portrait_alignment(dialog: Control, side: String) -> int:
 	var health := dialog.get_node("%%%sHpChip" % side) as StatChip
 	var chips_center := (attack.get_global_rect().get_center().x
 		+ health.get_global_rect().get_center().x) * 0.5
-	var body := appearance.transform * appearance.visual_rect_local(false)
+	var body := appearance.transform * appearance.visual_rect_local(false, true)
 	var body_center := portrait.global_position.x + body.get_center().x
 	var failures := _check(absf(body_center - chips_center) <= 2.0,
 		side + " Unit body is centered above combat chips")
@@ -421,7 +421,7 @@ static func _check_portrait_alignment(dialog: Control, side: String) -> int:
 		side + " visible Training equation is centered in its row")
 	failures += _check(absf(equation_center - body_center) <= 2.0,
 		side + " visible Training equation is centered below the Unit body")
-	var full_art := appearance.transform * appearance.visual_rect_local(true)
+	var full_art := appearance.transform * appearance.visual_rect_local(true, true)
 	failures += _check(full_art.position.x >= -2.0 and full_art.end.x <= portrait.size.x + 2.0,
 		side + " held Weapon remains inside portrait")
 	return failures

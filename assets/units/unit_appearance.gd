@@ -18,6 +18,8 @@ const MELEE_RECOVERY_TIME := 0.36
 const MELEE_ANTICIPATION_TIME := 0.28
 const MELEE_GUARD_BLEND_SPEED := 10.0
 
+static var _texture_used_rects: Dictionary[Texture2D, Rect2] = {}
+
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var body_shape: CollisionShape2D = $BodyShape
 
@@ -326,7 +328,8 @@ func play_walk(randomize_start: bool = true, animation_speed: float = 1.0) -> vo
 
 ## Axis-aligned bounds of visible sprites in this appearance's local space.
 ## Origin is the feet pivot; y is typically negative (up).
-func visual_rect_local(include_weapon: bool = true) -> Rect2:
+## Portraits can omit transparent texture padding; other callers keep full bounds.
+func visual_rect_local(include_weapon: bool = true, trim_transparency: bool = false) -> Rect2:
 	var merged := Rect2()
 	var has_rect := false
 	var stack: Array = [[self, Transform2D.IDENTITY]]
@@ -340,24 +343,64 @@ func visual_rect_local(include_weapon: bool = true) -> Rect2:
 			var sprite_2d := node as Sprite2D
 			if sprite_2d.visible and sprite_2d.texture != null:
 				var r := sprite_2d.get_rect()
-				var corners: Array[Vector2] = [
-					xf * r.position,
-					xf * Vector2(r.end.x, r.position.y),
-					xf * r.end,
-					xf * Vector2(r.position.x, r.end.y),
-				]
-				for point in corners:
-					if not has_rect:
-						merged = Rect2(point, Vector2.ZERO)
-						has_rect = true
-					else:
-						merged = merged.expand(point)
+				if trim_transparency:
+					r = _sprite_used_rect(sprite_2d)
+				if not trim_transparency or r.has_area():
+					var corners: Array[Vector2] = [
+						xf * r.position,
+						xf * Vector2(r.end.x, r.position.y),
+						xf * r.end,
+						xf * Vector2(r.position.x, r.end.y),
+					]
+					for point in corners:
+						if not has_rect:
+							merged = Rect2(point, Vector2.ZERO)
+							has_rect = true
+						else:
+							merged = merged.expand(point)
 		for child in node.get_children():
 			var child_xf := xf
 			if child is Node2D:
 				child_xf = xf * (child as Node2D).transform
 			stack.append([child, child_xf])
 	return merged
+
+
+static func _sprite_used_rect(sprite_2d: Sprite2D) -> Rect2:
+	var full := sprite_2d.get_rect()
+	var texture_rect := Rect2(Vector2.ZERO, sprite_2d.texture.get_size())
+	var source := sprite_2d.region_rect if sprite_2d.region_enabled else texture_rect
+	source.size /= Vector2(sprite_2d.hframes, sprite_2d.vframes)
+	source.position += Vector2(sprite_2d.frame_coords) * source.size
+	# Repeated regions and fractional frame sizes need the full conservative bounds.
+	if not source.has_area() or not texture_rect.encloses(source) or source.size != full.size:
+		return full
+	var used := _texture_used_rect(sprite_2d.texture).intersection(source)
+	if not used.has_area():
+		return Rect2()
+	var relative_position := (used.position - source.position) / source.size
+	var relative_size := used.size / source.size
+	if sprite_2d.flip_h:
+		relative_position.x = 1.0 - relative_position.x - relative_size.x
+	if sprite_2d.flip_v:
+		relative_position.y = 1.0 - relative_position.y - relative_size.y
+	return Rect2(full.position + relative_position * full.size, relative_size * full.size)
+
+
+static func _texture_used_rect(texture: Texture2D) -> Rect2:
+	if _texture_used_rects.has(texture):
+		return _texture_used_rects[texture]
+	var full := Rect2(Vector2.ZERO, texture.get_size())
+	_texture_used_rects[texture] = full
+	var texture_image := texture.get_image()
+	if texture_image == null or texture_image.is_empty():
+		return full
+	if Vector2(texture_image.get_size()) != full.size:
+		return full
+	if texture_image.is_compressed() and texture_image.decompress() != OK:
+		return full
+	_texture_used_rects[texture] = Rect2(texture_image.get_used_rect())
+	return _texture_used_rects[texture]
 
 
 func _body_sprite() -> Sprite2D:

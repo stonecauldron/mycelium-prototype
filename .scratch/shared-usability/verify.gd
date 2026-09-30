@@ -162,6 +162,9 @@ func _run() -> void:
 	var preview_checks = load("res://.scratch/shared-usability/preview_checks.gd")
 	if preview_checks != null:
 		failures += await preview_checks.run(base.get_node("HudLayer/HudRoot"))
+	var portrait_checks = load("res://.scratch/shared-usability/portrait_checks.gd")
+	if portrait_checks != null:
+		failures += await portrait_checks.run(base.get_node("HudLayer/HudRoot"))
 	# A fresh Run retains its existing blocking starter selection and opening Seal.
 	GameState.reset_run()
 	tree.change_scene_to_file("res://assets/base/base.tscn")

@@ -494,12 +494,15 @@ func harvest(plot_index: int) -> Array[RosterUnitData]:
 			body = spore.body_mutation
 		if cap == null:
 			cap = spore.cap_mutation
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("nursery-harvest:%d:%d:%d" % [GameState.run_seed, plot_index, plot.grow_number])
 	result = _make_harvest_units(
 		spore,
 		plot.stack_fertilizers(),
 		pending,
 		body,
-		cap
+		cap,
+		rng
 	)
 	_apply_favourite_child_if_first_hatch(result)
 	plot.clear()
@@ -525,7 +528,8 @@ func _make_harvest_units(
 	fertilizers: Array[FertilizerData],
 	pending_stat_bonus: int,
 	body_mutation: MutationData = null,
-	cap_mutation: MutationData = null
+	cap_mutation: MutationData = null,
+	rng: RandomNumberGenerator = null
 ) -> Array[RosterUnitData]:
 	var units: Array[RosterUnitData] = []
 	var weapon := WeaponSchool.sickle()
@@ -535,9 +539,9 @@ func _make_harvest_units(
 	var lineage := spore != null and spore.is_lineage_spore()
 	var stats: UnitStatsData
 	if lineage:
-		stats = UnitStatsData.create_around(spore.mean_stats)
+		stats = UnitStatsData.create_around(spore.mean_stats, 1, rng)
 	else:
-		stats = UnitStatsData.create_for_tier(tier)
+		stats = UnitStatsData.create_for_tier(tier, rng)
 	_apply_fertilizer_stats(stats, fertilizers)
 	if pending_stat_bonus != 0:
 		stats.add_all(pending_stat_bonus)
@@ -579,7 +583,7 @@ func _make_harvest_units(
 			unit_stats.scale_all(0.5)
 		if triploid:
 			unit_stats.scale_all(1.0 / 3.0)
-		var hatch_name := UnitNames.pick()
+		var hatch_name := UnitNames.pick(rng)
 		var hatch_generation := 1
 		var hatch_lineage := hatch_name
 		if lineage:

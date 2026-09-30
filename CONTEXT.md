@@ -51,6 +51,9 @@ The between-battles hub where the player manages the run between days. Its zones
 **War Chamber**:
 The Base zone for the troop, scouting the enemy army, and starting a battle.
 
+**Base Undo**:
+Reversing the latest completed Base action, including its Biomass and other consequences, one action at a time. History lasts for the current Base visit and ends at any paid reroll or the start of a Battle.
+
 **Nursery**:
 The Base zone where spores are grown on plots into Child units. It is not available at the start of a Run; it unlocks after the first Battle.
 *Avoid*: treating the Nursery as present for the whole Run

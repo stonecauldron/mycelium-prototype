@@ -23,10 +23,10 @@ var base_action_button: Button
 @onready var _reroll_cost_label: Label = %RerollCostLabel
 
 
-func setup(offers: Array[SealData], allow_reroll: bool = true) -> void:
+func setup(offers: Array[SealData], allow_reroll: bool = true, rerolls_this_pick: int = 0) -> void:
 	_offers = offers
 	_allow_reroll = allow_reroll
-	_rerolls_this_pick = 0
+	_rerolls_this_pick = rerolls_this_pick
 
 
 func _ready() -> void:
@@ -135,6 +135,9 @@ func _on_reroll_pressed() -> void:
 	Audio.play_ui_cue(Sfx.Cue.REROLL)
 	_rerolls_this_pick += 1
 	_offers = SealCatalog.roll_offers(_OFFER_COUNT, GameState.seals, null, _offers)
+	GameState.seal_choice_offers = _offers
+	GameState.seal_rerolls_this_pick = _rerolls_this_pick
+	GameState.base_undo.clear()
 	_selected = null
 	_build_cards()
 	_refresh_selection()

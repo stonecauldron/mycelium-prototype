@@ -10,6 +10,8 @@ const REMAINING_UNSET := -1
 
 @export var planted_spore: SporeData
 @export var days_grown: int = 0
+## Identifies successive grows so undoing and repeating a harvest keeps its outcome.
+@export var grow_number: int = 0
 ## Days left until READY. −1 = unset (empty or legacy plots that only set days_grown).
 @export var remaining_time: int = REMAINING_UNSET
 @export var applied_fertilizers: Array[FertilizerData] = []
@@ -194,6 +196,7 @@ func _discard_fungicide_markers() -> void:
 
 ## Snapshot Remaining Time from Growth Time, then replay stacked duration Fertilizers in order.
 func begin_planted_grow() -> void:
+	grow_number += 1
 	days_grown = 0
 	remaining_time = growth_time()
 	for fert in applied_fertilizers:

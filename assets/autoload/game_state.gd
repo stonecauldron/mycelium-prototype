@@ -14,6 +14,7 @@ var pupation: PupationData = PupationData.new()
 var biomass: BiomassData = BiomassData.new()
 var seals: SealsCollection = SealsCollection.new()
 var barks: BarkData = BarkData.new()
+var base_undo: BaseUndoHistory = BaseUndoHistory.new()
 var current_day: int = 0
 ## Seeds deterministic enemy compositions for this run (scout matches combat).
 var run_seed: int = 0
@@ -34,6 +35,9 @@ var show_plot_plant_hint: bool = true
 var debug_mode_active: bool = false
 ## Mandatory seal pick waiting when returning to base (after days 2 / 5 / 8).
 var pending_seal_choice: bool = false
+## Retain this pick's offers and paid reroll count when its choice is undone.
+var seal_choice_offers: Array[SealData] = []
+var seal_rerolls_this_pick: int = 0
 ## Favourite Child: first harvest of the current day already claimed.
 var favourite_child_used_today: bool = false
 ## True after reset_run(); false on a cold boot until New Run (or editor play-from-base).
@@ -42,6 +46,7 @@ var run_started: bool = false
 
 ## Debug (~): +100 biomass and unlock all base screens.
 func activate_debug_cheats() -> void:
+	base_undo.clear()
 	biomass.add(100)
 	troop.unlock_all_squad_slots()
 	debug_mode_active = true
@@ -58,6 +63,7 @@ func toggle_debug_mode() -> void:
 
 ## Debug: skip combat and apply one day of progression.
 func debug_advance_day() -> void:
+	base_undo.clear()
 	ensure_nursery_seeded()
 	current_day += 1
 	clear_upcoming_enemy_formation()
@@ -80,6 +86,8 @@ func begin_day() -> void:
 
 func maybe_queue_seal_choice() -> void:
 	if current_day > 0 and is_seal_choice_day(get_upcoming_day()):
+		seal_choice_offers.clear()
+		seal_rerolls_this_pick = 0
 		pending_seal_choice = true
 
 
@@ -432,6 +440,9 @@ func start_new_run() -> void:
 
 
 func reset_run() -> void:
+	base_undo.end_visit()
+	seal_choice_offers.clear()
+	seal_rerolls_this_pick = 0
 	troop.reset()
 	nursery.reset()
 	pupation.reset()

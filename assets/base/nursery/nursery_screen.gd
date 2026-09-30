@@ -61,11 +61,27 @@ func _ready() -> void:
 
 
 func on_screen_shown() -> void:
+	dismiss_hatch_results()
 	_hydrate_and_refresh()
 
 
 func on_screen_hidden() -> void:
+	dismiss_hatch_results()
+
+
+func dismiss_hatch_results() -> void:
 	_dismiss_hatch_toast(false)
+
+
+func refresh_after_undo() -> void:
+	dismiss_hatch_results()
+	_build_plot_tiles()
+	_rebuild_shop_cards()
+	_refresh()
+
+
+func _exit_tree() -> void:
+	dismiss_hatch_results()
 
 
 func _hydrate_and_refresh() -> void:
@@ -312,12 +328,14 @@ func _on_reroll_pressed() -> void:
 	if not spend.allowed:
 		ActionFeedback.show_rejection(_reroll_button, spend)
 		return
+	dismiss_hatch_results()
 	Analytics.biomass_sink("Shop", "Reroll", cost)
 	Audio.play_ui_cue(Sfx.Cue.REROLL)
 	for card in _shop_cards:
 		card.clear_reroll_preview()
 	GameState.nursery.reroll_unlocked_shop_offers()
 	GameState.nursery.advance_shop_reroll_cost()
+	GameState.base_undo.clear()
 	_rebuild_shop_cards()
 	_refresh_shop_affordability()
 	_refresh_base_hud()
@@ -333,7 +351,10 @@ func _on_shop_lock_toggled(card: ShopOfferCard) -> void:
 	var shop := GameState.nursery.spore_shop
 	if shop == null:
 		return
+	dismiss_hatch_results()
+	var undo := GameState.base_undo.capture("Lock Offer")
 	var locked := shop.toggle_locked(card.slot_index)
+	GameState.base_undo.record(undo)
 	card.set_locked(locked)
 	Audio.play_ui_cue(Sfx.Cue.LOCK if locked else Sfx.Cue.UNLOCK)
 
@@ -343,10 +364,13 @@ func _on_shop_offer_clicked(card: ShopOfferCard) -> void:
 
 
 func _on_stock_item_dropped(slot: DropSlot, data: Dictionary) -> void:
+	var undo := GameState.base_undo.capture("Move Stock")
 	var previous_item := GameState.nursery.stock.get_at(slot.slot_index)
 	if StockInventory.consume_stock_rearrange(
 		GameState.nursery.stock, data, slot.slot_index, _stock_drag_types
 	):
+		dismiss_hatch_results()
+		GameState.base_undo.record(undo)
 		if GameState.nursery.stock.get_at(slot.slot_index) != previous_item:
 			Audio.play_ui_cue(Sfx.Cue.MOVE)
 		_refresh()
@@ -361,9 +385,12 @@ func _on_stock_spore_clicked(card: SporeCard) -> void:
 	var plot_index := nursery.first_empty_plot_index()
 	if plot_index < 0:
 		return
+	dismiss_hatch_results()
+	var undo := GameState.base_undo.capture("Plant Spore")
 	if nursery.plant(plot_index, card.stock_index):
 		Audio.play_ui_cue(Sfx.Cue.PLANT)
 		GameState.show_plot_plant_hint = false
+		GameState.base_undo.record(undo)
 		_refresh()
 
 
@@ -371,8 +398,11 @@ func _on_shop_sell_dropped(_zone: ShopDropZone, data: Dictionary) -> void:
 	var drop_type := str(data.get("type", ""))
 	if drop_type != "spore" and drop_type != "fertilizer" and drop_type != "mutation":
 		return
+	dismiss_hatch_results()
 	var stock_index := int(data.get("stock_index", -1))
+	var undo := GameState.base_undo.capture("Sell Stock")
 	if GameState.try_sell_nursery_stock_item(stock_index):
+		GameState.base_undo.record(undo)
 		Audio.play_ui_cue(Sfx.Cue.SELL)
 		_refresh()
 		_refresh_base_hud()
@@ -384,13 +414,16 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 	var drop_type := str(data.get("type", ""))
 	if not GameState.nursery.can_add_stock_item():
 		return
+	dismiss_hatch_results()
 	if drop_type == "shop_fertilizer":
 		var fertilizer := data.get("fertilizer") as FertilizerData
 		if fertilizer == null:
 			return
+		var undo := GameState.base_undo.capture("Buy Fertilizer")
 		if GameState.try_buy_fertilizer(fertilizer, cost):
 			Audio.play_ui_cue(Sfx.Cue.PURCHASE)
 			_replace_bought_shop_slot(slot_index)
+			GameState.base_undo.record(undo)
 			_rebuild_shop_cards()
 			_refresh()
 			_refresh_base_hud()
@@ -399,9 +432,11 @@ func _try_buy_shop_payload(data: Dictionary) -> void:
 		var mutation := data.get("mutation") as MutationData
 		if mutation == null:
 			return
+		var undo := GameState.base_undo.capture("Buy Mutation")
 		if GameState.try_buy_mutation(mutation, cost):
 			Audio.play_ui_cue(Sfx.Cue.PURCHASE)
 			_replace_bought_shop_slot(slot_index)
+			GameState.base_undo.record(undo)
 			_rebuild_shop_cards()
 			_refresh()
 			_refresh_base_hud()
@@ -418,9 +453,12 @@ func _on_plant_pressed(tile: PlotTile) -> void:
 		return
 	if not GameState.nursery.is_plot_unlocked(tile.plot_index):
 		return
+	dismiss_hatch_results()
+	var undo := GameState.base_undo.capture("Plant Spore")
 	if GameState.try_plant_fresh_common(tile.plot_index):
 		Audio.play_ui_cue(Sfx.Cue.PLANT)
 		GameState.show_plot_plant_hint = false
+		GameState.base_undo.record(undo)
 		_refresh()
 		_refresh_base_hud()
 
@@ -444,6 +482,7 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 		NurseryPlotData.State.GROWING:
 			pass
 		NurseryPlotData.State.READY:
+			var undo := GameState.base_undo.capture("Harvest")
 			if not GameState.troop.is_seeded():
 				var empty_bench: Array[RosterUnitData] = []
 				GameState.troop.seed_if_empty(empty_bench)
@@ -461,6 +500,7 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 			if kept.is_empty():
 				return
 			GameState.show_plot_harvest_hint = false
+			GameState.base_undo.record(undo)
 			Audio.play_ui_cue(Sfx.Cue.HARVEST)
 			var toast_anchor := _control_canvas_rect(tile)
 			_refresh()
@@ -608,32 +648,42 @@ func _dismiss_hatch_toast(animated: bool) -> void:
 func _on_plot_item_dropped(tile: PlotTile, data: Dictionary) -> void:
 	if tile.is_unlockable:
 		return
+	dismiss_hatch_results()
 	var drop_type := str(data.get("type", ""))
 	match drop_type:
 		"spore":
 			var stock_index := int(data.get("stock_index", 0))
+			var undo := GameState.base_undo.capture("Plant Spore")
 			if GameState.nursery.plant(tile.plot_index, stock_index):
 				Audio.play_ui_cue(Sfx.Cue.PLANT)
 				GameState.show_plot_plant_hint = false
+				GameState.base_undo.record(undo)
 				_refresh()
 		"shop_fertilizer":
 			_apply_fertilizer_from_shop(tile.plot_index, data)
 		"fertilizer":
 			var fert_index := int(data.get("stock_index", 0))
+			var undo := GameState.base_undo.capture("Apply Fertilizer")
 			if GameState.nursery.apply_fertilizer_from_stock(tile.plot_index, fert_index):
+				GameState.base_undo.record(undo)
 				Audio.play_ui_cue(Sfx.Cue.FERTILIZE)
 				_refresh()
 		"shop_mutation":
 			_apply_mutation_from_shop(tile.plot_index, data)
 		"mutation":
 			var mut_index := int(data.get("stock_index", 0))
+			var undo := GameState.base_undo.capture("Apply Mutation")
 			if GameState.nursery.apply_mutation_from_stock(tile.plot_index, mut_index):
+				GameState.base_undo.record(undo)
 				Audio.play_ui_cue(Sfx.Cue.MUTATE)
 				_refresh()
 
 
 func _try_unlock_plot() -> void:
+	dismiss_hatch_results()
+	var undo := GameState.base_undo.capture("Unlock Plot")
 	if GameState.try_unlock_plot():
+		GameState.base_undo.record(undo)
 		Audio.play_ui_cue(Sfx.Cue.UNLOCK)
 		_build_plot_tiles()
 		_refresh()
@@ -646,6 +696,7 @@ func _apply_fertilizer_from_shop(plot_index: int, data: Dictionary) -> void:
 	var slot_index := int(data.get("slot_index", -1))
 	if fertilizer == null:
 		return
+	var undo := GameState.base_undo.capture("Apply Fertilizer")
 	GameState.ensure_nursery_seeded()
 	if not GameState.biomass.try_spend(cost):
 		return
@@ -655,6 +706,7 @@ func _apply_fertilizer_from_shop(plot_index: int, data: Dictionary) -> void:
 	Analytics.biomass_sink("Shop", Analytics.resource_slug(fertilizer), cost)
 	Audio.play_ui_cue(Sfx.Cue.FERTILIZE)
 	_replace_bought_shop_slot(slot_index)
+	GameState.base_undo.record(undo)
 	_rebuild_shop_cards()
 	_refresh()
 	_refresh_base_hud()
@@ -666,6 +718,7 @@ func _apply_mutation_from_shop(plot_index: int, data: Dictionary) -> void:
 	var slot_index := int(data.get("slot_index", -1))
 	if mutation == null:
 		return
+	var undo := GameState.base_undo.capture("Apply Mutation")
 	GameState.ensure_nursery_seeded()
 	if not GameState.biomass.try_spend(cost):
 		return
@@ -675,6 +728,7 @@ func _apply_mutation_from_shop(plot_index: int, data: Dictionary) -> void:
 	Analytics.biomass_sink("Shop", Analytics.resource_slug(mutation), cost)
 	Audio.play_ui_cue(Sfx.Cue.MUTATE)
 	_replace_bought_shop_slot(slot_index)
+	GameState.base_undo.record(undo)
 	_rebuild_shop_cards()
 	_refresh()
 	_refresh_base_hud()

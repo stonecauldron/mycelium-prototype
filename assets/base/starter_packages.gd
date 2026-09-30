@@ -77,14 +77,16 @@ static func preview_unit(package_id: StringName) -> RosterUnitData:
 	return _make_evolved(names[0], def["evolved_schools"])
 
 
-static func build_units(package_id: StringName) -> Array[RosterUnitData]:
+static func build_units(
+	package_id: StringName, rng: RandomNumberGenerator = null
+) -> Array[RosterUnitData]:
 	var def := def_for(package_id)
 	var units: Array[RosterUnitData] = []
 	if def.is_empty():
 		return units
-	var names := UnitNames.pick_unique(2)
-	var evolved := _make_evolved(names[0], def["evolved_schools"])
-	var child := _make_untrained_child(names[1])
+	var names := UnitNames.pick_unique(2, rng)
+	var evolved := _make_evolved(names[0], def["evolved_schools"], rng)
+	var child := _make_untrained_child(names[1], rng)
 	if evolved != null:
 		units.append(evolved)
 	if child != null:
@@ -112,8 +114,10 @@ static func _range_sort_key(unit: RosterUnitData) -> int:
 			return 99
 
 
-static func _make_evolved(unit_name: String, schools: Array) -> RosterUnitData:
-	var unit := _make_blank(unit_name)
+static func _make_evolved(
+	unit_name: String, schools: Array, rng: RandomNumberGenerator = null
+) -> RosterUnitData:
+	var unit := _make_blank(unit_name, rng)
 	if unit == null:
 		return null
 	for school in schools:
@@ -127,16 +131,18 @@ static func _make_evolved(unit_name: String, schools: Array) -> RosterUnitData:
 	return unit
 
 
-static func _make_untrained_child(unit_name: String) -> RosterUnitData:
-	var unit := _make_blank(unit_name)
+static func _make_untrained_child(
+	unit_name: String, rng: RandomNumberGenerator = null
+) -> RosterUnitData:
+	var unit := _make_blank(unit_name, rng)
 	if unit == null:
 		return null
 	unit.sync_weapon_from_trainings()
 	return unit
 
 
-static func _make_blank(unit_name: String) -> RosterUnitData:
-	var stats := UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON)
+static func _make_blank(unit_name: String, rng: RandomNumberGenerator = null) -> RosterUnitData:
+	var stats := UnitStatsData.create_for_tier(UnitStatsData.PowerTier.COMMON, rng)
 	return RosterUnitData.create(
 		unit_name,
 		stats,

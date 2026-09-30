@@ -183,6 +183,7 @@ func _on_scout_reroll_pressed() -> void:
 		day,
 		GameState.upcoming_enemy_formation
 	)
+	GameState.base_undo.clear()
 	refresh()
 	_refresh_base_hud()
 

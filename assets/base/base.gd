@@ -19,6 +19,7 @@ const _READY_BADGE_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI 
 @onready var _biomass_chip: BiomassChip = %BiomassChip
 @onready var _debug_advance_day_button: Button = %DebugAdvanceDayButton
 @onready var _start_combat_button: Button = %StartCombatButton
+@onready var _undo_button: Button = %UndoButton
 @onready var _nursery_zone: Node2D = %NurseryZone
 @onready var _colony_zone: Node2D = %ColonyZone
 @onready var _nursery_screen: BaseScreen = %NurseryScreen
@@ -39,6 +40,12 @@ func _ready() -> void:
 	Audio.play_base_music()
 	if not GameState.run_started:
 		GameState.reset_run()
+	GameState.base_undo.begin_visit()
+	GameState.base_undo.changed.connect(_refresh_undo_button)
+	GameState.base_undo.restored.connect(_on_base_state_restored)
+	_undo_button.pressed.connect(_on_undo_pressed)
+	BiomassPreview.bind(_undo_button, _undo_biomass_preview)
+	_refresh_undo_button()
 	_camera.make_current()
 	_wire_progress_tracks()
 	GameState.nursery.changed.connect(_refresh_nursery_readiness)
@@ -59,6 +66,70 @@ func _ready() -> void:
 	Analytics.maybe_start_day()
 
 
+func _exit_tree() -> void:
+	GameState.base_undo.end_visit()
+
+
+func _process(_delta: float) -> void:
+	# Drag payloads hold live references; wait for the drag to end before restoring.
+	_undo_button.disabled = not _can_undo()
+
+
+func _can_undo() -> bool:
+	return (
+		GameState.base_undo.can_undo()
+		and not get_tree().paused
+		and not get_viewport().gui_is_dragging()
+		and not SceneTransition.is_transitioning()
+	)
+
+
+func _shortcut_input(event: InputEvent) -> void:
+	if not event is InputEventKey:
+		return
+	var key := event as InputEventKey
+	if not key.pressed or key.echo or key.keycode != KEY_Z:
+		return
+	if not key.is_command_or_control_pressed() or key.shift_pressed or key.alt_pressed:
+		return
+	var focused := get_viewport().gui_get_focus_owner()
+	if focused is LineEdit or focused is TextEdit:
+		return
+	if _can_undo():
+		_on_undo_pressed()
+		get_viewport().set_input_as_handled()
+
+
+func _on_undo_pressed() -> void:
+	if _can_undo():
+		GameState.base_undo.undo()
+
+
+func _refresh_undo_button() -> void:
+	if _undo_button == null:
+		return
+	var platform_key := InputEventKey.new()
+	platform_key.command_or_control_autoremap = true
+	var shortcut := "⌘Z" if platform_key.meta_pressed else "Ctrl+Z"
+	_undo_button.disabled = not _can_undo()
+	var action := GameState.base_undo.next_action_name()
+	_undo_button.tooltip_text = "Undo %s (%s)" % [action, shortcut] if not action.is_empty() else "Nothing to undo. Rerolls and Battles clear undo history."
+
+
+func _undo_biomass_preview() -> Variant:
+	if not _can_undo():
+		return null
+	var delta := GameState.base_undo.next_biomass_delta()
+	return delta if delta != 0 else null
+
+
+func _on_base_state_restored() -> void:
+	ActionFeedback.dismiss()
+	_colony_screen.refresh_after_undo()
+	(_nursery_screen as NurseryScreen).refresh_after_undo()
+	_refresh_hud()
+
+
 func _on_debug_mode_changed(is_active: bool) -> void:
 	_debug_advance_day_button.visible = is_active
 	_build_tab_bar()
@@ -73,6 +144,7 @@ func _on_debug_mode_changed(is_active: bool) -> void:
 
 
 func _on_debug_advance_day_pressed() -> void:
+	(_nursery_screen as NurseryScreen).dismiss_hatch_results()
 	GameState.debug_advance_day()
 	_build_tab_bar()
 	_update_tab_visuals()
@@ -83,6 +155,7 @@ func _on_debug_advance_day_pressed() -> void:
 
 
 func _on_start_combat_pressed() -> void:
+	(_nursery_screen as NurseryScreen).dismiss_hatch_results()
 	if GameState.pending_seal_choice:
 		_colony_screen.toggle_seal_choice()
 		return

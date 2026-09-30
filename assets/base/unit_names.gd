@@ -46,21 +46,26 @@ const NAMES: Array[String] = [
 ]
 
 
-static func pick() -> String:
+static func pick(rng: RandomNumberGenerator = null) -> String:
 	if NAMES.is_empty():
 		return "Unit"
+	if rng != null:
+		return NAMES[rng.randi_range(0, NAMES.size() - 1)]
 	return NAMES[randi() % NAMES.size()]
 
 
-static func pick_unique(count: int) -> Array[String]:
+static func pick_unique(count: int, rng: RandomNumberGenerator = null) -> Array[String]:
 	var result: Array[String] = []
 	if count <= 0:
 		return result
 	var pool: Array[String] = NAMES.duplicate()
-	pool.shuffle()
+	if rng == null:
+		pool.shuffle()
 	for i in count:
 		if pool.is_empty():
-			result.append(pick())
+			result.append(pick(rng))
+		elif rng != null:
+			result.append(pool.pop_at(rng.randi_range(0, pool.size() - 1)))
 		else:
 			result.append(pool.pop_back())
 	return result

@@ -9,8 +9,17 @@
 [ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
 [ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="15_run_menu"]
 [ext_resource type="PackedScene" path="res://assets/vfx/ambient_motes/ambient_motes.tscn" id="16_ambient_motes"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/undo.svg" id="17_undo"]
+[ext_resource type="Texture2D" uid="uid://pi1cdc0aaat0" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 6.png" id="18_undo_paper"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jfa4i"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_undo"]
+content_margin_left = 14.0
+content_margin_top = 14.0
+content_margin_right = 14.0
+content_margin_bottom = 14.0
+texture = ExtResource("18_undo_paper")
 
 [node name="Base" type="Node2D" unique_id=65120356]
 script = ExtResource("1_base")
@@ -189,3 +198,43 @@ disabled = true
 text = "Start Battle"
 
 [node name="RunMenu" parent="." unique_id=992448351 instance=ExtResource("15_run_menu")]
+
+[node name="UndoLayer" type="CanvasLayer" parent="."]
+layer = 11
+
+[node name="UndoRoot" type="Control" parent="UndoLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_theme")
+
+[node name="UndoButton" type="Button" parent="UndoLayer/UndoRoot"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -93.0
+offset_right = 88.0
+offset_bottom = -29.0
+grow_vertical = 0
+focus_mode = 0
+theme_override_colors/icon_focus_color = Color(1.15, 1.15, 1.15, 1)
+theme_override_colors/icon_pressed_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/icon_hover_color = Color(1.15, 1.15, 1.15, 1)
+theme_override_colors/icon_disabled_color = Color(1, 1, 1, 0.35)
+theme_override_styles/normal = SubResource("StyleBox_undo")
+theme_override_styles/pressed = SubResource("StyleBox_undo")
+theme_override_styles/hover = SubResource("StyleBox_undo")
+theme_override_styles/disabled = SubResource("StyleBox_undo")
+theme_override_styles/focus = SubResource("StyleBox_undo")
+disabled = true
+icon = ExtResource("17_undo")
+icon_alignment = 1
+expand_icon = true

@@ -70,6 +70,34 @@ func on_screen_hidden() -> void:
 		focused.release_focus()
 
 
+func refresh_after_undo() -> void:
+	# Remove stale confirmations before rebuilding; their exit callbacks must not
+	# close or reopen a replacement chooser on the next frame.
+	var dialogs := [_pupation_dialog, _compost_dialog, _starter_dialog, _seal_dialog]
+	var closed_callbacks := [
+		_on_pupation_dialog_closed, _on_compost_dialog_closed,
+		_on_starter_dialog_closed, _on_seal_dialog_closed,
+	]
+	for i in dialogs.size():
+		var dialog := dialogs[i] as Control
+		if not is_instance_valid(dialog):
+			continue
+		var closed: Callable = closed_callbacks[i].bind(dialog)
+		if dialog.tree_exited.is_connected(closed):
+			dialog.tree_exited.disconnect(closed)
+		if dialog.visibility_changed.is_connected(_notify_start_combat_state):
+			dialog.visibility_changed.disconnect(_notify_start_combat_state)
+		dialog.hide()
+		dialog.queue_free()
+	_pupation_dialog = null
+	_compost_dialog = null
+	_starter_dialog = null
+	_seal_dialog = null
+	_pending_pupation_unit = null
+	_hydrate_from_troop_data()
+	on_screen_shown()
+
+
 ## Starter then seal picks — safe to call from base even when another tab is active.
 func ensure_pending_modals() -> void:
 	_ensure_starter_choice()
@@ -193,7 +221,7 @@ func _ensure_starter_choice() -> void:
 	var dialog: StarterChoiceDialog = _STARTER_CHOICE_SCENE.instantiate()
 	_starter_dialog = dialog
 	dialog.package_chosen.connect(_on_starter_package_chosen)
-	dialog.tree_exited.connect(_on_starter_dialog_closed)
+	dialog.tree_exited.connect(_on_starter_dialog_closed.bind(dialog))
 	# Parent into HudRoot so the modal stacks above the biomass chip / top bar.
 	var hud := _hud_root()
 	if hud != null:
@@ -212,8 +240,12 @@ func _hud_root() -> Control:
 
 func _on_starter_package_chosen(package_id: StringName) -> void:
 	_starter_dialog = null
-	var units := StarterPackages.build_units(package_id)
+	var snapshot := GameState.base_undo.capture("Choose Starter")
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("%d:starter:%s" % [GameState.run_seed, package_id])
+	var units := StarterPackages.build_units(package_id, rng)
 	GameState.troop.seed_if_empty(units)
+	GameState.base_undo.record(snapshot)
 	Audio.play_ui_cue(Sfx.Cue.SEAL)
 	bench = GameState.troop.bench
 	squad = GameState.troop.squad
@@ -222,7 +254,9 @@ func _on_starter_package_chosen(package_id: StringName) -> void:
 	Analytics.maybe_start_day()
 
 
-func _on_starter_dialog_closed() -> void:
+func _on_starter_dialog_closed(dialog: StarterChoiceDialog) -> void:
+	if _starter_dialog != null and _starter_dialog != dialog:
+		return
 	_starter_dialog = null
 	if not GameState.troop.is_seeded():
 		# Recreate if closed without a choice (should not happen for blocking dialog).
@@ -261,17 +295,19 @@ func _ensure_seal_choice() -> void:
 		return
 	if _seal_dialog != null and is_instance_valid(_seal_dialog):
 		return
-	var offers := SealCatalog.roll_offers(3, GameState.seals)
+	if GameState.seal_choice_offers.is_empty():
+		GameState.seal_choice_offers = SealCatalog.roll_offers(3, GameState.seals)
+	var offers := GameState.seal_choice_offers
 	if offers.is_empty():
 		GameState.clear_pending_seal_choice()
 		_sync_all_slots()
 		return
 	var dialog: SealChoiceDialog = _SEAL_CHOICE_SCENE.instantiate()
 	# Run-start pick is day 0; mid-run picks (after days 2 / 5 / 8) may reroll.
-	dialog.setup(offers, GameState.current_day > 0)
+	dialog.setup(offers, GameState.current_day > 0, GameState.seal_rerolls_this_pick)
 	_seal_dialog = dialog
 	dialog.seal_chosen.connect(_on_seal_chosen)
-	dialog.tree_exited.connect(_on_seal_dialog_closed)
+	dialog.tree_exited.connect(_on_seal_dialog_closed.bind(dialog))
 	dialog.visibility_changed.connect(_notify_start_combat_state)
 	var hud := _hud_root()
 	if hud != null:
@@ -305,17 +341,20 @@ func toggle_seal_choice() -> void:
 
 func _on_seal_chosen(seal: SealData) -> void:
 	_seal_dialog = null
+	var snapshot := GameState.base_undo.capture("Choose Seal")
 	if GameState.try_add_seal(seal):
 		Audio.play_ui_cue(Sfx.Cue.SEAL)
 	GameState.clear_pending_seal_choice()
+	GameState.base_undo.record(snapshot)
 	_refresh_flag_seals()
 	_sync_all_slots()
 	_notify_start_combat_state()
 	_refresh_base_hud()
 
 
-func _on_seal_dialog_closed() -> void:
-	_seal_dialog = null
+func _on_seal_dialog_closed(dialog: SealChoiceDialog) -> void:
+	if _seal_dialog == dialog:
+		_seal_dialog = null
 
 
 func _row(source: String) -> Array:
@@ -384,8 +423,10 @@ func _move_unit(
 		if from_index < 0:
 			return
 	var displaced: RosterUnitData = to_row[to_index]
+	var snapshot := GameState.base_undo.capture("Move Unit")
 	to_row[to_index] = unit
 	from_row[from_index] = displaced
+	GameState.base_undo.record(snapshot)
 	Audio.play_ui_cue(Sfx.Cue.MOVE)
 	_sync_all_slots()
 
@@ -408,7 +449,9 @@ func _bench_drop(_at_position: Vector2, data: Variant) -> void:
 
 
 func _on_squad_unlock_pressed(_slot: DropSlot) -> void:
+	var snapshot := GameState.base_undo.capture("Unlock Squad Slot")
 	if GameState.try_unlock_squad_slot():
+		GameState.base_undo.record(snapshot)
 		Audio.play_ui_cue(Sfx.Cue.UNLOCK)
 		_build_squad_ui()
 		_sync_all_slots()
@@ -466,7 +509,7 @@ func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
 	_pupation_dialog = dialog
 	_pending_pupation_unit = unit
 	dialog.confirmed.connect(_on_pupation_confirmed)
-	dialog.tree_exited.connect(_on_pupation_dialog_closed)
+	dialog.tree_exited.connect(_on_pupation_dialog_closed.bind(dialog))
 	var hud := _hud_root()
 	if hud != null:
 		hud.add_child(dialog)
@@ -481,7 +524,7 @@ func _open_compost_confirm(unit: RosterUnitData) -> void:
 	var dialog: CompostConfirmDialog = _COMPOST_CONFIRM_SCENE.instantiate()
 	_compost_dialog = dialog
 	dialog.confirmed.connect(_on_compost_confirmed)
-	dialog.tree_exited.connect(_on_compost_dialog_closed)
+	dialog.tree_exited.connect(_on_compost_dialog_closed.bind(dialog))
 	var hud := _hud_root()
 	if hud != null:
 		hud.add_child(dialog)
@@ -494,7 +537,9 @@ func _open_compost_confirm(unit: RosterUnitData) -> void:
 func _on_pupation_confirmed(unit: RosterUnitData, school: int) -> void:
 	_pupation_dialog = null
 	_pending_pupation_unit = null
+	var snapshot := GameState.base_undo.capture("Train" if unit.is_adult_stage() else "Evolve")
 	if GameState.try_cocoon_for_pupation(unit, school):
+		GameState.base_undo.record(snapshot)
 		Audio.play_ui_cue(Sfx.Cue.TRAIN)
 	_sync_all_slots()
 	_refresh_base_hud()
@@ -502,21 +547,26 @@ func _on_pupation_confirmed(unit: RosterUnitData, school: int) -> void:
 
 func _on_compost_confirmed(unit: RosterUnitData) -> void:
 	_compost_dialog = null
+	var snapshot := GameState.base_undo.capture("Compost")
 	if GameState.try_compost_unit(unit):
+		GameState.base_undo.record(snapshot)
 		Audio.play_ui_cue(Sfx.Cue.COMPOST)
 		_sync_all_slots()
 		_refresh_base_hud()
 
 
-func _on_pupation_dialog_closed() -> void:
+func _on_pupation_dialog_closed(dialog: PupationConfirmDialog) -> void:
+	if _pupation_dialog != dialog:
+		return
 	_pupation_dialog = null
 	if _pending_pupation_unit != null:
 		_pending_pupation_unit = null
 		call_deferred("_sync_all_slots")
 
 
-func _on_compost_dialog_closed() -> void:
-	_compost_dialog = null
+func _on_compost_dialog_closed(dialog: CompostConfirmDialog) -> void:
+	if _compost_dialog == dialog:
+		_compost_dialog = null
 
 
 func _refresh_base_hud() -> void:
@@ -562,6 +612,7 @@ func can_start_combat() -> bool:
 func start_combat() -> void:
 	if not can_start_combat():
 		return
+	GameState.base_undo.end_visit()
 	BattleLaunch.set_enemy_roster(_make_default_enemy_roster())
 	SceneTransition.change_scene("res://assets/combat/combat_stage/combat_stage.tscn")
 

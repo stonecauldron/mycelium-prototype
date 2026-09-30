@@ -217,3 +217,4 @@ func _resource(flow: String, item_type: String, item_id: String, amount: int) ->
 	if id.is_empty():
 		return
 	ga.addResourceEvent(flow, CURRENCY, float(amount), item_type, id, {})
+	GameState.base_undo.note_resource_event(flow, item_type, id, amount)

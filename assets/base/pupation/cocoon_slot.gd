@@ -49,7 +49,7 @@ func _training_drag_decision(data: Variant) -> ActionDecision:
 	var unit := _dragged_troop_unit(data)
 	if unit == null:
 		return null
-	return unit.check_training_eligibility()
+	return unit.check_training_eligibility(school)
 
 
 func _dragged_troop_unit(data: Variant) -> RosterUnitData:

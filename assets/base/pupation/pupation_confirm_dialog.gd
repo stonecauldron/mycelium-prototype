@@ -110,9 +110,19 @@ func _biomass_preview_delta() -> Variant:
 
 func _refresh_affordability() -> void:
 	var can_afford := GameState.biomass.can_afford(WeaponSchool.COCOON_COST)
-	_confirm_button.text = "%s %s" % [_action_verb(), BiomassDisplay.number(WeaponSchool.COCOON_COST)]
-	_confirm_button.disabled = not can_afford
-	_confirm_button.modulate = Color.WHITE if can_afford else Color(0.55, 0.55, 0.55, 1)
+	var unchanged := WeaponSchool.is_unchanged_training(_unit, _school)
+	_confirm_button.text = (
+		"No changes" if unchanged
+		else "%s %s" % [_action_verb(), BiomassDisplay.number(WeaponSchool.COCOON_COST)]
+	)
+	_confirm_button.icon = null if unchanged else _BIOMASS_ICON
+	_confirm_button.disabled = unchanged or not can_afford
+	if unchanged:
+		_confirm_button.modulate = Color.WHITE
+		_confirm_button.add_theme_color_override("font_disabled_color", _confirm_button.get_theme_color("font_color"))
+	else:
+		_confirm_button.remove_theme_color_override("font_disabled_color")
+		_confirm_button.modulate = Color.WHITE if can_afford else Color(0.55, 0.55, 0.55, 1)
 
 
 func _refresh_duration_chip() -> void:
@@ -123,6 +133,7 @@ func _refresh_duration_chip() -> void:
 	_duration_chip.visible = days > 0
 	var suffix := "Instant" if days <= 0 else WeaponSchool.day_word(days)
 	_duration_suffix.text = suffix
+	_duration_suffix.visible = not WeaponSchool.is_unchanged_training(_unit, _school)
 
 
 func _fill_current_side() -> void:
@@ -157,7 +168,7 @@ func _fill_result_side() -> void:
 		_mount_comparison_portrait(_preview_unit, _right_portrait)
 
 	_right_stage.text = WeaponSchool.stage_display_name(next_stage)
-	_right_weapon_row.set_unit(_preview_unit, _unit)
+	_right_weapon_row.set_unit(_preview_unit, not WeaponSchool.is_unchanged_training(_unit, _school))
 	_fill_weapon_tags(_left_weapon_tags, _unit.weapon, right_weapon, -1)
 	_fill_weapon_tags(_right_weapon_tags, right_weapon, _unit.weapon, 1)
 	_set_combat_chips(_preview_unit, _right_atk_chip, _right_hp_chip, _preview_troop)
@@ -378,7 +389,7 @@ func _on_cancel_pressed() -> void:
 
 
 func _on_confirm_pressed() -> void:
-	if _unit == null:
+	if not GameState.can_cocoon_for_pupation(_unit, _school):
 		return
 	if not GameState.biomass.can_afford(WeaponSchool.COCOON_COST):
 		return

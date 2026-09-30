@@ -172,7 +172,7 @@ func _troop_contains(unit: RosterUnitData) -> bool:
 func can_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
 	if unit == null or school < 0 or school >= WeaponSchool.COUNT:
 		return false
-	if not unit.can_pupate():
+	if not unit.check_training_eligibility(school).allowed:
 		return false
 	if pupation.is_school_filled(school):
 		return false

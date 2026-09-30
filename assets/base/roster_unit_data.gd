@@ -188,9 +188,11 @@ func can_pupate() -> bool:
 	return check_training_eligibility().allowed
 
 
-func check_training_eligibility() -> ActionDecision:
+func check_training_eligibility(school: int = -1) -> ActionDecision:
 	if enemy_unit_data != null or (life_stage_id != STAGE_JUVENILE and not is_adult_stage()):
 		return ActionDecision.reject(ActionReasons.UNIT_CANNOT_TRAIN)
+	if WeaponSchool.is_unchanged_training(self, school):
+		return ActionDecision.reject(ActionReasons.TRAINING_UNCHANGED)
 	return ActionDecision.accept()
 
 
@@ -204,7 +206,7 @@ func sync_weapon_from_trainings() -> void:
 ## Apply one school training from pupation emerge. Returns false if illegal.
 ## At 2 trainings, evicts oldest (weapon list only; prior school stats stay).
 func apply_pupation_training(school: int) -> bool:
-	if not can_pupate():
+	if not check_training_eligibility(school).allowed:
 		return false
 	if school < 0 or school >= WeaponSchool.COUNT:
 		return false

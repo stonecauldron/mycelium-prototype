@@ -16,30 +16,26 @@ func _init() -> void:
 	alignment = BoxContainer.ALIGNMENT_BEGIN
 
 
-func setup(unit: RosterUnitData, previous_unit: RosterUnitData = null) -> void:
+func setup(unit: RosterUnitData, highlight_newest_training: bool = false) -> void:
 	for child in get_children():
 		remove_child(child)
 		child.queue_free()
+	var training_count := unit.weapon_trainings.size() if unit != null else 0
 	for i in range(2):
 		if i > 0:
 			add_child(_make_separator("+"))
 		var weapon: WeaponData = null
-		if unit != null and i < unit.weapon_trainings.size():
+		if i < training_count:
 			weapon = WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(unit.weapon_trainings[i]))
-		var changed := previous_unit != null and _school_at(unit, i) != _school_at(previous_unit, i)
-		var slot := _make_slot(weapon, changed)
+		# Stored order is oldest to newest; moving a retained Training is not a new one.
+		var is_new_training := highlight_newest_training and i == training_count - 1
+		var slot := _make_slot(weapon, is_new_training)
 		slot.name = "TrainingSlot%d" % (i + 1)
 		add_child(slot)
 	add_child(_make_separator("="))
 	var result := _make_icon(unit.weapon if unit != null else null)
 	result.name = "ResultWeapon"
 	add_child(result)
-
-
-func _school_at(unit: RosterUnitData, index: int) -> int:
-	if unit == null or index >= unit.weapon_trainings.size():
-		return -1
-	return unit.weapon_trainings[index]
 
 
 func _make_slot(weapon: WeaponData, changed: bool) -> PanelContainer:

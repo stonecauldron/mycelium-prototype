@@ -14,9 +14,9 @@ func _ready() -> void:
 	_equation.alignment = BoxContainer.ALIGNMENT_CENTER
 
 
-func set_unit(unit: RosterUnitData, previous_unit: RosterUnitData = null) -> void:
+func set_unit(unit: RosterUnitData, highlight_newest_training: bool = false) -> void:
 	weapon = unit.weapon if unit != null else null
-	_equation.setup(unit, previous_unit)
+	_equation.setup(unit, highlight_newest_training)
 	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
 	tooltip_text = weapon.display_name if weapon != null else ""
 

@@ -172,6 +172,15 @@ static func trainings_after_training(trainings: Array, new_school: int) -> Array
 	return next
 
 
+## Children still evolve; Adults need a change to their ordered Trainings.
+static func is_unchanged_training(unit: RosterUnitData, school: int) -> bool:
+	if unit == null or unit.enemy_unit_data != null or not unit.is_adult_stage():
+		return false
+	if school < 0 or school >= COUNT:
+		return false
+	return trainings_after_training(unit.weapon_trainings, school) == unit.weapon_trainings
+
+
 static func preview_weapon_after_training(
 	trainings: Array,
 	new_school: int

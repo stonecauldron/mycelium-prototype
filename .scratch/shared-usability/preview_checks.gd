@@ -41,12 +41,12 @@ static func run(host: Control) -> int:
 		"Sword + Sword → Great Sword", "Ready immediately · Stats unchanged", [1], [], ["AOE"])
 	var dual := make_unit([WeaponSchool.Id.SWORD, WeaponSchool.Id.BOW], true)
 	failures += await _training_dialog(host, dual, WeaponSchool.Id.MACE,
-		"Bow + Mace → Great Horn", "Ready immediately · Stats unchanged", [0, 1],
+		"Bow + Mace → Great Horn", "Ready immediately · Stats unchanged", [1],
 		["Ranged", "Scaling"], ["Mid Range", "Scaling", "Blunt"])
 	failures += _check(WeaponSchool.training_replacement_text(dual, WeaponSchool.Id.MACE)
 		== "Replaces oldest Training: Sword. Keeps Bow and adds Mace.", "Oldest replacement named")
 	failures += await _training_dialog(host, dual, WeaponSchool.Id.SWORD,
-		"Bow + Sword → Crossbow", "Ready immediately · Stats unchanged", [0, 1], [], [])
+		"Bow + Sword → Crossbow", "Ready immediately · Stats unchanged", [1], [], [])
 	failures += _check(WeaponSchool.training_replacement_text(dual, WeaponSchool.Id.SWORD)
 		== "Trains Sword again, replacing its oldest Training. Keeps Bow.", "Oldest renewal named")
 
@@ -61,9 +61,10 @@ static func run(host: Control) -> int:
 	descendant.pending_adult_stat_bonus = 7
 	failures += await _training_dialog(host, descendant, WeaponSchool.Id.MACE,
 		"Bow + Mace → Great Horn",
-		"Returns after the next Battle · Becomes an Adult", [0, 1],
+		"Returns after the next Battle · Becomes an Adult", [1],
 		["Ranged", "Scaling"], ["Mid Range", "Scaling", "Blunt"])
 	failures += await _training_equation_reuse(host)
+	failures += await training_chronology_checks(host)
 	for school in WeaponSchool.DISPLAY_ORDER:
 		var card: SchoolTrainingDetailCard = SCHOOL_SCENE.instantiate()
 		card.setup(school)
@@ -333,7 +334,7 @@ static func _training_equation_reuse(host: Control) -> int:
 		make_unit([WeaponSchool.Id.BOW, WeaponSchool.Id.BOW], true),
 	]
 	# Bow Training also removes AOE from Great Sword and Blunt from Warhammer.
-	var changed_slots: Array[Array] = [[0], [0], [1], [1], [0, 1], []]
+	var changed_slots: Array[Array] = [[1], [0], [1], [1], [1], []]
 	var before_changed_tags: Array[Array] = [
 		["Scaling"], ["Melee", "Scaling"], [], ["Melee", "AOE"], ["Melee", "Blunt"], [],
 	]
@@ -368,6 +369,142 @@ static func _training_equation_reuse(host: Control) -> int:
 			await _snapshot(host, "/tmp/usability-training-removed-blunt.png")
 	dialog.queue_free()
 	await host.get_tree().process_frame
+	return failures
+
+
+static func training_chronology_checks(host: Control) -> int:
+	var failures := 0
+	# Each case states the expected chronology independently of recipe resolution.
+	var sword := WeaponSchool.Id.SWORD
+	var bow := WeaponSchool.Id.BOW
+	var mace := WeaponSchool.Id.MACE
+	var before: Array[Array] = [[], [sword], [sword, bow], [bow, sword], [sword, bow], [bow, bow]]
+	var schools: Array[int] = [sword, bow, mace, mace, bow, mace]
+	var after: Array[Array] = [[sword], [sword, bow], [bow, mace], [sword, mace], [bow, bow], [bow, mace]]
+	var highlights: Array[Array] = [[0], [1], [1], [1], [1], [1]]
+	var dialog: PupationConfirmDialog = TRAINING_SCENE.instantiate()
+	var card: UnitDetailCard = preload("res://assets/base/unit_detail_card/unit_detail_card.tscn").instantiate()
+	host.add_child(dialog)
+	host.add_child(card)
+	card.hide()
+	for index in before.size():
+		var trainings: Array[int] = []
+		trainings.assign(before[index])
+		var source := make_unit(trainings, true)
+		var actual := source.duplicate(true) as RosterUnitData
+		failures += _check(actual.apply_pupation_training(schools[index]), "Chronological Training accepted")
+		failures += _check(actual.weapon_trainings == after[index], "Training action preserves chronological order")
+		dialog.setup(source, schools[index])
+		card.setup(actual, false, false)
+		for frame in 4:
+			await host.get_tree().process_frame
+		var changed: Array[int] = []
+		changed.assign(highlights[index])
+		var left := dialog.get_node("%LeftWeaponRow") as PupationWeaponHoverRow
+		var right := dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow
+		failures += _check_weapon_equation(left, source, "Chronological before %d" % index)
+		failures += _check_weapon_equation(right, actual, "Chronological result %d" % index, changed)
+		failures += _check_training_equation(card._content.get_node("%TrainingsList").get_child(0),
+			actual, "Chronological Unit detail %d" % index)
+		if index in [2, 3, 4, 5]:
+			await _snapshot(host, "/tmp/usability-training-chronology-%d.png" % index)
+		# Clearing and reusing the same result renderer cannot leak blue borders.
+		right.set_unit(actual)
+		failures += _check_weapon_equation(right, actual, "Reused neutral result %d" % index)
+		right.set_unit(actual, true)
+		failures += _check_weapon_equation(right, actual, "Reused highlighted result %d" % index, changed)
+	failures += await _training_noop_checks(host, dialog)
+	dialog.queue_free()
+	card.queue_free()
+	await host.get_tree().process_frame
+	print("TRAINING_CHRONOLOGY_CHECKS cases=", before.size(), " failures=", failures)
+	return failures
+
+
+static func _training_noop_checks(host: Control, dialog: PupationConfirmDialog) -> int:
+	var failures := 0
+	var saved_troop := GameState.troop
+	var saved_pupation := GameState.pupation
+	var saved_biomass := GameState.biomass.amount
+	GameState.troop = TroopData.new()
+	GameState.troop.seed_if_empty(StarterPackages.build_units(&"great_sword_spear"))
+	GameState.pupation = PupationData.new()
+	GameState.biomass.amount = 50
+	var sword := WeaponSchool.Id.SWORD
+	var bow := WeaponSchool.Id.BOW
+	var units: Array[RosterUnitData] = [
+		make_unit([bow, bow], true),
+		make_unit([sword, bow], true),
+		make_unit([bow, bow], false),
+	]
+	var schools: Array[int] = [bow, sword, bow]
+	var expected: Array[Array] = [[bow, bow], [bow, sword], [bow, bow]]
+	for index in units.size():
+		var unit := units[index]
+		GameState.troop.try_add_unit(unit)
+		dialog.setup(unit, schools[index])
+		for frame in 4:
+			await host.get_tree().process_frame
+		var allowed := index > 0
+		var button := dialog.get_node("%ConfirmButton") as Button
+		failures += _check(GameState.can_cocoon_for_pupation(unit, schools[index]) == allowed,
+			"No-op rejection preserves chronology changes and Child Evolution")
+		failures += _check(button.disabled == (not allowed), "Only no-op Training disables confirmation")
+		var expected_cost: Variant = null
+		if allowed:
+			expected_cost = -WeaponSchool.COCOON_COST
+		failures += _check(dialog._biomass_preview_delta() == expected_cost,
+			"No-op Training has no Biomass preview")
+		var preview := WeaponSchool.preview_emerged_unit(unit, schools[index])
+		var changed: Array[int] = []
+		if allowed:
+			changed.append(1)
+		failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow,
+			preview, "No-op/chronology/Evolution result %d" % index, changed)
+		failures += _check(button.has_theme_color_override("font_disabled_color") == (not allowed),
+			"No-op text contrast override clears on normal reuse")
+		if not allowed:
+			failures += _check(button.modulate == Color.WHITE
+				and button.get_theme_color("font_disabled_color") == button.get_theme_color("font_color"),
+				"No changes label retains normal readable text color")
+		failures += _check((button.icon != null) == allowed, "No-op hides price icon; reuse restores it")
+		failures += _check((dialog.get_node("%DurationSuffix") as Label).visible == allowed,
+			"No-op hides timing; reuse restores it")
+		if not allowed:
+			var decision := unit.check_training_eligibility(schools[index])
+			failures += _check(not decision.allowed and decision.reason == ActionReasons.TRAINING_UNCHANGED,
+				"No-op Training has its specific rejection reason")
+			var slot := CocoonSlot.new()
+			slot.school = bow
+			var drag_decision := slot._training_drag_decision({"unit": unit, "source": "squad"})
+			failures += _check(not drag_decision.allowed and drag_decision.reason == ActionReasons.TRAINING_UNCHANGED,
+				"School drag reports the no-op reason")
+			slot.free()
+			failures += _check(not unit.apply_pupation_training(schools[index])
+				and unit.weapon_trainings == [bow, bow], "Direct no-op Training rejects without mutation")
+			failures += _check(button.text == "No changes", "No-op Training explicitly says No changes")
+			var confirmations: Array[int] = [0]
+			var on_confirm := func(_unit: RosterUnitData, _school: int) -> void: confirmations[0] += 1
+			dialog.confirmed.connect(on_confirm)
+			dialog._on_confirm_pressed()
+			dialog.confirmed.disconnect(on_confirm)
+			failures += _check(confirmations[0] == 0 and not dialog.is_queued_for_deletion(),
+				"No-op confirmation cannot emit a paid action")
+		await _snapshot(host, "/tmp/usability-training-noop-%d.png" % index)
+		var balance_before := GameState.biomass.amount
+		failures += _check(GameState.try_cocoon_for_pupation(unit, schools[index]) == allowed,
+			"Authoritative Training action rejects only no-op")
+		failures += _check(GameState.biomass.amount == balance_before - (WeaponSchool.COCOON_COST if allowed else 0),
+			"No-op keeps Biomass; meaningful Training spends exact cost")
+		if index == 2:
+			failures += _check(GameState.pupation.get_occupant(bow) == unit,
+				"Repeated Child Training still starts Evolution")
+			GameState.pupation.advance_day()
+			failures += _check(unit.is_adult_stage(), "Repeated Child Training still evolves into Adult")
+		failures += _check(unit.weapon_trainings == expected[index], "Paid action preserves exact chronological result")
+	GameState.troop = saved_troop
+	GameState.pupation = saved_pupation
+	GameState.biomass.amount = saved_biomass
 	return failures
 
 

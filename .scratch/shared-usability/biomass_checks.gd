@@ -68,6 +68,13 @@ static func _lifecycle_checks(host: Control, chip: Control) -> int:
 	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
 	host.add_child(blocker)
 	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var compact: BiomassChip = preload("res://assets/ui/biomass_chip/biomass_chip.tscn").instantiate()
+	compact.position = Vector2(1100, 200)
+	compact.size = Vector2(176, 96)
+	blocker.add_child(compact)
+	await _settle(host)
+	var compact_resting_size := (compact.get_node("Paper") as Control).size
+	var compact_resting_position := (compact.get_node("Paper") as Control).position
 	var action := Control.new()
 	action.position = Vector2(800, 250)
 	action.size = Vector2(200, 64)
@@ -79,6 +86,8 @@ static func _lifecycle_checks(host: Control, chip: Control) -> int:
 	var state := {"delta": -4}
 	BiomassPreview.bind(action, func() -> Variant: return state["delta"])
 	var balance := GameState.biomass.amount
+	var resting_size := (chip.get_node("Paper") as Control).size
+	var resting_position := (chip.get_node("Paper") as Control).position
 	await _hover(child)
 	var failures := _check(host.get_viewport().gui_get_hovered_control() == child,
 		"hovered descendant exercises metadata ancestor lookup")
@@ -87,6 +96,19 @@ static func _lifecycle_checks(host: Control, chip: Control) -> int:
 	BiomassPreview.bind(action, func() -> Variant: return state["delta"], "On victory")
 	await _settle(host)
 	failures += _check_preview(chip, -4, "context changes under pointer", "On victory")
+	GameState.biomass.amount = 3
+	await _settle(host)
+	failures += _check_warning(chip, "conditional unaffordable action")
+	failures += _check((compact.get_node("Paper") as Control).size.y > compact_resting_size.y,
+		"compact warning exercises paper minimum-height growth")
+	GameState.biomass.amount = 4
+	await _settle(host)
+	failures += _check_preview(chip, -4, "exact cost leaves zero and restores context", "On victory")
+	state["delta"] = 4
+	await _settle(host)
+	failures += _check_preview(chip, 4, "gain after warning restores signed amount", "On victory")
+	state["delta"] = -4
+	GameState.biomass.amount = balance
 	BiomassPreview.bind(action, func() -> Variant: return state["delta"])
 	await _settle(host)
 	failures += _check_preview(chip, -4, "context removal retains preview size")
@@ -103,8 +125,20 @@ static func _lifecycle_checks(host: Control, chip: Control) -> int:
 	action.queue_free()
 	await _settle(host)
 	failures += _check_current(chip, "freed action clears preview")
+	var compact_restored := (compact.get_node("Paper") as Control).size
+	print("BIOMASS_COMPACT_PAPER resting=", compact_resting_size, " restored=", compact_restored,
+		" position=", compact_resting_position, " -> ", (compact.get_node("Paper") as Control).position)
+	failures += _check(compact_restored.is_equal_approx(compact_resting_size)
+		and (compact.get_node("Paper") as Control).position.is_equal_approx(compact_resting_position),
+		"compact paper shrinks after warning content disappears")
 	blocker.queue_free()
 	await _move(host, Vector2(4, 4))
+	var restored_size := (chip.get_node("Paper") as Control).size
+	print("BIOMASS_PAPER_SIZE resting=", resting_size, " restored=", restored_size,
+		" position=", resting_position, " -> ", (chip.get_node("Paper") as Control).position)
+	failures += _check(restored_size.is_equal_approx(resting_size)
+		and (chip.get_node("Paper") as Control).position.is_equal_approx(resting_position), "warning removal restores actual paper size")
+	await _snapshot(host, "normal-after-warning")
 	return failures
 
 
@@ -124,14 +158,23 @@ static func _training_checks(
 	GameState.biomass.amount = 1
 	await _settle(host)
 	failures += _check(button.disabled, "unaffordable Training is disabled")
-	failures += _check_preview(chip, -WeaponSchool.COCOON_COST, "unaffordable negative total remains red")
-	await _snapshot(host, "loss")
+	failures += _check_warning(chip, "disabled Training warning")
+	await _snapshot(host, "not-enough")
+	GameState.biomass.amount = WeaponSchool.COCOON_COST
+	await _settle(host)
+	failures += _check(not button.disabled, "Training enables at exact cost without pointer movement")
+	failures += _check_preview(chip, -WeaponSchool.COCOON_COST, "exact Training cost projects zero")
+	await _snapshot(host, "exact-cost")
+	GameState.biomass.amount = WeaponSchool.COCOON_COST - 1
+	await _settle(host)
+	failures += _check_warning(chip, "warning returns when balance drops under pointer")
 	GameState.biomass.amount = 20
 	dialog.setup(child, WeaponSchool.Id.BOW)
 	await _hover(button)
 	failures += _check_preview(chip, -WeaponSchool.COCOON_COST, "Child Evolution")
 	await _move(host, Vector2(4, 4))
 	failures += _check_current(chip, "hover exit restores current amount")
+	await _snapshot(host, "normal-after-hover")
 	dialog.queue_free()
 	await _settle(host)
 	return failures
@@ -228,7 +271,23 @@ static func _battle_checks(base: Node, host: Control, chip: Control) -> int:
 	return failures
 
 
+static func _check_warning(chip: Control, label: String) -> int:
+	var amount := chip.get_node("%BiomassAmount") as Label
+	var warning := chip.get_node("%BiomassDelta") as Label
+	var context := chip.get_node("%PreviewContext") as Label
+	var failures := _check(amount.text == BiomassDisplay.number(GameState.biomass.amount), label + ": actual balance remains")
+	failures += _check(amount.get_theme_color("font_color") == StatDisplay.change_color(-1, true), label + ": red actual balance")
+	failures += _check(warning.is_visible_in_tree() and warning.text == "Not enough\nbiomass", label + ": warning replaces negative total")
+	failures += _check(warning.get_theme_color("font_color") == StatDisplay.LOSS_COLOR
+		and warning.get_theme_constant("outline_size") == 0, label + ": red words without number outline")
+	failures += _check(not context.visible and context.text.is_empty(), label + ": conditional context hidden")
+	failures += _check((chip.get_node("Paper") as Control).scale.distance_to(Vector2.ONE * 1.18) < 0.01, label + ": counter stays enlarged")
+	return failures
+
+
 static func _check_preview(chip: Control, delta: int, label: String, context: String = "") -> int:
+	if delta < 0 and GameState.biomass.amount + delta < 0:
+		return _check_warning(chip, label)
 	var amount := chip.get_node("%BiomassAmount") as Label
 	var change := chip.get_node("%BiomassDelta") as Label
 	var reason := chip.get_node("%PreviewContext") as Label
@@ -240,6 +299,7 @@ static func _check_preview(chip: Control, delta: int, label: String, context: St
 		and (context.is_empty() or reason.text == context), label + ": conditional context")
 	failures += _check(amount.get_theme_color("font_color") == StatDisplay.change_color(delta, true),
 		label + ": total color")
+	failures += _check(change.get_theme_constant("outline_size") == 3, label + ": signed number outline restored")
 	if delta != 0:
 		failures += _check(change.get_theme_color("font_color") == StatDisplay.change_color(delta),
 			label + ": delta color")
@@ -263,9 +323,11 @@ static func _hover(control: Control) -> void:
 
 
 static func _move(host: Control, point: Vector2) -> void:
+	host.get_viewport().warp_mouse(point)
 	var motion := InputEventMouseMotion.new()
-	motion.position = point
-	host.get_viewport().push_input(motion, true)
+	motion.position = host.get_viewport().get_final_transform() * point
+	motion.global_position = motion.position
+	Input.parse_input_event(motion)
 	await _settle(host)
 
 
@@ -277,8 +339,9 @@ static func _click(button: Button) -> void:
 		var event := InputEventMouseButton.new()
 		event.button_index = MOUSE_BUTTON_LEFT
 		event.pressed = pressed
-		event.position = point
-		button.get_viewport().push_input(event, true)
+		event.position = button.get_viewport().get_final_transform() * point
+		event.global_position = event.position
+		Input.parse_input_event(event)
 	await tree.create_timer(0.2).timeout
 
 

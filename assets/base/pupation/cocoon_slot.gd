@@ -11,6 +11,7 @@ const _WEAPON_DETAIL_CARD_SCENE := preload("res://assets/base/weapon_detail_card
 const _SCHOOL_TRAINING_DETAIL_CARD_SCENE := preload(
 	"res://assets/base/pupation/school_training_detail_card.tscn"
 )
+const _TRAINING_PREVIEW_TOOLTIP := preload("res://assets/base/pupation/training_preview_tooltip.gd")
 const _DETAIL_TOOLTIP_SEPARATION := 12.0
 const _SLOT_SIZE := Vector2(132, 260)
 const _HOVER_SCALE := 1.18
@@ -21,6 +22,10 @@ const _TWEEN_SECONDS := 0.14
 var _base_modulate: Color = Color.WHITE
 var _drag_hover_active: bool = false
 var _scale_tween: Tween
+var _drag_preview_unit: RosterUnitData
+var _drag_preview_tip: TrainingPreviewTooltip
+var _drag_preview_lease: Control
+var _emergence_active: bool = false
 
 @onready var _weapon_icon: TextureRect = %WeaponIcon
 @onready var _cocoon_image: TextureRect = %CocoonImage
@@ -73,6 +78,7 @@ func _refresh_arrow() -> void:
 
 
 func _ready() -> void:
+	set_process(false)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	BiomassPreview.bind(self, _biomass_preview_delta)
 	custom_minimum_size = _SLOT_SIZE
@@ -83,6 +89,42 @@ func _ready() -> void:
 	_refresh_weapon_icon()
 	_refresh_visuals()
 	_prepare_cocoon_pivot()
+
+
+func _process(_delta: float) -> void:
+	var viewport := get_viewport()
+	var hovered := viewport.gui_get_hovered_control()
+	if not viewport.gui_is_dragging() or not is_visible_in_tree():
+		_clear_transformation_preview()
+	elif hovered != self and (hovered == null or not is_ancestor_of(hovered)):
+		_clear_transformation_preview()
+	elif not _accepts_drag_data(viewport.gui_get_drag_data()):
+		_clear_transformation_preview()
+
+
+func _show_transformation_preview(unit: RosterUnitData) -> void:
+	if _drag_preview_unit == unit and is_instance_valid(_drag_preview_tip):
+		return
+	_clear_transformation_preview()
+	_drag_preview_unit = unit
+	_drag_preview_tip = _TRAINING_PREVIEW_TOOLTIP.new()
+	_drag_preview_tip.setup(unit, school)
+	# Native hover tooltips are suspended during a drag, so own this lease explicitly.
+	_drag_preview_lease = DetailTooltipPopup.configure(_drag_preview_tip)
+	add_child(_drag_preview_lease)
+	set_process(true)
+
+
+func _clear_transformation_preview() -> void:
+	_drag_preview_unit = null
+	# A pause can stop the overlay's fade tween; remove the drag preview immediately.
+	if is_instance_valid(_drag_preview_tip):
+		_drag_preview_tip.hide()
+	_drag_preview_tip = null
+	if is_instance_valid(_drag_preview_lease):
+		_drag_preview_lease.queue_free()
+	_drag_preview_lease = null
+	set_process(false)
 
 
 func _biomass_preview_delta() -> Variant:
@@ -147,6 +189,9 @@ func _update_days_chip() -> void:
 
 
 func _update_tooltip() -> void:
+	if _emergence_active or get_viewport().gui_is_dragging():
+		tooltip_text = ""
+		return
 	var unit := get_occupant()
 	# Non-empty text enables the tooltip popup; content comes from _make_custom_tooltip.
 	if unit != null:
@@ -160,15 +205,54 @@ func get_occupant() -> RosterUnitData:
 
 
 func sync_from_state() -> void:
+	_clear_transformation_preview()
 	_refresh_visuals()
 	_set_drag_hover(false)
 	_refresh_arrow()
 	if _hover_punch != null:
 		_hover_punch.reset()
+		if _emergence_active:
+			_hover_punch.suppress_enter()
+		else:
+			_hover_punch.call_deferred("arm_enter_unless_hovered")
+
+
+func begin_emergence() -> Dictionary:
+	_clear_transformation_preview()
+	_emergence_active = true
+	_drag_hover_active = false
+	modulate = _base_modulate
+	if _scale_tween != null and _scale_tween.is_valid():
+		_scale_tween.kill()
+	_cocoon_image.scale = Vector2.ONE
+	_cocoon_image.rotation = 0.0
+	if _hover_punch != null:
+		_hover_punch.reset()
+		_hover_punch.suppress_enter()
+	_set_drop_arrow_visible(false)
+	tooltip_text = ""
+	# Completion has already emptied the model slot; show the closed shell only
+	# in the effect, keeping the live Control's layout space reserved.
+	_cocoon_image.texture = _COCOON_CLOSED
+	_cocoon_image.self_modulate = Color.WHITE
+	var shell := UnitEmergence.capture_shell(_cocoon_image)
+	_cocoon_image.self_modulate.a = 0.0
+	return shell
+
+
+func end_emergence() -> void:
+	_emergence_active = false
+	_cocoon_image.self_modulate = Color.WHITE
+	_refresh_visuals()
+	_refresh_arrow()
+	if _hover_punch != null:
 		_hover_punch.call_deferred("arm_enter_unless_hovered")
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:
+	# A queued native tooltip must not replace the explicitly owned result preview.
+	if _emergence_active or get_viewport().gui_is_dragging():
+		return DetailTooltipPopup.configure(null)
 	var unit := get_occupant()
 	if unit == null:
 		return _make_empty_training_tooltip()
@@ -205,6 +289,7 @@ func _make_cocooned_unit_tooltip(unit: RosterUnitData) -> Object:
 
 
 func _on_mouse_exited() -> void:
+	_clear_transformation_preview()
 	_set_drag_hover(false)
 	ActionFeedback.clear_drag_preview()
 
@@ -244,18 +329,22 @@ func _tween_cocoon_scale(target: float) -> void:
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	var decision := _training_drag_decision(data)
 	if decision != null and not decision.allowed:
+		_clear_transformation_preview()
 		ActionFeedback.preview_rejection(self, decision)
 		_set_drag_hover(false)
 		return false
 	ActionFeedback.clear_drag_preview()
 	if not _accepts_drag_data(data):
+		_clear_transformation_preview()
 		_set_drag_hover(false)
 		return false
 	_set_drag_hover(true)
+	_show_transformation_preview(_dragged_troop_unit(data))
 	return true
 
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
+	_clear_transformation_preview()
 	_set_drag_hover(false)
 	_refresh_arrow()
 	if not _accepts_drag_data(data):
@@ -265,7 +354,14 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_BEGIN:
+		_update_tooltip()
 		_refresh_arrow()
 	elif what == NOTIFICATION_DRAG_END:
+		_clear_transformation_preview()
+		_update_tooltip()
 		_set_drag_hover(false)
 		_refresh_arrow()
+	elif what == NOTIFICATION_PAUSED or what == NOTIFICATION_EXIT_TREE:
+		_clear_transformation_preview()
+	elif what == NOTIFICATION_VISIBILITY_CHANGED and not is_visible_in_tree():
+		_clear_transformation_preview()

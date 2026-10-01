@@ -9,6 +9,9 @@ const _MUSIC_FADE_SECONDS := 0.5
 const _BATTLE_CROSSFADE_SECONDS := 2.0
 const _BASE_CROSSFADE_SECONDS := 8.0
 const _BATTLE_VOLUME_DB := -7.0
+const _REVEAL_MUSIC_GAIN := 0.07
+const _REVEAL_DUCK_SECONDS := 0.18
+const _REVEAL_RECOVER_SECONDS := 0.26
 
 @export var base_music: AudioStream
 @export var battle_music: AudioStream
@@ -23,6 +26,10 @@ var _pitch_rng := RandomNumberGenerator.new()
 var _current_music: AudioStreamPlayer
 var _music_sources: Dictionary[AudioStreamPlayer, AudioStream] = {}
 var _music_fade: Tween
+var _music_levels: Dictionary[AudioStreamPlayer, float] = {}
+var _reveal_music_gain: float = 1.0
+var _reveal_music_fade: Tween
+var _reveal_audio_leases: int = 0
 var _last_gameplay_cues: Dictionary[Sfx.Cue, int] = {}
 var _last_ui_cues: Dictionary[Sfx.Cue, int] = {}
 
@@ -52,6 +59,67 @@ func play_ui_cue(cue: Sfx.Cue) -> AudioStreamPlayer:
 		return null
 	var sound: Dictionary = Sfx.SOUNDS[cue]
 	return play_ui_sfx(sound.stream, sound.gain_db, sound.pitch_variation)
+
+
+## Dedicated playback: freeing the owner or returned player cancels only this cue.
+func play_owned_ui_cue(owner_node: Node, cue: Sfx.Cue) -> AudioStreamPlayer:
+	if not is_instance_valid(owner_node) or not owner_node.is_inside_tree():
+		return null
+	if not _allow_cue(cue, _last_ui_cues):
+		return null
+	var sound: Dictionary = Sfx.SOUNDS[cue]
+	var player := AudioStreamPlayer.new()
+	player.bus = &"SFX"
+	player.process_mode = Node.PROCESS_MODE_ALWAYS
+	owner_node.add_child(player)
+	player.finished.connect(player.queue_free, CONNECT_ONE_SHOT)
+	_start_effect(player, sound.stream, sound.gain_db, sound.pitch_variation)
+	return player
+
+
+## Acquire 0.18s before release; free 0.24s after it for the reference mix timing.
+## Owner exit also releases the duck. Settings and track crossfades stay independent.
+func acquire_reveal_audio(owner_node: Node) -> Node:
+	if not is_instance_valid(owner_node) or not owner_node.is_inside_tree():
+		return null
+	var lease := Node.new()
+	lease.name = "RevealAudioLease"
+	lease.tree_exiting.connect(_release_reveal_audio, CONNECT_ONE_SHOT)
+	owner_node.add_child(lease)
+	_reveal_audio_leases += 1
+	if _reveal_audio_leases == 1:
+		_fade_reveal_music(_REVEAL_MUSIC_GAIN, _REVEAL_DUCK_SECONDS)
+	return lease
+
+
+func _release_reveal_audio() -> void:
+	_reveal_audio_leases -= 1
+	if _reveal_audio_leases == 0:
+		_fade_reveal_music(1.0, _REVEAL_RECOVER_SECONDS)
+
+
+func _fade_reveal_music(gain: float, seconds: float) -> void:
+	if _reveal_music_fade != null:
+		_reveal_music_fade.kill()
+	if not is_inside_tree():
+		_set_reveal_music_gain(gain)
+		return
+	_reveal_music_fade = create_tween()
+	_reveal_music_fade.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_reveal_music_fade.set_ignore_time_scale(true)
+	_reveal_music_fade.tween_method(_set_reveal_music_gain, _reveal_music_gain, gain, seconds)
+
+
+func _set_reveal_music_gain(gain: float) -> void:
+	_reveal_music_gain = gain
+	for player in _music_levels:
+		if is_instance_valid(player):
+			player.volume_linear = _music_levels[player] * gain
+
+
+func _set_music_level(level: float, player: AudioStreamPlayer) -> void:
+	_music_levels[player] = level
+	player.volume_linear = level * _reveal_music_gain
 
 
 func _allow_cue(cue: Sfx.Cue, last_played: Dictionary[Sfx.Cue, int]) -> bool:
@@ -173,6 +241,11 @@ func _play_effect(
 			# Recycle the oldest voice when a burst fills this pool.
 			player = players.pop_front()
 	players.append(player)
+	_start_effect(player, stream, volume_db, pitch_variation)
+	return player
+
+
+func _start_effect(player: AudioStreamPlayer, stream: AudioStream, volume_db: float, pitch_variation: float) -> void:
 	player.stop()
 	player.stream = stream
 	player.volume_db = volume_db
@@ -181,7 +254,6 @@ func _play_effect(
 	var variation := clampf(pitch_variation, 0.0, 0.99)
 	player.pitch_scale = _pitch_rng.randf_range(1.0 - variation, 1.0 + variation)
 	player.play()
-	return player
 
 
 func _play_music(
@@ -213,7 +285,7 @@ func _ensure_music_player(player: AudioStreamPlayer, stream: AudioStream) -> boo
 		return was_paused
 	player.stop()
 	player.stream = _looping_music(stream)
-	player.volume_linear = 0.0
+	_set_music_level(0.0, player)
 	player.stream_paused = false
 	player.play()
 	_music_sources[player] = stream
@@ -246,7 +318,8 @@ func _fade_music(seconds: float) -> void:
 		var volume := 0.0
 		if player == _current_music and player.has_stream_playback():
 			volume = db_to_linear(_BATTLE_VOLUME_DB) if player == _battle_player else 1.0
-		_music_fade.tween_property(player, "volume_linear", volume, seconds)
+		_music_fade.tween_method(_set_music_level.bind(player),
+			_music_levels.get(player, player.volume_linear), volume, seconds)
 	if _current_music == null:
 		_music_fade.chain().tween_callback(_finish_music_stop)
 	else:

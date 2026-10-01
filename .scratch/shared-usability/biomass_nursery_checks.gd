@@ -238,10 +238,15 @@ static func _expect(chip: Control, delta: Variant, label: String) -> int:
 	var expected_delta := 0 if delta == null else int(delta)
 	var amount := chip.get_node("%BiomassAmount") as Label
 	var change := chip.get_node("%BiomassDelta") as Label
+	var unaffordable := expected_delta < 0 and GameState.biomass.amount + expected_delta < 0
+	var total := GameState.biomass.amount if unaffordable else GameState.biomass.amount + expected_delta
+	var expected_text := "Not enough\nbiomass" if unaffordable else BiomassDisplay.number(expected_delta, true)
 	var matches := (
-		amount.text == BiomassDisplay.number(GameState.biomass.amount + expected_delta)
+		amount.text == BiomassDisplay.number(total)
 		and change.is_visible_in_tree() == (expected_delta != 0)
-		and (expected_delta == 0 or change.text == BiomassDisplay.number(expected_delta, true))
+		and (expected_delta == 0 or change.text == expected_text)
+		and amount.get_theme_color("font_color") == StatDisplay.change_color(expected_delta, true)
+		and change.get_theme_constant("outline_size") == (0 if unaffordable else 3)
 	)
 	if not matches:
 		var viewport := chip.get_viewport()

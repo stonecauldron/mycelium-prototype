@@ -120,7 +120,9 @@ func _undo_biomass_preview() -> Variant:
 	if not _can_undo():
 		return null
 	var delta := GameState.base_undo.next_biomass_delta()
-	return delta if delta != 0 else null
+	if delta == 0:
+		return null
+	return delta
 
 
 func _on_base_state_restored() -> void:
@@ -262,37 +264,37 @@ func _wire_progress_tracks() -> void:
 	if track == null:
 		return
 	_progress_tracks.append(track)
-	if not track.elite_hovered.is_connected(_on_elite_track_hovered):
-		track.elite_hovered.connect(_on_elite_track_hovered)
-	if not track.elite_unhovered.is_connected(_on_elite_track_unhovered):
-		track.elite_unhovered.connect(_on_elite_track_unhovered)
-	if not track.elite_pressed.is_connected(_on_elite_track_pressed):
-		track.elite_pressed.connect(_on_elite_track_pressed)
+	if not track.day_hovered.is_connected(_on_day_track_hovered):
+		track.day_hovered.connect(_on_day_track_hovered)
+	if not track.day_unhovered.is_connected(_on_day_track_unhovered):
+		track.day_unhovered.connect(_on_day_track_unhovered)
+	if not track.day_pressed.is_connected(_on_day_track_pressed):
+		track.day_pressed.connect(_on_day_track_pressed)
 	var scout := _scout_bubble()
-	if scout != null and not scout.elite_focus_changed.is_connected(track.set_focused_elite_day):
-		scout.elite_focus_changed.connect(track.set_focused_elite_day)
+	if scout != null and not scout.preview_focus_changed.is_connected(track.set_focused_day):
+		scout.preview_focus_changed.connect(track.set_focused_day)
 
 
-func _on_elite_track_hovered(day: int) -> void:
+func _on_day_track_hovered(day: int) -> void:
 	var scout := _scout_bubble()
 	if scout != null:
-		scout.preview_elite_for_day(day)
+		scout.preview_day(day)
 
 
-func _on_elite_track_unhovered() -> void:
+func _on_day_track_unhovered() -> void:
 	var scout := _scout_bubble()
 	if scout != null:
 		scout.clear_preview()
 
 
-func _on_elite_track_pressed(day: int) -> void:
+func _on_day_track_pressed(day: int) -> void:
 	var scout := _scout_bubble()
 	if scout == null:
 		return
-	if scout.focused_elite_day() == day:
+	if scout.focused_day() == day:
 		scout.return_to_next_battle()
 	else:
-		scout.pin_elite_for_day(day)
+		scout.pin_day(day)
 
 
 func _scout_bubble() -> ScoutBubble:
@@ -399,6 +401,10 @@ func _refresh_nursery_readiness() -> void:
 	var count := GameState.nursery.ready_plot_count()
 	_nursery_ready_badge.text = str(count)
 	_nursery_ready_badge.visible = count > 0
+
+
+func is_tab_transitioning() -> bool:
+	return _camera_tween != null and _camera_tween.is_valid() and _camera_tween.is_running()
 
 
 func _select_tab(tab_id: TabId, instant: bool = false) -> void:

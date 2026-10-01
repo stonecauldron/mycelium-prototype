@@ -11,7 +11,7 @@ var interactive: bool = true
 @onready var _name_label: Label = %NameLabel
 @onready var _desc_label: RichTextLabel = %DescLabel
 @onready var _dmg_label: Label = %DmgLabel
-@onready var _speed_label: Label = %SpeedLabel
+@onready var _speed_chip: StatChip = %SpeedChip
 @onready var _range_tag: TagChip = %RangeTag
 @onready var _scaling_tag: TagChip = %ScalingTag
 @onready var _blunt_tag: TagChip = %BluntTag
@@ -82,8 +82,9 @@ func _refresh() -> void:
 		StatDisplay.INK_MUTED
 	)
 	_desc_label.visible = not weapon_data.short_description.is_empty()
-	_dmg_label.text = "DMG %d" % weapon_data.base_damage
-	_speed_label.text = "Attacks every %s secs" % str(weapon_data.attack_interval)
+	_speed_chip.icon = AttackSpeedDisplay.ICON
+	_speed_chip.set_value(AttackSpeedDisplay.format_seconds(weapon_data.attack_interval))
+	_dmg_label.text = "Base Damage: %d" % weapon_data.base_damage
 	_range_tag.set_text(_range_label(weapon_data.formation_line))
 	_scaling_tag.show_icons(
 		StatDisplay.textures_for_damage_stat(weapon_data.damage_stat),

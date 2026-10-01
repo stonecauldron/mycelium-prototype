@@ -34,9 +34,17 @@ var _compost_dialog: CompostConfirmDialog = null
 var _starter_dialog: StarterChoiceDialog = null
 var _seal_dialog: SealChoiceDialog = null
 var _flag_seals: FlagSealsOverlay = null
+var _screen_active: bool = false
+var _emergence: UnitEmergence = null
+var _emergence_ready_frame := 0
+var _compost_release: CompostRelease = null
+var _compost_gain: BiomassGain = null
+var _revealing_unit: RosterUnitData = null
+var _revealing_cocoon: CocoonSlot = null
 
 
 func _ready() -> void:
+	set_process(false)
 	_hydrate_from_troop_data()
 	_build_squad_ui()
 	_build_bench_ui()
@@ -52,6 +60,8 @@ func _ready() -> void:
 
 
 func on_screen_shown() -> void:
+	_screen_active = true
+	_cancel_presentations()
 	_ensure_squad_ui()
 	_sync_all_slots()
 	if _scout_bubble != null:
@@ -59,18 +69,31 @@ func on_screen_shown() -> void:
 	_refresh_flag_seals()
 	_notify_start_combat_state()
 	ensure_pending_modals()
+	_queue_emergence_presentation()
 
 
 func on_screen_hidden() -> void:
+	_screen_active = false
+	set_process(false)
+	_cancel_presentations()
+	get_viewport().gui_cancel_drag()
 	if _scout_bubble != null:
 		_scout_bubble.return_to_next_battle()
 	# Camera tabs keep controls visible; release focus before they move offscreen.
 	var focused := get_viewport().gui_get_focus_owner()
 	if focused != null and is_ancestor_of(focused):
 		focused.release_focus()
+	_notify_start_combat_state()
 
 
 func refresh_after_undo() -> void:
+	var was_active := _screen_active
+	# Delayed Evolution predates this Base visit and survives unrelated Undo.
+	for i in range(GameState.pending_cocoon_emergences.size() - 1, -1, -1):
+		if not GameState.is_cocoon_emergence_current(GameState.pending_cocoon_emergences[i]):
+			GameState.pending_cocoon_emergences.remove_at(i)
+	_cancel_presentations()
+	_cancel_cocoon_drag_preview()
 	# Remove stale confirmations before rebuilding; their exit callbacks must not
 	# close or reopen a replacement chooser on the next frame.
 	var dialogs := [_pupation_dialog, _compost_dialog, _starter_dialog, _seal_dialog]
@@ -96,6 +119,9 @@ func refresh_after_undo() -> void:
 	_pending_pupation_unit = null
 	_hydrate_from_troop_data()
 	on_screen_shown()
+	_screen_active = was_active
+	set_process(was_active and not GameState.pending_cocoon_emergences.is_empty())
+	_notify_start_combat_state()
 
 
 ## Starter then seal picks — safe to call from base even when another tab is active.
@@ -218,6 +244,8 @@ func _ensure_starter_choice() -> void:
 		return
 	if _starter_dialog != null and is_instance_valid(_starter_dialog):
 		return
+	_cancel_cocoon_drag_preview()
+	_cancel_presentations()
 	var dialog: StarterChoiceDialog = _STARTER_CHOICE_SCENE.instantiate()
 	_starter_dialog = dialog
 	dialog.package_chosen.connect(_on_starter_package_chosen)
@@ -302,6 +330,8 @@ func _ensure_seal_choice() -> void:
 		GameState.clear_pending_seal_choice()
 		_sync_all_slots()
 		return
+	_cancel_cocoon_drag_preview()
+	_cancel_presentations()
 	var dialog: SealChoiceDialog = _SEAL_CHOICE_SCENE.instantiate()
 	# Run-start pick is day 0; mid-run picks (after days 2 / 5 / 8) may reroll.
 	dialog.setup(offers, GameState.current_day > 0, GameState.seal_rerolls_this_pick)
@@ -336,6 +366,8 @@ func toggle_seal_choice() -> void:
 	elif _seal_dialog.visible:
 		_seal_dialog.hide()
 	else:
+		_cancel_cocoon_drag_preview()
+		_cancel_presentations()
 		_seal_dialog.reopen()
 
 
@@ -355,6 +387,7 @@ func _on_seal_chosen(seal: SealData) -> void:
 func _on_seal_dialog_closed(dialog: SealChoiceDialog) -> void:
 	if _seal_dialog == dialog:
 		_seal_dialog = null
+	_queue_emergence_presentation()
 
 
 func _row(source: String) -> Array:
@@ -409,6 +442,8 @@ func _move_unit(
 	to_source: String,
 	to_index: int
 ) -> void:
+	if is_instance_valid(_compost_release):
+		return
 	var from_row := _row(from_source)
 	var to_row := _row(to_source)
 	if to_source == "squad" and not GameState.troop.is_squad_slot_unlocked(to_index):
@@ -423,6 +458,8 @@ func _move_unit(
 		if from_index < 0:
 			return
 	var displaced: RosterUnitData = to_row[to_index]
+	if unit == _revealing_unit or displaced == _revealing_unit:
+		_cancel_emergence()
 	var snapshot := GameState.base_undo.capture("Move Unit")
 	to_row[to_index] = unit
 	from_row[from_index] = displaced
@@ -432,6 +469,8 @@ func _move_unit(
 
 
 func _bench_can_drop(_at_position: Vector2, data: Variant) -> bool:
+	if is_instance_valid(_compost_release):
+		return false
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
 	return str(data.get("source", "")) == "squad" and _first_empty(bench) >= 0
@@ -449,9 +488,12 @@ func _bench_drop(_at_position: Vector2, data: Variant) -> void:
 
 
 func _on_squad_unlock_pressed(_slot: DropSlot) -> void:
+	if is_instance_valid(_compost_release):
+		return
 	var snapshot := GameState.base_undo.capture("Unlock Squad Slot")
 	if GameState.try_unlock_squad_slot():
 		GameState.base_undo.record(snapshot)
+		_cancel_emergence()
 		Audio.play_ui_cue(Sfx.Cue.UNLOCK)
 		_build_squad_ui()
 		_sync_all_slots()
@@ -464,8 +506,10 @@ func _sync_all_slots() -> void:
 	bench = GameState.troop.bench
 	squad = GameState.troop.squad
 	for slot in _squad_slots:
+		slot.accepts_drops = not is_instance_valid(_compost_release)
 		_sync_slot_card(slot, "squad")
 	for slot in _bench_slots:
+		slot.accepts_drops = not is_instance_valid(_compost_release)
 		_sync_slot_card(slot, "bench")
 	for slot in _cocoon_slots:
 		slot.sync_from_state()
@@ -474,7 +518,14 @@ func _sync_all_slots() -> void:
 	_notify_start_combat_state()
 
 
+func _has_active_reveal() -> bool:
+	# Serialize presentation effects; Cocoon emergence does not gate gameplay.
+	return is_instance_valid(_emergence) or is_instance_valid(_compost_release)
+
+
 func _has_open_cocoon_dialog() -> bool:
+	if is_instance_valid(_compost_release):
+		return true
 	if _pupation_dialog != null and is_instance_valid(_pupation_dialog):
 		return true
 	if _compost_dialog != null and is_instance_valid(_compost_dialog):
@@ -505,6 +556,15 @@ func _on_compost_drop(slot: CompostingBin, drag_data: Dictionary) -> void:
 
 
 func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
+	if is_instance_valid(_compost_release):
+		return
+	# Reusing this Unit or Cocoon takes priority over its cosmetic flight.
+	if (
+		unit == _revealing_unit
+		or (is_instance_valid(_revealing_cocoon) and _revealing_cocoon.school == school)
+	):
+		_cancel_emergence()
+	_cancel_cocoon_drag_preview()
 	var dialog: PupationConfirmDialog = _PUPATION_CONFIRM_SCENE.instantiate()
 	_pupation_dialog = dialog
 	_pending_pupation_unit = unit
@@ -521,6 +581,9 @@ func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
 
 
 func _open_compost_confirm(unit: RosterUnitData) -> void:
+	if is_instance_valid(_compost_release):
+		return
+	_cancel_cocoon_drag_preview()
 	var dialog: CompostConfirmDialog = _COMPOST_CONFIRM_SCENE.instantiate()
 	_compost_dialog = dialog
 	dialog.confirmed.connect(_on_compost_confirmed)
@@ -534,39 +597,245 @@ func _open_compost_confirm(unit: RosterUnitData) -> void:
 	Audio.play_ui_cue(Sfx.Cue.UI_OPEN)
 
 
+func _cancel_cocoon_drag_preview() -> void:
+	for slot: CocoonSlot in _cocoon_slots:
+		if slot._drag_preview_unit != null:
+			get_viewport().gui_cancel_drag()
+			return
+
+
+func _queue_emergence_presentation() -> void:
+	if not _screen_active or GameState.pending_cocoon_emergences.is_empty():
+		return
+	# Let freshly rebuilt destination cards settle before capturing their poses.
+	# Base also installs its camera tween after on_screen_shown returns.
+	_emergence_ready_frame = Engine.get_process_frames() + 2
+	set_process(true)
+
+
+func _process(_delta: float) -> void:
+	_try_play_next_emergence()
+
+
+func _try_play_next_emergence() -> void:
+	if not is_inside_tree() or not _screen_active or get_tree().paused:
+		return
+	if _has_active_reveal() or Engine.get_process_frames() < _emergence_ready_frame:
+		return
+	if GameState.pending_cocoon_emergences.is_empty():
+		set_process(false)
+		_notify_start_combat_state()
+		return
+	if (
+		GameState.pending_seal_choice or not GameState.troop.is_seeded()
+		or is_instance_valid(_starter_dialog) or is_instance_valid(_seal_dialog)
+		or _has_open_cocoon_dialog() or get_viewport().gui_is_dragging()
+		or SceneTransition.is_transitioning()
+	):
+		return
+	var base := get_tree().current_scene
+	if base != null and base.has_method("is_tab_transitioning") and base.is_tab_transitioning():
+		return
+	while not GameState.pending_cocoon_emergences.is_empty():
+		var entry: Dictionary = GameState.pending_cocoon_emergences.pop_front()
+		if not GameState.is_cocoon_emergence_current(entry):
+			continue
+		var unit := entry.get("unit") as RosterUnitData
+		var cocoon: CocoonSlot = null
+		for slot: CocoonSlot in _cocoon_slots:
+			if slot.school == int(entry.get("school", -1)):
+				cocoon = slot
+				break
+		if cocoon == null:
+			continue
+		var card := _find_unit_card(unit)
+		if card == null:
+			continue
+		var destinations: Array[Transform2D] = [card.portrait_canvas_transform()]
+		_cancel_cocoon_drag_preview()
+		_revealing_unit = unit
+		_revealing_cocoon = cocoon
+		var shell := cocoon.begin_emergence()
+		var host := _hud_root()
+		var units: Array[RosterUnitData] = [unit]
+		_emergence = UnitEmergence.play(host if host != null else self, units, shell, UnitEmergence.Kind.COCOON, destinations)
+		_emergence.finished.connect(_on_emergence_ended.bind(_emergence.get_instance_id()))
+		_emergence.cancelled.connect(_on_emergence_ended.bind(_emergence.get_instance_id()))
+		card.set_emergence_hidden(true)
+		set_process(false)
+		return
+	set_process(false)
+	_notify_start_combat_state()
+
+
+func _on_emergence_ended(instance_id: int) -> void:
+	if not is_instance_valid(_emergence) or _emergence.get_instance_id() != instance_id:
+		return
+	var phase := 0.0
+	if not _emergence._actors.is_empty():
+		phase = _emergence._actors[0].animation_player.current_animation_position
+	_emergence = null
+	_restore_emergence_sources(phase)
+	_queue_emergence_presentation()
+
+
+func _restore_emergence_sources(phase: float = -1.0) -> void:
+	var unit := _revealing_unit
+	_revealing_unit = null
+	if is_instance_valid(_revealing_cocoon):
+		_revealing_cocoon.end_emergence()
+	_revealing_cocoon = null
+	# Presentation completion must not rebuild the Troop or restart idle animations.
+	var card := _find_unit_card(unit)
+	if card == null:
+		return
+	card.set_emergence_hidden(false)
+	if phase >= 0.0 and card._portrait_instance is UnitAppearance:
+		var actor := card._portrait_instance as UnitAppearance
+		actor.animation_player.seek(phase, true)
+
+
+func _find_unit_card(unit: RosterUnitData) -> UnitCard:
+	if unit == null:
+		return null
+	for slots in [_squad_slots, _bench_slots]:
+		for slot: DropSlot in slots:
+			for child in slot.get_node("%CardHost").get_children():
+				if child is UnitCard and (child as UnitCard).unit_data == unit:
+					return child as UnitCard
+	return null
+
+
+func _cancel_emergence() -> void:
+	if not is_instance_valid(_emergence):
+		return
+	var effect := _emergence
+	# cancel emits synchronously; detach first so its callback cannot drain a queue.
+	_emergence = null
+	effect.cancel()
+	_restore_emergence_sources()
+	_queue_emergence_presentation()
+
+
+func _cancel_presentations() -> void:
+	_cancel_emergence()
+	_cancel_compost_release()
+	_cancel_compost_gain()
+
+
+func _cancel_compost_gain() -> void:
+	if is_instance_valid(_compost_gain):
+		_compost_gain.cancel()
+	_compost_gain = null
+
+
+func _on_compost_release_ended(instance_id: int) -> void:
+	if not is_instance_valid(_compost_release) or _compost_release.get_instance_id() != instance_id:
+		return
+	_compost_release = null
+	if is_instance_valid(_compost_bin):
+		_compost_bin.end_release()
+	_sync_all_slots()
+	_queue_emergence_presentation()
+
+
+func _cancel_compost_release() -> void:
+	if not is_instance_valid(_compost_release):
+		return
+	var effect := _compost_release
+	_compost_release = null
+	effect.cancel()
+	if is_instance_valid(_compost_bin):
+		_compost_bin.end_release()
+	_sync_all_slots()
+
+
+func _exit_tree() -> void:
+	_screen_active = false
+	_cancel_compost_gain()
+	if is_instance_valid(_emergence):
+		var effect := _emergence
+		_emergence = null
+		effect.cancel()
+	if is_instance_valid(_compost_release):
+		var effect := _compost_release
+		_compost_release = null
+		effect.cancel()
+
+
 func _on_pupation_confirmed(unit: RosterUnitData, school: int) -> void:
+	if is_instance_valid(_compost_release):
+		return
 	_pupation_dialog = null
 	_pending_pupation_unit = null
+	var completes_now := unit.effective_cocoon_days() <= 0
 	var snapshot := GameState.base_undo.capture("Train" if unit.is_adult_stage() else "Evolve")
 	if GameState.try_cocoon_for_pupation(unit, school):
 		GameState.base_undo.record(snapshot)
-		Audio.play_ui_cue(Sfx.Cue.TRAIN)
+		# A reused Cocoon must not later show its previous occupant emerging.
+		for i in range(GameState.pending_cocoon_emergences.size() - 1, -1, -1):
+			if int(GameState.pending_cocoon_emergences[i].get("school", -1)) == school:
+				GameState.pending_cocoon_emergences.remove_at(i)
+		if completes_now:
+			GameState.queue_cocoon_emergence(unit, school)
+			_queue_emergence_presentation()
+		else:
+			Audio.play_ui_cue(Sfx.Cue.TRAIN)
 	_sync_all_slots()
 	_refresh_base_hud()
 
 
 func _on_compost_confirmed(unit: RosterUnitData) -> void:
+	if is_instance_valid(_compost_release):
+		return
 	_compost_dialog = null
 	var snapshot := GameState.base_undo.capture("Compost")
+	var previous_stock: Array = GameState.nursery.stock.slots.duplicate()
+	var previous_biomass := GameState.biomass.amount
 	if GameState.try_compost_unit(unit):
 		GameState.base_undo.record(snapshot)
-		Audio.play_ui_cue(Sfx.Cue.COMPOST)
+		_cancel_emergence()
+		var released_spores: Array[SporeData] = []
+		for item in GameState.nursery.stock.slots:
+			if item is SporeData and not previous_stock.has(item):
+				released_spores.append(item as SporeData)
+		if is_instance_valid(_compost_bin):
+			var bin_snapshot := _compost_bin.begin_release()
+			var host := _hud_root()
+			_compost_release = CompostRelease.play(host if host != null else self, bin_snapshot, released_spores)
+			var instance_id := _compost_release.get_instance_id()
+			_compost_release.finished.connect(_on_compost_release_ended.bind(instance_id))
+			_compost_release.cancelled.connect(_on_compost_release_ended.bind(instance_id))
+			_cancel_compost_gain()
+			var base := get_tree().current_scene
+			var counter := base.get_node_or_null("%BiomassChip") as BiomassChip
+			var gained := GameState.biomass.amount - previous_biomass
+			if counter != null and gained > 0:
+				_compost_gain = BiomassGain.play(
+					host if host != null else self, _compost_release.biomass_source_canvas_rect(),
+					gained, counter, false, CompostRelease.ANTICIPATION_SECONDS
+				)
+		else:
+			Audio.play_ui_cue(Sfx.Cue.COMPOST)
 		_sync_all_slots()
 		_refresh_base_hud()
 
 
 func _on_pupation_dialog_closed(dialog: PupationConfirmDialog) -> void:
 	if _pupation_dialog != dialog:
+		_queue_emergence_presentation()
 		return
 	_pupation_dialog = null
 	if _pending_pupation_unit != null:
 		_pending_pupation_unit = null
 		call_deferred("_sync_all_slots")
+	_queue_emergence_presentation()
 
 
 func _on_compost_dialog_closed(dialog: CompostConfirmDialog) -> void:
 	if _compost_dialog == dialog:
 		_compost_dialog = null
+	_queue_emergence_presentation()
 
 
 func _refresh_base_hud() -> void:
@@ -587,6 +856,14 @@ func _sync_slot_card(slot: DropSlot, source: String) -> void:
 	card.clicked.connect(_on_unit_card_clicked)
 	slot.set_card(card)
 	card.set_training_hint_visible(unit == get_training_hint_unit())
+	if unit == _revealing_unit:
+		card.set_emergence_hidden(true)
+		return
+	# Keep the destination laid out without flashing the result before its launch.
+	for entry in GameState.pending_cocoon_emergences:
+		if entry.get("unit") == unit and GameState.is_cocoon_emergence_current(entry):
+			card.set_emergence_hidden(true)
+			break
 
 
 func get_training_hint_unit() -> RosterUnitData:
@@ -604,7 +881,7 @@ func get_training_hint_unit() -> RosterUnitData:
 
 
 func can_start_combat() -> bool:
-	if GameState.pending_seal_choice:
+	if GameState.pending_seal_choice or is_instance_valid(_compost_release):
 		return false
 	return _squad_unit_count() > 0
 
@@ -612,6 +889,8 @@ func can_start_combat() -> bool:
 func start_combat() -> void:
 	if not can_start_combat():
 		return
+	_cancel_presentations()
+	GameState.pending_cocoon_emergences.clear()
 	GameState.base_undo.end_visit()
 	BattleLaunch.set_enemy_roster(_make_default_enemy_roster())
 	SceneTransition.change_scene("res://assets/combat/combat_stage/combat_stage.tscn")

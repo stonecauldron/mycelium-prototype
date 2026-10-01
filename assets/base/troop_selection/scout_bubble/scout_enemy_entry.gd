@@ -1,5 +1,5 @@
 class_name ScoutEnemyEntry
-extends HBoxContainer
+extends VBoxContainer
 
 ## Enemy art is shorter above the feet origin than player portraits.
 const _PORTRAIT_SCALE := 0.6
@@ -8,6 +8,8 @@ const _PORTRAIT_Y_FACTOR := 0.82
 const _TOOLTIP_WIDTH := 260.0
 const _CHIP_SIZE := Vector2(40, 40)
 const _CHIP_FONT_SIZE := 24
+const _PREVIEW_CHIP_SIZE := Vector2(32, 32)
+const _PREVIEW_CHIP_FONT_SIZE := 20
 
 const _STAT_CHIP_SCENE: PackedScene = preload("res://assets/ui/stat_chip/stat_chip.tscn")
 const _TAG_CHIP_SCENE: PackedScene = preload("res://assets/ui/tag_chip/tag_chip.tscn")
@@ -16,6 +18,7 @@ const _HP_ICON: Texture2D = preload("res://assets/base/unit_card/hp_icon.png")
 
 @onready var _count_label: Label = %CountLabel
 @onready var _portrait_host: Control = %PortraitHost
+@onready var _combat_row: HBoxContainer = %CombatRow
 
 var _portrait_instance: Node2D = null
 var _unit_data: EnemyUnitData = null
@@ -31,12 +34,20 @@ func setup(count: int, unit_data: EnemyUnitData) -> void:
 func _apply(count: int, unit_data: EnemyUnitData) -> void:
 	_unit_data = unit_data
 	_count_label.text = "%d ×" % count
+	for chip in _combat_row.get_children():
+		_combat_row.remove_child(chip)
+		chip.queue_free()
+	_combat_row.visible = unit_data != null
 	if _portrait_instance != null:
 		_portrait_instance.queue_free()
 		_portrait_instance = null
 	if unit_data == null or _portrait_host == null:
 		tooltip_text = ""
 		return
+	_add_combat_chips(_combat_row, unit_data)
+	for chip: StatChip in _combat_row.get_children():
+		chip.chip_size = _PREVIEW_CHIP_SIZE
+		chip.value_font_size = _PREVIEW_CHIP_FONT_SIZE
 	var data := RosterUnitData.create_enemy(
 		unit_data.display_name,
 		null,
@@ -78,20 +89,13 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 	vbox.add_child(name_label)
 
 	var combat := unit_data.get_combat_profile()
-	var atk: int = combat.base_damage
-	if unit_data.stats != null:
-		atk += unit_data.stats.get_damage_bonus(combat.damage_stat)
-	atk = maxi(roundi(float(atk) * combat.outgoing_damage_multiplier), 1)
-	var hp: int = unit_data.stats.get_max_hp() if unit_data.stats != null else 0
-
 	var combat_row := HBoxContainer.new()
 	combat_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	combat_row.add_theme_constant_override("separation", 10)
 	combat_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	vbox.add_child(combat_row)
 
-	combat_row.add_child(_make_stat_chip(_SWORD_ICON, atk, 45.0))
-	combat_row.add_child(_make_stat_chip(_HP_ICON, hp))
+	_add_combat_chips(combat_row, unit_data)
 
 	var speed_label := Label.new()
 	speed_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -128,11 +132,24 @@ func _build_enemy_tooltip(unit_data: EnemyUnitData) -> Control:
 	return panel
 
 
+func _add_combat_chips(row: HBoxContainer, unit_data: EnemyUnitData) -> void:
+	# A grouped enemy preview uses authored averages, as its detail tooltip does.
+	var combat := unit_data.get_combat_profile()
+	var atk: int = combat.base_damage
+	if unit_data.stats != null:
+		atk += unit_data.stats.get_damage_bonus(combat.damage_stat)
+	atk = maxi(roundi(float(atk) * combat.outgoing_damage_multiplier), 1)
+	var hp: int = unit_data.stats.get_max_hp() if unit_data.stats != null else 0
+	row.add_child(_make_stat_chip(_SWORD_ICON, atk, 45.0))
+	row.add_child(_make_stat_chip(_HP_ICON, hp))
+
+
 func _make_stat_chip(icon: Texture2D, value: int, icon_angle: float = 0.0) -> StatChip:
 	var chip: StatChip = _STAT_CHIP_SCENE.instantiate()
 	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	chip.icon = icon
 	chip.icon_rotation_degrees = icon_angle
+	chip.icon_scale = 1.4 if icon == _SWORD_ICON else 1.0
 	chip.chip_size = _CHIP_SIZE
 	chip.value_font_size = _CHIP_FONT_SIZE
 	if chip.is_node_ready():
@@ -147,4 +164,3 @@ func _make_tag_chip(text: String) -> TagChip:
 	tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tag.set_text(text)
 	return tag
-

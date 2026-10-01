@@ -20,7 +20,7 @@ func _run() -> void:
 	add_child(dialog)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var failures := _check_portrait(dialog.get_node("%RightPortrait"), "Adult Umbrella Shield")
+	var failures := _check_portrait(dialog._comparison.get_node("%RightPortrait"), "Adult Umbrella Shield")
 	var args := OS.get_cmdline_user_args()
 	if not args.is_empty():
 		await RenderingServer.frame_post_draw
@@ -43,9 +43,9 @@ func _run() -> void:
 					"Adult" if is_adult else "Child",
 					WeaponSchool.display_name(first), WeaponSchool.display_name(second),
 				]
-				failures += _check_portrait(dialog.get_node("%RightPortrait"), label + " result")
+				failures += _check_portrait(dialog._comparison.get_node("%RightPortrait"), label + " result")
 				if not is_adult:
-					failures += _check_portrait(dialog.get_node("%LeftPortrait"), label + " before")
+					failures += _check_portrait(dialog._comparison.get_node("%LeftPortrait"), label + " before")
 	print("Portrait containment: ", "PASS" if failures == 0 else "FAIL", " (", failures, " clipped samples; all 10 combos, Adult and Child layouts)")
 	get_tree().quit(0 if failures == 0 else 1)
 

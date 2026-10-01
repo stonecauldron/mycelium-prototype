@@ -321,10 +321,10 @@ func _check_base_ui_and_compost() -> void:
 		GameState.troop.unlock_next_squad_slot()
 		screen.on_screen_shown()
 		await _settle()
-		var bin := row.get_child(row.get_child_count() - 1) as CompostingBin
-		_check(bin != null, "bin last at capacity " + str(count))
+		var last_bin := row.get_child(row.get_child_count() - 1) as CompostingBin
+		_check(last_bin != null, "bin last at capacity " + str(count))
 		_check(screen._squad_slots.size() == count, "bin never counts as squad slot")
-		_check(bin.get_global_rect().end.x <= screen.get_global_rect().end.x, "bin within viewport at capacity " + str(count))
+		_check(last_bin.get_global_rect().end.x <= screen.get_global_rect().end.x, "bin within viewport at capacity " + str(count))
 		_check_compost_spacing(screen)
 	_check(row.get_child_count() == 12 and screen._squad_unlock_slot == null, "ten squad slots plus spacer and bin, no purchase")
 	await _capture("war-chamber-max")

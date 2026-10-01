@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://r2jxi58t3ovw" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 3 6.png" id="7_c8sri"]
 [ext_resource type="StyleBox" uid="uid://cvsxo5ho127wu" path="res://assets/themes/paper/paper_tooltip_panel.tres" id="8_tooltip_panel"]
 [ext_resource type="Texture2D" uid="uid://81frowvo5wno" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 2 9.png" id="10_c8sri"]
+[ext_resource type="StyleBox" path="res://assets/themes/paper/paper_text_tooltip.tres" id="text_tooltip_panel"]
 [ext_resource type="Texture2D" uid="uid://pi1cdc0aaat0" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 6.png" id="tex_paper_chip"]
 [ext_resource type="Texture2D" uid="uid://d3wxm5pduf23n" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square border 6.png" id="tex_paper_chip_outline"]
 
@@ -85,8 +86,6 @@ variation_opentype = {
 2003072104: 100,
 2003265652: 500
 }
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tooltip_panel"]
 
 [resource]
 BaseRootMargin/base_type = &"MarginContainer"
@@ -242,5 +241,8 @@ TitleLabel/base_type = &"Label"
 TitleLabel/colors/font_color = Color(0.18, 0.16, 0.14, 1)
 TitleLabel/font_sizes/font_size = 80
 TitleLabel/fonts/font = ExtResource("6_n83um")
-TooltipPanel/styles/panel = SubResource("StyleBoxEmpty_tooltip_panel")
+TooltipLabel/colors/font_color = Color(0.18, 0.16, 0.14, 1)
+TooltipLabel/font_sizes/font_size = 22
+TooltipLabel/fonts/font = SubResource("Font_figtree_body")
+TooltipPanel/styles/panel = ExtResource("text_tooltip_panel")
 VBoxContainer/constants/separation = 8

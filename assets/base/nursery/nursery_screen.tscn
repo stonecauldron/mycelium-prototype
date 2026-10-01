@@ -50,20 +50,22 @@ text = "Nursery"
 unique_name_in_owner = true
 layout_mode = 1
 offset_left = 16.0
-offset_top = 164.0
+offset_top = 67.0
 offset_right = 780.0
-offset_bottom = 464.0
+offset_bottom = 458.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="StockMargin" type="MarginContainer" parent="StockPanel" unique_id=878538865]
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"PanelInnerMargin"
+theme_override_constants/margin_top = 42
 
 [node name="StockVBox" type="VBoxContainer" parent="StockPanel/StockMargin" unique_id=1807134095]
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"TightVBox"
+theme_override_constants/separation = 70
 
 [node name="StockTitle" type="Label" parent="StockPanel/StockMargin/StockVBox" unique_id=1323217261]
 layout_mode = 2
@@ -85,9 +87,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 offset_left = 14.0
-offset_top = 589.0
+offset_top = 541.0
 offset_right = -18.0
-offset_bottom = 944.0
+offset_bottom = 896.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_panel")
 
 [node name="PlotsMargin" type="MarginContainer" parent="PlotsPanel" unique_id=1251518974]

@@ -1,0 +1,4 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://.scratch/shared-usability/default_tooltip_checks.gd" id="1"]
+[node name="DefaultTooltipChecks" type="Node"]
+script = ExtResource("1")

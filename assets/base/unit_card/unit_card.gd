@@ -35,8 +35,6 @@ func setup(data: Resource, card_source: String = "bench", card_slot: Node = null
 	reset_compact_layout()
 	if is_node_ready():
 		_refresh()
-	else:
-		ready.connect(_refresh, CONNECT_ONE_SHOT)
 
 
 func reset_compact_layout() -> void:
@@ -183,6 +181,20 @@ func _refresh_portrait(data: RosterUnitData) -> void:
 	if _portrait_host == null:
 		return
 	_portrait_instance = data.mount_portrait(_portrait_host, PORTRAIT_SCALE)
+
+
+## Normal on-screen pose for a reveal to land on, independent of hover animation.
+func portrait_canvas_transform() -> Transform2D:
+	_hover_punch.reset()
+	RosterUnitData._sync_portrait_in_host(_portrait_host)
+	return _portrait_instance.get_global_transform_with_canvas()
+
+
+## Keep the landing portrait alive and animating behind its temporary reveal.
+func set_emergence_hidden(should_hide: bool) -> void:
+	modulate.a = 0.0 if should_hide else 1.0
+	mouse_filter = Control.MOUSE_FILTER_IGNORE if should_hide else Control.MOUSE_FILTER_STOP
+	tooltip_text = "" if should_hide else unit_data.display_name
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:

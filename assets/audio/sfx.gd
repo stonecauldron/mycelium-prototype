@@ -52,7 +52,15 @@ enum Cue {
 	GREAT_HIT_SLASH,
 	GREAT_HIT_BLUNT,
 	GREAT_BLOCK,
+	COCOON_EMERGE,
+	ITEM_TRANSFORM,
+	BIOMASS_DROP,
+	BIOMASS_FEED,
+	BIOMASS_COMPLETE,
 }
+
+## Main transient offset of the reference combo-reel v9 emergence sound.
+const COCOON_EMERGE_TRANSIENT_SECONDS := 0.015
 
 const SOUNDS: Dictionary = {
 	Cue.UI_HOVER: {
@@ -242,6 +250,26 @@ const SOUNDS: Dictionary = {
 	Cue.GREAT_BLOCK: {
 		"stream": preload("res://assets/audio/sfx/great_block.wav"),
 		"gain_db": -9.0, "cooldown_ms": 140, "pitch_variation": 0.08,
+	},
+	Cue.COCOON_EMERGE: {
+		"stream": preload("res://assets/audio/sfx/cocoon_emerge.wav"),
+		"gain_db": -3.0, "cooldown_ms": 100, "pitch_variation": 0.0,
+	},
+	Cue.ITEM_TRANSFORM: {
+		"stream": preload("res://assets/audio/sfx/spore.wav"),
+		"gain_db": -12.0, "cooldown_ms": 80, "pitch_variation": 0.1,
+	},
+	Cue.BIOMASS_DROP: {
+		"stream": preload("res://assets/audio/sfx/ground.wav"),
+		"gain_db": -13.0, "cooldown_ms": 100, "pitch_variation": 0.08,
+	},
+	Cue.BIOMASS_FEED: {
+		"stream": preload("res://assets/audio/sfx/select.wav"),
+		"gain_db": -14.0, "cooldown_ms": 40, "pitch_variation": 0.0,
+	},
+	Cue.BIOMASS_COMPLETE: {
+		"stream": preload("res://assets/audio/sfx/purchase.wav"),
+		"gain_db": -8.0, "cooldown_ms": 180, "pitch_variation": 0.0,
 	},
 }
 

@@ -3,3 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://carmy001" path="res://assets/combat/troop/troop.tscn" id="1_troop"]
 
 [node name="PlayerTroop" instance=ExtResource("1_troop")]
+
+[node name="FlagBearer" parent="." index="0"]
+show_owned_seals = true

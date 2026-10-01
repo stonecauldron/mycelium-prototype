@@ -1,0 +1,4 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://.scratch/nursery-item-drag/verify.gd" id="1"]
+[node name="NurseryItemDragChecks" type="Node"]
+script = ExtResource("1")

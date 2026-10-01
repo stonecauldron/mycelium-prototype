@@ -7,9 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://c4swjtkoverfp" path="res://assets/base/nursery/nursery_screen.tscn" id="11_nursery"]
 [ext_resource type="PackedScene" uid="uid://c2o6rfx3qe441" path="res://assets/base/troop_selection/troop_selection_screen.tscn" id="13_colony"]
 [ext_resource type="PackedScene" uid="uid://dsqs8t51u2t41" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="14_biomass_chip"]
-[ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="15_run_menu"]
+[ext_resource type="PackedScene" uid="uid://di7wsln3p56v0" path="res://assets/ui/run_menu/run_menu.tscn" id="15_run_menu"]
 [ext_resource type="PackedScene" path="res://assets/vfx/ambient_motes/ambient_motes.tscn" id="16_ambient_motes"]
-[ext_resource type="Texture2D" path="res://assets/ui/icons/undo.svg" id="17_undo"]
+[ext_resource type="Texture2D" uid="uid://k7ory7bu4wdy" path="res://assets/ui/icons/undo.svg" id="17_undo"]
 [ext_resource type="Texture2D" uid="uid://pi1cdc0aaat0" path="res://assets/asset_packs/Cila - Paper UI stylized/square/square 6.png" id="18_undo_paper"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jfa4i"]
@@ -54,7 +54,7 @@ mouse_filter = 2
 texture = ExtResource("2_apgqf")
 expand_mode = 1
 
-[node name="AmbientMotes" parent="World/Zones/NurseryZone/Host/Background" instance=ExtResource("16_ambient_motes")]
+[node name="AmbientMotes" parent="World/Zones/NurseryZone/Host/Background" unique_id=683917940 instance=ExtResource("16_ambient_motes")]
 position = Vector2(960, 540)
 amount = 44
 initial_velocity_min = 2.0
@@ -90,7 +90,7 @@ mouse_filter = 2
 texture = ExtResource("4_j7mcc")
 expand_mode = 1
 
-[node name="AmbientMotes" parent="World/Zones/ColonyZone/Host/Background" instance=ExtResource("16_ambient_motes")]
+[node name="AmbientMotes" parent="World/Zones/ColonyZone/Host/Background" unique_id=2124780196 instance=ExtResource("16_ambient_motes")]
 position = Vector2(960, 540)
 
 [node name="ColonyScreen" parent="World/Zones/ColonyZone/Host" unique_id=685627613 instance=ExtResource("13_colony")]
@@ -199,10 +199,10 @@ text = "Start Battle"
 
 [node name="RunMenu" parent="." unique_id=992448351 instance=ExtResource("15_run_menu")]
 
-[node name="UndoLayer" type="CanvasLayer" parent="."]
+[node name="UndoLayer" type="CanvasLayer" parent="." unique_id=2010281691]
 layer = 11
 
-[node name="UndoRoot" type="Control" parent="UndoLayer"]
+[node name="UndoRoot" type="Control" parent="UndoLayer" unique_id=1525986157]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -212,7 +212,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("2_theme")
 
-[node name="UndoButton" type="Button" parent="UndoLayer/UndoRoot"]
+[node name="UndoButton" type="Button" parent="UndoLayer/UndoRoot" unique_id=1442761696]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 1

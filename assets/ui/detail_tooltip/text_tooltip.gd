@@ -1,6 +1,6 @@
 extends Control
 
-## Readable text tips for Controls in the theme with a blank native TooltipPanel.
+## Wrapped text tips for Controls that need an overlay instead of the native paper tip.
 func _make_custom_tooltip(for_text: String) -> Object:
 	var panel := PanelContainer.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE

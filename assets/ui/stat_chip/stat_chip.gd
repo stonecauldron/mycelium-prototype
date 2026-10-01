@@ -30,6 +30,12 @@ const DEFAULT_VALUE_FONT_SIZE := 24
 		value_font_size = value
 		_apply_value_font_size()
 
+## Offset from the icon center, as a fraction of chip_size.
+@export var value_position_offset: Vector2 = Vector2.ZERO:
+	set(value):
+		value_position_offset = value
+		_apply_value_position()
+
 ## Optional factory returning a Control for Godot's custom tooltip popup.
 var custom_tooltip_factory: Callable
 
@@ -70,6 +76,7 @@ func set_value_color(color: Color) -> void:
 func _apply_chip_size() -> void:
 	custom_minimum_size = chip_size
 	size = chip_size
+	_apply_value_position()
 
 
 func _apply_icon_transform() -> void:
@@ -84,6 +91,16 @@ func _apply_value_font_size() -> void:
 	if _value_label == null:
 		return
 	_value_label.add_theme_font_size_override("font_size", value_font_size)
+
+
+func _apply_value_position() -> void:
+	if _value_label == null:
+		return
+	var offset := chip_size * value_position_offset
+	_value_label.offset_left = offset.x
+	_value_label.offset_right = offset.x
+	_value_label.offset_top = offset.y
+	_value_label.offset_bottom = offset.y
 
 
 func _set_children_mouse_filter_ignore(node: Node) -> void:

@@ -59,7 +59,7 @@ theme_type_variation = &"SlotMargin"
 [node name="Stack" type="VBoxContainer" parent="Content/Margin" unique_id=1962374868]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = -12
+theme_override_constants/separation = 8
 
 [node name="LockSpacer" type="Control" parent="Content/Margin/Stack" unique_id=1087985864]
 unique_name_in_owner = true
@@ -82,6 +82,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 24.0
+offset_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -96,6 +98,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 24.0
+offset_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -110,6 +114,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 24.0
+offset_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2

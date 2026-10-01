@@ -1,7 +1,7 @@
 class_name ScoutBubble
 extends Control
 
-signal elite_focus_changed(day: int)
+signal preview_focus_changed(day: int)
 
 const _SCOUT_ENTRY_SCENE := preload(
 	"res://assets/base/troop_selection/scout_bubble/scout_enemy_entry.tscn"
@@ -15,8 +15,8 @@ const _SCOUT_ENTRY_SCENE := preload(
 @onready var _next_battle_button: Button = %NextBattleButton
 
 var _previewing: bool = false
-var _focused_elite_day: int = 0
-## Day used for Battle-reward preview (upcoming day, or elite day while previewing).
+var _focused_day: int = 0
+## Day used for Battle-reward preview (upcoming day, or selected day while previewing).
 var _reward_day: int = 1
 
 
@@ -30,56 +30,56 @@ func _ready() -> void:
 
 
 func refresh() -> void:
-	var had_focus := _focused_elite_day != 0
-	_focused_elite_day = 0
+	var had_focus := _focused_day != 0
+	_focused_day = 0
+	_show_upcoming_battle()
+	if had_focus:
+		preview_focus_changed.emit(0)
+
+
+func _show_upcoming_battle() -> void:
 	_previewing = false
 	GameState.ensure_upcoming_enemy_formation()
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	var specs := GameState.upcoming_enemy_formation
 	show_specs(specs, _title_for_day(day, false), day)
 	_refresh_reroll_affordability()
-	if had_focus:
-		elite_focus_changed.emit(0)
 
 
-func preview_elite_for_day(day: int) -> void:
-	if _focused_elite_day != 0:
-		return
-	var elite_day := clampi(day, 1, GameState.WIN_DAYS)
-	if not GameState.is_elite_day(elite_day):
-		return
+func preview_day(day: int) -> void:
+	var previewed_day := clampi(day, 1, GameState.WIN_DAYS)
 	var upcoming := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
-	if elite_day <= upcoming:
+	if previewed_day == upcoming:
+		# Hovering the real Battle borrows its cached army without changing the pin.
+		if _previewing:
+			_show_upcoming_battle()
+		return
+	_show_day_preview(previewed_day)
+
+
+func pin_day(day: int) -> void:
+	var previewed_day := clampi(day, 1, GameState.WIN_DAYS)
+	var upcoming := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	if previewed_day == upcoming:
 		return_to_next_battle()
 		return
-	_show_elite_preview(elite_day)
-
-
-func pin_elite_for_day(day: int) -> void:
-	var elite_day := clampi(day, 1, GameState.WIN_DAYS)
-	if not GameState.is_elite_day(elite_day):
-		return
-	var upcoming := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
-	if elite_day <= upcoming:
-		return_to_next_battle()
-		return
-	var changed := _focused_elite_day != elite_day
-	_focused_elite_day = elite_day
-	_show_elite_preview(elite_day)
+	var changed := _focused_day != previewed_day
+	_focused_day = previewed_day
+	_show_day_preview(previewed_day)
 	if changed:
-		elite_focus_changed.emit(elite_day)
+		preview_focus_changed.emit(previewed_day)
 
 
-func focused_elite_day() -> int:
-	return _focused_elite_day
+func focused_day() -> int:
+	return _focused_day
 
 
 func return_to_next_battle() -> void:
-	if _previewing or _focused_elite_day != 0:
+	if _previewing or _focused_day != 0:
 		refresh()
 
 
-func _show_elite_preview(day: int) -> void:
+func _show_day_preview(day: int) -> void:
 	# Pinning an already visible hover preview keeps its enemy tooltip targets alive.
 	if not _previewing or _reward_day != day:
 		_previewing = true
@@ -89,9 +89,10 @@ func _show_elite_preview(day: int) -> void:
 
 
 func clear_preview() -> void:
-	if not _previewing or _focused_elite_day != 0:
-		return
-	refresh()
+	if _focused_day != 0:
+		_show_day_preview(_focused_day)
+	elif _previewing:
+		_show_upcoming_battle()
 
 
 func show_specs(specs: Array[EnemyUnitSpec], title: String, day: int = -1) -> void:
@@ -129,14 +130,14 @@ func show_specs(specs: Array[EnemyUnitSpec], title: String, day: int = -1) -> vo
 
 
 func _title_for_day(day: int, include_day: bool) -> String:
-	var base := "Elite Battle" if GameState.is_elite_day(day) else "Next Battle"
 	if include_day:
+		var base := "Elite Battle" if GameState.is_elite_day(day) else "Battle"
 		return "%s: Day %d" % [base, day]
-	return base
+	return "Elite Battle" if GameState.is_elite_day(day) else "Next Battle"
 
 
 func _reroll_allowed() -> bool:
-	if _previewing:
+	if _previewing or _focused_day != 0:
 		return false
 	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	return not GameState.is_elite_day(day)
@@ -149,8 +150,7 @@ func _biomass_preview_delta() -> Variant:
 
 
 func _refresh_reroll_affordability() -> void:
-	var upcoming := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
-	_next_battle_button.visible = _focused_elite_day > upcoming
+	_next_battle_button.visible = _focused_day != 0
 	if _scout_reroll_button == null:
 		return
 	var cost := GameState.current_scout_reroll_cost()

@@ -110,7 +110,7 @@ func _check_edge_cases() -> void:
 	var shop_card_before := _screen._shop_cards[0]
 	GameState.biomass.add(1)
 	_check(GameState.nursery.stock.get_at(0) == stock_before and _screen._shop_cards[0] == shop_card_before, "Balance-only refresh preserves inventory and shop cards")
-	_scout.preview_elite_for_day(5)
+	_scout.preview_day(5)
 	GameState.biomass.add(100)
 	_check(not _scout._scout_reroll_button.visible and _scout._scout_reroll_button.disabled, "Elite preview keeps Scout reroll unavailable after gain")
 	_scout.clear_preview()

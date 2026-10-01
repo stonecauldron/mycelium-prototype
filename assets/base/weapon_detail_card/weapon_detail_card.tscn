@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://b8g6iah8v7rc7" path="res://assets/ui/tag_chip/tag_chip.tscn" id="5_tag"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="6_biomass"]
 [ext_resource type="StyleBox" uid="uid://cvsxo5ho127wu" path="res://assets/themes/paper/paper_tooltip_panel.tres" id="8_tooltip_panel"]
+[ext_resource type="PackedScene" uid="uid://cstatchip001" path="res://assets/ui/stat_chip/stat_chip.tscn" id="9_stat_chip"]
 
 [node name="WeaponDetailCard" type="Control"]
 custom_minimum_size = Vector2(320, 390)
@@ -74,20 +75,20 @@ size_flags_horizontal = 4
 theme_override_constants/separation = 16
 alignment = 1
 
+[node name="SpeedChip" parent="CardPanel/Margin/VBox/CombatRow" instance=ExtResource("9_stat_chip")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+icon_scale = 1.3
+value_font_size = 20
+value_position_offset = Vector2(0, 0.4)
+
 [node name="DmgLabel" type="Label" parent="CardPanel/Margin/VBox/CombatRow"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
 theme_override_font_sizes/font_size = 26
-text = "DMG 0"
-horizontal_alignment = 1
-
-[node name="SpeedLabel" type="Label" parent="CardPanel/Margin/VBox/CombatRow"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.03137255, 0.03529412, 0.02745098, 1)
-theme_override_font_sizes/font_size = 26
-text = "Attacks every 0 secs"
+text = "Base Damage: 0"
 horizontal_alignment = 1
 
 [node name="TagMargin" type="MarginContainer" parent="CardPanel/Margin/VBox"]

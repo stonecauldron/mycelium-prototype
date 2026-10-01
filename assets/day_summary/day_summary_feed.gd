@@ -2,7 +2,7 @@ class_name DaySummaryFeed
 extends RefCounted
 
 ## Pending end-of-day summary rows.
-## Keys: text, optional formation_line, optional unit, optional biomass, optional nursery_ready,
+## Keys: text, optional formation_line, optional unit, optional biomass + biomass_amount, optional nursery_ready,
 ## optional emitted_spores + spore_tint.
 static var entries: Array[Dictionary] = []
 
@@ -116,6 +116,7 @@ static func add_biomass_earned(amount: int) -> void:
 	entries.append({
 		"text": BiomassDisplay.text(amount, true),
 		"biomass": true,
+		"biomass_amount": amount,
 	})
 
 

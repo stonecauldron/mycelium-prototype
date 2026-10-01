@@ -132,9 +132,15 @@ func _run() -> void:
 	await settle()
 	check(get_viewport().gui_get_hovered_control() == seal_day, "Seal artwork itself owns the timing tooltip hover")
 	await capture("seal-tooltip")
+	get_viewport().warp_mouse(Vector2(4, 4))
+	var focus_motion := InputEventMouseMotion.new()
+	focus_motion.position = get_viewport().get_final_transform() * Vector2(4, 4)
+	focus_motion.global_position = focus_motion.position
+	Input.parse_input_event(focus_motion)
+	await settle()
 	seal_day.grab_focus()
 	await settle()
-	check(seal_day.has_node("FocusTooltipLease") and "Before Battle 3" in seal_day.accessibility_name, "focused Day provides timing tooltip and accessible name")
+	check(seal_day.has_node("FocusTooltipLease") and "Seal choice" in seal_day.accessibility_name, "focused Day provides Seal tooltip and accessible name")
 	seal_day.release_focus()
 	for day in range(1, 11):
 		GameState.current_day = day - 1

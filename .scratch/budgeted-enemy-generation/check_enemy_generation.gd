@@ -193,7 +193,7 @@ func _check_scout_and_combat() -> void:
 	_expect(label.text == "+%d" % EnemyComposer.battle_reward_for(1, GameState.upcoming_enemy_formation), "Scout displays matching reward")
 	var cached_ids := _ordered_ids(GameState.upcoming_enemy_formation)
 	var preview := _ordered_ids(EnemyComposer.specs_for_day(5))
-	scout.preview_elite_for_day(5)
+	scout.preview_day(5)
 	_expect(_ordered_ids(GameState.upcoming_enemy_formation) == cached_ids, "elite preview preserves upcoming army")
 	_expect(label.text == "+%d" % EnemyComposer.battle_reward_for(5, EnemyComposer.specs_for_day(5)), "elite preview uses elite reward")
 	_expect(not scout._reroll_allowed(), "elite preview disables reroll")

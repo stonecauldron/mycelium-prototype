@@ -46,9 +46,8 @@ const _SHAKE_NUDGE_NORMAL_PX := 4.0
 const _SHAKE_NUDGE_IMAGO_PX := 8.0
 const _ARROW_WIDTH := 96.0
 const _ARROW_HEIGHT := 96.0
-const _ARROW_DRAG_TOP := -20.0
-const _ARROW_HARVEST_TOP := -48.0
-const _ARROW_PLANT_GAP_PX := 20.0
+const _ARROW_DRAG_TOP := 0.0
+const _ARROW_HARVEST_TOP := 0.0
 
 var plot_index: int = 0
 var is_unlockable: bool = false
@@ -89,6 +88,7 @@ var _egg_shake_rot: float = 0.0:
 
 
 func _ready() -> void:
+	add_to_group(NurseryItemDropTargets.GROUP)
 	_fertilizer_icon_atlas = AtlasTexture.new()
 	_fertilizer_icon_atlas.atlas = _FERTILIZER_ICON
 	_fertilizer_icon_atlas.region = Rect2(183, 167, 169, 180)
@@ -107,8 +107,7 @@ func _ready() -> void:
 	if _egg_visual != null:
 		_egg_visual.resized.connect(_update_egg_pivot)
 	_refresh_stats_panel_visibility()
-	# Plant-hint Y is measured from ActionSlot; that rect is (0,0) until the first sort.
-	_action_slot.item_rect_changed.connect(_refresh_arrow)
+	_drop_arrow.custom_minimum_size = Vector2(_ARROW_WIDTH, _ARROW_HEIGHT)
 	GameState.biomass.changed.connect(_refresh_affordability)
 	if is_unlockable or _plot != null:
 		_refresh()
@@ -141,6 +140,14 @@ func clear_drop_highlight() -> void:
 	modulate = _base_modulate
 
 
+func drag_target_canvas_rect() -> Rect2:
+	return get_global_transform_with_canvas() * Rect2(Vector2.ZERO, size)
+
+
+func _has_point(point: Vector2) -> bool:
+	return NurseryItemDropTargets.contains(self, get_global_transform_with_canvas() * point)
+
+
 func _on_mouse_exited() -> void:
 	clear_drop_highlight()
 	ActionFeedback.clear_drag_preview()
@@ -162,13 +169,6 @@ func _place_drop_arrow(top_px: float) -> void:
 	_drop_arrow.offset_right = _ARROW_WIDTH * 0.5
 	_drop_arrow.offset_top = top_px
 	_drop_arrow.offset_bottom = top_px + _ARROW_HEIGHT
-
-
-## Tip sits over the top of the Plant button (ActionSlot).
-func _plant_hint_arrow_top() -> float:
-	var arrow_parent := _drop_arrow.get_parent() as Control
-	var slot_top_y := _action_slot.global_position.y - arrow_parent.global_position.y
-	return slot_top_y - _ARROW_HEIGHT - _ARROW_PLANT_GAP_PX
 
 
 func _accepts_drag_data(data: Variant) -> bool:
@@ -266,12 +266,8 @@ func _refresh_arrow() -> void:
 		_set_drop_arrow_visible(_accepts_drag_data(viewport.gui_get_drag_data()))
 		return
 	if _should_show_plant_hint():
-		var top_px := _plant_hint_arrow_top()
-		# Same-frame add_child+setup still has ActionSlot at the parent origin.
-		if top_px < 0.0:
-			_set_drop_arrow_visible(false)
-			return
-		_place_drop_arrow(top_px)
+		# Empty dirt is also clickable; keep its hint above the modifier strip.
+		_place_drop_arrow(_ARROW_DRAG_TOP)
 		_set_drop_arrow_visible(true)
 		return
 	if _should_show_harvest_hint():
@@ -662,6 +658,13 @@ func _texture_for_plot() -> Texture2D:
 	return _TEX_GROWTH1
 
 
+func capture_hatch_shell() -> Dictionary:
+	_stop_egg_shake()
+	var shell := UnitEmergence.capture_shell(_egg_visual)
+	shell["shadow_texture"] = _egg_shadow.texture
+	return shell
+
+
 func _show_egg_layers(as_imago: bool) -> void:
 	if _egg_shadow == null or _egg_visual == null:
 		return
@@ -764,7 +767,10 @@ func _gui_input(event: InputEvent) -> void:
 			accept_event()
 
 
-func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
+	if not _has_point(at_position):
+		clear_drop_highlight()
+		return false
 	var decision := _plot_item_drag_decision(data)
 	if decision != null:
 		if not decision.allowed:
@@ -782,10 +788,10 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 	return true
 
 
-func _drop_data(_at_position: Vector2, data: Variant) -> void:
+func _drop_data(at_position: Vector2, data: Variant) -> void:
 	clear_drop_highlight()
 	_refresh_arrow()
-	if not _accepts_drag_data(data):
+	if not _has_point(at_position) or not _accepts_drag_data(data):
 		return
 	spore_dropped.emit(self, data)
 

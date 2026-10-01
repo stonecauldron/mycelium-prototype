@@ -1,7 +1,7 @@
 class_name FlagSealsOverlay
 extends Node2D
 
-## War Chamber only: seal icons on the flag cloth + manual HUD tooltip on hover.
+## Seal icons attached to the flag cloth, with optional War Chamber hover details.
 ## Built-in Control tooltips fail here (world Control under Camera2D + moving hit targets).
 
 const MAX_DISPLAY := 3
@@ -14,6 +14,8 @@ const INK := PaperStyles.INK
 const DESC := PaperStyles.INK_MUTED
 const _HOVER_PAD := 12.0
 
+@export var hover_tooltip_enabled: bool = true
+
 var _icons: Array[Sprite2D] = []
 var _tooltip: Control
 var _hovering: bool = false
@@ -25,6 +27,7 @@ func _ready() -> void:
 	position = CLOTH_ORIGIN
 	_flag_bearer = _find_flag_bearer()
 	_build_icons()
+	set_process(hover_tooltip_enabled)
 	call_deferred("refresh")
 
 

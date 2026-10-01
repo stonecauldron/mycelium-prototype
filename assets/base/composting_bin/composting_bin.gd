@@ -11,6 +11,7 @@ var _base_modulate: Color = Color.WHITE
 var _drag_hover_active: bool = false
 var _scale_tween: Tween
 var _hover_mask: BitMap = BitMap.new()
+var _release_active := false
 
 @onready var _bin_image: TextureRect = %BinImage
 @onready var _hover_punch: HoverPunch = %HoverPunch
@@ -37,7 +38,7 @@ func _biomass_preview_delta() -> Variant:
 
 
 func _has_point(point: Vector2) -> bool:
-	if _bin_image == null or _bin_image.texture == null:
+	if _release_active or _bin_image == null or _bin_image.texture == null:
 		return false
 	var texture_size := _bin_image.texture.get_size()
 	var image_scale := minf(_bin_image.size.x / texture_size.x, _bin_image.size.y / texture_size.y)
@@ -58,6 +59,8 @@ func _has_point(point: Vector2) -> bool:
 
 
 func _accepts_drag_data(data: Variant) -> bool:
+	if _release_active:
+		return false
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
 	var source := str(data.get("source", ""))
@@ -82,10 +85,40 @@ func sync_from_state() -> void:
 	_refresh_arrow()
 	if _hover_punch != null:
 		_hover_punch.reset()
-		_hover_punch.call_deferred("arm_enter_unless_hovered")
+		if _release_active:
+			_hover_punch.suppress_enter()
+		else:
+			_hover_punch.call_deferred("arm_enter_unless_hovered")
+
+
+func begin_release() -> Dictionary:
+	_release_active = true
+	_drag_hover_active = false
+	modulate = _base_modulate
+	if _scale_tween != null and _scale_tween.is_valid():
+		_scale_tween.kill()
+	_bin_image.scale = Vector2.ONE
+	_bin_image.rotation = 0.0
+	if _hover_punch != null:
+		_hover_punch.reset()
+		_hover_punch.suppress_enter()
+	_drop_arrow.hide_arrow()
+	tooltip_text = ""
+	var snapshot := UnitEmergence.capture_shell(_bin_image)
+	_bin_image.hide()
+	return snapshot
+
+
+func end_release() -> void:
+	_release_active = false
+	_bin_image.show()
+	tooltip_text = "Composting bin"
+	sync_from_state()
 
 
 func _make_custom_tooltip(_for_text: String) -> Object:
+	if _release_active:
+		return DetailTooltipPopup.configure(null)
 	var tip := PanelContainer.new()
 	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	PaperStyles.apply_tooltip(tip)
@@ -119,6 +152,8 @@ func _on_mouse_exited() -> void:
 
 
 func _set_drag_hover(active: bool) -> void:
+	if _release_active:
+		return
 	if _drag_hover_active == active:
 		return
 	_drag_hover_active = active

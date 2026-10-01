@@ -2,6 +2,8 @@
 
 Godot 4.x 2D auto-battler prototype. Prefer minimal focused diffs; match existing GDScript style (static typing, `@onready`, `%UniqueName` where used). Floor-divide with `floori(n / 2.0)` or `floori(float(n) / d)` — `/` on two ints warns `INTEGER_DIVISION`; `//` is not an operator and fails to parse the script (global class unload, e.g. `BiomassData`). Don't commit unless asked; push to main only when explicitly requested. When in doubt, mirror nearby base/combat patterns rather than inventing new systems.
 
+For optional scalar values (such as biomass preview deltas), use explicit `if` branches and separate returns for the value and `null`. A ternary combining an `int`, `float`, `bool`, or `String` with `null` raises `INCOMPATIBLE_TERNARY` even inside a function returning `Variant`. Keep ternary branches type-compatible and resolve analyzer warnings when validating changed scripts.
+
 ## Layout
 
 - **Base hub** (`assets/base/`): camera-tab zones — War Chamber (troop selection), Nursery.

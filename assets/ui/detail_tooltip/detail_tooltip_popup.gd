@@ -77,7 +77,16 @@ static func _make_lease() -> Control:
 	lease.visible = true
 	lease.modulate.a = 0.0
 	lease.custom_minimum_size = Vector2(1, 1)
+	lease.tree_entered.connect(_hide_native_wrapper.bind(lease))
 	return lease
+
+
+static func _hide_native_wrapper(lease: Control) -> void:
+	# Plain tooltips use the theme's paper panel; overlay cards already draw theirs.
+	# Keep the native popup transparent while it owns hover timing and dismissal.
+	var popup := lease.get_parent() as PopupPanel
+	if popup != null:
+		popup.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 
 
 static func _ensure() -> DetailTooltipPopup:
@@ -294,7 +303,9 @@ func _fit_tip_tree(tip: Control) -> void:
 			_fit_tip_tree(child as Control)
 	if tip.has_method("fit_to_content"):
 		tip.call("fit_to_content")
-	elif tip is BoxContainer:
+	elif tip is BoxContainer and not tip.get_parent() is Container:
+		# Container parents own their children's allocated size; resetting it here
+		# leaves inner rows at minimum width even when their paper panel is wider.
 		(tip as BoxContainer).reset_size()
 
 
@@ -310,8 +321,11 @@ func _layout_box_children(box: BoxContainer, total: Vector2) -> void:
 			continue
 		var child_size := _control_content_size(child_control)
 		child_control.custom_minimum_size = child_size
-		child_control.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-		child_control.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		# Preserve cross-axis alignment: centered headers and filling panels rely on it.
+		if horizontal:
+			child_control.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		else:
+			child_control.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 		var rect := (
 			Rect2(cursor, 0.0, child_size.x, total.y)
 			if horizontal

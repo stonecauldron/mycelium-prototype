@@ -1,0 +1,4 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://.scratch/shared-usability/day_tooltip_checks.gd" id="1"]
+[node name="DayTooltipChecks" type="Node"]
+script = ExtResource("1")

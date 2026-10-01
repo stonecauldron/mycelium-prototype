@@ -1,0 +1,10 @@
+[gd_resource type="StyleBoxTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/dialog box 2 04.png" id="1_paper"]
+
+[resource]
+content_margin_left = 24.0
+content_margin_top = 18.0
+content_margin_right = 40.0
+content_margin_bottom = 14.0
+texture = ExtResource("1_paper")

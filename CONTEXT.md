@@ -234,7 +234,7 @@ An enemy type in the introductory enemy pool, distinct from Strong enemies.
 An enemy type in the advanced enemy pool: Elite enemy armies contain only Strong enemies, and later non-elite armies may mix them with Regular enemies. This is an enemy category, not a player Tier.
 
 **Scout**:
-The Base preview of the upcoming enemy army (with optional biomass-priced reroll when allowed). Type order is the reverse of Enemy army Home order — Melee, then Mid, then Ranged — so it matches what the player faces. Reroll price uses Reroll Increase per extra this Day; Elite Days cannot be rerolled.
+The Base preview of the upcoming enemy army (with optional biomass-priced reroll when allowed). The chapter's Day markers also let the player inspect each Day's initial army without changing the upcoming Battle. Hover temporarily overrides any pinned preview, then restores it on exit; clicking pins a Day. Hovering the upcoming Day shows its current army, including any paid reroll, while clicking it also clears the pin. Type order is the reverse of Enemy army Home order — Melee, then Mid, then Ranged — so it matches what the player faces. Reroll price uses Reroll Increase per extra this Day; Elite Days cannot be rerolled, and reroll is unavailable while previewing another Day or retaining a pinned Day.
 *Avoid*: treating Scout order as Home order
 
 **Flag bearer**:

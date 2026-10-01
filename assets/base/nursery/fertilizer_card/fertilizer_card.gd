@@ -145,22 +145,12 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	var preview: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
 	preview.setup(fertilizer, stock_index)
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_drag_preview(_centered_drag_preview(preview, CARD_SIZE))
+	set_drag_preview(NurseryItemDragPreview.create(preview))
 	return {
 		"type": "fertilizer",
 		"stock_index": stock_index,
 		"fertilizer": fertilizer,
 	}
-
-
-func _centered_drag_preview(preview: Control, preview_size: Vector2) -> Control:
-	var host := Control.new()
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var center := func() -> void:
-		preview.position = Vector2(-preview_size.x * 0.5, -preview_size.y * 0.5 + 28.0)
-	preview.ready.connect(center, CONNECT_ONE_SHOT)
-	host.add_child(preview)
-	return host
 
 
 func _notification(what: int) -> void:

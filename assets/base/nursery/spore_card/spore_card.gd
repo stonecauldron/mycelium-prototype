@@ -4,7 +4,7 @@ extends PanelContainer
 signal spore_clicked(card: SporeCard)
 
 const CARD_SIZE := Vector2(200, 100)
-const LINEAGE_HINT_SIZE := Vector2(96, 96)
+const LINEAGE_HINT_SIZE := Vector2(64, 64)
 const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")

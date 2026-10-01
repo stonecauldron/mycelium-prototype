@@ -11,6 +11,8 @@ const BASE_SCENE_PATH := "res://assets/base/base.tscn"
 var troop: TroopData = TroopData.new()
 var nursery: NurseryData = NurseryData.new()
 var pupation: PupationData = PupationData.new()
+## Committed cocoon results waiting for their one-time Base presentation.
+var pending_cocoon_emergences: Array[Dictionary] = []
 var biomass: BiomassData = BiomassData.new()
 var seals: SealsCollection = SealsCollection.new()
 var barks: BarkData = BarkData.new()
@@ -241,7 +243,28 @@ func emerge_pupations() -> Array[Dictionary]:
 		if unit == null:
 			continue
 		troop.try_add_unit(unit)
+		queue_cocoon_emergence(unit, int(entry.get("school", 0)))
 	return emerged
+
+
+func queue_cocoon_emergence(unit: RosterUnitData, school: int) -> void:
+	if unit == null:
+		return
+	pending_cocoon_emergences.append({
+		"unit": unit,
+		"school": school,
+		"stage": unit.life_stage_id,
+		"trainings": unit.weapon_trainings.duplicate(),
+	})
+
+
+func is_cocoon_emergence_current(entry: Dictionary) -> bool:
+	var unit := entry.get("unit") as RosterUnitData
+	return (
+		unit != null and _troop_contains(unit) and unit.is_adult_stage()
+		and unit.life_stage_id == entry.get("stage", &"")
+		and unit.weapon_trainings == entry.get("trainings", [])
+	)
 
 
 func try_add_seal(seal: SealData) -> bool:
@@ -441,6 +464,7 @@ func start_new_run() -> void:
 
 func reset_run() -> void:
 	base_undo.end_visit()
+	pending_cocoon_emergences.clear()
 	seal_choice_offers.clear()
 	seal_rerolls_this_pick = 0
 	troop.reset()

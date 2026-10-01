@@ -16,6 +16,7 @@ const _WARNING := Color(0.55, 0.16, 0.12, 1.0)
 const _COPY_BY_REASON := {
 	ActionReasons.UNIT_CANNOT_TRAIN: "This unit cannot be trained.",
 	ActionReasons.TRAINING_UNCHANGED: "No changes from this Training.",
+	ActionReasons.UNIT_CAPACITY_FULL: "No room to harvest.\nFree a Troop or Bench slot in the War Chamber.",
 	ActionReasons.MUTATION_CAPACITY_FULL: "Mutation capacity full",
 	ActionReasons.FERTILIZER_CAPACITY_FULL: "Fertilizer capacity full.",
 	ActionReasons.NOT_ENOUGH_BIOMASS: "Not enough Biomass.",

@@ -16,6 +16,7 @@ const _METRIC_BAR_TRACK := Color(0.08, 0.1, 0.1, 1)
 const _METRIC_BAR_DEALT := Color(0.35, 0.55, 0.9, 1)
 const _METRIC_BAR_RECEIVED := Color(0.85, 0.25, 0.3, 1)
 const _METRIC_BAR_FONT_SIZE := 18
+const _BIOMASS_REWARD_SIZE := Vector2(360, 130)
 
 const _FORMATION_COLORS := {
 	WeaponData.FormationLine.FRONT: Color(0.35, 0.75, 0.45),
@@ -23,20 +24,130 @@ const _FORMATION_COLORS := {
 	WeaponData.FormationLine.BACK: Color(0.85, 0.65, 0.3),
 }
 
+var _biomass_reward_amount := 0
+var _biomass_reward_source: Control
+var _biomass_gain: BiomassGain
+var _biomass_pending_token := 0
+var _biomass_delay_left := 0.15
+var _biomass_ready_frame := 0
+var _continuing := false
+var _finishing_pointer_press := false
+
 @onready var _entries: VBoxContainer = %Entries
 @onready var _continue_button: Button = %ContinueButton
 @onready var _title: Label = %Title
 @onready var _troop_hp_bar: ProgressBar = %TroopHpBar
 @onready var _troop_hp_label: Label = %TroopHpLabel
 @onready var _damage_boards: VBoxContainer = %DamageBoards
+@onready var _biomass_counter: BiomassChip = %SummaryBiomass
+@onready var _biomass_day_spacer: Label = %BiomassDaySpacer
+@onready var _biomass_debug_spacer: Button = %BiomassDebugSpacer
 
 
 func _ready() -> void:
 	Audio.play_base_music()
 	_title.text = "Day %d => Day %d" % [GameState.current_day, GameState.current_day + 1]
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	_biomass_day_spacer.text = "Day %d / %d" % [day, GameState.WIN_DAYS]
+	_on_debug_mode_changed(GameState.debug_mode_active)
+	GameState.debug_mode_changed.connect(_on_debug_mode_changed)
 	_populate_combat_recap()
 	_populate_entries(DaySummaryFeed.take_entries())
+	if _biomass_reward_amount > 0:
+		_biomass_pending_token = _biomass_counter.begin_gain(_biomass_reward_amount)
 	_continue_button.pressed.connect(_on_continue_pressed)
+	_biomass_ready_frame = Engine.get_process_frames() + 2
+	set_process(_biomass_reward_amount > 0)
+
+
+func _on_debug_mode_changed(is_active: bool) -> void:
+	_biomass_debug_spacer.visible = is_active
+
+
+func _process(delta: float) -> void:
+	_biomass_delay_left = maxf(_biomass_delay_left - delta, 0.0)
+	if (
+		_biomass_delay_left > 0.0 or Engine.get_process_frames() < _biomass_ready_frame
+		or SceneTransition.is_transitioning()
+	):
+		return
+	set_process(false)
+	if _continuing or not is_instance_valid(_biomass_reward_source):
+		return
+	var source_rect := _biomass_reward_source.get_global_transform_with_canvas() * Rect2(
+		Vector2.ZERO, _biomass_reward_source.size
+	)
+	_biomass_gain = BiomassGain.play(self, source_rect, _biomass_reward_amount, _biomass_counter, true)
+	_biomass_pending_token = 0
+	_biomass_gain.cancelled.connect(_on_biomass_gain_cancelled)
+
+
+func _on_biomass_gain_cancelled() -> void:
+	_biomass_gain = null
+	_show_biomass_reward_total()
+
+
+func _show_biomass_reward_total() -> void:
+	if _continuing or not is_inside_tree() or not is_instance_valid(_biomass_reward_source):
+		return
+	var center := CenterContainer.new()
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_biomass_reward_source.add_child(center)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var amount := BiomassDisplay.make_amount(
+		BiomassDisplay.number(_biomass_reward_amount, true), 64, Color("f1d980"), true
+	)
+	(amount.get_child(0) as Label).add_theme_constant_override("outline_size", 7)
+	center.add_child(amount)
+
+
+func _input(event: InputEvent) -> void:
+	var pressed := false
+	var pointer_position := Vector2.ZERO
+	if event is InputEventMouseButton:
+		if event.button_index not in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE]:
+			return
+		pressed = event.pressed
+		pointer_position = event.position
+	elif event is InputEventScreenTouch:
+		pressed = event.pressed
+		pointer_position = event.position
+	else:
+		return
+	if _finishing_pointer_press:
+		get_viewport().set_input_as_handled()
+		if not pressed:
+			# Touch and its emulated mouse release can arrive in either order.
+			_clear_finishing_pointer_press.call_deferred()
+		return
+	var button_position := _continue_button.get_global_transform_with_canvas().affine_inverse() * pointer_position
+	if Rect2(Vector2.ZERO, _continue_button.size).has_point(button_position):
+		# Let Continue receive its normal click, even while a reward is playing.
+		return
+	if pressed and _finish_biomass_animation():
+		# Consume the whole gesture, including the mouse events emulated from a tap.
+		_finishing_pointer_press = true
+		get_viewport().set_input_as_handled()
+
+
+func _clear_finishing_pointer_press() -> void:
+	_finishing_pointer_press = false
+
+
+func _finish_biomass_animation() -> bool:
+	if _continuing:
+		return false
+	if _biomass_pending_token > 0:
+		set_process(false)
+		_biomass_counter.end_gain(_biomass_pending_token)
+		_biomass_pending_token = 0
+		_show_biomass_reward_total()
+		Audio.play_owned_ui_cue(self, Sfx.Cue.BIOMASS_COMPLETE)
+		return true
+	if is_instance_valid(_biomass_gain) and not _biomass_gain.is_finished():
+		_biomass_gain.finish_immediately()
+		return true
+	return false
 
 
 func _populate_combat_recap() -> void:
@@ -180,6 +291,11 @@ func _make_metric_label(text: String) -> Label:
 func _populate_entries(entries: Array[Dictionary]) -> void:
 	for child in _entries.get_children():
 		child.queue_free()
+	_biomass_reward_amount = 0
+	_biomass_reward_source = null
+	for entry in entries:
+		if bool(entry.get("biomass", false)):
+			_biomass_reward_amount += maxi(int(entry.get("biomass_amount", 0)), 0)
 
 	if entries.is_empty():
 		_entries.add_child(_make_message_row("Nothing notable happened today."))
@@ -196,6 +312,15 @@ func _populate_entries(entries: Array[Dictionary]) -> void:
 			_entries.add_child(_make_unit_row(text, unit, show_spore, spore_tint))
 			continue
 		if bool(entry.get("biomass", false)):
+			if int(entry.get("biomass_amount", 0)) > 0:
+				if _biomass_reward_source == null:
+					_biomass_reward_source = Control.new()
+					_biomass_reward_source.name = "BiomassRewardSource"
+					_biomass_reward_source.custom_minimum_size = _BIOMASS_REWARD_SIZE
+					_biomass_reward_source.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+					_biomass_reward_source.mouse_filter = Control.MOUSE_FILTER_IGNORE
+					_entries.add_child(_biomass_reward_source)
+				continue
 			_entries.add_child(_make_entry_label(text))
 			continue
 		if bool(entry.get("nursery_ready", false)):
@@ -314,4 +439,25 @@ func _make_icon_row(text: String, formation_line: int) -> Control:
 
 
 func _on_continue_pressed() -> void:
+	if _continuing:
+		return
+	_continuing = true
+	set_process(false)
+	_cancel_biomass_gain()
 	SceneTransition.change_scene(_BASE_SCENE_PATH)
+
+
+func _exit_tree() -> void:
+	_continuing = true
+	_cancel_biomass_gain()
+
+
+func _cancel_biomass_gain() -> void:
+	if _biomass_pending_token > 0 and is_instance_valid(_biomass_counter):
+		_biomass_counter.end_gain(_biomass_pending_token)
+		_biomass_pending_token = 0
+	if not is_instance_valid(_biomass_gain):
+		return
+	var effect := _biomass_gain
+	_biomass_gain = null
+	effect.cancel()

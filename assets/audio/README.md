@@ -44,6 +44,29 @@ controller. Projectiles expose **Launch Cue** in their scenes: throws by default
 with bow/crossbow and horn overrides. New unit types using the shared combat scripts
 inherit attack, hit, block, and death feedback.
 
+Shop card/inventory-form changes play `ITEM_TRANSFORM` with the smoke puff in both directions. This reuses the short airy `spore.wav` at −12 dB, with its own 80 ms UI cooldown and ±10% pitch variation. It follows the SFX volume setting and plays only when the form changes.
+
+Biomass reward presenters use three separate cues for landing, feeding the counter,
+and finishing the count. They reuse the existing organic pack without new generated
+assets or generation credits:
+
+| Cue | Existing sound | Duration | Gain | Cooldown | Pitch variation |
+| --- | --- | --- | --- | --- | --- |
+| `BIOMASS_DROP` | `ground.wav`: soft soil landing | 0.155 s | −13 dB | 100 ms | ±8% |
+| `BIOMASS_FEED` | `select.wav`: short hollow mushroom pop | 0.080 s | −14 dB | 40 ms | None |
+| `BIOMASS_COMPLETE` | `purchase.wav`: cash-register ka-ching with a bell and coin jingle | 0.748 s | −8 dB | 180 ms | None |
+
+Play them with `Audio.play_owned_ui_cue(owner, cue)` so cancellation stops the
+presenter's sounds. Trigger `BIOMASS_DROP` on landing, `BIOMASS_FEED` as each
+visible icon reaches the counter, and `BIOMASS_COMPLETE` once at the final total.
+For a rising collection run, immediately set the returned feed player's
+`pitch_scale` from about 0.95 to 1.25 across the icons; check for `null` because the
+cue can be rate-limited. Keep the final sound's owner alive until its
+0.748-second ka-ching finishes, including after natural animation completion or
+click-to-finish; the visual animation need not wait for the audio tail.
+These semantic cues have separate cooldowns
+from the original sounds and retain the shared SFX volume control.
+
 Great weapon resources enable **Great Weapon SFX** to select dedicated heavier
 swings, releases and direct-hit cues. Great Shield also has a heavier block and
 bash sound. This presentation flag survives resource duplication and does not
@@ -72,6 +95,12 @@ Every call chooses a fresh pitch within ±10% of normal (0.9–1.1×), including
 - Gameplay effects pause/resume with gameplay; new requests while paused are ignored. They stop when their current scene exits. `Audio.stop_gameplay_sfx()` also clears them explicitly, for example when resetting a battle within the same scene.
 - UI effects remain available during pause.
 - Pools hold up to 16 gameplay effects and 4 UI effects. A full pool replaces its oldest effect. The returned `AudioStreamPlayer` is pooled: use it only for immediate adjustments, not as a lasting playback handle.
+
+Reveal presenters use `Audio.play_owned_ui_cue(owner, cue)` when cancellation must stop their specific sound. Its dedicated SFX player frees itself when playback finishes and is destroyed with the owner; it never reuses a pooled voice. Cue gain, pitch, and cooldown still come from `Sfx.SOUNDS`.
+
+`Sfx.Cue.COCOON_EMERGE` uses the reference v9 `cocoon-heavy-pop.wav` source from the combo-reel package, promoted as `sfx/cocoon_emerge.wav` with Godot-compatible 16-bit PCM encoding: 0.525 seconds, unchanged timing, fixed pitch, −3 dB cue gain. Start it `Sfx.COCOON_EMERGE_TRANSIENT_SECONDS` (0.015 seconds) before the shell opens to align its main transient with release.
+
+For the brief emergence music dip, call `Audio.acquire_reveal_audio(owner)` 0.18 seconds before release. Free the returned lease 0.24 seconds after release; the music recovers over 0.26 seconds. Freeing the owner cancels the lease too. Overlapping leases retain the dip until the last is released. This multiplies the current music fade levels by 7% at the dip without changing Settings bus volumes or restarting track transitions.
 
 For a scene-owned `AudioStreamPlayer` or animation audio track, set its bus to **SFX** and choose the appropriate process mode. Music uses the persistent Audio service. Both buses feed **Master**.
 

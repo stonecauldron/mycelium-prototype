@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://dln2hju8jjutl" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 1/dialog box 16.png" id="2_723wi"]
 [ext_resource type="Texture2D" uid="uid://mhcamp0d8vab" path="res://assets/base/biomass_small_icon.png" id="3_biomass"]
 [ext_resource type="Texture2D" uid="uid://dei6urctle8mi" path="res://assets/asset_packs/Cila - Paper UI stylized/title/title 1 8.png" id="4_rm8ap"]
+[ext_resource type="Texture2D" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label 8.png" id="5_return_normal"]
+[ext_resource type="Texture2D" path="res://assets/asset_packs/Cila - Paper UI stylized/label/label border 8.png" id="6_return_hover"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
 texture = ExtResource("2_723wi")
@@ -11,7 +13,31 @@ expand_margin_right = 63.0
 region_rect = Rect2(0, 0, 430, 331)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_723wi"]
+content_margin_left = 32.0
+content_margin_top = 16.0
+content_margin_right = 36.0
+content_margin_bottom = 16.0
 texture = ExtResource("4_rm8ap")
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_return_normal"]
+content_margin_left = 28.0
+content_margin_top = 12.0
+content_margin_right = 28.0
+content_margin_bottom = 16.0
+texture = ExtResource("5_return_normal")
+texture_margin_left = 26.333183
+texture_margin_right = 32.784733
+region_rect = Rect2(0, 0, 1760, 100)
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_return_hover"]
+content_margin_left = 28.0
+content_margin_top = 12.0
+content_margin_right = 28.0
+content_margin_bottom = 16.0
+texture = ExtResource("6_return_hover")
+texture_margin_left = 37.268105
+texture_margin_right = 45.254128
+region_rect = Rect2(0, 0, 1781, 125)
 
 [node name="ScoutBubble" type="Control" unique_id=1943444135]
 layout_mode = 3
@@ -133,8 +159,13 @@ custom_minimum_size = Vector2(240, 52)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"NavButton"
+theme_override_colors/font_focus_color = Color(0.94, 0.94, 0.88, 1)
+theme_override_colors/font_hover_color = Color(0.94, 0.94, 0.88, 1)
 theme_override_font_sizes/font_size = 22
-text = "Back to Next Battle"
+theme_override_styles/normal = SubResource("StyleBox_return_normal")
+theme_override_styles/hover = SubResource("StyleBox_return_hover")
+theme_override_styles/focus = SubResource("StyleBox_return_hover")
+text = "Back to today"
 
 [node name="ScoutTitle" type="Label" parent="." unique_id=486641464]
 unique_name_in_owner = true

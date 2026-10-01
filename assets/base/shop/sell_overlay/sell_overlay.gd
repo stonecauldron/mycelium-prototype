@@ -12,6 +12,7 @@ var _scale_tween: Tween = null
 
 
 func _ready() -> void:
+	add_to_group(NurseryItemDropTargets.GROUP)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_set_children_mouse_filter_ignore(self)
 	mouse_entered.connect(_on_mouse_entered)
@@ -35,7 +36,12 @@ func hide_overlay() -> void:
 func contains_sell_point(viewport_position: Vector2) -> bool:
 	if not is_visible_in_tree() or _badge == null:
 		return false
-	var point := _badge.get_global_transform_with_canvas().affine_inverse() * viewport_position
+	return drag_target_canvas_rect().has_point(viewport_position)
+
+
+func drag_target_canvas_rect() -> Rect2:
+	if not is_visible_in_tree() or _badge == null:
+		return Rect2()
 	var paper := _badge.get_theme_stylebox("panel") as StyleBoxTexture
 	var bounds := Rect2(Vector2.ZERO, _badge.size)
 	if paper != null:
@@ -43,11 +49,15 @@ func contains_sell_point(viewport_position: Vector2) -> bool:
 			paper.expand_margin_left, paper.expand_margin_top,
 			paper.expand_margin_right, paper.expand_margin_bottom
 		)
-	return bounds.has_point(point)
+	return _badge.get_global_transform_with_canvas() * bounds
+
+
+func contains_drag(viewport_position: Vector2) -> bool:
+	return NurseryItemDropTargets.contains(self, viewport_position)
 
 
 func _has_point(point: Vector2) -> bool:
-	return contains_sell_point(get_global_transform_with_canvas() * point)
+	return contains_drag(get_global_transform_with_canvas() * point)
 
 
 func set_drop_highlight(active: bool) -> void:

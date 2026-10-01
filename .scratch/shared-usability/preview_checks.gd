@@ -162,25 +162,25 @@ static func _training_dialog(
 		"Actual recipe: " + recipe)
 	failures += _check(WeaponSchool.training_availability_text(unit) == availability,
 		"Actual availability preserved")
-	failures += _check((dialog.get_node("%LeftColumn") as Control).visible
-		and (dialog.get_node("%MidColumn") as Control).visible, "Both life stages show comparison")
-	failures += _check_weapon_equation(dialog.get_node("%LeftWeaponRow") as PupationWeaponHoverRow, unit, "Before")
+	failures += _check((dialog._comparison.get_node("%LeftColumn") as Control).visible
+		and (dialog._comparison.get_node("%MidColumn") as Control).visible, "Both life stages show comparison")
+	failures += _check_weapon_equation(dialog._comparison.get_node("%LeftWeaponRow") as PupationWeaponHoverRow, unit, "Before")
 	var days := unit.effective_cocoon_days()
-	failures += _check((dialog.get_node("%DurationChip") as Control).visible == (days > 0),
+	failures += _check((dialog._comparison.get_node("%DurationChip") as Control).visible == (days > 0),
 		"Hourglass only shown for delayed Evolution")
-	failures += _check((dialog.get_node("%DurationSuffix") as Label).text
+	failures += _check((dialog._comparison.get_node("%DurationSuffix") as Label).text
 		== (WeaponSchool.day_word(days) if days > 0 else "Instant"), "Preview timing label")
-	failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow,
+	failures += _check_weapon_equation(dialog._comparison.get_node("%RightWeaponRow") as PupationWeaponHoverRow,
 		actual, "After", changed_slots)
 	var attack_before := SealModifiers.effective_attack_damage(unit)
 	var attack_after := SealModifiers.effective_attack_damage(actual)
 	var hp_before := SealModifiers.effective_max_hp(unit)
 	var hp_after := SealModifiers.effective_max_hp(actual)
-	failures += _check_combat_preview(dialog, "Atk", attack_before, attack_after)
-	failures += _check_combat_preview(dialog, "Hp", hp_before, hp_after)
+	failures += _check_combat_preview(dialog._comparison, "Atk", attack_before, attack_after)
+	failures += _check_combat_preview(dialog._comparison, "Hp", hp_before, hp_after)
 	for side in ["Left", "Right"]:
-		failures += _check_portrait_alignment(dialog, side)
-	failures += _check_weapon_tag_comparison(dialog, unit.weapon, actual.weapon,
+		failures += _check_portrait_alignment(dialog._comparison, side)
+	failures += _check_weapon_tag_comparison(dialog._comparison, unit.weapon, actual.weapon,
 		before_changed_tags, after_changed_tags)
 	failures += _check((dialog.get_node("%ConfirmButton") as Button).text
 		== "%s %s" % [action, BiomassDisplay.number(WeaponSchool.COCOON_COST)], "Actual cost visible")
@@ -192,8 +192,8 @@ static func _training_dialog(
 	elif recipe == "Sword + Mace → Warhammer" and unit.is_adult_stage():
 		await _snapshot(host, "/tmp/usability-training-adult.png")
 		await _snapshot_close_hover(host, dialog, "/tmp/usability-training-close-hover.png")
-		failures += await _check_weapon_hover(host, dialog.get_node("%LeftWeaponRow") as PupationWeaponHoverRow)
-		failures += await _check_weapon_hover(host, dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow)
+		failures += await _check_weapon_hover(host, dialog._comparison.get_node("%LeftWeaponRow") as PupationWeaponHoverRow)
+		failures += await _check_weapon_hover(host, dialog._comparison.get_node("%RightWeaponRow") as PupationWeaponHoverRow)
 	elif recipe == "Sword + Sword → Great Sword" and unit.is_adult_stage():
 		await _snapshot(host, "/tmp/usability-training-aoe.png")
 	elif recipe == "Bow + Mace → Great Horn" and unit.is_adult_stage():
@@ -263,11 +263,11 @@ static func _check_equation_icon(node: Node, weapon: WeaponData, label: String) 
 
 
 static func _check_weapon_tag_comparison(
-	dialog: Control, before: WeaponData, after: WeaponData,
+	comparison: Control, before: WeaponData, after: WeaponData,
 	before_changed: Array[String], after_changed: Array[String]
 ) -> int:
-	return _check_weapon_tags(dialog.get_node("%LeftWeaponTags") as HFlowContainer, before, before_changed, -1) \
-		+ _check_weapon_tags(dialog.get_node("%RightWeaponTags") as HFlowContainer, after, after_changed, 1)
+	return _check_weapon_tags(comparison.get_node("%LeftWeaponTags") as HFlowContainer, before, before_changed, -1) \
+		+ _check_weapon_tags(comparison.get_node("%RightWeaponTags") as HFlowContainer, after, after_changed, 1)
 
 
 static func _check_weapon_tags(
@@ -348,16 +348,16 @@ static func _training_equation_reuse(host: Control) -> int:
 			await host.get_tree().process_frame
 		var actual := unit.duplicate(true) as RosterUnitData
 		actual.apply_pupation_training(WeaponSchool.Id.BOW)
-		failures += _check_weapon_equation(dialog.get_node("%LeftWeaponRow") as PupationWeaponHoverRow, unit, "Reused before")
+		failures += _check_weapon_equation(dialog._comparison.get_node("%LeftWeaponRow") as PupationWeaponHoverRow, unit, "Reused before")
 		var expected_changes: Array[int] = []
 		expected_changes.assign(changed_slots[index])
-		failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow,
+		failures += _check_weapon_equation(dialog._comparison.get_node("%RightWeaponRow") as PupationWeaponHoverRow,
 			actual, "Reused after %d" % index, expected_changes)
 		var before_changes: Array[String] = []
 		var after_changes: Array[String] = []
 		before_changes.assign(before_changed_tags[index])
 		after_changes.assign(after_changed_tags[index])
-		failures += _check_weapon_tag_comparison(dialog, unit.weapon, actual.weapon,
+		failures += _check_weapon_tag_comparison(dialog._comparison, unit.weapon, actual.weapon,
 			before_changes, after_changes)
 		failures += _check((dialog.get_node("Center/Panel") as Control).size.y < 1000.0,
 			"Reused Training confirmation fits play height")
@@ -400,8 +400,8 @@ static func training_chronology_checks(host: Control) -> int:
 			await host.get_tree().process_frame
 		var changed: Array[int] = []
 		changed.assign(highlights[index])
-		var left := dialog.get_node("%LeftWeaponRow") as PupationWeaponHoverRow
-		var right := dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow
+		var left := dialog._comparison.get_node("%LeftWeaponRow") as PupationWeaponHoverRow
+		var right := dialog._comparison.get_node("%RightWeaponRow") as PupationWeaponHoverRow
 		failures += _check_weapon_equation(left, source, "Chronological before %d" % index)
 		failures += _check_weapon_equation(right, actual, "Chronological result %d" % index, changed)
 		failures += _check_training_equation(card._content.get_node("%TrainingsList").get_child(0),
@@ -459,7 +459,7 @@ static func _training_noop_checks(host: Control, dialog: PupationConfirmDialog) 
 		var changed: Array[int] = []
 		if allowed:
 			changed.append(1)
-		failures += _check_weapon_equation(dialog.get_node("%RightWeaponRow") as PupationWeaponHoverRow,
+		failures += _check_weapon_equation(dialog._comparison.get_node("%RightWeaponRow") as PupationWeaponHoverRow,
 			preview, "No-op/chronology/Evolution result %d" % index, changed)
 		failures += _check(button.has_theme_color_override("font_disabled_color") == (not allowed),
 			"No-op text contrast override clears on normal reuse")
@@ -468,7 +468,7 @@ static func _training_noop_checks(host: Control, dialog: PupationConfirmDialog) 
 				and button.get_theme_color("font_disabled_color") == button.get_theme_color("font_color"),
 				"No changes label retains normal readable text color")
 		failures += _check((button.icon != null) == allowed, "No-op hides price icon; reuse restores it")
-		failures += _check((dialog.get_node("%DurationSuffix") as Label).visible == allowed,
+		failures += _check((dialog._comparison.get_node("%DurationSuffix") as Label).visible == allowed,
 			"No-op hides timing; reuse restores it")
 		if not allowed:
 			var decision := unit.check_training_eligibility(schools[index])
@@ -532,8 +532,8 @@ static func _move_pointer(host: Control, point: Vector2) -> void:
 	await host.get_tree().create_timer(0.4).timeout
 
 
-static func _check_portrait_alignment(dialog: Control, side: String) -> int:
-	var portrait := dialog.get_node("%%%sPortrait" % side) as Control
+static func _check_portrait_alignment(comparison: Control, side: String) -> int:
+	var portrait := comparison.get_node("%%%sPortrait" % side) as Control
 	var appearance: UnitAppearance = null
 	for child in portrait.get_children():
 		if child is UnitAppearance:
@@ -541,15 +541,15 @@ static func _check_portrait_alignment(dialog: Control, side: String) -> int:
 			break
 	if appearance == null:
 		return _check(false, side + " comparison portrait exists")
-	var attack := dialog.get_node("%%%sAtkChip" % side) as StatChip
-	var health := dialog.get_node("%%%sHpChip" % side) as StatChip
+	var attack := comparison.get_node("%%%sAtkChip" % side) as StatChip
+	var health := comparison.get_node("%%%sHpChip" % side) as StatChip
 	var chips_center := (attack.get_global_rect().get_center().x
 		+ health.get_global_rect().get_center().x) * 0.5
 	var body := appearance.transform * appearance.visual_rect_local(false, true)
 	var body_center := portrait.global_position.x + body.get_center().x
 	var failures := _check(absf(body_center - chips_center) <= 2.0,
 		side + " Unit body is centered above combat chips")
-	var weapon_row := dialog.get_node("%%%sWeaponRow" % side) as Control
+	var weapon_row := comparison.get_node("%%%sWeaponRow" % side) as Control
 	var first_slot := weapon_row.get_node("TrainingEquation/TrainingSlot1") as Control
 	var result_weapon := weapon_row.get_node("TrainingEquation/ResultWeapon") as Control
 	var equation_center := (first_slot.get_global_rect().position.x
@@ -564,11 +564,11 @@ static func _check_portrait_alignment(dialog: Control, side: String) -> int:
 	return failures
 
 
-static func _check_combat_preview(dialog: Control, chip_name: String, before: int, after: int) -> int:
+static func _check_combat_preview(comparison: Control, chip_name: String, before: int, after: int) -> int:
 	var failures := 0
-	var left := dialog.get_node("%%Left%sChip" % chip_name) as StatChip
-	var right := dialog.get_node("%%Right%sChip" % chip_name) as StatChip
-	var delta_label := dialog.get_node("%%Right%sDelta" % chip_name) as Label
+	var left := comparison.get_node("%%Left%sChip" % chip_name) as StatChip
+	var right := comparison.get_node("%%Right%sChip" % chip_name) as StatChip
+	var delta_label := comparison.get_node("%%Right%sDelta" % chip_name) as Label
 	var delta := after - before
 	failures += _check((left.get_node("%Value") as Label).text == str(before),
 		chip_name + " before value matches gameplay")
@@ -610,8 +610,8 @@ static func _training_seal_checks(host: Control) -> int:
 		host.add_child(dialog)
 		await host.get_tree().process_frame
 		await host.get_tree().process_frame
-		failures += _check_combat_preview(dialog, "Atk", attack_before, attack_after)
-		failures += _check_combat_preview(dialog, "Hp", hp_before, hp_after)
+		failures += _check_combat_preview(dialog._comparison, "Atk", attack_before, attack_after)
+		failures += _check_combat_preview(dialog._comparison, "Hp", hp_before, hp_after)
 		failures += _check(slots[0] == unit and unit.weapon_trainings == [WeaponSchool.Id.SWORD],
 			"Seal comparison preserves live Unit and Formation: " + scenario)
 		if scenario == "squad":

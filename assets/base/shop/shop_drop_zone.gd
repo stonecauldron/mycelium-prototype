@@ -36,7 +36,7 @@ func clear_drop_highlight() -> void:
 
 
 func _is_over_sell_button(at_position: Vector2) -> bool:
-	return _sell_overlay != null and _sell_overlay.contains_sell_point(
+	return _sell_overlay != null and _sell_overlay.contains_drag(
 		get_global_transform_with_canvas() * at_position
 	)
 

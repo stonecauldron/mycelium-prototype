@@ -22,6 +22,7 @@ const COLLISION_WORLD := 1
 const _DAMAGE_NUMBER_SCENE := preload("res://assets/vfx/damage_number/damage_number.tscn")
 const _HIT_BURST_SCENE := preload("res://assets/vfx/hit_burst/hit_burst.tscn")
 const _SPORE_CLOUD_SCENE := preload("res://assets/vfx/spore_cloud/spore_cloud.tscn")
+const _FLAG_SEALS_SCENE := preload("res://assets/base/seals/flag_seals_overlay.tscn")
 const DEATH_POP_TIME := 0.05
 const DEATH_FADE_TIME := 0.28
 const DEATH_HOP := Vector2(150.0, -95.0)
@@ -32,6 +33,7 @@ const PLAYER_SPORE_COLOR := Color("b7b08d")
 
 @export var flag_color: Color = Color.WHITE
 @export var flag_faces_left: bool = false
+@export var show_owned_seals: bool = false
 
 @onready var _visual: Node2D = $Visual
 @onready var _shroom: Sprite2D = $Visual/Shroom
@@ -56,6 +58,10 @@ func _ready() -> void:
 		_shroom_rest_position = _shroom.position
 		_shroom_rest_scale = _shroom.scale
 	_apply_flag_appearance()
+	if show_owned_seals:
+		var seals := _FLAG_SEALS_SCENE.instantiate() as FlagSealsOverlay
+		seals.hover_tooltip_enabled = false
+		_flag_banner.add_child(seals)
 	_setup_collision()
 	_play_idle_animation(true)
 

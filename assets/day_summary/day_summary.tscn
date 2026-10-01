@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://7lvq36vgc1wb" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 08.png" id="3_1ucyj"]
 [ext_resource type="Texture2D" uid="uid://b6mfiqthp4vam" path="res://assets/base/background/bg_battlegrounds.png" id="3_ly7t2"]
 [ext_resource type="Texture2D" uid="uid://b8jsadweoa6vd" path="res://assets/asset_packs/Cila - Paper UI stylized/Paper style 1/paper 13.png" id="4_1ucyj"]
+[ext_resource type="PackedScene" path="res://assets/ui/biomass_chip/biomass_chip.tscn" id="5_biomass_chip"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ly7t2"]
 texture = ExtResource("3_1ucyj")
@@ -63,6 +64,7 @@ layout_mode = 2
 theme_type_variation = &"StackVBox"
 
 [node name="Header" type="VBoxContainer" parent="RootMargin/RootVBox" unique_id=135799625]
+custom_minimum_size = Vector2(0, 125)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"TightVBox"
@@ -171,3 +173,44 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "continue"
+
+[node name="BiomassHeaderMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 145.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_type_variation = &"BaseRootMargin"
+
+[node name="BiomassHeaderRow" type="HBoxContainer" parent="BiomassHeaderMargin"]
+custom_minimum_size = Vector2(0, 125)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"TightHBox"
+
+[node name="BiomassDaySpacer" type="Label" parent="BiomassHeaderMargin/BiomassHeaderRow"]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"PageTitleLabel"
+text = "Day 1 / 10"
+vertical_alignment = 1
+
+[node name="BiomassDebugSpacer" type="Button" parent="BiomassHeaderMargin/BiomassHeaderRow"]
+unique_name_in_owner = true
+visible = false
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(160, 56)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+mouse_filter = 2
+theme_type_variation = &"NavButton"
+text = "Advance Day"
+
+[node name="SummaryBiomass" parent="BiomassHeaderMargin/BiomassHeaderRow" instance=ExtResource("5_biomass_chip")]
+unique_name_in_owner = true
+layout_mode = 2

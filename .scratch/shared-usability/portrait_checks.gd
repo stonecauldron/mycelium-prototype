@@ -15,12 +15,12 @@ static func run(host: Control) -> int:
 	# Both sides must recompute their common scale when available portrait space changes.
 	var before_resize := _appearance(dialog, "Left").scale.x
 	for side in ["Left", "Right"]:
-		(dialog.get_node("%%%sPortrait" % side) as Control).custom_minimum_size.y = 210.0
+		(dialog._comparison.get_node("%%%sPortrait" % side) as Control).custom_minimum_size.y = 210.0
 	failures += await _sample_cycle(host, dialog, false, "resized")
 	failures += _check(_appearance(dialog, "Left").scale.x > before_resize,
 		"larger hosts recompute the shared fit")
 	for side in ["Left", "Right"]:
-		(dialog.get_node("%%%sPortrait" % side) as Control).custom_minimum_size.y = 140.0
+		(dialog._comparison.get_node("%%%sPortrait" % side) as Control).custom_minimum_size.y = 140.0
 	var child := PREVIEW_CHECKS.make_unit([], false)
 	dialog.setup(child, WeaponSchool.Id.BOW)
 	failures += await _sample_cycle(host, dialog, true, "child-bow")
@@ -55,7 +55,7 @@ static func run(host: Control) -> int:
 	return failures
 
 
-static func _sample_cycle(host: Control, dialog: Control, is_child: bool, label: String) -> int:
+static func _sample_cycle(host: Control, dialog: PupationConfirmDialog, is_child: bool, label: String) -> int:
 	var failures := 0
 	# Settle containers/deferred fit, then sample a complete authored 1.2s idle loop.
 	for frame in 4:
@@ -75,7 +75,7 @@ static func _sample_cycle(host: Control, dialog: Control, is_child: bool, label:
 			failures += _check(left_body.size.is_equal_approx(right_body.size),
 				label + " Adult body dimensions match")
 		for side in ["Left", "Right"]:
-			failures += PREVIEW_CHECKS._check_portrait_alignment(dialog, side)
+			failures += PREVIEW_CHECKS._check_portrait_alignment(dialog._comparison, side)
 			var appearance := _appearance(dialog, side)
 			var portrait := appearance.get_parent() as Control
 			var painted := appearance.transform * appearance.visual_rect_local(true, true)
@@ -109,8 +109,8 @@ static func _check_weapon_pixels(appearance: UnitAppearance, portrait: Control, 
 	return failures
 
 
-static func _appearance(dialog: Control, side: String) -> UnitAppearance:
-	var portrait := dialog.get_node("%%%sPortrait" % side) as Control
+static func _appearance(dialog: PupationConfirmDialog, side: String) -> UnitAppearance:
+	var portrait := dialog._comparison.get_node("%%%sPortrait" % side) as Control
 	for child in portrait.get_children():
 		if child is UnitAppearance:
 			return child as UnitAppearance

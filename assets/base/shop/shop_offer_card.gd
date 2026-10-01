@@ -11,6 +11,8 @@ const REROLL_PREVIEW_OUT_SEC := 0.1
 const REROLL_SHAKE_DEG := 5.0
 const REROLL_SHAKE_STEP_SEC := 0.045
 const _SHOP_OFFER_CARD_SCENE := preload("res://assets/base/shop/shop_offer_card.tscn")
+const _FERTILIZER_CARD_SCENE := preload("res://assets/base/nursery/fertilizer_card/fertilizer_card.tscn")
+const _MUTATION_CARD_SCENE := preload("res://assets/base/nursery/mutation_card/mutation_card.tscn")
 const _SPORE_DETAIL_CARD_SCENE := preload("res://assets/base/spore_detail_card/spore_detail_card.tscn")
 const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
 
@@ -305,8 +307,8 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	_did_drag = true
 	if _hover_punch != null:
 		_hover_punch.reset()
-	# Chess-piece pickup: leave the pad empty while dragging.
-	visible = false
+	# Keep the offer's layout space so pickup cannot move the reroll button.
+	modulate.a = 0.0
 	# Instantiate fresh — duplicate() keeps @onready refs to this card.
 	var preview: ShopOfferCard = _SHOP_OFFER_CARD_SCENE.instantiate()
 	preview.setup(
@@ -323,8 +325,28 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	preview.set_affordable(true)
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	preview.clip_contents = false
-	set_drag_preview(_centered_drag_preview(preview, CARD_SIZE))
+	var inventory_form := _make_inventory_drag_form()
+	if inventory_form != null:
+		set_drag_preview(NurseryItemDragPreview.create(
+			inventory_form, preview, find_parent("ShopPanel") as Control
+		))
+	else:
+		set_drag_preview(_centered_drag_preview(preview, CARD_SIZE))
 	return payload.duplicate(true)
+
+
+func _make_inventory_drag_form() -> Control:
+	var fertilizer := payload.get("fertilizer") as FertilizerData
+	if fertilizer != null:
+		var card: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
+		card.setup(fertilizer, slot_index)
+		return card
+	var mutation := payload.get("mutation") as MutationData
+	if mutation != null:
+		var card: MutationCard = _MUTATION_CARD_SCENE.instantiate()
+		card.setup(mutation, slot_index)
+		return card
+	return null
 
 
 func _centered_drag_preview(preview: Control, preview_size: Vector2) -> Control:
@@ -353,6 +375,6 @@ func _notification(what: int) -> void:
 			_hover_punch.suppress_enter()
 		# Restore if the drag was cancelled; successful drops rebuild the card.
 		if is_inside_tree():
-			visible = true
+			modulate.a = 1.0
 		if _hover_punch != null:
 			_hover_punch.call_deferred("arm_enter_unless_hovered")

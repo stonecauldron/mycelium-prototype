@@ -1,11 +1,11 @@
 class_name CombatProgressTrack
 extends Control
 
-## Chapter track: 4 normal battles + elite skull. Signals for scout elite preview.
+## Chapter track: 4 normal battles + elite skull. Signals for Scout day previews.
 
-signal elite_hovered(day: int)
-signal elite_unhovered
-signal elite_pressed(day: int)
+signal day_hovered(day: int)
+signal day_unhovered
+signal day_pressed(day: int)
 
 const _SKULL_TEXTURE := preload("res://assets/base/combat_progress_track/skull.png")
 const _SEAL_TEXTURE := preload("res://assets/base/seals/seal.png")
@@ -25,14 +25,14 @@ const _FILL := Color(0.96, 0.96, 0.94, 1.0)
 
 var _upcoming_day: int = 1
 var _chapter_start: int = 1
-var _skull_control: Control = null
 var _marker: Polygon2D = null
 var _node_centers: Array[Vector2] = []
 var _node_controls: Array[Control] = []
 var _built_chapter_start: int = -1
 var _hover_t: Array[float] = []  # 0..1 per node; drives animated size
 var _hover_tweens: Dictionary = {}  # index -> Tween
-var _focused_elite_day: int = 0
+var _focused_day: int = 0
+var _keyboard_focus_visible: bool = true
 
 
 func _ready() -> void:
@@ -41,11 +41,35 @@ func _ready() -> void:
 	refresh()
 
 
+func _input(event: InputEvent) -> void:
+	var keyboard_focus_visible := _keyboard_focus_visible
+	if event is InputEventMouse:
+		keyboard_focus_visible = false
+	elif (event is InputEventKey or event is InputEventJoypadButton) and event.is_pressed():
+		keyboard_focus_visible = true
+	elif event is InputEventJoypadMotion and absf(event.axis_value) > 0.5:
+		keyboard_focus_visible = true
+	if keyboard_focus_visible == _keyboard_focus_visible:
+		return
+	# Mouse clicks retain navigation focus, but must not leave a focus highlight.
+	_keyboard_focus_visible = keyboard_focus_visible
+	for index in _node_controls.size():
+		_apply_node_hover_visual(index)
+	_update_marker()
+	queue_redraw()
+
+
 func refresh() -> void:
 	_upcoming_day = clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
 	_chapter_start = _chapter_start_for_day(_upcoming_day)
 	if _built_chapter_start != _chapter_start:
 		_build_nodes()
+	for i in _node_controls.size():
+		var completed := _chapter_start + i <= GameState.current_day
+		(_node_controls[i] as CombatProgressDayNode).set_completed(completed)
+		var skull := _node_controls[i].get_node_or_null("SkullIcon") as TextureRect
+		if skull != null:
+			skull.visible = not completed
 	_layout_nodes()
 	_update_marker()
 	queue_redraw()
@@ -60,21 +84,25 @@ func chapter_elite_day() -> int:
 	return _chapter_start + CHAPTER_LENGTH - 1
 
 
-func set_focused_elite_day(day: int) -> void:
-	_focused_elite_day = day
-	_apply_node_hover_visual(NODE_COUNT - 1)
+func set_focused_day(day: int) -> void:
+	_focused_day = day
+	for index in _node_controls.size():
+		_apply_node_hover_visual(index)
 	_update_marker()
 	queue_redraw()
 
 
 func _build_nodes() -> void:
 	_kill_hover_tweens()
+	# Focus callbacks read the marker geometry; release while every old node is live.
+	for node in _node_controls:
+		if node.has_focus():
+			node.release_focus()
 	for child in get_children():
 		child.free()
 	_node_centers.clear()
 	_node_controls.clear()
 	_hover_t.clear()
-	_skull_control = null
 	_marker = null
 	_built_chapter_start = _chapter_start
 
@@ -82,22 +110,8 @@ func _build_nodes() -> void:
 		_hover_t.append(0.0)
 		var day := _chapter_start + i
 		var is_elite := i == NODE_COUNT - 1
-		var node: Control
-		if is_elite:
-			var button := Button.new()
-			button.flat = true
-			button.accessibility_name = "Preview Elite Battle on Day %d" % day
-			var empty := StyleBoxEmpty.new()
-			for state in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
-				button.add_theme_stylebox_override(state, empty)
-			button.pressed.connect(_on_elite_pressed.bind(day))
-			button.focus_entered.connect(queue_redraw)
-			button.focus_exited.connect(queue_redraw)
-			node = button
-		else:
-			var day_node := CombatProgressDayNode.new()
-			day_node.setup(day)
-			node = day_node
+		var node := CombatProgressDayNode.new()
+		node.setup(day, is_elite)
 		node.name = "Node%d" % day
 		var node_size := ELITE_NODE_SIZE if is_elite else NODE_RADIUS * 2.0
 		node.custom_minimum_size = Vector2(node_size, node_size)
@@ -105,10 +119,12 @@ func _build_nodes() -> void:
 		node.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		add_child(node)
 		_node_controls.append(node)
-		node.mouse_entered.connect(_on_node_entered.bind(i, is_elite, day))
-		node.mouse_exited.connect(_on_node_exited.bind(i, is_elite))
+		node.pressed.connect(_on_day_pressed.bind(day))
+		node.focus_entered.connect(_on_node_focus_changed.bind(i))
+		node.focus_exited.connect(_on_node_focus_changed.bind(i))
+		node.mouse_entered.connect(_on_node_entered.bind(i, day))
+		node.mouse_exited.connect(_on_node_exited.bind(i))
 		if is_elite:
-			_skull_control = node
 			var skull := TextureRect.new()
 			skull.name = "SkullIcon"
 			skull.texture = _SKULL_TEXTURE
@@ -180,9 +196,13 @@ func _hover_amount(index: int) -> float:
 
 
 func _node_scale_for(index: int) -> float:
-	if index == NODE_COUNT - 1 and _focused_elite_day == chapter_elite_day():
+	if _focused_day == _chapter_start + index or _has_visible_focus(index):
 		return HOVER_SCALE
 	return lerpf(1.0, HOVER_SCALE, _hover_amount(index))
+
+
+func _has_visible_focus(index: int) -> bool:
+	return _keyboard_focus_visible and _node_controls[index].has_focus()
 
 
 func _node_visual_radius(index: int) -> float:
@@ -197,6 +217,12 @@ func _apply_node_hover_visual(index: int) -> void:
 	node.pivot_offset = node.size * 0.5
 	var s := _node_scale_for(index)
 	node.scale = Vector2(s, s)
+
+
+func _on_node_focus_changed(index: int) -> void:
+	_apply_node_hover_visual(index)
+	_update_marker()
+	queue_redraw()
 
 
 func _notification(what: int) -> void:
@@ -219,17 +245,24 @@ func _draw() -> void:
 	)
 
 	for i in _node_centers.size():
-		if i == NODE_COUNT - 1:
-			var elite_radius := _node_visual_radius(i)
-			if _focused_elite_day == chapter_elite_day():
-				draw_circle(_node_centers[i], elite_radius + 6.0, Color(0.467, 0.6, 0.467, 1))
-			if _skull_control != null and _skull_control.has_focus():
-				draw_arc(_node_centers[i], elite_radius + 10.0, 0.0, TAU, 48, _FILL, 2.0, true)
-			continue  # Elite uses skull.png TextureRect.
 		var center: Vector2 = _node_centers[i]
 		var radius := _node_visual_radius(i)
-		draw_circle(center, radius, _FILL)
-		draw_arc(center, radius, 0.0, TAU, 48, _INK, 4.0, true)
+		var selected := _focused_day == _chapter_start + i
+		var focused := _has_visible_focus(i)
+		if i == NODE_COUNT - 1:
+			if selected:
+				draw_circle(center, radius + 6.0, Color(0.467, 0.6, 0.467, 1))
+			if focused:
+				draw_arc(center, radius + 10.0, 0.0, TAU, 48, _FILL, 2.0, true)
+			continue  # Elite uses skull.png TextureRect.
+		if _chapter_start + i <= GameState.current_day:
+			if selected or focused:
+				var underline := Vector2(radius * 0.55, radius + 3.0)
+				draw_line(center + Vector2(-underline.x, underline.y), center + underline, _FILL, 2.0, true)
+			continue  # Completed days use an unnumbered gold trophy.
+		draw_circle(center, radius, Color(0.68, 0.8, 0.63) if selected else _FILL)
+		# Focus reuses the circle's border instead of adding a second outer ring.
+		draw_arc(center, radius, 0.0, TAU, 48, _FILL if focused else _INK, 4.0, true)
 
 	if not _node_centers.is_empty():
 		var index := clampi(_upcoming_day - _chapter_start, 0, NODE_COUNT - 1)
@@ -243,20 +276,18 @@ func _draw() -> void:
 		draw_polyline(pts, _INK, 3.0, true)
 
 
-func _on_elite_pressed(day: int) -> void:
-	elite_pressed.emit(day)
+func _on_day_pressed(day: int) -> void:
+	day_pressed.emit(day)
 
 
-func _on_node_entered(index: int, is_elite: bool, day: int) -> void:
+func _on_node_entered(index: int, day: int) -> void:
 	_tween_node_hover(index, true)
-	if is_elite:
-		elite_hovered.emit(day)
+	day_hovered.emit(day)
 
 
-func _on_node_exited(index: int, is_elite: bool) -> void:
+func _on_node_exited(index: int) -> void:
 	_tween_node_hover(index, false)
-	if is_elite:
-		elite_unhovered.emit()
+	day_unhovered.emit()
 
 
 func _tween_node_hover(index: int, hovering: bool) -> void:

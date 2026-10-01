@@ -20,9 +20,9 @@ const DISPLAY_NAMES := {
 	"CON": "Constitution",
 }
 const DESCRIPTIONS := {
-	"STR": "Affects damage with melee attacks.",
-	"DEX": "Affects damage with ranged attacks.",
-	"CON": "Determines Max HP",
+	"STR": "Affects damage with Strength-scaling weapons.",
+	"DEX": "Affects damage with Dexterity-scaling weapons.",
+	"CON": "Determines Max HP (CON x 4)",
 }
 
 const _STAT_ICON_SCENE := preload("res://assets/ui/stat_icon/stat_icon.tscn")

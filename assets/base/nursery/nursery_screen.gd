@@ -20,8 +20,6 @@ const _FERTILIZER_ICON := preload("res://assets/base/nursery/fertilizers/fertili
 const _MUTATION_ICON := preload("res://assets/base/nursery/mutations/mutation_icon.png")
 
 @onready var _stock_row: HBoxContainer = %StockRow
-@onready var _stock_vbox: VBoxContainer = _stock_row.get_parent() as VBoxContainer
-@onready var _stock_row_spacing: int = _stock_vbox.get_theme_constant("separation")
 @onready var _shop_drop_zone: ShopDropZone = %ShopDropZone
 @onready var _shop_row: HBoxContainer = %ShopRow
 @onready var _middle_shop_column: VBoxContainer = %MiddleShopColumn
@@ -39,6 +37,7 @@ var _hatch_toasts: Array[UnitDetailCard] = []
 var _hatch_toast_host: Control = null
 var _hatch_toast_dimmer: Control = null
 var _hatch_toast_tween: Tween = null
+var _hatch_reveal: UnitEmergence
 
 
 func _ready() -> void:
@@ -66,10 +65,12 @@ func on_screen_shown() -> void:
 
 
 func on_screen_hidden() -> void:
+	get_viewport().gui_cancel_drag()
 	dismiss_hatch_results()
 
 
 func dismiss_hatch_results() -> void:
+	_cancel_hatch_reveal()
 	_dismiss_hatch_toast(false)
 
 
@@ -238,13 +239,8 @@ func _make_shop_card_spacer() -> Control:
 
 
 func _sync_stock_slots() -> void:
+	# StockVBox reserves hint space so adding or removing a spore cannot move the row.
 	var stock := GameState.nursery.stock
-	var first_spore := GameState.nursery.first_lineage_spore
-	var has_lineage_hint := first_spore != null and stock.slots.has(first_spore)
-	# Leave room above the spore so its arrow does not cover the Inventory heading.
-	_stock_vbox.add_theme_constant_override(
-		"separation", _stock_row_spacing + (int(SporeCard.LINEAGE_HINT_SIZE.y) if has_lineage_hint else 0)
-	)
 	_update_stock_slot_accepts()
 	for i in _stock_slots.size():
 		var slot := _stock_slots[i]
@@ -464,8 +460,13 @@ func _on_plant_pressed(tile: PlotTile) -> void:
 
 
 func _on_plot_pressed(tile: PlotTile) -> void:
+	var base := get_tree().current_scene
+	if base != null and base.has_method("is_tab_transitioning") and base.is_tab_transitioning():
+		return
 	if tile.is_unlockable:
 		_try_unlock_plot()
+		return
+	if is_instance_valid(_hatch_reveal):
 		return
 	var nursery := GameState.nursery
 	if not nursery.is_plot_unlocked(tile.plot_index):
@@ -487,7 +488,10 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 				var empty_bench: Array[RosterUnitData] = []
 				GameState.troop.seed_if_empty(empty_bench)
 			if not GameState.troop.has_free_slot():
+				ActionFeedback.show_rejection(tile, ActionDecision.reject(ActionReasons.UNIT_CAPACITY_FULL))
 				return
+			var shell := tile.capture_hatch_shell()
+			var toast_anchor := _control_canvas_rect(tile)
 			var harvested := nursery.harvest(tile.plot_index)
 			if harvested.is_empty():
 				return
@@ -501,10 +505,8 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 				return
 			GameState.show_plot_harvest_hint = false
 			GameState.base_undo.record(undo)
-			Audio.play_ui_cue(Sfx.Cue.HARVEST)
-			var toast_anchor := _control_canvas_rect(tile)
 			_refresh()
-			_show_hatch_toasts(kept, toast_anchor)
+			_show_hatch_reveal(kept, shell, toast_anchor)
 
 
 func _control_canvas_rect(control: Control) -> Rect2:
@@ -519,6 +521,43 @@ func _hud_root() -> Control:
 	if base == null:
 		return null
 	return base.get_node_or_null("HudLayer/HudRoot") as Control
+
+
+func _show_hatch_reveal(
+	units: Array[RosterUnitData], shell: Dictionary, anchor_canvas_rect: Rect2
+) -> void:
+	dismiss_hatch_results()
+	var hud := _hud_root()
+	if hud == null:
+		_show_hatch_toasts(units, anchor_canvas_rect)
+		return
+	_hatch_reveal = UnitEmergence.play(hud, units, shell, UnitEmergence.Kind.EGG)
+	var reveal_id := _hatch_reveal.get_instance_id()
+	_hatch_reveal.finished.connect(
+		_on_hatch_reveal_finished.bind(reveal_id, units, anchor_canvas_rect)
+	)
+	_hatch_reveal.cancelled.connect(_on_hatch_reveal_cancelled.bind(reveal_id))
+
+
+func _on_hatch_reveal_finished(
+	reveal_id: int, units: Array[RosterUnitData], anchor_canvas_rect: Rect2
+) -> void:
+	if not is_instance_valid(_hatch_reveal) or _hatch_reveal.get_instance_id() != reveal_id:
+		return
+	_hatch_reveal = null
+	_show_hatch_toasts(units, anchor_canvas_rect)
+
+
+func _on_hatch_reveal_cancelled(reveal_id: int) -> void:
+	if is_instance_valid(_hatch_reveal) and _hatch_reveal.get_instance_id() == reveal_id:
+		_hatch_reveal = null
+
+
+func _cancel_hatch_reveal() -> void:
+	var reveal := _hatch_reveal
+	_hatch_reveal = null
+	if is_instance_valid(reveal):
+		reveal.cancel()
 
 
 func _show_hatch_toasts(units: Array[RosterUnitData], anchor_canvas_rect: Rect2) -> void:
@@ -569,21 +608,30 @@ func _show_hatch_toasts(units: Array[RosterUnitData], anchor_canvas_rect: Rect2)
 func _position_hatch_toasts(cards: Array[UnitDetailCard], anchor_canvas_rect: Rect2) -> void:
 	if cards.is_empty():
 		return
-	var card_size := cards[0].card_size()
-	var count := cards.size()
-	var total_width := card_size.x * count + _HATCH_TOAST_GAP * maxi(count - 1, 0)
+	var total_width := _HATCH_TOAST_GAP * maxi(cards.size() - 1, 0)
+	var max_height := 0.0
+	for card in cards:
+		var card_size := card.card_size()
+		total_width += card_size.x
+		max_height = maxf(max_height, card_size.y)
 	var bounds := get_viewport().get_visible_rect().size
+	var anchor := anchor_canvas_rect
 	if _hatch_toast_host != null and _hatch_toast_host.size.x > 0.0:
 		bounds = _hatch_toast_host.size
-	var row_x := anchor_canvas_rect.position.x + (anchor_canvas_rect.size.x - total_width) * 0.5
-	var row_y := anchor_canvas_rect.position.y - card_size.y + 24.0
-	row_x = clampf(row_x, 8.0, maxf(8.0, bounds.x - total_width - 8.0))
-	row_y = clampf(row_y, 8.0, maxf(8.0, bounds.y - card_size.y - 8.0))
-	for i in count:
-		cards[i].position = Vector2(
-			row_x + float(i) * (card_size.x + _HATCH_TOAST_GAP),
-			row_y
-		)
+		anchor = _hatch_toast_host.get_global_transform_with_canvas().affine_inverse() * anchor_canvas_rect
+	var fit := minf(1.0, minf(
+		maxf(bounds.x - 16.0, 1.0) / maxf(total_width, 1.0),
+		maxf(bounds.y - 16.0, 1.0) / maxf(max_height, 1.0)
+	))
+	var row_size := Vector2(total_width, max_height) * fit
+	var row_x := anchor.position.x + (anchor.size.x - row_size.x) * 0.5
+	var row_y := anchor.position.y - row_size.y + 24.0
+	row_x = clampf(row_x, 8.0, maxf(8.0, bounds.x - row_size.x - 8.0))
+	row_y = clampf(row_y, 8.0, maxf(8.0, bounds.y - row_size.y - 8.0))
+	for card in cards:
+		card.scale = Vector2.ONE * fit
+		card.position = Vector2(row_x, row_y)
+		row_x += (card.card_size().x + _HATCH_TOAST_GAP) * fit
 
 
 func _on_hatch_toast_dimmer_input(event: InputEvent) -> void:

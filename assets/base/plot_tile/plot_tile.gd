@@ -96,6 +96,10 @@ func _ready() -> void:
 	custom_minimum_size = TILE_SIZE
 	_base_modulate = modulate
 	_set_children_mouse_filter_ignore(self)
+	_stats_panel.mouse_filter = Control.MOUSE_FILTER_PASS
+	_stats_panel.set_drag_forwarding(
+		Callable(), _modifier_can_drop.bind(_stats_panel), _modifier_drop.bind(_stats_panel)
+	)
 	_plant_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	_plant_button.pressed.connect(_on_plant_pressed)
 	_unlock_button.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -599,9 +603,29 @@ func _make_slot_chip(icon_tex: Texture2D) -> StatChip:
 	_stats_row.add_child(chip)
 	# StatChip._ready defaults to IGNORE; re-enable for hover punch + tooltips.
 	chip.mouse_filter = Control.MOUSE_FILTER_STOP
+	chip.set_drag_forwarding(Callable(), _modifier_can_drop.bind(chip), _modifier_drop.bind(chip))
 	# Inspecting a modifier does not activate the containing Plot's Plant action.
 	BiomassPreview.bind(chip, _shop_drop_biomass_delta)
 	return chip
+
+
+func _modifier_can_drop(at_position: Vector2, data: Variant, source: Control) -> bool:
+	if _plot_item_drag_decision(data) == null:
+		clear_drop_highlight()
+		return false
+	var plot_position := get_global_transform_with_canvas().affine_inverse() * (
+		source.get_global_transform_with_canvas() * at_position
+	)
+	return _can_drop_data(plot_position, data)
+
+
+func _modifier_drop(at_position: Vector2, data: Variant, source: Control) -> void:
+	if _plot_item_drag_decision(data) == null:
+		return
+	var plot_position := get_global_transform_with_canvas().affine_inverse() * (
+		source.get_global_transform_with_canvas() * at_position
+	)
+	_drop_data(plot_position, data)
 
 
 func _make_fertilizer_detail_tip(

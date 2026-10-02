@@ -821,3 +821,45 @@ func _is_shop_payload_available(data: Dictionary) -> bool:
 	if str(data.get("type", "")) == "shop_mutation":
 		return GameState.is_feature_available(&"mutations")
 	return true
+
+
+## Resolve card/Plot visuals; missing, rebuilt, or hidden targets are not usable.
+func get_guided_hint_target(hint: Dictionary) -> Control:
+	var target: Control
+	match StringName(hint.get("target", &"")):
+		&"plot_slot":
+			var index := GameState.nursery.unlocked_plot_count
+			if index < _tiles.size() and _tiles[index].is_unlockable:
+				target = _tiles[index].get_node_or_null("%UnlockButton") as Control
+		&"shop_reroll":
+			target = _reroll_button
+		&"plot":
+			var index := int(hint.get("plot_index", -1))
+			if index >= 0 and index < _tiles.size():
+				target = _tiles[index].get_guided_hint_target(
+					StringName(hint.get("plot_action", &""))
+				)
+		&"shop":
+			var index := int(hint.get("shop_index", -1))
+			for card in _shop_cards:
+				if card.slot_index == index:
+					target = card
+					break
+		&"stock":
+			var index := int(hint.get("stock_index", -1))
+			if index >= 0 and index < _stock_slots.size():
+				var host := _stock_slots[index].get_node_or_null("%CardHost")
+				if host != null and host.get_child_count() > 0:
+					target = host.get_child(0) as Control
+	if not is_instance_valid(target) or target.is_queued_for_deletion():
+		return null
+	if not target.is_visible_in_tree() or target.modulate.a <= 0.0:
+		return null
+	return target
+
+
+func is_guided_hint_blocked() -> bool:
+	return (
+		is_instance_valid(_hatch_reveal)
+		or (is_instance_valid(_hatch_toast_host) and _hatch_toast_host.is_visible_in_tree())
+	)

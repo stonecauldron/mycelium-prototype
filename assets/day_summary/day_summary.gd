@@ -40,11 +40,11 @@ var _battle_won := false
 var _battle_day := 0
 
 @onready var _entries: VBoxContainer = %Entries
+@onready var _entries_scroll: ScrollContainer = %EntriesScroll
 @onready var _continue_button: Button = %ContinueButton
 @onready var _restart_button: Button = %RestartButton
 @onready var _preparation_button: Button = %PreparationButton
 @onready var _end_run_button: Button = %EndRunButton
-@onready var _retry_help: Label = %RetryHelp
 @onready var _title: Label = %Title
 @onready var _troop_hp_bar: ProgressBar = %TroopHpBar
 @onready var _troop_hp_label: Label = %TroopHpLabel
@@ -74,22 +74,21 @@ func _ready() -> void:
 	_restart_button.pressed.connect(_on_restart_pressed)
 	_preparation_button.pressed.connect(_on_preparation_pressed)
 	_end_run_button.pressed.connect(_on_end_run_pressed)
+	_entries_scroll.get_v_scroll_bar().value_changed.connect(_on_entries_scrolled)
 	_biomass_ready_frame = Engine.get_process_frames() + 2
 	set_process(_biomass_reward_amount > 0)
 
 
 func _configure_result_actions() -> void:
 	_continue_button.visible = not _guided_result or _battle_won
-	_restart_button.visible = _guided_result
-	_preparation_button.visible = _guided_result
-	_end_run_button.visible = _guided_result
-	_retry_help.visible = _guided_result
+	var can_retry := _guided_result and not _battle_won
+	_restart_button.visible = can_retry
+	_preparation_button.visible = can_retry
+	_end_run_button.visible = can_retry
 	if not _guided_result:
 		return
 	_title.text = "Day %d · %s" % [_battle_day, "Victory" if _battle_won else "Battle lost"]
-	_restart_button.theme_type_variation = &"NavButton" if _battle_won else &"PrimaryButton"
-	if _battle_won and GameState.has_won_run():
-		_continue_button.text = "Finish Guided Run"
+	_restart_button.theme_type_variation = &"PrimaryButton"
 
 
 func _on_debug_mode_changed(is_active: bool) -> void:
@@ -111,7 +110,14 @@ func _process(delta: float) -> void:
 	)
 	_biomass_gain = BiomassGain.play(self, source_rect, _biomass_reward_amount, _biomass_counter, true)
 	_biomass_pending_token = 0
+	_biomass_gain.finished.connect(_on_biomass_gain_finished)
 	_biomass_gain.cancelled.connect(_on_biomass_gain_cancelled)
+
+
+func _on_biomass_gain_finished() -> void:
+	# Keep the completion sound alive while the final amount joins the scroll content.
+	_biomass_gain.hide()
+	_show_biomass_reward_total()
 
 
 func _on_biomass_gain_cancelled() -> void:
@@ -119,8 +125,14 @@ func _on_biomass_gain_cancelled() -> void:
 	_show_biomass_reward_total()
 
 
+func _on_entries_scrolled(_value: float) -> void:
+	_finish_biomass_animation()
+
+
 func _show_biomass_reward_total() -> void:
 	if _continuing or not is_inside_tree() or not is_instance_valid(_biomass_reward_source):
+		return
+	if _biomass_reward_source.get_child_count() > 0:
 		return
 	var center := CenterContainer.new()
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -152,8 +164,8 @@ func _input(event: InputEvent) -> void:
 			# Touch and its emulated mouse release can arrive in either order.
 			_clear_finishing_pointer_press.call_deferred()
 		return
-	if _is_over_result_action(pointer_position):
-		# Result actions remain available on the first click during a reward.
+	if _is_over_result_control(pointer_position):
+		# Actions and scrollbar drags work on their first press during a reward.
 		return
 	if pressed and _finish_biomass_animation():
 		# Consume the whole gesture, including the mouse events emulated from a tap.
@@ -161,12 +173,16 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func _is_over_result_action(pointer_position: Vector2) -> bool:
-	for button: Button in [_continue_button, _restart_button, _preparation_button, _end_run_button]:
-		if not button.is_visible_in_tree():
+func _is_over_result_control(pointer_position: Vector2) -> bool:
+	var damage_scroll := _damage_boards.get_parent() as ScrollContainer
+	for control: Control in [
+		_continue_button, _restart_button, _preparation_button, _end_run_button,
+		_entries_scroll.get_v_scroll_bar(), damage_scroll.get_v_scroll_bar(),
+	]:
+		if not control.is_visible_in_tree():
 			continue
-		var button_position := button.get_global_transform_with_canvas().affine_inverse() * pointer_position
-		if Rect2(Vector2.ZERO, button.size).has_point(button_position):
+		var local_position := control.get_global_transform_with_canvas().affine_inverse() * pointer_position
+		if Rect2(Vector2.ZERO, control.size).has_point(local_position):
 			return true
 	return false
 
@@ -325,6 +341,7 @@ func _make_bar_style(color: Color) -> StyleBoxFlat:
 
 func _make_metric_label(text: String) -> Label:
 	var label := _make_entry_label(text)
+	label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	label.add_theme_font_size_override("font_size", 28)
 	return label
 
@@ -343,6 +360,10 @@ func _populate_entries(entries: Array[Dictionary]) -> void:
 		return
 
 	for entry in entries:
+		var unlocks: Array = entry.get("unlocks", [])
+		if not unlocks.is_empty():
+			_entries.add_child(_make_unlock_group(unlocks, int(entry.get("unlock_day", 0))))
+			continue
 		var text := str(entry.get("text", ""))
 		var unit := entry.get("unit") as RosterUnitData
 		if unit != null:
@@ -378,6 +399,67 @@ func _populate_entries(entries: Array[Dictionary]) -> void:
 			_entries.add_child(_make_message_row(text))
 
 
+func _make_unlock_group(unlocks: Array, day: int) -> Control:
+	var panel := PanelContainer.new()
+	panel.name = "DailyUnlocks"
+	panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	PaperStyles.apply_card(panel, true)
+	var paper := panel.get_theme_stylebox("panel").duplicate() as StyleBox
+	paper.content_margin_left = 48.0
+	paper.content_margin_top = 42.0
+	paper.content_margin_right = 48.0
+	paper.content_margin_bottom = 34.0
+	panel.add_theme_stylebox_override("panel", paper)
+	var column := VBoxContainer.new()
+	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_theme_constant_override("separation", 12)
+	panel.add_child(column)
+	var heading := Label.new()
+	heading.name = "UnlockHeading"
+	heading.text = "Unlocked for Day %d" % day
+	heading.add_theme_font_size_override("font_size", 26)
+	heading.add_theme_color_override("font_color", PaperStyles.CREAM)
+	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_child(heading)
+	for unlock: Dictionary in unlocks:
+		var row := HBoxContainer.new()
+		row.name = "Unlock_%s" % str(unlock["id"])
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_theme_constant_override("separation", 12)
+		column.add_child(row)
+		var icon := TextureRect.new()
+		icon.custom_minimum_size = Vector2(60, 60)
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		icon.texture = _unlock_icon(unlock.get("icon") as Texture2D)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(icon)
+		var label := Label.new()
+		label.text = str(unlock["label"])
+		label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		label.add_theme_font_size_override("font_size", 30)
+		label.add_theme_color_override("font_color", PaperStyles.CREAM)
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(label)
+	return panel
+
+
+func _unlock_icon(texture: Texture2D) -> Texture2D:
+	if texture == null:
+		return null
+	var image := texture.get_image()
+	if image == null:
+		return texture
+	if image.is_compressed():
+		image.decompress()
+	var atlas := AtlasTexture.new()
+	atlas.atlas = texture
+	atlas.region = Rect2(image.get_used_rect())
+	return atlas
+
+
 func _make_message_row(text: String) -> Control:
 	return _make_entry_label(text)
 
@@ -396,6 +478,8 @@ func _make_entry_label(text: String) -> Control:
 	var label := Label.new()
 	label.theme_type_variation = &"SummaryEntryLabel"
 	label.text = text
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	return label
@@ -493,7 +577,7 @@ func _on_continue_pressed() -> void:
 
 
 func _on_restart_pressed() -> void:
-	if _continuing or not _guided_result:
+	if _continuing or not _guided_result or _battle_won:
 		return
 	if not GameState.restart_guided_battle():
 		return
@@ -501,7 +585,7 @@ func _on_restart_pressed() -> void:
 
 
 func _on_preparation_pressed() -> void:
-	if _continuing or not _guided_result:
+	if _continuing or not _guided_result or _battle_won:
 		return
 	if not GameState.restore_guided_preparation():
 		return
@@ -509,9 +593,8 @@ func _on_preparation_pressed() -> void:
 
 
 func _on_end_run_pressed() -> void:
-	if _continuing or not _guided_result:
+	if _continuing or not _guided_result or _battle_won:
 		return
-	# End the last accepted Day, not the provisional victory being discarded.
 	if not GameState.restore_guided_preparation():
 		return
 	Analytics.day_fail()

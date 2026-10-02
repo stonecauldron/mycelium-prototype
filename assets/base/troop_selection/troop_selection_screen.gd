@@ -931,3 +931,40 @@ func _squad_unit_count() -> int:
 		if entry != null:
 			count += 1
 	return count
+
+
+## Resolve an optional arrow to live visuals without changing preparation state.
+func get_guided_hint_target(hint: Dictionary) -> Control:
+	var target: Control
+	match StringName(hint.get("target", &"")):
+		&"unit":
+			target = _find_unit_card(hint.get("unit") as RosterUnitData)
+		&"school":
+			var school := int(hint.get("school", -1))
+			for slot: CocoonSlot in _cocoon_slots:
+				if slot.school == school:
+					target = slot.get_node_or_null("%CocoonImage") as Control
+					break
+		&"formation":
+			if not _squad_slots.is_empty():
+				target = _squad_slots[0].get_node_or_null("%CardHost") as Control
+		&"squad_slot":
+			if is_instance_valid(_squad_unlock_slot):
+				target = _squad_unlock_slot.get_node_or_null("%UnlockButton") as Control
+		&"compost":
+			if is_instance_valid(_compost_bin):
+				target = _compost_bin.get_node_or_null("%BinImage") as Control
+	if not is_instance_valid(target) or target.is_queued_for_deletion():
+		return null
+	if not target.is_visible_in_tree() or target.modulate.a <= 0.0:
+		return null
+	return target
+
+
+func is_guided_hint_blocked() -> bool:
+	return (
+		_has_active_reveal()
+		or _has_open_cocoon_dialog()
+		or is_seal_choice_visible()
+		or (is_instance_valid(_starter_dialog) and _starter_dialog.is_visible_in_tree())
+	)

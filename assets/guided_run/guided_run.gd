@@ -3,9 +3,55 @@ extends RefCounted
 
 ## Authored learning content. Availability follows Days, never a completed action.
 const LENGTH := 15
+const MAX_PLOT_COUNT := 2
+const SEAL_CHOICE_DAYS: Array[int] = [11, 13, 15]
 const FEATURE_DAYS := {
 	&"progression": 4, &"nursery": 6, &"shop": 7, &"mutations": 8,
-	&"squad_slots": 9, &"compost": 11, &"seals": 11,
+	&"squad_slots": 9, &"plot_slots": 9, &"compost": 11, &"seals": 11,
+	&"full_shop": 12, &"shop_reroll": 12, &"offer_locks": 12, &"full_seal_pool": 13,
+}
+const _FEATURE_UNLOCK_PRESENTATION := {
+	&"progression": {
+		"label": "Daily progression",
+		"icon": preload("res://assets/base/combat_progress_track/skull.png"),
+	},
+	&"nursery": {
+		"label": "Nursery",
+		"icon": preload("res://assets/base/plot_tile/growth0.png"),
+	},
+	&"shop": {
+		"label": "Shop · Quick Growth",
+		"icon": preload("res://assets/base/nursery/fertilizers/fertiliser.png"),
+	},
+	&"mutations": {
+		"label": "Thorny Mutation",
+		"icon": preload("res://assets/base/nursery/mutations/mutation_icon.png"),
+	},
+	&"squad_slots": {
+		"label": "Squad expansion",
+		"icon": preload("res://assets/combat/flag_bearer/flag.png"),
+	},
+	&"plot_slots": {
+		"label": "Plot expansion",
+		"icon": preload("res://assets/base/plot_tile/plot_empty.png"),
+	},
+	&"compost": {
+		"label": "Compost",
+		"icon": preload("res://assets/base/composting_bin/composting_bin.png"),
+	},
+	&"seals": {
+		"label": "Seals",
+		"icon": preload("res://assets/base/seals/seal.png"),
+	},
+	# The full Shop card includes its catalogs, rerolls, and offer locks.
+	&"full_shop": {
+		"label": "Full Shop",
+		"icon": preload("res://assets/base/nursery/fertilizers/fertiliser.png"),
+	},
+	&"full_seal_pool": {
+		"label": "Full Seal pool",
+		"icon": preload("res://assets/base/seals/seal.png"),
+	},
 }
 const QUICK_GROWTH := preload("res://assets/base/nursery/fertilizers/quick_growth.tres")
 const THORNY := preload("res://assets/base/nursery/mutations/body/thorny.tres")
@@ -52,8 +98,38 @@ static func school_available(school: int, day: int) -> bool:
 		WeaponSchool.Id.SWORD:
 			return day >= 3
 		WeaponSchool.Id.MACE:
-			return day >= 5
+			return day >= 4
+		WeaponSchool.Id.SHIELD:
+			return day >= 8
+		WeaponSchool.Id.SPEAR:
+			return day >= 13
 	return false
+
+
+## Systems first available in this preparation Day, not recurring rewards.
+static func unlocks_for_day(day: int) -> Array[Dictionary]:
+	var unlocks: Array[Dictionary] = []
+	if day < 1 or day > LENGTH:
+		return unlocks
+	for school in WeaponSchool.DISPLAY_ORDER:
+		if not school_available(school, day) or school_available(school, day - 1):
+			continue
+		var weapon := WeaponSchool.load_weapon(WeaponSchool.base_weapon_path(school))
+		unlocks.append({
+			"id": StringName("school_%d" % school),
+			"label": "%s Training" % WeaponSchool.display_name(school),
+			"icon": weapon.icon,
+		})
+	for feature: StringName in _FEATURE_UNLOCK_PRESENTATION:
+		if not feature_available(feature, day) or feature_available(feature, day - 1):
+			continue
+		var presentation: Dictionary = _FEATURE_UNLOCK_PRESENTATION[feature]
+		unlocks.append({
+			"id": feature,
+			"label": presentation["label"],
+			"icon": presentation["icon"],
+		})
+	return unlocks
 
 
 static func specs_for_day(day: int) -> Array[EnemyUnitSpec]:
@@ -67,7 +143,11 @@ static func specs_for_day(day: int) -> Array[EnemyUnitSpec]:
 
 
 static func make_starter(adult: bool) -> RosterUnitData:
-	var unit_name := "Fern" if adult else "Moss"
+	# Resolve the same distinct pair when the reserved Child arrives on Day 2.
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash([GameState.run_seed, "guided-starter-names"])
+	var names := UnitNames.pick_unique(2, rng)
+	var unit_name := names[0] if adult else names[1]
 	var unit := RosterUnitData.create(
 		unit_name, UnitStatsData.average_for_tier(UnitStatsData.PowerTier.COMMON),
 		WeaponSchool.sickle(), UnitStatsData.PowerTier.COMMON

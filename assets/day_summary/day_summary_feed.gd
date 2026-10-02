@@ -3,7 +3,7 @@ extends RefCounted
 
 ## Pending end-of-day summary rows.
 ## Keys: text, optional formation_line, optional unit, optional biomass + biomass_amount, optional nursery_ready,
-## optional emitted_spores + spore_tint.
+## optional emitted_spores + spore_tint, or unlocks + unlock_day for guided availability.
 static var entries: Array[Dictionary] = []
 
 ## Left-column combat recap (separate from event entries).
@@ -12,7 +12,7 @@ static var troop_hp_max: int = 0
 ## Rows: { unit: RosterUnitData, dealt: int, taken: int, max_hp: int, order: int }
 static var unit_damage_rows: Array[Dictionary] = []
 
-## Guided outcomes stay replayable until the result screen accepts the victory.
+## Guided defeats offer retries; victories await Continue before leaving the result.
 static var guided_result: bool = false
 static var battle_won: bool = false
 static var battle_day: int = 0
@@ -57,6 +57,12 @@ static func add_base_unlock(feature_name: String) -> void:
 	if trimmed.is_empty():
 		return
 	add_entry("%s unlocked" % trimmed)
+
+
+static func add_guided_unlocks(day: int) -> void:
+	var unlocks := GuidedRun.unlocks_for_day(day)
+	if not unlocks.is_empty():
+		entries.append({"unlocks": unlocks, "unlock_day": day})
 
 
 static func add_fallen_unit(

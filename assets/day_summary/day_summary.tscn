@@ -81,15 +81,12 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="EntriesHost" type="CenterContainer" parent="RootMargin/RootVBox/Body" unique_id=1321859347]
+[node name="EntriesHost" type="MarginContainer" parent="RootMargin/RootVBox/Body" unique_id=1321859347]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 7.0
-offset_top = 66.0
-offset_right = 7.0
-offset_bottom = 66.0
+offset_left = 474.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -99,9 +96,15 @@ custom_minimum_size = Vector2(700, 500)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_ly7t2")
 
-[node name="Entries" type="VBoxContainer" parent="RootMargin/RootVBox/Body/EntriesHost/EntriesPanel" unique_id=193854218]
+[node name="EntriesScroll" type="ScrollContainer" parent="RootMargin/RootVBox/Body/EntriesHost/EntriesPanel"]
 unique_name_in_owner = true
 layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Entries" type="VBoxContainer" parent="RootMargin/RootVBox/Body/EntriesHost/EntriesPanel/EntriesScroll" unique_id=193854218]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"SectionVBox"
 
 [node name="CombatRecapPanel" type="PanelContainer" parent="RootMargin/RootVBox/Body" unique_id=1959810099]
@@ -165,14 +168,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"SectionVBox"
-
-[node name="RetryHelp" type="Label" parent="RootMargin/RootVBox"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_type_variation = &"PageSubtitleLabel"
-text = "Change preparation resets this Day's choices and restores its spending."
-horizontal_alignment = 1
 
 [node name="ResultActions" type="HBoxContainer" parent="RootMargin/RootVBox"]
 layout_mode = 2

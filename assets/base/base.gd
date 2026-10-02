@@ -71,6 +71,11 @@ func _ready() -> void:
 		initial = TabId.NURSERY
 	_select_tab(initial, true)
 	_colony_screen.ensure_pending_modals()
+	var guide := GuidedRunGuide.new()
+	guide.name = "GuidedRunGuide"
+	guide.resolve_target = _resolve_guided_hint
+	guide.is_blocked = _is_guided_hint_blocked
+	$HudLayer/HudRoot.add_child(guide)
 	Analytics.maybe_start_day()
 
 
@@ -418,6 +423,43 @@ func _refresh_nursery_readiness() -> void:
 
 func is_tab_transitioning() -> bool:
 	return _camera_tween != null and _camera_tween.is_valid() and _camera_tween.is_running()
+
+
+func _is_guided_hint_blocked() -> bool:
+	return (
+		get_tree().paused or SceneTransition.is_transitioning()
+		or get_viewport().gui_is_dragging() or is_tab_transitioning()
+		or (is_instance_valid(_early_stock_popup) and _early_stock_popup.visible)
+		or _colony_screen.is_guided_hint_blocked()
+		or (_nursery_screen as NurseryScreen).is_guided_hint_blocked()
+	)
+
+
+## Resolve world-space targets only on the shown tab; first suggest navigation otherwise.
+func _resolve_guided_hint(hint: Dictionary) -> Dictionary:
+	var target: Control
+	if StringName(hint.get("target", &"")) == &"battle":
+		target = _start_combat_button
+	else:
+		var tab := TabId.NURSERY if StringName(hint.get("tab", &"war")) == &"nursery" else TabId.COLONY
+		if not _is_tab_visible(tab):
+			return {}
+		if _current_tab != tab:
+			return {"control": _tab_buttons.get(tab), "navigation": true}
+		match StringName(hint.get("target", &"")):
+			&"progression":
+				if not _progress_tracks.is_empty():
+					target = _progress_tracks[0]
+			&"scout":
+				var scout := _scout_bubble()
+				if scout != null:
+					target = scout.get_node_or_null("ScoutPanel") as Control
+			_:
+				if tab == TabId.NURSERY:
+					target = (_nursery_screen as NurseryScreen).get_guided_hint_target(hint)
+				else:
+					target = _colony_screen.get_guided_hint_target(hint)
+	return {"control": target, "navigation": false}
 
 
 func _select_tab(tab_id: TabId, instant: bool = false) -> void:

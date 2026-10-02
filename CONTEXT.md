@@ -13,7 +13,7 @@ A single playthrough of Auto Shrooms, lasting up to 10 days, or 15 in a guided R
 *Avoid*: campaign, session (when you mean the playthrough)
 
 **Guided Run**:
-An optional Run that introduces systems through scheduled unlocks and restricted choices. It starts with a fixed Sword Adult, makes a Child available before Day 2, and permits free Battle retries or restoring the current Day's preparation. Progress never requires tutorial actions; pending Seal choices still require selection before Battle. The next-Run checkbox turns off after the first guided Run ends, while later manual choices persist.
+An optional Run that introduces systems through scheduled unlocks and restricted choices. Optional graphical arrows introduce only newly unlocked functionality on its unlock Day, using the player's actual state, through Day 11. They do not repeat missed introductions or routine actions; no guided arrows appear from Day 12 onward. It starts with a fixed Sword Adult, makes a Child available before Day 2, and permits free Battle retries or restoring the current Day's preparation. Progress never requires tutorial actions; pending Seal choices still require selection before Battle. The next-Run checkbox turns off after the first guided Run ends, while later manual choices persist.
 
 **Day**:
 The primary unit of run progression. A day may or may not include a battle.
@@ -70,7 +70,7 @@ A spore produced when an Adult is composted or dies in battle, carrying that uni
 *Avoid*: death spore (code name)
 
 **Plot**:
-A Nursery slot where a spore grows. The Nursery has four Plots; they unlock in order. A locked Plot cannot hold a Spore; unlocking one spends biomass. Unlocked plots show blank Mutation and Fertilizer capacity chips that fill when Fertilizers are applied — not Fungicide. An empty Plot with Extra nutrition shows a Fungicide chip.
+A Nursery slot where a spore grows. The Nursery has four Plots in an ordinary Run; they unlock in order. A guided Run allows two total Plots, with the second purchasable from Day 9. A locked Plot cannot hold a Spore; unlocking one spends biomass. Unlocked plots show blank Mutation and Fertilizer capacity chips that fill when Fertilizers are applied — not Fungicide. An empty Plot with Extra nutrition shows a Fungicide chip.
 
 **Growth Time**:
 The days a Spore needs on a Plot to become harvestable, counting Greenhouse but not Plot Fertilizers. Unplanted spores show this.

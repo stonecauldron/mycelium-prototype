@@ -826,3 +826,19 @@ func _notification(what: int) -> void:
 	elif what == NOTIFICATION_DRAG_END:
 		clear_drop_highlight()
 		_refresh_arrow()
+
+
+## Target the action or grow instead of the Plot's full layout rectangle.
+## An apply hint points at empty dirt, while ordinary empty-Plot hints use Plant.
+func get_guided_hint_target(action: StringName = &"") -> Control:
+	if not is_node_ready() or not is_visible_in_tree() or is_unlockable or _plot == null:
+		return null
+	if _plot.is_empty():
+		if action == &"apply":
+			return _plot_visual
+		if _plant_button.is_visible_in_tree():
+			return _plant_button
+		return null
+	if _egg_visual.is_visible_in_tree():
+		return _egg_visual
+	return _plot_visual

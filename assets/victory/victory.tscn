@@ -69,7 +69,11 @@ theme_type_variation = &"SubtitleLabel"
 text = "Your troop survived 10 days."
 horizontal_alignment = 1
 
-[node name="NewRunButton" type="Button" parent="Center/Panel/VBox"]
+[node name="NewRunRow" type="CenterContainer" parent="Center/Panel/VBox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NewRunButton" type="Button" parent="Center/Panel/VBox/NewRunRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
@@ -77,11 +81,19 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "New Run"
 
-[node name="GuidedRunCheckBox" type="CheckBox" parent="Center/Panel/VBox"]
+[node name="GuidedRunCheckBox" type="CheckBox" parent="Center/Panel/VBox/NewRunRow/NewRunButton"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 44)
-layout_mode = 2
-size_flags_horizontal = 4
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 20.0
+offset_top = -22.0
+offset_right = 20.0
+offset_bottom = 22.0
+grow_vertical = 2
 theme_override_colors/font_color = Color(0.18, 0.16, 0.14, 1)
 theme_override_colors/font_pressed_color = Color(0.18, 0.16, 0.14, 1)
 theme_override_colors/font_hover_color = Color(0.32, 0.3, 0.26, 1)

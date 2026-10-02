@@ -115,7 +115,7 @@ func _test_guided_terminal_day() -> void:
 	GameState.current_day = 10
 	DaySummaryFeed.set_guided_result(true, 10)
 	GameState.finish_run()
-	_expect(_collector.designs == ["guided:run:start", "guided:run:quit:10"], "Quitting a replayable victory reports its Battle, not next Day")
+	_expect(_collector.designs == ["guided:run:start", "guided:run:quit:10"], "Quitting a victory awaiting Continue reports its Battle, not next Day")
 	_collector.clear()
 	GameState.reset_run(true)
 	GameState.current_day = 10

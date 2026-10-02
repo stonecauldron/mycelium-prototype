@@ -57,6 +57,17 @@ static func dismiss_current() -> void:
 	_instance._dismiss()
 
 
+## Viewport coordinates allow hints on other CanvasLayers to wait for inspection.
+static func obscures_rect(canvas_rect: Rect2) -> bool:
+	if not is_instance_valid(_instance) or not _instance._laid_out:
+		return false
+	var tip := _instance._tip
+	if not is_instance_valid(tip) or not tip.is_visible_in_tree() or tip.modulate.a <= 0.0:
+		return false
+	var tip_rect := tip.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, tip.size)
+	return tip_rect.intersects(canvas_rect)
+
+
 ## Re-fit a card that is already on the overlay (e.g. plot tip refresh).
 static func relayout(tip: Control) -> void:
 	if _instance == null or not is_instance_valid(_instance):

@@ -31,7 +31,8 @@ func _run() -> void:
 		_settings_bytes = FileAccess.get_file_as_bytes("user://settings.cfg")
 	print("SETTINGS_BACKUP_PATH ", ProjectSettings.globalize_path("user://settings.cfg"))
 	await _check_defeat_retries()
-	await _check_day_ten_and_final_victory()
+	await _check_victory_continue()
+	await _check_ordinary_nursery_summary()
 	await _sample_balance()
 	_state.reset_run(false)
 	# Let one-shot combat timers finish after their owning stage exits.
@@ -57,6 +58,7 @@ func _check_defeat_retries() -> void:
 			_expect(_settings.guided_run_enabled == expected_preference, "Defeat keeps next-Run preference")
 			_expect(_settings.guided_run_ended == expected_history, "Defeat does not record terminal history")
 			_expect(not get_tree().current_scene.get_node("%ContinueButton").visible, "Defeat cannot continue to next Day")
+			_check_unlock_panel(day + 1, {})
 			var restart: Button = get_tree().current_scene.get_node("%RestartButton")
 			_expect(restart.visible and not restart.disabled, "Restart remains available after loss %d" % (attempt + 1))
 			restart.pressed.emit()
@@ -65,6 +67,7 @@ func _check_defeat_retries() -> void:
 			_expect(_state.biomass.amount == expected_balance, "Restart restores precombat biomass")
 			_expect(_state.troop.squad_unit_count() > 0, "Restart restores fallen Units")
 			_expect(not DaySummaryFeed.guided_result, "Restart clears stale result")
+			_expect(DaySummaryFeed.entries.is_empty(), "Restart clears pending summary entries")
 		_wipe_side(get_tree().current_scene, true)
 		if not await _wait_for_scene(SUMMARY):
 			return
@@ -77,19 +80,47 @@ func _check_defeat_retries() -> void:
 	print("PASS: regular and elite defeats remain repeatable")
 
 
-func _check_day_ten_and_final_victory() -> void:
-	await _prepare_day(10)
-	await _launch_battle()
-	_wipe_side(get_tree().current_scene, false)
-	if not await _wait_for_scene(SUMMARY):
-		return
-	_expect(_state.current_day == 10, "Battle 10 victory advances to Day 11 preparation")
-	_expect(not _state.has_won_run(), "Battle 10 is not the guided final victory")
-	get_tree().current_scene.get_node("%ContinueButton").pressed.emit()
-	if not await _wait_for_scene(BASE):
-		return
-	_expect(_state.pending_seal_choice, "Day 11 receives its first Seal")
-	_expect(_state.get_upcoming_day() == 11, "Continue after Battle 10 enters Day 11")
+func _check_victory_continue() -> void:
+	for day in [1, 3, 5, 7, 8, 9, 10, 11, 12]:
+		await _prepare_day(day)
+		await _launch_battle()
+		_wipe_side(get_tree().current_scene, false)
+		if not await _wait_for_scene(SUMMARY):
+			return
+		_expect(_state.current_day == day, "Victory advances preparation after Day %d" % day)
+		_expect(not _state.has_won_run(), "Victory before Day 15 does not finish the guided Run")
+		_check_victory_controls()
+		match day:
+			1:
+				_check_unlock_panel(2, {"school_3": "Bow Training"})
+			3:
+				_check_unlock_panel(4, {"school_4": "Mace Training", "progression": "Daily progression"})
+			5:
+				_check_unlock_panel(6, {"nursery": "Nursery"})
+				_expect(_summary_label_count("Nursery unlocked") == 0, "Guided Nursery card replaces the legacy Nursery message")
+			7:
+				_check_unlock_panel(8, {"school_1": "Shield Training", "mutations": "Thorny Mutation"})
+			8:
+				_check_unlock_panel(9, {"squad_slots": "Squad expansion", "plot_slots": "Plot expansion"})
+			9:
+				_check_unlock_panel(10, {})
+			10:
+				_check_unlock_panel(11, {"compost": "Compost", "seals": "Seals"})
+			11:
+				_check_unlock_panel(12, {"full_shop": "Full Shop"})
+			12:
+				_check_unlock_panel(13, {"school_2": "Spear Training", "full_seal_pool": "Full Seal pool"})
+		get_tree().current_scene.get_node("%ContinueButton").pressed.emit()
+		if not await _wait_for_scene(BASE):
+			return
+		_expect(_state.get_upcoming_day() == day + 1, "Continue enters the next preparation Day")
+		_expect(not DaySummaryFeed.guided_result and DaySummaryFeed.entries.is_empty(), "Continue clears consumed result metadata and unlock entries")
+		if day == 10:
+			_expect(_state.pending_seal_choice, "Day 11 receives its first Seal")
+		elif day == 11:
+			_expect(not _state.pending_seal_choice, "Day 12 does not receive a second Seal")
+		elif day == 12:
+			_expect(_state.pending_seal_choice, "Day 13 receives its second Seal")
 	await _prepare_day(15)
 	var ended_before: bool = _settings.guided_run_ended
 	var completed_before: bool = _settings.guided_run_completed
@@ -98,20 +129,82 @@ func _check_day_ten_and_final_victory() -> void:
 	if not await _wait_for_scene(SUMMARY):
 		return
 	_expect(_state.has_won_run(), "Battle 15 reaches the guided victory threshold")
-	_expect(_settings.guided_run_ended == ended_before, "Replayable final result has not ended the Run")
-	_expect(_settings.guided_run_completed == completed_before, "Replayable final result has not recorded completion")
-	get_tree().current_scene.get_node("%RestartButton").pressed.emit()
-	if not await _wait_for_scene(COMBAT):
-		return
-	_expect(_state.current_day == 14, "Final Battle retry restores Day 15")
-	_wipe_side(get_tree().current_scene, false)
-	if not await _wait_for_scene(SUMMARY):
-		return
+	_expect(_settings.guided_run_ended == ended_before, "Final result waits for Continue before ending the Run")
+	_expect(_settings.guided_run_completed == completed_before, "Final result waits for Continue before recording completion")
+	_check_victory_controls()
+	_check_unlock_panel(16, {})
 	get_tree().current_scene.get_node("%ContinueButton").pressed.emit()
 	if not await _wait_for_scene(VICTORY):
 		return
 	_expect(_settings.guided_run_ended and _settings.guided_run_completed, "Accepting final victory records completion")
-	print("PASS: Day 10 continues; Day 15 remains replayable until accepted")
+	print("PASS: regular and final victories show only Continue; Day 10 continues to Day 11")
+
+
+func _check_ordinary_nursery_summary() -> void:
+	await _clear_scene()
+	_state.reset_run(false)
+	var starters: Array[RosterUnitData] = [GuidedRun.make_starter(true)]
+	_state.troop.seed_if_empty(starters)
+	_state.ensure_seal_choice_offers()
+	_expect(_state.try_add_seal(_state.seal_choice_offers[0]), "Ordinary opening Seal can be selected")
+	_state.clear_pending_seal_choice()
+	_state.combat_fast_forward = 4
+	await _launch_battle()
+	_wipe_side(get_tree().current_scene, false)
+	if not await _wait_for_scene(SUMMARY):
+		return
+	_check_unlock_panel(2, {})
+	_expect(_summary_label_count("Nursery unlocked") == 1, "Ordinary first victory retains exactly one legacy Nursery message")
+	_expect(not DaySummaryFeed.guided_result, "Ordinary summary keeps its existing result mode")
+	get_tree().current_scene.get_node("%ContinueButton").pressed.emit()
+	if not await _wait_for_scene(BASE):
+		return
+	_expect(_state.get_upcoming_day() == 2 and _state.is_nursery_unlocked(), "Ordinary Continue still enters the newly unlocked Nursery Day")
+
+
+func _check_unlock_panel(day: int, expected: Dictionary) -> void:
+	var entries: VBoxContainer = get_tree().current_scene.get_node("%Entries")
+	var panel := entries.get_node_or_null("DailyUnlocks")
+	_expect(DaySummaryFeed.entries.is_empty(), "Summary consumes pending entries once")
+	if expected.is_empty():
+		_expect(panel == null, "No unlock panel when this result grants no new system")
+		return
+	_expect(panel != null, "Victory displays newly available systems for Day %d" % day)
+	if panel == null:
+		return
+	var heading := panel.find_child("UnlockHeading", true, false) as Label
+	_expect(heading != null and heading.text == "Unlocked for Day %d" % day, "Unlock heading names the next preparation Day")
+	_expect(panel.find_children("Unlock_*", "HBoxContainer", true, false).size() == expected.size(), "Unlock panel contains only the newly introduced systems")
+	for id: String in expected:
+		var row := panel.find_child("Unlock_%s" % id, true, false)
+		_expect(row != null, "Unlock panel includes %s" % id)
+		if row == null:
+			continue
+		var labels := row.find_children("*", "Label", false, false)
+		_expect(labels.size() == 1 and (labels[0] as Label).text == expected[id], "Unlock row names %s" % expected[id])
+
+
+func _summary_label_count(text: String) -> int:
+	var count := 0
+	for label: Label in get_tree().current_scene.get_node("%Entries").find_children("*", "Label", true, false):
+		if label.text == text:
+			count += 1
+	return count
+
+
+func _check_victory_controls() -> void:
+	var summary := get_tree().current_scene
+	var day_before: int = _state.current_day
+	var continue_button: Button = summary.get_node("%ContinueButton")
+	_expect(continue_button.visible and not continue_button.disabled, "Victory presents the normal Continue action")
+	_expect(continue_button.text.to_lower() == "continue", "Final and regular victories retain the normal Continue label")
+	_expect(summary.get_node_or_null("%RetryHelp") == null, "Victory has no retry explanation text")
+	for button_name in ["RestartButton", "PreparationButton", "EndRunButton"]:
+		var button: Button = summary.get_node("%" + button_name)
+		_expect(not button.visible, "Victory hides %s" % button_name)
+		button.pressed.emit()
+		_expect(_state.current_day == day_before, "Hidden %s cannot change the Run" % button_name)
+		_expect(not get_tree().root.get_node("SceneTransition").is_transitioning(), "Hidden %s cannot leave victory" % button_name)
 
 
 func _prepare_day(day: int) -> void:
@@ -126,6 +219,7 @@ func _prepare_day(day: int) -> void:
 	if _state.pending_seal_choice:
 		_state.ensure_seal_choice_offers()
 		_expect(_state.try_add_seal(_state.seal_choice_offers[0]), "Scheduled Seal can be selected before Battle")
+		_state.clear_pending_seal_choice()
 	_state.combat_fast_forward = 4
 
 

@@ -19,6 +19,8 @@ var barks: BarkData = BarkData.new()
 var base_undo: BaseUndoHistory = BaseUndoHistory.new()
 var current_day: int = 0
 var is_guided_run: bool = false
+## Presentation-only inspection history; deliberately survives preparation/Battle retries.
+var guided_hint_history: Dictionary = {}
 var _guided_child_revealed: bool = false
 var _guided_preparation_day: int = -1
 var _guided_enemy_day: int = -1
@@ -108,7 +110,7 @@ func maybe_queue_seal_choice() -> void:
 ## Receiving Days, shared by the ordinary Run reward schedule and progression UI.
 func is_seal_choice_day(day: int) -> bool:
 	if is_guided_run:
-		return day <= get_run_length() and (day == 11 or (day >= 12 and day % 3 == 0))
+		return day in GuidedRun.SEAL_CHOICE_DAYS
 	return day >= 1 and day <= WIN_DAYS and (day == 1 or day % 3 == 0)
 
 
@@ -284,9 +286,9 @@ func is_cocoon_emergence_current(entry: Dictionary) -> bool:
 
 
 func try_add_seal(seal: SealData) -> bool:
-	if is_guided_run and (not pending_seal_choice or not GuidedRun.SEALS.has(seal)):
-		return false
 	if seal == null:
+		return false
+	if is_guided_run and (not pending_seal_choice or not ensure_seal_choice_offers().has(seal)):
 		return false
 	if not seals.add(seal):
 		return false
@@ -498,6 +500,7 @@ func start_new_run() -> void:
 
 func reset_run(guided: Variant = null) -> void:
 	is_guided_run = SettingsServer.guided_run_enabled if guided == null else bool(guided)
+	guided_hint_history.clear()
 	_run_finished = false
 	_guided_child_revealed = false
 	_guided_preparation_day = -1
@@ -562,7 +565,7 @@ func is_school_available(school: int) -> bool:
 
 
 func is_guided_shop_slot_available(slot_index: int) -> bool:
-	if not is_guided_run or debug_mode_active:
+	if not is_guided_run or debug_mode_active or is_feature_available(&"full_shop"):
 		return true
 	return (slot_index == 0 and is_feature_available(&"shop")) or (
 		slot_index == 2 and is_feature_available(&"mutations")
@@ -571,7 +574,7 @@ func is_guided_shop_slot_available(slot_index: int) -> bool:
 
 func ensure_seal_choice_offers() -> Array[SealData]:
 	if pending_seal_choice and seal_choice_offers.is_empty():
-		if is_guided_run:
+		if is_guided_run and not is_feature_available(&"full_seal_pool"):
 			seal_choice_offers.assign(GuidedRun.SEALS)
 		else:
 			seal_choice_offers = SealCatalog.roll_offers(3, seals)

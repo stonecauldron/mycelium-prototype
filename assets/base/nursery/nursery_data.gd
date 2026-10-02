@@ -132,7 +132,8 @@ func ready_plot_count() -> int:
 func can_unlock_plot() -> bool:
 	if GameState.is_guided_run and not GameState.is_feature_available(&"plot_slots"):
 		return false
-	return unlocked_plot_count < MAX_PLOT_COUNT
+	var limit := GuidedRun.MAX_PLOT_COUNT if GameState.is_guided_run else MAX_PLOT_COUNT
+	return unlocked_plot_count < limit
 
 
 func next_unlock_cost() -> int:
@@ -160,7 +161,7 @@ func ensure_shop_offers() -> void:
 
 
 func reroll_unlocked_shop_offers() -> void:
-	if GameState.is_guided_run:
+	if GameState.is_guided_run and not GameState.is_feature_available(&"full_shop"):
 		refresh_guided_shop_offers()
 		return
 	_ensure_spore_shop()
@@ -171,16 +172,22 @@ func reroll_unlocked_shop_offers() -> void:
 			selected_paths.append(offer.item.resource_path)
 	spore_shop.reroll_unlocked(generate_offer_for_slot.bind(selected_paths))
 	_normalize_shop_offers(selected_paths)
+	if GameState.is_guided_run:
+		# Daily refresh precedes ensure_guided_preparation; do not roll again there.
+		_guided_shop_day = GameState.get_upcoming_day()
 
 
-## Refill authored offers once per Day. Purchased slots stay empty during Base
-## refreshes and retry restoration; ordinary Shop generation is unchanged.
+## Refill once per Day: authored offers first, then the normal unlocked catalog.
+## Purchases and locks survive Base refreshes and retry restoration.
 func refresh_guided_shop_offers() -> void:
 	if not GameState.is_guided_run:
 		return
 	_ensure_spore_shop()
 	var day := GameState.get_upcoming_day()
 	if _guided_shop_day == day:
+		return
+	if GameState.is_feature_available(&"full_shop"):
+		reroll_unlocked_shop_offers()
 		return
 	spore_shop.offers.clear()
 	for slot_index in SHOP_SLOT_COUNT:

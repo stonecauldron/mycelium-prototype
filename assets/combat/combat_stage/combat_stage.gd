@@ -823,10 +823,11 @@ func _check_battle_end() -> void:
 	DaySummaryFeed.clear()
 	if GameState.is_guided_run:
 		DaySummaryFeed.set_guided_result(true, battle_day)
+		if not GameState.has_won_run() and not GameState.debug_mode_active:
+			DaySummaryFeed.add_guided_unlocks(GameState.get_upcoming_day())
 	_push_combat_recap_to_day_summary()
 	GameState.prefer_nursery_tab = not GameState.is_guided_run
-	var nursery_unlock_day := 5 if GameState.is_guided_run else GameState.NURSERY_UNLOCK_DAY
-	if GameState.current_day == nursery_unlock_day:
+	if not GameState.is_guided_run and GameState.current_day == GameState.NURSERY_UNLOCK_DAY:
 		DaySummaryFeed.add_base_unlock("Nursery")
 	if _biomass_earned_this_fight > 0:
 		DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)

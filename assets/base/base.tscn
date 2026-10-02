@@ -186,44 +186,14 @@ alignment = 1
 [node name="RightPad" type="HBoxContainer" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow" unique_id=1504207992]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 32
 alignment = 2
 
-[node name="StartCombatButton" type="Button" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow/RightPad" unique_id=1667727997]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 72)
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"PrimaryButton"
-disabled = true
-text = "Start Battle"
-
-[node name="RunMenu" parent="." unique_id=992448351 instance=ExtResource("15_run_menu")]
-
-[node name="UndoLayer" type="CanvasLayer" parent="." unique_id=2010281691]
-layer = 11
-
-[node name="UndoRoot" type="Control" parent="UndoLayer" unique_id=1525986157]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme = ExtResource("2_theme")
-
-[node name="UndoButton" type="Button" parent="UndoLayer/UndoRoot" unique_id=1442761696]
+[node name="UndoButton" type="Button" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow/RightPad" unique_id=1442761696]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = -93.0
-offset_right = 88.0
-offset_bottom = -29.0
-grow_vertical = 0
+layout_mode = 2
+size_flags_vertical = 4
 focus_mode = 0
 theme_override_colors/icon_focus_color = Color(1.15, 1.15, 1.15, 1)
 theme_override_colors/icon_pressed_color = Color(0.8, 0.8, 0.8, 1)
@@ -238,3 +208,14 @@ disabled = true
 icon = ExtResource("17_undo")
 icon_alignment = 1
 expand_icon = true
+
+[node name="StartCombatButton" type="Button" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow/RightPad" unique_id=1667727997]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 72)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
+disabled = true
+text = "Start Battle"
+
+[node name="RunMenu" parent="." unique_id=992448351 instance=ExtResource("15_run_menu")]

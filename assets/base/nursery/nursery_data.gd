@@ -165,6 +165,10 @@ func reroll_unlocked_shop_offers() -> void:
 		return
 	_ensure_spore_shop()
 	var selected_paths: Array[String] = []
+	# Exclude the entire current shop, including locked items, before replacing slots.
+	for offer in spore_shop.offers:
+		if offer != null and not offer.is_empty():
+			selected_paths.append(offer.item.resource_path)
 	spore_shop.reroll_unlocked(generate_offer_for_slot.bind(selected_paths))
 	_normalize_shop_offers(selected_paths)
 
@@ -348,7 +352,7 @@ func generate_mutation_offer(selected_paths: Array[String] = []) -> ShopOffer:
 	return offer
 
 
-## Track only this roll's new items; reuse a path when its selected pool is exhausted.
+## Track excluded and newly selected items; reuse a path when its pool is exhausted.
 func _pick_shop_item_path(paths: Array[String], selected_paths: Array[String]) -> String:
 	var available_paths: Array[String] = []
 	for path in paths:

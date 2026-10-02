@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" path="res://assets/title/title_battle.tscn" id="5_battle"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="6_paper"]
 
+[ext_resource type="Texture2D" path="res://assets/title/steam_qr.png" id="7_steam_qr"]
+
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
 content_margin_left = 28.0
 content_margin_top = 24.0
@@ -178,6 +180,36 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Back"
+
+[node name="SteamQRAnchor" type="Control" parent="Center/Panel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="SteamQR" type="VBoxContainer" parent="Center/Panel/SteamQRAnchor"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 0
+offset_left = 808.0
+offset_top = 86.0
+offset_right = 1068.0
+offset_bottom = 366.0
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Code" type="TextureRect" parent="Center/Panel/SteamQRAnchor/SteamQR"]
+custom_minimum_size = Vector2(240, 240)
+layout_mode = 2
+mouse_filter = 2
+texture_filter = 1
+texture = ExtResource("7_steam_qr")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Center/Panel/SteamQRAnchor/SteamQR"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 22
+text = "Scan to wishlist on Steam"
+horizontal_alignment = 1
 
 [node name="RunMenu" parent="." instance=ExtResource("4_run_menu")]
 intent_scene = "title"

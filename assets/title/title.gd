@@ -7,6 +7,7 @@ extends Control
 @onready var _menu_page: VBoxContainer = %MenuPage
 @onready var _credits_page: VBoxContainer = %CreditsPage
 @onready var _credits_back_button: Button = %CreditsBackButton
+@onready var _steam_qr: Control = $Center/Panel/SteamQRAnchor
 @onready var _run_menu: RunMenu = $RunMenu
 
 
@@ -31,6 +32,7 @@ func _set_credits_visible(show_credits: bool) -> void:
 	get_viewport().gui_release_focus()
 	_menu_page.visible = not show_credits
 	_credits_page.visible = show_credits
+	_steam_qr.visible = not show_credits
 	_run_menu.set_available(not show_credits)
 	Audio.play_ui_cue(Sfx.Cue.UI_OPEN if show_credits else Sfx.Cue.UI_CLOSE)
 

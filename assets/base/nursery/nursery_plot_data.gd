@@ -41,8 +41,6 @@ func check_fertilizer_application(fertilizer: FertilizerData = null) -> ActionDe
 		if state != State.GROWING and state != State.READY:
 			return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_FERTILIZER)
 		return ActionDecision.accept()
-	if state != State.EMPTY and state != State.GROWING:
-		return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_FERTILIZER)
 	if fertilizer_stack_count() >= SealModifiers.max_fertilizer_stacks():
 		return ActionDecision.reject(ActionReasons.FERTILIZER_CAPACITY_FULL)
 	return ActionDecision.accept()
@@ -77,15 +75,12 @@ func filled_mutation() -> MutationData:
 	return cap_mutation
 
 
-## Mutations apply on empty or growing plots when both capacity and its typed slot are free.
+## Mutations apply at any growth stage when both capacity and its typed slot are free.
 func can_apply_mutation(mutation: MutationData = null) -> bool:
 	return check_mutation_application(mutation).allowed
 
 
 func check_mutation_application(mutation: MutationData = null) -> ActionDecision:
-	var state := get_state()
-	if state != State.EMPTY and state != State.GROWING:
-		return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_MUTATION)
 	var max_slots := SealModifiers.max_mutation_slots()
 	if mutation == null:
 		if mutation_count() >= max_slots:

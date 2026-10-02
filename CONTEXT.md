@@ -1,6 +1,6 @@
 # Auto Shrooms
 
-A 10-day auto-battler run where you grow mushroom troops, train them, and fight daily enemy armies for biomass.
+A 10-day auto-battler run where you grow mushroom troops, train them, and fight daily enemy armies for biomass, with an optional 15-day guided Run.
 
 Shared presentation guidance: [UI conventions](docs/ui-conventions.md).
 
@@ -9,15 +9,18 @@ Shared presentation guidance: [UI conventions](docs/ui-conventions.md).
 ### Run loop
 
 **Run**:
-A single playthrough of Auto Shrooms, lasting up to 10 days.
+A single playthrough of Auto Shrooms, lasting up to 10 days, or 15 in a guided Run.
 *Avoid*: campaign, session (when you mean the playthrough)
+
+**Guided Run**:
+An optional Run that introduces systems through scheduled unlocks and restricted choices. It starts with a fixed Sword Adult, makes a Child available before Day 2, and permits free Battle retries or restoring the current Day's preparation. Progress never requires tutorial actions; pending Seal choices still require selection before Battle. The next-Run checkbox turns off after the first guided Run ends, while later manual choices persist.
 
 **Day**:
 The primary unit of run progression. A day may or may not include a battle.
 *Avoid*: chapter (UI progress-track slice only)
 
 **Elite Day**:
-A harder day that falls on days 5 and 10 of the run.
+A harder day that falls every fifth Day: 5 and 10 in an ordinary Run, also 15 in a guided Run.
 
 **Battle**:
 A combat encounter fought during a day. Not every day necessarily has one.
@@ -55,7 +58,7 @@ The Base zone for the troop, scouting the enemy army, and starting a battle.
 Reversing the latest completed Base action, including its Biomass and other consequences, one action at a time. History lasts for the current Base visit and ends at any paid reroll or the start of a Battle.
 
 **Nursery**:
-The Base zone where spores are grown on plots into Child units. It is not available at the start of a Run; it unlocks after the first Battle.
+The Base zone where spores are grown on plots into Child units. It is not available at the start of a Run; it unlocks after the first Battle in an ordinary Run, or after Battle 5 in a guided Run.
 *Avoid*: treating the Nursery as present for the whole Run
 
 **Spore**:

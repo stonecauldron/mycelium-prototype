@@ -242,7 +242,7 @@ func _plot_item_drag_decision(data: Variant) -> ActionDecision:
 
 
 func _should_show_harvest_hint() -> bool:
-	if not GameState.show_plot_harvest_hint:
+	if GameState.is_guided_run or not GameState.show_plot_harvest_hint:
 		return false
 	if is_unlockable or _plot == null:
 		return false
@@ -250,7 +250,7 @@ func _should_show_harvest_hint() -> bool:
 
 
 func _should_show_plant_hint() -> bool:
-	if not GameState.show_plot_plant_hint:
+	if GameState.is_guided_run or not GameState.show_plot_plant_hint:
 		return false
 	if is_unlockable or _plot == null:
 		return false
@@ -472,9 +472,9 @@ func _refresh_fertilizer_chips() -> void:
 		return
 	# Ghost capacity chips only while a spore is planted; empty dirt shows filled only.
 	var show_ghosts := not _plot.is_empty()
-	_add_mutation_slot_chips(show_ghosts)
+	_add_mutation_slot_chips(show_ghosts and GameState.is_feature_available(&"mutations"))
 	_add_extra_nutrition_chip()
-	_add_fertilizer_slot_chips(show_ghosts)
+	_add_fertilizer_slot_chips(show_ghosts and GameState.is_feature_available(&"shop"))
 
 
 func _add_mutation_slot_chips(show_ghost: bool) -> void:

@@ -47,6 +47,8 @@ func is_squad_slot_unlocked(slot_index: int) -> bool:
 
 
 func can_unlock_squad_slot() -> bool:
+	if GameState.is_guided_run and not GameState.is_feature_available(&"squad_slots"):
+		return false
 	return unlocked_squad_count < SQUAD_SLOT_COUNT
 
 

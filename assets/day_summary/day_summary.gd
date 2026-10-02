@@ -1,6 +1,9 @@
 extends Control
 
 const _BASE_SCENE_PATH := "res://assets/base/base.tscn"
+const _COMBAT_SCENE_PATH := "res://assets/combat/combat_stage/combat_stage.tscn"
+const _VICTORY_SCENE_PATH := "res://assets/victory/victory.tscn"
+const _GAME_OVER_SCENE_PATH := "res://assets/game_over/game_over.tscn"
 const _PORTRAIT_HOST_SIZE := Vector2(68, 84)
 const _PORTRAIT_SCALE := 0.54
 const _DAMAGE_PORTRAIT_HOST_SIZE := Vector2(100, 124)
@@ -32,9 +35,16 @@ var _biomass_delay_left := 0.15
 var _biomass_ready_frame := 0
 var _continuing := false
 var _finishing_pointer_press := false
+var _guided_result := false
+var _battle_won := false
+var _battle_day := 0
 
 @onready var _entries: VBoxContainer = %Entries
 @onready var _continue_button: Button = %ContinueButton
+@onready var _restart_button: Button = %RestartButton
+@onready var _preparation_button: Button = %PreparationButton
+@onready var _end_run_button: Button = %EndRunButton
+@onready var _retry_help: Label = %RetryHelp
 @onready var _title: Label = %Title
 @onready var _troop_hp_bar: ProgressBar = %TroopHpBar
 @onready var _troop_hp_label: Label = %TroopHpLabel
@@ -47,8 +57,13 @@ var _finishing_pointer_press := false
 func _ready() -> void:
 	Audio.play_base_music()
 	_title.text = "Day %d => Day %d" % [GameState.current_day, GameState.current_day + 1]
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
-	_biomass_day_spacer.text = "Day %d / %d" % [day, GameState.WIN_DAYS]
+	_guided_result = GameState.is_guided_run and DaySummaryFeed.guided_result
+	_battle_won = DaySummaryFeed.battle_won
+	_battle_day = DaySummaryFeed.battle_day
+	var run_length := GameState.get_run_length()
+	var day := clampi(GameState.get_upcoming_day(), 1, run_length)
+	_biomass_day_spacer.text = "Day %d / %d" % [day, run_length]
+	_configure_result_actions()
 	_on_debug_mode_changed(GameState.debug_mode_active)
 	GameState.debug_mode_changed.connect(_on_debug_mode_changed)
 	_populate_combat_recap()
@@ -56,8 +71,25 @@ func _ready() -> void:
 	if _biomass_reward_amount > 0:
 		_biomass_pending_token = _biomass_counter.begin_gain(_biomass_reward_amount)
 	_continue_button.pressed.connect(_on_continue_pressed)
+	_restart_button.pressed.connect(_on_restart_pressed)
+	_preparation_button.pressed.connect(_on_preparation_pressed)
+	_end_run_button.pressed.connect(_on_end_run_pressed)
 	_biomass_ready_frame = Engine.get_process_frames() + 2
 	set_process(_biomass_reward_amount > 0)
+
+
+func _configure_result_actions() -> void:
+	_continue_button.visible = not _guided_result or _battle_won
+	_restart_button.visible = _guided_result
+	_preparation_button.visible = _guided_result
+	_end_run_button.visible = _guided_result
+	_retry_help.visible = _guided_result
+	if not _guided_result:
+		return
+	_title.text = "Day %d · %s" % [_battle_day, "Victory" if _battle_won else "Battle lost"]
+	_restart_button.theme_type_variation = &"NavButton" if _battle_won else &"PrimaryButton"
+	if _battle_won and GameState.has_won_run():
+		_continue_button.text = "Finish Guided Run"
 
 
 func _on_debug_mode_changed(is_active: bool) -> void:
@@ -120,14 +152,23 @@ func _input(event: InputEvent) -> void:
 			# Touch and its emulated mouse release can arrive in either order.
 			_clear_finishing_pointer_press.call_deferred()
 		return
-	var button_position := _continue_button.get_global_transform_with_canvas().affine_inverse() * pointer_position
-	if Rect2(Vector2.ZERO, _continue_button.size).has_point(button_position):
-		# Let Continue receive its normal click, even while a reward is playing.
+	if _is_over_result_action(pointer_position):
+		# Result actions remain available on the first click during a reward.
 		return
 	if pressed and _finish_biomass_animation():
 		# Consume the whole gesture, including the mouse events emulated from a tap.
 		_finishing_pointer_press = true
 		get_viewport().set_input_as_handled()
+
+
+func _is_over_result_action(pointer_position: Vector2) -> bool:
+	for button: Button in [_continue_button, _restart_button, _preparation_button, _end_run_button]:
+		if not button.is_visible_in_tree():
+			continue
+		var button_position := button.get_global_transform_with_canvas().affine_inverse() * pointer_position
+		if Rect2(Vector2.ZERO, button.size).has_point(button_position):
+			return true
+	return false
 
 
 func _clear_finishing_pointer_press() -> void:
@@ -439,12 +480,51 @@ func _make_icon_row(text: String, formation_line: int) -> Control:
 
 
 func _on_continue_pressed() -> void:
-	if _continuing:
+	if _continuing or (_guided_result and not _battle_won):
 		return
+	if _guided_result:
+		DaySummaryFeed.clear()
+		if GameState.has_won_run():
+			Analytics.run_complete()
+			GameState.finish_run(true)
+			_leave_result(_VICTORY_SCENE_PATH)
+			return
+	_leave_result(_BASE_SCENE_PATH)
+
+
+func _on_restart_pressed() -> void:
+	if _continuing or not _guided_result:
+		return
+	if not GameState.restart_guided_battle():
+		return
+	_leave_result(_COMBAT_SCENE_PATH)
+
+
+func _on_preparation_pressed() -> void:
+	if _continuing or not _guided_result:
+		return
+	if not GameState.restore_guided_preparation():
+		return
+	_leave_result(_BASE_SCENE_PATH)
+
+
+func _on_end_run_pressed() -> void:
+	if _continuing or not _guided_result:
+		return
+	# End the last accepted Day, not the provisional victory being discarded.
+	if not GameState.restore_guided_preparation():
+		return
+	Analytics.day_fail()
+	Analytics.run_fail()
+	GameState.finish_run()
+	_leave_result(_GAME_OVER_SCENE_PATH)
+
+
+func _leave_result(scene_path: String) -> void:
 	_continuing = true
 	set_process(false)
 	_cancel_biomass_gain()
-	SceneTransition.change_scene(_BASE_SCENE_PATH)
+	SceneTransition.change_scene(scene_path)
 
 
 func _exit_tree() -> void:

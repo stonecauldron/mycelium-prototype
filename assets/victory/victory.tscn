@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://assets/victory/victory.gd" id="1_victory"]
 [ext_resource type="Theme" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="tex_paper_dialog"]
+
+[ext_resource type="Script" path="res://assets/ui/guided_run_checkbox.gd" id="guided_selector"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
 content_margin_left = 28.0
@@ -61,6 +63,7 @@ text = "Victory"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="Center/Panel/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"SubtitleLabel"
 text = "Your troop survived 10 days."
@@ -73,6 +76,20 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "New Run"
+
+[node name="GuidedRunCheckBox" type="CheckBox" parent="Center/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.18, 0.16, 0.14, 1)
+theme_override_colors/font_pressed_color = Color(0.18, 0.16, 0.14, 1)
+theme_override_colors/font_hover_color = Color(0.32, 0.3, 0.26, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.32, 0.3, 0.26, 1)
+theme_override_colors/font_focus_color = Color(0.18, 0.16, 0.14, 1)
+theme_override_font_sizes/font_size = 26
+text = "Guided run"
+script = ExtResource("guided_selector")
 
 [node name="FeedbackButton" type="Button" parent="Center/Panel/VBox"]
 unique_name_in_owner = true

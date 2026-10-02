@@ -171,6 +171,22 @@ layout_mode = 2
 theme_type_variation = &"NavButton"
 text = "Settings"
 
+[node name="RestartBattleButton" type="Button" parent="Root/Overlay/Center/Panel/Content/MenuPage"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+text = "Restart Battle"
+
+[node name="ChangePreparationButton" type="Button" parent="Root/Overlay/Center/Panel/Content/MenuPage"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+text = "Change preparation"
+
 [node name="ExitActionsSpacer" type="Control" parent="Root/Overlay/Center/Panel/Content/MenuPage" unique_id=642929425]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2

@@ -88,6 +88,7 @@ func _exit_tree() -> void:
 func _hydrate_and_refresh() -> void:
 	GameState.ensure_nursery_seeded()
 	GameState.nursery.ensure_shop_offers()
+	GameState.ensure_guided_preparation()
 	_rebuild_shop_cards()
 	_refresh()
 
@@ -137,7 +138,7 @@ func _build_plot_tiles() -> void:
 	GameState.ensure_nursery_seeded()
 	var nursery := GameState.nursery
 	var visible_count := nursery.unlocked_plot_count
-	if nursery.can_unlock_plot():
+	if nursery.can_unlock_plot() and GameState.is_feature_available(&"plot_slots"):
 		visible_count += 1
 	for i in visible_count:
 		var tile: PlotTile = _PLOT_TILE_SCENE.instantiate()
@@ -165,7 +166,9 @@ func _rebuild_shop_cards() -> void:
 		if i >= shop.offers.size():
 			break
 		var offer := shop.offers[i]
-		if offer == null or offer.is_empty():
+		if offer == null or offer.is_empty() or not GameState.is_feature_available(&"shop"):
+			continue
+		if offer.item is MutationData and not GameState.is_feature_available(&"mutations"):
 			continue
 		var card: ShopOfferCard = null
 		if offer.item is FertilizerData:
@@ -210,6 +213,7 @@ func _rebuild_shop_cards() -> void:
 			)
 		else:
 			continue
+		card.allow_offer_locks = GameState.is_feature_available(&"offer_locks")
 		card.offer_clicked.connect(_on_shop_offer_clicked)
 		card.lock_toggled.connect(_on_shop_lock_toggled)
 		built[i] = card
@@ -241,6 +245,7 @@ func _make_shop_card_spacer() -> Control:
 func _sync_stock_slots() -> void:
 	# StockVBox reserves hint space so adding or removing a spore cannot move the row.
 	var stock := GameState.nursery.stock
+	_stock_panel.visible = not GameState.is_guided_run or _stock_has_items()
 	_update_stock_slot_accepts()
 	for i in _stock_slots.size():
 		var slot := _stock_slots[i]
@@ -251,7 +256,7 @@ func _sync_stock_slots() -> void:
 			card.setup(item as SporeData, i)
 			card.spore_clicked.connect(_on_stock_spore_clicked)
 			slot.set_card(card)
-			card.set_lineage_hint_visible(item == GameState.nursery.first_lineage_spore)
+			card.set_lineage_hint_visible(not GameState.is_guided_run and item == GameState.nursery.first_lineage_spore)
 		elif item is FertilizerData:
 			var fert_card: FertilizerCard = _FERTILIZER_CARD_SCENE.instantiate()
 			fert_card.setup(item as FertilizerData, i)
@@ -272,9 +277,10 @@ func _update_stock_slot_accepts() -> void:
 
 
 func _refresh() -> void:
+	visible = GameState.is_feature_available(&"nursery")
 	var nursery := GameState.nursery
 	var expected_visible := nursery.unlocked_plot_count
-	if nursery.can_unlock_plot():
+	if nursery.can_unlock_plot() and GameState.is_feature_available(&"plot_slots"):
 		expected_visible += 1
 	if _tiles.size() != expected_visible:
 		_build_plot_tiles()
@@ -285,12 +291,14 @@ func _refresh() -> void:
 			break
 		var plot := nursery.plots[i] as NurseryPlotData if i < nursery.plots.size() else null
 		_tiles[i].setup(i, plot)
-	if nursery.can_unlock_plot() and _tiles.size() > nursery.unlocked_plot_count:
+	if nursery.can_unlock_plot() and GameState.is_feature_available(&"plot_slots") and _tiles.size() > nursery.unlocked_plot_count:
 		var unlock_index := nursery.unlocked_plot_count
 		_tiles[unlock_index].setup_unlockable(unlock_index, nursery.next_unlock_cost())
 
 
 func _refresh_shop_affordability() -> void:
+	_shop_panel.visible = GameState.is_feature_available(&"shop")
+	_reroll_button.visible = GameState.is_feature_available(&"shop_reroll")
 	for card in _shop_cards:
 		card.set_affordable(GameState.biomass.can_afford(card.cost))
 	_reroll_cost_label.text = "%d" % GameState.nursery.current_shop_reroll_cost()
@@ -317,6 +325,8 @@ func _reroll_biomass_delta() -> Variant:
 
 
 func _on_reroll_pressed() -> void:
+	if not GameState.is_feature_available(&"shop_reroll"):
+		return
 	var cost := GameState.nursery.current_shop_reroll_cost()
 	var spend := GameState.biomass.try_spend_decision(cost)
 	if spend == null:
@@ -344,6 +354,8 @@ func _play_shop_reroll_shake() -> void:
 
 
 func _on_shop_lock_toggled(card: ShopOfferCard) -> void:
+	if not GameState.is_feature_available(&"offer_locks"):
+		return
 	var shop := GameState.nursery.spore_shop
 	if shop == null:
 		return
@@ -405,6 +417,8 @@ func _on_shop_sell_dropped(_zone: ShopDropZone, data: Dictionary) -> void:
 
 
 func _try_buy_shop_payload(data: Dictionary) -> void:
+	if not _is_shop_payload_available(data):
+		return
 	var cost := int(data.get("cost", 0))
 	var slot_index := int(data.get("slot_index", -1))
 	var drop_type := str(data.get("type", ""))
@@ -728,6 +742,8 @@ func _on_plot_item_dropped(tile: PlotTile, data: Dictionary) -> void:
 
 
 func _try_unlock_plot() -> void:
+	if not GameState.is_feature_available(&"plot_slots"):
+		return
 	dismiss_hatch_results()
 	var undo := GameState.base_undo.capture("Unlock Plot")
 	if GameState.try_unlock_plot():
@@ -739,6 +755,8 @@ func _try_unlock_plot() -> void:
 
 
 func _apply_fertilizer_from_shop(plot_index: int, data: Dictionary) -> void:
+	if not _is_shop_payload_available(data):
+		return
 	var fertilizer := data.get("fertilizer") as FertilizerData
 	var cost := int(data.get("cost", 0))
 	var slot_index := int(data.get("slot_index", -1))
@@ -761,6 +779,8 @@ func _apply_fertilizer_from_shop(plot_index: int, data: Dictionary) -> void:
 
 
 func _apply_mutation_from_shop(plot_index: int, data: Dictionary) -> void:
+	if not _is_shop_payload_available(data):
+		return
 	var mutation := data.get("mutation") as MutationData
 	var cost := int(data.get("cost", 0))
 	var slot_index := int(data.get("slot_index", -1))
@@ -786,3 +806,18 @@ func _refresh_base_hud() -> void:
 	var base := get_tree().current_scene
 	if base != null and base.has_method("_refresh_hud"):
 		base._refresh_hud()
+
+
+func _stock_has_items() -> bool:
+	for item in GameState.nursery.stock.slots:
+		if item != null:
+			return true
+	return false
+
+
+func _is_shop_payload_available(data: Dictionary) -> bool:
+	if not GameState.is_feature_available(&"shop"):
+		return false
+	if str(data.get("type", "")) == "shop_mutation":
+		return GameState.is_feature_available(&"mutations")
+	return true

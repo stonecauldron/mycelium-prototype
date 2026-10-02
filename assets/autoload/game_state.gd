@@ -18,6 +18,15 @@ var seals: SealsCollection = SealsCollection.new()
 var barks: BarkData = BarkData.new()
 var base_undo: BaseUndoHistory = BaseUndoHistory.new()
 var current_day: int = 0
+var is_guided_run: bool = false
+var _guided_child_revealed: bool = false
+var _guided_preparation_day: int = -1
+var _guided_enemy_day: int = -1
+var _guided_enemy_roster: Array[RosterUnitData] = []
+var _guided_preparation_checkpoint: GuidedRunSnapshot = null
+var _guided_battle_checkpoint: GuidedRunSnapshot = null
+var _seal_choice_queued_day: int = -1
+var _run_finished: bool = false
 ## Seeds deterministic enemy compositions for this run (scout matches combat).
 var run_seed: int = 0
 ## Active enemy formation for the upcoming day (filled by scout; consumed by roster build).
@@ -75,6 +84,7 @@ func debug_advance_day() -> void:
 	refresh_shops_for_new_day()
 	begin_day()
 	maybe_queue_seal_choice()
+	ensure_guided_preparation()
 
 
 ## Day-start effects (Golden Mould, Favourite Child day flag). Call after day advances and on run start.
@@ -87,7 +97,9 @@ func begin_day() -> void:
 
 
 func maybe_queue_seal_choice() -> void:
-	if current_day > 0 and is_seal_choice_day(get_upcoming_day()):
+	if (current_day > 0 and is_seal_choice_day(get_upcoming_day())
+			and _seal_choice_queued_day != get_upcoming_day()):
+		_seal_choice_queued_day = get_upcoming_day()
 		seal_choice_offers.clear()
 		seal_rerolls_this_pick = 0
 		pending_seal_choice = true
@@ -95,6 +107,8 @@ func maybe_queue_seal_choice() -> void:
 
 ## Receiving Days, shared by the ordinary Run reward schedule and progression UI.
 func is_seal_choice_day(day: int) -> bool:
+	if is_guided_run:
+		return day <= get_run_length() and (day == 11 or (day >= 12 and day % 3 == 0))
 	return day >= 1 and day <= WIN_DAYS and (day == 1 or day % 3 == 0)
 
 
@@ -116,6 +130,8 @@ func preview_compost_outcome(unit: RosterUnitData) -> Dictionary:
 
 
 func can_compost_unit(unit: RosterUnitData) -> bool:
+	if not is_feature_available(&"compost"):
+		return false
 	if unit == null:
 		return false
 	if not _troop_contains(unit):
@@ -180,7 +196,7 @@ func _troop_contains(unit: RosterUnitData) -> bool:
 
 ## Eligibility to open the pupation confirm (funds checked separately on confirm).
 func can_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
-	if unit == null or school < 0 or school >= WeaponSchool.COUNT:
+	if unit == null or not is_school_available(school):
 		return false
 	if not unit.check_training_eligibility(school).allowed:
 		return false
@@ -268,6 +284,8 @@ func is_cocoon_emergence_current(entry: Dictionary) -> bool:
 
 
 func try_add_seal(seal: SealData) -> bool:
+	if is_guided_run and (not pending_seal_choice or not GuidedRun.SEALS.has(seal)):
+		return false
 	if seal == null:
 		return false
 	if not seals.add(seal):
@@ -313,20 +331,24 @@ func is_elite_day(day: int) -> bool:
 
 func clear_upcoming_enemy_formation() -> void:
 	upcoming_enemy_formation.clear()
+	_guided_enemy_roster.clear()
+	_guided_enemy_day = -1
 
 
 func ensure_upcoming_enemy_formation() -> void:
 	if not upcoming_enemy_formation.is_empty():
 		return
-	var day := clampi(get_upcoming_day(), 1, WIN_DAYS)
+	var day := clampi(get_upcoming_day(), 1, get_run_length())
 	upcoming_enemy_formation = EnemyComposer.specs_for_day(day)
 
 
 func has_won_run() -> bool:
-	return current_day >= WIN_DAYS
+	return current_day >= get_run_length()
 
 
 func is_nursery_unlocked() -> bool:
+	if is_guided_run:
+		return is_feature_available(&"nursery")
 	return debug_mode_active or current_day >= NURSERY_UNLOCK_DAY
 
 
@@ -350,6 +372,8 @@ func refresh_shops_for_new_day() -> void:
 
 
 func try_buy_fertilizer(fertilizer: FertilizerData, cost: int) -> bool:
+	if not is_feature_available(&"shop"):
+		return false
 	if fertilizer == null or cost < 0:
 		return false
 	ensure_nursery_seeded()
@@ -365,6 +389,8 @@ func try_buy_fertilizer(fertilizer: FertilizerData, cost: int) -> bool:
 
 
 func try_buy_mutation(mutation: MutationData, cost: int) -> bool:
+	if not is_feature_available(&"mutations"):
+		return false
 	if mutation == null or cost < 0:
 		return false
 	ensure_nursery_seeded()
@@ -381,6 +407,8 @@ func try_buy_mutation(mutation: MutationData, cost: int) -> bool:
 
 ## Pay biomass on an empty plot to start a fresh Common grow (Rotten Thumb applies).
 func try_plant_fresh_common(plot_index: int) -> bool:
+	if not is_nursery_unlocked():
+		return false
 	ensure_nursery_seeded()
 	if not nursery.can_plant_on_plot(plot_index):
 		return false
@@ -430,6 +458,8 @@ func try_sell_nursery_stock_item(stock_index: int) -> bool:
 
 
 func try_unlock_plot() -> bool:
+	if not is_feature_available(&"plot_slots"):
+		return false
 	ensure_nursery_seeded()
 	if not nursery.can_unlock_plot():
 		return false
@@ -444,6 +474,8 @@ func try_unlock_plot() -> bool:
 
 
 func try_unlock_squad_slot() -> bool:
+	if not is_feature_available(&"squad_slots"):
+		return false
 	if not troop.can_unlock_squad_slot():
 		return false
 	var cost := troop.next_squad_unlock_cost()
@@ -457,12 +489,23 @@ func try_unlock_squad_slot() -> bool:
 
 
 func start_new_run() -> void:
+	if run_started:
+		finish_run()
 	reset_run()
 	Audio.play_base_music(true)
 	SceneTransition.change_scene(BASE_SCENE_PATH)
 
 
-func reset_run() -> void:
+func reset_run(guided: Variant = null) -> void:
+	is_guided_run = SettingsServer.guided_run_enabled if guided == null else bool(guided)
+	_run_finished = false
+	_guided_child_revealed = false
+	_guided_preparation_day = -1
+	_guided_preparation_checkpoint = null
+	_guided_battle_checkpoint = null
+	_seal_choice_queued_day = -1
+	BattleLaunch.enemy_roster.clear()
+	DaySummaryFeed.clear()
 	base_undo.end_visit()
 	pending_cocoon_emergences.clear()
 	seal_choice_offers.clear()
@@ -484,7 +527,16 @@ func reset_run() -> void:
 	clear_upcoming_enemy_formation()
 	_roll_run_seed()
 	begin_day()
-	pending_seal_choice = true
+	pending_seal_choice = not is_guided_run
+	if pending_seal_choice:
+		_seal_choice_queued_day = 1
+	if is_guided_run:
+		var starters: Array[RosterUnitData] = [GuidedRun.make_starter(true)]
+		troop.seed_if_empty(starters)
+		show_start_combat_hint = false
+		show_plot_harvest_hint = false
+		show_plot_plant_hint = false
+		ensure_guided_preparation()
 	run_started = true
 	Analytics.on_run_started()
 
@@ -493,3 +545,126 @@ func _roll_run_seed() -> void:
 	run_seed = randi()
 	if run_seed == 0:
 		run_seed = 1
+
+
+func get_run_length() -> int:
+	return GuidedRun.LENGTH if is_guided_run else WIN_DAYS
+
+
+func is_feature_available(feature: StringName) -> bool:
+	return not is_guided_run or debug_mode_active or GuidedRun.feature_available(feature, get_upcoming_day())
+
+
+func is_school_available(school: int) -> bool:
+	if school < 0 or school >= WeaponSchool.COUNT:
+		return false
+	return not is_guided_run or debug_mode_active or GuidedRun.school_available(school, get_upcoming_day())
+
+
+func is_guided_shop_slot_available(slot_index: int) -> bool:
+	if not is_guided_run or debug_mode_active:
+		return true
+	return (slot_index == 0 and is_feature_available(&"shop")) or (
+		slot_index == 2 and is_feature_available(&"mutations")
+	)
+
+
+func ensure_seal_choice_offers() -> Array[SealData]:
+	if pending_seal_choice and seal_choice_offers.is_empty():
+		if is_guided_run:
+			seal_choice_offers.assign(GuidedRun.SEALS)
+		else:
+			seal_choice_offers = SealCatalog.roll_offers(3, seals)
+	return seal_choice_offers
+
+
+func can_reroll_seals() -> bool:
+	return not is_guided_run and current_day > 0
+
+
+func ensure_guided_preparation() -> void:
+	if not is_guided_run:
+		return
+	var day := get_upcoming_day()
+	if day >= 2 and not _guided_child_revealed:
+		troop.try_add_unit(GuidedRun.make_starter(false))
+		_guided_child_revealed = true
+	if _guided_preparation_day != day:
+		_guided_preparation_day = day
+		ensure_nursery_seeded()
+		nursery.refresh_guided_shop_offers()
+	ensure_seal_choice_offers()
+	ensure_upcoming_enemy_formation()
+
+
+func make_upcoming_enemy_roster() -> Array[RosterUnitData]:
+	ensure_upcoming_enemy_formation()
+	if is_guided_run and _guided_enemy_day == get_upcoming_day():
+		return _guided_enemy_roster.duplicate()
+	var roster: Array[RosterUnitData] = []
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash([run_seed, get_upcoming_day(), "guided-enemy-stats"])
+	for spec in upcoming_enemy_formation:
+		if spec.unit_data == null:
+			continue
+		var stats := spec.unit_data.make_stats(rng if is_guided_run else null)
+		var unit_name := spec.unit_data.display_name
+		if unit_name.is_empty():
+			unit_name = UnitNames.pick(rng if is_guided_run else null)
+		roster.append(RosterUnitData.create_enemy(unit_name, stats, spec.unit_data))
+	if is_guided_run:
+		_guided_enemy_roster = roster.duplicate()
+		_guided_enemy_day = get_upcoming_day()
+	return roster
+
+
+func ensure_guided_preparation_checkpoint() -> void:
+	if not is_guided_run or has_won_run():
+		return
+	if _guided_preparation_checkpoint != null and _guided_preparation_checkpoint.day == current_day:
+		return
+	ensure_guided_preparation()
+	_guided_preparation_checkpoint = GuidedRunSnapshot.new()
+	_guided_preparation_checkpoint.enemy_roster = make_upcoming_enemy_roster()
+	_guided_preparation_checkpoint.capture()
+	_guided_battle_checkpoint = null
+
+
+func capture_guided_battle_checkpoint(enemy_roster: Array[RosterUnitData]) -> void:
+	if not is_guided_run:
+		return
+	_guided_battle_checkpoint = GuidedRunSnapshot.new()
+	_guided_battle_checkpoint.enemy_roster = enemy_roster.duplicate()
+	_guided_battle_checkpoint.capture()
+
+
+func has_guided_battle_checkpoint() -> bool:
+	return is_guided_run and _guided_battle_checkpoint != null
+
+
+func restart_guided_battle() -> bool:
+	if not has_guided_battle_checkpoint():
+		return false
+	_guided_battle_checkpoint.restore()
+	BattleLaunch.set_enemy_roster(_guided_battle_checkpoint.enemy_roster)
+	return true
+
+
+func restore_guided_preparation() -> bool:
+	if not is_guided_run or _guided_preparation_checkpoint == null:
+		return false
+	_guided_preparation_checkpoint.restore()
+	_guided_battle_checkpoint = null
+	return true
+
+
+func finish_run(completed: bool = false) -> void:
+	if not run_started or _run_finished:
+		return
+	_run_finished = true
+	if is_guided_run:
+		var reached_day := get_upcoming_day()
+		if DaySummaryFeed.guided_result:
+			reached_day = DaySummaryFeed.battle_day
+		Analytics.guided_run_ended(completed, reached_day)
+		SettingsServer.record_guided_run_end(completed)

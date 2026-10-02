@@ -43,11 +43,15 @@ static var _cached_enemy_pool: Array = []
 
 
 static func specs_for_day(day: int) -> Array[EnemyUnitSpec]:
+	if GameState.is_guided_run:
+		return GuidedRun.specs_for_day(day)
 	var clamped := clampi(day, 1, GameState.WIN_DAYS)
 	return _generate_from_curve(clamped, _rng_for_day(clamped))
 
 
 static func budget_range_for_day(day: int) -> Vector2i:
+	if GameState.is_guided_run:
+		return GuidedRun.BUDGETS[clampi(day, 1, GuidedRun.LENGTH) - 1]
 	return _DAY_BUDGET_RANGES[clampi(day, 1, GameState.WIN_DAYS) - 1]
 
 
@@ -81,7 +85,7 @@ static func reroll_for_day(
 	rng: RandomNumberGenerator = null
 ) -> Array[EnemyUnitSpec]:
 	var clamped := clampi(day, 1, GameState.WIN_DAYS)
-	if GameState.is_elite_day(clamped):
+	if GameState.is_guided_run or GameState.is_elite_day(clamped):
 		return current_specs
 	var generator := rng if rng != null else RandomNumberGenerator.new()
 	if rng == null:

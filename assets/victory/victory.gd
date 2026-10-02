@@ -9,6 +9,9 @@ const _TITLE_SCENE_PATH := "res://assets/title/title.tscn"
 
 
 func _ready() -> void:
+	GameState.finish_run(true)
+	%GuidedRunCheckBox.refresh()
+	%Subtitle.text = "Your troop survived %d days." % GameState.get_run_length()
 	Audio.play_base_music()
 	Audio.play_ui_cue(Sfx.Cue.RUN_WIN)
 	_new_run_button.pressed.connect(_on_new_run_pressed)

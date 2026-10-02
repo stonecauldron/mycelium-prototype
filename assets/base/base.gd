@@ -11,6 +11,7 @@ const TAB_DEFS := [
 const VIEWPORT_SIZE := Vector2(1920, 1080)
 const CAMERA_TWEEN_SECONDS := 0.35
 const _FLOATING_ARROW_SCENE := preload("res://assets/ui/floating_arrow/floating_arrow.tscn")
+const _SPORE_CARD_SCENE := preload("res://assets/base/nursery/spore_card/spore_card.tscn")
 const _READY_BADGE_TEXTURE := preload("res://assets/asset_packs/Cila - Paper UI stylized/square/square border 6.png")
 
 @onready var _camera: Camera2D = %BaseCamera
@@ -34,12 +35,17 @@ var _nursery_ready_badge: Label
 var _camera_tween: Tween
 var _start_arrow: FloatingArrow = null
 var _progress_tracks: Array[CombatProgressTrack] = []
+var _early_stock_button: Button
+var _early_stock_popup: PanelContainer
 
 
 func _ready() -> void:
 	Audio.play_base_music()
 	if not GameState.run_started:
 		GameState.reset_run()
+	GameState.ensure_guided_preparation()
+	GameState.ensure_seal_choice_offers()
+	GameState.ensure_guided_preparation_checkpoint()
 	GameState.base_undo.begin_visit()
 	GameState.base_undo.changed.connect(_refresh_undo_button)
 	GameState.base_undo.restored.connect(_on_base_state_restored)
@@ -49,8 +55,10 @@ func _ready() -> void:
 	_camera.make_current()
 	_wire_progress_tracks()
 	GameState.nursery.changed.connect(_refresh_nursery_readiness)
+	GameState.nursery.changed.connect(_refresh_early_stock_access)
 	_refresh_hud()
 	_build_tab_bar()
+	_build_early_stock_button()
 	_start_combat_button.pressed.connect(_on_start_combat_pressed)
 	BiomassPreview.bind(_start_combat_button, _battle_biomass_preview, "On victory")
 	_debug_advance_day_button.pressed.connect(_on_debug_advance_day_pressed)
@@ -59,7 +67,7 @@ func _ready() -> void:
 	set_start_combat_enabled(_colony_screen.can_start_combat())
 	_ensure_start_arrow()
 	var initial := TabId.COLONY
-	if GameState.consume_prefer_nursery_tab():
+	if GameState.consume_prefer_nursery_tab() and not GameState.is_guided_run:
 		initial = TabId.NURSERY
 	_select_tab(initial, true)
 	_colony_screen.ensure_pending_modals()
@@ -148,6 +156,9 @@ func _on_debug_mode_changed(is_active: bool) -> void:
 func _on_debug_advance_day_pressed() -> void:
 	(_nursery_screen as NurseryScreen).dismiss_hatch_results()
 	GameState.debug_advance_day()
+	GameState.ensure_guided_preparation()
+	GameState.ensure_seal_choice_offers()
+	GameState.ensure_guided_preparation_checkpoint()
 	_build_tab_bar()
 	_update_tab_visuals()
 	if _current_screen != null:
@@ -212,7 +223,8 @@ func _refresh_start_arrow() -> void:
 	if _start_arrow == null:
 		return
 	if (
-		GameState.show_start_combat_hint
+		not GameState.is_guided_run
+		and GameState.show_start_combat_hint
 		and not GameState.pending_seal_choice
 		and not _start_combat_button.disabled
 		and _colony_screen.get_training_hint_unit() == null
@@ -236,10 +248,11 @@ func set_start_combat_enabled(enabled: bool) -> void:
 
 
 func _refresh_hud() -> void:
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
-	_day_label.text = "Day %d / %d" % [day, GameState.WIN_DAYS]
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
+	_day_label.text = "Day %d / %d" % [day, GameState.get_run_length()]
 	_refresh_biomass_amount()
 	_refresh_nursery_readiness()
+	_refresh_early_stock_access()
 	for track in _progress_tracks:
 		track.refresh()
 	if _colony_screen != null:
@@ -306,7 +319,7 @@ func _scout_bubble() -> ScoutBubble:
 func _is_tab_visible(tab_id: TabId) -> bool:
 	match tab_id:
 		TabId.NURSERY:
-			return GameState.is_nursery_unlocked()
+			return GameState.is_feature_available(&"nursery") and GameState.is_nursery_unlocked()
 		_:
 			return true
 
@@ -454,3 +467,102 @@ func _update_tab_visuals() -> void:
 			button.modulate = Color(1, 1, 1, 1)
 		else:
 			button.modulate = Color(0.8, 0.8, 0.8, 1)
+
+
+func _build_early_stock_button() -> void:
+	_early_stock_button = Button.new()
+	_early_stock_button.name = "EarlyStockButton"
+	_early_stock_button.text = "Stock"
+	_early_stock_button.theme_type_variation = &"NavButton"
+	_early_stock_button.custom_minimum_size = Vector2(160, 56)
+	var left_pad := $HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow/LeftPad
+	left_pad.add_child(_early_stock_button)
+	_early_stock_button.set_anchors_and_offsets_preset(Control.PRESET_CENTER_LEFT)
+	_early_stock_button.position.x = 96.0
+	_early_stock_button.pressed.connect(_open_early_stock)
+	_refresh_early_stock_access()
+
+
+func _refresh_early_stock_access() -> void:
+	if not is_instance_valid(_early_stock_button):
+		return
+	var available := (
+		GameState.is_guided_run
+		and not GameState.is_feature_available(&"nursery")
+		and GameState.nursery.has_spore_in_stock()
+	)
+	_early_stock_button.visible = available
+	if not available:
+		hide_early_stock()
+
+
+func _open_early_stock() -> void:
+	if not _early_stock_button.visible:
+		return
+	if is_instance_valid(_early_stock_popup):
+		_early_stock_popup.free()
+	_early_stock_popup = PanelContainer.new()
+	_early_stock_popup.name = "EarlyStockPopup"
+	_early_stock_popup.z_index = 100
+	PaperStyles.apply_tooltip(_early_stock_popup)
+	$HudLayer/HudRoot.add_child(_early_stock_popup)
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 40)
+	margin.add_theme_constant_override("margin_right", 40)
+	_early_stock_popup.add_child(margin)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 20)
+	margin.add_child(column)
+	var header := HBoxContainer.new()
+	column.add_child(header)
+	var title := Label.new()
+	title.text = "Stock"
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title.add_theme_color_override("font_color", PaperStyles.INK)
+	title.add_theme_font_size_override("font_size", 32)
+	header.add_child(title)
+	var close := Button.new()
+	close.text = "Close"
+	close.pressed.connect(hide_early_stock)
+	header.add_child(close)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 24)
+	column.add_child(row)
+	for item in GameState.nursery.stock.slots:
+		var spore := item as SporeData
+		if spore == null:
+			continue
+		var card := _SPORE_CARD_SCENE.instantiate() as SporeCard
+		card.setup(spore, -1)
+		row.add_child(card)
+		# Keep the existing item tooltip, without exposing Nursery actions early.
+		card.set_drag_forwarding(_read_only_stock_drag, Callable(), Callable())
+		card.mouse_default_cursor_shape = Control.CURSOR_ARROW
+	_center_early_stock.call_deferred()
+
+
+func _read_only_stock_drag(_position: Vector2) -> Variant:
+	return null
+
+
+func hide_early_stock() -> bool:
+	if not is_instance_valid(_early_stock_popup) or not _early_stock_popup.visible:
+		return false
+	DetailTooltipPopup.dismiss_current()
+	_early_stock_popup.hide()
+	return true
+
+
+func _center_early_stock() -> void:
+	if not is_instance_valid(_early_stock_popup):
+		return
+	_early_stock_popup.reset_size()
+	_early_stock_popup.position = (VIEWPORT_SIZE - _early_stock_popup.size) * 0.5
+
+
+func _input(event: InputEvent) -> void:
+	if not is_instance_valid(_early_stock_popup) or not _early_stock_popup.visible:
+		return
+	if event is InputEventMouseButton and event.pressed:
+		if not _early_stock_popup.get_global_rect().has_point(event.position):
+			hide_early_stock()

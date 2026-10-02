@@ -9,6 +9,8 @@
 
 [ext_resource type="Texture2D" path="res://assets/title/steam_qr.png" id="7_steam_qr"]
 
+[ext_resource type="Script" path="res://assets/ui/guided_run_checkbox.gd" id="guided_selector"]
+
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
 content_margin_left = 28.0
 content_margin_top = 24.0
@@ -88,6 +90,20 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "New Run"
+
+[node name="GuidedRunCheckBox" type="CheckBox" parent="Center/Panel/MenuPage"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.18, 0.16, 0.14, 1)
+theme_override_colors/font_pressed_color = Color(0.18, 0.16, 0.14, 1)
+theme_override_colors/font_hover_color = Color(0.32, 0.3, 0.26, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.32, 0.3, 0.26, 1)
+theme_override_colors/font_focus_color = Color(0.18, 0.16, 0.14, 1)
+theme_override_font_sizes/font_size = 26
+text = "Guided run"
+script = ExtResource("guided_selector")
 
 [node name="WishlistButton" type="Button" parent="Center/Panel/MenuPage" unique_id=573247743]
 unique_name_in_owner = true

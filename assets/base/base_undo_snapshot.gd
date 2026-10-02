@@ -86,7 +86,7 @@ func _capture_object(object: Object) -> void:
 	if object is TroopData:
 		_capture_field(object, &"_seeded", fields)
 	elif object is NurseryData:
-		for field in [&"_seeded", &"_first_spore_planted", &"first_lineage_spore", &"_next_stock_seq"]:
+		for field in [&"_seeded", &"_first_spore_planted", &"first_lineage_spore", &"_next_stock_seq", &"_guided_shop_day"]:
 			_capture_field(object, field, fields)
 	elif object is RosterUnitData:
 		_capture_field(object, &"last_death_biomass_yield", fields)

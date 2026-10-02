@@ -5,6 +5,10 @@ extends Node
 const PATH := "user://settings.cfg"
 const SECTION := "general"
 
+var guided_run_enabled: bool = true
+var guided_run_ended: bool = false
+var guided_run_completed: bool = false
+
 var show_tutorial: bool = true:
 	get:
 		return _show_tutorial
@@ -67,6 +71,24 @@ func set_fullscreen(enabled: bool) -> void:
 		_save()
 
 
+func set_guided_run_enabled(enabled: bool) -> void:
+	if guided_run_enabled == enabled:
+		return
+	guided_run_enabled = enabled
+	_save()
+
+
+func record_guided_run_end(completed: bool) -> void:
+	# Only the first terminal end changes the next-Run preference. Later replays
+	# must preserve an explicitly selected mode, including another guided Run.
+	if not guided_run_ended:
+		guided_run_ended = true
+		guided_run_enabled = false
+	if completed:
+		guided_run_completed = true
+	_save()
+
+
 func _apply_fullscreen(enabled: bool) -> void:
 	if DisplayServer.get_name() == "headless":
 		return
@@ -83,6 +105,9 @@ func _load() -> void:
 	var err := cfg.load(PATH)
 	if err != OK:
 		return
+	guided_run_enabled = bool(cfg.get_value(SECTION, "guided_run_enabled", true))
+	guided_run_ended = bool(cfg.get_value(SECTION, "guided_run_ended", false))
+	guided_run_completed = bool(cfg.get_value(SECTION, "guided_run_completed", false))
 	_show_tutorial = cfg.get_value(SECTION, "show_tutorial", true)
 	_master_volume = _valid_volume(cfg.get_value("audio", "master_volume", 1.0))
 	_sfx_volume = _valid_volume(cfg.get_value("audio", "sfx_volume", 1.0))
@@ -95,6 +120,9 @@ func _load() -> void:
 func _save() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(PATH)  # Preserve other keys if present; ignore missing file.
+	cfg.set_value(SECTION, "guided_run_enabled", guided_run_enabled)
+	cfg.set_value(SECTION, "guided_run_ended", guided_run_ended)
+	cfg.set_value(SECTION, "guided_run_completed", guided_run_completed)
 	cfg.set_value(SECTION, "show_tutorial", _show_tutorial)
 	cfg.set_value("audio", "master_volume", _master_volume)
 	cfg.set_value("audio", "sfx_volume", _sfx_volume)

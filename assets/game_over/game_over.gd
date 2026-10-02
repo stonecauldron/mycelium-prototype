@@ -9,6 +9,11 @@ const _TITLE_SCENE_PATH := "res://assets/title/title.tscn"
 
 
 func _ready() -> void:
+	GameState.finish_run()
+	%GuidedRunCheckBox.refresh()
+	if GameState.is_guided_run:
+		$Center/Panel/VBox/Title.text = "Run ended"
+		$Center/Panel/VBox/Subtitle.text = "You reached Day %d." % GameState.get_upcoming_day()
 	Audio.play_base_music()
 	Audio.play_ui_cue(Sfx.Cue.RUN_LOSS)
 	_new_run_button.pressed.connect(_on_new_run_pressed)

@@ -54,6 +54,7 @@ const _CAP_MUTATION_PATHS: Array[String] = [
 
 var _seeded: bool = false
 var _first_spore_planted: bool = false
+var _guided_shop_day: int = 0
 ## Keep the first emitted spore after use so later spores do not repeat the Run's hint.
 var first_lineage_spore: SporeData = null
 ## Monotonic stamp for FIFO eviction when death-spores overflow stock.
@@ -94,6 +95,7 @@ func reset() -> void:
 	spore_shop.clear()
 	_seeded = false
 	_first_spore_planted = false
+	_guided_shop_day = 0
 	first_lineage_spore = null
 	_next_stock_seq = 1
 	_ensure_plot_count()
@@ -128,6 +130,8 @@ func ready_plot_count() -> int:
 
 
 func can_unlock_plot() -> bool:
+	if GameState.is_guided_run and not GameState.is_feature_available(&"plot_slots"):
+		return false
 	return unlocked_plot_count < MAX_PLOT_COUNT
 
 
@@ -146,6 +150,9 @@ func unlock_next_plot() -> bool:
 
 
 func ensure_shop_offers() -> void:
+	if GameState.is_guided_run:
+		refresh_guided_shop_offers()
+		return
 	_ensure_spore_shop()
 	var selected_paths: Array[String] = []
 	spore_shop.ensure_filled(generate_offer_for_slot.bind(selected_paths))
@@ -153,10 +160,31 @@ func ensure_shop_offers() -> void:
 
 
 func reroll_unlocked_shop_offers() -> void:
+	if GameState.is_guided_run:
+		refresh_guided_shop_offers()
+		return
 	_ensure_spore_shop()
 	var selected_paths: Array[String] = []
 	spore_shop.reroll_unlocked(generate_offer_for_slot.bind(selected_paths))
 	_normalize_shop_offers(selected_paths)
+
+
+## Refill authored offers once per Day. Purchased slots stay empty during Base
+## refreshes and retry restoration; ordinary Shop generation is unchanged.
+func refresh_guided_shop_offers() -> void:
+	if not GameState.is_guided_run:
+		return
+	_ensure_spore_shop()
+	var day := GameState.get_upcoming_day()
+	if _guided_shop_day == day:
+		return
+	spore_shop.offers.clear()
+	for slot_index in SHOP_SLOT_COUNT:
+		var offer: ShopOffer = null
+		if GameState.is_guided_shop_slot_available(slot_index):
+			offer = GuidedRun.make_shop_offer(slot_index)
+		spore_shop.offers.append(offer)
+	_guided_shop_day = day
 
 
 ## Drop legacy Spore SKUs and keep slot kinds: 0–1 Fertilizer, 2–3 Mutation.
@@ -363,6 +391,8 @@ func make_fresh_common_spore() -> SporeData:
 
 
 func can_plant_on_plot(plot_index: int) -> bool:
+	if GameState.is_guided_run and not GameState.is_feature_available(&"nursery"):
+		return false
 	if not is_plot_unlocked(plot_index):
 		return false
 	if plot_index >= plots.size():
@@ -402,6 +432,8 @@ func apply_fertilizer_from_stock(plot_index: int, stock_index: int) -> bool:
 
 
 func apply_fertilizer_to_plot(plot_index: int, fertilizer: FertilizerData) -> bool:
+	if GameState.is_guided_run and not GameState.is_feature_available(&"shop"):
+		return false
 	if not is_plot_unlocked(plot_index):
 		return false
 	if plot_index >= plots.size():
@@ -429,6 +461,8 @@ func apply_mutation_from_stock(plot_index: int, stock_index: int) -> bool:
 
 
 func apply_mutation_to_plot(plot_index: int, mutation: MutationData) -> bool:
+	if GameState.is_guided_run and not GameState.is_feature_available(&"mutations"):
+		return false
 	if not is_plot_unlocked(plot_index):
 		return false
 	if plot_index >= plots.size():
@@ -478,6 +512,8 @@ func advance_day() -> Array[Dictionary]:
 ## Harvests a READY plot into zero or more roster units (overflow handled by caller).
 func harvest(plot_index: int) -> Array[RosterUnitData]:
 	var result: Array[RosterUnitData] = []
+	if GameState.is_guided_run and not GameState.is_feature_available(&"nursery"):
+		return result
 	if not is_plot_unlocked(plot_index):
 		return result
 	if plot_index >= plots.size():

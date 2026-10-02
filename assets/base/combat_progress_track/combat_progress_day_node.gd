@@ -23,7 +23,7 @@ var day: int = 1:
 func setup(day_number: int, is_elite: bool = false) -> void:
 	_is_elite = is_elite
 	day = day_number
-	if _is_elite:
+	if _is_elite and not GameState.is_seal_choice_day(day):
 		tooltip_text = ""
 	flat = true
 	var empty := StyleBoxEmpty.new()
@@ -33,7 +33,7 @@ func setup(day_number: int, is_elite: bool = false) -> void:
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	focus_mode = Control.FOCUS_ALL
 	set_process_input(false)
-	if not _is_elite:
+	if not _is_elite or GameState.is_seal_choice_day(day):
 		focus_entered.connect(_show_focus_tooltip)
 		focus_exited.connect(_hide_focus_tooltip)
 		mouse_exited.connect(_hide_focus_tooltip)

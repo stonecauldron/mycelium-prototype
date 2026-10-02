@@ -20,6 +20,7 @@ var cost: int = 0
 var payload: Dictionary = {}
 var slot_index: int = -1
 var is_locked: bool = false
+var allow_offer_locks: bool = true
 var _can_afford: bool = true
 var _pressing: bool = false
 var _did_drag: bool = false
@@ -92,7 +93,7 @@ func set_locked(locked: bool) -> void:
 	is_locked = locked
 	if not is_node_ready():
 		return
-	_lock_icon.visible = locked
+	_lock_icon.visible = locked and allow_offer_locks
 	_lock_icon.modulate = Color.WHITE
 	_lock_icon.tooltip_text = "Unlock" if locked else "Lock"
 
@@ -270,6 +271,8 @@ func _set_children_mouse_filter_ignore(node: Node) -> void:
 
 
 func _on_lock_gui_input(event: InputEvent) -> void:
+	if not allow_offer_locks:
+		return
 	if event is InputEventMouseButton:
 		var mouse := event as InputEventMouseButton
 		if not mouse.pressed:
@@ -284,7 +287,7 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mouse := event as InputEventMouseButton
 		if mouse.button_index == MOUSE_BUTTON_RIGHT:
-			if mouse.pressed:
+			if mouse.pressed and allow_offer_locks:
 				lock_toggled.emit(self)
 				accept_event()
 			return

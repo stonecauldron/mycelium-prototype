@@ -91,6 +91,7 @@ func _ready() -> void:
 	_camera_start_limit_right = _camera.limit_right
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	_run_menu.returning_to_title.connect(_restore_engine_timing)
+	_run_menu.retrying_battle.connect(_restore_engine_timing)
 	_fast_forward_button.pressed.connect(_on_fast_forward_pressed)
 	_set_fast_forward(GameState.combat_fast_forward)
 	_refresh_biomass_hud()
@@ -110,7 +111,11 @@ func _ready() -> void:
 		push_error("CombatStage requires an enemy roster via BattleLaunch.")
 		return
 
-	start_battle(player_roster, BattleLaunch.take_enemy_roster())
+	var enemy_roster := BattleLaunch.take_enemy_roster()
+	if GameState.is_guided_run:
+		if not GameState.has_guided_battle_checkpoint():
+			GameState.capture_guided_battle_checkpoint(enemy_roster)
+	start_battle(player_roster, enemy_roster)
 
 
 func _exit_tree() -> void:
@@ -470,7 +475,7 @@ func _clear_zombie_battle_revives() -> void:
 
 
 func _compute_battle_reward(enemy_roster: Array[RosterUnitData]) -> int:
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
 	var specs: Array[EnemyUnitSpec] = []
 	specs.assign(GameState.upcoming_enemy_formation)
 	if specs.is_empty():
@@ -767,6 +772,12 @@ func _check_battle_end() -> void:
 		if sandboxed:
 			battle_ended.emit(false)
 			return
+		if GameState.is_guided_run:
+			DaySummaryFeed.clear()
+			DaySummaryFeed.set_guided_result(false, GameState.get_upcoming_day())
+			_push_combat_recap_to_day_summary()
+			SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
+			return
 		Analytics.flush_hit_biomass()
 		Analytics.day_fail()
 		Analytics.run_fail()
@@ -799,23 +810,31 @@ func _check_battle_end() -> void:
 
 	Analytics.flush_hit_biomass()
 	_award_battle_reward()
-	Analytics.day_complete()
+	var battle_day := GameState.get_upcoming_day()
+	if not GameState.is_guided_run:
+		Analytics.day_complete()
 	GameState.ensure_nursery_seeded()
 	GameState.current_day += 1
 	GameState.clear_upcoming_enemy_formation()
-	if GameState.has_won_run():
+	if GameState.has_won_run() and not GameState.is_guided_run:
 		Analytics.run_complete()
 		SceneTransition.change_scene(_VICTORY_SCENE_PATH)
 		return
 	DaySummaryFeed.clear()
+	if GameState.is_guided_run:
+		DaySummaryFeed.set_guided_result(true, battle_day)
 	_push_combat_recap_to_day_summary()
-	GameState.prefer_nursery_tab = true
-	if GameState.current_day == GameState.NURSERY_UNLOCK_DAY:
+	GameState.prefer_nursery_tab = not GameState.is_guided_run
+	var nursery_unlock_day := 5 if GameState.is_guided_run else GameState.NURSERY_UNLOCK_DAY
+	if GameState.current_day == nursery_unlock_day:
 		DaySummaryFeed.add_base_unlock("Nursery")
 	if _biomass_earned_this_fight > 0:
 		DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)
 	for unit in _fallen_units:
 		DaySummaryFeed.add_fallen_unit(unit)
+	if GameState.has_won_run():
+		SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
+		return
 	GameState.troop.advance_unit_ages()
 	var emerged := GameState.emerge_pupations()
 	for entry in emerged:
@@ -834,6 +853,7 @@ func _check_battle_end() -> void:
 	GameState.refresh_shops_for_new_day()
 	GameState.begin_day()
 	GameState.maybe_queue_seal_choice()
+	GameState.ensure_guided_preparation()
 	SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
 
 

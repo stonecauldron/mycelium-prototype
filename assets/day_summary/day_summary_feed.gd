@@ -12,12 +12,26 @@ static var troop_hp_max: int = 0
 ## Rows: { unit: RosterUnitData, dealt: int, taken: int, max_hp: int, order: int }
 static var unit_damage_rows: Array[Dictionary] = []
 
+## Guided outcomes stay replayable until the result screen accepts the victory.
+static var guided_result: bool = false
+static var battle_won: bool = false
+static var battle_day: int = 0
+
 
 static func clear() -> void:
 	entries.clear()
 	troop_hp_current = 0
 	troop_hp_max = 0
 	unit_damage_rows.clear()
+	guided_result = false
+	battle_won = false
+	battle_day = 0
+
+
+static func set_guided_result(won: bool, day: int) -> void:
+	guided_result = true
+	battle_won = won
+	battle_day = day
 
 
 static func set_combat_recap(

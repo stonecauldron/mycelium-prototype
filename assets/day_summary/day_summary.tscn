@@ -166,13 +166,50 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"SectionVBox"
 
-[node name="ContinueButton" type="Button" parent="RootMargin/RootVBox" unique_id=1597407319]
+[node name="RetryHelp" type="Label" parent="RootMargin/RootVBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"PageSubtitleLabel"
+text = "Change preparation resets this Day's choices and restores its spending."
+horizontal_alignment = 1
+
+[node name="ResultActions" type="HBoxContainer" parent="RootMargin/RootVBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="ContinueButton" type="Button" parent="RootMargin/RootVBox/ResultActions" unique_id=1597407319]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 72)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "continue"
+
+[node name="RestartButton" type="Button" parent="RootMargin/RootVBox/ResultActions"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(220, 72)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+text = "Restart Battle"
+
+[node name="PreparationButton" type="Button" parent="RootMargin/RootVBox/ResultActions"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(270, 72)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+text = "Change preparation"
+
+[node name="EndRunButton" type="Button" parent="RootMargin/RootVBox/ResultActions"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(170, 72)
+layout_mode = 2
+theme_type_variation = &"NavButton"
+text = "End Run"
 
 [node name="BiomassHeaderMargin" type="MarginContainer" parent="."]
 layout_mode = 1

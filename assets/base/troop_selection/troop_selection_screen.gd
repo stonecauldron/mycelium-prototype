@@ -44,6 +44,7 @@ var _revealing_cocoon: CocoonSlot = null
 
 
 func _ready() -> void:
+	GameState.ensure_guided_preparation()
 	set_process(false)
 	_hydrate_from_troop_data()
 	_build_squad_ui()
@@ -63,6 +64,7 @@ func on_screen_shown() -> void:
 	_screen_active = true
 	_cancel_presentations()
 	_ensure_squad_ui()
+	_refresh_guided_visibility()
 	_sync_all_slots()
 	if _scout_bubble != null:
 		_scout_bubble.refresh()
@@ -151,7 +153,8 @@ func _ensure_squad_ui() -> void:
 	# Compare their roles, so the final purchase is replaced by a fighting slot.
 	if (
 		_squad_slots.size() != GameState.troop.unlocked_squad_count
-		or has_purchase_slot != GameState.troop.can_unlock_squad_slot()
+		or has_purchase_slot != (GameState.troop.can_unlock_squad_slot() and GameState.is_feature_available(&"squad_slots"))
+		or is_instance_valid(_compost_bin) != GameState.is_feature_available(&"compost")
 	):
 		_build_squad_ui()
 		return
@@ -185,7 +188,7 @@ func _build_squad_ui() -> void:
 		slot.unit_dropped.connect(_on_unit_dropped.bind("squad"))
 		_squad_slot_row.add_child(slot)
 		_squad_slots.append(slot)
-	if troop.can_unlock_squad_slot():
+	if troop.can_unlock_squad_slot() and GameState.is_feature_available(&"squad_slots"):
 		var unlock_slot: DropSlot = _DROP_SLOT_SCENE.instantiate()
 		unlock_slot.slot_index = troop.unlocked_squad_count
 		unlock_slot.floor_tint = drop_slot_tint
@@ -193,6 +196,8 @@ func _build_squad_ui() -> void:
 		_squad_slot_row.add_child(unlock_slot)
 		unlock_slot.setup_unlockable(troop.next_squad_unlock_cost())
 		_squad_unlock_slot = unlock_slot
+	if not GameState.is_feature_available(&"compost"):
+		return
 	# Leave room for the unlock button, which extends beyond its squad slot.
 	var compost_spacing := Control.new()
 	compost_spacing.name = "CompostSpacing"
@@ -232,13 +237,24 @@ func _build_cocoon_ui() -> void:
 		slot.unit_dropped_on_cocoon.connect(_on_cocoon_drop)
 		_cocoon_row.add_child(slot)
 		_cocoon_slots.append(slot)
+	_refresh_guided_visibility()
+
+
+func _refresh_guided_visibility() -> void:
+	var has_school := false
+	for slot: CocoonSlot in _cocoon_slots:
+		slot.visible = GameState.is_school_available(slot.school)
+		has_school = has_school or slot.visible
+	%CocoonPanel.visible = has_school
+	# Bench management is available as soon as there is a second Unit to manage.
+	_bench_panel.visible = not GameState.is_guided_run or GameState.get_upcoming_day() >= 2
 
 
 func _ensure_starter_choice() -> void:
 	# Dialog teardown can defer this until after Base has left the scene tree.
 	if not is_inside_tree():
 		return
-	if GameState.troop.is_seeded():
+	if GameState.is_guided_run or GameState.troop.is_seeded():
 		return
 	if _seal_dialog != null and is_instance_valid(_seal_dialog):
 		return
@@ -323,9 +339,7 @@ func _ensure_seal_choice() -> void:
 		return
 	if _seal_dialog != null and is_instance_valid(_seal_dialog):
 		return
-	if GameState.seal_choice_offers.is_empty():
-		GameState.seal_choice_offers = SealCatalog.roll_offers(3, GameState.seals)
-	var offers := GameState.seal_choice_offers
+	var offers := GameState.ensure_seal_choice_offers()
 	if offers.is_empty():
 		GameState.clear_pending_seal_choice()
 		_sync_all_slots()
@@ -333,8 +347,7 @@ func _ensure_seal_choice() -> void:
 	_cancel_cocoon_drag_preview()
 	_cancel_presentations()
 	var dialog: SealChoiceDialog = _SEAL_CHOICE_SCENE.instantiate()
-	# Run-start pick is day 0; mid-run picks (after days 2 / 5 / 8) may reroll.
-	dialog.setup(offers, GameState.current_day > 0, GameState.seal_rerolls_this_pick)
+	dialog.setup(offers, GameState.can_reroll_seals(), GameState.seal_rerolls_this_pick)
 	_seal_dialog = dialog
 	dialog.seal_chosen.connect(_on_seal_chosen)
 	dialog.tree_exited.connect(_on_seal_dialog_closed.bind(dialog))
@@ -488,6 +501,8 @@ func _bench_drop(_at_position: Vector2, data: Variant) -> void:
 
 
 func _on_squad_unlock_pressed(_slot: DropSlot) -> void:
+	if not GameState.is_feature_available(&"squad_slots"):
+		return
 	if is_instance_valid(_compost_release):
 		return
 	var snapshot := GameState.base_undo.capture("Unlock Squad Slot")
@@ -556,6 +571,8 @@ func _on_compost_drop(slot: CompostingBin, drag_data: Dictionary) -> void:
 
 
 func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
+	if not GameState.is_school_available(school):
+		return
 	if is_instance_valid(_compost_release):
 		return
 	# Reusing this Unit or Cocoon takes priority over its cosmetic flight.
@@ -581,6 +598,8 @@ func _open_pupation_confirm(unit: RosterUnitData, school: int) -> void:
 
 
 func _open_compost_confirm(unit: RosterUnitData) -> void:
+	if not GameState.is_feature_available(&"compost"):
+		return
 	if is_instance_valid(_compost_release):
 		return
 	_cancel_cocoon_drag_preview()
@@ -867,6 +886,8 @@ func _sync_slot_card(slot: DropSlot, source: String) -> void:
 
 
 func get_training_hint_unit() -> RosterUnitData:
+	if GameState.is_guided_run:
+		return null
 	if not GameState.show_start_combat_hint or GameState.current_day != 0:
 		return null
 	if GameState.pending_seal_choice:
@@ -892,7 +913,9 @@ func start_combat() -> void:
 	_cancel_presentations()
 	GameState.pending_cocoon_emergences.clear()
 	GameState.base_undo.end_visit()
-	BattleLaunch.set_enemy_roster(_make_default_enemy_roster())
+	var enemy_roster := GameState.make_upcoming_enemy_roster()
+	GameState.capture_guided_battle_checkpoint(enemy_roster)
+	BattleLaunch.set_enemy_roster(enemy_roster)
 	SceneTransition.change_scene("res://assets/combat/combat_stage/combat_stage.tscn")
 
 
@@ -908,19 +931,3 @@ func _squad_unit_count() -> int:
 		if entry != null:
 			count += 1
 	return count
-
-
-func _make_default_enemy_roster() -> Array[RosterUnitData]:
-	GameState.ensure_upcoming_enemy_formation()
-	var enemy: Array[RosterUnitData] = []
-	for spec in GameState.upcoming_enemy_formation:
-		if spec.unit_data == null:
-			continue
-		var stats := spec.unit_data.make_stats()
-		var display_name := spec.unit_data.display_name
-		if display_name.is_empty():
-			display_name = UnitNames.pick()
-		enemy.append(
-			RosterUnitData.create_enemy(display_name, stats, spec.unit_data)
-		)
-	return enemy

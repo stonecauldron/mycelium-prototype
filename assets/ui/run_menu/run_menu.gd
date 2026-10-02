@@ -2,10 +2,13 @@ class_name RunMenu
 extends CanvasLayer
 
 signal returning_to_title
+signal retrying_battle
 
 enum Page { MENU, SETTINGS, RETURN_TO_TITLE, QUIT }
 
 const _TITLE_SCENE := "res://assets/title/title.tscn"
+const _COMBAT_SCENE := "res://assets/combat/combat_stage/combat_stage.tscn"
+const _BASE_SCENE := "res://assets/base/base.tscn"
 const _VOLUME_GRABBER: Texture2D = preload("res://assets/asset_packs/Cila - Paper UI stylized/arrow/arrow border 10.png")
 const _VOLUME_GRABBER_HIGHLIGHT: Texture2D = preload("res://assets/asset_packs/Cila - Paper UI stylized/arrow/arrow border 13.png")
 
@@ -44,6 +47,8 @@ func _ready() -> void:
 	%Dim.gui_input.connect(_on_dim_gui_input)
 	_settings_button.pressed.connect(_show_page.bind(Page.SETTINGS))
 	%ResumeButton.pressed.connect(close_menu)
+	%RestartBattleButton.pressed.connect(_restart_guided_battle)
+	%ChangePreparationButton.pressed.connect(_change_guided_preparation)
 	%TitleButton.pressed.connect(_show_page.bind(Page.RETURN_TO_TITLE))
 	%QuitButton.pressed.connect(_show_page.bind(Page.QUIT))
 	%QuitButton.visible = not OS.has_feature("web")
@@ -72,6 +77,9 @@ func _input(event: InputEvent) -> void:
 		if (event as InputEventKey).keycode == KEY_ESCAPE:
 			get_viewport().set_input_as_handled()
 			var scene := get_tree().current_scene
+			if not _open and scene != null and scene.has_method("hide_early_stock"):
+				if scene.hide_early_stock():
+					return
 			if not _open and scene != null and scene.has_method("hide_pending_seal_choice"):
 				if scene.hide_pending_seal_choice():
 					return
@@ -121,6 +129,9 @@ func open_menu() -> void:
 	_overlay.show()
 	Audio.play_ui_cue(Sfx.Cue.UI_OPEN)
 	_page = Page.SETTINGS if settings_only else Page.MENU
+	var can_retry := intent_scene == "combat" and GameState.is_guided_run
+	%RestartBattleButton.visible = can_retry
+	%ChangePreparationButton.visible = can_retry
 	_show_page(_page)
 
 
@@ -244,10 +255,29 @@ func _confirm_exit() -> void:
 		return
 	if _page == Page.QUIT:
 		_leaving = true
+		if not settings_only:
+			GameState.finish_run()
 		Analytics.request_quit(intent_scene)
 	elif _page == Page.RETURN_TO_TITLE:
 		_leaving = true
+		GameState.finish_run()
 		Analytics.intent("title", intent_scene)
 		returning_to_title.emit()
 		# Keep gameplay paused through the fade; _exit_tree releases the pause.
 		SceneTransition.change_scene(_TITLE_SCENE)
+
+
+func _restart_guided_battle() -> void:
+	if _leaving or not GameState.restart_guided_battle():
+		return
+	_leaving = true
+	retrying_battle.emit()
+	SceneTransition.change_scene(_COMBAT_SCENE)
+
+
+func _change_guided_preparation() -> void:
+	if _leaving or not GameState.restore_guided_preparation():
+		return
+	_leaving = true
+	retrying_battle.emit()
+	SceneTransition.change_scene(_BASE_SCENE)

@@ -25,6 +25,7 @@ var ga: Object = null
 var _day_started: int = -1
 var _hit_biomass: int = 0
 var _shutting_down: bool = false
+var _guided_end_recorded: bool = false
 
 
 func _ready() -> void:
@@ -45,18 +46,23 @@ func _ready() -> void:
 func on_run_started() -> void:
 	_day_started = -1
 	_hit_biomass = 0
+	_guided_end_recorded = false
+	if GameState.is_guided_run:
+		if _can_send():
+			ga.addDesignEvent("guided:run:start", {})
+		return
 	_progression("start", "run", "", "", -1)
 	biomass_source("Start", "Grant", BiomassData.STARTING_AMOUNT)
 
 
 func maybe_start_day() -> void:
-	if not GameState.run_started:
+	if GameState.is_guided_run or not GameState.run_started:
 		return
 	if not GameState.troop.is_seeded():
 		return
 	if GameState.has_won_run():
 		return
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
 	if day == _day_started:
 		return
 	_day_started = day
@@ -79,8 +85,19 @@ func run_fail() -> void:
 	_progression("fail", "run", "", "", GameState.current_day)
 
 
+## Guided Runs only report entry and the point where the player leaves.
+func guided_run_ended(completed: bool, reached_day: int) -> void:
+	if not GameState.is_guided_run or _guided_end_recorded:
+		return
+	_guided_end_recorded = true
+	if not _can_send():
+		return
+	var outcome := "complete" if completed else "quit"
+	ga.addDesignEvent("guided:run:%s:%d" % [outcome, clampi(reached_day, 1, GameState.get_run_length())], {})
+
+
 func note_hit_biomass(amount: int) -> void:
-	if amount <= 0:
+	if GameState.is_guided_run or amount <= 0:
 		return
 	_hit_biomass += amount
 
@@ -100,7 +117,8 @@ func biomass_sink(item_type: String, item_id: String, amount: int) -> void:
 
 
 func intent(kind: String, scene: String) -> void:
-	if not _can_send():
+	# Title actions are outside the Run, even after returning from a guided Run.
+	if (GameState.is_guided_run and scene != "title") or not _can_send():
 		return
 	# The native binding requires options even when there are no custom fields.
 	ga.addDesignEvent("intent:%s:%s" % [slug(kind), slug(scene)], {})
@@ -172,6 +190,8 @@ func request_quit(scene: String = "") -> void:
 		return
 	_shutting_down = true
 	var where := scene if not scene.is_empty() else intent_scene()
+	if GameState.is_guided_run:
+		GameState.finish_run()
 	intent("quit", where)
 	var tree := get_tree()
 	if tree != null:
@@ -191,7 +211,7 @@ func _day_band(day: int) -> String:
 
 
 func _end_day(status: String) -> void:
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
 	_progression(status, "day", str(day), _day_band(day), GameState.biomass.amount)
 
 
@@ -202,7 +222,7 @@ func _progression(
 	progression03: String,
 	score: int
 ) -> void:
-	if not _can_send():
+	if GameState.is_guided_run or not _can_send():
 		return
 	if score < 0:
 		ga.addProgressionEvent(status, progression01, progression02, progression03, {})
@@ -211,7 +231,7 @@ func _progression(
 
 
 func _resource(flow: String, item_type: String, item_id: String, amount: int) -> void:
-	if amount <= 0 or not _can_send():
+	if GameState.is_guided_run or amount <= 0 or not _can_send():
 		return
 	var id := slug(item_id)
 	if id.is_empty():

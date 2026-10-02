@@ -40,15 +40,15 @@ func refresh() -> void:
 func _show_upcoming_battle() -> void:
 	_previewing = false
 	GameState.ensure_upcoming_enemy_formation()
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
 	var specs := GameState.upcoming_enemy_formation
 	show_specs(specs, _title_for_day(day, false), day)
 	_refresh_reroll_affordability()
 
 
 func preview_day(day: int) -> void:
-	var previewed_day := clampi(day, 1, GameState.WIN_DAYS)
-	var upcoming := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var previewed_day := clampi(day, 1, GameState.get_run_length())
+	var upcoming := clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
 	if previewed_day == upcoming:
 		# Hovering the real Battle borrows its cached army without changing the pin.
 		if _previewing:
@@ -58,8 +58,8 @@ func preview_day(day: int) -> void:
 
 
 func pin_day(day: int) -> void:
-	var previewed_day := clampi(day, 1, GameState.WIN_DAYS)
-	var upcoming := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var previewed_day := clampi(day, 1, GameState.get_run_length())
+	var upcoming := clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
 	if previewed_day == upcoming:
 		return_to_next_battle()
 		return
@@ -98,7 +98,7 @@ func clear_preview() -> void:
 func show_specs(specs: Array[EnemyUnitSpec], title: String, day: int = -1) -> void:
 	if _scout_row == null:
 		return
-	_reward_day = day if day > 0 else clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	_reward_day = day if day > 0 else clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
 	for child in _scout_row.get_children():
 		_scout_row.remove_child(child)
 		child.queue_free()
@@ -137,9 +137,11 @@ func _title_for_day(day: int, include_day: bool) -> String:
 
 
 func _reroll_allowed() -> bool:
+	if not GameState.is_feature_available(&"scout_reroll"):
+		return false
 	if _previewing or _focused_day != 0:
 		return false
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
 	return not GameState.is_elite_day(day)
 
 
@@ -177,7 +179,7 @@ func _on_scout_reroll_pressed() -> void:
 	Analytics.biomass_sink("Scout", "Reroll", cost)
 	Audio.play_ui_cue(Sfx.Cue.REROLL)
 	GameState.advance_scout_reroll_cost()
-	var day := clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	var day := clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
 	GameState.ensure_upcoming_enemy_formation()
 	GameState.upcoming_enemy_formation = EnemyComposer.reroll_for_day(
 		day,

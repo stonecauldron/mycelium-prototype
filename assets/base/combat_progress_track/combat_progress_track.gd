@@ -60,7 +60,8 @@ func _input(event: InputEvent) -> void:
 
 
 func refresh() -> void:
-	_upcoming_day = clampi(GameState.get_upcoming_day(), 1, GameState.WIN_DAYS)
+	visible = GameState.is_feature_available(&"progression")
+	_upcoming_day = clampi(GameState.get_upcoming_day(), 1, GameState.get_run_length())
 	_chapter_start = _chapter_start_for_day(_upcoming_day)
 	if _built_chapter_start != _chapter_start:
 		_build_nodes()
@@ -76,7 +77,7 @@ func refresh() -> void:
 
 
 static func _chapter_start_for_day(day: int) -> int:
-	var clamped := clampi(day, 1, GameState.WIN_DAYS)
+	var clamped := clampi(day, 1, GameState.get_run_length())
 	return floori(float(clamped - 1) / float(CHAPTER_LENGTH)) * CHAPTER_LENGTH + 1
 
 

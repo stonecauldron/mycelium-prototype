@@ -12,6 +12,8 @@ const _MORTAR_SPORE_COLOR := Color("9dcc6a")
 
 @export var launch_angle_deg: float = 45.0
 @export var fallback_speed: float = 600.0
+## Shallow, precise shot that levels out at the aim point (crossbow).
+@export var apex_at_target: bool = false
 @export var max_lifetime: float = 2.5
 @export var stick_hold_time: float = 1.6
 @export var stick_fade_time: float = 1.2
@@ -32,6 +34,7 @@ var damage_type: int = 0
 var owner_unit: Node
 var homing_target: Node2D
 var _velocity: Vector2 = Vector2.ZERO
+var _apex_gravity: Vector2 = Vector2.ZERO
 var _lifetime: float = 0.0
 var _spent: bool = false
 var _hit_targets: Dictionary = {}
@@ -87,6 +90,11 @@ func set_homing_target(target: Node2D) -> void:
 ## Override for custom arcs (e.g. flatter crossbow). Default = lobbed ballistic.
 func _compute_launch_velocity(from_global: Vector2, aim_global: Vector2) -> Vector2:
 	var displacement := aim_global - from_global
+	if apex_at_target:
+		var flight_time := _apex_flight_time(from_global, aim_global)
+		# y(T) = aim.y and vy(T) = 0. Lower targets get a leveling descent.
+		_apex_gravity = Vector2(0.0, -2.0 * displacement.y / (flight_time * flight_time))
+		return Vector2(displacement.x, 2.0 * displacement.y) / flight_time
 	var direction_x := signf(displacement.x)
 	if direction_x == 0.0:
 		var troop = owner_unit.get("_troop") if owner_unit != null else null
@@ -108,6 +116,17 @@ func _compute_launch_velocity(from_global: Vector2, aim_global: Vector2) -> Vect
 	return Vector2(cos(angle), sin(angle)) * speed
 
 
+func flight_time_to(from_global: Vector2, aim_global: Vector2) -> float:
+	if apex_at_target:
+		return _apex_flight_time(from_global, aim_global)
+	var launch_velocity := _compute_launch_velocity(from_global, aim_global)
+	return absf(aim_global.x - from_global.x) / maxf(absf(launch_velocity.x), 1.0)
+
+
+func _apex_flight_time(from_global: Vector2, aim_global: Vector2) -> float:
+	return maxf(from_global.distance_to(aim_global) / maxf(fallback_speed, 1.0), 0.001)
+
+
 ## Override for homing / other in-flight behaviour. Default = gravity + integrate.
 func _physics_flight(delta: float) -> void:
 	if homing and _homing_active:
@@ -118,6 +137,9 @@ func _physics_flight(delta: float) -> void:
 	if homing and not _homing_active and prev_vy < 0.0 and _velocity.y >= 0.0:
 		_homing_active = true
 	var next_position := global_position + _velocity * delta
+	if apex_at_target:
+		# Exact integration keeps the apex at the aim point at every physics rate.
+		next_position -= _gravity_vector() * (0.5 * delta * delta)
 	if next_position.y >= FLOOR_Y:
 		global_position = next_position
 		global_position.y = FLOOR_Y
@@ -255,6 +277,8 @@ func _physics_process(delta: float) -> void:
 
 
 func _gravity_vector() -> Vector2:
+	if apex_at_target:
+		return _apex_gravity
 	var gravity_strength := float(ProjectSettings.get_setting("physics/2d/default_gravity", 980.0))
 	return Vector2(0.0, gravity_strength)
 

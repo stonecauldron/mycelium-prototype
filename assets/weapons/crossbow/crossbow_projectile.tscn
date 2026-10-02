@@ -13,7 +13,8 @@ monitorable = false
 script = ExtResource("1_proj")
 launch_angle_deg = 12.0
 launch_cue = 23
-fallback_speed = 1400.0
+fallback_speed = 1700.0
+apex_at_target = true
 max_lifetime = 3.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

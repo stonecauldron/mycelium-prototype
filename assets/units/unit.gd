@@ -55,6 +55,11 @@ const BOW_AIM_RELEASE_KICK_DEG := 14.0
 const BOW_AIM_LEAN_TIME := 0.16
 const BOW_AIM_RELEASE_TIME := 0.08
 const BOW_AIM_SETTLE_TIME := 0.2
+const CROSSBOW_BRACE_DEG := 4.0
+const CROSSBOW_RECOIL_DEG := -9.0
+const CROSSBOW_BRACE_TIME := 0.16
+const CROSSBOW_RECOIL_TIME := 0.06
+const CROSSBOW_SETTLE_TIME := 0.24
 const KNOCKBACK_UP_RATIO := 0.5
 ## Give units time to act after landing, even under continuous hits.
 const KNOCKBACK_RECOVERY_TIME := 0.35
@@ -128,6 +133,9 @@ var _throw_timer: float = 0.0
 ## True while a spear throw or bow shot attack is in progress (not spear melee).
 var _projectile_attack_active: bool = false
 var _ranged_aim: Vector2 = Vector2.ZERO
+var _ranged_apex_shot: bool = false
+## Precise shots keep their selected target through windup and refresh at release.
+var _ranged_apex_target: Unit = null
 var _bow_lean_angle: float = 0.0
 var _dying: bool = false
 var _celebrating: bool = false
@@ -1050,16 +1058,26 @@ func _start_ranged_attack() -> void:
 	_projectile_attack_active = true
 	_throw_released = false
 	_throw_timer = 0.0
-	_ranged_aim = _pick_ranged_aim_with_jitter()
-	_play_bow_aim_lean(_ranged_aim)
+	_ranged_apex_target = null
+	_ranged_aim = _pick_ranged_aim()
+	if _ranged_apex_shot:
+		_play_crossbow_brace()
+	else:
+		_play_bow_aim_lean(_ranged_aim)
 
 
 func _process_ranged_attack(delta: float) -> void:
 	_throw_timer += delta
 	if not _throw_released and _throw_timer >= RANGED_RELEASE_DELAY:
+		# Stationary ranged attacks finish landing before releasing their shot.
+		if not is_on_floor():
+			return
 		_throw_released = true
 		_spawn_arrow_projectile()
-		_release_bow_aim_lean()
+		if _ranged_apex_shot:
+			_release_crossbow_recoil()
+		else:
+			_release_bow_aim_lean()
 		_throw_timer = 0.0
 		return
 
@@ -1067,16 +1085,11 @@ func _process_ranged_attack(delta: float) -> void:
 		_finish_attack()
 
 
-func _pick_ranged_aim_with_jitter() -> Vector2:
+func _pick_ranged_aim() -> Vector2:
 	var opponent := _troop.get_opponent() if _troop != null else null
 	if opponent == null or opponent.get_living_unit_count() == 0:
 		return _get_forward_aim_fallback()
-	var aim := _pick_ranged_aim_target(opponent)
-	aim += Vector2(
-		randf_range(-ARROW_AIM_JITTER_X, ARROW_AIM_JITTER_X),
-		randf_range(-ARROW_AIM_JITTER_Y, ARROW_AIM_JITTER_Y)
-	)
-	return aim
+	return _pick_ranged_aim_target(opponent)
 
 
 func _get_forward_aim_fallback() -> Vector2:
@@ -1088,8 +1101,17 @@ func _get_forward_aim_fallback() -> Vector2:
 
 func _spawn_arrow_projectile() -> void:
 	var aim := _ranged_aim
-	if aim == Vector2.ZERO:
-		aim = _pick_ranged_aim_with_jitter()
+	if _ranged_apex_shot:
+		if (
+			is_instance_valid(_ranged_apex_target)
+			and _ranged_apex_target.current_hp > 0
+			and not _ranged_apex_target._dying
+		):
+			aim = _lead_aim_point(_get_ranged_spawn_global(), _ranged_apex_target)
+		else:
+			aim = _pick_ranged_aim()
+	elif aim == Vector2.ZERO:
+		aim = _pick_ranged_aim()
 	_spawn_weapon_projectile(_get_ranged_spawn_global(), aim)
 
 
@@ -1127,6 +1149,35 @@ func _get_ranged_spawn_global() -> Vector2:
 	if mount != null:
 		return mount.global_position
 	return global_position + Vector2(0.0, RANGED_ORIGIN_HEIGHT)
+
+
+func _play_crossbow_brace() -> void:
+	if _appearance == null:
+		return
+	if _flip_tween:
+		_flip_tween.kill()
+	# A small forward brace keeps the crossbow level; facing mirrors the pose.
+	_appearance.rotation = 0.0
+	_flip_tween = create_tween()
+	_flip_tween.tween_property(
+		_appearance, "rotation", deg_to_rad(CROSSBOW_BRACE_DEG), CROSSBOW_BRACE_TIME
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+func _release_crossbow_recoil() -> void:
+	if _appearance == null:
+		return
+	if _flip_tween:
+		_flip_tween.kill()
+	_flip_tween = create_tween()
+	_flip_tween.tween_property(
+		_appearance, "rotation", deg_to_rad(CROSSBOW_RECOIL_DEG), CROSSBOW_RECOIL_TIME
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_flip_tween.tween_property(_appearance, "rotation", 0.0, CROSSBOW_SETTLE_TIME)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_flip_tween.tween_callback(func() -> void:
+		_flip_tween = null
+	)
 
 
 func _play_bow_aim_lean(aim: Vector2) -> void:
@@ -1429,11 +1480,10 @@ func _pick_ranged_aim_target(opponent: Troop) -> Vector2:
 	return _get_forward_aim_fallback()
 
 
-## Lead aim by target velocity using an approximate ballistic flight time.
+## Lead horizontal motion using the projectile's own flight time.
 func _lead_aim_point(from_global: Vector2, target: Unit) -> Vector2:
 	var aim := target.global_position
-	var launch_angle_deg := 45.0
-	var fallback_speed := 600.0
+	var probe: Projectile = null
 	if combat != null:
 		var scene := combat.resolve_projectile_scene()
 		if scene == null and combat.uses_throw_projectile():
@@ -1441,29 +1491,41 @@ func _lead_aim_point(from_global: Vector2, target: Unit) -> Vector2:
 		elif scene == null and combat.attack_style == WeaponData.AttackStyle.BOW_SHOT:
 			scene = _ARROW_PROJECTILE_FALLBACK
 		if scene != null:
-			var probe := scene.instantiate() as Projectile
-			if probe != null:
-				launch_angle_deg = probe.launch_angle_deg
-				fallback_speed = probe.fallback_speed
-				probe.free()
-	var gravity_y := get_gravity().y
-	if gravity_y <= 0.0:
-		gravity_y = 980.0
-	for _i in 2:
-		var displacement := aim - from_global
-		var dx := absf(displacement.x)
-		var dy := displacement.y
-		var launch_angle := deg_to_rad(launch_angle_deg)
-		var cos_a := cos(launch_angle)
-		var tan_a := tan(launch_angle)
-		var denominator := 2.0 * cos_a * cos_a * (dy + dx * tan_a)
-		var speed := fallback_speed
-		if denominator > 1.0:
-			speed = sqrt(gravity_y * dx * dx / denominator)
-		var vx := maxf(speed * cos_a, 1.0)
-		var flight_t := dx / vx
+			probe = scene.instantiate() as Projectile
+	if probe == null:
+		return aim
+	_ranged_apex_shot = probe.apex_at_target
+	var target_point := aim
+	if probe.apex_at_target:
+		_ranged_apex_target = target
+		target_point = _get_apex_aim_point(from_global, target, probe.launch_angle_deg)
+		aim = target_point
+	var prediction_steps := 4 if probe.apex_at_target else 2
+	for _i in prediction_steps:
+		var flight_t := probe.flight_time_to(from_global, aim)
 		# Lead only on horizontal motion (ignore jump/knockback Y).
-		aim = target.global_position + Vector2(target.velocity.x * flight_t, 0.0)
+		aim = target_point + Vector2(target.velocity.x * flight_t, 0.0)
+	if not probe.apex_at_target and combat.attack_style == WeaponData.AttackStyle.BOW_SHOT:
+		aim += Vector2(
+			randf_range(-ARROW_AIM_JITTER_X, ARROW_AIM_JITTER_X),
+			randf_range(-ARROW_AIM_JITTER_Y, ARROW_AIM_JITTER_Y)
+		)
+	probe.free()
+	return aim
+
+
+func _get_apex_aim_point(from_global: Vector2, target: Unit, max_angle_deg: float) -> Vector2:
+	var dx := absf(target.global_position.x - from_global.x)
+	# Limit the rise to 16 px and the initial angle to the authored shallow angle.
+	var rise := minf(16.0, dx * tan(deg_to_rad(max_angle_deg)) * 0.5)
+	var aim := Vector2(target.global_position.x, from_global.y - rise)
+	if target._appearance != null and target._appearance.hurtbox != null:
+		var shape := target._appearance.hurtbox.get_node_or_null("CollisionShape2D") as CollisionShape2D
+		if shape != null and shape.shape != null:
+			var bounds := shape.global_transform * shape.shape.get_rect()
+			# Stay inside the body, including short or airborne targets.
+			var inset := minf(8.0, bounds.size.y * 0.25)
+			aim.y = clampf(aim.y, bounds.position.y + inset, bounds.end.y - inset)
 	return aim
 
 

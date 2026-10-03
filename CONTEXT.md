@@ -184,7 +184,7 @@ The War Chamber's dedicated place for Compost, separate from weapon-school Cocoo
 
 **Training**:
 Putting a Child or Adult through a weapon school to gain that school's fighting identity. Child Training includes Evolution into an Adult; Adults use **Train** and complete Training instantly on confirmation with their Stats and troop position unchanged.
-Trainings retain their chronological order: a third Training replaces the oldest, keeps the newer one, and appends the newly applied school. Adult Training that leaves this ordered pair unchanged is unavailable and costs no Biomass; changing the order of two different schools is meaningful because it changes which one is replaced next.
+Trainings retain their chronological order: a third Training normally replaces the oldest, keeps the newer one, and appends the newly applied school. If that would keep the same Weapon, it replaces the newer Training instead. Adult Training that cannot change the Weapon is unavailable and costs no Biomass; Children may still complete Evolution with the same Weapon.
 *Avoid*: WeaponSchool (code)
 
 **Evolution**:

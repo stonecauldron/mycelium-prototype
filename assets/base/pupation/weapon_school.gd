@@ -161,7 +161,7 @@ static func is_retrain(unit: RosterUnitData) -> bool:
 	)
 
 
-## Resulting training list after emerge (evict oldest when already at 2).
+## Evict the oldest at 2 trainings, unless doing so keeps the same Weapon.
 static func trainings_after_training(trainings: Array, new_school: int) -> Array[int]:
 	var next: Array[int] = []
 	for t in trainings:
@@ -169,16 +169,20 @@ static func trainings_after_training(trainings: Array, new_school: int) -> Array
 	if next.size() >= 2:
 		next.pop_front()
 	next.append(new_school)
+	if trainings.size() >= 2 and resolve_weapon_path(next) == resolve_weapon_path(trainings):
+		# Keep the older school when FIFO would only reverse the same combo.
+		next[0] = int(trainings[0])
 	return next
 
 
-## Children still evolve; Adults need a change to their ordered Trainings.
+## Children still evolve; Adults need a change to their Weapon.
 static func is_unchanged_training(unit: RosterUnitData, school: int) -> bool:
 	if unit == null or unit.enemy_unit_data != null or not unit.is_adult_stage():
 		return false
 	if school < 0 or school >= COUNT:
 		return false
-	return trainings_after_training(unit.weapon_trainings, school) == unit.weapon_trainings
+	var next := trainings_after_training(unit.weapon_trainings, school)
+	return resolve_weapon_path(next) == resolve_weapon_path(unit.weapon_trainings)
 
 
 static func preview_weapon_after_training(
@@ -227,7 +231,13 @@ static func training_replacement_text(unit: RosterUnitData, school: int) -> Stri
 	if unit == null or unit.weapon_trainings.size() < 2:
 		return "Adds %s Training" % display_name(school)
 	var oldest := int(unit.weapon_trainings[0])
-	var kept := display_name(int(unit.weapon_trainings[1]))
+	var newest := int(unit.weapon_trainings[1])
+	var next := trainings_after_training(unit.weapon_trainings, school)
+	var kept := display_name(next[0])
+	if next[0] != newest:
+		return "Replaces newest Training: %s. Keeps %s and adds %s." % [
+			display_name(newest), kept, display_name(school)
+		]
 	if oldest == school:
 		return "Trains %s again, replacing its oldest Training. Keeps %s." % [
 			display_name(school), kept

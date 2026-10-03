@@ -46,9 +46,10 @@ static func run(host: Control) -> int:
 	failures += _check(WeaponSchool.training_replacement_text(dual, WeaponSchool.Id.MACE)
 		== "Replaces oldest Training: Sword. Keeps Bow and adds Mace.", "Oldest replacement named")
 	failures += await _training_dialog(host, dual, WeaponSchool.Id.SWORD,
-		"Bow + Sword → Crossbow", "Ready immediately · Stats unchanged", [1], [], [])
+		"Sword + Sword → Great Sword", "Ready immediately · Stats unchanged", [1],
+		["Ranged"], ["Melee", "AOE"])
 	failures += _check(WeaponSchool.training_replacement_text(dual, WeaponSchool.Id.SWORD)
-		== "Trains Sword again, replacing its oldest Training. Keeps Bow.", "Oldest renewal named")
+		== "Replaces newest Training: Bow. Keeps Sword and adds Sword.", "Weapon-changing replacement named")
 
 	# Exercise generation scaling, doubled Training gains, pending adulthood bonus,
 	# and Stat clamps through the actual action as well as the preview.
@@ -378,10 +379,10 @@ static func training_chronology_checks(host: Control) -> int:
 	var sword := WeaponSchool.Id.SWORD
 	var bow := WeaponSchool.Id.BOW
 	var mace := WeaponSchool.Id.MACE
-	var before: Array[Array] = [[], [sword], [sword, bow], [bow, sword], [sword, bow], [bow, bow]]
-	var schools: Array[int] = [sword, bow, mace, mace, bow, mace]
-	var after: Array[Array] = [[sword], [sword, bow], [bow, mace], [sword, mace], [bow, bow], [bow, mace]]
-	var highlights: Array[Array] = [[0], [1], [1], [1], [1], [1]]
+	var before: Array[Array] = [[], [sword], [sword, bow], [bow, sword], [sword, bow], [bow, bow], [sword, mace], [mace, sword]]
+	var schools: Array[int] = [sword, bow, mace, mace, bow, mace, sword, mace]
+	var after: Array[Array] = [[sword], [sword, bow], [bow, mace], [sword, mace], [bow, bow], [bow, mace], [sword, sword], [mace, mace]]
+	var highlights: Array[Array] = [[0], [1], [1], [1], [1], [1], [1], [1]]
 	var dialog: PupationConfirmDialog = TRAINING_SCENE.instantiate()
 	var card: UnitDetailCard = preload("res://assets/base/unit_detail_card/unit_detail_card.tscn").instantiate()
 	host.add_child(dialog)
@@ -438,7 +439,7 @@ static func _training_noop_checks(host: Control, dialog: PupationConfirmDialog) 
 		make_unit([bow, bow], false),
 	]
 	var schools: Array[int] = [bow, sword, bow]
-	var expected: Array[Array] = [[bow, bow], [bow, sword], [bow, bow]]
+	var expected: Array[Array] = [[bow, bow], [sword, sword], [bow, bow]]
 	for index in units.size():
 		var unit := units[index]
 		GameState.troop.try_add_unit(unit)
@@ -448,7 +449,7 @@ static func _training_noop_checks(host: Control, dialog: PupationConfirmDialog) 
 		var allowed := index > 0
 		var button := dialog.get_node("%ConfirmButton") as Button
 		failures += _check(GameState.can_cocoon_for_pupation(unit, schools[index]) == allowed,
-			"No-op rejection preserves chronology changes and Child Evolution")
+			"No-op rejection preserves Weapon changes and Child Evolution")
 		failures += _check(button.disabled == (not allowed), "Only no-op Training disables confirmation")
 		var expected_cost: Variant = null
 		if allowed:

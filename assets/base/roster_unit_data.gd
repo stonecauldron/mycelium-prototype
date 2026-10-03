@@ -204,17 +204,15 @@ func sync_weapon_from_trainings() -> void:
 
 
 ## Apply one school training from pupation emerge. Returns false if illegal.
-## At 2 trainings, evicts oldest (weapon list only; prior school stats stay).
+## Prefer oldest replacement, but ensure Adult Training changes the Weapon.
 func apply_pupation_training(school: int) -> bool:
 	if not check_training_eligibility(school).allowed:
 		return false
 	if school < 0 or school >= WeaponSchool.COUNT:
 		return false
-	if weapon_trainings.size() >= 2:
-		weapon_trainings.pop_front()
 	if not is_adult_stage():
 		WeaponSchool.apply_school_stats(stats, school, generation, pupation_stat_multiplier)
-	weapon_trainings.append(school)
+	weapon_trainings = WeaponSchool.trainings_after_training(weapon_trainings, school)
 	promote_to_imago()
 	sync_weapon_from_trainings()
 	return true

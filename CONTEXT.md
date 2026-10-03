@@ -27,7 +27,7 @@ A combat encounter fought during a day. Not every day necessarily has one.
 *Avoid*: using Battle as the name for run progression
 
 **Battle reward**:
-Biomass granted for winning a Battle. Ordinary Runs use the Day and enemy army’s difficulty. Guided Runs grant the next preparation Day’s introduction costs plus 30%, rounded up, with increased grants of 16 on Day 7 and 21 on Day 9, in addition to any savings; they start with zero and grant 98 total scheduled biomass. Neither mode grants per-kill rewards.
+Biomass granted for winning a Battle. Ordinary Runs use a Day base capped at 20 biomass (10, 15, then 20 from Day 3 onward), adjusted by ±10% for the enemy army’s difficulty and rounded to the nearest integer. Guided Runs grant the next preparation Day’s introduction costs plus 30%, rounded up, with increased grants of 16 on Day 7 and 21 on Day 9, in addition to any savings; they start with zero and grant 98 total scheduled biomass. Neither mode grants per-kill rewards.
 *Avoid*: kill bounty, per-kill biomass, currency drop
 
 **Biomass**:

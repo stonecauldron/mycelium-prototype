@@ -73,7 +73,7 @@ Scout keeps its existing price progression (2, 3, 4… biomass, reset daily) and
 
 Keep the existing easier/harder bias, now measured by actual Enemy cost against the midpoint of the authored Day range. At or above the midpoint, cheaper candidate armies receive more weight; below it, more expensive armies receive more weight. The bias is a preference, not an absolute direction guarantee. If no distinct candidate exists, the generator retains the current army.
 
-Battle reward remains `round((10 + 5 × (day − 1)) × lerp(0.9, 1.1, t))`, granted on victory. `t = clamp((actual_army_cost − day_minimum) / (day_maximum − day_minimum), 0, 1)`; a flat range uses `t = 0.5`. Unspent budget earns no reward, and reward does not depend on Run seed or individual stat rolls. A cost below the Day minimum gets the minimum multiplier.
+Ordinary Run Battle reward is `round(min(10 + 5 × (day − 1), 20) × lerp(0.9, 1.1, t))`, granted on victory. The base is 10 on Day 1, 15 on Day 2, and 20 thereafter; difficulty-adjusted payouts from Day 3 onward are 18–22. `t = clamp((actual_army_cost − day_minimum) / (day_maximum − day_minimum), 0, 1)`; a flat range uses `t = 0.5`. Unspent budget earns no reward, and reward does not depend on Run seed or individual stat rolls. A cost below the Day minimum gets the minimum multiplier. Guided Runs use separate introductory allowances.
 
 The sampled difficulty bounds and unused authored-override hook have been removed. See [ADR 0015](../../docs/adr/0015-budgeted-enemy-armies.md) for the trade-off and the amendment to ADR 0005.
 

@@ -1,9 +1,10 @@
 class_name BiomassData
 extends Resource
 
-## Battle reward base for day 1; each later day adds BATTLE_REWARD_PER_DAY.
+## Battle reward base grows each day up to BATTLE_REWARD_BASE_CAP.
 const BATTLE_REWARD_DAY_1 := 10
 const BATTLE_REWARD_PER_DAY := 5
+const BATTLE_REWARD_BASE_CAP := 20
 ## ± swing applied from easiest→hardest army for that day (0.1 → 0.9…1.1).
 const BATTLE_REWARD_DIFFICULTY_SWING := 0.1
 const COMPOST_CHILD := 6
@@ -31,7 +32,7 @@ const STARTING_AMOUNT := 3
 ## Day-scaled Battle reward before difficulty (upcoming battle day, 1-based).
 static func base_battle_reward(day: int) -> int:
 	var d := maxi(day, 1)
-	return BATTLE_REWARD_DAY_1 + BATTLE_REWARD_PER_DAY * (d - 1)
+	return mini(BATTLE_REWARD_DAY_1 + BATTLE_REWARD_PER_DAY * (d - 1), BATTLE_REWARD_BASE_CAP)
 
 
 ## Full Battle reward: base × lerp(0.9, 1.1, difficulty_t), nearest int.

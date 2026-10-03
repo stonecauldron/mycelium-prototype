@@ -223,6 +223,8 @@ func _harvest(yield_count: int, free_slots: int) -> void:
 	_check_effect(effect, retained, "harvest-%d" % retained)
 	if not is_instance_valid(effect):
 		return
+	var cards := _nursery._hatch_toasts.duplicate()
+	_check(cards.size() == retained, "harvest shows retained result cards immediately")
 	var finished := {}
 	effect.finished.connect(_finished_actors.bind(effect, finished))
 	var seen_walking: Array[bool] = []
@@ -234,14 +236,14 @@ func _harvest(yield_count: int, free_slots: int) -> void:
 	var moving_right := true
 	var opaque := true
 	var scale_ok := true
-	var cards_wait := true
+	var cards_present := true
 	var peak_dim := 0.0
 	var captured_hatch := false
 	var captured_walk := false
 	var remaining := 10.0
 	while is_instance_valid(effect) and remaining > 0.0:
 		peak_dim = maxf(peak_dim, effect._backdrop.color.a)
-		cards_wait = cards_wait and _nursery._hatch_toasts.is_empty()
+		cards_present = cards_present and _nursery._hatch_toasts == cards
 		for i in effect._actors.size():
 			var actor := effect._actors[i]
 			if actor.visible:
@@ -261,10 +263,10 @@ func _harvest(yield_count: int, free_slots: int) -> void:
 		remaining -= get_process_delta_time()
 	_check(not is_instance_valid(effect) and not finished.is_empty(), "hatch finishes after bounded walk")
 	_check(not seen_walking.has(false) and moving_right and opaque and scale_ok, "all retained hatchlings walk right at normal scale without fading")
-	_check(cards_wait and peak_dim > 0.1, "hatch dims anticipation and delays cards until departure")
+	_check(cards_present and peak_dim > 0.1, "hatch dims anticipation with the same result cards already shown")
 	if not finished.is_empty():
 		for bounds: Rect2 in finished.bounds:
-			_check(bounds.position.x > get_viewport().get_visible_rect().end.x, "whole painted hatchling leaves screen before cards")
+			_check(bounds.position.x > get_viewport().get_visible_rect().end.x, "whole painted hatchling leaves screen")
 	_check(_nursery._hatch_reveal == null and _nursery._hatch_toasts.size() == retained, "finished harvest shows only retained result cards")
 	for card in _nursery._hatch_toasts:
 		var bounds := card.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, card.size)

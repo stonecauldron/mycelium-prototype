@@ -505,7 +505,7 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 				ActionFeedback.show_rejection(tile, ActionDecision.reject(ActionReasons.UNIT_CAPACITY_FULL))
 				return
 			var shell := tile.capture_hatch_shell()
-			var toast_anchor := _control_canvas_rect(tile)
+			var toast_anchor := _hatch_toast_anchor(tile)
 			var harvested := nursery.harvest(tile.plot_index)
 			if harvested.is_empty():
 				return
@@ -530,6 +530,17 @@ func _control_canvas_rect(control: Control) -> Rect2:
 	return Rect2(top_left, bottom_right - top_left)
 
 
+func _hatch_toast_anchor(tile: PlotTile) -> Rect2:
+	var next_index := tile.plot_index + 1
+	if next_index < _tiles.size():
+		return _control_canvas_rect(_tiles[next_index])
+	# The last Plot uses the same spacing to anchor above the next position to its right.
+	var anchor := _control_canvas_rect(tile)
+	var step := Vector2(tile.size.x + _plot_row.get_theme_constant("separation"), 0.0)
+	anchor.position += tile.get_global_transform_with_canvas().basis_xform(step)
+	return anchor
+
+
 func _hud_root() -> Control:
 	var base := get_tree().current_scene
 	if base == null:
@@ -547,24 +558,21 @@ func _show_hatch_reveal(
 		return
 	_hatch_reveal = UnitEmergence.play(hud, units, shell, UnitEmergence.Kind.EGG)
 	var reveal_id := _hatch_reveal.get_instance_id()
-	_hatch_reveal.finished.connect(
-		_on_hatch_reveal_finished.bind(reveal_id, units, anchor_canvas_rect)
-	)
+	_hatch_reveal.finished.connect(_on_hatch_reveal_finished.bind(reveal_id))
 	_hatch_reveal.cancelled.connect(_on_hatch_reveal_cancelled.bind(reveal_id))
+	_show_hatch_toasts(units, anchor_canvas_rect)
 
 
-func _on_hatch_reveal_finished(
-	reveal_id: int, units: Array[RosterUnitData], anchor_canvas_rect: Rect2
-) -> void:
+func _on_hatch_reveal_finished(reveal_id: int) -> void:
 	if not is_instance_valid(_hatch_reveal) or _hatch_reveal.get_instance_id() != reveal_id:
 		return
 	_hatch_reveal = null
-	_show_hatch_toasts(units, anchor_canvas_rect)
 
 
 func _on_hatch_reveal_cancelled(reveal_id: int) -> void:
 	if is_instance_valid(_hatch_reveal) and _hatch_reveal.get_instance_id() == reveal_id:
 		_hatch_reveal = null
+		_dismiss_hatch_toast(false)
 
 
 func _cancel_hatch_reveal() -> void:
@@ -638,8 +646,8 @@ func _position_hatch_toasts(cards: Array[UnitDetailCard], anchor_canvas_rect: Re
 		maxf(bounds.y - 16.0, 1.0) / maxf(max_height, 1.0)
 	))
 	var row_size := Vector2(total_width, max_height) * fit
-	var row_x := anchor.position.x + (anchor.size.x - row_size.x) * 0.5
-	var row_y := anchor.position.y - row_size.y + 24.0
+	var row_x := anchor.position.x
+	var row_y := anchor.position.y - row_size.y - _HATCH_TOAST_GAP
 	row_x = clampf(row_x, 8.0, maxf(8.0, bounds.x - row_size.x - 8.0))
 	row_y = clampf(row_y, 8.0, maxf(8.0, bounds.y - row_size.y - 8.0))
 	for card in cards:

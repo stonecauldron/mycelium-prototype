@@ -13,7 +13,7 @@ A single playthrough of Auto Shrooms, lasting up to 10 days in either mode.
 *Avoid*: campaign, session (when you mean the playthrough)
 
 **Guided Run**:
-An optional 10-Day Run that introduces systems through scheduled unlocks and restricted choices. Optional graphical arrows introduce only newly unlocked functionality on its unlock Day, using the player's actual state. They do not repeat missed introductions or routine actions and stop after completion. It starts with a fixed Sword Adult, makes a Child available before Day 2, and permits free Battle retries or restoring the current Day's preparation. Nursery and Quick Growth open on Day 5; Squad expansion and Bench on Day 6; Shield and Thorny on Day 7; Compost, a second Plot, and the only Seal choice on Day 8; and Spear and the full Shop on Day 9. The player’s Flag bearer stays hidden until the first Seal is confirmed. The first fresh guided grow retains its normal two-Day wait. Progress never requires tutorial actions; the pending Seal choice still requires selection before Battle. Winning Battle 10 opens Victory directly without a daily summary with the subtitle “Try a real run now!” The next-Run checkbox turns off after the first guided Run ends and after every guided victory, including replays. Players can check it again for another guided Run.
+An optional 10-Day Run that introduces systems through scheduled unlocks and restricted choices. Optional graphical arrows introduce only newly unlocked functionality on its unlock Day, using the player's actual state. They do not repeat missed introductions or routine actions and stop after completion. It starts with a fixed Sword Adult, makes a Child available before Day 2, and permits free Battle retries or restoring the current Day's preparation. Nursery and Quick Growth open on Day 5; Squad expansion, Bench, and Thorny on Day 6; Shield and Compost on Day 7; a second Plot, the full Shop, and the only Seal choice on Day 8; and Spear on Day 9. The player’s Flag bearer stays hidden until the first Seal is confirmed. The first fresh guided grow retains its normal two-Day wait. Progress never requires tutorial actions; the pending Seal choice still requires selection before Battle. Winning Battle 10 opens Victory directly without a daily summary with the subtitle “Try a real run now!” The next-Run checkbox turns off after the first guided Run ends and after every guided victory, including replays. Players can check it again for another guided Run.
 
 **Day**:
 The primary unit of run progression. A day may or may not include a battle.
@@ -27,7 +27,7 @@ A combat encounter fought during a day. Not every day necessarily has one.
 *Avoid*: using Battle as the name for run progression
 
 **Battle reward**:
-Biomass granted for winning a Battle. Ordinary Runs use the Day and enemy army’s difficulty. Guided Runs grant the next preparation Day’s introduction costs plus 30%, rounded up, in addition to any savings; they start with zero and grant 71 total scheduled biomass. Neither mode grants per-kill rewards.
+Biomass granted for winning a Battle. Ordinary Runs use the Day and enemy army’s difficulty. Guided Runs grant the next preparation Day’s introduction costs plus 30%, rounded up, with increased grants of 16 on Day 7 and 21 on Day 9, in addition to any savings; they start with zero and grant 98 total scheduled biomass. Neither mode grants per-kill rewards.
 *Avoid*: kill bounty, per-kill biomass, currency drop
 
 **Biomass**:

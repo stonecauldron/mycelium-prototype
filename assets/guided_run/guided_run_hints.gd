@@ -33,18 +33,18 @@ static func next_hint() -> Dictionary:
 			candidates.append(_grow_item_hint(false))
 		6:
 			candidates.append(_capacity_hint())
-		7:
 			candidates.append(_grow_item_hint(true))
+		7:
 			candidates.append(_harvested_shield_hint())
-		8:
 			candidates.append(_compost_hint())
+		8:
 			candidates.append(_plot_capacity_hint())
+			candidates.append(_full_shop_hint())
+			candidates.append(_shop_reroll_hint())
 		9:
 			var spear := _training_hint(WeaponSchool.Id.SPEAR)
 			spear.erase("source")
 			candidates.append(spear)
-			candidates.append(_full_shop_hint())
-			candidates.append(_shop_reroll_hint())
 	return _first_unseen(candidates)
 
 

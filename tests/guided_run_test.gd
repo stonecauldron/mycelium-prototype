@@ -21,6 +21,7 @@ func _run() -> void:
 	_test_late_nursery_and_offers()
 	_test_new_unlock_actions()
 	_test_full_shop_and_restore()
+	_test_first_full_shop_quick_growth()
 	_test_battle_and_preparation_restore()
 	_test_compost_and_lineage_restore()
 	_test_seal_restore()
@@ -63,13 +64,13 @@ func _test_mode_and_unlocks() -> void:
 		_expect(GameState.is_nursery_unlocked() == (day >= 5), "Nursery schedule")
 		_expect(GameState.is_feature_available(&"bench") == (day >= 6), "Bench schedule")
 		_expect(GameState.is_feature_available(&"shop") == (day >= 5), "Shop schedule")
-		_expect(GameState.is_feature_available(&"mutations") == (day >= 7), "Mutation schedule")
+		_expect(GameState.is_feature_available(&"mutations") == (day >= 6), "Mutation schedule")
 		_expect(GameState.troop.can_unlock_squad_slot() == (day >= 6), "Squad capacity schedule")
 		_expect(GameState.nursery.can_unlock_plot() == (day >= 8), "Plot capacity schedule")
-		_expect(GameState.is_feature_available(&"compost") == (day >= 8), "Compost schedule")
-		_expect(GameState.is_feature_available(&"full_shop") == (day >= 9), "Full Shop schedule")
-		_expect(GameState.is_feature_available(&"shop_reroll") == (day >= 9), "Shop reroll schedule")
-		_expect(GameState.is_feature_available(&"offer_locks") == (day >= 9), "Shop lock schedule")
+		_expect(GameState.is_feature_available(&"compost") == (day >= 7), "Compost schedule")
+		_expect(GameState.is_feature_available(&"full_shop") == (day >= 8), "Full Shop schedule")
+		_expect(GameState.is_feature_available(&"shop_reroll") == (day >= 8), "Shop reroll schedule")
+		_expect(GameState.is_feature_available(&"offer_locks") == (day >= 8), "Shop lock schedule")
 		_expect(not GameState.is_feature_available(&"full_seal_pool"), "Guided Run keeps introductory Seal choices")
 		_expect(GameState.is_seal_choice_day(day) == (day == 8), "Seal receiving Day %d" % day)
 		_expect(GameState.is_feature_available(&"seals") == (day >= 8), "Seals unlock on Day 8")
@@ -99,11 +100,11 @@ func _test_mode_and_unlocks() -> void:
 
 
 func _test_guided_biomass() -> void:
-	var budgets := [0, 4, 8, 4, 8, 11, 10, 11, 15, 0]
+	var budgets := [0, 4, 8, 4, 8, 16, 16, 21, 21, 0]
 	GameState.reset_run(true)
 	_expect(GameState.biomass.amount == 0, "Guided opening needs no paid actions")
 	for day in range(1, 11):
-		_expect(GuidedRun.biomass_budget_for_day(day) == budgets[day - 1], "Day %d funds its introductions plus 30 percent rounded up" % day)
+		_expect(GuidedRun.biomass_budget_for_day(day) == budgets[day - 1], "Day %d grants its scheduled preparation allowance" % day)
 		var target := int(budgets[day]) if day < 10 else 0
 		var specs := GuidedRun.specs_for_day(day)
 		for savings in [0, 1, target, target + 8]:
@@ -117,7 +118,7 @@ func _test_guided_biomass() -> void:
 		GameState.debug_advance_day()
 		saved += int(budgets[day])
 		_expect(GameState.biomass.amount == saved, "Skipped spending carries over alongside the next grant")
-	_expect(saved == 71, "Guided Run grants 71 total biomass for its introductions")
+	_expect(saved == 98, "Guided Run grants 98 total scheduled biomass")
 	GameState.reset_run(false)
 	_expect(GameState.biomass.amount == BiomassData.STARTING_AMOUNT, "Ordinary starting biomass is unchanged")
 	for day in range(1, 11):
@@ -141,29 +142,29 @@ func _test_guided_biomass() -> void:
 	_expect(GameState.nursery.apply_fertilizer_from_stock(0, 0), "Funded Quick Growth can be applied")
 	GameState.debug_advance_day()
 	_expect(GameState.try_unlock_squad_slot(), "Day-6 allowance covers Squad expansion")
+	_expect(GameState.try_buy_mutation(GuidedRun.THORNY, GuidedRun.THORNY.biomass_cost), "Day-6 allowance also covers Thorny")
+	_expect(GameState.nursery.apply_mutation_from_stock(0, 0), "Funded Thorny can be applied")
 	GameState.debug_advance_day()
 	for unit in GameState.nursery.harvest(0):
 		GameState.troop.try_add_unit(unit)
 	_expect(GameState.try_cocoon_for_pupation(starter, WeaponSchool.Id.SHIELD), "Day-7 allowance covers Shield")
-	_expect(GameState.try_buy_mutation(GuidedRun.THORNY, GuidedRun.THORNY.biomass_cost), "Day-7 allowance also covers Thorny")
-	_expect(GameState.nursery.apply_mutation_from_stock(0, 0), "Funded Thorny can be applied")
 	GameState.debug_advance_day()
 	_expect(GameState.try_unlock_plot(), "Day-8 allowance covers second Plot without requiring Compost")
 	_expect(GameState.pending_seal_choice and GameState.try_add_seal(GameState.ensure_seal_choice_offers()[0]), "Day-8 Seal remains free")
 	GameState.clear_pending_seal_choice()
+	var offers := GameState.nursery.spore_shop.offers
+	_expect(GameState.try_buy_fertilizer(offers[0].item as FertilizerData, offers[0].cost), "Day-8 allowance covers a full-Shop Fertilizer")
+	_expect(GameState.try_buy_mutation(offers[2].item as MutationData, offers[2].cost), "Day-8 allowance covers a full-Shop Mutation")
+	_expect(GameState.biomass.try_spend(GameState.nursery.current_shop_reroll_cost()), "Day-8 allowance covers one Shop reroll")
+	_expect(GameState.biomass.amount >= 4, "Full Shop purchases leave the rounded 30 percent margin")
 	GameState.debug_advance_day()
 	_expect(GameState.try_cocoon_for_pupation(starter, WeaponSchool.Id.SPEAR), "Day-9 allowance covers Spear")
-	var offers := GameState.nursery.spore_shop.offers
-	_expect(GameState.try_buy_fertilizer(offers[0].item as FertilizerData, offers[0].cost), "Day-9 allowance covers a full-Shop Fertilizer")
-	_expect(GameState.try_buy_mutation(offers[2].item as MutationData, offers[2].cost), "Day-9 allowance covers a full-Shop Mutation")
-	_expect(GameState.biomass.try_spend(GameState.nursery.current_shop_reroll_cost()), "Day-9 allowance covers one Shop reroll")
-	_expect(GameState.biomass.amount >= 4, "Full Shop purchases leave the rounded 30 percent margin")
 	GameState.debug_advance_day()
 	_expect(not GameState.pending_seal_choice and GameState.seals.owned.size() == 1, "Day 10 retains the only Seal without another choice")
 
 
 func _test_late_nursery_and_offers() -> void:
-	_prepare_day(8)
+	_prepare_day(7)
 	GameState.biomass.add(30)
 	_expect(GameState.try_plant_fresh_common(0), "Late first planting succeeds")
 	var plot: NurseryPlotData = GameState.nursery.plots[0]
@@ -177,7 +178,7 @@ func _test_late_nursery_and_offers() -> void:
 	_expect(GameState.nursery.spore_shop.offers[0] == null, "Refresh never replenishes a bought offer")
 	GameState.debug_advance_day()
 	_expect(not plot.can_harvest() and plot.remaining_days() == 1, "Unaccelerated first grow still needs its second Day")
-	_expect(GameState.nursery.spore_shop.offers[0] != null, "Day 9 fills the newly unlocked full Shop")
+	_expect(GameState.nursery.spore_shop.offers[0] != null, "Day 8 fills the newly unlocked full Shop")
 	GameState.debug_advance_day()
 	_expect(plot.can_harvest(), "Unaccelerated grow is ready after two victories")
 	var children := GameState.nursery.harvest(0)
@@ -202,15 +203,15 @@ func _test_late_nursery_and_offers() -> void:
 
 
 func _test_new_unlock_actions() -> void:
-	_prepare_day(7)
+	_prepare_day(6)
 	var parent: RosterUnitData = GameState.troop.squad[0]
-	_expect(not GameState.try_compost_unit(parent), "Compost rejects actions before Day 8")
+	_expect(not GameState.try_compost_unit(parent), "Compost rejects actions before Day 7")
 	GameState.debug_advance_day()
-	_expect(GameState.try_compost_unit(parent), "Day 8 allows Compost")
-	_expect(GameState.nursery.has_spore_in_stock(), "Day-8 Compost produces a lineage Spore")
+	_expect(GameState.try_compost_unit(parent), "Day 7 allows Compost")
+	_expect(GameState.nursery.has_spore_in_stock(), "Day-7 Compost produces a lineage Spore")
 	_expect(GameState.nursery.plant(0, GameState.nursery.first_spore_stock_index()), "The early lineage Spore can be planted")
 	GameState.debug_advance_day()
-	_expect(GameState.nursery.plots[0].can_harvest(), "Early lineage is ready before Battle 9")
+	_expect(GameState.nursery.plots[0].can_harvest(), "Early lineage is ready before Battle 8")
 
 	_prepare_day(3)
 	GameState.biomass.add(100)
@@ -281,33 +282,35 @@ func _test_new_unlock_actions() -> void:
 
 
 func _test_full_shop_and_restore() -> void:
-	_prepare_day(8)
+	_prepare_day(7)
 	GameState.biomass.add(200)
 	var shop := GameState.nursery.spore_shop
 	var intro_offers := shop.offers.duplicate()
-	_expect(not GameState.is_guided_shop_slot_available(1) and not GameState.is_guided_shop_slot_available(3), "Additional Shop slots remain hidden before Day 9")
+	_expect(not GameState.is_guided_shop_slot_available(1) and not GameState.is_guided_shop_slot_available(3), "Additional Shop slots remain hidden before Day 8")
 	GameState.nursery.reroll_unlocked_shop_offers()
 	_expect(shop.offers == intro_offers, "Early restricted offers cannot be rerolled into the full catalog")
 	GameState.debug_advance_day()
 	for slot in NurseryData.SHOP_SLOT_COUNT:
 		var offer := shop.offers[slot]
-		_expect(GameState.is_guided_shop_slot_available(slot) and offer != null, "Day 9 fills Shop slot %d" % slot)
+		_expect(GameState.is_guided_shop_slot_available(slot) and offer != null, "Day 8 fills Shop slot %d" % slot)
 		if offer != null:
 			var right_kind := offer.item is FertilizerData if slot < 2 else offer.item is MutationData
 			_expect(right_kind, "Full Shop preserves the normal slot type")
 	_expect(shop.offers[0].item != shop.offers[1].item, "Full Shop includes distinct normal Fertilizers beyond Quick Growth")
+	_expect(shop.offers[0].item == GuidedRun.QUICK_GROWTH, "The first full Shop guarantees Quick Growth")
+	_expect(shop.offers[0].cost == GuidedRun.QUICK_GROWTH.biomass_cost, "Scripted Quick Growth keeps its normal price")
 	_expect(shop.offers[2].item != shop.offers[3].item, "Full Shop includes distinct normal Mutations beyond Thorny")
 	var before := GameState.biomass.amount
 	var full_offers := shop.offers.duplicate()
 	GameState.ensure_guided_preparation_checkpoint()
-	shop.set_locked(0, true)
-	var purchase: ShopOffer = shop.offers[1]
-	_expect(GameState.try_buy_fertilizer(purchase.item as FertilizerData, SealModifiers.fertilizer_cost(purchase.cost)), "A full-catalog Fertilizer can be bought")
-	GameState.nursery.replace_shop_slot(1)
+	shop.set_locked(1, true)
+	var purchase: ShopOffer = shop.offers[0]
+	_expect(GameState.try_buy_fertilizer(purchase.item as FertilizerData, SealModifiers.fertilizer_cost(purchase.cost)), "The guaranteed Quick Growth can be bought")
+	GameState.nursery.replace_shop_slot(0)
 	var prepared_offers := shop.offers.duplicate()
 	GameState.nursery.ensure_shop_offers()
 	GameState.ensure_guided_preparation()
-	_expect(shop.offers == prepared_offers and shop.offers[1] == null, "Ensuring full Shop preserves offers, locks and a purchased empty slot")
+	_expect(shop.offers == prepared_offers and shop.offers[0] == null, "Ensuring full Shop preserves offers, locks and purchased Quick Growth's empty slot")
 	var prepared := BaseUndoSnapshot.new()
 	prepared.capture()
 	GameState.capture_guided_battle_checkpoint(GameState.make_upcoming_enemy_roster())
@@ -321,7 +324,7 @@ func _test_full_shop_and_restore() -> void:
 	_expect(prepared.matches_current_state(), "Battle retry restores exact full-Shop offers, Stock, locks, reroll count and balance")
 	_expect(GameState.restore_guided_preparation(), "Full-Shop preparation can be restored")
 	GameState.nursery.ensure_shop_offers()
-	_expect(shop.offers == full_offers and not shop.is_locked(0), "Preparation restore keeps the original rolled offers and undoes locks")
+	_expect(shop.offers == full_offers and not shop.is_locked(1), "Preparation restore keeps the original scripted draw and undoes locks")
 	_expect(GameState.biomass.amount == before and GameState.nursery.stock.slots.all(func(item: Resource) -> bool: return item == null), "Preparation restore refunds purchases and removes their Stock")
 	shop.set_locked(0, true)
 	var locked_offer := shop.offers[0]
@@ -333,6 +336,33 @@ func _test_full_shop_and_restore() -> void:
 	GameState.ensure_guided_preparation()
 	GameState.nursery.ensure_shop_offers()
 	_expect(shop.offers == final_offers, "Ensuring final-Day preparation never rerolls the full Shop")
+
+
+func _test_first_full_shop_quick_growth() -> void:
+	for draw_seed in range(16):
+		_prepare_day(7)
+		var shop := GameState.nursery.spore_shop
+		if draw_seed % 2 == 0:
+			var intro_offer: ShopOffer = shop.offers[0]
+			_expect(GameState.try_buy_fertilizer(intro_offer.item as FertilizerData, intro_offer.cost), "Introductory Quick Growth can be bought before the full Shop")
+			GameState.nursery.replace_shop_slot(0)
+		seed(draw_seed)
+		GameState.debug_advance_day()
+		var quick_growth_count := 0
+		for slot in NurseryData.SHOP_FERTILIZER_SLOT_COUNT:
+			if shop.offers[slot].item == GuidedRun.QUICK_GROWTH:
+				quick_growth_count += 1
+		_expect(quick_growth_count == 1, "First full draw includes exactly one Quick Growth for seed %d" % draw_seed)
+		var first_draw := shop.offers.duplicate()
+		GameState.nursery.ensure_shop_offers()
+		GameState.ensure_guided_preparation()
+		_expect(shop.offers == first_draw, "Base refresh keeps the scripted first draw")
+		if draw_seed % 2 == 0:
+			GameState.nursery.reroll_unlocked_shop_offers()
+		else:
+			GameState.debug_advance_day()
+		for slot in NurseryData.SHOP_FERTILIZER_SLOT_COUNT:
+			_expect(shop.offers[slot].item != GuidedRun.QUICK_GROWTH, "Later normal draws exclude the previous Quick Growth instead of scripting it again")
 
 
 func _test_battle_and_preparation_restore() -> void:
@@ -371,7 +401,7 @@ func _test_battle_and_preparation_restore() -> void:
 
 
 func _test_compost_and_lineage_restore() -> void:
-	_prepare_day(8)
+	_prepare_day(7)
 	GameState.biomass.add(40)
 	var parent: RosterUnitData = GameState.troop.squad[0]
 	parent.body_mutation = GuidedRun.THORNY

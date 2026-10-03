@@ -6,9 +6,9 @@ const LENGTH := 10
 const MAX_PLOT_COUNT := 2
 const SEAL_CHOICE_DAYS: Array[int] = [8]
 const FEATURE_DAYS := {
-	&"progression": 4, &"bench": 6, &"nursery": 5, &"shop": 5, &"mutations": 7,
-	&"squad_slots": 6, &"plot_slots": 8, &"compost": 8, &"seals": 8,
-	&"full_shop": 9, &"shop_reroll": 9, &"offer_locks": 9,
+	&"progression": 4, &"bench": 6, &"nursery": 5, &"shop": 5, &"mutations": 6,
+	&"squad_slots": 6, &"plot_slots": 8, &"compost": 7, &"seals": 8,
+	&"full_shop": 8, &"shop_reroll": 8, &"offer_locks": 8,
 }
 const _FEATURE_UNLOCK_PRESENTATION := {
 	&"progression": {
@@ -81,7 +81,7 @@ const BUDGETS: Array[Vector2i] = [
 ]
 
 
-## Preparation allowance for today's introductions, with a 30% margin rounded up.
+## Introduction costs plus 30% rounded up, with increased grants on Days 7 and 9.
 static func biomass_budget_for_day(day: int) -> int:
 	var cost := 0
 	match day:
@@ -92,13 +92,13 @@ static func biomass_budget_for_day(day: int) -> int:
 		5:
 			cost = BiomassData.COMMON_SPORE_COST + QUICK_GROWTH.biomass_cost
 		6:
-			cost = BiomassData.SQUAD_SLOT_UNLOCK_COST
+			cost = BiomassData.SQUAD_SLOT_UNLOCK_COST + THORNY.biomass_cost
 		7:
-			cost = WeaponSchool.COCOON_COST + THORNY.biomass_cost
-		8: # Compost and planting its lineage Spore are free.
-			cost = BiomassData.PLOT_UNLOCK_COST
-		9: # Spear, one Fertilizer, one Mutation, and one Shop reroll.
-			cost = WeaponSchool.COCOON_COST + QUICK_GROWTH.biomass_cost + THORNY.biomass_cost + BiomassData.reroll_price(1)
+			return 16
+		8: # Second Plot, one Fertilizer, one Mutation, and one Shop reroll.
+			cost = BiomassData.PLOT_UNLOCK_COST + QUICK_GROWTH.biomass_cost + THORNY.biomass_cost + BiomassData.reroll_price(1)
+		9:
+			return 21
 	return ceili(float(cost) * 1.3)
 
 

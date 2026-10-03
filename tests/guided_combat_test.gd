@@ -109,13 +109,13 @@ func _check_victory_continue() -> void:
 				_check_unlock_panel(5, {"nursery": "Nursery", "shop": "Shop · Quick Growth"})
 				_expect(_summary_label_count("Nursery unlocked") == 0, "Guided Nursery card replaces the legacy Nursery message")
 			5:
-				_check_unlock_panel(6, {"squad_slots": "Squad expansion", "bench": "Bench"})
+				_check_unlock_panel(6, {"squad_slots": "Squad expansion", "bench": "Bench", "mutations": "Thorny Mutation"})
 			6:
-				_check_unlock_panel(7, {"school_1": "Shield Training", "mutations": "Thorny Mutation"})
+				_check_unlock_panel(7, {"school_1": "Shield Training", "compost": "Compost"})
 			7:
-				_check_unlock_panel(8, {"compost": "Compost", "plot_slots": "Plot expansion", "seals": "Seals"})
+				_check_unlock_panel(8, {"plot_slots": "Plot expansion", "seals": "Seals", "full_shop": "Full Shop"})
 			8:
-				_check_unlock_panel(9, {"school_2": "Spear Training", "full_shop": "Full Shop"})
+				_check_unlock_panel(9, {"school_2": "Spear Training"})
 			9:
 				_check_unlock_panel(10, {})
 		get_tree().current_scene.get_node("%ContinueButton").pressed.emit()

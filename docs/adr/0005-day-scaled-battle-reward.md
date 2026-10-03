@@ -8,4 +8,4 @@ Combat used to grant biomass on each enemy kill from that type's authored `bioma
 
 ## Amendment — 2026-10-03
 
-Ordinary Runs cap the Day base at 25 biomass: `min(10 + 5 × (day − 1), 25)`. Days 1–3 retain bases of 10, 15, and 20; Days 4–10 use 25. The difficulty adjustment applies after the cap, giving payouts of 23–28 from Day 4 onward after rounding. This limits late-Run income growth while preserving Scout's reward differences. Guided allowances are unchanged.
+Ordinary Runs cap the Day base at 20 biomass: `min(10 + 5 × (day − 1), 20)`. Days 1 and 2 retain bases of 10 and 15; Days 3–10 use 20. The difficulty adjustment applies after the cap, giving payouts of 18–22 from Day 3 onward. This limits late-Run income growth while preserving Scout's reward differences. Guided allowances are unchanged.

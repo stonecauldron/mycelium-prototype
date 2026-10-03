@@ -6,8 +6,8 @@ const LENGTH := 10
 const MAX_PLOT_COUNT := 2
 const SEAL_CHOICE_DAYS: Array[int] = [8]
 const FEATURE_DAYS := {
-	&"progression": 4, &"bench": 5, &"nursery": 6, &"shop": 6, &"mutations": 7,
-	&"squad_slots": 5, &"plot_slots": 8, &"compost": 8, &"seals": 8,
+	&"progression": 4, &"bench": 6, &"nursery": 5, &"shop": 5, &"mutations": 7,
+	&"squad_slots": 6, &"plot_slots": 8, &"compost": 8, &"seals": 8,
 	&"full_shop": 9, &"shop_reroll": 9, &"offer_locks": 9,
 }
 const _FEATURE_UNLOCK_PRESENTATION := {
@@ -90,9 +90,9 @@ static func biomass_budget_for_day(day: int) -> int:
 		3: # Try Training on both Units.
 			cost = 2 * WeaponSchool.COCOON_COST
 		5:
-			cost = BiomassData.SQUAD_SLOT_UNLOCK_COST
-		6:
 			cost = BiomassData.COMMON_SPORE_COST + QUICK_GROWTH.biomass_cost
+		6:
+			cost = BiomassData.SQUAD_SLOT_UNLOCK_COST
 		7:
 			cost = WeaponSchool.COCOON_COST + THORNY.biomass_cost
 		8: # Compost and planting its lineage Spore are free.

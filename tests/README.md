@@ -18,7 +18,7 @@ Run the scenes sequentially. They temporarily exercise saved guided preferences 
 
 `guided_analytics_test` captures outgoing calls locally and verifies the guided start/exit-only contract, reached-Day reporting, and ordinary gameplay events.
 
-`guided_hints_test` checks arrows only on each feature's unlock Day, including Squad expansion on Day 5, Nursery/Quick Growth on Day 6, Shield/Thorny on Day 7, Compost/Plot expansion and the only Seal on Day 8, and Spear/full Shop on Day 9. It uses actual Training, Plot, Stock and lineage state, skips unaffordable or completed actions, and verifies read-only selection, history across retries, and no arrows after completion. It does not write saved preferences.
+`guided_hints_test` checks arrows only on each feature's unlock Day, including Nursery/Quick Growth on Day 5, Squad expansion/Bench on Day 6, Shield/Thorny on Day 7, Compost/Plot expansion and the only Seal on Day 8, and Spear/full Shop on Day 9. It uses actual Training, Plot, Stock and lineage state, skips unaffordable or completed actions, and verifies read-only selection, history across retries, and no arrows after completion. It does not write saved preferences.
 
 The balance samples use attainable prepared rosters; they do not simulate a player's complete economic Run. Pacing, understanding and formation readability still need playtesting.
 

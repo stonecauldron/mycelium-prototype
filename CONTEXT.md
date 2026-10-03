@@ -13,7 +13,7 @@ A single playthrough of Auto Shrooms, lasting up to 10 days in either mode.
 *Avoid*: campaign, session (when you mean the playthrough)
 
 **Guided Run**:
-An optional 10-Day Run that introduces systems through scheduled unlocks and restricted choices. Optional graphical arrows introduce only newly unlocked functionality on its unlock Day, using the player's actual state. They do not repeat missed introductions or routine actions and stop after completion. It starts with a fixed Sword Adult, makes a Child available before Day 2, and permits free Battle retries or restoring the current Day's preparation. Squad expansion and Bench open on Day 5; Nursery and Quick Growth on Day 6; Shield and Thorny on Day 7; Compost, a second Plot, and the only Seal choice on Day 8; and Spear and the full Shop on Day 9. The player’s Flag bearer stays hidden until the first Seal is confirmed. The first fresh guided grow retains its normal two-Day wait. Progress never requires tutorial actions; the pending Seal choice still requires selection before Battle. Winning Battle 10 opens Victory directly without a daily summary with the subtitle “Try a real run now!” The next-Run checkbox turns off after the first guided Run ends and after every guided victory, including replays. Players can check it again for another guided Run.
+An optional 10-Day Run that introduces systems through scheduled unlocks and restricted choices. Optional graphical arrows introduce only newly unlocked functionality on its unlock Day, using the player's actual state. They do not repeat missed introductions or routine actions and stop after completion. It starts with a fixed Sword Adult, makes a Child available before Day 2, and permits free Battle retries or restoring the current Day's preparation. Nursery and Quick Growth open on Day 5; Squad expansion and Bench on Day 6; Shield and Thorny on Day 7; Compost, a second Plot, and the only Seal choice on Day 8; and Spear and the full Shop on Day 9. The player’s Flag bearer stays hidden until the first Seal is confirmed. The first fresh guided grow retains its normal two-Day wait. Progress never requires tutorial actions; the pending Seal choice still requires selection before Battle. Winning Battle 10 opens Victory directly without a daily summary with the subtitle “Try a real run now!” The next-Run checkbox turns off after the first guided Run ends and after every guided victory, including replays. Players can check it again for another guided Run.
 
 **Day**:
 The primary unit of run progression. A day may or may not include a battle.
@@ -153,7 +153,7 @@ A fighting position in the Squad. Slots unlock in order from the flag. A locked 
 *Avoid*: troop slot (when you mean a Squad position)
 
 **Bench**:
-The units in the troop held out of the fighting lineup. Bench management is available from Day 5 in a guided Run and from the start in an ordinary Run. Bench positions are separate from Squad slots.
+The units in the troop held out of the fighting lineup. Bench management is available from Day 6 in a guided Run and from the start in an ordinary Run. Bench positions are separate from Squad slots.
 
 **Child**:
 A unit at the life stage before Evolution into an Adult.

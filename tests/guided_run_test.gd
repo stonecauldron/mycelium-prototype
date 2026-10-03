@@ -60,11 +60,11 @@ func _test_mode_and_unlocks() -> void:
 		_expect(GameState.is_school_available(WeaponSchool.Id.SHIELD) == (day >= 7), "Shield schedule")
 		_expect(GameState.is_school_available(WeaponSchool.Id.SPEAR) == (day >= 9), "Spear completes the school unlocks on Day 9")
 		_expect(GameState.is_feature_available(&"progression") == (day >= 4), "Progression schedule")
-		_expect(GameState.is_nursery_unlocked() == (day >= 6), "Nursery schedule")
-		_expect(GameState.is_feature_available(&"bench") == (day >= 5), "Bench schedule")
-		_expect(GameState.is_feature_available(&"shop") == (day >= 6), "Shop schedule")
+		_expect(GameState.is_nursery_unlocked() == (day >= 5), "Nursery schedule")
+		_expect(GameState.is_feature_available(&"bench") == (day >= 6), "Bench schedule")
+		_expect(GameState.is_feature_available(&"shop") == (day >= 5), "Shop schedule")
 		_expect(GameState.is_feature_available(&"mutations") == (day >= 7), "Mutation schedule")
-		_expect(GameState.troop.can_unlock_squad_slot() == (day >= 5), "Squad capacity schedule")
+		_expect(GameState.troop.can_unlock_squad_slot() == (day >= 6), "Squad capacity schedule")
 		_expect(GameState.nursery.can_unlock_plot() == (day >= 8), "Plot capacity schedule")
 		_expect(GameState.is_feature_available(&"compost") == (day >= 8), "Compost schedule")
 		_expect(GameState.is_feature_available(&"full_shop") == (day >= 9), "Full Shop schedule")
@@ -99,7 +99,7 @@ func _test_mode_and_unlocks() -> void:
 
 
 func _test_guided_biomass() -> void:
-	var budgets := [0, 4, 8, 4, 11, 8, 10, 11, 15, 0]
+	var budgets := [0, 4, 8, 4, 8, 11, 10, 11, 15, 0]
 	GameState.reset_run(true)
 	_expect(GameState.biomass.amount == 0, "Guided opening needs no paid actions")
 	for day in range(1, 11):
@@ -136,11 +136,11 @@ func _test_guided_biomass() -> void:
 	GameState.debug_advance_day()
 	_expect(GameState.try_cocoon_for_pupation(starter, WeaponSchool.Id.MACE), "Day-4 allowance covers Mace")
 	GameState.debug_advance_day()
-	_expect(GameState.try_unlock_squad_slot(), "Day-5 allowance covers Squad expansion")
-	GameState.debug_advance_day()
-	_expect(GameState.try_plant_fresh_common(0), "Day-6 allowance covers fresh planting")
-	_expect(GameState.try_buy_fertilizer(GuidedRun.QUICK_GROWTH, GuidedRun.QUICK_GROWTH.biomass_cost), "Day-6 allowance also covers Quick Growth")
+	_expect(GameState.try_plant_fresh_common(0), "Day-5 allowance covers fresh planting")
+	_expect(GameState.try_buy_fertilizer(GuidedRun.QUICK_GROWTH, GuidedRun.QUICK_GROWTH.biomass_cost), "Day-5 allowance also covers Quick Growth")
 	_expect(GameState.nursery.apply_fertilizer_from_stock(0, 0), "Funded Quick Growth can be applied")
+	GameState.debug_advance_day()
+	_expect(GameState.try_unlock_squad_slot(), "Day-6 allowance covers Squad expansion")
 	GameState.debug_advance_day()
 	for unit in GameState.nursery.harvest(0):
 		GameState.troop.try_add_unit(unit)
@@ -183,16 +183,16 @@ func _test_late_nursery_and_offers() -> void:
 	var children := GameState.nursery.harvest(0)
 	_expect(children.size() == 1 and not children[0].is_adult_stage(), "Harvest yields a Child")
 
-	_prepare_day(6)
+	_prepare_day(5)
 	GameState.biomass.add(30)
 	_expect(GameState.try_plant_fresh_common(0), "First Nursery-Day planting succeeds")
 	plot = GameState.nursery.plots[0]
 	_expect(plot.remaining_days() == 2, "First guided grow has its normal two-Day wait")
-	_expect(GameState.try_buy_fertilizer(GuidedRun.QUICK_GROWTH, GuidedRun.QUICK_GROWTH.biomass_cost), "Quick Growth can be bought on Day 6")
-	_expect(GameState.nursery.apply_fertilizer_from_stock(0, 0), "Day-6 Quick Growth can be applied")
+	_expect(GameState.try_buy_fertilizer(GuidedRun.QUICK_GROWTH, GuidedRun.QUICK_GROWTH.biomass_cost), "Quick Growth can be bought on Day 5")
+	_expect(GameState.nursery.apply_fertilizer_from_stock(0, 0), "Day-5 Quick Growth can be applied")
 	_expect(plot.remaining_days() == 1, "Quick Growth saves one Day on the first grow")
 	GameState.debug_advance_day()
-	_expect(plot.can_harvest(), "Quick Growth makes the first grow ready on Day 7")
+	_expect(plot.can_harvest(), "Quick Growth makes the first grow ready on Day 6")
 
 	GameState.reset_run(false)
 	GameState.debug_advance_day()
@@ -255,14 +255,14 @@ func _test_new_unlock_actions() -> void:
 	GameState.debug_advance_day()
 	_expect(not GameState.try_unlock_plot() and GameState.nursery.unlocked_plot_count == 2, "Two-Plot limit remains after more progression")
 
-	_prepare_day(4)
+	_prepare_day(5)
 	GameState.biomass.add(100)
 	before = GameState.biomass.amount
-	_expect(not GameState.try_unlock_squad_slot() and GameState.biomass.amount == before, "Squad expansion is unavailable before Day 5")
+	_expect(not GameState.try_unlock_squad_slot() and GameState.biomass.amount == before, "Squad expansion is unavailable before Day 6")
 	GameState.debug_advance_day()
 	before = GameState.biomass.amount
 	var squad_cost := GameState.troop.next_squad_unlock_cost()
-	_expect(GameState.try_unlock_squad_slot(), "Squad expansion unlocks on Day 5")
+	_expect(GameState.try_unlock_squad_slot(), "Squad expansion unlocks on Day 6")
 	_expect(GameState.biomass.amount == before - squad_cost, "Squad expansion charges its normal price")
 
 	_prepare_day(8)

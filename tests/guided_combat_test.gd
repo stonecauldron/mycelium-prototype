@@ -106,10 +106,10 @@ func _check_victory_continue() -> void:
 			3:
 				_check_unlock_panel(4, {"school_4": "Mace Training", "progression": "Daily progression"})
 			4:
-				_check_unlock_panel(5, {"squad_slots": "Squad expansion", "bench": "Bench"})
-			5:
-				_check_unlock_panel(6, {"nursery": "Nursery", "shop": "Shop · Quick Growth"})
+				_check_unlock_panel(5, {"nursery": "Nursery", "shop": "Shop · Quick Growth"})
 				_expect(_summary_label_count("Nursery unlocked") == 0, "Guided Nursery card replaces the legacy Nursery message")
+			5:
+				_check_unlock_panel(6, {"squad_slots": "Squad expansion", "bench": "Bench"})
 			6:
 				_check_unlock_panel(7, {"school_1": "Shield Training", "mutations": "Thorny Mutation"})
 			7:

@@ -55,8 +55,8 @@ func _test_opening_opportunities() -> void:
 	_expect(early_mace.get("target") == &"school" and early_mace.get("school") == WeaponSchool.Id.MACE and not early_mace.has("source"), "Day 4 points directly to the Mace cocoon")
 	_seen(early_mace)
 	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Day-4 unlocks finish without requiring an action")
-	_prepare_day(5)
-	_expect(GuidedRunHints.next_hint().is_empty(), "Day 5 stays quiet even when Mace Training was skipped")
+	_prepare_day(6)
+	_expect(GuidedRunHints.next_hint().is_empty(), "Day 6 stays quiet when Squad expansion is unnecessary, even if Mace was skipped")
 
 
 func _test_day_three_training_completion() -> void:
@@ -109,7 +109,7 @@ func _test_day_four_actions() -> void:
 
 
 func _test_nursery_opportunities() -> void:
-	_prepare_day(6)
+	_prepare_day(5)
 	var plant := GuidedRunHints.next_hint()
 	_expect(plant.get("target") == &"plot" and plant.get("tab") == &"nursery", "New Nursery points to an available Plot")
 	_expect(str(plant.get("id")) == "plant", "Empty Nursery offers the first fresh planting")
@@ -117,7 +117,7 @@ func _test_nursery_opportunities() -> void:
 	_expect(GuidedRunHints.next_hint().is_empty(), "No fresh planting suggestion when its fee is unaffordable")
 	GameState.biomass.add(40)
 	_expect(GameState.try_plant_fresh_common(0), "First fresh grow can be planted")
-	_expect(_hint_id() == "quick_growth", "Day 6 introduces Quick Growth after planting")
+	_expect(_hint_id() == "quick_growth", "Day 5 introduces Quick Growth after planting")
 	_expect(GameState.nursery.plots[0].remaining_days() == 2, "The first grow makes Quick Growth useful")
 	_seen(GuidedRunHints.next_hint())
 	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Nursery-Day opportunities add no recurring prompts")
@@ -177,11 +177,11 @@ func _test_later_unlocks() -> void:
 	GuidedRunHints.record_shield_hover()
 	_expect(before_hover.matches_current_state(), "Shield hover changes no gameplay state")
 	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Day-7 unlocks leave no recurring Battle or Nursery hint")
-	_prepare_day(5)
+	_prepare_day(6)
 	while GameState.troop.first_empty_unlocked_squad() >= 0:
 		GameState.troop.try_add_unit(GuidedRun.make_starter(false))
 	GameState.troop.try_add_unit(GuidedRun.make_starter(false))
-	_expect(_hint_id() == "squad_slot", "Day 5 introduces Squad expansion when another Unit needs room")
+	_expect(_hint_id() == "squad_slot", "Day 6 introduces Squad expansion when another Unit needs room")
 	_seen(GuidedRunHints.next_hint())
 	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Squad expansion leaves no recurring guidance")
 	_prepare_day(8)
@@ -258,7 +258,7 @@ func _test_final_unlocks() -> void:
 
 
 func _test_lineage_prerequisites() -> void:
-	_prepare_day(6)
+	_prepare_day(5)
 	var fallen_parent: RosterUnitData = GameState.troop.squad[0]
 	GameState.nursery.add_death_spore(fallen_parent)
 	GameState.troop.remove_unit(fallen_parent)

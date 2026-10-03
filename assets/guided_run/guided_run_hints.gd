@@ -27,12 +27,12 @@ static func next_hint() -> Dictionary:
 				mace["action_required"] = true
 			candidates.append(mace)
 		5:
-			candidates.append(_capacity_hint())
-		6:
 			candidates.append(_harvest_hint())
 			candidates.append(_lineage_hint())
 			candidates.append(_plant_hint())
 			candidates.append(_grow_item_hint(false))
+		6:
+			candidates.append(_capacity_hint())
 		7:
 			candidates.append(_grow_item_hint(true))
 			candidates.append(_harvested_shield_hint())

@@ -53,8 +53,8 @@ Curated encounters should support multiple viable preparations. An unlocked tool
 - Use Bow as the proposed first Child Training, replacing Shield in the opening, to introduce melee versus ranged roles and a practical reason to change Formation.
 - Introduce the daily progression bar before Battle 4.
 - Introduce Mace Training before Battle 4. Battle 5 remains elite and includes a Log enemy.
-- Unlock the Nursery after winning the Battle on Day 5.
-- Unlock Squad expansion and Bench on Day 5; Nursery and Quick Growth on Day 6; Shield Training and Thorny on Day 7; Compost and the second Plot on Day 8; Spear and the full Shop (including paid rerolls and offer locks) on Day 9. Guided Runs allow two total Plots. First fresh Common grows take two Days, with Quick Growth available to shorten the wait.
+- Unlock the Nursery after winning the Battle on Day 4, before Battle 5.
+- Unlock Nursery and Quick Growth on Day 5; Squad expansion and Bench on Day 6; Shield Training and Thorny on Day 7; Compost and the second Plot on Day 8; Spear and the full Shop (including paid rerolls and offer locks) on Day 9. Guided Runs allow two total Plots. First fresh Common grows take two Days, with Quick Growth available to shorten the wait.
 - Introduce the only Seal choice after winning Battle 7, before Battle 8, using the three introductory offers. Selection is required before Battle 8; hiding the chooser lets players inspect and manage the War Chamber and Nursery. Mark Day 8 with a graphical Seal icon and preserve the existing shared Seal inspection tooltip.
 - Winning Battle 10 completes the guided Run and opens Victory directly, without a daily summary, with the subtitle **Try a real run now!**.
 - Let the player choose a guided or ordinary Run when starting a New Run. The guided option starts checked and becomes unchecked after the first guided Run ends; it remains available to choose again.
@@ -77,7 +77,7 @@ Potential implementation touchpoints are [training confirmation](../../assets/ba
 
 ## Guided Run unlock schedule
 
-Introduce combat roles, Formation, Training, Squad expansion, and Bench on Days 1–5; Nursery, Compost, lineage, and the full Shop on Days 6–9, with the only Seal choice on Day 8. Unlocked features stay available through the final Battle. Squad rearrangement is available from the start, and no optional action is required to demonstrate a skill.
+Introduce combat roles, Formation, Training, and the Nursery on Days 1–5; Squad expansion, Bench, Compost, lineage, and the full Shop on Days 6–9, with the only Seal choice on Day 8. Unlocked features stay available through the final Battle. Squad rearrangement is available from the start, and no optional action is required to demonstrate a skill.
 
 Each weapon-school Cocoon keeps its fixed background socket throughout the Run. Reserve space for locked schools while hiding their Cocoons and controls, so the visible schools do not recenter between sockets as more unlock.
 
@@ -87,8 +87,8 @@ Each weapon-school Cocoon keeps its fixed background socket throughout the Run. 
 | Before Battle 2 | Bow school and starter Child | Reveal the reserved Child and Bow Training. The existing Training preview shows ranged attacks, the 3 biomass cost, and the selected Unit's actual wait. Any eligible Unit can use the school; the player can also leave it unused. A Child trained now returns before Battle 3. |
 | Before Battle 3 | Sword school; melee/ranged Formation choices | Make the familiar Sword school's Training option available. Players with melee and ranged Units can explore their positioning and observe the Battle. They may keep their positions, choose any legal Training, or start Battle immediately. |
 | Before Battle 4 | Daily progression bar and Mace school | Show completed days, the Day-4 marker, and the Day-5 elite skull with its preview. Reveal Mace Training with the actual recipe for the selected Unit. Neither unlock depends on earlier Training or Formation choices. |
-| Before Battle 5 | Squad expansion; Bench; Log elite | Reveal Bench management and allow purchasing additional Squad slots at normal prices. Fight the first elite Log encounter; victory unlocks the Nursery regardless of preparation choices. |
-| Before Battle 6 | Nursery with one Plot; Quick Growth Shop offer | Reveal Nursery planting/harvesting. A fresh Common grow takes two Days, including the first planting. Quick Growth can reduce its wait by one Day. These actions remain optional. |
+| Before Battle 5 | Nursery with one Plot; Quick Growth Shop offer; Log elite | Reveal Nursery planting/harvesting. A fresh Common grow takes two Days, including the first planting. Quick Growth can reduce its wait by one Day. These actions remain optional. Fight the first elite Log encounter. |
+| Before Battle 6 | Squad expansion; Bench | Reveal Bench management and allow purchasing additional Squad slots at normal prices, regardless of Nursery use. |
 | Before Battle 7 | Mutation offer and Shield school | Add the guaranteed Thorny offer and reveal Shield Training. Preview actual effects and valid targets without assuming the player has planted or harvested. |
 | Before Battle 8 | Only Seal choice; Compost and second Plot purchase | Offer melee damage, ranged damage, or health. Hide the chooser to manage the Base before confirming any offer. Reveal Compost and purchase of a second Plot at ordinary prices. Adults can yield lineage spores; lineage grows retain their normal one-Day duration. Two total Plots is the guided cap. |
 | Before Battle 9 | Spear school; full Shop | All weapon-school Cocoons are now available. Open all four Shop slots with normal Fertilizer/Mutation catalogs, paid rerolls, and offer locks. |
@@ -98,13 +98,13 @@ Use the existing Unit names, portraits, and result presentations to connect real
 
 ### Daily summary unlock highlights
 
-After a guided victory, highlight the systems newly available for the next preparation Day with their existing icons and short names under **Unlocked for Day N**. Derive these rows from the same school and feature availability rules used by the Base. For example, the Day-4 victory highlights Squad expansion and Bench for Day 5; Day 5 highlights Nursery and Quick Growth for Day 6; Day 7 highlights the Seal choice alongside Compost and Plot expansion for Day 8. The Squad expansion and Bench messages use only their labels, without icons or reserved icon space. These are result labels, without tutorial explanations, tooltips, or extra actions.
+After a guided victory, highlight the systems newly available for the next preparation Day with their existing icons and short names under **Unlocked for Day N**. Derive these rows from the same school and feature availability rules used by the Base. For example, the Day-4 victory highlights Nursery and Quick Growth for Day 5; Day 5 highlights Squad expansion and Bench for Day 6; Day 7 highlights the Seal choice alongside Compost and Plot expansion for Day 8. The Squad expansion and Bench messages use only their labels, without icons or reserved icon space. These are result labels, without tutorial explanations, tooltips, or extra actions.
 
 Place the unlock heading and icon/name rows directly on the summary paper above the biomass amount, with dark ink text and no separate background panel.
 
 Omit the highlight on Days without new systems, failed Battles, and the final victory. Child arrivals, growth, and lineage results remain actual event rows rather than scheduled unlock claims. Consume the highlight with the existing summary feed so it cannot survive a retry or appear twice. Ordinary Runs retain their existing Nursery-unlocked message.
 
-The Day-3 result highlights Mace and progression; Day 4 highlights Squad expansion and Bench; Day 5 highlights Nursery and Quick Growth; Day 6 highlights Shield and Thorny; Day 7 highlights Compost, Plot expansion, and Seals; Day 8 highlights Spear and Full Shop. Day 9 has no unlock highlight. Full Shop includes catalogs, rerolls, and locks. The final Day-10 victory skips the daily summary entirely.
+The Day-3 result highlights Mace and progression; Day 4 highlights Nursery and Quick Growth; Day 5 highlights Squad expansion and Bench; Day 6 highlights Shield and Thorny; Day 7 highlights Compost, Plot expansion, and Seals; Day 8 highlights Spear and Full Shop. Day 9 has no unlock highlight. Full Shop includes catalogs, rerolls, and locks. The final Day-10 victory skips the daily summary entirely.
 
 Keep the result paper within the screen beside the combat recap. Long result lists scroll while the normal Continue action remains visible. The biomass total belongs to its result row and scrolls/clips with it after the gain animation finishes or is skipped; scrolling during the animation settles the total into that row.
 
@@ -122,8 +122,8 @@ Follow the existing unlock schedule when choosing daily opportunities:
 | 2 | Introduce Bow Training for an eligible Unit. |
 | 3 | Introduce Sword Training for an eligible Unit. Dismiss the Day's guidance after the player successfully trains two distinct Units during Day 3; repeat Training of the same Unit counts once. This dismissal survives retries and resets with a new Run. |
 | 4 | Point at the Day-5 elite skull until it is clicked or activated, then point directly at the Mace cocoon until one Unit successfully trains with Mace, without an intermediate source-Unit arrow. Hovering or elapsed time does not dismiss either destination arrow. |
-| 5 | Introduce affordable Squad expansion when more room is needed. The Bench becomes visible the same Day. |
-| 6 | Introduce Nursery operations using actual Plot and Stock state, then Quick Growth for a compatible grow. |
+| 5 | Introduce Nursery operations using actual Plot and Stock state, then Quick Growth for a compatible grow. |
+| 6 | Introduce affordable Squad expansion when more room is needed. The Bench becomes visible the same Day. |
 | 7 | Introduce Thorny for a compatible Plot. Shield guidance points only to a Unit from the latest Day-7 harvest that is still in the Troop and eligible for Shield Training, then to the Shield cocoon. Without such a harvest, show no Shield Unit arrow; never substitute a starter or older Unit. Hovering the Shield cocoon immediately dismisses Shield guidance, including its source-Unit arrow; no Training is required. |
 | 8 | Introduce the only Seal choice while it is pending. After confirmation, point directly at the unlocked Compost bin without a source-Unit arrow, then introduce affordable second-Plot expansion. Hovering the Compost bin immediately dismisses its guidance; no Compost action is required. |
 | 9 | Point directly at the unlocked Spear cocoon without a source-Unit arrow, then introduce compatible full-Shop offers and an available paid Shop reroll. Hovering the Spear cocoon immediately dismisses Spear guidance; no Training is required. |
@@ -201,17 +201,17 @@ Tune the encounter through playtests with multiple preparations, including viabl
 
 ### Nursery availability, offers, and capacity
 
-After the fifth victory, the Nursery tab becomes available. Its appearance and an optional Day-6 graphical arrow expose the new choice without a text prompt. Entering it, planting, and harvesting are optional. Later Days do not repeat Nursery-operation arrows. Its scheduled Shop and Mutation unlocks happen on time even if the player has never visited the tab.
+After the fourth victory, the Nursery tab becomes available. Its appearance and an optional Day-5 graphical arrow expose the new choice without a text prompt. Entering it, planting, and harvesting are optional. Later Days do not repeat Nursery-operation arrows. Its scheduled Shop and Mutation unlocks happen on time even if the player has never visited the tab.
 
-Offer Quick Growth from Day 6 and Thorny from Day 7, guaranteeing these introductory offers through Day 8. On Day 9, open the normal four-slot Shop and full Fertilizer/Mutation catalogs with paid rerolls and offer locks. Generate the daily roll once, preserve locked offers during rerolls, and keep purchases empty through UI refreshes and retries. Quick Growth and Thorny remain eligible in the normal pools, but are no longer guaranteed. Purchasing an item may retire its graphical suggestion, but never unlocks another category or advances the Day. Support direct Shop-to-Plot use and the existing Stock route. Stock appears whenever it contains an item, including an earlier lineage spore from a fallen Adult; hiding future features must not hide possessions the player already has. Before the Nursery opens, a Stock button in the War Chamber exposes existing spore inspection in a read-only popup. It does not permit planting, selling, or dragging items, and does not unlock the Nursery early.
+Offer Quick Growth from Day 5 and Thorny from Day 7, guaranteeing these introductory offers through Day 8. On Day 9, open the normal four-slot Shop and full Fertilizer/Mutation catalogs with paid rerolls and offer locks. Generate the daily roll once, preserve locked offers during rerolls, and keep purchases empty through UI refreshes and retries. Quick Growth and Thorny remain eligible in the normal pools, but are no longer guaranteed. Purchasing an item may retire its graphical suggestion, but never unlocks another category or advances the Day. Support direct Shop-to-Plot use and the existing Stock route. Stock appears whenever it contains an item, including an earlier lineage spore from a fallen Adult; hiding future features must not hide possessions the player already has. Before the Nursery opens, a Stock button in the War Chamber exposes existing spore inspection in a read-only popup. It does not permit planting, selling, or dragging items, and does not unlock the Nursery early.
 
 Use real timing and application rules in previews. Every fresh Common grow in a guided Run normally takes two Days, including the first planting. Ordinary Runs retain their first-grow reduction to one Day; lineage spores retain their authored duration. Quick Growth changes Remaining Time, not Growth Time, following ADR-0007: it reduces the first grow to one Day, or can turn a grow with one Day remaining READY immediately. Thorny can be applied to an empty or growing Plot; a READY Plot retains its normal restrictions.
 
-Squad slot purchases and Bench management become available on Day 5; clicks and drops require both the unlock and a visible Bench. Hidden Bench slots reject drops, while Squad rearrangement remains available. The second Plot purchase appears with Compost on Day 8. Shield is available from Day 7 and Spear from Day 9. After buying the second Plot, hide and reject further Plot purchases without spending biomass. Ordinary Runs retain four total Plots and immediate Bench management.
+Squad slot purchases and Bench management become available on Day 6; clicks and drops require both the unlock and a visible Bench. Hidden Bench slots reject drops, while Squad rearrangement remains available. The second Plot purchase appears with Compost on Day 8. Shield is available from Day 7 and Spear from Day 9. After buying the second Plot, hide and reject further Plot purchases without spending biomass. Ordinary Runs retain four total Plots and immediate Bench management.
 
 Use ordinary costs, spending, and affordability. Do not reserve biomass for a required tutorial purchase, force a refund, or prevent legal spending to reserve a later purchase. The player can postpone a purchase or use Change preparation to revisit the current Day's choices. Balance should provide meaningful opportunities to try available tools without assuming every offer is bought.
 
-The guided catalog introduces Bow on Day 2, Sword on Day 3, Mace on Day 4, Squad expansion/Bench on Day 5, Nursery/Quick Growth on Day 6, Thorny/Shield on Day 7, Compost/Plot expansion and the only Seal on Day 8, and Spear/full Shop on Day 9. Scout and Seal rerolls remain hidden. The pending Seal choice follows the explicit selection requirement above.
+The guided catalog introduces Bow on Day 2, Sword on Day 3, Mace on Day 4, Nursery/Quick Growth on Day 5, Squad expansion/Bench on Day 6, Thorny/Shield on Day 7, Compost/Plot expansion and the only Seal on Day 8, and Spear/full Shop on Day 9. Scout and Seal rerolls remain hidden. The pending Seal choice follows the explicit selection requirement above.
 
 ### Guided biomass allowances
 
@@ -223,8 +223,8 @@ Use the actual normal action prices to grant each preparation Day’s introducti
 | 2 | One Bow Training | 3 | 4 |
 | 3 | Two Trainings | 6 | 8 |
 | 4 | One Mace Training; progression inspection is free | 3 | 4 |
-| 5 | One Squad slot; Bench is free | 8 | 11 |
-| 6 | Fresh planting and Quick Growth | 6 | 8 |
+| 5 | Fresh planting and Quick Growth | 6 | 8 |
+| 6 | One Squad slot; Bench is free | 8 | 11 |
 | 7 | Shield Training and Thorny | 7 | 10 |
 | 8 | Second Plot; Seal choice, Compost, and lineage planting are free | 8 | 11 |
 | 9 | Spear Training, one Fertilizer, one Mutation, and one Shop reroll; offer locking is free | 11 | 15 |
@@ -263,8 +263,8 @@ These examples verify that the unlocked systems can produce visible results with
 | Optional choice | Result under the existing timing rules |
 | --- | --- |
 | Train the starter Child in Bow before Battle 2 | Bow Adult available before Battle 3. |
-| First planting before Battle 6 without Quick Growth; harvest and train before Battle 8 | New Adult available before Battle 9. |
-| First planting plus Quick Growth before Battle 6; harvest and train before Battle 7 | New Adult available before Battle 8. |
+| First planting before Battle 5 without Quick Growth; harvest and train before Battle 7 | New Adult available before Battle 8. |
+| First planting plus Quick Growth before Battle 5; harvest and train before Battle 6 | New Adult available before Battle 7. |
 | Plant and mutate a normal two-day grow before Battle 8; use Quick Growth at one day remaining before Battle 9; harvest and train | Mutated Adult available before Battle 10. |
 | Compost an Adult and plant its spore before Battle 8; harvest and train before Battle 9 | Descendant Adult available before Battle 10. |
 | Plant a fresh grow and apply Thorny before Battle 7; apply Quick Growth and harvest/train before Battle 8; Compost the resulting Adult and plant its spore before Battle 9 | Mutated lineage Child can be harvested before Battle 10; it may fight the final encounter as a Child. |
@@ -345,16 +345,16 @@ Exclude guided Runs from ordinary Run/Day progression, combat, retry, resource, 
 
 Before release, verify the schedule and divergent player choices:
 
-- No new onboarding text tooltips, hint panels, or Guidance button appear. Skip Bow Training and Formation changes, then win: the progression bar still appears before Battle 4, Mace before Battle 4, and the Nursery after the Day-5 victory. No tutorial action gates normal controls.
+- No new onboarding text tooltips, hint panels, or Guidance button appear. Skip Bow Training and Formation changes, then win: the progression bar still appears before Battle 4, Mace before Battle 4, and the Nursery after the Day-4 victory. No tutorial action gates normal controls.
 - Follow and ignore arrows on the scheduled introductory Days through Day 10. Check actual source/destination targets, missing Units, completed or unchanged Training, purchased offers, occupied/READY Plots, and insufficient biomass. No arrow points at an unavailable action or changes normal eligibility. Verify skipped introductions never replay on a later Day.
-- Verify there are no arrows after completion or recurring reminders for previously introduced actions. Day 6 introduces Quick Growth after planting; Day 8 introduces the Seal, Compost, and Plot expansion; Day 9 introduces Spear/full Shop; Day 10 adds no new introduction. Legacy coaching remains suppressed.
+- Verify there are no arrows after completion or recurring reminders for previously introduced actions. Day 5 introduces Quick Growth after planting; Day 8 introduces the Seal, Compost, and Plot expansion; Day 9 introduces Spear/full Shop; Day 10 adds no new introduction. Legacy coaching remains suppressed.
 - On Day 4, the progression arrow targets the elite skull and retires on its activation; the Mace arrow retires after one successful Mace Training, even if that Training happened before inspecting the skull. Hover/time, other schools, failed Training, or non-elite clicks do not complete these introductions. Other-tab hints point at the correct visible tab button and wait for a voluntary tab change. Modal dialogs, the Seal chooser, Stock inspection, active drags, pause, reveals, and camera/scene transitions hide the arrow; dismissal restores only a still-relevant target. Retried Battles do not reset seen inspection hints.
 - Training an Adult or discovering a combo before Day 5 remains legal within the available schools. Every preview shows the actual result, including oldest-Training replacement and actual wait.
 - Never visit the Nursery: Shop and Mutation offers still become available on Days 7 and 8. A READY grow, an unused offer, or a benched Unit never blocks an otherwise eligible Battle.
-- Squad expansion rejects purchases before Day 5, Bench management before Day 5, and Plot expansion before Day 8. Purchases use normal prices; guided Plots cap at two. Shield appears alongside Thorny on Day 7, and Spear completes the schools on Day 9.
+- Squad expansion rejects purchases before Day 6, Bench management before Day 6, and Plot expansion before Day 8. Purchases use normal prices; guided Plots cap at two. Shield appears alongside Thorny on Day 7, and Spear completes the schools on Day 9.
 - Day 9 fills all four Shop slots from the normal catalogs. Paid rerolls retain locked offers; refreshes and retries preserve purchases, rolled items, prices, and locks. Day 8 offers the three introductory Seals without Seal reroll.
-- Verify the optional timing examples. A first fresh grow planted before Battle 8 is READY before Battle 10 without Quick Growth, or before Battle 9 with Quick Growth. A Day-6 first planting follows the same two-Day duration. Ordinary first planting still takes one Day, and lineage spores retain normal timing.
-- An Adult lost during a won Battle before Day 5 leaves a visible Stock button during the next preparation. The existing spore tooltip works in its read-only popup; dragging and planting remain unavailable until the Nursery opens. The owned item remains unchanged.
+- Verify the optional timing examples. A first fresh grow planted before Battle 8 is READY before Battle 10 without Quick Growth, or before Battle 9 with Quick Growth. A Day-5 first planting follows the same two-Day duration. Ordinary first planting still takes one Day, and lineage spores retain normal timing.
+- An Adult lost during a won Battle before Day 4 leaves a visible Stock button during the next preparation. The existing spore tooltip works in its read-only popup; dragging and planting remain unavailable until the Nursery opens. The owned item remains unchanged.
 - A lineage path consumes the chosen Stock spore once, uses its real Growth Time, preserves inherited Trainings and Mutations, and previews any Training replacement correctly. Compost preview and execution agree on payout and removal. Keeping every Adult and never growing a descendant remains valid through final victory.
 - The optional Bow trained before Battle 2 returns before Battle 3. A Squad-slot swap changes its actual combat spawn position. Compare front and rear arrangements with matched Stats/enemies to assess visibility despite skirmishing; neither arrangement gates progress.
 - If an Adult still has only Sword Training, adding Mace produces Warhammer instantly without increasing Stats. Validate the authored Log across expected Stat variation and viable preparations without Mace; no exact recipe is required to advance.
@@ -376,7 +376,7 @@ Before release, verify the schedule and divergent player choices:
 - Which part of Training causes the most confusion: starting it, selecting a school, timing, Stat gains, combos, or replacement?
 - Are players confused by controls, vocabulary, choices, or battle causality?
 - Does Bow positioning produce a clear enough combat difference, and does making Mace available on Day 4 give players room to explore basic roles without restricting earlier combos?
-- Does Day 6 leave enough room to explore planting and Quick Growth together? Observe late and skipped use as well.
+- Does Day 5 leave enough room to explore planting and Quick Growth alongside the first elite Battle? Observe late and skipped use as well.
 - Is Thorny's combat effect easy enough to notice to serve as the first Mutation, or does it need clearer hit feedback?
 - Does introducing the Seal alongside Compost and Plot expansion on Day 8 leave enough room for an informed choice? Does hiding the chooser help players inspect their troop without losing their place?
 - Can players understand inheritance through the preview and their chosen lineage experiments, without a prescribed second Compost cycle?

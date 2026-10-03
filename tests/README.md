@@ -21,3 +21,5 @@ Run the scenes sequentially. They temporarily exercise saved guided preferences 
 `guided_hints_test` checks arrows only on each feature's unlock Day, with none from Day 12 onward, including pending Seals and empty Squads. It uses actual Training, Plot, Stock and lineage state, skips unaffordable or completed actions, and verifies read-only selection and presentation history across retries. It does not write saved preferences.
 
 The balance samples use attainable prepared rosters; they do not simulate a player's complete economic Run. Pacing, understanding and formation readability still need playtesting.
+
+Run `godot --headless --path . res://tests/nursery_fertilizer_test.tscn` for Nursery Fertilizer regression checks. It verifies that wait-changing Fertilizers apply to empty or growing Plots but reject harvestable Plots through direct, Stock, Shop, and drag eligibility paths without consuming items or Biomass. It also checks natural, accelerated, and legacy READY state, and preserves eligibility for other Fertilizers and Fungicide.

@@ -19,6 +19,7 @@ const _COPY_BY_REASON := {
 	ActionReasons.UNIT_CAPACITY_FULL: "No room to harvest.\nFree a Troop or Bench slot in the War Chamber.",
 	ActionReasons.MUTATION_CAPACITY_FULL: "Mutation capacity full",
 	ActionReasons.FERTILIZER_CAPACITY_FULL: "Fertilizer capacity full.",
+	ActionReasons.PLOT_STATE_REJECTS_FERTILIZER: "This fertilizer cannot be used at this growth stage.",
 	ActionReasons.NOT_ENOUGH_BIOMASS: "Not enough Biomass.",
 }
 

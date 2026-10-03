@@ -41,6 +41,11 @@ func check_fertilizer_application(fertilizer: FertilizerData = null) -> ActionDe
 		if state != State.GROWING and state != State.READY:
 			return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_FERTILIZER)
 		return ActionDecision.accept()
+	if state == State.READY and fertilizer != null and (
+		fertilizer.growth_bonus != 0 or fertilizer.force_ready
+		or fertilizer.behavior == FertilizerData.Behavior.SLOW_STEADY
+	):
+		return ActionDecision.reject(ActionReasons.PLOT_STATE_REJECTS_FERTILIZER)
 	if fertilizer_stack_count() >= SealModifiers.max_fertilizer_stacks():
 		return ActionDecision.reject(ActionReasons.FERTILIZER_CAPACITY_FULL)
 	return ActionDecision.accept()
@@ -145,7 +150,7 @@ func apply_fertilizer(fertilizer: FertilizerData) -> bool:
 		return false
 	if fertilizer.behavior == FertilizerData.Behavior.FUNGICIDE:
 		return _apply_fungicide(fertilizer)
-	if not can_apply_fertilizer():
+	if not check_fertilizer_application(fertilizer).allowed:
 		return false
 	_discard_fungicide_markers()
 	applied_fertilizers.append(fertilizer)

@@ -201,6 +201,12 @@ func _prepare_harvest(yield_count: int, free_slots: int) -> void:
 	GameState.base_undo.clear()
 	await _wait(0.08)
 
+func _latest_hatch() -> UnitEmergence:
+	if _nursery._hatch_reveals.is_empty():
+		return null
+	return _nursery._hatch_reveals.back()
+
+
 func _count() -> int:
 	var count := GameState.troop.get_squad_roster().size()
 	for unit in GameState.troop.bench:
@@ -213,7 +219,7 @@ func _harvest(yield_count: int, free_slots: int) -> void:
 	var before := _count()
 	var retained := mini(yield_count, free_slots)
 	_nursery._tiles[0].plot_pressed.emit(_nursery._tiles[0])
-	var effect := _nursery._hatch_reveal
+	var effect := _latest_hatch()
 	_nursery._tiles[0].plot_pressed.emit(_nursery._tiles[0])
 	_check(_count() == before + retained, "harvest yield %d capacity %d commits once" % [yield_count, free_slots])
 	_check((GameState.nursery.plots[0] as NurseryPlotData).is_empty() == (free_slots > 0), "full Troop preserves ready egg; successful harvest clears it")
@@ -267,7 +273,7 @@ func _harvest(yield_count: int, free_slots: int) -> void:
 	if not finished.is_empty():
 		for bounds: Rect2 in finished.bounds:
 			_check(bounds.position.x > get_viewport().get_visible_rect().end.x, "whole painted hatchling leaves screen")
-	_check(_nursery._hatch_reveal == null and _nursery._hatch_toasts.size() == retained, "finished harvest shows only retained result cards")
+	_check(_nursery._hatch_reveals.is_empty() and _nursery._hatch_toasts.size() == retained, "finished harvest shows only retained result cards")
 	for card in _nursery._hatch_toasts:
 		var bounds := card.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, card.size)
 		_check(get_viewport().get_visible_rect().grow(1).encloses(bounds), "harvest result card fits viewport")
@@ -277,7 +283,7 @@ func _interruptions() -> void:
 	await _prepare_harvest(1, 7)
 	_nursery._tiles[0].plot_pressed.emit(_nursery._tiles[0])
 	await _wait(0.4)
-	var effect := _nursery._hatch_reveal
+	var effect := _latest_hatch()
 	(_base.get_node("%UndoButton") as Button).pressed.emit()
 	await _wait(0.35)
 	_check(not is_instance_valid(effect) and _count() == 1 and (GameState.nursery.plots[0] as NurseryPlotData).can_harvest(), "Undo cancels reveal and restores committed harvest")
@@ -286,16 +292,16 @@ func _interruptions() -> void:
 	await _wait(0.4)
 	_base._select_tab(_base.TabId.COLONY, true)
 	await _wait(1.1)
-	_check(_nursery._hatch_reveal == null and _nursery._hatch_toasts.is_empty() and _count() == 2, "tab departure cancels presentation without losing harvest")
+	_check(_nursery._hatch_reveals.is_empty() and _nursery._hatch_toasts.is_empty() and _count() == 2, "tab departure cancels presentation without losing harvest")
 	await _prepare_harvest(1, 7)
 	_nursery._tiles[0].plot_pressed.emit(_nursery._tiles[0])
 	await _wait(0.4)
-	effect = _nursery._hatch_reveal
+	effect = _latest_hatch()
 	var owned_sounds := effect.find_children("*", "AudioStreamPlayer", false, false)
 	var menu := _base.get_node("RunMenu") as RunMenu
 	menu.open_menu()
 	await _wait(0.4)
-	_check(not is_instance_valid(effect) and _nursery._hatch_reveal == null, "pause removes reveal synchronously")
+	_check(not is_instance_valid(effect) and _nursery._hatch_reveals.is_empty(), "pause removes reveal synchronously")
 	for sound in owned_sounds:
 		_check(not is_instance_valid(sound), "cancel frees owned sound")
 	_check(Audio._reveal_audio_leases == 0 and is_equal_approx(Audio._reveal_music_gain, 1.0), "music recovers while paused")
@@ -306,7 +312,7 @@ func _interruptions() -> void:
 	await _wait(0.4)
 	(_base.get_node("%StartCombatButton") as Button).pressed.emit()
 	await _wait(1.1)
-	_check(_colony.is_seal_choice_visible() and _nursery._hatch_reveal == null and _nursery._hatch_toasts.is_empty(), "reopened Seal chooser has no hatch overlay or late cards")
+	_check(_colony.is_seal_choice_visible() and _nursery._hatch_reveals.is_empty() and _nursery._hatch_toasts.is_empty(), "reopened Seal chooser has no hatch overlay or late cards")
 	_colony.hide_seal_choice()
 	GameState.pending_seal_choice = false
 	await _prepare_harvest(1, 7)
@@ -314,18 +320,18 @@ func _interruptions() -> void:
 	await _wait(0.4)
 	_nursery._shop_cards[0].lock_toggled.emit(_nursery._shop_cards[0])
 	await _wait(1.1)
-	_check(_nursery._hatch_reveal == null and _nursery._hatch_toasts.is_empty() and _count() == 2, "shop lock dismisses presentation and keeps harvested unit")
+	_check(_nursery._hatch_reveals.is_empty() and _nursery._hatch_toasts.is_empty() and _count() == 2, "shop lock dismisses presentation and keeps harvested unit")
 	await _prepare_harvest(1, 7)
 	_base._select_tab(_base.TabId.COLONY, true)
 	_base._select_tab(_base.TabId.NURSERY)
 	_nursery._tiles[0].plot_pressed.emit(_nursery._tiles[0])
-	_check((GameState.nursery.plots[0] as NurseryPlotData).can_harvest() and _nursery._hatch_reveal == null, "camera-pan harvest input does not consume egg")
+	_check((GameState.nursery.plots[0] as NurseryPlotData).can_harvest() and _nursery._hatch_reveals.is_empty(), "camera-pan harvest input does not consume egg")
 	await _wait(0.4)
 	_nursery._tiles[0].plot_pressed.emit(_nursery._tiles[0])
 	await _wait(0.4)
 	_base._on_debug_advance_day_pressed()
 	await _wait(1.1)
-	_check(_nursery._hatch_reveal == null and _nursery._hatch_toasts.is_empty(), "debug advance cancels hatch and late cards")
+	_check(_nursery._hatch_reveals.is_empty() and _nursery._hatch_toasts.is_empty(), "debug advance cancels hatch and late cards")
 	_colony.hide_seal_choice()
 	GameState.pending_seal_choice = false
 
@@ -462,7 +468,7 @@ func _cancel_presenter(kind: String, action: String) -> void:
 		await _open()
 		await _prepare_harvest(1, 7)
 		_nursery._tiles[0].plot_pressed.emit(_nursery._tiles[0])
-		effect = _nursery._hatch_reveal
+		effect = _latest_hatch()
 	_check(is_instance_valid(effect), kind + " " + action + " has active effect")
 	if not is_instance_valid(effect):
 		return
@@ -541,7 +547,7 @@ func _run() -> void:
 	await _prepare_harvest(1, 7)
 	_nursery._tiles[0].plot_pressed.emit(_nursery._tiles[0])
 	await _wait(0.4)
-	var effect := _nursery._hatch_reveal
+	var effect := _latest_hatch()
 	_base.queue_free()
 	await _wait(0.4)
 	_check(not is_instance_valid(effect) and Audio._reveal_audio_leases == 0 and is_equal_approx(Audio._reveal_music_gain, 1.0), "scene exit frees reveal and recovers music")

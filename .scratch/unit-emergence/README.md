@@ -2,6 +2,14 @@
 
 Run from the project root with Godot outside the agent sandbox.
 
+The focused overlapping-hatch regression uses actual viewport clicks, including a second Plot underneath the previous hatch result card:
+
+```sh
+godot --headless --path . res://.scratch/unit-emergence/hatch_overlap_check.tscn
+```
+
+It verifies concurrent animations, exactly-once harvests, independent completion/cancellation, original result-card sizing, latest-harvest results, and cleanup through Undo, tab departure, pause, Shop interaction and Day advance.
+
 The focused Cocoon continuity regression exercises the nonblocking presentation change:
 
 ```sh

@@ -35,9 +35,9 @@ var _shop_cards: Array[ShopOfferCard] = []
 var _fertilizer_icon_atlas: AtlasTexture
 var _hatch_toasts: Array[UnitDetailCard] = []
 var _hatch_toast_host: Control = null
-var _hatch_toast_dimmer: Control = null
 var _hatch_toast_tween: Tween = null
-var _hatch_reveal: UnitEmergence
+var _hatch_reveals: Array[UnitEmergence] = []
+var _hatch_toast_reveal_id := 0
 
 
 func _ready() -> void:
@@ -70,7 +70,7 @@ func on_screen_hidden() -> void:
 
 
 func dismiss_hatch_results() -> void:
-	_cancel_hatch_reveal()
+	_cancel_hatch_reveals()
 	_dismiss_hatch_toast(false)
 
 
@@ -480,8 +480,6 @@ func _on_plot_pressed(tile: PlotTile) -> void:
 	if tile.is_unlockable:
 		_try_unlock_plot()
 		return
-	if is_instance_valid(_hatch_reveal):
-		return
 	var nursery := GameState.nursery
 	if not nursery.is_plot_unlocked(tile.plot_index):
 		return
@@ -551,35 +549,34 @@ func _hud_root() -> Control:
 func _show_hatch_reveal(
 	units: Array[RosterUnitData], shell: Dictionary, anchor_canvas_rect: Rect2
 ) -> void:
-	dismiss_hatch_results()
 	var hud := _hud_root()
 	if hud == null:
 		_show_hatch_toasts(units, anchor_canvas_rect)
 		return
-	_hatch_reveal = UnitEmergence.play(hud, units, shell, UnitEmergence.Kind.EGG)
-	var reveal_id := _hatch_reveal.get_instance_id()
-	_hatch_reveal.finished.connect(_on_hatch_reveal_finished.bind(reveal_id))
-	_hatch_reveal.cancelled.connect(_on_hatch_reveal_cancelled.bind(reveal_id))
+	var reveal := UnitEmergence.play(hud, units, shell, UnitEmergence.Kind.EGG)
+	_hatch_reveals.append(reveal)
+	reveal.finished.connect(_on_hatch_reveal_finished.bind(reveal))
+	reveal.cancelled.connect(_on_hatch_reveal_cancelled.bind(reveal))
 	_show_hatch_toasts(units, anchor_canvas_rect)
+	_hatch_toast_reveal_id = reveal.get_instance_id()
 
 
-func _on_hatch_reveal_finished(reveal_id: int) -> void:
-	if not is_instance_valid(_hatch_reveal) or _hatch_reveal.get_instance_id() != reveal_id:
-		return
-	_hatch_reveal = null
+func _on_hatch_reveal_finished(reveal: UnitEmergence) -> void:
+	_hatch_reveals.erase(reveal)
 
 
-func _on_hatch_reveal_cancelled(reveal_id: int) -> void:
-	if is_instance_valid(_hatch_reveal) and _hatch_reveal.get_instance_id() == reveal_id:
-		_hatch_reveal = null
+func _on_hatch_reveal_cancelled(reveal: UnitEmergence) -> void:
+	_hatch_reveals.erase(reveal)
+	if _hatch_toast_reveal_id == reveal.get_instance_id():
 		_dismiss_hatch_toast(false)
 
 
-func _cancel_hatch_reveal() -> void:
-	var reveal := _hatch_reveal
-	_hatch_reveal = null
-	if is_instance_valid(reveal):
-		reveal.cancel()
+func _cancel_hatch_reveals() -> void:
+	var reveals := _hatch_reveals.duplicate()
+	_hatch_reveals.clear()
+	for reveal in reveals:
+		if is_instance_valid(reveal):
+			reveal.cancel()
 
 
 func _show_hatch_toasts(units: Array[RosterUnitData], anchor_canvas_rect: Rect2) -> void:
@@ -599,22 +596,13 @@ func _show_hatch_toasts(units: Array[RosterUnitData], anchor_canvas_rect: Rect2)
 	hud.add_child(host)
 	_hatch_toast_host = host
 
-	var dimmer := Control.new()
-	dimmer.name = "HatchToastDimmer"
-	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
-	dimmer.gui_input.connect(_on_hatch_toast_dimmer_input)
-	host.add_child(dimmer)
-	_hatch_toast_dimmer = dimmer
-
 	var cards: Array[UnitDetailCard] = []
 	for unit in units:
 		var card: UnitDetailCard = _UNIT_DETAIL_CARD_SCENE.instantiate()
-		card.setup(unit)
+		card.setup(unit, true, false)
 		card.modulate.a = 0.0
 		host.add_child(card)
 		card.reset_compact_layout()
-		card.gui_input.connect(_on_hatch_toast_card_input)
 		cards.append(card)
 	_hatch_toasts = cards
 	_position_hatch_toasts(cards, anchor_canvas_rect)
@@ -656,20 +644,12 @@ func _position_hatch_toasts(cards: Array[UnitDetailCard], anchor_canvas_rect: Re
 		row_x += (card.card_size().x + _HATCH_TOAST_GAP) * fit
 
 
-func _on_hatch_toast_dimmer_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mouse := event as InputEventMouseButton
 		if mouse.pressed and mouse.button_index == MOUSE_BUTTON_LEFT:
+			# Dismiss the passive result cards without consuming the next Plot click.
 			_dismiss_hatch_toast(true)
-			accept_event()
-
-
-func _on_hatch_toast_card_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		var mouse := event as InputEventMouseButton
-		if mouse.pressed and mouse.button_index == MOUSE_BUTTON_LEFT:
-			_dismiss_hatch_toast(true)
-			accept_event()
 
 
 func _dismiss_hatch_toast(animated: bool) -> void:
@@ -678,10 +658,7 @@ func _dismiss_hatch_toast(animated: bool) -> void:
 		_hatch_toast_tween = null
 	var cards := _hatch_toasts
 	var host := _hatch_toast_host
-	var dimmer := _hatch_toast_dimmer
-	_hatch_toast_dimmer = null
-	if dimmer != null and is_instance_valid(dimmer):
-		dimmer.queue_free()
+	_hatch_toast_reveal_id = 0
 	var valid_cards: Array[UnitDetailCard] = []
 	for card in cards:
 		if card != null and is_instance_valid(card):
@@ -868,6 +845,6 @@ func get_guided_hint_target(hint: Dictionary) -> Control:
 
 func is_guided_hint_blocked() -> bool:
 	return (
-		is_instance_valid(_hatch_reveal)
+		not _hatch_reveals.is_empty()
 		or (is_instance_valid(_hatch_toast_host) and _hatch_toast_host.is_visible_in_tree())
 	)

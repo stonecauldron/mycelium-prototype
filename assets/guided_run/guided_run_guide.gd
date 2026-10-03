@@ -86,7 +86,7 @@ func _process(delta: float) -> void:
 		# Briefly indicate what to drag, then its destination. Native drag arrows take over.
 		if _shown_seconds >= _SOURCE_SECONDS or _inspection_seconds >= _INSPECTION_SECONDS:
 			GameState.guided_hint_history[source_key] = true
-	elif StringName(hint.get("target", &"")) != &"battle":
+	elif not bool(hint.get("action_required", false)) and StringName(hint.get("target", &"")) != &"battle":
 		if (_inspection_seconds >= _INSPECTION_SECONDS
 				or (bool(hint.get("passive", false)) and _shown_seconds >= _PASSIVE_SECONDS)):
 			GameState.guided_hint_history[key] = true

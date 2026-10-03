@@ -73,7 +73,7 @@ func _process(_delta: float) -> void:
 		return
 	if _opening_pending:
 		_opening_pending = false
-		if _troop.has_flag_bearer():
+		if _troop.has_flag_bearer() and _troop.flag_bearer.is_visible_in_tree():
 			_show_line(BarkData.Kind.OPENING, _troop.flag_bearer)
 		return
 	var killers := _pending_killers.duplicate()

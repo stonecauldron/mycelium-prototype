@@ -1,6 +1,6 @@
 # Auto Shrooms
 
-A 10-day auto-battler run where you grow mushroom troops, train them, and fight daily enemy armies for biomass, with an optional 15-day guided Run.
+A 10-day auto-battler run where you grow mushroom troops, train them, and fight daily enemy armies for biomass, with an optional guided Run of the same length.
 
 Shared presentation guidance: [UI conventions](docs/ui-conventions.md).
 
@@ -9,25 +9,25 @@ Shared presentation guidance: [UI conventions](docs/ui-conventions.md).
 ### Run loop
 
 **Run**:
-A single playthrough of Auto Shrooms, lasting up to 10 days, or 15 in a guided Run.
+A single playthrough of Auto Shrooms, lasting up to 10 days in either mode.
 *Avoid*: campaign, session (when you mean the playthrough)
 
 **Guided Run**:
-An optional Run that introduces systems through scheduled unlocks and restricted choices. Optional graphical arrows introduce only newly unlocked functionality on its unlock Day, using the player's actual state, through Day 11. They do not repeat missed introductions or routine actions; no guided arrows appear from Day 12 onward. It starts with a fixed Sword Adult, makes a Child available before Day 2, and permits free Battle retries or restoring the current Day's preparation. Progress never requires tutorial actions; pending Seal choices still require selection before Battle. The next-Run checkbox turns off after the first guided Run ends, while later manual choices persist.
+An optional 10-Day Run that introduces systems through scheduled unlocks and restricted choices. Optional graphical arrows introduce only newly unlocked functionality on its unlock Day, using the player's actual state. They do not repeat missed introductions or routine actions and stop after completion. It starts with a fixed Sword Adult, makes a Child available before Day 2, and permits free Battle retries or restoring the current Day's preparation. Squad expansion and Bench open on Day 5; Nursery and Quick Growth on Day 6; Shield and Thorny on Day 7; Compost, a second Plot, and the only Seal choice on Day 8; and Spear and the full Shop on Day 9. The player’s Flag bearer stays hidden until the first Seal is confirmed. The first fresh guided grow retains its normal two-Day wait. Progress never requires tutorial actions; the pending Seal choice still requires selection before Battle. Winning Battle 10 opens Victory directly without a daily summary with the subtitle “Try a real run now!” The next-Run checkbox turns off after the first guided Run ends and after every guided victory, including replays. Players can check it again for another guided Run.
 
 **Day**:
 The primary unit of run progression. A day may or may not include a battle.
 *Avoid*: chapter (UI progress-track slice only)
 
 **Elite Day**:
-A harder day that falls every fifth Day: 5 and 10 in an ordinary Run, also 15 in a guided Run.
+A harder day that falls every fifth Day: 5 and 10 in both ordinary and guided Runs.
 
 **Battle**:
 A combat encounter fought during a day. Not every day necessarily has one.
 *Avoid*: using Battle as the name for run progression
 
 **Battle reward**:
-Biomass granted for winning a Battle. The amount is set by the Day and that enemy army's difficulty — not by individual kills.
+Biomass granted for winning a Battle. Ordinary Runs use the Day and enemy army’s difficulty. Guided Runs grant the next preparation Day’s introduction costs plus 30%, rounded up, in addition to any savings; they start with zero and grant 71 total scheduled biomass. Neither mode grants per-kill rewards.
 *Avoid*: kill bounty, per-kill biomass, currency drop
 
 **Biomass**:
@@ -70,7 +70,7 @@ A spore produced when an Adult is composted or dies in battle, carrying that uni
 *Avoid*: death spore (code name)
 
 **Plot**:
-A Nursery slot where a spore grows. The Nursery has four Plots in an ordinary Run; they unlock in order. A guided Run allows two total Plots, with the second purchasable from Day 9. A locked Plot cannot hold a Spore; unlocking one spends biomass. Unlocked plots show blank Mutation and Fertilizer capacity chips that fill when Fertilizers are applied — not Fungicide. An empty Plot with Extra nutrition shows a Fungicide chip.
+A Nursery slot where a spore grows. The Nursery has four Plots in an ordinary Run; they unlock in order. A guided Run allows two total Plots, with the second purchasable from Day 8. A locked Plot cannot hold a Spore; unlocking one spends biomass. Unlocked plots show blank Mutation and Fertilizer capacity chips that fill when Fertilizers are applied — not Fungicide. An empty Plot with Extra nutrition shows a Fungicide chip.
 
 **Growth Time**:
 The days a Spore needs on a Plot to become harvestable, counting Greenhouse but not Plot Fertilizers. Unplanted spores show this.
@@ -153,7 +153,7 @@ A fighting position in the Squad. Slots unlock in order from the flag. A locked 
 *Avoid*: troop slot (when you mean a Squad position)
 
 **Bench**:
-The units in the troop held out of the fighting lineup. Bench positions are available for the whole run — they are not Squad slots.
+The units in the troop held out of the fighting lineup. Bench management is available from Day 5 in a guided Run and from the start in an ordinary Run. Bench positions are separate from Squad slots.
 
 **Child**:
 A unit at the life stage before Evolution into an Adult.

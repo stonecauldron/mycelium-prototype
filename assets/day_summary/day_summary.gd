@@ -2,7 +2,6 @@ extends Control
 
 const _BASE_SCENE_PATH := "res://assets/base/base.tscn"
 const _COMBAT_SCENE_PATH := "res://assets/combat/combat_stage/combat_stage.tscn"
-const _VICTORY_SCENE_PATH := "res://assets/victory/victory.tscn"
 const _GAME_OVER_SCENE_PATH := "res://assets/game_over/game_over.tscn"
 const _PORTRAIT_HOST_SIZE := Vector2(68, 84)
 const _PORTRAIT_SCALE := 0.54
@@ -400,26 +399,16 @@ func _populate_entries(entries: Array[Dictionary]) -> void:
 
 
 func _make_unlock_group(unlocks: Array, day: int) -> Control:
-	var panel := PanelContainer.new()
-	panel.name = "DailyUnlocks"
-	panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	PaperStyles.apply_card(panel, true)
-	var paper := panel.get_theme_stylebox("panel").duplicate() as StyleBox
-	paper.content_margin_left = 48.0
-	paper.content_margin_top = 42.0
-	paper.content_margin_right = 48.0
-	paper.content_margin_bottom = 34.0
-	panel.add_theme_stylebox_override("panel", paper)
 	var column := VBoxContainer.new()
+	column.name = "DailyUnlocks"
+	column.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_theme_constant_override("separation", 12)
-	panel.add_child(column)
 	var heading := Label.new()
 	heading.name = "UnlockHeading"
 	heading.text = "Unlocked for Day %d" % day
 	heading.add_theme_font_size_override("font_size", 26)
-	heading.add_theme_color_override("font_color", PaperStyles.CREAM)
+	heading.add_theme_color_override("font_color", PaperStyles.INK)
 	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(heading)
 	for unlock: Dictionary in unlocks:
@@ -428,22 +417,24 @@ func _make_unlock_group(unlocks: Array, day: int) -> Control:
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row.add_theme_constant_override("separation", 12)
 		column.add_child(row)
-		var icon := TextureRect.new()
-		icon.custom_minimum_size = Vector2(60, 60)
-		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		icon.texture = _unlock_icon(unlock.get("icon") as Texture2D)
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		row.add_child(icon)
+		var texture := unlock.get("icon") as Texture2D
+		if texture != null:
+			var icon := TextureRect.new()
+			icon.custom_minimum_size = Vector2(60, 60)
+			icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			icon.texture = _unlock_icon(texture)
+			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			row.add_child(icon)
 		var label := Label.new()
 		label.text = str(unlock["label"])
 		label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		label.add_theme_font_size_override("font_size", 30)
-		label.add_theme_color_override("font_color", PaperStyles.CREAM)
+		label.add_theme_color_override("font_color", PaperStyles.INK)
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row.add_child(label)
-	return panel
+	return column
 
 
 func _unlock_icon(texture: Texture2D) -> Texture2D:
@@ -568,11 +559,6 @@ func _on_continue_pressed() -> void:
 		return
 	if _guided_result:
 		DaySummaryFeed.clear()
-		if GameState.has_won_run():
-			Analytics.run_complete()
-			GameState.finish_run(true)
-			_leave_result(_VICTORY_SCENE_PATH)
-			return
 	_leave_result(_BASE_SCENE_PATH)
 
 

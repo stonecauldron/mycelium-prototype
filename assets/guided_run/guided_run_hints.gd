@@ -1,14 +1,12 @@
 class_name GuidedRunHints
 extends RefCounted
 
-## Optional arrows introduce today's unlocks before Day 12, never change gameplay.
+## Optional arrows introduce today's unlocks, never change gameplay.
 static func next_hint() -> Dictionary:
 	if not GameState.is_guided_run or GameState.debug_mode_active or GameState.has_won_run():
 		return {}
 	var day := GameState.get_upcoming_day()
-	if day >= 12:
-		return {}
-	if day == 11 and GameState.pending_seal_choice:
+	if GameState.pending_seal_choice:
 		return _first_unseen([_hint("seal", &"battle", &"war")])
 
 	var candidates: Array[Dictionary] = []
@@ -20,27 +18,79 @@ static func next_hint() -> Dictionary:
 		3:
 			candidates.append(_training_hint(WeaponSchool.Id.SWORD))
 		4:
-			candidates.append(_hint("progression", &"progression", &"war", true))
-			candidates.append(_training_hint(WeaponSchool.Id.MACE))
+			var progression := _hint("progression", &"progression", &"war")
+			progression["action_required"] = true
+			candidates.append(progression)
+			var mace := _training_hint(WeaponSchool.Id.MACE)
+			if not mace.is_empty():
+				mace.erase("source")
+				mace["action_required"] = true
+			candidates.append(mace)
+		5:
+			candidates.append(_capacity_hint())
 		6:
 			candidates.append(_harvest_hint())
 			candidates.append(_lineage_hint())
 			candidates.append(_plant_hint())
-		7:
 			candidates.append(_grow_item_hint(false))
-		8:
+		7:
 			candidates.append(_grow_item_hint(true))
-			candidates.append(_training_hint(WeaponSchool.Id.SHIELD))
-		9:
-			candidates.append(_capacity_hint())
-			candidates.append(_plot_capacity_hint())
-		11:
+			candidates.append(_harvested_shield_hint())
+		8:
 			candidates.append(_compost_hint())
+			candidates.append(_plot_capacity_hint())
+		9:
+			var spear := _training_hint(WeaponSchool.Id.SPEAR)
+			spear.erase("source")
+			candidates.append(spear)
+			candidates.append(_full_shop_hint())
+			candidates.append(_shop_reroll_hint())
 	return _first_unseen(candidates)
 
 
 static func history_key(hint: Dictionary) -> String:
 	return "%d:%s" % [GameState.get_upcoming_day(), str(hint.get("id", ""))]
+
+
+static func record_training(unit: RosterUnitData, school: int) -> void:
+	if not GameState.is_guided_run:
+		return
+	var day := GameState.get_upcoming_day()
+	if day == 4 and school == WeaponSchool.Id.MACE:
+		GameState.guided_hint_history["4:training_%d" % WeaponSchool.Id.MACE] = true
+	if day != 3:
+		return
+	var trained_units: Array = GameState.guided_hint_history.get("3:trained_units", [])
+	if not trained_units.has(unit):
+		trained_units.append(unit)
+	GameState.guided_hint_history["3:trained_units"] = trained_units
+	if trained_units.size() >= 2:
+		GameState.guided_hint_history["3:training_%d" % WeaponSchool.Id.SWORD] = true
+
+
+static func record_day_inspected(day: int) -> void:
+	if GameState.is_guided_run and GameState.get_upcoming_day() == 4 and day == 5:
+		GameState.guided_hint_history["4:progression"] = true
+
+
+static func record_harvest(units: Array[RosterUnitData]) -> void:
+	if GameState.is_guided_run and GameState.get_upcoming_day() == 7 and not units.is_empty():
+		GameState.guided_hint_history["7:harvested_units"] = units.duplicate()
+
+
+static func record_compost_hover() -> void:
+	if GameState.is_guided_run and GameState.is_feature_available(&"compost"):
+		GameState.guided_hint_history["%d:compost" % GameState.get_upcoming_day()] = true
+
+
+static func record_shield_hover() -> void:
+	if GameState.is_guided_run and GameState.is_school_available(WeaponSchool.Id.SHIELD):
+		GameState.guided_hint_history["%d:training_%d" % [GameState.get_upcoming_day(), WeaponSchool.Id.SHIELD]] = true
+
+
+static func record_spear_hover() -> void:
+	if GameState.is_guided_run and GameState.is_school_available(WeaponSchool.Id.SPEAR):
+		GameState.guided_hint_history["%d:training_%d" % [GameState.get_upcoming_day(), WeaponSchool.Id.SPEAR]] = true
 
 
 static func _first_unseen(candidates: Array[Dictionary]) -> Dictionary:
@@ -79,6 +129,19 @@ static func _training_hint(school: int, children_only: bool = false) -> Dictiona
 		if children_only and unit.is_adult_stage():
 			continue
 		var candidate := _train_unit_hint(unit, school)
+		if not candidate.is_empty():
+			return candidate
+	return {}
+
+
+static func _harvested_shield_hint() -> Dictionary:
+	var harvested: Array = GameState.guided_hint_history.get("7:harvested_units", [])
+	var troop_units := _troop_units()
+	for unit: RosterUnitData in harvested:
+		# Undo or overflow can leave a harvested Unit outside the current Troop.
+		if not troop_units.has(unit):
+			continue
+		var candidate := _train_unit_hint(unit, WeaponSchool.Id.SHIELD)
 		if not candidate.is_empty():
 			return candidate
 	return {}
@@ -139,6 +202,10 @@ static func _grow_item_hint(mutation: bool) -> Dictionary:
 	return _available_item_hint(id, _is_intro_item.bind(mutation))
 
 
+static func _full_shop_hint() -> Dictionary:
+	return _available_item_hint("full_shop", _is_new_shop_item)
+
+
 static func _available_item_hint(id: String, accepts: Callable) -> Dictionary:
 	for index in GameState.nursery.stock.slots.size():
 		var item := GameState.nursery.stock.get_at(index)
@@ -161,6 +228,14 @@ static func _available_item_hint(id: String, accepts: Callable) -> Dictionary:
 		if not candidate.is_empty():
 			return candidate
 	return {}
+
+
+static func _is_new_shop_item(item: Resource) -> bool:
+	if item is MutationData:
+		return not _is_intro_item(item, true)
+	var fertilizer := item as FertilizerData
+	# Clearing a grow is a deliberate player choice, not an introductory suggestion.
+	return fertilizer != null and fertilizer.behavior != FertilizerData.Behavior.FUNGICIDE and not _is_intro_item(item, false)
 
 
 static func _is_intro_item(item: Resource, mutation: bool) -> bool:
@@ -203,6 +278,16 @@ static func _plot_capacity_hint() -> Dictionary:
 	return _hint("plot_slot", &"plot_slot", &"nursery")
 
 
+static func _shop_reroll_hint() -> Dictionary:
+	var nursery := GameState.nursery
+	if nursery.spore_shop == null or not GameState.biomass.can_afford(nursery.current_shop_reroll_cost()):
+		return {}
+	for offer in nursery.spore_shop.offers:
+		if offer == null or offer.is_empty() or not offer.locked:
+			return _hint("shop_reroll", &"shop_reroll", &"nursery")
+	return {}
+
+
 static func _capacity_hint() -> Dictionary:
 	if not GameState.troop.can_unlock_squad_slot() or GameState.troop.first_empty_unlocked_squad() >= 0:
 		return {}
@@ -226,7 +311,7 @@ static func _compost_hint() -> Dictionary:
 			return {}
 	for unit in _troop_units():
 		if unit.is_adult_stage() and GameState.can_compost_unit(unit):
-			return _with_source(_hint("compost", &"compost", &"war"), _unit_source(unit))
+			return _hint("compost", &"compost", &"war")
 	return {}
 
 

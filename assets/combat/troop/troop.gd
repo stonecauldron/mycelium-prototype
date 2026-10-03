@@ -24,6 +24,8 @@ var _opponent: Troop
 
 func _ready() -> void:
 	add_to_group("troops")
+	if not is_enemy and has_flag_bearer():
+		flag_bearer.visible = GameState.should_show_player_flag_bearer()
 	if spawn_anchor == null and not has_flag_bearer():
 		spawn_anchor = Node2D.new()
 		spawn_anchor.name = "SpawnAnchor"

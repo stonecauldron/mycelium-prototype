@@ -79,13 +79,14 @@ func set_guided_run_enabled(enabled: bool) -> void:
 
 
 func record_guided_run_end(completed: bool) -> void:
-	# Only the first terminal end changes the next-Run preference. Later replays
-	# must preserve an explicitly selected mode, including another guided Run.
+	# Clear the initial default on the first end, and offer an ordinary Run
+	# after every guided victory, including deliberate replays.
 	if not guided_run_ended:
 		guided_run_ended = true
 		guided_run_enabled = false
 	if completed:
 		guided_run_completed = true
+		guided_run_enabled = false
 	_save()
 
 

@@ -418,8 +418,8 @@ func plant_spore(plot_index: int, spore: SporeData) -> bool:
 	if not can_plant_on_plot(plot_index):
 		return false
 	var plot := plots[plot_index] as NurseryPlotData
-	# First planting each Run takes at most one day before Greenhouse and Fertilizers.
-	if not _first_spore_planted and spore.days_to_mature > 1:
+	# Ordinary Runs shorten the first grow; guided Runs introduce Quick Growth instead.
+	if not GameState.is_guided_run and not _first_spore_planted and spore.days_to_mature > 1:
 		spore = spore.duplicate(true) as SporeData
 		spore.days_to_mature = 1
 	plot.planted_spore = spore
@@ -553,6 +553,7 @@ func harvest(plot_index: int) -> Array[RosterUnitData]:
 	)
 	_apply_favourite_child_if_first_hatch(result)
 	plot.clear()
+	GuidedRunHints.record_harvest(result)
 	emit_changed()
 	return result
 

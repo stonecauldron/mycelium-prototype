@@ -2,13 +2,13 @@ class_name GuidedRun
 extends RefCounted
 
 ## Authored learning content. Availability follows Days, never a completed action.
-const LENGTH := 15
+const LENGTH := 10
 const MAX_PLOT_COUNT := 2
-const SEAL_CHOICE_DAYS: Array[int] = [11, 13, 15]
+const SEAL_CHOICE_DAYS: Array[int] = [8]
 const FEATURE_DAYS := {
-	&"progression": 4, &"nursery": 6, &"shop": 7, &"mutations": 8,
-	&"squad_slots": 9, &"plot_slots": 9, &"compost": 11, &"seals": 11,
-	&"full_shop": 12, &"shop_reroll": 12, &"offer_locks": 12, &"full_seal_pool": 13,
+	&"progression": 4, &"bench": 5, &"nursery": 6, &"shop": 6, &"mutations": 7,
+	&"squad_slots": 5, &"plot_slots": 8, &"compost": 8, &"seals": 8,
+	&"full_shop": 9, &"shop_reroll": 9, &"offer_locks": 9,
 }
 const _FEATURE_UNLOCK_PRESENTATION := {
 	&"progression": {
@@ -18,6 +18,10 @@ const _FEATURE_UNLOCK_PRESENTATION := {
 	&"nursery": {
 		"label": "Nursery",
 		"icon": preload("res://assets/base/plot_tile/growth0.png"),
+	},
+	&"bench": {
+		"label": "Bench",
+		"icon": null,
 	},
 	&"shop": {
 		"label": "Shop · Quick Growth",
@@ -29,7 +33,7 @@ const _FEATURE_UNLOCK_PRESENTATION := {
 	},
 	&"squad_slots": {
 		"label": "Squad expansion",
-		"icon": preload("res://assets/combat/flag_bearer/flag.png"),
+		"icon": null,
 	},
 	&"plot_slots": {
 		"label": "Plot expansion",
@@ -47,10 +51,6 @@ const _FEATURE_UNLOCK_PRESENTATION := {
 	&"full_shop": {
 		"label": "Full Shop",
 		"icon": preload("res://assets/base/nursery/fertilizers/fertiliser.png"),
-	},
-	&"full_seal_pool": {
-		"label": "Full Seal pool",
-		"icon": preload("res://assets/base/seals/seal.png"),
 	},
 }
 const QUICK_GROWTH := preload("res://assets/base/nursery/fertilizers/quick_growth.tres")
@@ -72,19 +72,41 @@ const ARMIES: Array[Dictionary] = [
 	{"peashooter": 2, "solar_sword": 3},
 	{"stump": 1, "solar_sword": 3},
 	{"log": 1, "solar_cleaver": 1},
-	{"peashooter": 1, "stump": 1, "solar_sword": 3},
-	{"peashooter": 2, "stump": 1, "solar_sword": 4},
-	{"peashooter": 2, "stump": 2, "rose_thorn": 2},
-	{"peashooter": 3, "stump": 2, "solar_sword": 3},
-	{"canopy": 1, "log": 1, "solar_cleaver": 2},
 ]
 const BUDGETS: Array[Vector2i] = [
 	Vector2i(6, 12), Vector2i(12, 18), Vector2i(18, 24), Vector2i(18, 30),
-	Vector2i(82, 111), # Single Log deliberately uses the normal Day-5 reward range.
+	Vector2i(82, 111),
 	Vector2i(24, 36), Vector2i(24, 38), Vector2i(30, 44), Vector2i(30, 48),
-	Vector2i(42, 66), Vector2i(36, 54), Vector2i(48, 66), Vector2i(48, 72),
-	Vector2i(54, 84), Vector2i(78, 110),
+	Vector2i(42, 66),
 ]
+
+
+## Preparation allowance for today's introductions, with a 30% margin rounded up.
+static func biomass_budget_for_day(day: int) -> int:
+	var cost := 0
+	match day:
+		2, 4: # One Bow or Mace Training.
+			cost = WeaponSchool.COCOON_COST
+		3: # Try Training on both Units.
+			cost = 2 * WeaponSchool.COCOON_COST
+		5:
+			cost = BiomassData.SQUAD_SLOT_UNLOCK_COST
+		6:
+			cost = BiomassData.COMMON_SPORE_COST + QUICK_GROWTH.biomass_cost
+		7:
+			cost = WeaponSchool.COCOON_COST + THORNY.biomass_cost
+		8: # Compost and planting its lineage Spore are free.
+			cost = BiomassData.PLOT_UNLOCK_COST
+		9: # Spear, one Fertilizer, one Mutation, and one Shop reroll.
+			cost = WeaponSchool.COCOON_COST + QUICK_GROWTH.biomass_cost + THORNY.biomass_cost + BiomassData.reroll_price(1)
+	return ceili(float(cost) * 1.3)
+
+
+## Each victory grants the next Day's full allowance; savings stay available.
+static func battle_reward_for(day: int) -> int:
+	if day < 1 or day >= LENGTH:
+		return 0
+	return biomass_budget_for_day(day + 1)
 
 
 static func feature_available(feature: StringName, day: int) -> bool:
@@ -100,9 +122,9 @@ static func school_available(school: int, day: int) -> bool:
 		WeaponSchool.Id.MACE:
 			return day >= 4
 		WeaponSchool.Id.SHIELD:
-			return day >= 8
+			return day >= 7
 		WeaponSchool.Id.SPEAR:
-			return day >= 13
+			return day >= 9
 	return false
 
 

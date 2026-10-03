@@ -19,7 +19,7 @@ var barks: BarkData = BarkData.new()
 var base_undo: BaseUndoHistory = BaseUndoHistory.new()
 var current_day: int = 0
 var is_guided_run: bool = false
-## Presentation-only inspection history; deliberately survives preparation/Battle retries.
+## Presentation-only guidance history; deliberately survives preparation/Battle retries.
 var guided_hint_history: Dictionary = {}
 var _guided_child_revealed: bool = false
 var _guided_preparation_day: int = -1
@@ -36,7 +36,7 @@ var upcoming_enemy_formation: Array[EnemyUnitSpec] = []
 ## Paid Scout rerolls already bought this Day (resets on new Day).
 var scout_rerolls_today: int = 0
 var prefer_nursery_tab: bool = false
-## Session preference: combat fast-forward scale (1, 2, or 4; restored on next fight).
+## Run preference: combat fast-forward scale (1, 2, or 4; restored on next fight).
 var combat_fast_forward: int = 1
 ## Session: show floating arrow pointing at Start Combat until first launch.
 var show_start_combat_hint: bool = true
@@ -78,6 +78,8 @@ func toggle_debug_mode() -> void:
 func debug_advance_day() -> void:
 	base_undo.clear()
 	ensure_nursery_seeded()
+	if is_guided_run:
+		biomass.add(GuidedRun.battle_reward_for(get_upcoming_day()))
 	current_day += 1
 	clear_upcoming_enemy_formation()
 	troop.advance_unit_ages()
@@ -228,6 +230,7 @@ func try_cocoon_for_pupation(unit: RosterUnitData, school: int) -> bool:
 			biomass.add(WeaponSchool.COCOON_COST)
 			troop.try_add_unit(unit)
 			return false
+	GuidedRunHints.record_training(unit, school)
 	Analytics.biomass_sink(
 		"Training",
 		Analytics.slug(WeaponSchool.display_name(school)),
@@ -500,6 +503,7 @@ func start_new_run() -> void:
 
 func reset_run(guided: Variant = null) -> void:
 	is_guided_run = SettingsServer.guided_run_enabled if guided == null else bool(guided)
+	combat_fast_forward = 1
 	guided_hint_history.clear()
 	_run_finished = false
 	_guided_child_revealed = false
@@ -517,6 +521,8 @@ func reset_run(guided: Variant = null) -> void:
 	nursery.reset()
 	pupation.reset()
 	biomass.reset()
+	if is_guided_run:
+		biomass.amount = GuidedRun.biomass_budget_for_day(1)
 	seals.reset()
 	barks.reset()
 	current_day = 0
@@ -554,6 +560,16 @@ func get_run_length() -> int:
 	return GuidedRun.LENGTH if is_guided_run else WIN_DAYS
 
 
+func battle_reward_for(day: int, specs: Array[EnemyUnitSpec]) -> int:
+	if is_guided_run:
+		return GuidedRun.battle_reward_for(day)
+	return EnemyComposer.battle_reward_for(day, specs)
+
+
+func should_show_player_flag_bearer() -> bool:
+	return not is_guided_run or not seals.all_owned().is_empty()
+
+
 func is_feature_available(feature: StringName) -> bool:
 	return not is_guided_run or debug_mode_active or GuidedRun.feature_available(feature, get_upcoming_day())
 
@@ -574,7 +590,7 @@ func is_guided_shop_slot_available(slot_index: int) -> bool:
 
 func ensure_seal_choice_offers() -> Array[SealData]:
 	if pending_seal_choice and seal_choice_offers.is_empty():
-		if is_guided_run and not is_feature_available(&"full_seal_pool"):
+		if is_guided_run:
 			seal_choice_offers.assign(GuidedRun.SEALS)
 		else:
 			seal_choice_offers = SealCatalog.roll_offers(3, seals)

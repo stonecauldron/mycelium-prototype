@@ -12,7 +12,7 @@ static var troop_hp_max: int = 0
 ## Rows: { unit: RosterUnitData, dealt: int, taken: int, max_hp: int, order: int }
 static var unit_damage_rows: Array[Dictionary] = []
 
-## Guided defeats offer retries; victories await Continue before leaving the result.
+## Guided defeats offer retries; non-final victories await Continue.
 static var guided_result: bool = false
 static var battle_won: bool = false
 static var battle_day: int = 0

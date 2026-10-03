@@ -58,7 +58,7 @@ var _background_segment_count: int = 4
 var _battle_over: bool = false
 var _fallen_units: Array[RosterUnitData] = []
 var _biomass_earned_this_fight: int = 0
-## Precomputed Battle reward for this fight (day × difficulty); granted on victory.
+## Precomputed Battle reward for this fight; granted on victory.
 var _battle_reward: int = 0
 var _fast_forward_scale: int = 1
 var _hitstop_active: bool = false
@@ -480,7 +480,7 @@ func _compute_battle_reward(enemy_roster: Array[RosterUnitData]) -> int:
 	specs.assign(GameState.upcoming_enemy_formation)
 	if specs.is_empty():
 		specs = _specs_from_enemy_roster(enemy_roster)
-	return EnemyComposer.battle_reward_for(day, specs)
+	return GameState.battle_reward_for(day, specs)
 
 
 static func _specs_from_enemy_roster(enemy_roster: Array[RosterUnitData]) -> Array[EnemyUnitSpec]:
@@ -816,14 +816,14 @@ func _check_battle_end() -> void:
 	GameState.ensure_nursery_seeded()
 	GameState.current_day += 1
 	GameState.clear_upcoming_enemy_formation()
-	if GameState.has_won_run() and not GameState.is_guided_run:
+	DaySummaryFeed.clear()
+	if GameState.has_won_run():
 		Analytics.run_complete()
 		SceneTransition.change_scene(_VICTORY_SCENE_PATH)
 		return
-	DaySummaryFeed.clear()
 	if GameState.is_guided_run:
 		DaySummaryFeed.set_guided_result(true, battle_day)
-		if not GameState.has_won_run() and not GameState.debug_mode_active:
+		if not GameState.debug_mode_active:
 			DaySummaryFeed.add_guided_unlocks(GameState.get_upcoming_day())
 	_push_combat_recap_to_day_summary()
 	GameState.prefer_nursery_tab = not GameState.is_guided_run
@@ -833,9 +833,6 @@ func _check_battle_end() -> void:
 		DaySummaryFeed.add_biomass_earned(_biomass_earned_this_fight)
 	for unit in _fallen_units:
 		DaySummaryFeed.add_fallen_unit(unit)
-	if GameState.has_won_run():
-		SceneTransition.change_scene(_DAY_SUMMARY_SCENE_PATH)
-		return
 	GameState.troop.advance_unit_ages()
 	var emerged := GameState.emerge_pupations()
 	for entry in emerged:

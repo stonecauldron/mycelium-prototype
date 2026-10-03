@@ -271,7 +271,7 @@ func _refresh_biomass_amount() -> void:
 func _battle_biomass_preview() -> Variant:
 	if _start_combat_button.disabled or not _colony_screen.can_start_combat():
 		return null
-	return EnemyComposer.battle_reward_for(GameState.get_upcoming_day(), GameState.upcoming_enemy_formation)
+	return GameState.battle_reward_for(GameState.get_upcoming_day(), GameState.upcoming_enemy_formation)
 
 
 func _wire_progress_tracks() -> void:
@@ -306,6 +306,7 @@ func _on_day_track_unhovered() -> void:
 
 
 func _on_day_track_pressed(day: int) -> void:
+	GuidedRunHints.record_day_inspected(day)
 	var scout := _scout_bubble()
 	if scout == null:
 		return
@@ -449,7 +450,8 @@ func _resolve_guided_hint(hint: Dictionary) -> Dictionary:
 		match StringName(hint.get("target", &"")):
 			&"progression":
 				if not _progress_tracks.is_empty():
-					target = _progress_tracks[0]
+					var track := _progress_tracks[0]
+					target = track.get_node_or_null("Node%d/SkullIcon" % track.chapter_elite_day()) as Control
 			&"scout":
 				var scout := _scout_bubble()
 				if scout != null:

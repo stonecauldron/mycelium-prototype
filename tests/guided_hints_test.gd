@@ -13,9 +13,11 @@ func _ready() -> void:
 func _run() -> void:
 	Analytics.ga = null
 	_test_opening_opportunities()
+	_test_day_three_training_completion()
+	_test_day_four_actions()
 	_test_nursery_opportunities()
 	_test_later_unlocks()
-	_test_cutoff()
+	_test_final_unlocks()
 	_test_lineage_prerequisites()
 	_test_mode_and_history()
 	print("Guided hint checks: %d checks, %d failures" % [_checks, _failures])
@@ -46,17 +48,64 @@ func _test_opening_opportunities() -> void:
 	_expect(GuidedRunHints.next_hint().is_empty(), "Missing Day-2 Bow Training does not bring its arrow back on Day 3")
 	_prepare_day(4)
 	var progression := GuidedRunHints.next_hint()
-	_expect(progression.get("target") == &"progression" and progression.get("passive", false), "Day 4 presents passive progression inspection")
+	_expect(progression.get("target") == &"progression" and progression.get("action_required", false), "Day 4 progression stays until the elite is activated")
 	_seen(progression)
 	var early_mace := GuidedRunHints.next_hint()
 	_expect(str(early_mace.get("id")) == "training_%d" % WeaponSchool.Id.MACE, "Day 4 offers Mace after progression inspection")
-	_expect(GameState.can_cocoon_for_pupation(early_mace.get("source", {}).get("unit"), WeaponSchool.Id.MACE), "Day 4 Mace points to an eligible unit")
+	_expect(early_mace.get("target") == &"school" and early_mace.get("school") == WeaponSchool.Id.MACE and not early_mace.has("source"), "Day 4 points directly to the Mace cocoon")
 	_seen(early_mace)
 	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Day-4 unlocks finish without requiring an action")
 	_prepare_day(5)
 	_expect(GuidedRunHints.next_hint().is_empty(), "Day 5 stays quiet even when Mace Training was skipped")
-	_prepare_day(10)
-	_expect(GuidedRunHints.next_hint().is_empty(), "Day 10 adds no elite Scout or recurring Nursery arrow")
+
+
+func _test_day_three_training_completion() -> void:
+	_prepare_day(2)
+	var child: RosterUnitData = GameState.troop.squad[1]
+	_expect(GameState.try_cocoon_for_pupation(child, WeaponSchool.Id.BOW), "Day-2 Training prepares the second Adult")
+	GameState.debug_advance_day()
+	GameState.biomass.add(40)
+	GameState.ensure_guided_preparation_checkpoint()
+	var adult: RosterUnitData = GameState.troop.squad[0]
+	_expect(not GameState.try_cocoon_for_pupation(child, WeaponSchool.Id.MACE), "A locked school rejects Training")
+	_expect(GameState.try_cocoon_for_pupation(adult, WeaponSchool.Id.SWORD), "First Day-3 Unit can train")
+	_expect(_hint_id() == "training_%d" % WeaponSchool.Id.SWORD, "Earlier Training and failed attempts do not dismiss Day-3 guidance")
+	_expect(GameState.try_cocoon_for_pupation(adult, WeaponSchool.Id.BOW), "The same Adult can train again")
+	_expect(not GuidedRunHints.next_hint().is_empty(), "Retraining one Unit does not count as two Units")
+	_expect(GameState.try_cocoon_for_pupation(child, WeaponSchool.Id.SWORD), "Second distinct Day-3 Unit can train")
+	_expect(GuidedRunHints.next_hint().is_empty(), "Training two Units dismisses Day-3 arrows")
+	_expect(GameState.restore_guided_preparation(), "Day-3 preparation can be restored")
+	_expect(GuidedRunHints.next_hint().is_empty(), "Restoring preparation keeps learned Day-3 guidance dismissed")
+	GameState.debug_advance_day()
+	_expect(_hint_id() == "progression", "Day-4 unlock guidance still appears")
+	_prepare_day(3)
+	_expect(_hint_id() == "training_%d" % WeaponSchool.Id.SWORD, "A new Run resets Day-3 Training completion")
+
+
+func _test_day_four_actions() -> void:
+	_prepare_day(4)
+	GameState.ensure_guided_preparation_checkpoint()
+	GuidedRunHints.record_day_inspected(4)
+	_expect(_hint_id() == "progression", "Inspecting a non-elite Day does not dismiss the elite arrow")
+	GuidedRunHints.record_day_inspected(5)
+	var mace := GuidedRunHints.next_hint()
+	_expect(str(mace.get("id")) == "training_%d" % WeaponSchool.Id.MACE and mace.get("action_required", false), "Elite activation advances to Mace guidance until Training")
+	var unit: RosterUnitData = GameState.troop.squad[0]
+	_expect(GameState.try_cocoon_for_pupation(unit, WeaponSchool.Id.SWORD), "Other Training remains optional and available")
+	_expect(_hint_id() == "training_%d" % WeaponSchool.Id.MACE, "Sword Training does not dismiss Mace guidance")
+	_spend_all()
+	_expect(not GameState.try_cocoon_for_pupation(unit, WeaponSchool.Id.MACE), "Unaffordable Mace Training fails")
+	GameState.biomass.add(40)
+	_expect(_hint_id() == "training_%d" % WeaponSchool.Id.MACE, "Failed Mace Training does not complete its guidance")
+	_expect(GameState.try_cocoon_for_pupation(unit, WeaponSchool.Id.MACE), "One Unit successfully trains with Mace")
+	_expect(GuidedRunHints.next_hint().is_empty(), "One Mace Training dismisses Day-4 guidance")
+	_expect(GameState.restore_guided_preparation() and GuidedRunHints.next_hint().is_empty(), "Retrying preparation preserves both Day-4 dismissals")
+	_prepare_day(4)
+	unit = GameState.troop.squad[0]
+	_expect(GameState.try_cocoon_for_pupation(unit, WeaponSchool.Id.MACE), "Mace Training can happen before inspecting the elite")
+	_expect(_hint_id() == "progression", "Early Mace Training still leaves the elite introduction available")
+	GuidedRunHints.record_day_inspected(5)
+	_expect(GuidedRunHints.next_hint().is_empty(), "Elite activation does not repeat an already completed Mace introduction")
 
 
 func _test_nursery_opportunities() -> void:
@@ -68,17 +117,14 @@ func _test_nursery_opportunities() -> void:
 	_expect(GuidedRunHints.next_hint().is_empty(), "No fresh planting suggestion when its fee is unaffordable")
 	GameState.biomass.add(40)
 	_expect(GameState.try_plant_fresh_common(0), "First fresh grow can be planted")
-	GameState.debug_advance_day()
-	_expect(GuidedRunHints.next_hint().is_empty(), "Day 7 does not repeat Nursery arrows or offer Quick Growth to a ready grow")
-	for unit in GameState.nursery.harvest(0):
-		_expect(not GameState.troop.try_add_unit(unit).is_empty(), "Harvested Child enters the troop")
-	_expect(GameState.try_plant_fresh_common(0), "Next grow is planted through normal gameplay")
-	GameState.guided_hint_history.clear()
-	_expect(_hint_id() == "quick_growth", "Quick Growth is suggested for an actual growing Plot")
+	_expect(_hint_id() == "quick_growth", "Day 6 introduces Quick Growth after planting")
+	_expect(GameState.nursery.plots[0].remaining_days() == 2, "The first grow makes Quick Growth useful")
+	_seen(GuidedRunHints.next_hint())
+	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Nursery-Day opportunities add no recurring prompts")
 
-	_prepare_day(8)
+	_prepare_day(7)
 	var mutation := GuidedRunHints.next_hint()
-	_expect(str(mutation.get("id")) == "mutation", "Day 8 introduces Thorny")
+	_expect(str(mutation.get("id")) == "mutation", "Day 7 introduces Thorny")
 	_expect(mutation.get("source", {}).get("target") == &"shop", "An unowned mutation points to its real Shop offer")
 	var snapshot := BaseUndoSnapshot.new()
 	snapshot.capture()
@@ -101,43 +147,114 @@ func _test_nursery_opportunities() -> void:
 
 
 func _test_later_unlocks() -> void:
-	_prepare_day(8)
+	_prepare_day(6)
+	_expect(GameState.try_plant_fresh_common(0), "Plant the introductory grow")
+	_expect(GameState.try_buy_fertilizer(GuidedRun.QUICK_GROWTH, GuidedRun.QUICK_GROWTH.biomass_cost), "Buy Quick Growth for a Day-7 harvest")
+	_expect(GameState.nursery.apply_fertilizer_from_stock(0, 0), "Apply Quick Growth")
+	GameState.debug_advance_day()
 	_seen(GuidedRunHints.next_hint())
+	_expect(GuidedRunHints.next_hint().is_empty(), "Shield guidance never points at starter Units before a harvest")
+	var before_harvest := BaseUndoSnapshot.new()
+	before_harvest.capture()
+	var harvested := GameState.nursery.harvest(0)
+	_expect(harvested.size() == 1, "First grow produces a new Unit")
+	_expect(GuidedRunHints.next_hint().is_empty(), "Harvested Unit outside the Troop cannot receive guidance")
+	GameState.troop.try_add_unit(harvested[0])
 	var shield := GuidedRunHints.next_hint()
-	_expect(str(shield.get("id")) == "training_%d" % WeaponSchool.Id.SHIELD, "Day 8 introduces Shield after the Mutation opportunity")
+	_expect(str(shield.get("id")) == "training_%d" % WeaponSchool.Id.SHIELD, "Day 7 introduces Shield after the Mutation opportunity")
+	_expect(shield.get("source", {}).get("unit") == harvested[0], "Shield guidance starts at the newly harvested Unit")
 	_expect(GameState.can_cocoon_for_pupation(shield.get("source", {}).get("unit"), WeaponSchool.Id.SHIELD), "Shield source is eligible for that school")
-	_seen(shield)
-	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Day-8 unlocks leave no recurring Battle or Nursery hint")
-	_prepare_day(9)
+	before_harvest.restore()
+	_expect(GuidedRunHints.next_hint().is_empty(), "Undoing Harvest never redirects Shield guidance to an older Unit")
+	harvested = GameState.nursery.harvest(0)
+	GameState.troop.try_add_unit(harvested[0])
+	_expect(GuidedRunHints.next_hint().get("source", {}).get("unit") == harvested[0], "Harvesting again points to the replacement Unit")
+	GameState.troop.remove_unit(harvested[0])
+	_expect(GuidedRunHints.next_hint().is_empty(), "Losing the new Unit does not fall back to a starter")
+	GameState.troop.try_add_unit(harvested[0])
+	var before_hover := BaseUndoSnapshot.new()
+	before_hover.capture()
+	GuidedRunHints.record_shield_hover()
+	_expect(before_hover.matches_current_state(), "Shield hover changes no gameplay state")
+	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Day-7 unlocks leave no recurring Battle or Nursery hint")
+	_prepare_day(5)
 	while GameState.troop.first_empty_unlocked_squad() >= 0:
 		GameState.troop.try_add_unit(GuidedRun.make_starter(false))
-	_expect(GameState.troop.try_add_unit(GuidedRun.make_starter(false)) == "bench", "Capacity fixture has a real Unit waiting on the Bench")
-	_expect(GameState.try_plant_fresh_common(0), "The existing Plot can be occupied")
-	_expect(_hint_id() == "squad_slot", "Day 9 introduces Squad expansion when another Unit needs room")
+	GameState.troop.try_add_unit(GuidedRun.make_starter(false))
+	_expect(_hint_id() == "squad_slot", "Day 5 introduces Squad expansion when another Unit needs room")
 	_seen(GuidedRunHints.next_hint())
+	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Squad expansion leaves no recurring guidance")
+	_prepare_day(8)
+	_seen(GuidedRunHints.next_hint()) # Compost introduction.
+	_expect(GameState.try_plant_fresh_common(0), "The existing Plot can be occupied")
 	var capacity := GuidedRunHints.next_hint()
-	_expect(str(capacity.get("id")) == "plot_slot" and capacity.get("tab") == &"nursery", "An occupied Nursery offers affordable Plot expansion on Day 9")
+	_expect(str(capacity.get("id")) == "plot_slot" and capacity.get("tab") == &"nursery", "An occupied Nursery offers Plot expansion on Day 8")
 	_spend_all()
 	_expect(GuidedRunHints.next_hint().is_empty(), "Unaffordable Plot expansion is skipped")
 	GameState.biomass.add(GameState.nursery.next_unlock_cost())
 	_expect(_hint_id() == "plot_slot", "Plot expansion is suggested again when affordable")
 	_expect(GameState.try_unlock_plot(), "The suggested Plot can be unlocked normally")
-	_expect(_hint_id() != "plot_slot", "An available empty Plot suppresses more capacity hints")
+	_expect(GuidedRunHints.next_hint().is_empty(), "Buying the second Plot finishes the available Day-8 guidance")
+	_prepare_day(9)
+	var spear := GuidedRunHints.next_hint()
+	_expect(str(spear.get("id")) == "training_%d" % WeaponSchool.Id.SPEAR, "Day 9 introduces Spear")
+	_expect(spear.get("target") == &"school" and spear.get("school") == WeaponSchool.Id.SPEAR and not spear.has("source"), "Day 9 points directly to the Spear cocoon without a Unit arrow")
+	before_hover = BaseUndoSnapshot.new()
+	before_hover.capture()
+	GuidedRunHints.record_spear_hover()
+	_expect(before_hover.matches_current_state(), "Spear hover changes no gameplay state")
+	_expect(_hint_id() != "training_%d" % WeaponSchool.Id.SPEAR, "Viewed Spear leaves only new Shop opportunities")
 
 
-func _test_cutoff() -> void:
-	for day in [12, 13, 14, 15]:
-		_prepare_day(day, false)
-		_expect(GameState.pending_seal_choice, "Cutoff fixture retains a pending Seal on Day %d" % day)
-		_expect(GuidedRunHints.next_hint().is_empty(), "Pending Seal cannot bypass the Day-%d arrow cutoff" % day)
-		_choose_seal()
-		_expect(GuidedRunHints.next_hint().is_empty(), "Full Shop and late school unlocks show no arrows on Day %d" % day)
-		var squad := GameState.troop.get_squad_roster()
-		for index in squad.size():
-			GameState.troop.remove_unit(squad[index])
-			GameState.troop.bench[index] = squad[index]
-		_expect(GameState.troop.squad_unit_count() == 0 and GameState.troop.living_unit_count() > 0, "Cutoff fixture has an empty Squad with available Bench units")
-		_expect(GuidedRunHints.next_hint().is_empty(), "Empty Squad cannot bypass the Day-%d arrow cutoff" % day)
+func _test_final_unlocks() -> void:
+	_prepare_day(8, false)
+	var seal := GuidedRunHints.next_hint()
+	_expect(str(seal.get("id")) == "seal" and seal.get("target") == &"battle", "Day 8 introduces the only Seal before other opportunities")
+	_seen(seal)
+	_expect(GuidedRunHints.next_hint().is_empty() and GameState.pending_seal_choice, "Viewing the Seal arrow does not resolve the required choice")
+	_choose_seal()
+	_expect(_hint_id() == "compost", "Confirming the Day-8 Seal leaves Compost guidance available")
+	_prepare_day(10)
+	_expect(GuidedRunHints.next_hint().is_empty(), "Day 10 does not repeat the full-Shop introduction")
+	_prepare_day(9)
+	_seen(GuidedRunHints.next_hint()) # Spear introduction.
+	var fertilizer := load("res://assets/base/nursery/fertilizers/reinforced_chitin.tres") as FertilizerData
+	var shop := GameState.nursery.spore_shop
+	shop.offers.fill(null)
+	var offer := ShopOffer.new()
+	offer.item = fertilizer
+	offer.cost = fertilizer.biomass_cost
+	shop.offers[1] = offer
+	var item := GuidedRunHints.next_hint()
+	_expect(str(item.get("id")) == "full_shop" and item.get("source", {}).get("shop_index") == 1, "Day 9 full Shop points to an available compatible item")
+	_expect(item.get("target") == &"plot" and item.get("plot_action") == &"apply", "Full Shop points from its item to a compatible Plot")
+	var snapshot := BaseUndoSnapshot.new()
+	snapshot.capture()
+	GuidedRunHints.next_hint()
+	_expect(snapshot.matches_current_state(), "Full-Shop selection leaves gameplay unchanged")
+	_spend_all()
+	_expect(GuidedRunHints.next_hint().is_empty(), "Unaffordable full-Shop purchase and reroll are skipped")
+	GameState.biomass.add(offer.cost)
+	_expect(GameState.try_buy_fertilizer(fertilizer, offer.cost), "The full-Shop Fertilizer can be bought")
+	shop.replace_slot(1)
+	var owned := GuidedRunHints.next_hint()
+	var stock_index := int(owned.get("source", {}).get("stock_index", -1))
+	_expect(str(owned.get("id")) == "full_shop" and owned.get("source", {}).get("target") == &"stock", "A bought item follows its Stock location even at zero biomass")
+	_expect(GameState.nursery.apply_fertilizer_from_stock(0, stock_index), "The suggested owned item applies to its Plot")
+	_expect(GuidedRunHints.next_hint().is_empty(), "A consumed full-Shop item is no longer suggested")
+	GameState.biomass.add(GameState.nursery.current_shop_reroll_cost())
+	_expect(_hint_id() == "shop_reroll", "Day 9 can introduce an affordable reroll for empty Shop slots")
+	for index in shop.offers.size():
+		var locked := ShopOffer.new()
+		locked.item = GuidedRun.THORNY
+		locked.cost = GuidedRun.THORNY.biomass_cost
+		locked.locked = true
+		shop.offers[index] = locked
+	_expect(_hint_id() != "shop_reroll", "Reroll is not suggested when every offer is locked")
+	GameState.debug_advance_day()
+	_choose_seal()
+	GameState.debug_advance_day()
+	_expect(GameState.has_won_run() and GuidedRunHints.next_hint().is_empty(), "Completion after Battle 10 suppresses all further arrows")
 
 
 func _test_lineage_prerequisites() -> void:
@@ -153,20 +270,18 @@ func _test_lineage_prerequisites() -> void:
 	_expect(GameState.nursery.plant(0, stock_index), "Suggested lineage planting remains free at zero biomass")
 	_expect(GuidedRunHints.next_hint().is_empty(), "Consumed lineage Spore is no longer suggested")
 
-	_prepare_day(11, false)
-	var seal := GuidedRunHints.next_hint()
-	_expect(str(seal.get("id")) == "seal" and seal.get("target") == &"battle", "Pending Seal points to the Battle/Select Seal control")
-	_seen(seal)
-	_expect(GuidedRunHints.next_hint().is_empty() and GameState.pending_seal_choice, "Viewing a Seal arrow does not resolve the required choice")
-	_choose_seal()
+	_prepare_day(8)
 	var compost := GuidedRunHints.next_hint()
-	var parent := compost.get("source", {}).get("unit") as RosterUnitData
-	_expect(str(compost.get("id")) == "compost" and parent != null and parent.is_adult_stage(), "Day 11 offers a real removable Adult for Compost")
-	_expect(GameState.try_compost_unit(parent), "Suggested Adult can actually be composted")
+	var parent: RosterUnitData = GameState.troop.squad[0]
+	_expect(str(compost.get("id")) == "compost" and compost.get("target") == &"compost" and not compost.has("source"), "Day 8 points directly at Compost without a Unit arrow")
+	var before_hover := BaseUndoSnapshot.new()
+	before_hover.capture()
+	GuidedRunHints.record_compost_hover()
+	_expect(GuidedRunHints.next_hint().is_empty(), "Hovering Compost dismisses its guidance without composting")
+	_expect(before_hover.matches_current_state(), "Compost hover changes no gameplay state")
+	_expect(GameState.try_compost_unit(parent), "Player can still choose an Adult to compost")
 	_expect(GameState.nursery.has_spore_in_stock(), "Compost still produces its real lineage Spore")
-	_expect(GuidedRunHints.next_hint().is_empty(), "Day 11 Compost does not reintroduce an earlier Nursery planting arrow")
-	GameState.debug_advance_day()
-	_expect(GuidedRunHints.next_hint().is_empty(), "Day 12 stays quiet with an unplanted lineage Spore available")
+	_expect(GuidedRunHints.next_hint().is_empty(), "Day 8 Compost does not reintroduce an earlier Nursery planting arrow")
 
 
 func _test_mode_and_history() -> void:
@@ -187,7 +302,7 @@ func _test_mode_and_history() -> void:
 	_expect(GameState.guided_hint_history == viewed, "Changing preparation preserves arrow presentation history")
 	GameState.reset_run(true)
 	_expect(GameState.guided_hint_history.is_empty() and _hint_id() == "battle", "A new Run resets arrow history")
-	_prepare_day(16)
+	_prepare_day(11)
 	_expect(GuidedRunHints.next_hint().is_empty(), "Completed guided Runs receive no further arrows")
 
 

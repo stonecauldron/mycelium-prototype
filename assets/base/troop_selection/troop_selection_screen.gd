@@ -51,6 +51,7 @@ func _ready() -> void:
 	_build_bench_ui()
 	_build_cocoon_ui()
 	_ensure_flag_seals_overlay()
+	GameState.seals_changed.connect(_refresh_flag_seals)
 	_sync_all_slots()
 	_bench_panel.set_drag_forwarding(Callable(), _bench_can_drop, _bench_drop)
 	_set_bench_structure_mouse_ignore()
@@ -126,10 +127,10 @@ func refresh_after_undo() -> void:
 	_notify_start_combat_state()
 
 
-## Starter then seal picks — safe to call from base even when another tab is active.
+## Seal then starter picks — safe to call from base even when another tab is active.
 func ensure_pending_modals() -> void:
-	_ensure_starter_choice()
 	_ensure_seal_choice()
+	_ensure_starter_choice()
 
 
 func _hydrate_from_troop_data() -> void:
@@ -207,6 +208,7 @@ func _build_squad_ui() -> void:
 	# Composting is a separate control, never a fighting or purchase slot.
 	_compost_bin = _COMPOST_BIN_SCENE.instantiate() as CompostingBin
 	_compost_bin.unit_dropped_on_bin.connect(_on_compost_drop)
+	_compost_bin.mouse_entered.connect(GuidedRunHints.record_compost_hover)
 	_squad_slot_row.add_child(_compost_bin)
 
 
@@ -235,7 +237,16 @@ func _build_cocoon_ui() -> void:
 			continue
 		slot.school = school
 		slot.unit_dropped_on_cocoon.connect(_on_cocoon_drop)
-		_cocoon_row.add_child(slot)
+		if school == WeaponSchool.Id.SHIELD:
+			slot.mouse_entered.connect(GuidedRunHints.record_shield_hover)
+		elif school == WeaponSchool.Id.SPEAR:
+			slot.mouse_entered.connect(GuidedRunHints.record_spear_hover)
+		# Keep each background socket reserved when a guided school is hidden.
+		var socket := MarginContainer.new()
+		socket.custom_minimum_size = slot.custom_minimum_size
+		socket.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_cocoon_row.add_child(socket)
+		socket.add_child(slot)
 		_cocoon_slots.append(slot)
 	_refresh_guided_visibility()
 
@@ -246,8 +257,7 @@ func _refresh_guided_visibility() -> void:
 		slot.visible = GameState.is_school_available(slot.school)
 		has_school = has_school or slot.visible
 	%CocoonPanel.visible = has_school
-	# Bench management is available as soon as there is a second Unit to manage.
-	_bench_panel.visible = not GameState.is_guided_run or GameState.get_upcoming_day() >= 2
+	_bench_panel.visible = GameState.is_feature_available(&"bench")
 
 
 func _ensure_starter_choice() -> void:
@@ -255,6 +265,8 @@ func _ensure_starter_choice() -> void:
 	if not is_inside_tree():
 		return
 	if GameState.is_guided_run or GameState.troop.is_seeded():
+		return
+	if GameState.pending_seal_choice:
 		return
 	if _seal_dialog != null and is_instance_valid(_seal_dialog):
 		return
@@ -302,11 +314,8 @@ func _on_starter_dialog_closed(dialog: StarterChoiceDialog) -> void:
 	if _starter_dialog != null and _starter_dialog != dialog:
 		return
 	_starter_dialog = null
-	if not GameState.troop.is_seeded():
-		# Recreate if closed without a choice (should not happen for blocking dialog).
-		call_deferred("_ensure_starter_choice")
-	else:
-		call_deferred("_ensure_seal_choice")
+	# Recreate if closed without a choice (should not happen for blocking dialog).
+	call_deferred("ensure_pending_modals")
 
 
 func _ensure_flag_seals_overlay() -> void:
@@ -323,6 +332,8 @@ func _ensure_flag_seals_overlay() -> void:
 
 
 func _refresh_flag_seals() -> void:
+	if _flag_bearer != null:
+		_flag_bearer.visible = GameState.should_show_player_flag_bearer()
 	if _flag_seals != null and is_instance_valid(_flag_seals):
 		_flag_seals.refresh()
 
@@ -332,8 +343,6 @@ func _ensure_seal_choice() -> void:
 	if not is_inside_tree():
 		return
 	if not GameState.pending_seal_choice:
-		return
-	if not GameState.troop.is_seeded():
 		return
 	if _starter_dialog != null and is_instance_valid(_starter_dialog):
 		return
@@ -400,6 +409,7 @@ func _on_seal_chosen(seal: SealData) -> void:
 func _on_seal_dialog_closed(dialog: SealChoiceDialog) -> void:
 	if _seal_dialog == dialog:
 		_seal_dialog = null
+	call_deferred("ensure_pending_modals")
 	_queue_emergence_presentation()
 
 
@@ -457,6 +467,8 @@ func _move_unit(
 ) -> void:
 	if is_instance_valid(_compost_release):
 		return
+	if (from_source == "bench" or to_source == "bench") and not _is_bench_available():
+		return
 	var from_row := _row(from_source)
 	var to_row := _row(to_source)
 	if to_source == "squad" and not GameState.troop.is_squad_slot_unlocked(to_index):
@@ -481,8 +493,12 @@ func _move_unit(
 	_sync_all_slots()
 
 
+func _is_bench_available() -> bool:
+	return GameState.is_feature_available(&"bench") and _bench_panel.is_visible_in_tree()
+
+
 func _bench_can_drop(_at_position: Vector2, data: Variant) -> bool:
-	if is_instance_valid(_compost_release):
+	if is_instance_valid(_compost_release) or not _is_bench_available():
 		return false
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
@@ -524,7 +540,7 @@ func _sync_all_slots() -> void:
 		slot.accepts_drops = not is_instance_valid(_compost_release)
 		_sync_slot_card(slot, "squad")
 	for slot in _bench_slots:
-		slot.accepts_drops = not is_instance_valid(_compost_release)
+		slot.accepts_drops = _is_bench_available() and not is_instance_valid(_compost_release)
 		_sync_slot_card(slot, "bench")
 	for slot in _cocoon_slots:
 		slot.sync_from_state()

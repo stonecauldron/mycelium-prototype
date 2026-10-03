@@ -4,7 +4,7 @@ extends Resource
 ## Battle reward base grows each day up to BATTLE_REWARD_BASE_CAP.
 const BATTLE_REWARD_DAY_1 := 10
 const BATTLE_REWARD_PER_DAY := 5
-const BATTLE_REWARD_BASE_CAP := 20
+const BATTLE_REWARD_BASE_CAP := 25
 ## ± swing applied from easiest→hardest army for that day (0.1 → 0.9…1.1).
 const BATTLE_REWARD_DIFFICULTY_SWING := 0.1
 const COMPOST_CHILD := 6

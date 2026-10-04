@@ -33,6 +33,7 @@ static func next_hint() -> Dictionary:
 			candidates.append(_grow_item_hint(false))
 		6:
 			candidates.append(_capacity_hint())
+			candidates.append(_grow_item_hint(true))
 		7:
 			candidates.append(_grow_item_hint(true))
 			candidates.append(_harvested_shield_hint())
@@ -227,7 +228,8 @@ static func _available_item_hint(id: String, accepts: Callable) -> Dictionary:
 static func _is_intro_item(item: Resource, mutation: bool) -> bool:
 	if mutation:
 		var mutation_data := item as MutationData
-		return mutation_data != null and mutation_data.effect != null and mutation_data.effect.get_script() == GuidedRun.MOULD.effect.get_script()
+		var intro := GuidedRun.intro_mutation_for_day(GameState.get_upcoming_day())
+		return mutation_data != null and mutation_data.effect != null and mutation_data.effect.get_script() == intro.effect.get_script()
 	var fertilizer := item as FertilizerData
 	return fertilizer != null and fertilizer.growth_bonus > 0
 

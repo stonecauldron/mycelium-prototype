@@ -56,7 +56,7 @@ func _test_opening_opportunities() -> void:
 	_seen(early_mace)
 	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Day-4 unlocks finish without requiring an action")
 	_prepare_day(6)
-	_expect(GuidedRunHints.next_hint().is_empty(), "Day 6 has no Mutation or repeated Mace guidance when expansion is unnecessary")
+	_expect(_hint_id() == "mutation" and GameState.nursery.spore_shop.offers[2].item == GuidedRun.THORNY, "Day 6 introduces Thorny without repeating skipped Mace guidance")
 
 
 func _test_day_three_training_completion() -> void:
@@ -121,6 +121,17 @@ func _test_nursery_opportunities() -> void:
 	_expect(GameState.nursery.plots[0].remaining_days() == 2, "The first grow makes Quick Growth useful")
 	_seen(GuidedRunHints.next_hint())
 	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Nursery-Day opportunities add no recurring prompts")
+
+	_prepare_day(6)
+	var thorny := GuidedRunHints.next_hint()
+	_expect(thorny.get("source", {}).get("shop_index") == 2, "Thorny guidance points to the actual Day-6 offer")
+	_expect(GameState.try_buy_mutation(GuidedRun.THORNY, GuidedRun.THORNY.biomass_cost), "Thorny is purchasable on Day 6")
+	GameState.nursery.replace_shop_slot(2)
+	_expect(GuidedRunHints.next_hint().get("source", {}).get("target") == &"stock", "Purchased Thorny guidance uses its Stock item")
+	_seen(GuidedRunHints.next_hint())
+	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Thorny finishes its Day-6 introduction")
+	GameState.debug_advance_day()
+	_expect(_hint_id() == "mutation" and GuidedRunHints.next_hint().get("source", {}).get("target") == &"shop", "Day 7 introduces the Mould offer instead of repeating owned Thorny")
 
 	_prepare_day(7)
 	GuidedRunHints.record_compost_hover()
@@ -188,9 +199,11 @@ func _test_later_unlocks() -> void:
 	GameState.troop.try_add_unit(GuidedRun.make_starter(false))
 	_expect(_hint_id() == "squad_slot", "Day 6 introduces Squad expansion when another Unit needs room")
 	_seen(GuidedRunHints.next_hint())
-	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Day-6 expansion does not introduce a Mutation early")
+	_expect(_hint_id() == "mutation", "Viewed Day-6 expansion leaves the new Thorny introduction")
+	_seen(GuidedRunHints.next_hint())
+	_expect(GuidedRunHints.next_hint().is_empty(), "Viewed Day-6 unlocks finish without requiring practice")
 	GameState.debug_advance_day()
-	_expect(_hint_id() == "mutation", "Mould guidance appears when Mutations unlock on Day 7")
+	_expect(_hint_id() == "mutation", "Day-7 Mould guidance is separate from Day-6 Thorny history")
 	_prepare_day(8)
 	_expect(GameState.try_plant_fresh_common(0), "The existing Plot can be occupied")
 	var capacity := GuidedRunHints.next_hint()

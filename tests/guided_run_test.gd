@@ -64,7 +64,8 @@ func _test_mode_and_unlocks() -> void:
 		_expect(GameState.is_nursery_unlocked() == (day >= 5), "Nursery schedule")
 		_expect(GameState.is_feature_available(&"bench") == (day >= 6), "Bench schedule")
 		_expect(GameState.is_feature_available(&"shop") == (day >= 5), "Shop schedule")
-		_expect(GameState.is_feature_available(&"mutations") == (day >= 7), "Mutation schedule")
+		_expect(GameState.is_feature_available(&"mutations") == (day >= 6), "Thorny and Mutation controls unlock on Day 6")
+		_expect(GameState.is_feature_available(&"mould_cap") == (day >= 7), "Mould Cap introduction follows on Day 7")
 		_expect(GameState.troop.can_unlock_squad_slot() == (day >= 6), "Squad capacity schedule")
 		_expect(GameState.nursery.can_unlock_plot() == (day >= 8), "Plot capacity schedule")
 		_expect(GameState.is_feature_available(&"compost") == (day >= 7), "Compost schedule")
@@ -100,7 +101,7 @@ func _test_mode_and_unlocks() -> void:
 
 
 func _test_guided_biomass() -> void:
-	var budgets := [0, 4, 8, 4, 8, 11, 16, 21, 21, 21]
+	var budgets := [0, 4, 8, 4, 8, 16, 16, 21, 21, 21]
 	GameState.reset_run(true)
 	_expect(GameState.biomass.amount == 0, "Guided opening needs no paid actions")
 	for day in range(1, 11):
@@ -118,7 +119,7 @@ func _test_guided_biomass() -> void:
 		GameState.debug_advance_day()
 		saved += int(budgets[day])
 		_expect(GameState.biomass.amount == saved, "Skipped spending carries over alongside the next grant")
-	_expect(saved == 114, "Guided Run grants 114 total scheduled biomass")
+	_expect(saved == 119, "Guided Run grants 119 total scheduled biomass")
 	_expect(GuidedRun.battle_reward_for(9) == 21 and GuidedRun.battle_reward_for(9) == GuidedRun.battle_reward_for(8), "Battle 9 grants 21 biomass, matching Battle 8")
 	GameState.reset_run(false)
 	_expect(GameState.biomass.amount == BiomassData.STARTING_AMOUNT, "Ordinary starting biomass is unchanged")
@@ -143,12 +144,16 @@ func _test_guided_biomass() -> void:
 	_expect(GameState.nursery.apply_fertilizer_from_stock(0, 0), "Funded Quick Growth can be applied")
 	GameState.debug_advance_day()
 	_expect(GameState.try_unlock_squad_slot(), "Day-6 allowance covers Squad expansion")
+	_expect(GameState.try_buy_mutation(GuidedRun.THORNY, GuidedRun.THORNY.biomass_cost), "Day-6 allowance also covers Thorny")
+	_expect(GameState.nursery.apply_mutation_from_stock(0, 0), "Funded Thorny applies to the introductory grow")
+	var thorny_children := GameState.nursery.harvest(0)
+	_expect(thorny_children.size() == 1 and thorny_children[0].body_mutation != null and thorny_children[0].body_mutation.effect is ThornyBodyEffect and thorny_children[0].cap_mutation == null, "The first grow hatches with Thorny in its Body slot")
+	for unit in thorny_children:
+		GameState.troop.try_add_unit(unit)
 	GameState.debug_advance_day()
 	_expect(GameState.try_buy_mutation(GuidedRun.MOULD, GuidedRun.MOULD.biomass_cost), "Day-7 allowance covers Mould Cap")
 	_expect(GameState.nursery.apply_mutation_from_stock(0, 0), "Funded Mould can be applied")
-	for unit in GameState.nursery.harvest(0):
-		_expect(MouldCapEffect.is_mould(unit) and unit.cap_mutation.is_cap() and unit.body_mutation == null, "The introductory grow hatches with Mould in its Cap slot")
-		GameState.troop.try_add_unit(unit)
+	_expect(GameState.try_plant_fresh_common(0), "Day-7 allowance funds a separate Mould grow")
 	_expect(GameState.try_cocoon_for_pupation(starter, WeaponSchool.Id.SHIELD), "Day-7 allowance covers Shield")
 	GameState.debug_advance_day()
 	_expect(GameState.try_unlock_plot(), "Day-8 allowance covers second Plot without requiring Compost")
@@ -156,6 +161,11 @@ func _test_guided_biomass() -> void:
 	GameState.clear_pending_seal_choice()
 	var offers := GameState.nursery.spore_shop.offers
 	_expect(GameState.try_buy_fertilizer(offers[0].item as FertilizerData, offers[0].cost), "Day-8 allowance covers a full-Shop Fertilizer")
+	_expect(GameState.nursery.apply_fertilizer_from_stock(0, 0), "Full-Shop Quick Growth accelerates the separate Mould grow")
+	var mould_children := GameState.nursery.harvest(0)
+	_expect(mould_children.size() == 1 and MouldCapEffect.is_mould(mould_children[0]) and mould_children[0].cap_mutation.is_cap() and mould_children[0].body_mutation == null, "The second grow hatches with Mould in its Cap slot")
+	for unit in mould_children:
+		GameState.troop.try_add_unit(unit)
 	_expect(GameState.try_buy_mutation(offers[2].item as MutationData, offers[2].cost), "Day-8 allowance covers a full-Shop Mutation")
 	_expect(GameState.biomass.try_spend(GameState.nursery.current_shop_reroll_cost()), "Day-8 allowance covers one Shop reroll")
 	_expect(GameState.biomass.amount >= 4, "Full Shop purchases leave the rounded 30 percent margin")
@@ -205,15 +215,21 @@ func _test_late_nursery_and_offers() -> void:
 
 
 func _test_new_unlock_actions() -> void:
-	_prepare_day(6)
+	_prepare_day(5)
 	var parent: RosterUnitData = GameState.troop.squad[0]
 	var balance_before := GameState.biomass.amount
-	_expect(GameState.nursery.spore_shop.offers[2] == null, "Day 6 keeps the Mutation offer hidden")
-	_expect(not GameState.try_buy_mutation(GuidedRun.MOULD, GuidedRun.MOULD.biomass_cost), "Mould purchase rejects before Day 7")
+	_expect(GameState.nursery.spore_shop.offers[2] == null, "Day 5 keeps the Mutation offer hidden")
+	_expect(not GameState.try_buy_mutation(GuidedRun.THORNY, GuidedRun.THORNY.biomass_cost), "Mutation purchases reject before Day 6")
 	_expect(GameState.biomass.amount == balance_before, "Rejected early Mutation purchase spends no biomass")
+	GameState.debug_advance_day()
+	_expect(GameState.nursery.spore_shop.offers[2].item == GuidedRun.THORNY, "Day 6 offers Thorny")
 	_expect(not GameState.try_compost_unit(parent), "Compost rejects actions before Day 7")
+	GameState.ensure_guided_preparation_checkpoint()
 	GameState.debug_advance_day()
 	_expect(GameState.nursery.spore_shop.offers[2].item == GuidedRun.MOULD and GuidedRun.MOULD.is_cap(), "Day 7 offers the authored Mould Cap Mutation")
+	_expect(GameState.restore_guided_preparation() and GameState.get_upcoming_day() == 6 and GameState.nursery.spore_shop.offers[2].item == GuidedRun.THORNY, "Restoring Day-6 preparation restores the Thorny offer")
+	GameState.debug_advance_day()
+	_expect(GameState.nursery.spore_shop.offers[2].item == GuidedRun.MOULD, "Advancing again still switches to Mould on Day 7")
 	_expect(GameState.try_compost_unit(parent), "Day 7 allows Compost")
 	_expect(GameState.nursery.has_spore_in_stock(), "Day-7 Compost produces a lineage Spore")
 	_expect(GameState.nursery.plant(0, GameState.nursery.first_spore_stock_index()), "The early lineage Spore can be planted")

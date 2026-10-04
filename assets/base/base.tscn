@@ -195,6 +195,7 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
+theme_override_constants/icon_max_width = 32
 theme_override_colors/icon_focus_color = Color(1.15, 1.15, 1.15, 1)
 theme_override_colors/icon_pressed_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_colors/icon_hover_color = Color(1.15, 1.15, 1.15, 1)
@@ -205,8 +206,9 @@ theme_override_styles/hover = SubResource("StyleBox_undo")
 theme_override_styles/disabled = SubResource("StyleBox_undo")
 theme_override_styles/focus = SubResource("StyleBox_undo")
 disabled = true
+text = "Undo"
 icon = ExtResource("17_undo")
-icon_alignment = 1
+icon_alignment = 2
 expand_icon = true
 
 [node name="StartCombatButton" type="Button" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow/RightPad" unique_id=1667727997]

@@ -6,7 +6,8 @@ const LENGTH := 10
 const MAX_PLOT_COUNT := 2
 const SEAL_CHOICE_DAYS: Array[int] = [8]
 const FEATURE_DAYS := {
-	&"progression": 4, &"bench": 6, &"nursery": 5, &"shop": 5, &"mutations": 7,
+	&"progression": 4, &"bench": 6, &"nursery": 5, &"shop": 5, &"mutations": 6,
+	&"mould_cap": 7,
 	&"squad_slots": 6, &"plot_slots": 8, &"compost": 7, &"seals": 8,
 	&"full_shop": 8, &"shop_reroll": 8, &"offer_locks": 8,
 }
@@ -28,6 +29,10 @@ const _FEATURE_UNLOCK_PRESENTATION := {
 		"icon": preload("res://assets/base/nursery/fertilizers/fertiliser.png"),
 	},
 	&"mutations": {
+		"label": "Thorny Mutation",
+		"icon": preload("res://assets/base/nursery/mutations/mutation_icon.png"),
+	},
+	&"mould_cap": {
 		"label": "Mould Cap Mutation",
 		"icon": preload("res://assets/base/nursery/mutations/mutation_icon.png"),
 	},
@@ -54,6 +59,7 @@ const _FEATURE_UNLOCK_PRESENTATION := {
 	},
 }
 const QUICK_GROWTH := preload("res://assets/base/nursery/fertilizers/quick_growth.tres")
+const THORNY := preload("res://assets/base/nursery/mutations/body/thorny.tres")
 const MOULD := preload("res://assets/base/nursery/mutations/cap/mould.tres")
 const SEALS: Array[SealData] = [
 	preload("res://assets/base/seals/wooden_sword.tres"),
@@ -92,7 +98,7 @@ static func biomass_budget_for_day(day: int) -> int:
 		5:
 			cost = BiomassData.COMMON_SPORE_COST + QUICK_GROWTH.biomass_cost
 		6:
-			cost = BiomassData.SQUAD_SLOT_UNLOCK_COST
+			cost = BiomassData.SQUAD_SLOT_UNLOCK_COST + THORNY.biomass_cost
 		7:
 			return 16
 		8: # Second Plot, one Fertilizer, one Mutation, and one Shop reroll.
@@ -184,6 +190,12 @@ static func make_starter(adult: bool) -> RosterUnitData:
 	return unit
 
 
+static func intro_mutation_for_day(day: int) -> MutationData:
+	if feature_available(&"mould_cap", day):
+		return MOULD
+	return THORNY
+
+
 static func make_shop_offer(slot_index: int) -> ShopOffer:
 	if not GameState.is_guided_shop_slot_available(slot_index):
 		return null
@@ -192,6 +204,7 @@ static func make_shop_offer(slot_index: int) -> ShopOffer:
 		offer.item = QUICK_GROWTH
 		offer.cost = QUICK_GROWTH.biomass_cost
 	else:
-		offer.item = MOULD
-		offer.cost = MOULD.biomass_cost
+		var mutation := intro_mutation_for_day(GameState.get_upcoming_day())
+		offer.item = mutation
+		offer.cost = mutation.biomass_cost
 	return offer

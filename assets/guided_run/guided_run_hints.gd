@@ -33,14 +33,12 @@ static func next_hint() -> Dictionary:
 			candidates.append(_grow_item_hint(false))
 		6:
 			candidates.append(_capacity_hint())
-			candidates.append(_grow_item_hint(true))
 		7:
+			candidates.append(_grow_item_hint(true))
 			candidates.append(_harvested_shield_hint())
 			candidates.append(_compost_hint())
 		8:
 			candidates.append(_plot_capacity_hint())
-			candidates.append(_full_shop_hint())
-			candidates.append(_shop_reroll_hint())
 		9:
 			var spear := _training_hint(WeaponSchool.Id.SPEAR)
 			spear.erase("source")
@@ -202,10 +200,6 @@ static func _grow_item_hint(mutation: bool) -> Dictionary:
 	return _available_item_hint(id, _is_intro_item.bind(mutation))
 
 
-static func _full_shop_hint() -> Dictionary:
-	return _available_item_hint("full_shop", _is_new_shop_item)
-
-
 static func _available_item_hint(id: String, accepts: Callable) -> Dictionary:
 	for index in GameState.nursery.stock.slots.size():
 		var item := GameState.nursery.stock.get_at(index)
@@ -230,18 +224,10 @@ static func _available_item_hint(id: String, accepts: Callable) -> Dictionary:
 	return {}
 
 
-static func _is_new_shop_item(item: Resource) -> bool:
-	if item is MutationData:
-		return not _is_intro_item(item, true)
-	var fertilizer := item as FertilizerData
-	# Clearing a grow is a deliberate player choice, not an introductory suggestion.
-	return fertilizer != null and fertilizer.behavior != FertilizerData.Behavior.FUNGICIDE and not _is_intro_item(item, false)
-
-
 static func _is_intro_item(item: Resource, mutation: bool) -> bool:
 	if mutation:
 		var mutation_data := item as MutationData
-		return mutation_data != null and mutation_data.effect != null and mutation_data.effect.get_script() == GuidedRun.THORNY.effect.get_script()
+		return mutation_data != null and mutation_data.effect != null and mutation_data.effect.get_script() == GuidedRun.MOULD.effect.get_script()
 	var fertilizer := item as FertilizerData
 	return fertilizer != null and fertilizer.growth_bonus > 0
 
@@ -276,16 +262,6 @@ static func _plot_capacity_hint() -> Dictionary:
 	if cost < 0 or not GameState.biomass.can_afford(cost):
 		return {}
 	return _hint("plot_slot", &"plot_slot", &"nursery")
-
-
-static func _shop_reroll_hint() -> Dictionary:
-	var nursery := GameState.nursery
-	if nursery.spore_shop == null or not GameState.biomass.can_afford(nursery.current_shop_reroll_cost()):
-		return {}
-	for offer in nursery.spore_shop.offers:
-		if offer == null or offer.is_empty() or not offer.locked:
-			return _hint("shop_reroll", &"shop_reroll", &"nursery")
-	return {}
 
 
 static func _capacity_hint() -> Dictionary:

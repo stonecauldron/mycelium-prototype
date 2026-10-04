@@ -6,7 +6,7 @@ const LENGTH := 10
 const MAX_PLOT_COUNT := 2
 const SEAL_CHOICE_DAYS: Array[int] = [8]
 const FEATURE_DAYS := {
-	&"progression": 4, &"bench": 6, &"nursery": 5, &"shop": 5, &"mutations": 6,
+	&"progression": 4, &"bench": 6, &"nursery": 5, &"shop": 5, &"mutations": 7,
 	&"squad_slots": 6, &"plot_slots": 8, &"compost": 7, &"seals": 8,
 	&"full_shop": 8, &"shop_reroll": 8, &"offer_locks": 8,
 }
@@ -28,7 +28,7 @@ const _FEATURE_UNLOCK_PRESENTATION := {
 		"icon": preload("res://assets/base/nursery/fertilizers/fertiliser.png"),
 	},
 	&"mutations": {
-		"label": "Thorny Mutation",
+		"label": "Mould Cap Mutation",
 		"icon": preload("res://assets/base/nursery/mutations/mutation_icon.png"),
 	},
 	&"squad_slots": {
@@ -54,7 +54,7 @@ const _FEATURE_UNLOCK_PRESENTATION := {
 	},
 }
 const QUICK_GROWTH := preload("res://assets/base/nursery/fertilizers/quick_growth.tres")
-const THORNY := preload("res://assets/base/nursery/mutations/body/thorny.tres")
+const MOULD := preload("res://assets/base/nursery/mutations/cap/mould.tres")
 const SEALS: Array[SealData] = [
 	preload("res://assets/base/seals/wooden_sword.tres"),
 	preload("res://assets/base/seals/wooden_bow.tres"),
@@ -81,7 +81,7 @@ const BUDGETS: Array[Vector2i] = [
 ]
 
 
-## Introduction costs plus 30% rounded up, with increased grants on Days 7 and 9.
+## Introduction costs plus 30% rounded up, with increased grants on Days 7, 9 and 10.
 static func biomass_budget_for_day(day: int) -> int:
 	var cost := 0
 	match day:
@@ -92,12 +92,12 @@ static func biomass_budget_for_day(day: int) -> int:
 		5:
 			cost = BiomassData.COMMON_SPORE_COST + QUICK_GROWTH.biomass_cost
 		6:
-			cost = BiomassData.SQUAD_SLOT_UNLOCK_COST + THORNY.biomass_cost
+			cost = BiomassData.SQUAD_SLOT_UNLOCK_COST
 		7:
 			return 16
 		8: # Second Plot, one Fertilizer, one Mutation, and one Shop reroll.
-			cost = BiomassData.PLOT_UNLOCK_COST + QUICK_GROWTH.biomass_cost + THORNY.biomass_cost + BiomassData.reroll_price(1)
-		9:
+			cost = BiomassData.PLOT_UNLOCK_COST + QUICK_GROWTH.biomass_cost + MOULD.biomass_cost + BiomassData.reroll_price(1)
+		9, 10:
 			return 21
 	return ceili(float(cost) * 1.3)
 
@@ -192,6 +192,6 @@ static func make_shop_offer(slot_index: int) -> ShopOffer:
 		offer.item = QUICK_GROWTH
 		offer.cost = QUICK_GROWTH.biomass_cost
 	else:
-		offer.item = THORNY
-		offer.cost = THORNY.biomass_cost
+		offer.item = MOULD
+		offer.cost = MOULD.biomass_cost
 	return offer

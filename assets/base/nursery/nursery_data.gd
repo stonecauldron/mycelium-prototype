@@ -171,13 +171,11 @@ func reroll_unlocked_shop_offers() -> void:
 		if offer != null and not offer.is_empty():
 			selected_paths.append(offer.item.resource_path)
 	var generate_offer := generate_offer_for_slot.bind(selected_paths)
-	# Script only the full Shop's opening draw; later rerolls use the normal pools.
-	if (
-		GameState.is_guided_run
-		and GameState.get_upcoming_day() == int(GuidedRun.FEATURE_DAYS[&"full_shop"])
-		and _guided_shop_day != GameState.get_upcoming_day()
-	):
-		generate_offer = _generate_first_guided_full_shop_offer.bind(selected_paths)
+	if GameState.is_guided_run:
+		# Reserve Quick Growth on every roll, or keep an existing locked offer.
+		if not selected_paths.has(GuidedRun.QUICK_GROWTH.resource_path):
+			selected_paths.append(GuidedRun.QUICK_GROWTH.resource_path)
+		generate_offer = _generate_guided_full_shop_offer.bind(selected_paths, _guided_quick_growth_slot())
 	spore_shop.reroll_unlocked(generate_offer)
 	_normalize_shop_offers(selected_paths)
 	if GameState.is_guided_run:
@@ -185,13 +183,21 @@ func reroll_unlocked_shop_offers() -> void:
 		_guided_shop_day = GameState.get_upcoming_day()
 
 
-func _generate_first_guided_full_shop_offer(slot_index: int, selected_paths: Array[String]) -> ShopOffer:
-	if slot_index != 0:
+func _guided_quick_growth_slot() -> int:
+	var first_unlocked := -1
+	for slot in SHOP_FERTILIZER_SLOT_COUNT:
+		if spore_shop.is_locked(slot):
+			if spore_shop.offers[slot].item == GuidedRun.QUICK_GROWTH:
+				return -1
+		elif first_unlocked < 0:
+			first_unlocked = slot
+	return first_unlocked
+
+
+func _generate_guided_full_shop_offer(slot_index: int, selected_paths: Array[String], quick_growth_slot: int) -> ShopOffer:
+	if slot_index != quick_growth_slot:
 		return generate_offer_for_slot(slot_index, selected_paths)
-	var offer := GuidedRun.make_shop_offer(0)
-	if not selected_paths.has(offer.item.resource_path):
-		selected_paths.append(offer.item.resource_path)
-	return offer
+	return GuidedRun.make_shop_offer(0)
 
 
 ## Refill once per Day: authored offers first, then the normal unlocked catalog.

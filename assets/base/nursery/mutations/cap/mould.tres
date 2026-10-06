@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="MutationData" format=3 uid="uid://cvb8truc62km3"]
 
 [ext_resource type="Script" uid="uid://cklsnp1fms06u" path="res://assets/base/nursery/mutation_data.gd" id="1_mut"]
-[ext_resource type="Script" uid="uid://b2ep7gj7j4286" path="res://assets/base/nursery/mutations/cap/mould_effect.gd" id="2_effect"]
+[ext_resource type="Script" uid="uid://vef25p5hd5g10" path="res://assets/base/nursery/mutations/cap/mould_effect.gd" id="2_effect"]
 
 [sub_resource type="Resource" id="Effect"]
 script = ExtResource("2_effect")

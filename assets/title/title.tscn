@@ -3,12 +3,10 @@
 [ext_resource type="Script" uid="uid://ct4bgro45wopc" path="res://assets/title/title.gd" id="1_title"]
 [ext_resource type="Theme" uid="uid://b8rmvb87hj66n" path="res://assets/themes/default.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://b6mfiqthp4vam" path="res://assets/base/background/bg_battlegrounds.png" id="3_pajnb"]
-[ext_resource type="PackedScene" path="res://assets/ui/run_menu/run_menu.tscn" id="4_run_menu"]
+[ext_resource type="PackedScene" uid="uid://di7wsln3p56v0" path="res://assets/ui/run_menu/run_menu.tscn" id="4_run_menu"]
 [ext_resource type="PackedScene" path="res://assets/title/title_battle.tscn" id="5_battle"]
 [ext_resource type="Texture2D" uid="uid://dp3j8b8evypt3" path="res://assets/asset_packs/Cila - Paper UI stylized/paper style 3/paper 2 02.png" id="6_paper"]
-
-
-[ext_resource type="Script" path="res://assets/ui/guided_run_checkbox.gd" id="guided_selector"]
+[ext_resource type="Script" uid="uid://cjnxfu7loe6kw" path="res://assets/ui/guided_run_checkbox.gd" id="guided_selector"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_paper_dialog"]
 content_margin_left = 28.0
@@ -53,7 +51,7 @@ mouse_filter = 2
 texture = ExtResource("3_pajnb")
 expand_mode = 1
 
-[node name="TitleBattle" parent="." instance=ExtResource("5_battle")]
+[node name="TitleBattle" parent="." unique_id=1906494347 instance=ExtResource("5_battle")]
 layout_mode = 1
 
 [node name="Center" type="CenterContainer" parent="." unique_id=1012023005]
@@ -61,10 +59,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 offset_top = -130.0
 offset_bottom = -130.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Center" unique_id=814831916]
 custom_minimum_size = Vector2(760, 440)
@@ -82,7 +80,7 @@ theme_type_variation = &"TitleLabel"
 text = "Auto Shrooms"
 horizontal_alignment = 1
 
-[node name="NewRunRow" type="CenterContainer" parent="Center/Panel/MenuPage"]
+[node name="NewRunRow" type="CenterContainer" parent="Center/Panel/MenuPage" unique_id=1670084601]
 layout_mode = 2
 mouse_filter = 2
 
@@ -94,7 +92,7 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "New Run"
 
-[node name="GuidedRunCheckBox" type="CheckBox" parent="Center/Panel/MenuPage/NewRunRow/NewRunButton"]
+[node name="GuidedRunCheckBox" type="CheckBox" parent="Center/Panel/MenuPage/NewRunRow/NewRunButton" unique_id=1186853611]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 1
@@ -109,10 +107,10 @@ offset_right = 20.0
 offset_bottom = 22.0
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.18, 0.16, 0.14, 1)
+theme_override_colors/font_focus_color = Color(0.18, 0.16, 0.14, 1)
 theme_override_colors/font_pressed_color = Color(0.18, 0.16, 0.14, 1)
 theme_override_colors/font_hover_color = Color(0.32, 0.3, 0.26, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.32, 0.3, 0.26, 1)
-theme_override_colors/font_focus_color = Color(0.18, 0.16, 0.14, 1)
 theme_override_font_sizes/font_size = 26
 text = "Guided run"
 script = ExtResource("guided_selector")
@@ -125,7 +123,7 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Wishlist on Steam"
 
-[node name="CreditsButton" type="Button" parent="Center/Panel/MenuPage"]
+[node name="CreditsButton" type="Button" parent="Center/Panel/MenuPage" unique_id=19824219]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
@@ -141,67 +139,67 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Quit"
 
-[node name="CreditsPage" type="VBoxContainer" parent="Center/Panel"]
+[node name="CreditsPage" type="VBoxContainer" parent="Center/Panel" unique_id=1845124006]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_type_variation = &"StackVBox"
 
-[node name="Heading" type="Label" parent="Center/Panel/CreditsPage"]
+[node name="Heading" type="Label" parent="Center/Panel/CreditsPage" unique_id=1319270557]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 text = "Credits"
 horizontal_alignment = 1
 
-[node name="Creator" type="VBoxContainer" parent="Center/Panel/CreditsPage"]
+[node name="Creator" type="VBoxContainer" parent="Center/Panel/CreditsPage" unique_id=1991561761]
 layout_mode = 2
 
-[node name="Role" type="Label" parent="Center/Panel/CreditsPage/Creator"]
+[node name="Role" type="Label" parent="Center/Panel/CreditsPage/Creator" unique_id=1879967754]
 layout_mode = 2
 theme_type_variation = &"PageSubtitleLabel"
 text = "Game created by:"
 horizontal_alignment = 1
 
-[node name="Name" type="Label" parent="Center/Panel/CreditsPage/Creator"]
+[node name="Name" type="Label" parent="Center/Panel/CreditsPage/Creator" unique_id=1376431261]
 layout_mode = 2
 theme_type_variation = &"CardNameLabel"
 theme_override_font_sizes/font_size = 30
 text = "Pedro Caldeira"
 horizontal_alignment = 1
 
-[node name="Art" type="VBoxContainer" parent="Center/Panel/CreditsPage"]
+[node name="Art" type="VBoxContainer" parent="Center/Panel/CreditsPage" unique_id=459559976]
 layout_mode = 2
 
-[node name="Role" type="Label" parent="Center/Panel/CreditsPage/Art"]
+[node name="Role" type="Label" parent="Center/Panel/CreditsPage/Art" unique_id=1081687713]
 layout_mode = 2
 theme_type_variation = &"PageSubtitleLabel"
 text = "Environment and background art:"
 horizontal_alignment = 1
 
-[node name="Name" type="Label" parent="Center/Panel/CreditsPage/Art"]
+[node name="Name" type="Label" parent="Center/Panel/CreditsPage/Art" unique_id=702778251]
 layout_mode = 2
 theme_type_variation = &"CardNameLabel"
 theme_override_font_sizes/font_size = 30
 text = "Stephanie Stutz"
 horizontal_alignment = 1
 
-[node name="Music" type="VBoxContainer" parent="Center/Panel/CreditsPage"]
+[node name="Music" type="VBoxContainer" parent="Center/Panel/CreditsPage" unique_id=568309479]
 layout_mode = 2
 
-[node name="Role" type="Label" parent="Center/Panel/CreditsPage/Music"]
+[node name="Role" type="Label" parent="Center/Panel/CreditsPage/Music" unique_id=201118237]
 layout_mode = 2
 theme_type_variation = &"PageSubtitleLabel"
 text = "Music composed & performed by:"
 horizontal_alignment = 1
 
-[node name="Name" type="Label" parent="Center/Panel/CreditsPage/Music"]
+[node name="Name" type="Label" parent="Center/Panel/CreditsPage/Music" unique_id=1539074849]
 layout_mode = 2
 theme_type_variation = &"CardNameLabel"
 theme_override_font_sizes/font_size = 30
 text = "Andres D. Bubenhofer"
 horizontal_alignment = 1
 
-[node name="CreditsBackButton" type="Button" parent="Center/Panel/CreditsPage"]
+[node name="CreditsBackButton" type="Button" parent="Center/Panel/CreditsPage" unique_id=339710209]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
@@ -209,6 +207,6 @@ size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
 text = "Back"
 
-[node name="RunMenu" parent="." instance=ExtResource("4_run_menu")]
+[node name="RunMenu" parent="." unique_id=959923734 instance=ExtResource("4_run_menu")]
 intent_scene = "title"
 settings_only = true

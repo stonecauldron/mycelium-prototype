@@ -118,12 +118,14 @@ func _populate_unit(unit: RosterUnitData) -> void:
 		_description.visible = false
 
 	if weapon != null:
-		_tag_row.add_child(_make_tag(_range_label(weapon.formation_line)))
+		_tag_row.add_child(_make_tag(
+			_range_label(weapon.formation_line), TagChip.range_description(weapon.formation_line)
+		))
 		_tag_row.add_child(_make_stat_tag(weapon.damage_stat))
 		if weapon.damage_type == WeaponData.DamageType.BLUNT:
-			_tag_row.add_child(_make_tag("Blunt"))
+			_tag_row.add_child(_make_tag("Blunt", TagChip.BLUNT_DESCRIPTION))
 		if weapon.targeting_mode == WeaponData.TargetingMode.AOE:
-			_tag_row.add_child(_make_tag("AOE"))
+			_tag_row.add_child(_make_tag("AOE", TagChip.AOE_DESCRIPTION))
 
 
 func _clear_tags() -> void:
@@ -131,9 +133,9 @@ func _clear_tags() -> void:
 		child.queue_free()
 
 
-func _make_tag(text: String) -> TagChip:
+func _make_tag(text: String, description: String) -> TagChip:
 	var chip: TagChip = _TAG_CHIP_SCENE.instantiate()
-	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.set_description(description)
 	chip.set_text(text)
 	if chip.is_node_ready():
 		chip.set_content_font_size(_TAG_FONT_SIZE)
@@ -142,9 +144,9 @@ func _make_tag(text: String) -> TagChip:
 	return chip
 
 
-func _make_stat_tag(damage_stat: int) -> TagChip:
+func _make_stat_tag(damage_stat: WeaponData.DamageStat) -> TagChip:
 	var chip: TagChip = _TAG_CHIP_SCENE.instantiate()
-	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.set_description(TagChip.scaling_description(damage_stat))
 	chip.show_icons(
 		StatDisplay.textures_for_damage_stat(damage_stat),
 		"or",

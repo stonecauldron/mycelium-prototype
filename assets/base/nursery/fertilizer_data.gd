@@ -31,6 +31,19 @@ const AMOK_ATTACK_RATE := 2.0
 @export var force_ready: bool = false
 
 
+static func harvest_yield(fertilizers: Array[FertilizerData]) -> int:
+	var count := 1
+	for fertilizer in fertilizers:
+		if fertilizer == null:
+			continue
+		match fertilizer.behavior:
+			Behavior.MEIOSIS:
+				count *= 2
+			Behavior.TRIPLOID:
+				count *= 3
+	return count
+
+
 func is_stat_source() -> bool:
 	return (
 		behavior == Behavior.STAT

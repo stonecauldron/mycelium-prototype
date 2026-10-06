@@ -2,6 +2,9 @@ class_name TagChip
 extends PanelContainer
 
 const _INK := Color(0.03137255, 0.03529412, 0.02745098, 1)
+const _HOVER_PUNCH_SCENE := preload("res://assets/ui/hover_punch/hover_punch.tscn")
+const BLUNT_DESCRIPTION := "Blunt\nBypasses shields."
+const AOE_DESCRIPTION := "Area of effect\nCan hit multiple enemies in the attack area."
 
 @export var text: String = "":
 	set(value):
@@ -24,9 +27,67 @@ var _caption: String = ""
 
 
 func _ready() -> void:
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_set_children_mouse_filter_ignore(self)
 	_apply_mode()
+	set_description(tooltip_text)
+
+
+static func range_description(formation_line: WeaponData.FormationLine) -> String:
+	match formation_line:
+		WeaponData.FormationLine.MID:
+			return "Mid Range\nRanged spear throws.\nMelee when enemies close in."
+		WeaponData.FormationLine.BACK:
+			return "Ranged\nFights at a distance."
+		_:
+			return "Melee\nFights at close range."
+
+
+static func scaling_description(damage_stat: WeaponData.DamageStat) -> String:
+	match damage_stat:
+		WeaponData.DamageStat.DEX:
+			return "Dexterity scaling\nDamage scales with Dexterity DEX."
+		WeaponData.DamageStat.FINESSE:
+			return "Strength or Dexterity scaling\nDamage scales with whichever is higher:\nStrength STR or Dexterity DEX."
+		_:
+			return "Strength scaling\nDamage scales with Strength STR."
+
+
+func set_description(description: String, interactive: bool = true) -> void:
+	tooltip_text = description if interactive else ""
+	# Let clicks on starter tags continue to select their card.
+	mouse_filter = Control.MOUSE_FILTER_PASS if not tooltip_text.is_empty() else Control.MOUSE_FILTER_IGNORE
+	if not is_node_ready():
+		return
+	var punch := get_node_or_null("HoverPunch") as HoverPunch
+	if punch != null:
+		punch.reset()
+	if tooltip_text.is_empty():
+		if punch != null:
+			punch.suppress_enter()
+	elif punch == null:
+		add_child(_HOVER_PUNCH_SCENE.instantiate())
+	else:
+		punch.arm_enter_unless_hovered()
+
+
+func _make_custom_tooltip(for_text: String) -> Object:
+	var parts := for_text.split("\n", true, 1)
+	var panel := PanelContainer.new()
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_theme_stylebox_override("panel", get_theme_stylebox("panel", "TooltipPanel"))
+	var box := VBoxContainer.new()
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_theme_constant_override("separation", 6)
+	panel.add_child(box)
+	var title := Label.new()
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title.text = parts[0]
+	title.add_theme_font_size_override("font_size", 24)
+	title.add_theme_color_override("font_color", _INK)
+	box.add_child(title)
+	if parts.size() > 1:
+		box.add_child(StatDisplay.make_rich_label(parts[1], 22, StatDisplay.INK_MUTED, 390.0))
+	return DetailTooltipPopup.configure(panel)
 
 
 func set_text(value: String) -> void:

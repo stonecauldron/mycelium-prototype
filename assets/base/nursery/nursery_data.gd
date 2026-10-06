@@ -617,9 +617,7 @@ func _make_harvest_units(
 	if pending_stat_bonus != 0:
 		stats.add_all(pending_stat_bonus)
 
-	var yield_count := 1
-	var meiosis := false
-	var triploid := false
+	var yield_count := FertilizerData.harvest_yield(fertilizers)
 	var force_amok := false
 	var cocooning := false
 	var stimulants := false
@@ -629,10 +627,6 @@ func _make_harvest_units(
 		if fert == null:
 			continue
 		match fert.behavior:
-			FertilizerData.Behavior.MEIOSIS:
-				meiosis = true
-			FertilizerData.Behavior.TRIPLOID:
-				triploid = true
 			FertilizerData.Behavior.AMOK:
 				force_amok = true
 			FertilizerData.Behavior.COCOONING:
@@ -643,17 +637,10 @@ func _make_harvest_units(
 				late_bloomer = true
 			FertilizerData.Behavior.VOLATILE:
 				volatile = true
-	if meiosis:
-		yield_count *= 2
-	if triploid:
-		yield_count *= 3
 
 	for i in yield_count:
 		var unit_stats := stats.duplicate(true) as UnitStatsData
-		if meiosis:
-			unit_stats.scale_all(0.5)
-		if triploid:
-			unit_stats.scale_all(1.0 / 3.0)
+		unit_stats.scale_all(1.0 / yield_count)
 		var hatch_name := UnitNames.pick(rng)
 		var hatch_generation := 1
 		var hatch_lineage := hatch_name

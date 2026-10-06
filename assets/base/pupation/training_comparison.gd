@@ -362,39 +362,19 @@ func _fill_weapon_tags(
 	)
 	_add_weapon_tag(row, range_text,
 		change_direction if other_weapon == null or weapon.formation_line != other_weapon.formation_line else 0,
-		_range_description(weapon.formation_line))
+		TagChip.range_description(weapon.formation_line))
 	var scaling_change := change_direction if other_weapon == null or weapon.damage_stat != other_weapon.damage_stat else 0
-	var scaling := _add_weapon_tag(row, "", scaling_change, _scaling_description(weapon.damage_stat))
+	var scaling := _add_weapon_tag(row, "", scaling_change, TagChip.scaling_description(weapon.damage_stat))
 	scaling.show_icons(StatDisplay.textures_for_damage_stat(weapon.damage_stat), "or",
 		_CHANGED_TAG_FONT_SIZE if scaling_change != 0 else _TAG_FONT_SIZE, "Scaling")
 	if weapon.damage_type == WeaponData.DamageType.BLUNT:
 		_add_weapon_tag(row, "Blunt",
 			change_direction if other_weapon == null or other_weapon.damage_type != WeaponData.DamageType.BLUNT else 0,
-			"Blunt\nBypasses shields.")
+			TagChip.BLUNT_DESCRIPTION)
 	if weapon.targeting_mode == WeaponData.TargetingMode.AOE:
 		_add_weapon_tag(row, "AOE",
 			change_direction if other_weapon == null or other_weapon.targeting_mode != WeaponData.TargetingMode.AOE else 0,
-			"Area of effect\nCan hit multiple enemies in the attack area.")
-
-
-func _range_description(formation_line: WeaponData.FormationLine) -> String:
-	match formation_line:
-		WeaponData.FormationLine.MID:
-			return "Mid Range\nRanged spear throws.\nMelee when enemies close in."
-		WeaponData.FormationLine.BACK:
-			return "Ranged\nFights at a distance."
-		_:
-			return "Melee\nFights at close range."
-
-
-func _scaling_description(damage_stat: WeaponData.DamageStat) -> String:
-	match damage_stat:
-		WeaponData.DamageStat.DEX:
-			return "Scaling\nDamage scales with DEX."
-		WeaponData.DamageStat.FINESSE:
-			return "Scaling\nDamage scales with whichever is higher:\nSTR or DEX."
-		_:
-			return "Scaling\nDamage scales with STR."
+			TagChip.AOE_DESCRIPTION)
 
 
 func _add_weapon_tag(row: HFlowContainer, text: String, change: int, description: String) -> TagChip:
@@ -402,7 +382,7 @@ func _add_weapon_tag(row: HFlowContainer, text: String, change: int, description
 	row.add_child(tag)
 	tag.set_content_font_size(_CHANGED_TAG_FONT_SIZE if change != 0 else _TAG_FONT_SIZE)
 	tag.set_text(text)
-	_configure_description_hover(tag, description)
+	tag.set_description(description, not result_only)
 	if change != 0:
 		tag.set_fill_color(StatDisplay.change_color(change, true))
 		var style := tag.get_theme_stylebox("panel")

@@ -378,6 +378,7 @@ func is_seal_choice_visible() -> bool:
 func hide_seal_choice() -> void:
 	if is_seal_choice_visible():
 		_seal_dialog.hide()
+		_queue_emergence_presentation()
 
 
 func toggle_seal_choice() -> void:
@@ -386,7 +387,7 @@ func toggle_seal_choice() -> void:
 	if not is_instance_valid(_seal_dialog):
 		_ensure_seal_choice()
 	elif _seal_dialog.visible:
-		_seal_dialog.hide()
+		hide_seal_choice()
 	else:
 		_cancel_cocoon_drag_preview()
 		_cancel_presentations()
@@ -662,8 +663,8 @@ func _try_play_next_emergence() -> void:
 		_notify_start_combat_state()
 		return
 	if (
-		GameState.pending_seal_choice or not GameState.troop.is_seeded()
-		or is_instance_valid(_starter_dialog) or is_instance_valid(_seal_dialog)
+		not GameState.troop.is_seeded()
+		or is_instance_valid(_starter_dialog) or is_seal_choice_visible()
 		or _has_open_cocoon_dialog() or get_viewport().gui_is_dragging()
 		or SceneTransition.is_transitioning()
 	):

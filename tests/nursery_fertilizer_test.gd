@@ -19,7 +19,8 @@ func _ready() -> void:
 		for ready_kind in 3:
 			_check_ready_routes(fertilizer, ready_kind)
 	_check_other_fertilizers()
-	print("Nursery fertilizer checks: preparation, growth, harvestable Plot drops and purchases; failures=", _failures)
+	_check_split_fertilizers()
+	print("Nursery fertilizer checks: preparation, growth, harvestable Plot drops and purchases, stacked hatch yields and previews; failures=", _failures)
 	get_tree().quit(1 if _failures > 0 else 0)
 
 
@@ -108,6 +109,64 @@ func _check_other_fertilizers() -> void:
 	_expect(full.apply_fertilizer(fungicide), "Fungicide still applies to a full harvestable Plot")
 	_expect(full.is_empty() and full.pending_stat_bonus == NurseryPlotData.FUNGICIDE_NEXT_SPORE_BONUS,
 		"Fungicide kills the harvestable grow and leaves Extra nutrition")
+
+
+func _check_split_fertilizers() -> void:
+	GameState.seals.add(load("res://assets/base/seals/fertilizer_spreader.tres") as SealData)
+	var cases := [
+		[[], 1],
+		[["meiosis"], 2],
+		[["triploid_cells"], 3],
+		[["meiosis", "meiosis"], 4],
+		[["triploid_cells", "triploid_cells"], 9],
+		[["meiosis", "triploid_cells"], 6],
+		[["triploid_cells", "meiosis"], 6],
+	]
+	for lineage in [false, true]:
+		for entry in cases:
+			var plot := _planted_plot()
+			if lineage:
+				plot.planted_spore.lineage_name = "Split test"
+				plot.planted_spore.mean_stats = UnitStatsData.new()
+				plot.planted_spore.mean_stats.strength = 26
+				plot.planted_spore.mean_stats.dex = 44
+				plot.planted_spore.mean_stats.con = 62
+				plot.pending_stat_bonus = 4
+			plot.remaining_time = 0
+			GameState.nursery.plots[0] = plot.duplicate(true)
+			var baseline := GameState.nursery.harvest(0)
+			var count: int = entry[1]
+			var label := "%s, lineage %s" % [str(entry[0]), str(lineage)]
+			for fertilizer_name in entry[0]:
+				var fertilizer := load("res://assets/base/nursery/fertilizers/%s.tres" % fertilizer_name) as FertilizerData
+				_expect(plot.apply_fertilizer(fertilizer), label + ": stacked Fertilizer applies")
+			var preview := SporeDetailCard.new()
+			preview.spore_data = plot.planted_spore
+			preview.plot_data = plot
+			var expected_average := UnitStatsData.average_for_tier(plot.planted_spore.power_tier)
+			if lineage:
+				expected_average = plot.planted_spore.mean_stats.duplicate(true) as UnitStatsData
+			expected_average.add_all(plot.pending_stat_bonus)
+			_expect_divided_stats(preview._preview_average_stats(), expected_average, count, label + ": preview")
+			preview.free()
+			GameState.nursery.plots[0] = plot
+			var units := GameState.nursery.harvest(0)
+			_expect(units.size() == count, label + ": correct hatch count")
+			for unit in units:
+				_expect_divided_stats(unit.stats, baseline[0].stats, count, label + ": hatch")
+			if units.size() > 1:
+				var sibling_strength := units[1].stats.strength
+				units[0].stats.strength += 1
+				_expect(units[1].stats.strength == sibling_strength, label + ": hatchlings have independent Stats")
+			_expect(plot.is_empty() and plot.applied_fertilizers.is_empty(), label + ": harvest consumes the grow")
+	GameState.seals = SealsCollection.new()
+
+
+func _expect_divided_stats(actual: UnitStatsData, original: UnitStatsData, divisor: int, label: String) -> void:
+	_expect(actual.strength == maxi(1, roundi(float(original.strength) / divisor))
+		and actual.dex == maxi(1, roundi(float(original.dex) / divisor))
+		and actual.con == maxi(1, roundi(float(original.con) / divisor)),
+		label + ": divides all Stats once, preserving rounding and the minimum of 1")
 
 
 func _planted_plot() -> NurseryPlotData:

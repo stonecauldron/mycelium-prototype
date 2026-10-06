@@ -168,20 +168,7 @@ func _apply_preview_plot_stat_modifiers(stats: UnitStatsData) -> void:
 func _apply_preview_yield_stat_scale(stats: UnitStatsData) -> void:
 	if stats == null or plot_data == null:
 		return
-	var meiosis := false
-	var triploid := false
-	for fert in plot_data.applied_fertilizers:
-		if fert == null:
-			continue
-		match fert.behavior:
-			FertilizerData.Behavior.MEIOSIS:
-				meiosis = true
-			FertilizerData.Behavior.TRIPLOID:
-				triploid = true
-	if meiosis:
-		stats.scale_all(0.5)
-	if triploid:
-		stats.scale_all(1.0 / 3.0)
+	stats.scale_all(1.0 / FertilizerData.harvest_yield(plot_data.applied_fertilizers))
 
 
 func _make_preview_unit() -> RosterUnitData:

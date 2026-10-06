@@ -86,12 +86,16 @@ func _refresh() -> void:
 	_speed_chip.set_value(AttackSpeedDisplay.format_seconds(weapon_data.attack_interval))
 	_dmg_label.text = "Base Damage: %d" % weapon_data.base_damage
 	_range_tag.set_text(_range_label(weapon_data.formation_line))
+	_range_tag.set_description(TagChip.range_description(weapon_data.formation_line), interactive)
 	_scaling_tag.show_icons(
 		StatDisplay.textures_for_damage_stat(weapon_data.damage_stat),
 		"or",
 		22,
 		"Scaling"
 	)
+	_scaling_tag.set_description(TagChip.scaling_description(weapon_data.damage_stat), interactive)
+	_blunt_tag.set_description(TagChip.BLUNT_DESCRIPTION, interactive)
+	_aoe_tag.set_description(TagChip.AOE_DESCRIPTION, interactive)
 	_blunt_tag.visible = weapon_data.damage_type == WeaponData.DamageType.BLUNT
 	if _blunt_tag.visible:
 		_blunt_tag.set_text("Blunt")

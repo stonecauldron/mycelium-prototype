@@ -1,0 +1,217 @@
+{
+  "title": "Auto Shrooms",
+  "tagline": "Grow. Train. Fight. Replant.",
+  "one_liner": "An auto-battler where you grow your own mushroom troop.",
+  "updated": "24 September 2026",
+  "facts": [
+    {
+      "label": "Developer & publisher",
+      "value": "Cauldron Games"
+    },
+    {
+      "label": "Based in",
+      "value": "Zurich, Switzerland"
+    },
+    {
+      "label": "Genre",
+      "value": "Single-player auto-battler"
+    },
+    {
+      "label": "Platforms",
+      "value": "Windows, macOS"
+    },
+    {
+      "label": "Status",
+      "value": "In development"
+    },
+    {
+      "label": "Release date",
+      "value": "To be announced"
+    },
+    {
+      "label": "Language",
+      "value": "English"
+    }
+  ],
+  "description": [
+    "Auto Shrooms is an auto-battler where you grow your own mushroom troop. Plant spores in the Nursery, nurture them with Fertilizers and Mutations, and harvest new recruits. Train them in weapon schools, combine their fighting styles, and arrange your squad before sending it into battle against plant enemies.",
+    "Winning battles earns biomass to invest in your next generation. Fallen Adults leave lineage spores that preserve their weapon Trainings and Mutations, letting their descendants carry the fight forward. Grow, train, fight, and replant through a ten-day run."
+  ],
+  "features": [
+    {
+      "title": "Grow your troop",
+      "body": "Plant spores and shape your next recruits with Fertilizers and Mutations."
+    },
+    {
+      "title": "Train & combine",
+      "body": "Train in five weapon schools and discover combo weapons."
+    },
+    {
+      "title": "Prepare for battle",
+      "body": "Scout the enemy army and arrange your squad before automated combat."
+    },
+    {
+      "title": "Continue the lineage",
+      "body": "Replant fallen Adults to pass their weapon Trainings and Mutations to the next generation."
+    },
+    {
+      "title": "Survive ten days",
+      "body": "Face escalating opposition and elite battles across a ten-day run."
+    }
+  ],
+  "studio": "Cauldron Games is a solo indie game studio based in Zurich, founded by Pedro Caldeira. Its games aim to nudge players into seeing things differently.",
+  "contact": {
+    "name": "Pedro Caldeira",
+    "email": "pedro@cauldron.games",
+    "purpose": "Press, interviews and business enquiries",
+    "source": "Public contact link on https://cauldron.games/, decoded by its own script.js",
+    "verified_on": "2026-09-24"
+  },
+  "links": {
+    "steam": "https://store.steampowered.com/app/4963670/Auto_Shrooms/",
+    "website": "https://cauldron.games/",
+    "newsletter": "https://cauldron.games/#home",
+    "x": "https://x.com/_cauldron",
+    "youtube": "https://www.youtube.com/@cauldrongames",
+    "presskit_dropbox": "https://www.dropbox.com/scl/fo/wx95ir6a86xckksb8yf0r/AHNSq8OVeCoS1ASVi8wdIrY?rlkey=jmm08x09phyrxp5y2ddnhnm14&st=yad2cgot&dl=0",
+    "trailer": "https://www.youtube.com/watch?v=RZcBiuLZ1qw"
+  },
+  "media_notes": "Covers are promotional illustrations. Screenshots are gameplay captures. The trailer is 32 seconds long and includes music and game sound effects.",
+  "unannounced": [
+    "price",
+    "exact release date"
+  ],
+  "web_demo": {
+    "public": false,
+    "url": "https://cauldron.itch.io/auto-shrooms",
+    "checked_on": "2026-09-24"
+  },
+  "characters": [
+    {
+      "file": "child",
+      "name": "Child",
+      "caption": "Weaponless Child mushroom, rendered with its default in-game colours.",
+      "render": {
+        "kind": "child",
+        "source": "assets/units/generalist/player_child_base.tscn"
+      }
+    },
+    {
+      "file": "adult",
+      "name": "Adult",
+      "caption": "Weaponless Adult mushroom, rendered with its default in-game colours.",
+      "render": {
+        "kind": "adult",
+        "source": "assets/units/generalist/player_imago_base.tscn"
+      }
+    }
+  ],
+  "youtube_video_id": "RZcBiuLZ1qw",
+  "weapons": [
+    {
+      "file": "bow",
+      "name": "Bow",
+      "source": "assets/weapons/bow/bow.png"
+    },
+    {
+      "file": "crossbow",
+      "name": "Crossbow",
+      "source": "assets/weapons/crossbow/crossbow.png"
+    },
+    {
+      "file": "giant-horn",
+      "name": "Great Horn",
+      "source": "assets/weapons/giant_horn/horn.png"
+    },
+    {
+      "file": "great-bow",
+      "name": "Great Bow",
+      "source": "assets/weapons/great_bow/great_bow.png"
+    },
+    {
+      "file": "great-hammer",
+      "name": "Great Hammer",
+      "source": "assets/weapons/great_hammer/greathammer.png"
+    },
+    {
+      "file": "great-shield",
+      "name": "Great Shield",
+      "source": "assets/weapons/great_shield/great_shield.png"
+    },
+    {
+      "file": "great-spear",
+      "name": "Great Spear",
+      "source": "assets/weapons/great_spear/great_spear.png"
+    },
+    {
+      "file": "great-sword",
+      "name": "Great Sword",
+      "source": "assets/weapons/great_sword/great_sword.png"
+    },
+    {
+      "file": "lance",
+      "name": "Lance",
+      "source": "assets/weapons/lance/lance.png"
+    },
+    {
+      "file": "mace",
+      "name": "Mace",
+      "source": "assets/weapons/mace/mace.png"
+    },
+    {
+      "file": "mace-and-shield",
+      "name": "Mace and Shield",
+      "source": "assets/weapons/mace_and_shield/mace_and_shield.png"
+    },
+    {
+      "file": "mortar",
+      "name": "Spore Mortar",
+      "source": "assets/weapons/mortar/mortar.png"
+    },
+    {
+      "file": "polehammer",
+      "name": "Polehammer",
+      "source": "assets/weapons/polehammer/polehammer.png"
+    },
+    {
+      "file": "shield",
+      "name": "Shield",
+      "source": "assets/weapons/shield/shield.png"
+    },
+    {
+      "file": "sickle",
+      "name": "Sickle",
+      "source": "assets/weapons/sickle/sickle.png"
+    },
+    {
+      "file": "spear",
+      "name": "Spear",
+      "source": "assets/weapons/spear/spear.png"
+    },
+    {
+      "file": "spear-and-shield",
+      "name": "Spear and Shield",
+      "source": "assets/weapons/spear_and_shield/spear_and_shield.png"
+    },
+    {
+      "file": "sword",
+      "name": "Sword",
+      "source": "assets/weapons/sword/sword.png"
+    },
+    {
+      "file": "sword-and-shield",
+      "name": "Sword and Shield",
+      "source": "assets/weapons/sword_and_shield/sword_and_shield.png"
+    },
+    {
+      "file": "umbrella",
+      "name": "Umbrella Shield",
+      "source": "assets/weapons/umbrella/umbrella.png"
+    },
+    {
+      "file": "warhammer",
+      "name": "Warhammer",
+      "source": "assets/weapons/warhammer/warhammer.png"
+    }
+  ]
+}

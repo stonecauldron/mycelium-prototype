@@ -1,0 +1,87 @@
+{
+  "title": "Auto Shrooms",
+  "slug": "auto-shrooms",
+  "prepared_on": "2026-09-24",
+  "developer": "Cauldron Games",
+  "publisher": "Cauldron Games",
+  "genre": "Single-player auto-battler",
+  "status": "In development",
+  "release_date": "To be announced",
+  "announced_desktop_platforms": [
+    "Windows",
+    "macOS"
+  ],
+  "one_liner": "An auto-battler where you grow your own mushroom troop.",
+  "homepage_paragraphs": [
+    "An auto-battler where you grow your own mushroom troop.",
+    "Plant spores, nurture strange mutations, and harvest your next recruits.",
+    "Train your mushrooms, combine weapon schools, and arrange your squad to face the chlorophyll heathen.",
+    "When an Adult falls, replant its spores. The next generation carries its legacy into battle.",
+    "Grow. Train. Fight. Replant. Fungus Vult!"
+  ],
+  "status_line": "Status: In development · Release date TBA",
+  "primary_cta": {
+    "label": "Wishlist on Steam",
+    "url": "https://store.steampowered.com/app/4963670/Auto_Shrooms/",
+    "verified_on": "2026-09-24"
+  },
+  "secondary_cta": {
+    "label": "Watch trailer",
+    "url": "https://www.youtube.com/watch?v=RZcBiuLZ1qw"
+  },
+  "web_demo": {
+    "url": "https://cauldron.itch.io/auto-shrooms",
+    "public": false,
+    "observation": "The public page requires a password. Do not render a public play button yet.",
+    "checked_on": "2026-09-24",
+    "label_when_public": "Play the web demo"
+  },
+  "card_image": {
+    "src": "/assets/auto-shrooms/splash-art.jpg",
+    "webp_widths": [
+      640,
+      960,
+      1920
+    ],
+    "webp_pattern": "/assets/auto-shrooms/splash-art-{width}.webp",
+    "width": 1920,
+    "height": 1080,
+    "heading_alt": "Auto Shrooms",
+    "descriptive_alt": "Auto Shrooms promotional artwork: mushroom troops face plant enemies in a glowing underground cavern."
+  },
+  "meta_description": "Grow, train, and mutate a mushroom troop in Auto Shrooms, a single-player auto-battler from Cauldron Games. Replant fallen Adults to build powerful lineages.",
+  "suggested_dedicated_page_title": "Auto Shrooms | Cauldron Games",
+  "social_image": "/assets/auto-shrooms/splash-art.jpg",
+  "screenshots": [
+    {
+      "file": "01-battle-action",
+      "caption": "Fungal warfare",
+      "alt": "Mushroom troops clash with plant enemies in an active Auto Shrooms battle."
+    },
+    {
+      "file": "03-war-chamber",
+      "caption": "Prepare your troop",
+      "alt": "The War Chamber shows the squad, bench, weapon-school Cocoons, and the next enemy army."
+    },
+    {
+      "file": "04-nursery",
+      "caption": "Grow your next generation",
+      "alt": "The Nursery contains planted spores, growing plots, and shop offers for Fertilizers and Mutations."
+    },
+    {
+      "file": "06-training-combo",
+      "caption": "Train and combine",
+      "alt": "A Training comparison previews a Sword-wielding Child becoming a Great Sword Adult."
+    },
+    {
+      "file": "02-battle-approach",
+      "caption": "Meet the enemy",
+      "alt": "Mushroom and plant forces approach one another across the battlefield."
+    },
+    {
+      "file": "05-day-summary",
+      "caption": "Survive another day",
+      "alt": "The Day 7 victory summary displays the outcome of a completed battle."
+    }
+  ]
+}

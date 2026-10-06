@@ -1,0 +1,82 @@
+{
+  "date": "2026-09-24",
+  "asset_count": 49,
+  "asset_hashes": "passed: every delivered asset matches the manifest",
+  "sprite_assets": {
+    "units": [
+      "characters/child.png",
+      "characters/adult.png"
+    ],
+    "units_weaponless": "passed: exact game scene renders visually inspected; no weapon mounting in export recipe",
+    "unit_dimensions": [
+      768,
+      768
+    ],
+    "weapon_count": 21,
+    "weapons_originals": "passed: byte-for-byte source PNG copies, not UI icons",
+    "alpha": "passed: all 23 unit/weapon PNGs contain transparent and opaque pixels",
+    "web_gallery": "removed: no unit/weapon image references or individual sprite links remain in the page"
+  },
+  "html_asset_paths": "passed: every local href/src resolves in both HTML previews; all internal anchors resolve; no unresolved template tokens",
+  "fonts": "unchanged exact game Spicy Rice/Fredoka files; both OFL notices retained",
+  "dropbox": {
+    "configuration": "links.presskit_dropbox in presskit-content.json",
+    "value": "https://www.dropbox.com/scl/fo/wx95ir6a86xckksb8yf0r/AHNSq8OVeCoS1ASVi8wdIrY?rlkey=jmm08x09phyrxp5y2ddnhnm14&st=yad2cgot&dl=0",
+    "configured_state": "passed: both generated download anchors use the exact owner-supplied Dropbox folder URL, preserving query parameters; no disabled buttons or coming-soon copy",
+    "remote_contents": "not independently verified",
+    "upload_performed_by_assistant": false
+  },
+  "youtube": {
+    "video_id": "RZcBiuLZ1qw",
+    "embed_url": "https://www.youtube.com/embed/RZcBiuLZ1qw",
+    "title_verified": "Auto Shrooms Demo Trailer \u2014 Cauldron Games, 0:32",
+    "page": "iframe with title, strict-origin-when-cross-origin referrer policy, fullscreen support, explicit dimensions; no autoplay",
+    "player": "passed: correct trailer artwork/title and Play video control loaded; click entered playback state with Pause video control; preview reset to unplayed state afterwards",
+    "loading": "normal loading; lazy loading did not initialize in the in-app preview",
+    "direct_link": "same video linked under player and from homepage game card",
+    "local_video": "removed: no video tag or MP4 URL in either webpage"
+  },
+  "browser": {
+    "engine": "Codex in-app browser",
+    "desktop": {
+      "viewport_width": 1280,
+      "document_scroll_width": 1265,
+      "horizontal_overflow": false
+    },
+    "mobile": {
+      "viewport_width": 390,
+      "document_scroll_width": 375,
+      "iframe_content_size": [
+        331,
+        200
+      ],
+      "horizontal_overflow": false
+    },
+    "small_mobile": {
+      "viewport_width": 320,
+      "document_scroll_width": 305,
+      "iframe_content_size": [
+        261,
+        200
+      ],
+      "horizontal_overflow": false
+    },
+    "downloads": "Previously checked button layout at narrow widths; current configured link targets checked from generated HTML"
+  },
+  "press_trailer": "Unmodified original 1080p60 MP4 retained in public press ZIP; no self-hosted webpage player",
+  "external_links": {
+    "steam": "verified public main-game page for app 4963670; release TBA",
+    "itch": "password-protected; omitted from public card",
+    "existing_presskit": "Wageslave-specific; kept as a reference, not linked as Auto Shrooms presskit",
+    "press_contact": "pedro@cauldron.games decoded from the public homepage contact attribute using the public site script on 2026-09-24"
+  },
+  "public_archive": {
+    "file": "downloads/auto-shrooms-presskit.zip",
+    "files": 34,
+    "units": 2,
+    "weapons": 21,
+    "bytes": 42550313
+  },
+  "archive": "verified after packaging: integrity, all 49 manifest hashes, current docs, two unit PNGs and 21 weapon PNGs; superseded six-character gallery assets and local website MP4 absent",
+  "published": false
+}

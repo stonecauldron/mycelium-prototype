@@ -1,0 +1,45 @@
+[
+  {
+    "file": "child.png",
+    "ground_shadow": false,
+    "pose": "idle at 0 seconds",
+    "size": [
+      768,
+      768
+    ],
+    "source": "assets/units/generalist/player_child_base.tscn",
+    "textures": [
+      "assets/units/generalist/gen_child_body.png",
+      "assets/units/generalist/gen_child_cap.png",
+      "assets/units/generalist/gen_child_eyes.png"
+    ],
+    "transparent_background": true,
+    "visible_bounds": [
+      161,
+      49,
+      444,
+      672
+    ]
+  },
+  {
+    "file": "adult.png",
+    "ground_shadow": false,
+    "pose": "idle at 0 seconds",
+    "size": [
+      768,
+      768
+    ],
+    "source": "assets/units/generalist/player_imago_base.tscn",
+    "textures": [
+      "assets/units/generalist/gen_imago_body.png",
+      "assets/units/generalist/gen_imago_cap.png"
+    ],
+    "transparent_background": true,
+    "visible_bounds": [
+      124,
+      49,
+      522,
+      669
+    ]
+  }
+]

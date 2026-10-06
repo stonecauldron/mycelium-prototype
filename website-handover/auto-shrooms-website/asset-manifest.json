@@ -1,0 +1,584 @@
+{
+  "prepared_on": "2026-09-24",
+  "paths_relative_to": "handover package root",
+  "source_paths_relative_to": "mycelium-prototype repository root",
+  "assets": [
+    {
+      "file": "assets/auto-shrooms/splash-art.jpg",
+      "bytes": 756665,
+      "sha256": "b2cec0a715edf507fe4533cdf1e5e1a935d6b78d0733a90e8c791caa247aa94e",
+      "source": "steam/presskit/2026-09-23-cover/exports/auto-shrooms-cover-with-logo-1920x1080.jpg",
+      "source_sha256": "b2cec0a715edf507fe4533cdf1e5e1a935d6b78d0733a90e8c791caa247aa94e",
+      "purpose": "JPEG fallback and social sharing",
+      "operation": "Unmodified file copy",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/splash-art-640.webp",
+      "bytes": 51140,
+      "sha256": "2d1bfc047d98449645e638b61fc6ec478170bd401ab3a0477f2c52505f6541c5",
+      "source": "steam/presskit/2026-09-23-cover/exports/auto-shrooms-cover-with-logo-1920x1080.png",
+      "source_sha256": "1e3b01781b59c07859c2c7a2872ac11097a4b994a7feaf46232b3d8f62cc748d",
+      "purpose": "Responsive homepage card",
+      "operation": "Proportional downscale to 640px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "file": "assets/auto-shrooms/splash-art-960.webp",
+      "bytes": 88410,
+      "sha256": "ba26cc6291e9ac8a2113abd909b289de6d4641893b277e77c69a59a0465d85b1",
+      "source": "steam/presskit/2026-09-23-cover/exports/auto-shrooms-cover-with-logo-1920x1080.png",
+      "source_sha256": "1e3b01781b59c07859c2c7a2872ac11097a4b994a7feaf46232b3d8f62cc748d",
+      "purpose": "Responsive homepage card",
+      "operation": "Proportional downscale to 960px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "file": "assets/auto-shrooms/splash-art-1920.webp",
+      "bytes": 201526,
+      "sha256": "ca7c8ea448574e2b174ca075916a937cc9f378f72f12667a0c5c89b15bdc1533",
+      "source": "steam/presskit/2026-09-23-cover/exports/auto-shrooms-cover-with-logo-1920x1080.png",
+      "source_sha256": "1e3b01781b59c07859c2c7a2872ac11097a4b994a7feaf46232b3d8f62cc748d",
+      "purpose": "Responsive homepage card",
+      "operation": "Proportional downscale to 1920px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/cover-clean.webp",
+      "bytes": 188152,
+      "sha256": "5fa9da9c36e6664e0c0a6388b5d5df86c57a62d7c6b7febf605ef6326b02296f",
+      "source": "steam/presskit/2026-09-23-cover/exports/auto-shrooms-cover-without-logo-1920x1080.png",
+      "source_sha256": "0a6dab14be84129e9e05ecc43b5308879d51466b8cdde2d24c20e09d5e4bda47",
+      "purpose": "Optional clean illustration; supply a separate title",
+      "operation": "Proportional downscale to 1920px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/logo.png",
+      "bytes": 159134,
+      "sha256": "622c4ce1ae5afd48b431f91426dfb91921d84215f32aab232b996545c7dc98c3",
+      "source": "steam/store assets/2026-09-10/upload/library/library_logo_transparent_en.png",
+      "source_sha256": "622c4ce1ae5afd48b431f91426dfb91921d84215f32aab232b996545c7dc98c3",
+      "purpose": "Transparent wordmark, existing tight export",
+      "operation": "Unmodified file copy",
+      "width": 1280,
+      "height": 179
+    },
+    {
+      "file": "press/auto-shrooms-cover-with-logo.png",
+      "bytes": 2381794,
+      "sha256": "1e3b01781b59c07859c2c7a2872ac11097a4b994a7feaf46232b3d8f62cc748d",
+      "source": "steam/presskit/2026-09-23-cover/exports/auto-shrooms-cover-with-logo-1920x1080.png",
+      "source_sha256": "1e3b01781b59c07859c2c7a2872ac11097a4b994a7feaf46232b3d8f62cc748d",
+      "purpose": "Original 1080p press illustration",
+      "operation": "Unmodified file copy",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "press/auto-shrooms-cover-without-logo.png",
+      "bytes": 2364429,
+      "sha256": "0a6dab14be84129e9e05ecc43b5308879d51466b8cdde2d24c20e09d5e4bda47",
+      "source": "steam/presskit/2026-09-23-cover/exports/auto-shrooms-cover-without-logo-1920x1080.png",
+      "source_sha256": "0a6dab14be84129e9e05ecc43b5308879d51466b8cdde2d24c20e09d5e4bda47",
+      "purpose": "Original 1080p clean press illustration",
+      "operation": "Unmodified file copy",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/01-battle-action.jpg",
+      "bytes": 310668,
+      "sha256": "9541b84a865914c25cabd489a83c8f8e738a04bc39d4d65dd97f687e6f11984e",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/01-battle-action.jpg",
+      "source_sha256": "9541b84a865914c25cabd489a83c8f8e738a04bc39d4d65dd97f687e6f11984e",
+      "purpose": "Full-size gameplay screenshot / press download",
+      "operation": "Unmodified file copy",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/01-battle-action-960.webp",
+      "bytes": 44012,
+      "sha256": "f4f65bcd299210c2ce164b7851ac7b33ba27eb9cd33b0aca28ddbb3f6e2ddb1c",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/01-battle-action.png",
+      "source_sha256": "84494f672f5ead384d5d3705a1887cf95cefa1dd4fcb3f5465fe51764b511da6",
+      "purpose": "Optional gallery thumbnail",
+      "operation": "Proportional downscale to 960px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/03-war-chamber.jpg",
+      "bytes": 415039,
+      "sha256": "7955c65042d05a71d9e179a496f08e7d7dfb921d18f8166309e5d28d0fbc6508",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/03-war-chamber.jpg",
+      "source_sha256": "7955c65042d05a71d9e179a496f08e7d7dfb921d18f8166309e5d28d0fbc6508",
+      "purpose": "Full-size gameplay screenshot / press download",
+      "operation": "Unmodified file copy",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/03-war-chamber-960.webp",
+      "bytes": 64220,
+      "sha256": "ead138feca59db3c35f7906d4f293db626850c45e59e13f1377173071ac80518",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/03-war-chamber.png",
+      "source_sha256": "ba44f91e847a5b119b143070facf26c084b133be18ac891d86dc7d9f3609eb9d",
+      "purpose": "Optional gallery thumbnail",
+      "operation": "Proportional downscale to 960px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/04-nursery.jpg",
+      "bytes": 334124,
+      "sha256": "b9be1a790cbbe403816a804bb474bad7111399deefb139681aefdfb264142181",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/04-nursery.jpg",
+      "source_sha256": "b9be1a790cbbe403816a804bb474bad7111399deefb139681aefdfb264142181",
+      "purpose": "Full-size gameplay screenshot / press download",
+      "operation": "Unmodified file copy",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/04-nursery-960.webp",
+      "bytes": 50196,
+      "sha256": "c9d862ddcd554a716445d5cf4d64247cf6593a2f0ba5b9cd5c9864f868666705",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/04-nursery.png",
+      "source_sha256": "81c3dfa707b7ec5e96570de9f8b0b8ef1812c1aadeb38fc7674559dea5bfd712",
+      "purpose": "Optional gallery thumbnail",
+      "operation": "Proportional downscale to 960px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/06-training-combo.jpg",
+      "bytes": 244410,
+      "sha256": "0b898cfcb4a02fb23ae8ce07734b92776a436a3789a63080ebd5db67e4ea8851",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/06-training-combo.jpg",
+      "source_sha256": "0b898cfcb4a02fb23ae8ce07734b92776a436a3789a63080ebd5db67e4ea8851",
+      "purpose": "Full-size gameplay screenshot / press download",
+      "operation": "Unmodified file copy",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/06-training-combo-960.webp",
+      "bytes": 37458,
+      "sha256": "753c32c3921c805029deca700e01ad1a91875a67776ea489410180050232b56a",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/06-training-combo.png",
+      "source_sha256": "6865c20355365a0a167694b346fd656bfe194473b8c241540a2eac03b8862f5d",
+      "purpose": "Optional gallery thumbnail",
+      "operation": "Proportional downscale to 960px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/02-battle-approach.jpg",
+      "bytes": 321825,
+      "sha256": "f64841246f4ae5bf6d92c41840c39f353339b441b11c4f7ea640bc8777d564cd",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/02-battle-approach.jpg",
+      "source_sha256": "f64841246f4ae5bf6d92c41840c39f353339b441b11c4f7ea640bc8777d564cd",
+      "purpose": "Full-size gameplay screenshot / press download",
+      "operation": "Unmodified file copy",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/02-battle-approach-960.webp",
+      "bytes": 43560,
+      "sha256": "28f08a468111ed75101ef4d42107a076d5d27244c8a08e52b80f04ce7460cd1b",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/02-battle-approach.png",
+      "source_sha256": "a6bcde42aaf32cdd42a5be8a0f63e985f7f3516e9853214225779dc634e04a95",
+      "purpose": "Optional gallery thumbnail",
+      "operation": "Proportional downscale to 960px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/05-day-summary.jpg",
+      "bytes": 269779,
+      "sha256": "fbef581bcbaa6276df9daeedbbd894c4c3317df473b6ce4d5470cccba6822728",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/05-day-summary.jpg",
+      "source_sha256": "fbef581bcbaa6276df9daeedbbd894c4c3317df473b6ce4d5470cccba6822728",
+      "purpose": "Full-size gameplay screenshot / press download",
+      "operation": "Unmodified file copy",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/screenshots/05-day-summary-960.webp",
+      "bytes": 38834,
+      "sha256": "439ede2ec8cff730c82b5382b464124d86992807681815390d070ca118fe03c3",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/screenshots/05-day-summary.png",
+      "source_sha256": "498461a89aee464d229cb58f6b57de2b7a03b53e9919ed9f5a28c39449298f85",
+      "purpose": "Optional gallery thumbnail",
+      "operation": "Proportional downscale to 960px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "file": "press/auto-shrooms-trailer-1080p60.mp4",
+      "bytes": 33122965,
+      "sha256": "2071ccf0d71752a39dbc5c1112355a44edbcd0e638c764490bbaf6cab146d6bf",
+      "source": "steam/store assets/2026-09-20-store-refresh/exports/trailer/auto-shrooms-trailer-32s.mp4",
+      "source_sha256": "2071ccf0d71752a39dbc5c1112355a44edbcd0e638c764490bbaf6cab146d6bf",
+      "purpose": "Original finished trailer for press / uploads",
+      "operation": "Unmodified file copy",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "pix_fmt": "yuv420p",
+            "avg_frame_rate": "60/1"
+          },
+          {
+            "codec_name": "aac",
+            "avg_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "32.000000"
+        }
+      }
+    },
+    {
+      "file": "press/characters/child.png",
+      "bytes": 89606,
+      "sha256": "6749b97917eccecbc158f56e7f8a42c2927f23a52e007128a673bcb1b1f35ff7",
+      "source": "assets/units/generalist/player_child_base.tscn",
+      "source_sha256": "4b1bd66c80df88395dc43eb6487c9e76a1505158c932ab7110fd5e88aace63b3",
+      "purpose": "Transparent press character cutout",
+      "operation": "Godot render of weaponless Child or Adult at idle time 0; default game tints; transparent 768px square; ground shadow hidden; centered with approximately 48px padding",
+      "width": 768,
+      "height": 768,
+      "render_recipe": "scripts/render_characters.tscn",
+      "texture_sources": [
+        {
+          "file": "assets/units/generalist/gen_child_body.png",
+          "sha256": "31a9345305f68fb0839765d893e1099be093b13768ce023ebdd2c19f6245a7fa"
+        },
+        {
+          "file": "assets/units/generalist/gen_child_cap.png",
+          "sha256": "3358e29e7d71c5304a2080c1285774ee34037d695723b35c5f495e3fb834b3b0"
+        },
+        {
+          "file": "assets/units/generalist/gen_child_eyes.png",
+          "sha256": "2174f1abee9314e82c91853766629de488f5fcf0c7e7fc792785d64dbd20aee2"
+        }
+      ]
+    },
+    {
+      "file": "press/characters/adult.png",
+      "bytes": 84283,
+      "sha256": "8dc6f1ee3ed95f7a4fc83871756935366e9695620f7de7cfd87e6eec06d7cc45",
+      "source": "assets/units/generalist/player_imago_base.tscn",
+      "source_sha256": "abea4cd5ce27cbac403e9a8e994f07ced6ac8b3f2c8c979da5e613e975827e91",
+      "purpose": "Transparent press character cutout",
+      "operation": "Godot render of weaponless Child or Adult at idle time 0; default game tints; transparent 768px square; ground shadow hidden; centered with approximately 48px padding",
+      "width": 768,
+      "height": 768,
+      "render_recipe": "scripts/render_characters.tscn",
+      "texture_sources": [
+        {
+          "file": "assets/units/generalist/gen_imago_body.png",
+          "sha256": "da12570b5d878c46cd0577c9d04cc947594e46c2f126cd0c2d1706f944929bd3"
+        },
+        {
+          "file": "assets/units/generalist/gen_imago_cap.png",
+          "sha256": "b6033e78b7a259b8aa786e20492c42e4065e2da321972b645e298c3c02d171e1"
+        }
+      ]
+    },
+    {
+      "file": "press/weapons/bow.png",
+      "bytes": 52169,
+      "sha256": "1296d04924c3cc23efd7bc5f67077222138ac607f94762bcc51fa5b485780efc",
+      "source": "assets/weapons/bow/bow.png",
+      "source_sha256": "1296d04924c3cc23efd7bc5f67077222138ac607f94762bcc51fa5b485780efc",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/crossbow.png",
+      "bytes": 67616,
+      "sha256": "bdc6e0d5541424cdddb75a6a2e2339ae43f5c59840580f67ecd2d8d3cf4759d8",
+      "source": "assets/weapons/crossbow/crossbow.png",
+      "source_sha256": "bdc6e0d5541424cdddb75a6a2e2339ae43f5c59840580f67ecd2d8d3cf4759d8",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/giant-horn.png",
+      "bytes": 115838,
+      "sha256": "98f82fea75cbb89b08bf07743739f5280b5a6aaf0bdd6eaa00c0c5fcb6f3732e",
+      "source": "assets/weapons/giant_horn/horn.png",
+      "source_sha256": "98f82fea75cbb89b08bf07743739f5280b5a6aaf0bdd6eaa00c0c5fcb6f3732e",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/great-bow.png",
+      "bytes": 61694,
+      "sha256": "f9e48e5127fb85e111c8c882e4f13059130e8b4bf57b61054907fd4826f0ef22",
+      "source": "assets/weapons/great_bow/great_bow.png",
+      "source_sha256": "f9e48e5127fb85e111c8c882e4f13059130e8b4bf57b61054907fd4826f0ef22",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/great-hammer.png",
+      "bytes": 97400,
+      "sha256": "fccf4b32a61cdb802be18d38c79c9bbce73706a87a0fa013ffa9a8e20f72e472",
+      "source": "assets/weapons/great_hammer/greathammer.png",
+      "source_sha256": "fccf4b32a61cdb802be18d38c79c9bbce73706a87a0fa013ffa9a8e20f72e472",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/great-shield.png",
+      "bytes": 142480,
+      "sha256": "1f177621c8ce56cd31eb86864375f00435f16677c8e5e6660ca2fead26e32476",
+      "source": "assets/weapons/great_shield/great_shield.png",
+      "source_sha256": "1f177621c8ce56cd31eb86864375f00435f16677c8e5e6660ca2fead26e32476",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/great-spear.png",
+      "bytes": 57660,
+      "sha256": "fc43c3269085f487b3199cfe6afae889457c6a0486a9786bd826b8b240609d35",
+      "source": "assets/weapons/great_spear/great_spear.png",
+      "source_sha256": "fc43c3269085f487b3199cfe6afae889457c6a0486a9786bd826b8b240609d35",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/great-sword.png",
+      "bytes": 86586,
+      "sha256": "0165e6610b167405effec3f40040be304973ba793c6d22e1cd205bf794795d24",
+      "source": "assets/weapons/great_sword/great_sword.png",
+      "source_sha256": "0165e6610b167405effec3f40040be304973ba793c6d22e1cd205bf794795d24",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/lance.png",
+      "bytes": 45148,
+      "sha256": "af70e65c32a4524322cad7b8abe41a17955ab0c4d72c0f26af788bc1ad1de352",
+      "source": "assets/weapons/lance/lance.png",
+      "source_sha256": "af70e65c32a4524322cad7b8abe41a17955ab0c4d72c0f26af788bc1ad1de352",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/mace.png",
+      "bytes": 77212,
+      "sha256": "17c4dc904ea79ec908c9ef1d18d5ab1e0e55b5cd77bd1b0f0c1055c335b4c620",
+      "source": "assets/weapons/mace/mace.png",
+      "source_sha256": "17c4dc904ea79ec908c9ef1d18d5ab1e0e55b5cd77bd1b0f0c1055c335b4c620",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/mace-and-shield.png",
+      "bytes": 420946,
+      "sha256": "660ffc963812364d9a9d4843c5ca39bdc7a296ece955835b2f6bfd23b5f76349",
+      "source": "assets/weapons/mace_and_shield/mace_and_shield.png",
+      "source_sha256": "660ffc963812364d9a9d4843c5ca39bdc7a296ece955835b2f6bfd23b5f76349",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "file": "press/weapons/mortar.png",
+      "bytes": 135471,
+      "sha256": "8c9129979161d57d58604f44242778ff00cc77cdc79d9b9647accca06d32a5cb",
+      "source": "assets/weapons/mortar/mortar.png",
+      "source_sha256": "8c9129979161d57d58604f44242778ff00cc77cdc79d9b9647accca06d32a5cb",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/polehammer.png",
+      "bytes": 44217,
+      "sha256": "7b8fc6d3cb042ed7d628b627593644df2f390b42a436fde42bea5ab21bdbc832",
+      "source": "assets/weapons/polehammer/polehammer.png",
+      "source_sha256": "7b8fc6d3cb042ed7d628b627593644df2f390b42a436fde42bea5ab21bdbc832",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/shield.png",
+      "bytes": 158465,
+      "sha256": "cc892d6c4afccf8a515d38eae31911bea8854bca88c75ecd57c11e9f5ad1aef7",
+      "source": "assets/weapons/shield/shield.png",
+      "source_sha256": "cc892d6c4afccf8a515d38eae31911bea8854bca88c75ecd57c11e9f5ad1aef7",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/sickle.png",
+      "bytes": 79558,
+      "sha256": "0ae3200d7ffb8a2dcc60b93a35b2a768d1684b54bc8529334dcd8d41045abc6f",
+      "source": "assets/weapons/sickle/sickle.png",
+      "source_sha256": "0ae3200d7ffb8a2dcc60b93a35b2a768d1684b54bc8529334dcd8d41045abc6f",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/spear.png",
+      "bytes": 37662,
+      "sha256": "cabc3b20d3b546b26ec90baad98a48814eabe19aa06a9a8b6682828ca41b5b8c",
+      "source": "assets/weapons/spear/spear.png",
+      "source_sha256": "cabc3b20d3b546b26ec90baad98a48814eabe19aa06a9a8b6682828ca41b5b8c",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/spear-and-shield.png",
+      "bytes": 322028,
+      "sha256": "822d024050a3fe88a5054bd112076320c89918faef4a1f5c68a6b40b1a8c2f20",
+      "source": "assets/weapons/spear_and_shield/spear_and_shield.png",
+      "source_sha256": "822d024050a3fe88a5054bd112076320c89918faef4a1f5c68a6b40b1a8c2f20",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "file": "press/weapons/sword.png",
+      "bytes": 74101,
+      "sha256": "4a5ce5c8c6aa19c3ef3250a35676b34c2bd7964636f70de9c159a4b6784e99eb",
+      "source": "assets/weapons/sword/sword.png",
+      "source_sha256": "4a5ce5c8c6aa19c3ef3250a35676b34c2bd7964636f70de9c159a4b6784e99eb",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/sword-and-shield.png",
+      "bytes": 490109,
+      "sha256": "d55cf064fa12e57102a1a7960b1325d3b7bc9e80d3ac09d689e346b5ebf1c977",
+      "source": "assets/weapons/sword_and_shield/sword_and_shield.png",
+      "source_sha256": "d55cf064fa12e57102a1a7960b1325d3b7bc9e80d3ac09d689e346b5ebf1c977",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "file": "press/weapons/umbrella.png",
+      "bytes": 68817,
+      "sha256": "4c0f345be607f6dfeebf8129ac16f203db19777d8feb7da72102cf0ad9742b2d",
+      "source": "assets/weapons/umbrella/umbrella.png",
+      "source_sha256": "4c0f345be607f6dfeebf8129ac16f203db19777d8feb7da72102cf0ad9742b2d",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "press/weapons/warhammer.png",
+      "bytes": 70187,
+      "sha256": "38c4f02d187133c632dc3c28252c7e27e4baa6596eee5e113b691a1572ac49d2",
+      "source": "assets/weapons/warhammer/warhammer.png",
+      "source_sha256": "38c4f02d187133c632dc3c28252c7e27e4baa6596eee5e113b691a1572ac49d2",
+      "purpose": "Standalone transparent weapon sprite for the press download",
+      "operation": "Unmodified file copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "file": "assets/auto-shrooms/fonts/SpicyRice-Regular.ttf",
+      "bytes": 65816,
+      "sha256": "2a860581dea10791c25b0aa90c2a2b39fb9a919d6346c618809a240eab71ac14",
+      "source": "assets/fonts/SpicyRice-Regular.ttf",
+      "source_sha256": "2a860581dea10791c25b0aa90c2a2b39fb9a919d6346c618809a240eab71ac14",
+      "purpose": "Exact game title font, self-hosted",
+      "operation": "Unmodified file copy"
+    },
+    {
+      "file": "assets/auto-shrooms/fonts/Fredoka-Variable.ttf",
+      "bytes": 157744,
+      "sha256": "638482f81fcecafbbcffe5f06531cbb25586e7bcf31f78b3edd0980d84c0d3de",
+      "source": "assets/fonts/Fredoka-VariableFont_wdth,wght.ttf",
+      "source_sha256": "638482f81fcecafbbcffe5f06531cbb25586e7bcf31f78b3edd0980d84c0d3de",
+      "purpose": "Exact game body/UI font, self-hosted",
+      "operation": "Unmodified file copy"
+    },
+    {
+      "file": "assets/auto-shrooms/nursery-background.webp",
+      "bytes": 66746,
+      "sha256": "ca870d1b327e80d93efe4b27b749eba4e79fd52299b1110a5f0d9dbe5db6459c",
+      "source": "assets/base/background/bg_nursery.png",
+      "source_sha256": "dbf9e143ee5ec70bf5cc2b3ce071458aa612881cce98bba4942fdf2e18763377",
+      "purpose": "Presskit hero backdrop from the game Nursery",
+      "operation": "Proportional downscale to 1920px maximum width; WebP quality 86; metadata stripped; no crop or retouch",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "file": "assets/auto-shrooms/fonts/SpicyRice-OFL.txt",
+      "bytes": 4433,
+      "sha256": "466aaa3bbd245e4c91c4e82c0828efe9fcfd913f5b020d75f0918516c2540fa8",
+      "source": "handover/auto-shrooms-website/assets/auto-shrooms/fonts/SpicyRice-OFL.txt",
+      "source_sha256": "466aaa3bbd245e4c91c4e82c0828efe9fcfd913f5b020d75f0918516c2540fa8",
+      "purpose": "Retained font copyright and license notice",
+      "operation": "Official notice retained alongside unmodified game font",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/spicyrice/OFL.txt"
+    },
+    {
+      "file": "assets/auto-shrooms/fonts/Fredoka-OFL.txt",
+      "bytes": 4388,
+      "sha256": "5c9e7eee5c6b25f4b05b8d53b2e470ea4962f9ced742d044a98f7d95d1375bab",
+      "source": "handover/auto-shrooms-website/assets/auto-shrooms/fonts/Fredoka-OFL.txt",
+      "source_sha256": "5c9e7eee5c6b25f4b05b8d53b2e470ea4962f9ced742d044a98f7d95d1375bab",
+      "purpose": "Retained font copyright and license notice",
+      "operation": "Official notice retained alongside unmodified game font",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/fredoka/OFL.txt"
+    }
+  ]
+}

@@ -89,8 +89,8 @@ Steam lists release TBA and Windows/macOS support. Exact date and price are unan
 Normal `prepare.py` rebuilds reuse the finished unit PNGs and copy the weapon originals. To re-render the two units after game artwork changes, run from the repository root:
 
 ```sh
-godot --path . --rendering-method gl_compatibility --rendering-driver opengl3 --windowed --resolution 320x240 --audio-driver Dummy --quit-after 240 handover/auto-shrooms-website/scripts/render_characters.tscn
-python3 handover/auto-shrooms-website/prepare.py
+godot --path . --rendering-method gl_compatibility --rendering-driver opengl3 --windowed --resolution 320x240 --audio-driver Dummy --quit-after 240 website-handover/auto-shrooms-website/scripts/render_characters.tscn
+python3 website-handover/auto-shrooms-website/prepare.py
 ```
 
 Use an unsandboxed Godot launch on macOS, as required by the repository's agent guidance. The export scene does not enter gameplay or modify source artwork.

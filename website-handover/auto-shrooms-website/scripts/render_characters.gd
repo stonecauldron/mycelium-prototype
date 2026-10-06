@@ -1,7 +1,7 @@
 extends Node
 
 ## Export real character scenes at a fixed idle pose. No gameplay scene is entered.
-const PACKAGE := "res://handover/auto-shrooms-website/"
+const PACKAGE := "res://website-handover/auto-shrooms-website/"
 const SIZE := 768
 const MARGIN := 48.0
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Re-export approved artwork at Steam's exact upload sizes.
+# Re-export approved artwork at each destination's upload size.
 asset_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 cd "$asset_dir"
-mkdir -p upload/store/screenshots upload/library upload/igdb preview
+mkdir -p upload/store/screenshots upload/library upload/igdb upload/herofest preview
 
 export_png() {
   magick "$1" -filter Lanczos -resize "$2^" -gravity center -extent "$2" \
@@ -17,6 +17,7 @@ export_png sources/small_generated.png 462x174 upload/store/store_capsule_Small_
 export_png sources/vertical_generated.png 748x896 upload/store/store_capsule_vertical_en.png
 export_png sources/square_generated.png 800x800 upload/store/store_capsule_square_en.png
 export_png sources/igdb_cover_generated.png 900x1200 upload/igdb/igdb_cover_en.png
+export_png sources/herofest_cover_generated.png 800x600 upload/herofest/herofest_cover_en.png
 export_png sources/page_background_generated.png 1438x810 upload/store/store_page_background_en.png
 export_png sources/library_generated.png 600x900 upload/library/library_capsule_en.png
 export_png sources/hero_final_generated.png 3840x1240 upload/library/library_hero_en.png
@@ -52,4 +53,4 @@ magick montage \
   preview/contact_sheet.jpg
 
 magick identify -format '%f: %wx%h %[channels] opaque=%[opaque]\n' \
-  upload/store/*.png upload/library/*.png upload/igdb/*.png upload/store/screenshots/*.png
+  upload/store/*.png upload/library/*.png upload/igdb/*.png upload/herofest/*.png upload/store/screenshots/*.png

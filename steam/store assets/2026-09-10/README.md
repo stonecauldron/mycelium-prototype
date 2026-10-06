@@ -32,6 +32,11 @@ In Steam's Library logo placement tool, choose **centered top**. The hero keeps 
 - [IGDB cover guidelines](https://github.com/twitchtv/igdb-contribution-guidelines/wiki/Cover), checked 19 September 2026, prefer 3:4 artwork at a minimum of 600 × 800 in JPG or PNG format. This export has the exact preferred ratio and exceeds the minimum resolution.
 - Generated master: `sources/igdb_cover_generated.png`. The built-in imagegen prompt is recorded in `sources/igdb_cover_prompt.txt`.
 
+## HeroFest cover
+
+- Cover (added 28 September 2026): `upload/herofest/herofest_cover_en.png` — 800 × 600, opaque RGB PNG, using the requested 4:3 landscape format. Preserves the one-line Auto Shrooms logo, all seven fighters, and the established forest composition. Prepared for the herofest.ch convention listing.
+- Generated master: `sources/herofest_cover_generated.png`. The built-in imagegen prompt is recorded in `sources/herofest_cover_prompt.txt`.
+
 ## Art direction and validation
 
 The capsule adaptations preserve the opposing mushroom/plant teams, seven character identities, central golden tunnel, dark root canopy, and cyan mushrooms. Portraits reflow the title into two lines and extend the environment vertically. The Small Capsule removes all fighters and equipment, using a large title over the forest; legibility was checked at Steam's 120 × 45 and 184 × 69 display sizes.
@@ -40,7 +45,7 @@ All upload PNG dimensions were verified. Capsules, hero, page background, and sc
 
 `preview/contact_sheet.jpg` shows the eight branding assets and the page background. Original inputs and generated masters are retained in `sources/`. `PROMPTS.md` records the generation prompts. To reproduce exports on this Mac with ImageMagick installed, run `bash export_assets.sh` from this directory.
 
-Bundle artwork, community icons, and event artwork are outside this Store/Library asset set. Files are prepared for upload; nothing has been uploaded to Steam.
+Bundle artwork and community icons are outside this asset set. Files are prepared for upload; nothing has been uploaded to Steam.
 
 ## Specifications checked
 

@@ -1,5 +1,7 @@
 # Image generation prompts
 
+The 800 × 600 HeroFest Cover added on 28 September 2026 uses `sources/herofest_cover_generated.png`; its full built-in imagegen prompt is recorded in `sources/herofest_cover_prompt.txt`.
+
 The 900 × 1200 IGDB Cover added on 19 September 2026 uses `sources/igdb_cover_generated.png`; its full built-in imagegen prompt is recorded in `sources/igdb_cover_prompt.txt`.
 
 The 800 × 800 Square Capsule added on 17 September 2026 uses `sources/square_generated.png`; its full built-in imagegen prompt is recorded in `sources/square_prompt.txt`.

@@ -209,7 +209,7 @@ disabled = true
 text = "Undo"
 icon = ExtResource("17_undo")
 icon_alignment = 2
-expand_icon = true
+expand_icon = false
 
 [node name="StartCombatButton" type="Button" parent="HudLayer/HudRoot/RootMargin/RootVBox/BottomBar/BottomMargin/BottomRow/RightPad" unique_id=1667727997]
 unique_name_in_owner = true

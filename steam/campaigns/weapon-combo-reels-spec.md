@@ -146,7 +146,8 @@ the series format or game behavior.
   use a satisfying loot-reveal feeling without implying a random weapon result.
 - Keep entry brisk: 0.5 seconds of walking, with the pilot's 2.1x walk animation.
   Reuse the split shell, warm flash, sparks, 240-pixel hop, brief apex hold,
-  and landing at 3.1 seconds. The shadow stays on the floor. Keep the weapon legible.
+  and landing at 3.1 seconds for portrait. Landscape uses the continuous parabola
+  described below. The shadow stays on the floor. Keep the weapon legible.
 - Preserve authored Child/Adult proportions and unit transforms. Frame with the
   camera; never resize individual units to fit or slide armies for a new angle.
   Shell and UI-icon animation may scale; unit bodies may not.
@@ -167,6 +168,36 @@ the series format or game behavior.
   on both sides while the combat scene is visible; the closing fade to black is
   the deliberate exception. Frame the nine-unit player shot with enough movement
   room; a tight crop of the enemy-side impact is permitted.
+
+### 16:9 Intro Framing
+
+- When a 1920x1080 landscape version is requested, place the opening Child and
+  Cocoon about 80 pixels higher than in the Umbrella V1 landscape export. Target
+  an intro ground line around y=960, leaving roughly 120 pixels below the Child's
+  feet and Cocoon base, rather than placing them close to the bottom edge.
+- Raise the intro grouping together: Child, Cocoon, second-school icon, shadow,
+  and entry path. Preserve their relative alignment and authored unit sizes.
+  This is a landscape intro adjustment, not a change to portrait or battle framing.
+- Keep the opening Child-and-Cocoon composition horizontally centered. Do not
+  shift that grouping left to make room for the Adult's emergence. The opening
+  placement and the Adult's subsequent flight path are separate layout decisions.
+- The Adult must emerge toward the **left of the Cocoon** in 16:9: both the
+  airborne apex and final landing are left of the Cocoon's center. Use one
+  continuous parabola from release at 2.5 seconds to ground contact at 3.1 seconds:
+  constant leftward horizontal travel and a quadratic rise and fall. No initial
+  sideways burst, delayed lift, apex pause, direction reversal, or rebound after
+  landing. Retain the shell split, flash, sparks, cork-pop, and landing dust.
+  Do not mirror the weapon art or change unit sizes.
+- Check clearance from the equation throughout the complete flight, especially
+  with tall weapons such as Umbrella Shield. Keep the centered equation and
+  opening composition fixed; use a shallower parabola if needed. The Umbrella
+  landscape reference uses a 120-pixel rise, with
+  `x = lerp(cocoon_x, landing_x, t)` and `y = ground_y - 4 * height * t * (1 - t)`
+  for normalized flight time `t`. Do not switch to a rightward emergence, shrink
+  the unit, or move the opening Child and Cocoon left or down to make it fit.
+  Check the complete flight path, not just the apex and landing frames.
+- Apply this to future generation and revisions. Existing approved exports are
+  not regenerated solely because these instructions changed.
 
 ## Enemy Matchup And Formation
 
@@ -276,6 +307,10 @@ undo the staging. After battle starts, movement comes from gameplay only.
   positions. The Steam CTA is present only when enabled, at its specified position.
 - [ ] Child holds A, enters briskly, and emerges with the correct combo weapon.
 - [ ] Exciting but readable reveal; fixed unit sizes and grounded shadow.
+- [ ] In 16:9, the opening Child and Cocoon sit higher with roughly 120 pixels
+  of bottom clearance at 1080p and remain horizontally centered as a group;
+  the Adult follows one uninterrupted leftward parabola to the ground, with no
+  apex hold or rebound, and the full reveal remains clear of the equation.
 - [ ] One-versus-three demonstration shows both sides and the defining mechanic.
 - [ ] Enemy matchup and formation suit the weapon; AoE demonstrations show one
   genuine attack damaging multiple distinct enemies, without overlapping spawns.

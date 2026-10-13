@@ -1,0 +1,33 @@
+Initializing GameAnalytics
+GameAnalytics - Initializing http client
+GameAnalytics - Initializing Log
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 4.1 Metal - 89.4 - Compatibility - Using Device: Apple - Apple M3
+
+Movie Maker mode enabled, recording movie in 1920×1080 @ 60 FPS...
+2026-10-13 14:34:26.437 godot[37654:6421184] not in fullscreen state
+CAPTURE umbrella single 1 vs 3
+CAPTURE umbrella army 9 vs 18
+CAPTURE complete umbrella frames=1200
+ERROR: Texture with GL ID of 30: leaked 21844 bytes.
+   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)
+ERROR: Texture with GL ID of 32: leaked 21844 bytes.
+   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)
+ERROR: Texture with GL ID of 33: leaked 21844 bytes.
+   at: ~Utilities (drivers/gles3/storage/utilities.cpp:82)
+ERROR: Parameter "RenderingServer::get_singleton()" is null.
+   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)
+ERROR: Parameter "RenderingServer::get_singleton()" is null.
+   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)
+ERROR: Parameter "RenderingServer::get_singleton()" is null.
+   at: ~CompressedTexture2D (scene/resources/compressed_texture.cpp:464)
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)
+--------------------------------------------------------------------------------
+Done recording movie at path: /Users/cauldron/Git/mycelium-prototype/steam/campaigns/2026-10-13-umbrella/work/umbrella-portrait-v1-timing.avi
+1231 frames at 60 FPS (movie length: 00:00:20:31), recorded in 00:01:37 (20% of real-time speed).
+CPU render time: 0.62 seconds (average: 0.50 ms/frame)
+GPU render time: 0.00 seconds (average: 0.00 ms/frame)
+Encoding time: 22.54 seconds (average: 18.31 ms/frame)
+--------------------------------------------------------------------------------
+ERROR: 3 RID allocations of type 'N5GLES37TextureE' were leaked at exit.

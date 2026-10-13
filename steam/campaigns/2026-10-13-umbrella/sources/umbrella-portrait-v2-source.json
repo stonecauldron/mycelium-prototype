@@ -1,0 +1,15 @@
+{
+  "base_commit": "cecf2434672f20505aa7f73f6e0d4594dba22463",
+  "files": {
+    "assets/units/unit.gd": "73c6fc1f637cd67a0caac5dab006ba55a52516491202ae97e567d012e40cbd39",
+    "assets/units/unit_appearance.gd": "80e8ff11135a0c980fe0b32d815c004b4caf61806bcf028fe50ea495aa271b66",
+    "assets/combat/projectile/projectile.gd": "e4c1e3c2092825c21d9e880226e8aa2e0d63b1715569357b5bb3e40f30a2d28e",
+    "assets/combat/projectile/projectile_blocker.gd": "87e54e67832e386fd43456c07c1e11af1e1dca871101c4d7653d21b2871cf6cc",
+    "assets/weapons/umbrella/umbrella.tres": "87a8e3dea316b7a86fd9e56b8395548e5ffe4abb8f7040b13de53b08fec36888",
+    "assets/weapons/umbrella/umbrella_appearance.tscn": "d24986fc21a3052700db1416d70864ac200aa01fec74714d8f9d2711a49011fa",
+    "assets/weapons/mortar/mortar_projectile.tscn": "fdfeb308151d98850d4dcb1078bb79da200362aab421597ae02a7f6ab90f228e",
+    "assets/units/enemies/peashooter/peashooter_unit.tres": "c6882823255aa096d4526c254aeceafa9428fee67590b11c091ba295f4150c50",
+    "assets/units/enemies/seed_lobber/seed_lobber_unit.tres": "4e56600fb11d67d65d76aa1c31aa91dd8ff0bddccab4435f21cde7ce2b87b581"
+  },
+  "gameplay_patch": "umbrella-portrait-v2-physics.patch"
+}

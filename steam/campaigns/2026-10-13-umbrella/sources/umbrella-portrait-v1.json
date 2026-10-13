@@ -1,0 +1,3801 @@
+{
+	"audio_preroll_frames": 30,
+	"blocked_arrows": [
+		{
+			"action": "arrow_blocked",
+			"battle": "single",
+			"frame": 335,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 196326984039,
+			"screen_x": 426.115478515625,
+			"screen_y": 1131.22863769531,
+			"shot": "single_wide",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3451.8896484375,
+			"world_y": 601.90771484375
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "single",
+			"frame": 342,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 196444424557,
+			"screen_x": 429.44384765625,
+			"screen_y": 1133.54931640625,
+			"shot": "single_wide",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3457.52270507812,
+			"world_y": 605.83544921875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "single",
+			"frame": 447,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 221828352378,
+			"screen_x": 646.64794921875,
+			"screen_y": 1179.63952636719,
+			"shot": "single_wide",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3825.13427734375,
+			"world_y": 683.841796875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 658,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298902883384,
+			"screen_x": 756.47509765625,
+			"screen_y": 1107.71826171875,
+			"shot": "army_launch",
+			"unit": 6,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3969.69140625,
+			"world_y": 599.529296875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 668,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 299137764420,
+			"screen_x": 882.99658203125,
+			"screen_y": 1115.82275390625,
+			"shot": "army_launch",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4148.0419921875,
+			"world_y": 610.953674316406
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 668,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298433121312,
+			"screen_x": 913.274169921875,
+			"screen_y": 1110.27880859375,
+			"shot": "army_launch",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4190.72265625,
+			"world_y": 603.138671875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 669,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298550561830,
+			"screen_x": 482.923095703125,
+			"screen_y": 1130.40185546875,
+			"shot": "army_launch",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3584.0791015625,
+			"world_y": 631.505187988281
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 677,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 299255204938,
+			"screen_x": 491.7783203125,
+			"screen_y": 1110.25354003906,
+			"shot": "army_launch",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3596.56201171875,
+			"world_y": 603.103088378906
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 678,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 301000035409,
+			"screen_x": 948.282958984375,
+			"screen_y": 1116.57250976562,
+			"shot": "army_launch",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4240.07275390625,
+			"world_y": 612.0107421875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 678,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298298903559,
+			"screen_x": 592.9921875,
+			"screen_y": 1110.0595703125,
+			"shot": "army_launch",
+			"unit": 3,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3739.23803710938,
+			"world_y": 602.829711914062
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 684,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298785442866,
+			"screen_x": -210.55810546875,
+			"screen_y": 1008.24530029297,
+			"shot": "army_impact",
+			"unit": 2,
+			"visible": false,
+			"weapon": "Umbrella Shield",
+			"world_x": 3716.1474609375,
+			"world_y": 607.727111816406
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 684,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298668002348,
+			"screen_x": -104.53564453125,
+			"screen_y": 1011.31921386719,
+			"shot": "army_impact",
+			"unit": 3,
+			"visible": false,
+			"weapon": "Umbrella Shield",
+			"world_x": 3797.70336914062,
+			"world_y": 610.091674804688
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 692,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 303332068429,
+			"screen_x": 517.82958984375,
+			"screen_y": 1009.69183349609,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4276.44580078125,
+			"world_y": 608.83984375
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 704,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 305580214645,
+			"screen_x": 587.3310546875,
+			"screen_y": 1002.51739501953,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4329.90869140625,
+			"world_y": 603.321044921875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 722,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 307761253441,
+			"screen_x": 582.26953125,
+			"screen_y": 1079.74340820312,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4326.01513671875,
+			"world_y": 662.725646972656
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 742,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 328011353228,
+			"screen_x": 658.9111328125,
+			"screen_y": 1111.27099609375,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4384.97021484375,
+			"world_y": 686.977722167969
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 755,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 328380451998,
+			"screen_x": 695.18408203125,
+			"screen_y": 1076.7763671875,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4412.87255859375,
+			"world_y": 660.443359375
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 776,
+			"hit_targets": 0,
+			"hp": 44,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 317190048856,
+			"screen_x": 782.46142578125,
+			"screen_y": 1071.22229003906,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4480.0087890625,
+			"world_y": 656.170959472656
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 806,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 330544712716,
+			"screen_x": 670.5380859375,
+			"screen_y": 1003.19604492188,
+			"shot": "army_impact",
+			"unit": 5,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4393.9140625,
+			"world_y": 603.843078613281
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 811,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 328497892516,
+			"screen_x": 211.430297851562,
+			"screen_y": 1174.52783203125,
+			"shot": "army_wide",
+			"unit": 2,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4082.70166015625,
+			"world_y": 607.850830078125
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 811,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 328263011458,
+			"screen_x": 180.975830078125,
+			"screen_y": 1172.69946289062,
+			"shot": "army_wide",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3999.83544921875,
+			"world_y": 602.875732421875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 815,
+			"hit_targets": 0,
+			"hp": 44,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 333329730573,
+			"screen_x": 372.699462890625,
+			"screen_y": 1173.77282714844,
+			"shot": "army_wide",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4521.513671875,
+			"world_y": 605.796508789062
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 816,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 328145570970,
+			"screen_x": 210.176513671875,
+			"screen_y": 1174.35021972656,
+			"shot": "army_wide",
+			"unit": 2,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4079.2900390625,
+			"world_y": 607.36767578125
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 893,
+			"hit_targets": 0,
+			"hp": 40,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 366414400717,
+			"screen_x": 448.818725585938,
+			"screen_y": 1223.11303710938,
+			"shot": "army_wide",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4728.63330078125,
+			"world_y": 740.050903320312
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 896,
+			"hit_targets": 0,
+			"hp": 44,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 343916154073,
+			"screen_x": 370.66162109375,
+			"screen_y": 1172.88146972656,
+			"shot": "army_wide",
+			"unit": 6,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4515.96875,
+			"world_y": 603.37109375
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 909,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "child",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 371112021117,
+			"screen_x": 435.47509765625,
+			"screen_y": 1214.14599609375,
+			"shot": "army_wide",
+			"unit": 7,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4692.32568359375,
+			"world_y": 715.651672363281
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 916,
+			"hit_targets": 0,
+			"hp": 40,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 369669180591,
+			"screen_x": 454.250610351562,
+			"screen_y": 1190.43542480469,
+			"shot": "army_wide",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4743.41357421875,
+			"world_y": 651.135375976562
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 916,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 346432736488,
+			"screen_x": 363.539428710938,
+			"screen_y": 1173.96374511719,
+			"shot": "army_wide",
+			"unit": 3,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4496.58935546875,
+			"world_y": 606.316040039062
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 924,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 349284863019,
+			"screen_x": 424.821533203125,
+			"screen_y": 1173.81787109375,
+			"shot": "army_wide",
+			"unit": 5,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4663.33740234375,
+			"world_y": 605.919189453125
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 949,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 352942296071,
+			"screen_x": 375.228637695312,
+			"screen_y": 1176.30541992188,
+			"shot": "army_wide",
+			"unit": 2,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4528.3955078125,
+			"world_y": 612.6875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 976,
+			"hit_targets": 0,
+			"hp": 44,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 377957125318,
+			"screen_x": 446.564086914062,
+			"screen_y": 1174.0830078125,
+			"shot": "army_wide",
+			"unit": 6,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4722.49853515625,
+			"world_y": 606.640563964844
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 978,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 373880261826,
+			"screen_x": 370.505737304688,
+			"screen_y": 1175.96691894531,
+			"shot": "army_wide",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4515.54443359375,
+			"world_y": 611.766540527344
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 987,
+			"hit_targets": 0,
+			"hp": 40,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 382050766007,
+			"screen_x": 481.134887695312,
+			"screen_y": 1174.09313964844,
+			"shot": "army_wide",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4816.5654296875,
+			"world_y": 606.668212890625
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 1010,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "child",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 386681277662,
+			"screen_x": 503.813232421875,
+			"screen_y": 1189.13989257812,
+			"shot": "army_wide",
+			"unit": 7,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4878.27294921875,
+			"world_y": 647.610046386719
+		}
+	],
+	"equation_center_x": 540.0,
+	"equation_paper_filter": "linear",
+	"equation_paper_source": "res://assets/asset_packs/Cila - Paper UI stylized/Paper style 1/paper 12.png",
+	"equation_paper_source_size": {
+		"height": 380,
+		"width": 1220
+	},
+	"events": [
+		{
+			"action": "gameplay_source",
+			"blocker_script_sha256": "c800e1461a93ceb2944d4373bf5445cc9a3b5a93a92ed2b8cd83ee09d14f0bac",
+			"enemy_resource_sha256": "c6882823255aa096d4526c254aeceafa9428fee67590b11c091ba295f4150c50",
+			"frame": 0,
+			"knockback_recovery_seconds": 0.35,
+			"projectile_script_sha256": "8bf675c0b9cbee08f7964fc3f45b61eff6136c3cf2f9017a03a422722fd98e83",
+			"umbrella_resource_sha256": "5f4baf17d9e02add0499385e243a9e4943dc5e11ed4db710ec613e1189ee3e58",
+			"unit_script_sha256": "73c6fc1f637cd67a0caac5dab006ba55a52516491202ae97e567d012e40cbd39"
+		},
+		{
+			"action": "equation_paper_layout",
+			"filter": "linear",
+			"frame": 0,
+			"height": 283.0,
+			"source_height": 380,
+			"source_width": 1220,
+			"stretch_mode": "keep_aspect_centered",
+			"width": 900.0,
+			"x": 90.0,
+			"y": 452.0
+		},
+		{
+			"action": "cocoon_entry",
+			"frame": 0,
+			"held_school": 1,
+			"life_stage": "child",
+			"unit_scale": 1.65
+		},
+		{
+			"action": "walk_started",
+			"animation_speed": 2.1,
+			"frame": 21
+		},
+		{
+			"action": "cocoon_closed",
+			"frame": 51
+		},
+		{
+			"action": "cocoon_reveal",
+			"apex_hold_seconds": 0.1,
+			"complete_equation": true,
+			"frame": 150,
+			"hop_height": 240.0,
+			"result_label": "Umbrella Shield",
+			"shell_pieces": 2,
+			"sound": "train",
+			"unit_scale": 1.65,
+			"weapon": "Umbrella Shield"
+		},
+		{
+			"action": "reveal_landing",
+			"frame": 186,
+			"sound": "ground"
+		},
+		{
+			"action": "weapon_name",
+			"frame": 240
+		},
+		{
+			"action": "single",
+			"enemies": 3,
+			"enemy_held_weapon": "Bow",
+			"enemy_held_weapon_path": "res://assets/weapons/bow/bow.tres",
+			"enemy_home_slot_spacing": 80.0,
+			"enemy_projectile_path": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"enemy_projectile_range": 1300.0,
+			"enemy_show_held_weapon": true,
+			"enemy_spawn_offset": 180.0,
+			"enemy_stats": [
+				{
+					"con": 3,
+					"dex": 4,
+					"strength": 1
+				},
+				{
+					"con": 3,
+					"dex": 3,
+					"strength": 3
+				},
+				{
+					"con": 3,
+					"dex": 4,
+					"strength": 2
+				}
+			],
+			"enemy_type": "peashooter",
+			"frame": 240,
+			"nearest_front_gap": 720.950073242188,
+			"player_adults": 1,
+			"player_children": 0,
+			"player_specs": [
+				{
+					"appearance_scale_x": 1.0,
+					"appearance_scale_y": 1.0,
+					"appearance_scene": "res://assets/units/generalist/player_imago_base.tscn",
+					"con": 14,
+					"dex": 1,
+					"generation": 1,
+					"life_stage": "adult",
+					"life_stage_id": "imago",
+					"slot": 0,
+					"source": "trained_adult",
+					"strength": 5,
+					"trainings": [
+						1,
+						3
+					],
+					"unit_scale_x": 1.0,
+					"unit_scale_y": 1.0,
+					"weapon": "Umbrella Shield"
+				}
+			],
+			"players": 1,
+			"profile": {
+				"attack_interval": 0.75,
+				"attack_style": 0,
+				"engagement_stance": 2,
+				"knockback_force": 280.0,
+				"melee_engage_range": 78.0,
+				"melee_range": 96.0,
+				"projectile_range": 48.0,
+				"skirmish_distance": 80.0,
+				"targeting_mode": 0
+			},
+			"seed": 13102026,
+			"weapon": "Umbrella Shield"
+		},
+		{
+			"action": "cut",
+			"background_screen_scale": 0.295426040887833,
+			"camera_x": 3644.63598632812,
+			"frame": 240,
+			"screen_fixed_forest_visible": false,
+			"shot": "single_wide",
+			"zoom": 0.590852103210965
+		},
+		{
+			"alive": 1,
+			"camera_x": 3644.63598632812,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 0,
+			"enemies_alive": 3,
+			"frame": 240,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.590852081775665
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "single",
+			"enemy": 2,
+			"frame": 268,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "single_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 3800.00415039062,
+			"world_y": 740.026000976562
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "single",
+			"enemy": 1,
+			"frame": 268,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "single_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 3879.2138671875,
+			"world_y": 740.170532226562
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "single",
+			"enemy": 0,
+			"frame": 268,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "single_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 3959.55810546875,
+			"world_y": 740.105834960938
+		},
+		{
+			"alive": 1,
+			"camera_x": 3644.63598632812,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 0,
+			"enemies_alive": 3,
+			"frame": 300,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.590852081775665
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "single",
+			"frame": 335,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 196326984039,
+			"screen_x": 426.115478515625,
+			"screen_y": 1131.22863769531,
+			"shot": "single_wide",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3451.8896484375,
+			"world_y": 601.90771484375
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "single",
+			"frame": 342,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 196444424557,
+			"screen_x": 429.44384765625,
+			"screen_y": 1133.54931640625,
+			"shot": "single_wide",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3457.52270507812,
+			"world_y": 605.83544921875
+		},
+		{
+			"alive": 1,
+			"camera_x": 3644.63598632812,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 0,
+			"enemies_alive": 3,
+			"frame": 360,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.590852081775665
+		},
+		{
+			"alive": 1,
+			"camera_x": 3644.63598632812,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 0,
+			"enemies_alive": 3,
+			"frame": 420,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.590852081775665
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "single",
+			"enemy": 2,
+			"frame": 430,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "single_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 3799.04833984375,
+			"world_y": 740.202575683594
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "single",
+			"enemy": 1,
+			"frame": 430,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "single_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 3879.04833984375,
+			"world_y": 740.202575683594
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "single",
+			"enemy": 0,
+			"frame": 430,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "single_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 3959.04833984375,
+			"world_y": 740.202575683594
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "single",
+			"frame": 447,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 221828352378,
+			"screen_x": 646.64794921875,
+			"screen_y": 1179.63952636719,
+			"shot": "single_wide",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3825.13427734375,
+			"world_y": 683.841796875
+		},
+		{
+			"alive": 1,
+			"camera_x": 3644.63598632812,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 3,
+			"enemies_alive": 3,
+			"frame": 480,
+			"fully_visible_enemies": 3,
+			"fully_visible_players": 1,
+			"shot": "single_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.590852081775665
+		},
+		{
+			"action": "army",
+			"enemies": 18,
+			"enemy_held_weapon": "Bow",
+			"enemy_held_weapon_path": "res://assets/weapons/bow/bow.tres",
+			"enemy_home_slot_spacing": 80.0,
+			"enemy_projectile_path": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"enemy_projectile_range": 1300.0,
+			"enemy_show_held_weapon": true,
+			"enemy_spawn_offset": 180.0,
+			"enemy_stats": [
+				{
+					"con": 2,
+					"dex": 4,
+					"strength": 1
+				},
+				{
+					"con": 3,
+					"dex": 4,
+					"strength": 2
+				},
+				{
+					"con": 2,
+					"dex": 3,
+					"strength": 3
+				},
+				{
+					"con": 2,
+					"dex": 4,
+					"strength": 1
+				},
+				{
+					"con": 2,
+					"dex": 4,
+					"strength": 3
+				},
+				{
+					"con": 3,
+					"dex": 3,
+					"strength": 2
+				},
+				{
+					"con": 3,
+					"dex": 3,
+					"strength": 1
+				},
+				{
+					"con": 2,
+					"dex": 5,
+					"strength": 1
+				},
+				{
+					"con": 4,
+					"dex": 4,
+					"strength": 2
+				},
+				{
+					"con": 4,
+					"dex": 4,
+					"strength": 2
+				},
+				{
+					"con": 3,
+					"dex": 3,
+					"strength": 1
+				},
+				{
+					"con": 4,
+					"dex": 5,
+					"strength": 3
+				},
+				{
+					"con": 2,
+					"dex": 3,
+					"strength": 1
+				},
+				{
+					"con": 4,
+					"dex": 4,
+					"strength": 3
+				},
+				{
+					"con": 4,
+					"dex": 4,
+					"strength": 2
+				},
+				{
+					"con": 2,
+					"dex": 5,
+					"strength": 3
+				},
+				{
+					"con": 3,
+					"dex": 4,
+					"strength": 3
+				},
+				{
+					"con": 3,
+					"dex": 4,
+					"strength": 1
+				}
+			],
+			"enemy_type": "peashooter",
+			"frame": 540,
+			"nearest_front_gap": 720.950073242188,
+			"player_adults": 6,
+			"player_children": 3,
+			"player_specs": [
+				{
+					"appearance_scale_x": 1.0,
+					"appearance_scale_y": 1.0,
+					"appearance_scene": "res://assets/units/generalist/player_imago_base.tscn",
+					"con": 14,
+					"dex": 1,
+					"generation": 1,
+					"life_stage": "adult",
+					"life_stage_id": "imago",
+					"slot": 0,
+					"source": "trained_adult",
+					"strength": 5,
+					"trainings": [
+						1,
+						3
+					],
+					"unit_scale_x": 1.0,
+					"unit_scale_y": 1.0,
+					"weapon": "Umbrella Shield"
+				},
+				{
+					"appearance_scale_x": 1.0,
+					"appearance_scale_y": 1.0,
+					"appearance_scene": "res://assets/units/generalist/player_child_base.tscn",
+					"con": 14,
+					"dex": 1,
+					"generation": 2,
+					"life_stage": "child",
+					"life_stage_id": "juvenile",
+					"slot": 1,
+					"source": "native_lineage_spore_harvest",
+					"strength": 7,
+					"trainings": [
+						1,
+						3
+					],
+					"unit_scale_x": 1.0,
+					"unit_scale_y": 1.0,
+					"weapon": "Umbrella Shield"
+				},
+				{
+					"appearance_scale_x": 1.0,
+					"appearance_scale_y": 1.0,
+					"appearance_scene": "res://assets/units/generalist/player_imago_base.tscn",
+					"con": 13,
+					"dex": 2,
+					"generation": 1,
+					"life_stage": "adult",
+					"life_stage_id": "imago",
+					"slot": 2,
+					"source": "trained_adult",
+					"strength": 7,
+					"trainings": [
+						1,
+						3
+					],
+					"unit_scale_x": 1.0,
+					"unit_scale_y": 1.0,
+					"weapon": "Umbrella Shield"
+				},
+				{
+					"appearance_scale_x": 1.0,
+					"appearance_scale_y": 1.0,
+					"appearance_scene": "res://assets/units/generalist/player_imago_base.tscn",
+					"con": 12,
+					"dex": 1,
+					"generation": 1,
+					"life_stage": "adult",
+					"life_stage_id": "imago",
+					"slot": 3,
+					"source": "trained_adult",
+					"strength": 6,
+					"trainings": [
+						1,
+						3
+					],
+					"unit_scale_x": 1.0,
+					"unit_scale_y": 1.0,
+					"weapon": "Umbrella Shield"
+				},
+				{
+					"appearance_scale_x": 1.0,
+					"appearance_scale_y": 1.0,
+					"appearance_scene": "res://assets/units/generalist/player_child_base.tscn",
+					"con": 13,
+					"dex": 2,
+					"generation": 2,
+					"life_stage": "child",
+					"life_stage_id": "juvenile",
+					"slot": 4,
+					"source": "native_lineage_spore_harvest",
+					"strength": 6,
+					"trainings": [
+						1,
+						3
+					],
+					"unit_scale_x": 1.0,
+					"unit_scale_y": 1.0,
+					"weapon": "Umbrella Shield"
+				},
+				{
+					"appearance_scale_x": 1.0,
+					"appearance_scale_y": 1.0,
+					"appearance_scene": "res://assets/units/generalist/player_imago_base.tscn",
+					"con": 13,
+					"dex": 1,
+					"generation": 1,
+					"life_stage": "adult",
+					"life_stage_id": "imago",
+					"slot": 5,
+					"source": "trained_adult",
+					"strength": 7,
+					"trainings": [
+						1,
+						3
+					],
+					"unit_scale_x": 1.0,
+					"unit_scale_y": 1.0,
+					"weapon": "Umbrella Shield"
+				},
+				{
+					"appearance_scale_x": 1.0,
+					"appearance_scale_y": 1.0,
+					"appearance_scene": "res://assets/units/generalist/player_imago_base.tscn",
+					"con": 12,
+					"dex": 2,
+					"generation": 1,
+					"life_stage": "adult",
+					"life_stage_id": "imago",
+					"slot": 6,
+					"source": "trained_adult",
+					"strength": 5,
+					"trainings": [
+						1,
+						3
+					],
+					"unit_scale_x": 1.0,
+					"unit_scale_y": 1.0,
+					"weapon": "Umbrella Shield"
+				},
+				{
+					"appearance_scale_x": 1.0,
+					"appearance_scale_y": 1.0,
+					"appearance_scene": "res://assets/units/generalist/player_child_base.tscn",
+					"con": 12,
+					"dex": 3,
+					"generation": 2,
+					"life_stage": "child",
+					"life_stage_id": "juvenile",
+					"slot": 7,
+					"source": "native_lineage_spore_harvest",
+					"strength": 4,
+					"trainings": [
+						1,
+						3
+					],
+					"unit_scale_x": 1.0,
+					"unit_scale_y": 1.0,
+					"weapon": "Umbrella Shield"
+				},
+				{
+					"appearance_scale_x": 1.0,
+					"appearance_scale_y": 1.0,
+					"appearance_scene": "res://assets/units/generalist/player_imago_base.tscn",
+					"con": 14,
+					"dex": 1,
+					"generation": 1,
+					"life_stage": "adult",
+					"life_stage_id": "imago",
+					"slot": 8,
+					"source": "trained_adult",
+					"strength": 7,
+					"trainings": [
+						1,
+						3
+					],
+					"unit_scale_x": 1.0,
+					"unit_scale_y": 1.0,
+					"weapon": "Umbrella Shield"
+				}
+			],
+			"players": 9,
+			"profile": {
+				"attack_interval": 0.75,
+				"attack_style": 0,
+				"engagement_stance": 2,
+				"knockback_force": 280.0,
+				"melee_engage_range": 78.0,
+				"melee_range": 96.0,
+				"projectile_range": 48.0,
+				"skirmish_distance": 80.0,
+				"targeting_mode": 0
+			},
+			"seed": 13102126,
+			"weapon": "Umbrella Shield"
+		},
+		{
+			"action": "cut",
+			"background_screen_scale": 0.354698449373245,
+			"camera_x": 3664.53759765625,
+			"frame": 540,
+			"screen_fixed_forest_visible": false,
+			"shot": "army_launch",
+			"zoom": 0.709396922630909
+		},
+		{
+			"alive": 9,
+			"camera_x": 3664.53759765625,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 0,
+			"enemies_alive": 18,
+			"frame": 540,
+			"fully_visible_enemies": 0,
+			"fully_visible_players": 9,
+			"shot": "army_launch",
+			"steam_cta_visible": false,
+			"zoom": 0.70939689874649
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 13,
+			"frame": 568,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4760.62451171875,
+			"world_y": 739.92236328125
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 9,
+			"frame": 568,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5047.69140625,
+			"world_y": 739.911682128906
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 17,
+			"frame": 568,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4440.392578125,
+			"world_y": 739.960144042969
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 11,
+			"frame": 568,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4920.92626953125,
+			"world_y": 739.875
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 12,
+			"frame": 568,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4840.7666015625,
+			"world_y": 739.899841308594
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 14,
+			"frame": 568,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4680.25341796875,
+			"world_y": 739.983276367188
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 16,
+			"frame": 568,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4520.77099609375,
+			"world_y": 739.899108886719
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 10,
+			"frame": 568,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5000.51513671875,
+			"world_y": 739.940002441406
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 15,
+			"frame": 568,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4600.6376953125,
+			"world_y": 739.920227050781
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 8,
+			"frame": 578,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5091.869140625,
+			"world_y": 739.883911132812
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 7,
+			"frame": 592,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5130.03076171875,
+			"world_y": 739.817993164062
+		},
+		{
+			"alive": 9,
+			"camera_x": 3664.53759765625,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 0,
+			"enemies_alive": 18,
+			"frame": 600,
+			"fully_visible_enemies": 0,
+			"fully_visible_players": 9,
+			"shot": "army_launch",
+			"steam_cta_visible": false,
+			"zoom": 0.70939689874649
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 6,
+			"frame": 605,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5171.13916015625,
+			"world_y": 739.8017578125
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 5,
+			"frame": 618,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5212.27783203125,
+			"world_y": 739.781372070312
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 4,
+			"frame": 632,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5250.16162109375,
+			"world_y": 739.798400878906
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 3,
+			"frame": 645,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5291.19970703125,
+			"world_y": 739.792785644531
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 658,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298902883384,
+			"screen_x": 756.47509765625,
+			"screen_y": 1107.71826171875,
+			"shot": "army_launch",
+			"unit": 6,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3969.69140625,
+			"world_y": 599.529296875
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 2,
+			"frame": 658,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5332.3125,
+			"world_y": 739.776306152344
+		},
+		{
+			"alive": 9,
+			"camera_x": 3664.53759765625,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 0,
+			"enemies_alive": 18,
+			"frame": 660,
+			"fully_visible_enemies": 1,
+			"fully_visible_players": 9,
+			"shot": "army_launch",
+			"steam_cta_visible": false,
+			"zoom": 0.70939689874649
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 668,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 299137764420,
+			"screen_x": 882.99658203125,
+			"screen_y": 1115.82275390625,
+			"shot": "army_launch",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4148.0419921875,
+			"world_y": 610.953674316406
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 668,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298433121312,
+			"screen_x": 913.274169921875,
+			"screen_y": 1110.27880859375,
+			"shot": "army_launch",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4190.72265625,
+			"world_y": 603.138671875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 669,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298550561830,
+			"screen_x": 482.923095703125,
+			"screen_y": 1130.40185546875,
+			"shot": "army_launch",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3584.0791015625,
+			"world_y": 631.505187988281
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 1,
+			"frame": 672,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_launch",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5370.09375,
+			"world_y": 739.808532714844
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 677,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 299255204938,
+			"screen_x": 491.7783203125,
+			"screen_y": 1110.25354003906,
+			"shot": "army_launch",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3596.56201171875,
+			"world_y": 603.103088378906
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 678,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 301000035409,
+			"screen_x": 948.282958984375,
+			"screen_y": 1116.57250976562,
+			"shot": "army_launch",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4240.07275390625,
+			"world_y": 612.0107421875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 678,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298298903559,
+			"screen_x": 592.9921875,
+			"screen_y": 1110.0595703125,
+			"shot": "army_launch",
+			"unit": 3,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3739.23803710938,
+			"world_y": 602.829711914062
+		},
+		{
+			"action": "cut",
+			"background_screen_scale": 0.649999976158142,
+			"camera_x": 4293.5,
+			"frame": 678,
+			"screen_fixed_forest_visible": false,
+			"shot": "army_impact",
+			"zoom": 1.3
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 684,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298785442866,
+			"screen_x": -210.55810546875,
+			"screen_y": 1008.24530029297,
+			"shot": "army_impact",
+			"unit": 2,
+			"visible": false,
+			"weapon": "Umbrella Shield",
+			"world_x": 3716.1474609375,
+			"world_y": 607.727111816406
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 684,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 298668002348,
+			"screen_x": -104.53564453125,
+			"screen_y": 1011.31921386719,
+			"shot": "army_impact",
+			"unit": 3,
+			"visible": false,
+			"weapon": "Umbrella Shield",
+			"world_x": 3797.70336914062,
+			"world_y": 610.091674804688
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 0,
+			"frame": 685,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5411.17724609375,
+			"world_y": 739.796081542969
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 692,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 303332068429,
+			"screen_x": 517.82958984375,
+			"screen_y": 1009.69183349609,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4276.44580078125,
+			"world_y": 608.83984375
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 704,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 305580214645,
+			"screen_x": 587.3310546875,
+			"screen_y": 1002.51739501953,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4329.90869140625,
+			"world_y": 603.321044921875
+		},
+		{
+			"alive": 9,
+			"camera_x": 4293.5,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 5,
+			"enemies_alive": 18,
+			"frame": 720,
+			"fully_visible_enemies": 6,
+			"fully_visible_players": 4,
+			"shot": "army_impact",
+			"steam_cta_visible": false,
+			"zoom": 1.29999995231628
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 722,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 307761253441,
+			"screen_x": 582.26953125,
+			"screen_y": 1079.74340820312,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4326.01513671875,
+			"world_y": 662.725646972656
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 13,
+			"frame": 730,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 4426.04833984375,
+			"world_y": 740.161437988281
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 9,
+			"frame": 730,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4730.19580078125,
+			"world_y": 739.793395996094
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 11,
+			"frame": 730,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4588.11669921875,
+			"world_y": 739.805114746094
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 12,
+			"frame": 730,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 4506.04833984375,
+			"world_y": 740.161437988281
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 10,
+			"frame": 730,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4668.0927734375,
+			"world_y": 739.808654785156
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 8,
+			"frame": 740,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4809.59033203125,
+			"world_y": 739.88671875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 742,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 328011353228,
+			"screen_x": 658.9111328125,
+			"screen_y": 1111.27099609375,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4384.97021484375,
+			"world_y": 686.977722167969
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 7,
+			"frame": 754,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4886.552734375,
+			"world_y": 739.892761230469
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 755,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 328380451998,
+			"screen_x": 695.18408203125,
+			"screen_y": 1076.7763671875,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4412.87255859375,
+			"world_y": 660.443359375
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 6,
+			"frame": 767,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 4969.53662109375,
+			"world_y": 739.895385742188
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 776,
+			"hit_targets": 0,
+			"hp": 44,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 317190048856,
+			"screen_x": 782.46142578125,
+			"screen_y": 1071.22229003906,
+			"shot": "army_impact",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4480.0087890625,
+			"world_y": 656.170959472656
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 5,
+			"frame": 780,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5049.6064453125,
+			"world_y": 739.884155273438
+		},
+		{
+			"alive": 9,
+			"camera_x": 4293.5,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 10,
+			"enemies_alive": 18,
+			"frame": 780,
+			"fully_visible_enemies": 7,
+			"fully_visible_players": 6,
+			"shot": "army_impact",
+			"steam_cta_visible": false,
+			"zoom": 1.29999995231628
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 4,
+			"frame": 794,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5126.28466796875,
+			"world_y": 739.936950683594
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 806,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 330544712716,
+			"screen_x": 670.5380859375,
+			"screen_y": 1003.19604492188,
+			"shot": "army_impact",
+			"unit": 5,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4393.9140625,
+			"world_y": 603.843078613281
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 3,
+			"frame": 807,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_impact",
+			"visible": false,
+			"weapon": "Bow",
+			"world_x": 5210.21484375,
+			"world_y": 739.790588378906
+		},
+		{
+			"action": "cut",
+			"background_screen_scale": 0.183756574988365,
+			"camera_x": 4976.73681640625,
+			"frame": 810,
+			"screen_fixed_forest_visible": false,
+			"shot": "army_wide",
+			"zoom": 0.367513152742485
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 811,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 328497892516,
+			"screen_x": 211.430297851562,
+			"screen_y": 1174.52783203125,
+			"shot": "army_wide",
+			"unit": 2,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4082.70166015625,
+			"world_y": 607.850830078125
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 811,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 328263011458,
+			"screen_x": 180.975830078125,
+			"screen_y": 1172.69946289062,
+			"shot": "army_wide",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 3999.83544921875,
+			"world_y": 602.875732421875
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 815,
+			"hit_targets": 0,
+			"hp": 44,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 333329730573,
+			"screen_x": 372.699462890625,
+			"screen_y": 1173.77282714844,
+			"shot": "army_wide",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4521.513671875,
+			"world_y": 605.796508789062
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 816,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 328145570970,
+			"screen_x": 210.176513671875,
+			"screen_y": 1174.35021972656,
+			"shot": "army_wide",
+			"unit": 2,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4079.2900390625,
+			"world_y": 607.36767578125
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 2,
+			"frame": 820,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 5290.3125,
+			"world_y": 739.7763671875
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 1,
+			"frame": 834,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 5370.0791015625,
+			"world_y": 739.810791015625
+		},
+		{
+			"action": "outro_started",
+			"frame": 840,
+			"question_visible": false,
+			"result_visible": false,
+			"steam_cta_visible": false,
+			"subtitle": "Weapon combos"
+		},
+		{
+			"action": "outro_input",
+			"frame": 840,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 840,
+			"pair": [
+				0,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"alive": 9,
+			"camera_x": 4976.73681640625,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 17,
+			"enemies_alive": 18,
+			"frame": 840,
+			"fully_visible_enemies": 18,
+			"fully_visible_players": 9,
+			"shot": "army_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.36751314997673
+		},
+		{
+			"action": "outro_input",
+			"frame": 844,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 0,
+			"frame": 847,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 5411.3564453125,
+			"world_y": 739.77001953125
+		},
+		{
+			"action": "outro_input",
+			"frame": 849,
+			"pair": [
+				4,
+				3
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 853,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 858,
+			"pair": [
+				1,
+				0
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 862,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 867,
+			"pair": [
+				2,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_spear/great_spear.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 871,
+			"pair": [
+				2,
+				4
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/polehammer/polehammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 876,
+			"pair": [
+				3,
+				4
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 880,
+			"pair": [
+				3,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/great_bow/great_bow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 885,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 889,
+			"pair": [
+				0,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 9,
+			"frame": 892,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 4728.63330078125,
+			"world_y": 740.050903320312
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 893,
+			"hit_targets": 0,
+			"hp": 40,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 366414400717,
+			"screen_x": 448.818725585938,
+			"screen_y": 1223.11303710938,
+			"shot": "army_wide",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4728.63330078125,
+			"world_y": 740.050903320312
+		},
+		{
+			"action": "outro_input",
+			"frame": 894,
+			"pair": [
+				2,
+				1
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 896,
+			"hit_targets": 0,
+			"hp": 44,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 343916154073,
+			"screen_x": 370.66162109375,
+			"screen_y": 1172.88146972656,
+			"shot": "army_wide",
+			"unit": 6,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4515.96875,
+			"world_y": 603.37109375
+		},
+		{
+			"action": "outro_input",
+			"frame": 898,
+			"pair": [
+				2,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"alive": 9,
+			"camera_x": 4976.73681640625,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.0,
+			"combat_visible": true,
+			"damage_dealt": 25,
+			"enemies_alive": 18,
+			"frame": 900,
+			"fully_visible_enemies": 18,
+			"fully_visible_players": 9,
+			"shot": "army_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.36751314997673
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 8,
+			"frame": 902,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 4809.01025390625,
+			"world_y": 739.983764648438
+		},
+		{
+			"action": "outro_input",
+			"frame": 903,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 10,
+			"frame": 904,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 4708.04833984375,
+			"world_y": 740.161437988281
+		},
+		{
+			"action": "outro_input",
+			"frame": 907,
+			"pair": [
+				4,
+				4
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/great_hammer/great_hammer.tres"
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 909,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "child",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 371112021117,
+			"screen_x": 435.47509765625,
+			"screen_y": 1214.14599609375,
+			"shot": "army_wide",
+			"unit": 7,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4692.32568359375,
+			"world_y": 715.651672363281
+		},
+		{
+			"action": "outro_input",
+			"frame": 912,
+			"pair": [
+				3,
+				4
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 916,
+			"hit_targets": 0,
+			"hp": 40,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 369669180591,
+			"screen_x": 454.250610351562,
+			"screen_y": 1190.43542480469,
+			"shot": "army_wide",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4743.41357421875,
+			"world_y": 651.135375976562
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 916,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 346432736488,
+			"screen_x": 363.539428710938,
+			"screen_y": 1173.96374511719,
+			"shot": "army_wide",
+			"unit": 3,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4496.58935546875,
+			"world_y": 606.316040039062
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 7,
+			"frame": 916,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 4886.697265625,
+			"world_y": 739.86962890625
+		},
+		{
+			"action": "outro_input",
+			"frame": 916,
+			"pair": [
+				3,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/umbrella/umbrella.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 921,
+			"pair": [
+				1,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_shield/great_shield.tres"
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 924,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 349284863019,
+			"screen_x": 424.821533203125,
+			"screen_y": 1173.81787109375,
+			"shot": "army_wide",
+			"unit": 5,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4663.33740234375,
+			"world_y": 605.919189453125
+		},
+		{
+			"action": "outro_input",
+			"frame": 925,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 6,
+			"frame": 929,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 4969.34423828125,
+			"world_y": 739.927001953125
+		},
+		{
+			"action": "outro_input",
+			"frame": 930,
+			"pair": [
+				0,
+				2
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"action": "combat_fade_started",
+			"end_frame": 1020,
+			"frame": 930
+		},
+		{
+			"action": "outro_input",
+			"frame": 934,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 939,
+			"pair": [
+				4,
+				3
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 5,
+			"frame": 942,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 5049.1123046875,
+			"world_y": 739.966186523438
+		},
+		{
+			"action": "outro_input",
+			"frame": 943,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 948,
+			"pair": [
+				1,
+				0
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 949,
+			"hit_targets": 0,
+			"hp": 52,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 352942296071,
+			"screen_x": 375.228637695312,
+			"screen_y": 1176.30541992188,
+			"shot": "army_wide",
+			"unit": 2,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4528.3955078125,
+			"world_y": 612.6875
+		},
+		{
+			"action": "outro_input",
+			"frame": 952,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 4,
+			"frame": 956,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 5125.71435546875,
+			"world_y": 740.036254882812
+		},
+		{
+			"action": "outro_input",
+			"frame": 957,
+			"pair": [
+				2,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_spear/great_spear.tres"
+		},
+		{
+			"alive": 9,
+			"camera_x": 4976.73681640625,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 0.259259253740311,
+			"combat_visible": true,
+			"damage_dealt": 37,
+			"enemies_alive": 18,
+			"frame": 960,
+			"fully_visible_enemies": 18,
+			"fully_visible_players": 9,
+			"shot": "army_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.36751314997673
+		},
+		{
+			"action": "outro_input",
+			"frame": 961,
+			"pair": [
+				2,
+				4
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/polehammer/polehammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 966,
+			"pair": [
+				3,
+				4
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 3,
+			"frame": 969,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 5209.10400390625,
+			"world_y": 739.967590332031
+		},
+		{
+			"action": "outro_input",
+			"frame": 970,
+			"pair": [
+				3,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/great_bow/great_bow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 975,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 976,
+			"hit_targets": 0,
+			"hp": 44,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 377957125318,
+			"screen_x": 446.564086914062,
+			"screen_y": 1174.0830078125,
+			"shot": "army_wide",
+			"unit": 6,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4722.49853515625,
+			"world_y": 606.640563964844
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 978,
+			"hit_targets": 0,
+			"hp": 56,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 373880261826,
+			"screen_x": 370.505737304688,
+			"screen_y": 1175.96691894531,
+			"shot": "army_wide",
+			"unit": 0,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4515.54443359375,
+			"world_y": 611.766540527344
+		},
+		{
+			"action": "outro_input",
+			"frame": 979,
+			"pair": [
+				0,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 2,
+			"frame": 982,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 5289.1416015625,
+			"world_y": 739.961120605469
+		},
+		{
+			"action": "outro_input",
+			"frame": 984,
+			"pair": [
+				2,
+				1
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 987,
+			"hit_targets": 0,
+			"hp": 40,
+			"life_stage": "adult",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 382050766007,
+			"screen_x": 481.134887695312,
+			"screen_y": 1174.09313964844,
+			"shot": "army_wide",
+			"unit": 8,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4816.5654296875,
+			"world_y": 606.668212890625
+		},
+		{
+			"action": "outro_input",
+			"frame": 988,
+			"pair": [
+				2,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 993,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 1,
+			"frame": 996,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 5369.1875,
+			"world_y": 739.953369140625
+		},
+		{
+			"action": "outro_input",
+			"frame": 997,
+			"pair": [
+				4,
+				4
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/great_hammer/great_hammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1002,
+			"pair": [
+				3,
+				4
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1006,
+			"pair": [
+				3,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/umbrella/umbrella.tres"
+		},
+		{
+			"action": "arrow_blocked",
+			"battle": "army",
+			"frame": 1010,
+			"hit_targets": 0,
+			"hp": 48,
+			"life_stage": "child",
+			"native_spent": true,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"projectile_id": 386681277662,
+			"screen_x": 503.813232421875,
+			"screen_y": 1189.13989257812,
+			"shot": "army_wide",
+			"unit": 7,
+			"visible": true,
+			"weapon": "Umbrella Shield",
+			"world_x": 4878.27294921875,
+			"world_y": 647.610046386719
+		},
+		{
+			"action": "outro_input",
+			"frame": 1011,
+			"pair": [
+				1,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_shield/great_shield.tres"
+		},
+		{
+			"action": "enemy_arrow_launch",
+			"battle": "army",
+			"enemy": 0,
+			"frame": 1013,
+			"projectile": "res://assets/weapons/bow/arrow_projectile.tscn",
+			"shot": "army_wide",
+			"visible": true,
+			"weapon": "Bow",
+			"world_x": 5410.63916015625,
+			"world_y": 739.878845214844
+		},
+		{
+			"action": "outro_input",
+			"frame": 1015,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1020,
+			"pair": [
+				0,
+				2
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"action": "combat_black",
+			"combat_processing": false,
+			"fade_alpha": 1.0,
+			"frame": 1020
+		},
+		{
+			"alive": 9,
+			"camera_x": 4976.73681640625,
+			"closing_question_alpha": 0.0,
+			"closing_question_visible": false,
+			"combat_fade_alpha": 1.0,
+			"combat_visible": false,
+			"damage_dealt": 48,
+			"enemies_alive": 17,
+			"frame": 1020,
+			"fully_visible_enemies": 17,
+			"fully_visible_players": 9,
+			"shot": "army_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.36751314997673
+		},
+		{
+			"action": "outro_input",
+			"frame": 1024,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1029,
+			"pair": [
+				4,
+				3
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "closing_question_started",
+			"animation_end_frame": 1053,
+			"combat_fade_alpha": 1.0,
+			"frame": 1029,
+			"text": "Which combo next?",
+			"y_end": 1040.0,
+			"y_start": 1064.0
+		},
+		{
+			"action": "outro_input",
+			"frame": 1033,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1038,
+			"pair": [
+				1,
+				0
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1042,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1047,
+			"pair": [
+				2,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_spear/great_spear.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1051,
+			"pair": [
+				2,
+				4
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/polehammer/polehammer.tres"
+		},
+		{
+			"action": "closing_question_settled",
+			"alpha": 1.0,
+			"frame": 1053,
+			"text": "Which combo next?",
+			"y": 1040.0
+		},
+		{
+			"action": "outro_input",
+			"frame": 1056,
+			"pair": [
+				3,
+				4
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1060,
+			"pair": [
+				3,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/great_bow/great_bow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1065,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1069,
+			"pair": [
+				0,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1074,
+			"pair": [
+				2,
+				1
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1078,
+			"pair": [
+				2,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"alive": 9,
+			"camera_x": 4976.73681640625,
+			"closing_question_alpha": 1.0,
+			"closing_question_visible": true,
+			"combat_fade_alpha": 1.0,
+			"combat_visible": false,
+			"damage_dealt": 48,
+			"enemies_alive": 17,
+			"frame": 1080,
+			"fully_visible_enemies": 17,
+			"fully_visible_players": 9,
+			"shot": "army_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.36751314997673
+		},
+		{
+			"action": "outro_input",
+			"frame": 1083,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1087,
+			"pair": [
+				4,
+				4
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/great_hammer/great_hammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1092,
+			"pair": [
+				3,
+				4
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1096,
+			"pair": [
+				3,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/umbrella/umbrella.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1101,
+			"pair": [
+				1,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_shield/great_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1105,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1110,
+			"pair": [
+				0,
+				2
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1114,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1119,
+			"pair": [
+				4,
+				3
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1123,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1128,
+			"pair": [
+				1,
+				0
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1132,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1137,
+			"pair": [
+				2,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_spear/great_spear.tres"
+		},
+		{
+			"alive": 9,
+			"camera_x": 4976.73681640625,
+			"closing_question_alpha": 1.0,
+			"closing_question_visible": true,
+			"combat_fade_alpha": 1.0,
+			"combat_visible": false,
+			"damage_dealt": 48,
+			"enemies_alive": 17,
+			"frame": 1140,
+			"fully_visible_enemies": 17,
+			"fully_visible_players": 9,
+			"shot": "army_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.36751314997673
+		},
+		{
+			"action": "outro_input",
+			"frame": 1141,
+			"pair": [
+				2,
+				4
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/polehammer/polehammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1146,
+			"pair": [
+				3,
+				4
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1150,
+			"pair": [
+				3,
+				3
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/great_bow/great_bow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1155,
+			"pair": [
+				0,
+				3
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/crossbow/crossbow.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1159,
+			"pair": [
+				0,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/sword_and_shield/sword_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1164,
+			"pair": [
+				2,
+				1
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1168,
+			"pair": [
+				2,
+				0
+			],
+			"result_visible": false,
+			"school": 0,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/lance/lance.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1173,
+			"pair": [
+				4,
+				0
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/warhammer/warhammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1177,
+			"pair": [
+				4,
+				4
+			],
+			"result_visible": false,
+			"school": 4,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/great_hammer/great_hammer.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1182,
+			"pair": [
+				3,
+				4
+			],
+			"result_visible": false,
+			"school": 3,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/giant_horn/giant_horn.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1186,
+			"pair": [
+				3,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/umbrella/umbrella.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1191,
+			"pair": [
+				1,
+				1
+			],
+			"result_visible": false,
+			"school": 1,
+			"slot": 0,
+			"valid_result": "res://assets/weapons/great_shield/great_shield.tres"
+		},
+		{
+			"action": "outro_input",
+			"frame": 1195,
+			"pair": [
+				1,
+				2
+			],
+			"result_visible": false,
+			"school": 2,
+			"slot": 1,
+			"valid_result": "res://assets/weapons/spear_and_shield/spear_and_shield.tres"
+		},
+		{
+			"alive": 9,
+			"camera_x": 4976.73681640625,
+			"closing_question_alpha": 1.0,
+			"closing_question_visible": true,
+			"combat_fade_alpha": 1.0,
+			"combat_visible": false,
+			"damage_dealt": 48,
+			"enemies_alive": 17,
+			"frame": 1199,
+			"fully_visible_enemies": 17,
+			"fully_visible_players": 9,
+			"shot": "army_wide",
+			"steam_cta_visible": false,
+			"zoom": 0.36751314997673
+		}
+	],
+	"featured_mechanic": "native umbrella canopy blocks incoming bow arrows",
+	"format": "portrait",
+	"fps": 60,
+	"frames": 1200,
+	"height": 1920,
+	"layout": {
+		"brand": {
+			"height": 130.0,
+			"width": 940.0,
+			"x": 70.0,
+			"y": 215.0
+		},
+		"combat": {
+			"height": 1050.0,
+			"width": 1000.0,
+			"x": 40.0,
+			"y": 760.0
+		},
+		"combat_black_probe": {
+			"height": 240.0,
+			"width": 1080.0,
+			"x": 0.0,
+			"y": 780.0
+		},
+		"cta_probe": {
+			"height": 200.0,
+			"width": 880.0,
+			"x": 100.0,
+			"y": 1450.0
+		},
+		"equation": {
+			"height": 245.0,
+			"width": 796.0,
+			"x": 142.0,
+			"y": 478.0
+		},
+		"first_input": {
+			"height": 180.0,
+			"width": 180.0,
+			"x": 142.0,
+			"y": 478.0
+		},
+		"input_0": {
+			"height": 180.0,
+			"width": 180.0,
+			"x": 142.0,
+			"y": 478.0
+		},
+		"input_1": {
+			"height": 180.0,
+			"width": 180.0,
+			"x": 450.0,
+			"y": 478.0
+		},
+		"paper": {
+			"height": 283.0,
+			"width": 900.0,
+			"x": 90.0,
+			"y": 452.0
+		},
+		"question": {
+			"height": 160.0,
+			"width": 890.0,
+			"x": 95.0,
+			"y": 1040.0
+		},
+		"result_label": {
+			"height": 76.0,
+			"width": 230.0,
+			"x": 733.0,
+			"y": 656.0
+		},
+		"subtitle": {
+			"height": 85.0,
+			"width": 880.0,
+			"x": 100.0,
+			"y": 350.0
+		},
+		"weapon_name": {
+			"height": 130.0,
+			"width": 920.0,
+			"x": 80.0,
+			"y": 480.0
+		}
+	},
+	"outro": {
+		"black_frame": 1020,
+		"cycle_end_frame": 1199,
+		"cycle_start_frame": 840,
+		"fade_start_frame": 930,
+		"question_settled_frame": 1053,
+		"question_start_frame": 1029,
+		"subtitle": "Weapon combos"
+	},
+	"recipe": [
+		1,
+		3
+	],
+	"result_label": "Umbrella Shield",
+	"seed": 13102026,
+	"shot_metrics": {
+		"army_impact": {
+			"blocked_arrows": 9,
+			"damage": 12,
+			"enemy_arrow_launches": 12,
+			"first_action_frame": 568,
+			"first_effect_frame": 658,
+			"frames": 132,
+			"frames_all_enemies_visible": 0,
+			"frames_all_players_visible": 0,
+			"min_enemies_alive": 18,
+			"min_players_alive": 9,
+			"visible_blocks": 7
+		},
+		"army_launch": {
+			"blocked_arrows": 5,
+			"damage": 0,
+			"enemy_arrow_launches": 17,
+			"first_action_frame": 568,
+			"first_effect_frame": 658,
+			"frames": 138,
+			"frames_all_enemies_visible": 0,
+			"frames_all_players_visible": 138,
+			"min_enemies_alive": 18,
+			"min_players_alive": 9,
+			"visible_blocks": 5
+		},
+		"army_wide": {
+			"blocked_arrows": 15,
+			"damage": 36,
+			"enemy_arrow_launches": 14,
+			"first_action_frame": 568,
+			"first_effect_frame": 658,
+			"frames": 210,
+			"frames_all_enemies_visible": 210,
+			"frames_all_players_visible": 210,
+			"min_enemies_alive": 17,
+			"min_players_alive": 9,
+			"visible_blocks": 15
+		},
+		"single_wide": {
+			"blocked_arrows": 3,
+			"damage": 3,
+			"enemy_arrow_launches": 6,
+			"first_action_frame": 268,
+			"first_effect_frame": 335,
+			"frames": 300,
+			"frames_all_enemies_visible": 300,
+			"frames_all_players_visible": 300,
+			"min_enemies_alive": 3,
+			"min_players_alive": 1,
+			"visible_blocks": 3
+		}
+	},
+	"steam_cta": false,
+	"unit_scale": 1.65,
+	"version": 1,
+	"visibility_failures": [],
+	"weapon": "umbrella",
+	"width": 1080
+}

@@ -1,0 +1,7 @@
+work/
+__pycache__/
+
+# Keep storyboards and selected evidence, not regenerable frame probes.
+preview/umbrella-*-v*-*.png
+preview/export-umbrella-*-v*-*.jpg
+sources/*-dry.log

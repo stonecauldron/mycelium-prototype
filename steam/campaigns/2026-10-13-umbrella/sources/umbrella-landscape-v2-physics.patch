@@ -1,0 +1,309 @@
+diff --git a/assets/combat/projectile/projectile.gd b/assets/combat/projectile/projectile.gd
+index bf909ac..e3bbacd 100644
+--- a/assets/combat/projectile/projectile.gd
++++ b/assets/combat/projectile/projectile.gd
+@@ -9,6 +9,7 @@ const FLOOR_Y := 786.0
+ const _SPORE_CLOUD_SCENE := preload("res://assets/vfx/spore_cloud/spore_cloud.tscn")
+ ## Mortar blast tint — distinct from death-spore beige / enemy red.
+ const _MORTAR_SPORE_COLOR := Color("9dcc6a")
++const _CANOPY_BOUNCE_RETENTION := 0.65
+ 
+ @export var launch_angle_deg: float = 45.0
+ @export var fallback_speed: float = 600.0
+@@ -27,6 +28,8 @@ const _MORTAR_SPORE_COLOR := Color("9dcc6a")
+ @export var homing: bool = false
+ @export var launch_cue: Sfx.Cue = Sfx.Cue.THROW
+ 
++@onready var _collision_shape: CollisionShape2D = $CollisionShape2D
++
+ var damage: int = 0
+ var knockback_force: float = 0.0
+ ## Matches WeaponData.DamageType (int) without importing WeaponData here.
+@@ -43,6 +46,7 @@ var _fuse_armed: bool = false
+ var _homing_active: bool = false
+ ## Snapshot at launch so a projectile retains its sound after its owner dies.
+ var _impact_cue: int = -1
++var _bounced_blocker: ProjectileBlocker
+ 
+ 
+ func _ready() -> void:
+@@ -78,8 +82,8 @@ func launch(
+ 	# Homing waits for apex (vy crosses upward→down). Already descending → home now.
+ 	_homing_active = homing and _velocity.y >= 0.0
+ 	_face_velocity()
+-	# Delayed bombs ignore units until they land.
+-	monitoring = explode_delay <= 0.0
++	# Delayed bombs still detect canopies; hurtboxes are ignored until the explosion.
++	monitoring = true
+ 	monitorable = false
+ 
+ 
+@@ -266,6 +270,8 @@ func _on_impact(hurtbox: Area2D) -> void:
+ func _physics_process(delta: float) -> void:
+ 	if _spent:
+ 		return
++	if is_instance_valid(_bounced_blocker) and not overlaps_area(_bounced_blocker):
++		_bounced_blocker = null
+ 	_lifetime += delta
+ 	if _lifetime >= max_lifetime:
+ 		if explode_delay > 0.0 and aoe_radius > 0.0:
+@@ -290,20 +296,25 @@ func _face_velocity() -> void:
+ 
+ 
+ func _on_area_entered(_area: Area2D) -> void:
+-	if _spent or explode_delay > 0.0:
++	if _spent:
+ 		return
+ 	_resolve_hit()
+ 
+ 
+ func _resolve_hit() -> void:
+-	# Umbrella / projectile blockers destroy the shot with no damage.
++	# Resolve canopies before hurtboxes, including for delayed bombs.
+ 	for area in get_overlapping_areas():
+ 		if area is ProjectileBlocker:
+ 			var blocker := area as ProjectileBlocker
+ 			if blocker.blocks_projectile_from(_get_owner_troop()):
++				if explode_delay > 0.0:
++					_bounce_off_canopy(blocker)
++					return
+ 				Audio.play_cue(Sfx.Cue.BLOCK)
+-				_stick_and_fade()
++				_stick_and_fade(blocker)
+ 				return
++	if explode_delay > 0.0:
++		return
+ 
+ 	if piercing:
+ 		_resolve_piercing_hits()
+@@ -345,6 +356,27 @@ func _resolve_piercing_hits() -> void:
+ 		_on_impact(area)
+ 
+ 
++func _bounce_off_canopy(blocker: ProjectileBlocker) -> void:
++	if blocker == _bounced_blocker:
++		return
++	var contact := blocker.surface_contact_at(global_position)
++	var normal: Vector2 = contact.normal
++	if _velocity.dot(normal) >= 0.0:
++		return
++	Audio.play_cue(Sfx.Cue.BLOCK)
++	_velocity = _velocity.bounce(normal) * _CANOPY_BOUNCE_RETENTION
++	# Leave the overlap so slow bombs can hit the canopy again on the way down.
++	var circle := _collision_shape.shape as CircleShape2D
++	if circle != null:
++		var shape_transform := _collision_shape.global_transform
++		var radius := circle.radius * Vector2(
++			shape_transform.x.dot(normal), shape_transform.y.dot(normal)
++		).length()
++		global_position += contact.position + normal * (radius + 0.5) - _collision_shape.global_position
++	_bounced_blocker = blocker
++	_face_velocity()
++
++
+ func _on_body_entered(_body: Node2D) -> void:
+ 	if _spent:
+ 		return
+@@ -375,18 +407,21 @@ func _get_troop(target: Node) -> Node:
+ 
+ 
+ func _get_owner_troop() -> Node:
+-	if owner_unit == null:
++	if not is_instance_valid(owner_unit):
+ 		return null
+ 	return owner_unit.get("_troop")
+ 
+ 
+-func _stick_and_fade() -> void:
++func _stick_and_fade(blocker: ProjectileBlocker = null) -> void:
+ 	if _spent:
+ 		return
+ 	_spent = true
+ 	_velocity = Vector2.ZERO
+ 	set_deferred("monitoring", false)
+ 	set_physics_process(false)
++	if blocker != null:
++		var attached_transform := blocker.global_transform.affine_inverse() * global_transform
++		_attach_to_canopy.call_deferred(blocker, attached_transform)
+ 	if global_position.y > FLOOR_Y:
+ 		global_position.y = FLOOR_Y
+ 	var tween := create_tween()
+@@ -394,3 +429,11 @@ func _stick_and_fade() -> void:
+ 	tween.tween_property(self, "modulate:a", 0.0, stick_fade_time)\
+ 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+ 	tween.tween_callback(queue_free)
++
++
++func _attach_to_canopy(blocker: ProjectileBlocker, attached_transform: Transform2D) -> void:
++	if not is_instance_valid(blocker) or blocker.is_queued_for_deletion():
++		queue_free()
++		return
++	reparent(blocker, false)
++	transform = attached_transform
+diff --git a/assets/combat/projectile/projectile_blocker.gd b/assets/combat/projectile/projectile_blocker.gd
+index 1d3c589..e64901e 100644
+--- a/assets/combat/projectile/projectile_blocker.gd
++++ b/assets/combat/projectile/projectile_blocker.gd
+@@ -1,7 +1,30 @@
+ class_name ProjectileBlocker
+ extends Area2D
+ 
+-## Mounted on weapon appearances (e.g. umbrella canopy). Destroys opposing projectiles.
++## Mounted on weapon appearances (e.g. umbrella canopy). Intercepts opposing projectiles.
++
++@onready var _canopy: CollisionPolygon2D = $CollisionPolygon2D
++
++
++## Nearest canopy edge in world space, including facing flips and weapon poses.
++func surface_contact_at(world_position: Vector2) -> Dictionary:
++	var points := _canopy.global_transform * _canopy.polygon
++	var closest_distance := INF
++	var contact := world_position
++	var normal := Vector2.UP
++	var signed_area := 0.0
++	for i in points.size():
++		var start := points[i]
++		var end := points[(i + 1) % points.size()]
++		signed_area += start.cross(end)
++		var closest := Geometry2D.get_closest_point_to_segment(world_position, start, end)
++		var distance := world_position.distance_squared_to(closest)
++		if distance < closest_distance:
++			closest_distance = distance
++			contact = closest
++			var edge := end - start
++			normal = Vector2(edge.y, -edge.x).normalized()
++	return {"position": contact, "normal": normal if signed_area > 0.0 else -normal}
+ 
+ 
+ func blocks_projectile_from(shooter_troop: Node) -> bool:
+diff --git a/assets/units/unit_appearance.gd b/assets/units/unit_appearance.gd
+index 10798c4..eac2269 100644
+--- a/assets/units/unit_appearance.gd
++++ b/assets/units/unit_appearance.gd
+@@ -42,6 +42,8 @@ var _melee_body_pose := Transform2D.IDENTITY
+ var _melee_weapon_angle: float = 0.0
+ var _melee_offhand_angle: float = 0.0
+ var _melee_cap_angle: float = 0.0
++## Canopy-bearing art needs the same pose in physics and rendering.
++var _physical_weapon_poses: Dictionary[Node2D, Transform2D] = {}
+ 
+ 
+ func _ready() -> void:
+@@ -99,6 +101,9 @@ func update_melee_pose(
+ 
+ func clear_melee_pose() -> void:
+ 	_melee_guard_weight = 0.0
++	for held: Node2D in _physical_weapon_poses:
++		if is_instance_valid(held):
++			held.transform = _physical_weapon_poses[held]
+ 	if not RenderingServer.frame_pre_draw.is_connected(_render_melee_pose):
+ 		return
+ 	RenderingServer.frame_pre_draw.disconnect(_render_melee_pose)
+@@ -108,8 +113,8 @@ func clear_melee_pose() -> void:
+ 
+ 
+ ## Apply after AnimationPlayer/RemoteTransform2D updates. Only the renderer sees
+-## these offsets: node transforms, hurtboxes, hitboxes and projectile origins stay
+-## exactly as combat authored them. GroundShadow remains planted at the feet.
++## these offsets, except canopy-bearing weapon art whose blocker must follow it.
++## Hurtboxes, hitboxes and projectile origins stay as authored; shadows stay planted.
+ func _render_melee_pose() -> void:
+ 	if not is_inside_tree():
+ 		return
+@@ -127,9 +132,16 @@ func _render_art_pose(art: Node2D, angle: float) -> void:
+ 		return
+ 	var parent_to_appearance := global_transform.affine_inverse() * parent.global_transform
+ 	var pose := parent_to_appearance.affine_inverse() * _melee_body_pose * parent_to_appearance
+-	RenderingServer.canvas_item_set_transform(
+-		art.get_canvas_item(), pose * art.transform * Transform2D(angle, Vector2.ZERO)
+-	)
++	var posed_transform := pose * art.transform * Transform2D(angle, Vector2.ZERO)
++	for held: Node2D in _physical_weapon_poses:
++		if is_instance_valid(held) and held.get_parent() == art:
++			# Move only the held appearance, preserving the authored mount for combat.
++			RenderingServer.canvas_item_set_transform(art.get_canvas_item(), art.transform)
++			held.transform = (
++				art.transform.affine_inverse() * posed_transform * _physical_weapon_poses[held]
++			)
++			return
++	RenderingServer.canvas_item_set_transform(art.get_canvas_item(), posed_transform)
+ 
+ 
+ ## Player composition: shared base (collider + anim) + body + cap.
+@@ -284,6 +296,7 @@ func _mount_held_scene(mount: Node2D, scene: PackedScene) -> void:
+ 	if mount == null:
+ 		return
+ 	for child in mount.get_children():
++		_physical_weapon_poses.erase(child)
+ 		mount.remove_child(child)
+ 		child.free()
+ 	if scene == null:
+@@ -292,6 +305,10 @@ func _mount_held_scene(mount: Node2D, scene: PackedScene) -> void:
+ 	if held == null:
+ 		return
+ 	mount.add_child(held)
++	for area in held.find_children("*", "Area2D", true, false):
++		if area is ProjectileBlocker:
++			_physical_weapon_poses[held] = held.transform
++			break
+ 
+ 
+ func play(animation: StringName, randomize_start: bool = false) -> void:
+diff --git a/assets/weapons/mortar/mortar_projectile.tscn b/assets/weapons/mortar/mortar_projectile.tscn
+index c040732..5ff0cf2 100644
+--- a/assets/weapons/mortar/mortar_projectile.tscn
++++ b/assets/weapons/mortar/mortar_projectile.tscn
+@@ -8,7 +8,7 @@ radius = 18.0
+ 
+ [node name="MortarProjectile" type="Area2D" unique_id=697305217]
+ collision_layer = 8
+-monitoring = false
++collision_mask = 4
+ monitorable = false
+ script = ExtResource("1_proj")
+ launch_angle_deg = 72.0
+diff --git a/assets/weapons/umbrella/umbrella.tres b/assets/weapons/umbrella/umbrella.tres
+index 679a86e..60d7ae5 100644
+--- a/assets/weapons/umbrella/umbrella.tres
++++ b/assets/weapons/umbrella/umbrella.tres
+@@ -7,7 +7,7 @@
+ [resource]
+ script = ExtResource("1_weapon")
+ display_name = "Umbrella Shield"
+-short_description = "Protective canopy that absorbs projectiles."
++short_description = "Protective canopy that catches projectiles and deflects spore bombs."
+ engagement_stance = 2
+ base_damage = 3
+ attack_interval = 0.75
+diff --git a/assets/weapons/umbrella/umbrella_appearance.tscn b/assets/weapons/umbrella/umbrella_appearance.tscn
+index 524fd8a..c2eaa11 100644
+--- a/assets/weapons/umbrella/umbrella_appearance.tscn
++++ b/assets/weapons/umbrella/umbrella_appearance.tscn
+@@ -3,9 +3,6 @@
+ [ext_resource type="Texture2D" uid="uid://cm08y8uadclcn" path="res://assets/weapons/umbrella/umbrella.png" id="1_tex"]
+ [ext_resource type="Script" path="res://assets/combat/projectile/projectile_blocker.gd" id="2_blocker"]
+ 
+-[sub_resource type="RectangleShape2D" id="RectangleShape2D_canopy"]
+-size = Vector2(120, 28)
+-
+ [node name="UmbrellaShieldAppearance" type="Node2D"]
+ 
+ [node name="Visual" type="Sprite2D" parent="."]
+@@ -14,13 +11,13 @@ scale = Vector2(0.40948276, 0.40948276)
+ texture = ExtResource("1_tex")
+ offset = Vector2(0.0000, -176.3200)
+ 
+-[node name="ProjectileBlocker" type="Area2D" parent="."]
+-position = Vector2(8, -110)
++[node name="ProjectileBlocker" type="Area2D" parent="Visual"]
+ collision_layer = 4
+ collision_mask = 0
+ monitoring = false
+ monitorable = true
+ script = ExtResource("2_blocker")
+ 
+-[node name="CollisionShape2D" type="CollisionShape2D" parent="ProjectileBlocker"]
+-shape = SubResource("RectangleShape2D_canopy")
++[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Visual/ProjectileBlocker"]
++position = Vector2(-256, -432.32)
++polygon = PackedVector2Array(254, 19, 246, 25, 236, 51, 227, 60, 202, 66, 169, 78, 125, 103, 106, 117, 84, 138, 70, 156, 65, 168, 66, 177, 71, 184, 96, 195, 143, 204, 210, 209, 300, 209, 368, 204, 411, 196, 439, 185, 444, 179, 446, 168, 441, 156, 427, 138, 405, 117, 386, 103, 340, 77, 306, 65, 284, 60, 275, 51, 264, 23, 257, 19)

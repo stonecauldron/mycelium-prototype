@@ -1,0 +1,215 @@
+{
+  "file": "auto-shrooms-umbrella-landscape-v4.mp4",
+  "width": 1920,
+  "height": 1080,
+  "fps": 60,
+  "frames": 1200,
+  "duration": 20.038313,
+  "bytes": 15789683,
+  "full_decode": "passed",
+  "audio": {
+    "codec": "aac",
+    "sample_rate": 48000,
+    "integrated_lufs": "-15.80",
+    "true_peak_dbtp": "-5.03",
+    "picture_start_seconds": 0.033333,
+    "pop_transient_seconds": 2.533333,
+    "pop_source": "steam/campaigns/2026-09-28-combo-reels/exports/cocoon-heavy-pop.wav",
+    "pop_bed_gain": 0.07,
+    "mix_restored_seconds": 3.033333,
+    "combat_audio": "Native bow/bomb launch, canopy catch/bounce, and combat cues. No meme clang.",
+    "audition": "Technical checks only; subjective listening review required."
+  },
+  "capture_metadata": "sources/umbrella-landscape-v4.json",
+  "composition": {
+    "gameplay_source": {
+      "action": "gameplay_source",
+      "blocker_script_sha256": "87e54e67832e386fd43456c07c1e11af1e1dca871101c4d7653d21b2871cf6cc",
+      "enemy_resource_sha256": "c6882823255aa096d4526c254aeceafa9428fee67590b11c091ba295f4150c50",
+      "frame": 0,
+      "knockback_recovery_seconds": 0.35,
+      "mortar_projectile_sha256": "fdfeb308151d98850d4dcb1078bb79da200362aab421597ae02a7f6ab90f228e",
+      "projectile_script_sha256": "3adf53dc7e87658b47d141c04b9fd40ad9e39aeb62c4de06dd9a4a05a9c1946f",
+      "seed_lobber_resource_sha256": "4e56600fb11d67d65d76aa1c31aa91dd8ff0bddccab4435f21cde7ce2b87b581",
+      "umbrella_resource_sha256": "87a8e3dea316b7a86fd9e56b8395548e5ffe4abb8f7040b13de53b08fec36888",
+      "umbrella_scene_sha256": "d24986fc21a3052700db1416d70864ac200aa01fec74714d8f9d2711a49011fa",
+      "unit_appearance_sha256": "80e8ff11135a0c980fe0b32d815c004b4caf61806bcf028fe50ea495aa271b66",
+      "unit_script_sha256": "73c6fc1f637cd67a0caac5dab006ba55a52516491202ae97e567d012e40cbd39"
+    },
+    "recipe": "Shield + Bow = Umbrella Shield",
+    "army": "6 Adults + 3 Children versus 9 Peashooters + 9 Seed Lobbers",
+    "single_enemy_counts": {
+      "seed_lobber": 3
+    },
+    "army_enemy_counts": {
+      "peashooter": 9,
+      "seed_lobber": 9
+    },
+    "defense_counts": {
+      "bomb_bounced": 24,
+      "arrow_caught": 19
+    },
+    "single_starting_gap_world": 720.950073242188,
+    "army_starting_gap_world": 720.950073242188,
+    "visibility_checked_every_frame": true,
+    "shot_metrics": {
+      "army_impact": {
+        "bounced_bombs": 8,
+        "caught_arrows": 8,
+        "damage": 12,
+        "defense_events": 16,
+        "enemy_arrow_launches": 6,
+        "enemy_bomb_launches": 7,
+        "enemy_projectile_launches": 13,
+        "first_action_frame": 568,
+        "first_effect_frame": 658,
+        "frames": 132,
+        "frames_all_enemies_visible": 0,
+        "frames_all_players_visible": 11,
+        "min_enemies_alive": 18,
+        "min_players_alive": 9,
+        "visible_bounces": 6,
+        "visible_catches": 7,
+        "visible_defenses": 13,
+        "visible_enemy_arrow_launches": 2,
+        "visible_enemy_bomb_launches": 3
+      },
+      "army_launch": {
+        "bounced_bombs": 1,
+        "caught_arrows": 4,
+        "damage": 0,
+        "defense_events": 5,
+        "enemy_arrow_launches": 8,
+        "enemy_bomb_launches": 8,
+        "enemy_projectile_launches": 16,
+        "first_action_frame": 568,
+        "first_effect_frame": 658,
+        "frames": 138,
+        "frames_all_enemies_visible": 0,
+        "frames_all_players_visible": 138,
+        "min_enemies_alive": 18,
+        "min_players_alive": 9,
+        "visible_bounces": 1,
+        "visible_catches": 4,
+        "visible_defenses": 5,
+        "visible_enemy_arrow_launches": 0,
+        "visible_enemy_bomb_launches": 0
+      },
+      "army_wide": {
+        "bounced_bombs": 10,
+        "caught_arrows": 7,
+        "damage": 36,
+        "defense_events": 17,
+        "enemy_arrow_launches": 7,
+        "enemy_bomb_launches": 6,
+        "enemy_projectile_launches": 13,
+        "first_action_frame": 568,
+        "first_effect_frame": 658,
+        "frames": 210,
+        "frames_all_enemies_visible": 210,
+        "frames_all_players_visible": 210,
+        "min_enemies_alive": 18,
+        "min_players_alive": 9,
+        "visible_bounces": 10,
+        "visible_catches": 7,
+        "visible_defenses": 17,
+        "visible_enemy_arrow_launches": 7,
+        "visible_enemy_bomb_launches": 6
+      },
+      "single_wide": {
+        "bounced_bombs": 5,
+        "caught_arrows": 0,
+        "damage": 3,
+        "defense_events": 5,
+        "enemy_arrow_launches": 0,
+        "enemy_bomb_launches": 6,
+        "enemy_projectile_launches": 6,
+        "first_action_frame": 268,
+        "first_effect_frame": 362,
+        "frames": 300,
+        "frames_all_enemies_visible": 300,
+        "frames_all_players_visible": 300,
+        "min_enemies_alive": 3,
+        "min_players_alive": 1,
+        "visible_bounces": 5,
+        "visible_catches": 0,
+        "visible_defenses": 5,
+        "visible_enemy_arrow_launches": 0,
+        "visible_enemy_bomb_launches": 6
+      }
+    },
+    "closing_inputs_cycle_to_end": true,
+    "steam_cta": false,
+    "unit_body_sizes_unchanged": true,
+    "camera_cuts": [
+      {
+        "action": "cut",
+        "background_screen_scale": 0.568448543548584,
+        "camera_x": 3640.13598632812,
+        "frame": 240,
+        "screen_fixed_forest_visible": false,
+        "shot": "single_wide",
+        "zoom": 1.13689711315793
+      },
+      {
+        "action": "cut",
+        "background_screen_scale": 0.678553581237793,
+        "camera_x": 3664.53759765625,
+        "frame": 540,
+        "screen_fixed_forest_visible": false,
+        "shot": "army_launch",
+        "zoom": 1.35710715633739
+      },
+      {
+        "action": "cut",
+        "background_screen_scale": 0.824999988079071,
+        "camera_x": 4293.47412109375,
+        "frame": 678,
+        "screen_fixed_forest_visible": false,
+        "shot": "army_impact",
+        "zoom": 1.65
+      },
+      {
+        "action": "cut",
+        "background_screen_scale": 0.346984326839447,
+        "camera_x": 4960.32373046875,
+        "frame": 810,
+        "screen_fixed_forest_visible": false,
+        "shot": "army_wide",
+        "zoom": 0.693968629247922
+      }
+    ],
+    "intro_framing": {
+      "intro_ground_y": 960.0,
+      "cocoon_x": 1120.0,
+      "entry_x": 705.0,
+      "reveal_apex_x": 732.5,
+      "landing_x": 345.0,
+      "reveal_direction": "left",
+      "reveal_trajectory": "parabola",
+      "reveal_hop_height": 120.0
+    }
+  },
+  "gameplay_provenance": {
+    "base_commit": "cecf2434672f20505aa7f73f6e0d4594dba22463",
+    "files": {
+      "assets/units/unit.gd": "73c6fc1f637cd67a0caac5dab006ba55a52516491202ae97e567d012e40cbd39",
+      "assets/units/unit_appearance.gd": "80e8ff11135a0c980fe0b32d815c004b4caf61806bcf028fe50ea495aa271b66",
+      "assets/combat/projectile/projectile.gd": "3adf53dc7e87658b47d141c04b9fd40ad9e39aeb62c4de06dd9a4a05a9c1946f",
+      "assets/combat/projectile/projectile_blocker.gd": "87e54e67832e386fd43456c07c1e11af1e1dca871101c4d7653d21b2871cf6cc",
+      "assets/weapons/umbrella/umbrella.tres": "87a8e3dea316b7a86fd9e56b8395548e5ffe4abb8f7040b13de53b08fec36888",
+      "assets/weapons/umbrella/umbrella_appearance.tscn": "d24986fc21a3052700db1416d70864ac200aa01fec74714d8f9d2711a49011fa",
+      "assets/weapons/mortar/mortar_projectile.tscn": "fdfeb308151d98850d4dcb1078bb79da200362aab421597ae02a7f6ab90f228e",
+      "assets/units/enemies/peashooter/peashooter_unit.tres": "c6882823255aa096d4526c254aeceafa9428fee67590b11c091ba295f4150c50",
+      "assets/units/enemies/seed_lobber/seed_lobber_unit.tres": "4e56600fb11d67d65d76aa1c31aa91dd8ff0bddccab4435f21cde7ce2b87b581"
+    },
+    "gameplay_patch": "umbrella-landscape-v4-physics.patch"
+  },
+  "encoded_outro_checks": {
+    "combat_black_before_question": true,
+    "question_visible_after_black": true,
+    "steam_cta_area_black": true,
+    "input_changed_near_last_frame": true
+  },
+  "scope": "Native Umbrella combat reel. No posting or gameplay changes."
+}
